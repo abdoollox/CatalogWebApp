@@ -1,186 +1,209 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Hogwarts Cinema</title>
+<title>Garri Potter 4K</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at 50% 5%, #0b1320 0%, #000000 100%);
-  color: #e0e6ed;
-  margin: 0; padding: 15px; text-align: center;
-  min-height: 100vh;
+:root{
+  --bg:#0c0f14; --bg2:#14181f; --card:#161b23; --line:rgba(255,255,255,.09);
+  --text:#eef1f5; --dim:#98a2b3; --accent:#e0ae4e; --accent-ink:#1a1204;
 }
-h2 {
-  font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
-  margin-bottom: 30px;
-  text-shadow: 0 0 10px rgba(255,255,255,0.2);
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg)}
+body{
+  -webkit-font-smoothing:antialiased;
+  font-family:'Manrope',system-ui,sans-serif;
+  color:var(--text);min-height:100vh;
+  display:flex;justify-content:center;
 }
+.shell{width:100%;max-width:440px;padding:22px 18px 40px}
+@keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.screen{animation:riseIn .4s ease both}
+.hidden{display:none}
+@media (prefers-reduced-motion:reduce){.screen{animation:none}*{transition:none!important}}
 
-#lang-screen {
-  display: flex; flex-direction: column; gap: 20px;
-  margin-top: 60px; padding: 0 15px;
+/* --- TIL EKRANI --- */
+.lang-head{display:flex;flex-direction:column;gap:6px;padding:38px 4px 30px}
+.lang-head h1{
+  margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:40px;line-height:1.05;letter-spacing:-.01em;
 }
-.lang-btn {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 15px 20px;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+.lang-head h1 em{font-style:italic;color:var(--accent)}
+.lang-head p{margin:8px 0 0;font:400 14px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.lang-list{display:flex;flex-direction:column;gap:12px}
+.lang-btn{
+  display:grid;grid-template-columns:52px 1fr 20px;align-items:center;gap:14px;
+  width:100%;text-align:left;padding:16px;background:var(--card);
+  border:1px solid var(--line);border-radius:18px;cursor:pointer;color:var(--text);
+  font-family:'Manrope',sans-serif;
+  transition:border-color .2s,transform .12s,background .2s;
 }
-.lang-btn img {
-  width: 80%; max-height: 70px; object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.1));
-  transition: transform 0.3s ease;
+.lang-btn:hover{border-color:var(--accent);background:var(--bg2)}
+.lang-btn:active{transform:scale(.985)}
+.lang-mark{
+  display:grid;place-items:center;width:52px;height:52px;border-radius:14px;
+  font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--accent-ink);
 }
-.lang-btn span {
-  font-size: 13px; font-weight: 700; color: #8892b0;
-  letter-spacing: 1px; text-transform: uppercase;
-}
-.lang-btn:active {
-  background: rgba(77, 166, 255, 0.1);
-  box-shadow: 0 0 20px rgba(77, 166, 255, 0.4);
-  border-color: #4da6ff;
-}
-.lang-btn:active img { transform: scale(0.95); }
+.lang-name{display:flex;flex-direction:column;gap:3px}
+.lang-name b{font:600 16px/1.2 'Manrope',sans-serif}
+.lang-name small{font:500 12px/1.2 'Manrope',sans-serif;color:var(--dim);letter-spacing:.04em}
+.chev{color:var(--dim);font-size:16px}
 
-#catalog-screen { display: none; padding-bottom: 30px; }
-.back-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #aaa; padding: 10px 20px; border-radius: 12px;
-  margin-bottom: 25px; cursor: pointer; transition: 0.2s;
+/* --- KATALOG SARLAVHASI --- */
+.cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0 20px}
+.cat-head .kicker{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);
 }
-.back-btn:active { background: rgba(255, 255, 255, 0.1); color: white; }
+.cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:27px;line-height:1.1}
+.back-btn{
+  display:flex;align-items:center;gap:7px;padding:9px 13px;background:transparent;
+  border:1px solid var(--line);border-radius:99px;color:var(--dim);
+  font:600 12px/1 'Manrope',sans-serif;letter-spacing:.06em;cursor:pointer;transition:.2s;
+}
+.back-btn:hover{color:var(--text);border-color:var(--accent)}
+.back-btn:active{transform:scale(.96)}
 
-#progress-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin: 0 0 22px 0;
-  text-align: left;
+/* --- PROGRESS --- */
+.prog{padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
+.prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.prog-label{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);
 }
-#progress-head {
-  display: flex; justify-content: space-between; align-items: baseline;
-  margin-bottom: 10px;
-}
-#progress-label { font-size: 12px; color: #8892b0; letter-spacing: 1px; text-transform: uppercase; }
-#progress-count { font-size: 15px; font-weight: 800; color: #4da6ff; }
-#progress-track { height: 6px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden; }
-#progress-fill {
-  height: 100%; width: 0%;
-  background: #4da6ff; border-radius: 99px;
-  box-shadow: 0 0 12px rgba(77,166,255,0.6);
-  transition: width 0.6s cubic-bezier(.2,.8,.2,1);
-}
-#progress-hint { font-size: 12px; color: #6b7891; margin: 9px 0 0 0; }
+.prog-count{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--accent)}
+.prog-ticks{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;margin:13px 0 10px}
+.prog-ticks span{height:5px;border-radius:99px;background:rgba(255,255,255,.1);transition:background .4s ease}
+.prog-ticks span.on{background:var(--accent)}
+.prog-hint{margin:0;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
 
-.catalog-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;
+/* --- KEYINGI FILM --- */
+.next{
+  display:grid;grid-template-columns:64px 1fr;gap:15px;align-items:center;
+  margin-top:14px;padding:15px;border-radius:18px;
+  background:linear-gradient(115deg,rgba(224,174,78,.15),rgba(224,174,78,.04));
+  border:1px solid rgba(224,174,78,.32);
 }
-.movie-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 16px; overflow: hidden;
-  display: flex; flex-direction: column; padding-bottom: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-  position: relative;
-  transition: border-color 0.3s ease;
+.next-art{
+  position:relative;display:grid;place-items:center;height:92px;border-radius:12px;
+  overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--accent-ink);
 }
-.movie-card.watched { border-color: rgba(77,166,255,0.35); }
-.movie-card.next { border-color: rgba(255, 208, 92, 0.55); }
+.next-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.next-body{display:flex;flex-direction:column;gap:9px;min-width:0}
+.next-kicker{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);
+}
+.next-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.15}
+.next-play{
+  align-self:start;padding:10px 18px;background:var(--accent);color:var(--accent-ink);
+  border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
+  cursor:pointer;transition:transform .12s;
+}
+.next-play:active{transform:scale(.95)}
 
-.poster-wrap { position: relative; }
-.movie-card img {
-  width: 100%; aspect-ratio: 2 / 3; object-fit: cover;
-  display: block; margin-bottom: 12px;
-  transition: opacity 0.3s ease;
+/* --- KARTALAR --- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.card{
+  position:relative;aspect-ratio:2/3;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line);cursor:pointer;
+  transition:transform .14s,border-color .3s;
 }
-.movie-card.watched img { opacity: 0.45; }
-
-.check {
-  position: absolute; top: 8px; right: 8px;
-  width: 30px; height: 30px; border-radius: 50%;
-  background: rgba(0,0,0,0.55);
-  border: 1.5px solid rgba(255,255,255,0.25);
-  color: transparent;
-  font-size: 15px; font-weight: 900; line-height: 27px;
-  cursor: pointer; padding: 0;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  transition: all 0.2s ease;
+.card:active{transform:scale(.98)}
+.card.next-up{border-color:var(--accent)}
+.card.seen{border-color:rgba(255,255,255,.12)}
+.card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.veil{position:absolute;inset:0;background:transparent;transition:background .3s}
+.card.seen .veil{background:rgba(7,9,13,.6)}
+.numeral{
+  position:absolute;top:0;left:0;padding:11px 13px;
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;
+  line-height:1;color:rgba(18,13,4,.6);
 }
-.movie-card.watched .check {
-  background: #4da6ff; border-color: #4da6ff; color: #000;
-  box-shadow: 0 0 14px rgba(77,166,255,0.55);
+.card.has-img .numeral{color:rgba(244,246,249,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.check{
+  position:absolute;top:9px;right:9px;width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;background:transparent;
+  border:2px solid rgba(20,14,4,.75);color:var(--accent-ink);
+  font:800 13px/1 'Manrope',sans-serif;cursor:pointer;padding:0;
+  transition:transform .15s;
 }
-.check:active { transform: scale(0.88); }
-
-.next-tag {
-  position: absolute; top: 8px; left: 8px;
-  background: rgba(255, 208, 92, 0.92);
-  color: #221a00;
-  font-size: 10px; font-weight: 900; letter-spacing: 0.5px;
-  padding: 4px 8px; border-radius: 7px;
-  text-transform: uppercase;
+.card.has-img .check{border-color:rgba(255,255,255,.7)}
+.card.seen .check{background:var(--accent);border-color:var(--accent)}
+.check:active{transform:scale(.86)}
+.card-foot{
+  position:absolute;left:0;right:0;bottom:0;
+  display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px;
+  padding:28px 13px 13px;
+  background:linear-gradient(to top,rgba(6,8,12,.94) 12%,rgba(6,8,12,.65) 55%,transparent);
 }
-
-.movie-title {
-  font-size: 13px; font-weight: bold; margin: 0 5px 12px 5px;
-  height: 32px; overflow: hidden; color: #ddd;
+.card-text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.card-play{
+  flex:none;width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--accent);color:var(--accent-ink);border:none;padding:0;
+  font-size:14px;line-height:1;cursor:pointer;
+  transition:transform .12s,background .2s;
 }
-.play-btn {
-  background: #4da6ff; color: #000; border: none;
-  padding: 12px; border-radius: 10px; font-weight: 900;
-  width: 85%; margin: 0 auto; cursor: pointer;
-  box-shadow: 0 0 10px rgba(77, 166, 255, 0.3); transition: 0.2s;
+.card-play:active{transform:scale(.88)}
+.card.seen .card-play{background:rgba(255,255,255,.16);color:#dfe5ee}
+.card-title{
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;
+  line-height:1.1;color:#f4f6f9;
 }
-.play-btn:active { transform: scale(0.95); box-shadow: 0 0 20px rgba(77, 166, 255, 0.6); }
-.movie-card.watched .play-btn {
-  background: rgba(255,255,255,0.09); color: #9fb3cc; box-shadow: none;
+.card-meta{
+  font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);
 }
+.card.seen .card-meta{color:var(--dim)}
 </style>
 </head>
 <body>
+<div class="shell">
 
-<div id="lang-screen">
-  <h2>Kino tilini tanlang</h2>
-  <button class="lang-btn" data-lang="uz">
-    <img src="img/logo_uz.svg" alt="O'zbek tili" onerror="this.style.display='none'">
-    <span>🇺🇿 O'zbekcha</span>
-  </button>
-  <button class="lang-btn" data-lang="ru">
-    <img src="img/logo_ru.svg" alt="Русский язык" onerror="this.style.display='none'">
-    <span>🇷🇺 Русский</span>
-  </button>
-  <button class="lang-btn" data-lang="en">
-    <img src="img/logo_en.svg" alt="English" onerror="this.style.display='none'">
-    <span>🇬🇧 English</span>
-  </button>
-</div>
-
-<div id="catalog-screen">
-  <button class="back-btn" id="back-btn">🔙 Tilni o'zgartirish</button>
-  <h2 id="catalog-title">Katalog</h2>
-
-  <div id="progress-box">
-    <div id="progress-head">
-      <span id="progress-label">Progress</span>
-      <span id="progress-count">0 / 8</span>
+  <div id="scr-lang" class="screen">
+    <div class="lang-head">
+      <h1>Kino tilini<br><em>tanlang</em></h1>
+      <p>Choose language · Выберите язык</p>
     </div>
-    <div id="progress-track"><div id="progress-fill"></div></div>
-    <p id="progress-hint"></p>
+    <div class="lang-list" id="lang-list"></div>
   </div>
 
-  <div class="catalog-grid" id="grid"></div>
+  <div id="scr-cat" class="screen hidden">
+    <div class="cat-head">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span class="kicker" id="kicker">Katalog</span>
+        <h1 id="cat-title">Garri Potter</h1>
+      </div>
+      <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
+    </div>
+
+    <div class="prog">
+      <div class="prog-top">
+        <span class="prog-label" id="prog-label">Progress</span>
+        <span class="prog-count" id="prog-count">0 / 8</span>
+      </div>
+      <div class="prog-ticks" id="prog-ticks"></div>
+      <p class="prog-hint" id="prog-hint"></p>
+    </div>
+
+    <div class="next hidden" id="next-box">
+      <span class="next-art" id="next-art"></span>
+      <div class="next-body">
+        <span class="next-kicker" id="next-kicker">Keyingi film</span>
+        <span class="next-title" id="next-title"></span>
+        <button class="next-play" id="next-play">▶ Ko'rish</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
 </div>
 
 <script>
@@ -188,261 +211,362 @@ h2 {
   "use strict";
 
   var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-  if (tg) { try { tg.expand(); tg.ready(); } catch (e) {} }
+  if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
 
-  var BOT_USERNAME = "garripotterkinobot";
-  var STORE_KEY = "watched_movies";
+  var BOT = "garripotterkinobot";
+  var KEY = "watched_movies";
+  var LANG_KEY = "pref_lang";
 
-  var currentLang = "uz";
-  var watched = {};
-  var cloudOk = false;
+  var MOVIES = [
+    { id: "hp1", uz: "Hikmatlar Toshi",   ru: "Философский Камень", en: "Philosopher's Stone" },
+    { id: "hp2", uz: "Maxfiy Hujra",      ru: "Тайная Комната",     en: "Chamber of Secrets" },
+    { id: "hp3", uz: "Azkaban Mahbusi",   ru: "Узник Азкабана",     en: "Prisoner of Azkaban" },
+    { id: "hp4", uz: "Alanga Kubogi",     ru: "Кубок Огня",         en: "Goblet of Fire" },
+    { id: "hp5", uz: "Feniks Jamiyati",   ru: "Орден Феникса",      en: "Order of the Phoenix" },
+    { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка",   en: "Half-Blood Prince" },
+    { id: "hp7", uz: "Ajal Tuhfasi 1",    ru: "Дары Смерти 1",      en: "Deathly Hallows 1" },
+    { id: "hp8", uz: "Ajal Tuhfasi 2",    ru: "Дары Смерти 2",      en: "Deathly Hallows 2" }
+  ];
 
-  var movies = [
-    { id: "hp1", uz: "Hikmatlar Toshi", ru: "Философский Камень", en: "Philosopher's Stone" },
-    { id: "hp2", uz: "Maxfiy Hujra", ru: "Тайная Комната", en: "Chamber of Secrets" },
-    { id: "hp3", uz: "Azkaban Mahbusi", ru: "Узник Азкабана", en: "Prisoner of Azkaban" },
-    { id: "hp4", uz: "Alanga Kubogi", ru: "Кубок Огня", en: "Goblet of Fire" },
-    { id: "hp5", uz: "Feniks Jamiyati", ru: "Орден Феникса", en: "Order of the Phoenix" },
-    { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка", en: "Half-Blood Prince" },
-    { id: "hp7", uz: "Ajal Tuhfasi 1", ru: "Дары Смерти 1", en: "Deathly Hallows 1" },
-    { id: "hp8", uz: "Ajal Tuhfasi 2", ru: "Дары Смерти 2", en: "Deathly Hallows 2" }
+  var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
+  var YEARS = ["2001","2002","2004","2005","2007","2009","2010","2011"];
+  var GRADS = [
+    "linear-gradient(150deg,#d9b46a,#8d6a2f)",
+    "linear-gradient(150deg,#8fb9a8,#3f6b62)",
+    "linear-gradient(150deg,#a9b6cf,#4d5b78)",
+    "linear-gradient(150deg,#e0a06a,#8a4a2c)",
+    "linear-gradient(150deg,#c9a2c4,#61406a)",
+    "linear-gradient(150deg,#9fb2c9,#3c4f6b)",
+    "linear-gradient(150deg,#b6b0a4,#5a544a)",
+    "linear-gradient(150deg,#cf9a8d,#6b3b3b)"
   ];
 
   var T = {
-    uz: { title: "🎬 Garri Potter", back: "⏏️ Tilni o'zgartirish", watch: "Ko'rish",
-          again: "Qayta ko'rish", label: "Progress", next: "Keyingi",
-          hintStart: "Sayohatni boshlang", hintDone: "Barcha filmlar ko'rildi",
-          hintMid: function (n) { return "Yana " + n + " ta film qoldi"; } },
-    ru: { title: "🎬 Гарри Поттер", back: "⏏️ Сменить язык", watch: "Смотреть",
-          again: "Пересмотреть", label: "Прогресс", next: "Далее",
-          hintStart: "Начните путешествие", hintDone: "Все фильмы просмотрены",
-          hintMid: function (n) { return "Осталось фильмов: " + n; } },
-    en: { title: "🎬 Harry Potter", back: "⏏️ Change language", watch: "Watch",
-          again: "Watch again", label: "Progress", next: "Next",
-          hintStart: "Start the journey", hintDone: "All films watched",
-          hintMid: function (n) { return n + " films left"; } }
+    uz: { kicker:"Katalog", title:"Garri Potter", watch:"Ko'rish", label:"Progress",
+          next:"Keyingi film", seen:"Ko'rildi",
+          hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
+          hintMid:function(n){return "Yana "+n+" ta film qoldi";} },
+    ru: { kicker:"Каталог", title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
+          next:"Следующий фильм", seen:"Просмотрено",
+          hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
+          hintMid:function(n){return "Осталось фильмов: "+n;} },
+    en: { kicker:"Catalog", title:"Harry Potter", watch:"Watch", label:"Progress",
+          next:"Up next", seen:"Watched",
+          hintStart:"Start the journey", hintDone:"All films watched",
+          hintMid:function(n){return n+" films left";} }
   };
+
+  var LANGS = [
+    { code:"uz", name:"O'zbekcha", note:"UZ · Uzbek",   mark:"Uz", grad:GRADS[0] },
+    { code:"ru", name:"Русский",   note:"RU · Russian", mark:"Ру", grad:GRADS[2] },
+    { code:"en", name:"English",   note:"EN · English", mark:"En", grad:GRADS[1] }
+  ];
+
+  var lang = "uz";
+  var watched = {};
+  var cloudOk = false;
 
   function $(id) { return document.getElementById(id); }
 
-  function watchedList() {
+  function list() {
     var out = [];
     for (var k in watched) { if (watched[k]) { out.push(k); } }
     return out;
   }
 
-  function watchedCount() { return watchedList().length; }
-
   /* ---------- SAQLASH ---------- */
 
   function hasCloud() {
-    try {
-      return !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9"));
-    } catch (e) { return false; }
+    try { return !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9")); }
+    catch (e) { return false; }
+  }
+
+  function absorb(arr) {
+    for (var i = 0; i < arr.length; i++) { if (arr[i]) { watched[arr[i]] = true; } }
   }
 
   function readLocal() {
-    try {
-      var raw = window.localStorage.getItem(STORE_KEY);
-      return raw ? raw.split(",") : [];
-    } catch (e) { return []; }
+    try { var raw = window.localStorage.getItem(KEY); return raw ? raw.split(",") : []; }
+    catch (e) { return []; }
   }
 
-  function writeLocal(list) {
-    try { window.localStorage.setItem(STORE_KEY, list.join(",")); } catch (e) {}
+  function writeLocal() {
+    try { window.localStorage.setItem(KEY, list().join(",")); } catch (e) {}
   }
 
-  function absorb(list) {
-    for (var i = 0; i < list.length; i++) {
-      if (list[i]) { watched[list[i]] = true; }
-    }
+  function validLang(v) { return v === "uz" || v === "ru" || v === "en" ? v : null; }
+
+  function readLocalLang() {
+    try { return validLang(window.localStorage.getItem(LANG_KEY)); }
+    catch (e) { return null; }
   }
 
-  function loadProgress(done) {
+  function saveLang(code) {
+    try { window.localStorage.setItem(LANG_KEY, code); } catch (e) {}
+    if (!cloudOk) { return; }
+    try { tg.CloudStorage.setItem(LANG_KEY, code, function () {}); } catch (e) {}
+  }
+
+  function load(done) {
     absorb(readLocal());
+    var localLang = readLocalLang();
 
-    if (!hasCloud()) { done(); return; }
+    if (!hasCloud()) { done(localLang); return; }
     cloudOk = true;
 
-    var finished = false;
-    function finishOnce() {
-      if (finished) { return; }
-      finished = true;
-      done();
-    }
-    setTimeout(finishOnce, 2500);
+    var fired = false;
+    function once(l) { if (!fired) { fired = true; done(l); } }
+    setTimeout(function () { once(localLang); }, 1200);
 
     try {
-      tg.CloudStorage.getItem(STORE_KEY, function (err, value) {
-        if (!err && value) {
-          absorb(value.split(","));
-          writeLocal(watchedList());
+      tg.CloudStorage.getItems([KEY, LANG_KEY], function (err, vals) {
+        var l = localLang;
+        if (!err && vals) {
+          if (vals[KEY]) { absorb(vals[KEY].split(",")); writeLocal(); }
+          var cl = validLang(vals[LANG_KEY]);
+          if (!l && cl) { l = cl; try { window.localStorage.setItem(LANG_KEY, cl); } catch (e) {} }
         }
-        finishOnce();
+        once(l);
       });
-    } catch (e) { finishOnce(); }
+    } catch (e) { once(localLang); }
   }
 
-  function saveProgress(cb) {
-    var list = watchedList();
-    writeLocal(list);
-
+  function persist(cb) {
+    writeLocal();
     if (!cloudOk) { if (cb) { cb(); } return; }
 
-    var called = false;
-    function once() {
-      if (called) { return; }
-      called = true;
-      if (cb) { cb(); }
-    }
+    var fired = false;
+    function once() { if (!fired) { fired = true; if (cb) { cb(); } } }
     setTimeout(once, 1200);
 
-    try { tg.CloudStorage.setItem(STORE_KEY, list.join(","), once); }
+    try { tg.CloudStorage.setItem(KEY, list().join(","), once); }
     catch (e) { once(); }
-  }
-
-  /* ---------- CHIZISH ---------- */
-
-  function nextUnwatchedId() {
-    for (var i = 0; i < movies.length; i++) {
-      if (!watched[movies[i].id]) { return movies[i].id; }
-    }
-    return null;
-  }
-
-  function renderProgress() {
-    var t = T[currentLang];
-    var n = watchedCount();
-    var total = movies.length;
-    var left = total - n;
-
-    $("progress-count").textContent = n + " / " + total;
-    $("progress-fill").style.width = Math.round(n / total * 100) + "%";
-    $("progress-hint").textContent =
-      n === 0 ? t.hintStart : (left === 0 ? t.hintDone : t.hintMid(left));
-  }
-
-  function renderMovies() {
-    var grid = $("grid");
-    var t = T[currentLang];
-    var nextId = nextUnwatchedId();
-
-    grid.innerHTML = "";
-
-    movies.forEach(function (movie) {
-      var isWatched = !!watched[movie.id];
-      var isNext = movie.id === nextId;
-      var title = movie[currentLang];
-
-      var card = document.createElement("div");
-      card.className = "movie-card" + (isWatched ? " watched" : "") + (isNext ? " next" : "");
-
-      var wrap = document.createElement("div");
-      wrap.className = "poster-wrap";
-
-      var img = document.createElement("img");
-      img.src = "img/" + movie.id + "_" + currentLang + ".jpg";
-      img.alt = title;
-      img.onerror = function () {
-        this.onerror = null;
-        this.src = "https://via.placeholder.com/150/2b2b2b/FFFFFF?text=Poster";
-      };
-      wrap.appendChild(img);
-
-      if (isNext) {
-        var tag = document.createElement("span");
-        tag.className = "next-tag";
-        tag.textContent = t.next;
-        wrap.appendChild(tag);
-      }
-
-      var check = document.createElement("button");
-      check.className = "check";
-      check.textContent = "✓";
-      check.setAttribute("aria-label", title);
-      check.addEventListener("click", function (ev) {
-        ev.stopPropagation();
-        toggleWatched(movie.id);
-      });
-      wrap.appendChild(check);
-
-      var titleEl = document.createElement("p");
-      titleEl.className = "movie-title";
-      titleEl.textContent = title;
-
-      var play = document.createElement("button");
-      play.className = "play-btn";
-      play.textContent = "▶ " + (isWatched ? t.again : t.watch);
-      play.addEventListener("click", function () { requestMovie(movie.id); });
-
-      card.appendChild(wrap);
-      card.appendChild(titleEl);
-      card.appendChild(play);
-      grid.appendChild(card);
-    });
-
-    renderProgress();
   }
 
   /* ---------- HARAKATLAR ---------- */
 
-  function toggleWatched(id) {
+  function toggle(id) {
     if (watched[id]) { delete watched[id]; } else { watched[id] = true; }
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
-    saveProgress();
-    renderMovies();
+    persist();
+    renderCatalog();
   }
 
-  function requestMovie(id) {
-    var link = "https://t.me/" + BOT_USERNAME + "?start=" + id + "_" + currentLang;
-
+  function play(id) {
+    var link = "https://t.me/" + BOT + "?start=" + id + "_" + lang;
     watched[id] = true;
-    renderMovies();
-
-    saveProgress(function () {
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(link);
-        tg.close();
-      } else {
-        window.open(link, "_blank");
-      }
+    renderCatalog();
+    persist(function () {
+      if (tg && tg.openTelegramLink) { tg.openTelegramLink(link); tg.close(); }
+      else { window.open(link, "_blank"); }
     });
   }
 
-  function openCatalog(lang) {
-    currentLang = lang;
-    $("lang-screen").style.display = "none";
-    $("catalog-screen").style.display = "block";
+  /* ---------- CHIZISH ---------- */
 
+  function poster(id) { return "img/" + id + "_" + lang + ".jpg"; }
+
+  function nextIndex() {
+    for (var i = 0; i < MOVIES.length; i++) { if (!watched[MOVIES[i].id]) { return i; } }
+    return -1;
+  }
+
+  function renderLangs() {
+    var box = $("lang-list");
+    box.innerHTML = "";
+    LANGS.forEach(function (l) {
+      var b = document.createElement("button");
+      b.className = "lang-btn";
+
+      var mark = document.createElement("span");
+      mark.className = "lang-mark";
+      mark.style.background = l.grad;
+      mark.textContent = l.mark;
+
+      var nm = document.createElement("span");
+      nm.className = "lang-name";
+      var strong = document.createElement("b");
+      strong.textContent = l.name;
+      var small = document.createElement("small");
+      small.textContent = l.note;
+      nm.appendChild(strong);
+      nm.appendChild(small);
+
+      var chev = document.createElement("span");
+      chev.className = "chev";
+      chev.textContent = "›";
+
+      b.appendChild(mark);
+      b.appendChild(nm);
+      b.appendChild(chev);
+      b.addEventListener("click", function () { openCatalog(l.code, true); });
+      box.appendChild(b);
+    });
+  }
+
+  function renderProgress(t) {
+    var n = 0;
+    MOVIES.forEach(function (m) { if (watched[m.id]) { n++; } });
+    var total = MOVIES.length;
+
+    $("prog-count").textContent = n + " / " + total;
+    $("prog-hint").textContent =
+      n === 0 ? t.hintStart : (n === total ? t.hintDone : t.hintMid(total - n));
+
+    var ticks = $("prog-ticks");
+    ticks.innerHTML = "";
+    for (var i = 0; i < total; i++) {
+      var s = document.createElement("span");
+      if (i < n) { s.className = "on"; }
+      ticks.appendChild(s);
+    }
+  }
+
+  function renderNext(t) {
+    var box = $("next-box");
+    var i = nextIndex();
+    if (i < 0) { box.classList.add("hidden"); return; }
+
+    box.classList.remove("hidden");
+    var m = MOVIES[i];
+
+    var art = $("next-art");
+    art.innerHTML = "";
+    art.style.background = GRADS[i];
+    art.textContent = NUMERALS[i];
+
+    var img = document.createElement("img");
+    img.src = poster(m.id);
+    img.alt = "";
+    img.onerror = function () { this.remove(); };
+    img.onload = function () { art.textContent = ""; art.appendChild(img); };
+    art.appendChild(img);
+
+    $("next-kicker").textContent = t.next;
+    $("next-title").textContent = m[lang];
+    $("next-play").textContent = "▶ " + t.watch;
+    $("next-play").onclick = function () { play(m.id); };
+  }
+
+  function renderCards(t) {
+    var grid = $("grid");
+    var ni = nextIndex();
+    grid.innerHTML = "";
+
+    MOVIES.forEach(function (m, i) {
+      var seen = !!watched[m.id];
+
+      var card = document.createElement("div");
+      card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : ""));
+      card.style.background = GRADS[i];
+
+      var img = document.createElement("img");
+      img.className = "card-img";
+      img.src = poster(m.id);
+      img.alt = m[lang];
+      img.onerror = function () { this.remove(); };
+      img.onload = function () { card.classList.add("has-img"); };
+      card.appendChild(img);
+
+      var veil = document.createElement("span");
+      veil.className = "veil";
+      card.appendChild(veil);
+
+      var num = document.createElement("span");
+      num.className = "numeral";
+      num.textContent = NUMERALS[i];
+      card.appendChild(num);
+
+      var check = document.createElement("button");
+      check.className = "check";
+      check.textContent = seen ? "✓" : "";
+      check.setAttribute("aria-label", m[lang]);
+      check.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        toggle(m.id);
+      });
+      card.appendChild(check);
+
+      var foot = document.createElement("span");
+      foot.className = "card-foot";
+
+      var textCol = document.createElement("span");
+      textCol.className = "card-text";
+      var ttl = document.createElement("span");
+      ttl.className = "card-title";
+      ttl.textContent = m[lang];
+      var meta = document.createElement("span");
+      meta.className = "card-meta";
+      meta.textContent = seen ? t.seen : (i === ni ? t.next : YEARS[i]);
+      textCol.appendChild(ttl);
+      textCol.appendChild(meta);
+      foot.appendChild(textCol);
+
+      var pl = document.createElement("button");
+      pl.className = "card-play";
+      pl.textContent = "▶";
+      pl.setAttribute("aria-label", t.watch + " — " + m[lang]);
+      pl.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        play(m.id);
+      });
+      foot.appendChild(pl);
+
+      card.appendChild(foot);
+
+      grid.appendChild(card);
+    });
+  }
+
+  function renderCatalog() {
     var t = T[lang];
-    $("catalog-title").textContent = t.title;
-    $("back-btn").textContent = t.back;
-    $("progress-label").textContent = t.label;
+    $("kicker").textContent = t.kicker;
+    $("cat-title").textContent = t.title;
+    $("prog-label").textContent = t.label;
+    $("lang-badge").textContent = lang.toUpperCase();
+    renderProgress(t);
+    renderNext(t);
+    renderCards(t);
+  }
 
-    renderMovies();
+  function openCatalog(code, remember) {
+    lang = code;
+    if (remember) { saveLang(code); }
+    $("scr-lang").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
   }
 
   function goBack() {
-    $("catalog-screen").style.display = "none";
-    $("lang-screen").style.display = "flex";
+    $("scr-cat").classList.add("hidden");
+    $("scr-lang").classList.remove("hidden");
   }
 
   /* ---------- ISHGA TUSHIRISH ---------- */
 
   function init() {
-    var btns = document.querySelectorAll(".lang-btn");
-    for (var i = 0; i < btns.length; i++) {
-      (function (btn) {
-        btn.addEventListener("click", function () {
-          openCatalog(btn.getAttribute("data-lang"));
-        });
-      })(btns[i]);
-    }
-
+    renderLangs();
     $("back-btn").addEventListener("click", goBack);
 
-    loadProgress(function () {
-      if ($("catalog-screen").style.display === "block") { renderMovies(); }
+    // Ikkala ekran ham yashirin turadi — saqlangan til aniqlangunicha
+    $("scr-lang").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+
+    var settled = false;
+    function show(saved) {
+      if (settled) { return; }
+      settled = true;
+      if (saved) { openCatalog(saved, false); }
+      else { $("scr-lang").classList.remove("hidden"); }
+    }
+
+    // Lokal xotirada til bo'lsa — darhol ochamiz, kutmaymiz
+    var quick = readLocalLang();
+    if (quick) { show(quick); }
+
+    load(function (saved) {
+      show(saved);
+      if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
     });
   }
 
