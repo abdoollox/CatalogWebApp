@@ -743,9 +743,19 @@ body{
     }
   };
 
-  // Vaqtlar (millisekund)
-  var MS_REACT = 950;
-  var MS_THINK = 1200;
+  // O'qish vaqti matn uzunligiga qarab hisoblanadi.
+  // Sekinroq kerak bo'lsa MS_PER_CHAR ni oshiring.
+  var MS_BASE = 950;      // har qanday matn uchun eng kam qo'shimcha
+  var MS_PER_CHAR = 52;   // har belgi uchun
+  var MS_MIN = 1400;      // eng qisqa ko'rinish
+  var MS_MAX = 3400;      // eng uzun ko'rinish
+
+  function readMs(text) {
+    var ms = MS_BASE + (text ? text.length : 0) * MS_PER_CHAR;
+    if (ms < MS_MIN) { ms = MS_MIN; }
+    if (ms > MS_MAX) { ms = MS_MAX; }
+    return ms;
+  }
 
   var T = {
     uz: { kicker:"Katalog", title:"Garri Potter", watch:"Ko'rish", label:"Progress",
@@ -1423,7 +1433,8 @@ body{
     $("hat-say").classList.add("hidden");
     $("sort-q").classList.add("hidden");
     $("sort-opts").classList.add("hidden");
-    $("react-line").textContent = pickOne(HAT[lang].after);
+    var line = pickOne(HAT[lang].after);
+    $("react-line").textContent = line;
     $("react-box").classList.remove("hidden");
 
     sortIdx++;
@@ -1431,7 +1442,7 @@ body{
       sortBusy = false;
       if (sortIdx < SORTING.length) { renderSortQ(); }
       else { runThinking(); }
-    }, MS_REACT);
+    }, readMs(line));
   }
 
   // 3-bosqich: shlyapa o'ylaydi
@@ -1444,12 +1455,13 @@ body{
     function step() {
       if (n >= lines.length) { finishSorting(); return; }
       var el = $("think-line");
-      el.textContent = lines[n];
+      var line = lines[n];
+      el.textContent = line;
       el.className = "think-line";
       // animatsiyani qayta ishga tushirish
       try { void el.offsetWidth; } catch (e) {}
       n++;
-      sortTimer = setTimeout(step, MS_THINK);
+      sortTimer = setTimeout(step, readMs(line));
     }
     step();
   }
