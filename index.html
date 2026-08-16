@@ -722,6 +722,22 @@ body{
     try { tg.CloudStorage.setItem(LANG_KEY, code, function () {}); } catch (e) {}
   }
 
+  var API_HOUSE = "https://bot.tizimshunos.uz/api/house";
+
+  function reportHouse(id) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { return; }
+
+    try {
+      window.fetch(API_HOUSE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ house: id, initData: initData })
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
   function validHouse(v) { return v && HOUSES[v] && v !== "none" ? v : null; }
 
   function readLocalHouse() {
@@ -1200,6 +1216,7 @@ body{
   function finishSorting() {
     var id = pickHouse();
     setHouse(id);
+    reportHouse(id);
 
     var t = T[lang];
     var h = HOUSES[id];
