@@ -1010,12 +1010,17 @@ body{
 
   function load(done) {
     var localLang = readLocalLang();
+    var houseChanged = false;
 
-    if (!hasCloud()) { done(localLang); return; }
+    if (!hasCloud()) { done(localLang, false); return; }
     cloudOk = true;
 
     var fired = false;
-    function once(l) { if (!fired) { fired = true; done(l); } }
+    function once(l) {
+      if (!fired) { fired = true; done(l, houseChanged); return; }
+      // Bulut kechikib kelgan bo'lsa ham fakultet yangilansin
+      if (houseChanged) { houseChanged = false; refreshHouseView(); }
+    }
     setTimeout(function () { once(localLang); }, 1200);
 
     try {
@@ -1025,16 +1030,25 @@ body{
           if (vals[KEY]) { absorb(vals[KEY].split(",")); writeLocal(); }
           var cl = validLang(vals[LANG_KEY]);
           if (!l && cl) { l = cl; try { window.localStorage.setItem(LANG_KEY, cl); } catch (e) {} }
+          // Fakultet uchun bulut asosiy manba: qurilmalar orasida
+          // yagona bo'lishi kerak, shuning uchun lokal qiymatni almashtiradi.
           var ch = validHouse(vals[HOUSE_KEY]);
-          if (ch && house === "none") {
+          if (ch && ch !== house) {
             house = ch;
             applyHouse(ch);
             try { window.localStorage.setItem(HOUSE_KEY, ch); } catch (e) {}
+            houseChanged = true;
           }
         }
         once(l);
       });
     } catch (e) { once(localLang); }
+  }
+
+  // Fakultet o'zgargach ochiq ekranni qayta chizadi
+  function refreshHouseView() {
+    if (!$("scr-prof").classList.contains("hidden")) { renderProfile(); }
+    else if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
   }
 
   function persist(cb) {
@@ -1651,10 +1665,11 @@ body{
 
     if (quick) { migrate(quick); show(quick); }
 
-    load(function (saved) {
+    load(function (saved, houseChanged) {
       migrate(saved || quick || "uz");
       show(saved);
       if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
+      if (houseChanged) { refreshHouseView(); }
     });
   }
 
