@@ -256,10 +256,16 @@ body{
           hintMid:function(n){return n+" films left";} }
   };
 
+  var LANG_GRADS = {
+    uz: "linear-gradient(150deg,#8ec79b,#2f7346)",
+    ru: "linear-gradient(150deg,#8fb0e0,#2f4f8f)",
+    en: "linear-gradient(150deg,#e09090,#8f2f2f)"
+  };
+
   var LANGS = [
-    { code:"uz", flag:"🇺🇿", name:"O'zbekcha", note:"UZ · Uzbek",   grad:GRADS[0] },
-    { code:"ru", flag:"🇷🇺", name:"Русский",   note:"RU · Russian", grad:GRADS[2] },
-    { code:"en", flag:"🇬🇧", name:"English",   note:"EN · English", grad:GRADS[1] }
+    { code:"uz", flag:"🇺🇿", name:"O'zbekcha", note:"UZ · Uzbek",   grad:LANG_GRADS.uz },
+    { code:"ru", flag:"🇷🇺", name:"Русский",   note:"RU · Russian", grad:LANG_GRADS.ru },
+    { code:"en", flag:"🇬🇧", name:"English",   note:"EN · English", grad:LANG_GRADS.en }
   ];
 
   function flagOf(code) {
