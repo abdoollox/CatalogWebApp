@@ -133,6 +133,8 @@ body{
   border:1px solid rgba(var(--accent-rgb),.45);
   font-family:'Manrope',sans-serif;font-size:20px;opacity:1;
 }
+.house-crest img{width:34px;height:34px;object-fit:contain;display:block}
+.reveal-crest img{width:82px;height:82px;object-fit:contain;display:block}
 .house-txt b{color:var(--text)}
 .house-empty .house-crest.filled + .house-txt b{color:var(--accent)}
 .house-txt{display:flex;flex-direction:column;gap:3px}
@@ -191,6 +193,17 @@ body{
   font-family:'Cormorant Garamond',serif;font-size:44px;line-height:1;
   color:var(--accent);
 }
+/* Rasm bo'lsa — halqa va fon kerak emas */
+.hat-mark.bare{
+  width:auto;height:auto;background:none;border:none;border-radius:0;
+}
+.hat-img{
+  width:132px;display:block;margin:0 auto;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.65));
+  animation:float 4.5s ease-in-out infinite;
+}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-11px)}100%{transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.hat-img{animation:none}}
 .hat-top{
   display:block;font-family:'Cormorant Garamond',serif;font-size:31px;
   line-height:1.15;margin-bottom:16px;
@@ -444,7 +457,7 @@ body{
 
   <div id="scr-hat" class="screen hidden">
     <div class="hat-wrap">
-      <div class="hat-mark">?</div>
+      <div class="hat-mark" id="hat-mark">?</div>
       <span class="hat-top" id="hat-top"></span>
       <span class="hat-mid" id="hat-mid"></span>
       <span class="hat-bot" id="hat-bot"></span>
@@ -802,22 +815,26 @@ body{
     none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
                   crest:"?", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
     gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4",
-                  crest:"🦁", uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor",
+                  crest:"🦁", img:"Gryffindor_crest.png",
+                  uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor",
                   note_uz:"Jasorat, matonat va yurak amri bilan yashash — sizning yo'lingiz.",
                   note_ru:"Храбрость, стойкость и верность зову сердца — ваш путь.",
                   note_en:"Courage, nerve and following your heart — that is your way." },
     slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e",
-                  crest:"🐍", uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
+                  crest:"🐍", img:"Slytherin_crest.png",
+                  uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
                   note_uz:"Maqsad, zukkolik va o'z yo'lini topa bilish — sizning kuchingiz.",
                   note_ru:"Амбиции, хитрость и умение найти свой путь — ваша сила.",
                   note_en:"Ambition, cunning and finding your own path — that is your strength." },
     ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b",
-                  crest:"🦅", uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw",
+                  crest:"🦅", img:"Ravenclaw_crest.png",
+                  uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw",
                   note_uz:"Aql, izlanish va bilimga chanqoqlik — sizni yetaklaydi.",
                   note_ru:"Ум, любознательность и жажда знаний — вот что вас ведёт.",
                   note_en:"Wit, curiosity and a thirst for learning — these lead you." },
     hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204",
-                  crest:"🦡", uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
+                  crest:"🦡", img:"Hufflepuff_crest.png",
+                  uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
                   note_uz:"Sadoqat, mehnatsevarlik va adolat — sizning tayanchingiz.",
                   note_ru:"Верность, трудолюбие и справедливость — ваша опора.",
                   note_en:"Loyalty, hard work and fairness — these hold you up." }
@@ -923,6 +940,55 @@ body{
         body: JSON.stringify({ house: id, initData: initData })
       })["catch"](function () {});
     } catch (e) {}
+  }
+
+  var IMG_DIR = "img/";
+  var HAT_IMG = "sorting_hat.png";
+
+  // Gerbni chizadi. Rasm topilmasa — belgiga qaytadi.
+  function paintCrest(el, houseId, fallback) {
+    if (!el) { return; }
+    el.innerHTML = "";
+    var h = HOUSES[houseId];
+    var file = h && h.img;
+    if (!file) { el.textContent = fallback; return; }
+
+    var img = document.createElement("img");
+    img.src = IMG_DIR + file;
+    img.alt = "";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = fallback;
+    };
+    el.appendChild(img);
+  }
+
+  function paintHat(el) {
+    if (!el) { return; }
+    el.innerHTML = "";
+    var img = document.createElement("img");
+    img.src = IMG_DIR + HAT_IMG;
+    img.alt = "";
+    img.className = "hat-img";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = "?";
+      el.className = "hat-mark";
+    };
+    el.className = "hat-mark bare";
+    el.appendChild(img);
+  }
+
+  // Natija chiqqanda bo'sh joy ko'rinmasligi uchun
+  function preloadCrests() {
+    var names = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+    for (var i = 0; i < names.length; i++) {
+      var f = HOUSES[names[i]].img;
+      if (f) { try { new Image().src = IMG_DIR + f; } catch (e) {} }
+    }
+    try { new Image().src = IMG_DIR + HAT_IMG; } catch (e) {}
   }
 
   function validHouse(v) { return v && HOUSES[v] && v !== "none" ? v : null; }
@@ -1254,7 +1320,7 @@ body{
     $("house-label").textContent = t.houseLbl;
     $("house-name").textContent = h[lang];
     $("house-note").textContent = house === "none" ? t.houseNote : t.houseSet;
-    $("house-crest").textContent = h.crest;
+    paintCrest($("house-crest"), house, h.crest);
     if (house === "none") { $("house-crest").classList.remove("filled"); }
     else { $("house-crest").classList.add("filled"); }
 
@@ -1343,6 +1409,7 @@ body{
   function startSorting() {
     var h = HAT[lang];
     hideSortScreens();
+    paintHat($("hat-mark"));
     $("hat-top").textContent = h.introTop;
     $("hat-mid").textContent = h.introMid;
     $("hat-bot").textContent = h.introBot;
@@ -1485,7 +1552,7 @@ body{
 
     var t = T[lang];
     var h = HOUSES[id];
-    $("rv-crest").textContent = h.crest;
+    paintCrest($("rv-crest"), id, h.crest);
     $("rv-kicker").textContent = t.rvKicker;
     $("rv-place").textContent = HAT[lang].place;
     $("rv-name").textContent = h[lang];
@@ -1537,6 +1604,7 @@ body{
   /* ---------- ISHGA TUSHIRISH ---------- */
 
   function init() {
+    preloadCrests();
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
     $("avatar-btn").addEventListener("click", openProfile);
