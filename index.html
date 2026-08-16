@@ -138,6 +138,75 @@ body{
 .house-txt{display:flex;flex-direction:column;gap:3px}
 .house-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:17px}
 .house-txt small{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.sort-cta{
+  display:block;width:100%;margin-top:14px;padding:12px;
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;
+  font:800 13px/1 'Manrope',sans-serif;cursor:pointer;transition:transform .12s;
+}
+.sort-cta:active{transform:scale(.97)}
+.resort{
+  display:block;width:100%;margin-top:12px;padding:9px;background:transparent;
+  border:1px solid var(--line);border-radius:10px;color:var(--dim);
+  font:600 11px/1 'Manrope',sans-serif;cursor:pointer;transition:.2s;
+}
+.resort:hover{color:var(--text);border-color:var(--accent)}
+
+/* --- SARALASH TESTI --- */
+.sort-bar{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;margin-bottom:20px}
+.sort-bar span{display:block;height:4px;border-radius:99px;background:rgba(255,255,255,.1);transition:background .35s}
+.sort-bar span.on{background:var(--accent)}
+.sort-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.sort-back{
+  display:flex;align-items:center;gap:6px;padding:7px 12px;background:transparent;
+  border:1px solid var(--line);border-radius:99px;color:var(--dim);
+  font:600 11px/1 'Manrope',sans-serif;letter-spacing:.05em;cursor:pointer;transition:.2s;
+}
+.sort-back:hover{color:var(--text);border-color:var(--accent)}
+.sort-back:active{transform:scale(.95)}
+.sort-step{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);
+}
+.sort-q{
+  margin:9px 0 24px;font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:27px;line-height:1.2;
+}
+.sort-opts{display:flex;flex-direction:column;gap:11px}
+.sort-opt{
+  width:100%;text-align:left;padding:15px 17px;background:var(--card);
+  border:1px solid var(--line);border-radius:15px;color:var(--text);
+  font:500 14px/1.4 'Manrope',sans-serif;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .12s;
+}
+.sort-opt:hover{border-color:var(--accent);background:var(--bg2)}
+.sort-opt:active{transform:scale(.985)}
+
+/* --- NATIJA --- */
+.reveal{text-align:center;padding:26px 0 10px;animation:riseIn .6s ease both}
+.reveal-crest{
+  width:104px;height:104px;margin:0 auto 20px;border-radius:26px;
+  display:grid;place-items:center;font-size:48px;line-height:1;
+  background:rgba(var(--accent-rgb),.14);
+  border:1px solid rgba(var(--accent-rgb),.45);
+}
+.reveal-kicker{
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:9px;
+}
+.reveal-name{
+  display:block;font-family:'Cormorant Garamond',serif;font-size:42px;
+  line-height:1.05;color:var(--accent);margin-bottom:13px;
+}
+.reveal-note{
+  display:block;max-width:300px;margin:0 auto 28px;
+  font:500 13px/1.6 'Manrope',sans-serif;color:var(--dim);
+}
+.reveal-done{
+  padding:13px 30px;background:var(--accent);color:var(--accent-ink);
+  border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
+  cursor:pointer;transition:transform .12s;
+}
+.reveal-done:active{transform:scale(.95)}
 
 /* --- PROGRESS --- */
 .prog{padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
@@ -161,7 +230,8 @@ body{
 }
 .next-art{
   position:relative;display:grid;place-items:center;height:92px;border-radius:12px;
-  overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--accent-ink);
+  overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:26px;
+  color:rgba(238,241,245,.4);
 }
 .next-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .next-body{display:flex;flex-direction:column;gap:9px;min-width:0}
@@ -193,13 +263,13 @@ body{
 .numeral{
   position:absolute;top:0;left:0;padding:11px 13px;
   font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;
-  line-height:1;color:rgba(18,13,4,.6);
+  line-height:1;color:rgba(238,241,245,.34);
 }
 .card.has-img .numeral{color:rgba(244,246,249,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
 .check{
   position:absolute;top:9px;right:9px;width:28px;height:28px;border-radius:50%;
   display:grid;place-items:center;background:transparent;
-  border:2px solid rgba(20,14,4,.75);color:var(--accent-ink);
+  border:2px solid rgba(255,255,255,.42);color:var(--accent-ink);
   font:800 13px/1 'Manrope',sans-serif;cursor:pointer;padding:0;
   transition:transform .15s;
 }
@@ -306,12 +376,34 @@ body{
     <div class="panel">
       <span class="panel-label" id="house-label">Fakultet</span>
       <div class="house-empty">
-        <span class="house-crest" id="house-crest">🎩</span>
+        <span class="house-crest" id="house-crest">?</span>
         <span class="house-txt">
           <b id="house-name"></b>
           <small id="house-note"></small>
         </span>
       </div>
+      <button class="sort-cta hidden" id="sort-cta"></button>
+      <button class="resort hidden" id="resort-btn"></button>
+    </div>
+  </div>
+
+  <div id="scr-sort" class="screen hidden">
+    <div class="sort-bar" id="sort-bar"></div>
+    <div class="sort-head">
+      <span class="sort-step" id="sort-step"></span>
+      <button class="sort-back" id="sort-back"><span style="font-size:12px">‹</span> <span id="sort-back-txt">Ortga</span></button>
+    </div>
+    <h2 class="sort-q" id="sort-q"></h2>
+    <div class="sort-opts" id="sort-opts"></div>
+  </div>
+
+  <div id="scr-reveal" class="screen hidden">
+    <div class="reveal">
+      <div class="reveal-crest" id="rv-crest"></div>
+      <span class="reveal-kicker" id="rv-kicker"></span>
+      <span class="reveal-name" id="rv-name"></span>
+      <span class="reveal-note" id="rv-note"></span>
+      <button class="reveal-done" id="rv-done"></button>
     </div>
   </div>
 
@@ -342,15 +434,140 @@ body{
 
   var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
   var YEARS = ["2001","2002","2004","2005","2007","2009","2010","2011"];
-  var GRADS = [
-    "linear-gradient(150deg,#d9b46a,#8d6a2f)",
-    "linear-gradient(150deg,#8fb9a8,#3f6b62)",
-    "linear-gradient(150deg,#a9b6cf,#4d5b78)",
-    "linear-gradient(150deg,#e0a06a,#8a4a2c)",
-    "linear-gradient(150deg,#c9a2c4,#61406a)",
-    "linear-gradient(150deg,#9fb2c9,#3c4f6b)",
-    "linear-gradient(150deg,#b6b0a4,#5a544a)",
-    "linear-gradient(150deg,#cf9a8d,#6b3b3b)"
+  // Posterlar yuklanmaganda ko'rinadigan yagona neytral fon
+  var CARD_BG = "linear-gradient(155deg,#39414e,#171c24)";
+
+  // Saralash testi. Har javob fakultetlarga ball beradi:
+  // asosiy xususiyat 3 ball, yaqin xususiyat 1 ball.
+  var G = "gryffindor", S = "slytherin", R = "ravenclaw", H = "hufflepuff";
+
+  var SORTING = [
+    { w: [{a:G,b:R}, {a:R,b:H}, {a:H,b:G}, {a:S,b:R}],
+      uz: { q:"Kechqurun Taqiqlangan o'rmondan g'alati ovoz keladi. Nima qilasiz?",
+            a:["Darhol borib tekshiraman",
+               "Avval nima bo'lishi mumkinligini aniqlayman",
+               "Do'stlarimni ogohlantiraman va birga boramiz",
+               "Bu menga qanday imkoniyat berishini o'ylayman"] },
+      ru: { q:"Вечером из Запретного леса доносится странный звук. Что вы сделаете?",
+            a:["Сразу пойду проверить",
+               "Сначала выясню, что это может быть",
+               "Предупрежу друзей и пойдём вместе",
+               "Подумаю, какую выгоду это может дать"] },
+      en: { q:"A strange sound comes from the Forbidden Forest at night. What do you do?",
+            a:["Go and investigate at once",
+               "First work out what it could be",
+               "Warn my friends and go together",
+               "Consider what opportunity this might bring"] } },
+
+    { w: [{a:H,b:S}, {a:R,b:S}, {a:S,b:R}, {a:G,b:H}],
+      uz: { q:"Muhim imtihonga bir kun qoldi. Qanday tayyorlanasiz?",
+            a:["Reja tuzib, bosqichma-bosqich takrorlayman",
+               "Eng murakkab mavzularni chuqur o'rganaman",
+               "Eng tez natija beradigan yo'lni topaman",
+               "Bilganim bilan kiraman — qandaydir yo'lini topaman"] },
+      ru: { q:"До важного экзамена остался день. Как будете готовиться?",
+            a:["Составлю план и пройду всё по порядку",
+               "Углублюсь в самые сложные темы",
+               "Найду самый быстрый путь к результату",
+               "Пойду с тем, что знаю — как-нибудь справлюсь"] },
+      en: { q:"One day left before a major exam. How do you prepare?",
+            a:["Make a plan and work through it step by step",
+               "Go deep on the hardest topics",
+               "Find the fastest route to a good result",
+               "Go in with what I know and manage somehow"] } },
+
+    { w: [{a:G,b:S}, {a:S,b:G}, {a:R,b:H}, {a:H,b:R}],
+      uz: { q:"Sehrli oyna sizga eng katta orzuingizni ko'rsatadi. Unda nima bor?",
+            a:["Men qo'rqmasdan turgan lahza",
+               "Menga hurmat bilan qaraydigan odamlar",
+               "Barcha savollarimga topilgan javoblar",
+               "Yaqinlarim yonimda, hammasi joyida"] },
+      ru: { q:"Волшебное зеркало показывает вашу заветную мечту. Что в нём?",
+            a:["Момент, когда я не отступил",
+               "Люди, которые смотрят на меня с уважением",
+               "Ответы на все мои вопросы",
+               "Близкие рядом, и всё хорошо"] },
+      en: { q:"A magic mirror shows your deepest wish. What appears?",
+            a:["The moment I stood my ground",
+               "People who look at me with respect",
+               "Answers to all my questions",
+               "My loved ones near me, all well"] } },
+
+    { w: [{a:H,b:G}, {a:G,b:R}, {a:S,b:H}, {a:R,b:S}],
+      uz: { q:"Do'stingiz qoida buzdi va sizdan yashirishni so'radi.",
+            a:["Yashiraman — do'stlik muhimroq",
+               "Uni o'zi tan olishga ko'ndiraman",
+               "Vaziyatga qarab qaror qilaman",
+               "Bu qoida nega borligini avval o'ylab ko'raman"] },
+      ru: { q:"Друг нарушил правило и просит его прикрыть.",
+            a:["Прикрою — дружба важнее",
+               "Уговорю его признаться самому",
+               "Решу по обстоятельствам",
+               "Сначала подумаю, зачем вообще это правило"] },
+      en: { q:"A friend broke a rule and asks you to cover for them.",
+            a:["Cover for them — friendship comes first",
+               "Persuade them to own up themselves",
+               "Decide based on the situation",
+               "First consider why that rule exists at all"] } },
+
+    { w: [{a:G,b:H}, {a:S,b:R}, {a:R,b:G}, {a:H,b:S}],
+      uz: { q:"Qaysi dars sizni ko'proq o'ziga tortadi?",
+            a:["Qora sehrga qarshi himoya",
+               "Iksirlar tayyorlash",
+               "Qadimgi runalar",
+               "Sehrli maxluqlarni parvarishlash"] },
+      ru: { q:"Какой предмет вам интереснее всего?",
+            a:["Защита от тёмных искусств",
+               "Зельеварение",
+               "Древние руны",
+               "Уход за магическими существами"] },
+      en: { q:"Which subject draws you in the most?",
+            a:["Defence Against the Dark Arts",
+               "Potions",
+               "Ancient Runes",
+               "Care of Magical Creatures"] } },
+
+    { w: [{a:G,b:S}, {a:S,b:G}, {a:R,b:S}, {a:H,b:G}],
+      uz: { q:"Sizni nima ko'proq qo'rqitadi?",
+            a:["Qo'rqoq deb bilishlari",
+               "Oddiy bo'lib, izsiz o'tib ketish",
+               "Bilmaslik, adashib qolish",
+               "Yaqinlarimni yo'qotish"] },
+      ru: { q:"Что пугает вас больше всего?",
+            a:["Что меня сочтут трусом",
+               "Остаться обычным и незамеченным",
+               "Не знать, ошибиться",
+               "Потерять близких"] },
+      en: { q:"What frightens you most?",
+            a:["Being thought a coward",
+               "Being ordinary and forgotten",
+               "Not knowing, being wrong",
+               "Losing the people I love"] } },
+
+    { w: [{a:G,b:S}, {a:R,b:H}, {a:H,b:R}, {a:S,b:G}],
+      uz: { q:"Guruh ishida sizning o'rningiz qanday bo'ladi?",
+            a:["Yetakchilik qilaman va qaror qabul qilaman",
+               "Rejani tuzaman, xatolarni topaman",
+               "Hammani birlashtiraman, ish taqsimlayman",
+               "Maqsadga eng qisqa yo'lni topaman"] },
+      ru: { q:"Какая у вас роль в командной работе?",
+            a:["Беру руководство и принимаю решения",
+               "Составляю план, нахожу ошибки",
+               "Объединяю всех и распределяю задачи",
+               "Нахожу кратчайший путь к цели"] },
+      en: { q:"What is your role in a group?",
+            a:["I take the lead and make the calls",
+               "I build the plan and spot the flaws",
+               "I bring people together and share out the work",
+               "I find the shortest path to the goal"] } },
+
+    { w: [{a:G}, {a:S}, {a:R}, {a:H}],
+      uz: { q:"Yuz yildan keyin sizni qanday eslashlarini istardingiz?",
+            a:["Jasur edi", "Buyuk edi", "Dono edi", "Yaxshi odam edi"] },
+      ru: { q:"Каким вас должны запомнить через сто лет?",
+            a:["Он был храбрым", "Он был великим", "Он был мудрым", "Он был хорошим человеком"] },
+      en: { q:"How would you want to be remembered in a hundred years?",
+            a:["As brave", "As great", "As wise", "As good"] } }
   ];
 
   var T = {
@@ -362,6 +579,7 @@ body{
           stats:"Tillar bo'yicha", total:"Jami ko'rilgan",
           houseLbl:"Fakultet", houseName:"Hali aniqlanmagan",
           houseNote:"Saralovchi shlyapa tez orada sizni kutadi", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
+          sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { kicker:"Каталог", title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено",
@@ -371,6 +589,7 @@ body{
           stats:"По языкам", total:"Всего просмотрено",
           houseLbl:"Факультет", houseName:"Пока не определён",
           houseNote:"Распределяющая шляпа скоро вас ждёт", houseSet:"По решению Распределяющей шляпы",
+          sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { kicker:"Catalog", title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched",
@@ -380,6 +599,7 @@ body{
           stats:"By language", total:"Total watched",
           houseLbl:"House", houseName:"Not sorted yet",
           houseNote:"The Sorting Hat awaits you soon", houseSet:"As decided by the Sorting Hat",
+          sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
           guest:"Guest", noTag:"Open via Telegram" }
   };
 
@@ -395,13 +615,25 @@ body{
     none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
                   crest:"?", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
     gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4",
-                  crest:"🦁", uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor" },
+                  crest:"🦁", uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor",
+                  note_uz:"Jasorat, matonat va yurak amri bilan yashash — sizning yo'lingiz.",
+                  note_ru:"Храбрость, стойкость и верность зову сердца — ваш путь.",
+                  note_en:"Courage, nerve and following your heart — that is your way." },
     slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e",
-                  crest:"🐍", uz:"Sliterin", ru:"Слизерин", en:"Slytherin" },
+                  crest:"🐍", uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
+                  note_uz:"Maqsad, zukkolik va o'z yo'lini topa bilish — sizning kuchingiz.",
+                  note_ru:"Амбиции, хитрость и умение найти свой путь — ваша сила.",
+                  note_en:"Ambition, cunning and finding your own path — that is your strength." },
     ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b",
-                  crest:"🦅", uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw" },
+                  crest:"🦅", uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw",
+                  note_uz:"Aql, izlanish va bilimga chanqoqlik — sizni yetaklaydi.",
+                  note_ru:"Ум, любознательность и жажда знаний — вот что вас ведёт.",
+                  note_en:"Wit, curiosity and a thirst for learning — these lead you." },
     hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204",
-                  crest:"🦡", uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff" }
+                  crest:"🦡", uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
+                  note_uz:"Sadoqat, mehnatsevarlik va adolat — sizning tayanchingiz.",
+                  note_ru:"Верность, трудолюбие и справедливость — ваша опора.",
+                  note_en:"Loyalty, hard work and fairness — these hold you up." }
   };
 
   function applyHouse(id) {
@@ -638,7 +870,7 @@ body{
 
     var art = $("next-art");
     art.innerHTML = "";
-    art.style.background = GRADS[i];
+    art.style.background = CARD_BG;
     art.textContent = NUMERALS[i];
 
     var img = document.createElement("img");
@@ -664,7 +896,7 @@ body{
 
       var card = document.createElement("div");
       card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : ""));
-      card.style.background = GRADS[i];
+      card.style.background = CARD_BG;
 
       var img = document.createElement("img");
       img.className = "card-img";
@@ -740,6 +972,8 @@ body{
     if (remember) { saveLang(code); }
     $("scr-lang").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
   }
@@ -818,6 +1052,18 @@ body{
     if (house === "none") { $("house-crest").classList.remove("filled"); }
     else { $("house-crest").classList.add("filled"); }
 
+    var cta = $("sort-cta");
+    var again = $("resort-btn");
+    cta.textContent = t.sortCta;
+    again.textContent = t.resort;
+    if (house === "none") {
+      cta.classList.remove("hidden");
+      again.classList.add("hidden");
+    } else {
+      cta.classList.add("hidden");
+      again.classList.remove("hidden");
+    }
+
     $("prof-name").textContent = name;
     $("prof-tag").textContent = u
       ? (u.username ? "@" + u.username : "ID " + u.id)
@@ -859,9 +1105,128 @@ body{
     $("total-val").textContent = uniqueWatched() + " / " + MOVIES.length;
   }
 
+  /* ---------- SARALASH TESTI ---------- */
+
+  var sortIdx = 0;
+  var sortScore = null;
+  var sortLast = null;
+  var sortPicks = [];
+
+  function startSorting() {
+    sortIdx = 0;
+    sortLast = null;
+    sortPicks = [];
+    sortScore = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+    $("scr-prof").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-sort").classList.remove("hidden");
+    renderSortQ();
+  }
+
+  function scoreFor(idx, opt, sign) {
+    var w = SORTING[idx].w[opt];
+    var mult = (idx === SORTING.length - 1) ? 2 : 1;
+    sortScore[w.a] += sign * 3 * mult;
+    if (w.b) { sortScore[w.b] += sign * 1 * mult; }
+  }
+
+  function sortBack() {
+    if (sortIdx === 0) {
+      $("scr-sort").classList.add("hidden");
+      openProfile();
+      return;
+    }
+    sortIdx--;
+    var prev = sortPicks.pop();
+    scoreFor(sortIdx, prev, -1);
+    if (sortIdx < SORTING.length - 1) { sortLast = null; }
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+    renderSortQ();
+  }
+
+  function renderSortQ() {
+    var t = T[lang];
+    var item = SORTING[sortIdx];
+    var text = item[lang];
+
+    var bar = $("sort-bar");
+    bar.innerHTML = "";
+    for (var i = 0; i < SORTING.length; i++) {
+      var seg = document.createElement("span");
+      if (i <= sortIdx) { seg.className = "on"; }
+      bar.appendChild(seg);
+    }
+
+    $("sort-step").textContent = t.step(sortIdx + 1, SORTING.length);
+    $("sort-back-txt").textContent = sortIdx === 0 ? t.sortExit : t.back;
+    $("sort-q").textContent = text.q;
+
+    var box = $("sort-opts");
+    box.innerHTML = "";
+    text.a.forEach(function (label, i) {
+      var b = document.createElement("button");
+      b.className = "sort-opt";
+      b.textContent = label;
+      b.addEventListener("click", function () { answerSort(i); });
+      box.appendChild(b);
+    });
+  }
+
+  function answerSort(i) {
+    scoreFor(sortIdx, i, 1);
+    sortPicks.push(i);
+    if (sortIdx === SORTING.length - 1) { sortLast = SORTING[sortIdx].w[i].a; }
+
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+
+    sortIdx++;
+    if (sortIdx < SORTING.length) { renderSortQ(); }
+    else { finishSorting(); }
+  }
+
+  function pickHouse() {
+    var best = null, top = -1;
+    for (var k in sortScore) {
+      if (sortScore[k] > top) { top = sortScore[k]; best = k; }
+    }
+    // Tenglik bo'lsa — oxirgi savoldagi tanlov hal qiladi
+    var tied = [];
+    for (var k2 in sortScore) { if (sortScore[k2] === top) { tied.push(k2); } }
+    if (tied.length > 1 && sortLast && tied.indexOf(sortLast) >= 0) { return sortLast; }
+    return best;
+  }
+
+  function finishSorting() {
+    var id = pickHouse();
+    setHouse(id);
+
+    var t = T[lang];
+    var h = HOUSES[id];
+    $("rv-crest").textContent = h.crest;
+    $("rv-kicker").textContent = t.rvKicker;
+    $("rv-name").textContent = h[lang];
+    $("rv-note").textContent = h["note_" + lang] || "";
+    $("rv-done").textContent = t.rvDone;
+
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.remove("hidden");
+
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
+  }
+
+  function closeReveal() {
+    $("scr-reveal").classList.add("hidden");
+    openProfile();
+  }
+
   function openProfile() {
     $("scr-cat").classList.add("hidden");
     $("scr-lang").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
     $("scr-prof").classList.remove("hidden");
     renderProfile();
   }
@@ -875,6 +1240,8 @@ body{
   function goBack() {
     $("scr-cat").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
     $("scr-lang").classList.remove("hidden");
   }
 
@@ -885,6 +1252,17 @@ body{
     $("back-btn").addEventListener("click", goBack);
     $("avatar-btn").addEventListener("click", openProfile);
     $("prof-back").addEventListener("click", closeProfile);
+    $("sort-cta").addEventListener("click", startSorting);
+    $("sort-back").addEventListener("click", sortBack);
+    $("rv-done").addEventListener("click", closeReveal);
+    $("resort-btn").addEventListener("click", function () {
+      var msg = T[lang].resortAsk;
+      if (tg && tg.showConfirm) {
+        tg.showConfirm(msg, function (ok) { if (ok) { startSorting(); } });
+      } else if (window.confirm ? window.confirm(msg) : true) {
+        startSorting();
+      }
+    });
 
     var u = tgUser();
     fillAvatar($("avatar-btn"), u, u ? fullName(u) : "?", false);
@@ -893,6 +1271,8 @@ body{
     $("scr-lang").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
