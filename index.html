@@ -11,7 +11,8 @@
 <style>
 :root{
   --bg:#0c0f14; --bg2:#14181f; --card:#161b23; --line:rgba(255,255,255,.09);
-  --text:#eef1f5; --dim:#98a2b3; --accent:#e0ae4e; --accent-ink:#1a1204;
+  --text:#eef1f5; --dim:#98a2b3;
+  --accent:#97a1ae; --accent-2:#5a6472; --accent-rgb:151,161,174; --accent-ink:#0e1117;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:var(--bg)}
@@ -68,6 +69,74 @@ body{
 }
 .back-btn:hover{color:var(--text);border-color:var(--accent)}
 .back-btn:active{transform:scale(.96)}
+.head-tools{display:flex;align-items:center;gap:8px}
+.avatar-btn{
+  width:38px;height:38px;border-radius:50%;padding:0;flex:none;overflow:hidden;
+  display:grid;place-items:center;cursor:pointer;
+  background:linear-gradient(150deg,var(--accent),var(--accent-2));
+  border:1px solid var(--line);
+  font:800 13px/1 'Manrope',sans-serif;color:var(--accent-ink);
+  transition:border-color .2s,transform .12s;
+}
+.avatar-btn:hover{border-color:var(--accent)}
+.avatar-btn:active{transform:scale(.93)}
+.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* --- PROFIL --- */
+.prof-top{display:flex;align-items:center;gap:15px;padding:4px 0 22px}
+.prof-pic{
+  width:66px;height:66px;border-radius:50%;flex:none;overflow:hidden;
+  display:grid;place-items:center;
+  background:linear-gradient(150deg,var(--accent),var(--accent-2));
+  font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--accent-ink);
+}
+.prof-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.prof-id{display:flex;flex-direction:column;gap:3px;min-width:0}
+.prof-name{
+  font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.prof-tag{font:500 12px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.panel{
+  padding:16px 18px;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;margin-bottom:12px;
+}
+.panel-label{
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:14px;
+}
+.stat-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:11px;margin-bottom:13px}
+.stat-row:last-child{margin-bottom:0}
+.stat-chip{
+  width:34px;height:26px;border-radius:7px;display:grid;place-items:center;
+  font:800 10px/1 'Manrope',sans-serif;color:#0d1117;
+}
+.stat-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.stat-fill{height:100%;border-radius:99px;background:var(--accent);transition:width .5s ease}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--dim)}
+.stat-num.full{color:var(--accent)}
+.total-row{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding-top:14px;margin-top:14px;border-top:1px solid var(--line);
+}
+.total-label{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
+.total-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--accent)}
+.house-empty{display:flex;align-items:center;gap:13px}
+.house-crest{
+  width:46px;height:46px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);
+  font-size:20px;opacity:.65;transition:all .35s ease;
+}
+.house-crest.filled{
+  background:rgba(var(--accent-rgb),.14);
+  border:1px solid rgba(var(--accent-rgb),.45);
+  opacity:1;
+}
+.house-txt b{color:var(--text)}
+.house-empty .house-crest.filled + .house-txt b{color:var(--accent)}
+.house-txt{display:flex;flex-direction:column;gap:3px}
+.house-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:17px}
+.house-txt small{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
 
 /* --- PROGRESS --- */
 .prog{padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
@@ -86,8 +155,8 @@ body{
 .next{
   display:grid;grid-template-columns:64px 1fr;gap:15px;align-items:center;
   margin-top:14px;padding:15px;border-radius:18px;
-  background:linear-gradient(115deg,rgba(224,174,78,.15),rgba(224,174,78,.04));
-  border:1px solid rgba(224,174,78,.32);
+  background:linear-gradient(115deg,rgba(var(--accent-rgb),.15),rgba(var(--accent-rgb),.04));
+  border:1px solid rgba(var(--accent-rgb),.32);
 }
 .next-art{
   position:relative;display:grid;place-items:center;height:92px;border-radius:12px;
@@ -180,7 +249,10 @@ body{
         <span class="kicker" id="kicker">Katalog</span>
         <h1 id="cat-title">Garri Potter</h1>
       </div>
-      <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
+      <div class="head-tools">
+        <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
+        <button class="avatar-btn" id="avatar-btn" aria-label="Profil"></button>
+      </div>
     </div>
 
     <div class="prog">
@@ -204,6 +276,44 @@ body{
     <div class="grid" id="grid"></div>
   </div>
 
+  <div id="scr-prof" class="screen hidden">
+    <div class="cat-head">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span class="kicker" id="prof-kicker">Profil</span>
+        <h1 id="prof-heading">Sehrgar</h1>
+      </div>
+      <button class="back-btn" id="prof-back"><span style="font-size:13px">‹</span> <span id="prof-back-txt">Ortga</span></button>
+    </div>
+
+    <div class="prof-top">
+      <span class="prof-pic" id="prof-pic"></span>
+      <span class="prof-id">
+        <span class="prof-name" id="prof-name"></span>
+        <span class="prof-tag" id="prof-tag"></span>
+      </span>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label" id="stats-label">Progress</span>
+      <div id="stat-rows"></div>
+      <div class="total-row">
+        <span class="total-label" id="total-label">Jami</span>
+        <span class="total-val" id="total-val">0</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <span class="panel-label" id="house-label">Fakultet</span>
+      <div class="house-empty">
+        <span class="house-crest" id="house-crest">🎩</span>
+        <span class="house-txt">
+          <b id="house-name"></b>
+          <small id="house-note"></small>
+        </span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -216,6 +326,7 @@ body{
   var BOT = "garripotterkinobot";
   var KEY = "watched_movies";
   var LANG_KEY = "pref_lang";
+  var HOUSE_KEY = "house";
 
   var MOVIES = [
     { id: "hp1", uz: "Hikmatlar Toshi",   ru: "Философский Камень", en: "Philosopher's Stone" },
@@ -245,15 +356,30 @@ body{
     uz: { kicker:"Katalog", title:"Garri Potter", watch:"Ko'rish", label:"Progress",
           next:"Keyingi film", seen:"Ko'rildi",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
-          hintMid:function(n){return "Yana "+n+" ta film qoldi";} },
+          hintMid:function(n){return "Yana "+n+" ta film qoldi";},
+          profKicker:"Profil", profTitle:"Sehrgar", back:"Ortga",
+          stats:"Tillar bo'yicha", total:"Jami ko'rilgan",
+          houseLbl:"Fakultet", houseName:"Hali aniqlanmagan",
+          houseNote:"Saralovchi shlyapa tez orada sizni kutadi", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
+          guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { kicker:"Каталог", title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
-          hintMid:function(n){return "Осталось фильмов: "+n;} },
+          hintMid:function(n){return "Осталось фильмов: "+n;},
+          profKicker:"Профиль", profTitle:"Волшебник", back:"Назад",
+          stats:"По языкам", total:"Всего просмотрено",
+          houseLbl:"Факультет", houseName:"Пока не определён",
+          houseNote:"Распределяющая шляпа скоро вас ждёт", houseSet:"По решению Распределяющей шляпы",
+          guest:"Гость", noTag:"Войдите через Telegram" },
     en: { kicker:"Catalog", title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched",
           hintStart:"Start the journey", hintDone:"All films watched",
-          hintMid:function(n){return n+" films left";} }
+          hintMid:function(n){return n+" films left";},
+          profKicker:"Profile", profTitle:"Wizard", back:"Back",
+          stats:"By language", total:"Total watched",
+          houseLbl:"House", houseName:"Not sorted yet",
+          houseNote:"The Sorting Hat awaits you soon", houseSet:"As decided by the Sorting Hat",
+          guest:"Guest", noTag:"Open via Telegram" }
   };
 
   var LANG_GRADS = {
@@ -261,6 +387,31 @@ body{
     ru: "linear-gradient(150deg,#8fb0e0,#2f4f8f)",
     en: "linear-gradient(150deg,#e09090,#8f2f2f)"
   };
+
+  // Fakultet aniqlanmaguncha — neytral kulrang.
+  // Aniqlangach butun interfeys fakultet rangiga o'tadi.
+  var HOUSES = {
+    none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
+                  crest:"🎩", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
+    gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4",
+                  crest:"🦁", uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor" },
+    slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e",
+                  crest:"🐍", uz:"Sliterin", ru:"Слизерин", en:"Slytherin" },
+    ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b",
+                  crest:"🦅", uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw" },
+    hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204",
+                  crest:"🦡", uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff" }
+  };
+
+  function applyHouse(id) {
+    var h = HOUSES[id] || HOUSES.none;
+    var root = document.documentElement;
+    if (!root || !root.style || !root.style.setProperty) { return; }
+    root.style.setProperty("--accent", h.accent);
+    root.style.setProperty("--accent-2", h.accent2);
+    root.style.setProperty("--accent-rgb", h.rgb);
+    root.style.setProperty("--accent-ink", h.ink);
+  }
 
   var LANGS = [
     { code:"uz", flag:"🇺🇿", name:"O'zbekcha", note:"UZ · Uzbek",   grad:LANG_GRADS.uz },
@@ -276,6 +427,7 @@ body{
   }
 
   var lang = "uz";
+  var house = "none";
   var watched = {};
   var cloudOk = false;
 
@@ -337,6 +489,23 @@ body{
     try { tg.CloudStorage.setItem(LANG_KEY, code, function () {}); } catch (e) {}
   }
 
+  function validHouse(v) { return v && HOUSES[v] && v !== "none" ? v : null; }
+
+  function readLocalHouse() {
+    try { return validHouse(window.localStorage.getItem(HOUSE_KEY)); }
+    catch (e) { return null; }
+  }
+
+  function setHouse(id) {
+    var v = validHouse(id) || "none";
+    house = v;
+    applyHouse(v);
+    try { window.localStorage.setItem(HOUSE_KEY, v); } catch (e) {}
+    if (cloudOk) {
+      try { tg.CloudStorage.setItem(HOUSE_KEY, v, function () {}); } catch (e) {}
+    }
+  }
+
   function load(done) {
     var localLang = readLocalLang();
 
@@ -348,12 +517,18 @@ body{
     setTimeout(function () { once(localLang); }, 1200);
 
     try {
-      tg.CloudStorage.getItems([KEY, LANG_KEY], function (err, vals) {
+      tg.CloudStorage.getItems([KEY, LANG_KEY, HOUSE_KEY], function (err, vals) {
         var l = localLang;
         if (!err && vals) {
           if (vals[KEY]) { absorb(vals[KEY].split(",")); writeLocal(); }
           var cl = validLang(vals[LANG_KEY]);
           if (!l && cl) { l = cl; try { window.localStorage.setItem(LANG_KEY, cl); } catch (e) {} }
+          var ch = validHouse(vals[HOUSE_KEY]);
+          if (ch && house === "none") {
+            house = ch;
+            applyHouse(ch);
+            try { window.localStorage.setItem(HOUSE_KEY, ch); } catch (e) {}
+          }
         }
         once(l);
       });
@@ -563,12 +738,142 @@ body{
     lang = code;
     if (remember) { saveLang(code); }
     $("scr-lang").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+  }
+
+  /* ---------- PROFIL ---------- */
+
+  function tgUser() {
+    try {
+      var u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+      return u && u.id ? u : null;
+    } catch (e) { return null; }
+  }
+
+  function fullName(u) {
+    var n = (u.first_name || "") + " " + (u.last_name || "");
+    return n.trim() || u.username || "";
+  }
+
+  function initials(name) {
+    var parts = name.split(/\s+/).filter(Boolean);
+    if (!parts.length) { return "?"; }
+    var s = parts[0].charAt(0);
+    if (parts.length > 1) { s += parts[1].charAt(0); }
+    return s.toUpperCase();
+  }
+
+  function countFor(code) {
+    var n = 0;
+    MOVIES.forEach(function (m) { if (watched[code + ":" + m.id]) { n++; } });
+    return n;
+  }
+
+  function uniqueWatched() {
+    var seen = {};
+    MOVIES.forEach(function (m) {
+      LANGS.forEach(function (l) {
+        if (watched[l.code + ":" + m.id]) { seen[m.id] = true; }
+      });
+    });
+    var n = 0;
+    for (var k in seen) { if (seen[k]) { n++; } }
+    return n;
+  }
+
+  function fillAvatar(el, u, name, big) {
+    el.innerHTML = "";
+    if (u && u.photo_url) {
+      var img = document.createElement("img");
+      img.src = u.photo_url;
+      img.alt = "";
+      img.onerror = function () {
+        this.remove();
+        el.textContent = initials(name);
+      };
+      el.appendChild(img);
+    } else {
+      el.textContent = big ? initials(name) : initials(name);
+    }
+  }
+
+  function renderProfile() {
+    var t = T[lang];
+    var u = tgUser();
+    var name = u ? fullName(u) : t.guest;
+
+    $("prof-kicker").textContent = t.profKicker;
+    $("prof-heading").textContent = t.profTitle;
+    $("prof-back-txt").textContent = t.back;
+    $("stats-label").textContent = t.stats;
+    $("total-label").textContent = t.total;
+    var h = HOUSES[house] || HOUSES.none;
+    $("house-label").textContent = t.houseLbl;
+    $("house-name").textContent = h[lang];
+    $("house-note").textContent = house === "none" ? t.houseNote : t.houseSet;
+    $("house-crest").textContent = h.crest;
+    if (house === "none") { $("house-crest").classList.remove("filled"); }
+    else { $("house-crest").classList.add("filled"); }
+
+    $("prof-name").textContent = name;
+    $("prof-tag").textContent = u
+      ? (u.username ? "@" + u.username : "ID " + u.id)
+      : t.noTag;
+
+    fillAvatar($("prof-pic"), u, name, true);
+
+    var rows = $("stat-rows");
+    rows.innerHTML = "";
+    LANGS.forEach(function (l) {
+      var n = countFor(l.code);
+      var total = MOVIES.length;
+
+      var row = document.createElement("div");
+      row.className = "stat-row";
+
+      var chip = document.createElement("span");
+      chip.className = "stat-chip";
+      chip.style.background = LANG_GRADS[l.code];
+      chip.textContent = l.code.toUpperCase();
+
+      var bar = document.createElement("span");
+      bar.className = "stat-bar";
+      var fill = document.createElement("span");
+      fill.className = "stat-fill";
+      fill.style.width = Math.round(n / total * 100) + "%";
+      bar.appendChild(fill);
+
+      var num = document.createElement("span");
+      num.className = "stat-num" + (n === total ? " full" : "");
+      num.textContent = n + "/" + total;
+
+      row.appendChild(chip);
+      row.appendChild(bar);
+      row.appendChild(num);
+      rows.appendChild(row);
+    });
+
+    $("total-val").textContent = uniqueWatched() + " / " + MOVIES.length;
+  }
+
+  function openProfile() {
+    $("scr-cat").classList.add("hidden");
+    $("scr-lang").classList.add("hidden");
+    $("scr-prof").classList.remove("hidden");
+    renderProfile();
+  }
+
+  function closeProfile() {
+    $("scr-prof").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
   }
 
   function goBack() {
     $("scr-cat").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
     $("scr-lang").classList.remove("hidden");
   }
 
@@ -577,14 +882,23 @@ body{
   function init() {
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
+    $("avatar-btn").addEventListener("click", openProfile);
+    $("prof-back").addEventListener("click", closeProfile);
+
+    var u = tgUser();
+    fillAvatar($("avatar-btn"), u, u ? fullName(u) : "?", false);
 
     // Ikkala ekran ham yashirin turadi — saqlangan til aniqlangunicha
     $("scr-lang").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
     var quick = readLocalLang();
+    var localHouse = readLocalHouse();
+    if (localHouse) { house = localHouse; }
+    applyHouse(house);
 
     var settled = false;
     function show(saved) {
