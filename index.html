@@ -47,7 +47,7 @@ body{
 .lang-btn:active{transform:scale(.985)}
 .lang-mark{
   display:grid;place-items:center;width:52px;height:52px;border-radius:14px;
-  font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--accent-ink);
+  font-size:26px;line-height:1;
 }
 .lang-name{display:flex;flex-direction:column;gap:3px}
 .lang-name b{font:600 16px/1.2 'Manrope',sans-serif}
@@ -257,10 +257,17 @@ body{
   };
 
   var LANGS = [
-    { code:"uz", name:"O'zbekcha", note:"UZ · Uzbek",   mark:"Uz", grad:GRADS[0] },
-    { code:"ru", name:"Русский",   note:"RU · Russian", mark:"Ру", grad:GRADS[2] },
-    { code:"en", name:"English",   note:"EN · English", mark:"En", grad:GRADS[1] }
+    { code:"uz", flag:"🇺🇿", name:"O'zbekcha", note:"UZ · Uzbek",   grad:GRADS[0] },
+    { code:"ru", flag:"🇷🇺", name:"Русский",   note:"RU · Russian", grad:GRADS[2] },
+    { code:"en", flag:"🇬🇧", name:"English",   note:"EN · English", grad:GRADS[1] }
   ];
+
+  function flagOf(code) {
+    for (var i = 0; i < LANGS.length; i++) {
+      if (LANGS[i].code === code) { return LANGS[i].flag; }
+    }
+    return "";
+  }
 
   var lang = "uz";
   var watched = {};
@@ -272,6 +279,23 @@ body{
     var out = [];
     for (var k in watched) { if (watched[k]) { out.push(k); } }
     return out;
+  }
+
+  // Progress har til uchun alohida: kalit "uz:hp1" ko'rinishida
+  function key(id) { return lang + ":" + id; }
+
+  // Eski format ("hp1,hp2") -> "uz:hp1,uz:hp2"
+  function migrate(defLang) {
+    var moved = 0;
+    for (var k in watched) {
+      if (k.indexOf(":") === -1) {
+        delete watched[k];
+        watched[defLang + ":" + k] = true;
+        moved++;
+      }
+    }
+    if (moved) { writeLocal(); }
+    return moved;
   }
 
   /* ---------- SAQLASH ---------- */
@@ -308,7 +332,6 @@ body{
   }
 
   function load(done) {
-    absorb(readLocal());
     var localLang = readLocalLang();
 
     if (!hasCloud()) { done(localLang); return; }
@@ -346,7 +369,8 @@ body{
   /* ---------- HARAKATLAR ---------- */
 
   function toggle(id) {
-    if (watched[id]) { delete watched[id]; } else { watched[id] = true; }
+    var k = key(id);
+    if (watched[k]) { delete watched[k]; } else { watched[k] = true; }
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
     persist();
     renderCatalog();
@@ -354,7 +378,7 @@ body{
 
   function play(id) {
     var link = "https://t.me/" + BOT + "?start=" + id + "_" + lang;
-    watched[id] = true;
+    watched[key(id)] = true;
     renderCatalog();
     persist(function () {
       if (tg && tg.openTelegramLink) { tg.openTelegramLink(link); tg.close(); }
@@ -367,7 +391,7 @@ body{
   function poster(id) { return "img/" + id + "_" + lang + ".jpg"; }
 
   function nextIndex() {
-    for (var i = 0; i < MOVIES.length; i++) { if (!watched[MOVIES[i].id]) { return i; } }
+    for (var i = 0; i < MOVIES.length; i++) { if (!watched[key(MOVIES[i].id)]) { return i; } }
     return -1;
   }
 
@@ -381,7 +405,7 @@ body{
       var mark = document.createElement("span");
       mark.className = "lang-mark";
       mark.style.background = l.grad;
-      mark.textContent = l.mark;
+      mark.textContent = l.flag;
 
       var nm = document.createElement("span");
       nm.className = "lang-name";
@@ -406,7 +430,7 @@ body{
 
   function renderProgress(t) {
     var n = 0;
-    MOVIES.forEach(function (m) { if (watched[m.id]) { n++; } });
+    MOVIES.forEach(function (m) { if (watched[key(m.id)]) { n++; } });
     var total = MOVIES.length;
 
     $("prog-count").textContent = n + " / " + total;
@@ -454,7 +478,7 @@ body{
     grid.innerHTML = "";
 
     MOVIES.forEach(function (m, i) {
-      var seen = !!watched[m.id];
+      var seen = !!watched[key(m.id)];
 
       var card = document.createElement("div");
       card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : ""));
@@ -523,7 +547,7 @@ body{
     $("kicker").textContent = t.kicker;
     $("cat-title").textContent = t.title;
     $("prog-label").textContent = t.label;
-    $("lang-badge").textContent = lang.toUpperCase();
+    $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
     renderProgress(t);
     renderNext(t);
     renderCards(t);
@@ -552,6 +576,10 @@ body{
     $("scr-lang").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
 
+    // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
+    absorb(readLocal());
+    var quick = readLocalLang();
+
     var settled = false;
     function show(saved) {
       if (settled) { return; }
@@ -560,11 +588,10 @@ body{
       else { $("scr-lang").classList.remove("hidden"); }
     }
 
-    // Lokal xotirada til bo'lsa — darhol ochamiz, kutmaymiz
-    var quick = readLocalLang();
-    if (quick) { show(quick); }
+    if (quick) { migrate(quick); show(quick); }
 
     load(function (saved) {
+      migrate(saved || quick || "uz");
       show(saved);
       if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
     });
