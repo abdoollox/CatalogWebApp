@@ -181,7 +181,62 @@ body{
 .sort-opt:hover{border-color:var(--accent);background:var(--bg2)}
 .sort-opt:active{transform:scale(.985)}
 
-/* --- NATIJA --- */
+/* --- SHLYAPA: KIRISH VA O'YLANISH --- */
+.hat-wrap{text-align:center;padding:34px 4px 10px;animation:riseIn .55s ease both}
+.hat-mark{
+  width:96px;height:96px;margin:0 auto 26px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(var(--accent-rgb),.10);
+  border:1px dashed rgba(var(--accent-rgb),.42);
+  font-family:'Cormorant Garamond',serif;font-size:44px;line-height:1;
+  color:var(--accent);
+}
+.hat-top{
+  display:block;font-family:'Cormorant Garamond',serif;font-size:31px;
+  line-height:1.15;margin-bottom:16px;
+}
+.hat-mid{
+  display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:19px;line-height:1.35;color:var(--accent);margin-bottom:18px;
+}
+.hat-bot{
+  display:block;max-width:320px;margin:0 auto 32px;
+  font:500 13px/1.65 'Manrope',sans-serif;color:var(--dim);
+}
+.hat-go{
+  padding:13px 34px;background:var(--accent);color:var(--accent-ink);
+  border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
+  cursor:pointer;transition:transform .12s;
+}
+.hat-go:active{transform:scale(.95)}
+
+.think-wrap{
+  display:grid;place-items:center;min-height:62vh;padding:0 16px;text-align:center;
+}
+.think-line{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:24px;line-height:1.4;color:var(--accent);
+  max-width:320px;animation:riseIn .5s ease both;
+}
+
+/* --- SAVOL OLDIDAGI NUTQ --- */
+.hat-say{
+  display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:17px;line-height:1.45;color:var(--accent);
+  margin:14px 0 6px;min-height:24px;
+}
+.react-wrap{
+  display:grid;place-items:center;min-height:190px;padding:0 10px;text-align:center;
+}
+.react-line{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:23px;line-height:1.35;color:var(--accent);
+  animation:riseIn .35s ease both;
+}
+.rv-place{
+  display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:18px;color:var(--dim);margin-bottom:6px;
+}
 .reveal{text-align:center;padding:26px 0 10px;animation:riseIn .6s ease both}
 .reveal-crest{
   width:104px;height:104px;margin:0 auto 20px;border-radius:26px;
@@ -387,20 +442,41 @@ body{
     </div>
   </div>
 
+  <div id="scr-hat" class="screen hidden">
+    <div class="hat-wrap">
+      <div class="hat-mark">?</div>
+      <span class="hat-top" id="hat-top"></span>
+      <span class="hat-mid" id="hat-mid"></span>
+      <span class="hat-bot" id="hat-bot"></span>
+      <button class="hat-go" id="hat-go"></button>
+    </div>
+  </div>
+
+  <div id="scr-think" class="screen hidden">
+    <div class="think-wrap">
+      <span class="think-line" id="think-line"></span>
+    </div>
+  </div>
+
   <div id="scr-sort" class="screen hidden">
     <div class="sort-bar" id="sort-bar"></div>
     <div class="sort-head">
       <span class="sort-step" id="sort-step"></span>
       <button class="sort-back" id="sort-back"><span style="font-size:12px">‹</span> <span id="sort-back-txt">Ortga</span></button>
     </div>
+    <span class="hat-say" id="hat-say"></span>
     <h2 class="sort-q" id="sort-q"></h2>
     <div class="sort-opts" id="sort-opts"></div>
+    <div class="react-wrap hidden" id="react-box">
+      <span class="react-line" id="react-line"></span>
+    </div>
   </div>
 
   <div id="scr-reveal" class="screen hidden">
     <div class="reveal">
       <div class="reveal-crest" id="rv-crest"></div>
       <span class="reveal-kicker" id="rv-kicker"></span>
+      <span class="rv-place" id="rv-place"></span>
       <span class="reveal-name" id="rv-name"></span>
       <span class="reveal-note" id="rv-note"></span>
       <button class="reveal-done" id="rv-done"></button>
@@ -569,6 +645,107 @@ body{
       en: { q:"How would you want to be remembered in a hundred years?",
             a:["As brave", "As great", "As wise", "As good"] } }
   ];
+
+  // Saralovchi shlyapa nutqi. Har joyda bir nechta variant — tasodifiy tanlanadi.
+  var HAT = {
+    uz: {
+      introTop: "Meni boshingizga qo'ying.",
+      introMid: "Hmm... qiziq. Juda qiziq.",
+      introBot: "Men mingdan ortiq boshni ko'rganman. Sizniki esa\u2026 hali ochilmagan kitobga o'xshaydi. Keling, birga varaqlaymiz.",
+      ready: "Tayyorman",
+      before: [
+        ["Boshlaylik. Tun, o'rmon va noma'lum ovoz. Qiziqishingiz qo'rquvingizdan kuchlimi?",
+         "Birinchi savol eng sodda ko'rinadi. Odatda shunday emas."],
+        ["Endi tartibingizni ko'ray. Odam qanday ishlashi — kim ekanini aytib beradi.",
+         "Vaqt kam qolganda haqiqiy odat ko'rinadi."],
+        ["Ehtiyot bo'ling. Bu savolga yolg'on aytolmaysiz — men baribir ko'raman.",
+         "Orzu\u2026 eng ochiq narsa. Odam o'zi bilmagan holda aytib qo'yadi."],
+        ["Endi qiyinroq. Do'stlik va to'g'rilik har doim ham bir yo'ldan bormaydi.",
+         "Bu yerda to'g'ri javob yo'q. Faqat sizniki bor."],
+        ["Odam nimani o'rganishni tanlasa, nimaga aylanishni ham tanlaydi.",
+         "Menga darsingizni ayting — men sizga o'zingizni aytaman."],
+        ["Qo'rquv\u2026 hammada bor. Sizniki qaysi biri?",
+         "Bu savolni ko'plar chetlab o'tishni istaydi. Siz ham shundaymi?"],
+        ["Odamlar orasida turganingizda kim bo'lasiz? Yolg'iz qolganda emas — odamlar orasida.",
+         "Deyarli tugadi. Yana ikkitasi."],
+        ["Oxirgisi. Va eng og'iri — chunki bu javob qolganlarini yengib chiqishi mumkin.",
+         "Bitta so'z tanlang. Ehtiyot bo'ling — men aynan shunga quloq solaman."]
+      ],
+      after: ["Hmm.", "Shunday deysizmi\u2026", "Ko'rdim.", "Qiziq. Buni yodda tutaman.",
+              "Ha\u2026 bu ko'p narsani aytadi.", "Kutgan edim. Yoki kutmagandirman.",
+              "Yaxshi. Davom etamiz.", "Ichingizda bundan ko'proq narsa bor."],
+      think: ["Hmm\u2026 qiyin. Juda qiyin.",
+              "Sizda jasorat ham, aql ham bor. Va yana nimadir\u2026",
+              "Ha. Endi bildim."],
+      place: "Sizning joyingiz —"
+    },
+    ru: {
+      introTop: "Наденьте меня.",
+      introMid: "Хм... любопытно. Весьма любопытно.",
+      introBot: "Я повидала тысячи голов. А ваша\u2026 как ещё не открытая книга. Что ж, полистаем вместе.",
+      ready: "Я готов",
+      before: [
+        ["Начнём. Ночь, лес и неизвестный звук. Что сильнее — любопытство или страх?",
+         "Первый вопрос кажется простым. Обычно это не так."],
+        ["Теперь взгляну на ваш порядок. Как человек работает — то и говорит, кто он.",
+         "Когда времени мало, проступают настоящие привычки."],
+        ["Осторожнее. Здесь солгать не выйдет — я всё равно увижу.",
+         "Мечта\u2026 самое откровенное. Человек выдаёт себя, сам того не зная."],
+        ["Теперь сложнее. Дружба и правота не всегда идут одной дорогой.",
+         "Здесь нет верного ответа. Есть только ваш."],
+        ["Что человек выбирает изучать — тем он и становится.",
+         "Назовите свой предмет — и я назову вас."],
+        ["Страх\u2026 есть у каждого. Каков ваш?",
+         "Этот вопрос многие хотят обойти. Вы тоже?"],
+        ["Кем вы становитесь среди людей? Не наедине с собой — среди людей.",
+         "Почти закончили. Осталось два."],
+        ["Последний. И самый весомый — этот ответ может перевесить всё остальное.",
+         "Выберите одно слово. Осторожно — именно к нему я прислушаюсь."]
+      ],
+      after: ["Хм.", "Вот как\u2026", "Вижу.", "Любопытно. Запомню.",
+              "Да\u2026 это многое говорит.", "Я ожидала. Или нет.",
+              "Хорошо. Дальше.", "В вас есть больше, чем это."],
+      think: ["Хм\u2026 непросто. Совсем непросто.",
+              "В вас есть и смелость, и ум. И ещё что-то\u2026",
+              "Да. Теперь я знаю."],
+      place: "Ваше место —"
+    },
+    en: {
+      introTop: "Put me on.",
+      introMid: "Hmm... curious. Very curious indeed.",
+      introBot: "I have seen a thousand minds. Yours, though\u2026 is a book yet unopened. Let us turn the pages together.",
+      ready: "I'm ready",
+      before: [
+        ["Let us begin. Night, a forest, an unknown sound. Which is stronger — curiosity or fear?",
+         "The first question seems simple. It rarely is."],
+        ["Now, your method. How a person works tells me who they are.",
+         "When time runs short, true habits surface."],
+        ["Careful now. You cannot lie here — I will see it anyway.",
+         "A wish is the most revealing thing. People give themselves away without meaning to."],
+        ["Harder now. Friendship and rightness do not always walk the same road.",
+         "There is no correct answer here. Only yours."],
+        ["What a person chooses to study, they choose to become.",
+         "Name your subject, and I will name you."],
+        ["Fear\u2026 everyone carries one. Which is yours?",
+         "Many would rather skip this one. Would you?"],
+        ["Who do you become among others? Not alone — among others.",
+         "Almost done. Two remain."],
+        ["The last. And the heaviest — this answer may outweigh the rest.",
+         "Choose one word. Careful — this is the one I listen to."]
+      ],
+      after: ["Hmm.", "Is that so\u2026", "I see.", "Curious. I shall remember that.",
+              "Yes\u2026 that says a great deal.", "I expected as much. Or perhaps not.",
+              "Good. Onward.", "There is more in you than that."],
+      think: ["Hmm\u2026 difficult. Very difficult.",
+              "There is courage here. And a fine mind. And something else\u2026",
+              "Yes. Now I know."],
+      place: "Your place is —"
+    }
+  };
+
+  // Vaqtlar (millisekund)
+  var MS_REACT = 950;
+  var MS_THINK = 1200;
 
   var T = {
     uz: { kicker:"Katalog", title:"Garri Potter", watch:"Ko'rish", label:"Progress",
@@ -986,10 +1163,13 @@ body{
   function openCatalog(code, remember) {
     lang = code;
     if (remember) { saveLang(code); }
+    stopSortTimer();
     $("scr-lang").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
   }
@@ -1127,15 +1307,48 @@ body{
   var sortScore = null;
   var sortLast = null;
   var sortPicks = [];
+  var sortBusy = false;
+  var sortTimer = null;
 
-  function startSorting() {
-    sortIdx = 0;
-    sortLast = null;
-    sortPicks = [];
-    sortScore = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+  function stopSortTimer() {
+    if (sortTimer) { clearTimeout(sortTimer); sortTimer = null; }
+    sortBusy = false;
+  }
+
+  function pickOne(arr) {
+    if (!arr || !arr.length) { return ""; }
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function hideSortScreens() {
     $("scr-prof").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+  }
+
+  // 1-bosqich: shlyapa bilan tanishuv
+  function startSorting() {
+    var h = HAT[lang];
+    hideSortScreens();
+    $("hat-top").textContent = h.introTop;
+    $("hat-mid").textContent = h.introMid;
+    $("hat-bot").textContent = h.introBot;
+    $("hat-go").textContent = h.ready;
+    $("scr-hat").classList.remove("hidden");
+  }
+
+  // 2-bosqich: savollar
+  function beginQuestions() {
+    if (sortTimer) { clearTimeout(sortTimer); sortTimer = null; }
+    sortIdx = 0;
+    sortLast = null;
+    sortPicks = [];
+    sortBusy = false;
+    sortScore = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+    hideSortScreens();
     $("scr-sort").classList.remove("hidden");
     renderSortQ();
   }
@@ -1148,8 +1361,9 @@ body{
   }
 
   function sortBack() {
+    if (sortBusy) { return; }
     if (sortIdx === 0) {
-      $("scr-sort").classList.add("hidden");
+      hideSortScreens();
       openProfile();
       return;
     }
@@ -1163,8 +1377,13 @@ body{
 
   function renderSortQ() {
     var t = T[lang];
-    var item = SORTING[sortIdx];
-    var text = item[lang];
+    var h = HAT[lang];
+    var text = SORTING[sortIdx][lang];
+
+    $("react-box").classList.add("hidden");
+    $("sort-opts").classList.remove("hidden");
+    $("hat-say").classList.remove("hidden");
+    $("sort-q").classList.remove("hidden");
 
     var bar = $("sort-bar");
     bar.innerHTML = "";
@@ -1176,6 +1395,7 @@ body{
 
     $("sort-step").textContent = t.step(sortIdx + 1, SORTING.length);
     $("sort-back-txt").textContent = sortIdx === 0 ? t.sortExit : t.back;
+    $("hat-say").textContent = pickOne(h.before[sortIdx]);
     $("sort-q").textContent = text.q;
 
     var box = $("sort-opts");
@@ -1190,15 +1410,48 @@ body{
   }
 
   function answerSort(i) {
+    if (sortBusy) { return; }
+    sortBusy = true;
+
     scoreFor(sortIdx, i, 1);
     sortPicks.push(i);
     if (sortIdx === SORTING.length - 1) { sortLast = SORTING[sortIdx].w[i].a; }
 
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
 
+    // Shlyapaning qisqa reaksiyasi
+    $("hat-say").classList.add("hidden");
+    $("sort-q").classList.add("hidden");
+    $("sort-opts").classList.add("hidden");
+    $("react-line").textContent = pickOne(HAT[lang].after);
+    $("react-box").classList.remove("hidden");
+
     sortIdx++;
-    if (sortIdx < SORTING.length) { renderSortQ(); }
-    else { finishSorting(); }
+    sortTimer = setTimeout(function () {
+      sortBusy = false;
+      if (sortIdx < SORTING.length) { renderSortQ(); }
+      else { runThinking(); }
+    }, MS_REACT);
+  }
+
+  // 3-bosqich: shlyapa o'ylaydi
+  function runThinking() {
+    var lines = HAT[lang].think;
+    hideSortScreens();
+    $("scr-think").classList.remove("hidden");
+
+    var n = 0;
+    function step() {
+      if (n >= lines.length) { finishSorting(); return; }
+      var el = $("think-line");
+      el.textContent = lines[n];
+      el.className = "think-line";
+      // animatsiyani qayta ishga tushirish
+      try { void el.offsetWidth; } catch (e) {}
+      n++;
+      sortTimer = setTimeout(step, MS_THINK);
+    }
+    step();
   }
 
   function pickHouse() {
@@ -1222,11 +1475,12 @@ body{
     var h = HOUSES[id];
     $("rv-crest").textContent = h.crest;
     $("rv-kicker").textContent = t.rvKicker;
+    $("rv-place").textContent = HAT[lang].place;
     $("rv-name").textContent = h[lang];
     $("rv-note").textContent = h["note_" + lang] || "";
     $("rv-done").textContent = t.rvDone;
 
-    $("scr-sort").classList.add("hidden");
+    hideSortScreens();
     $("scr-reveal").classList.remove("hidden");
 
     try {
@@ -1240,10 +1494,13 @@ body{
   }
 
   function openProfile() {
+    stopSortTimer();
     $("scr-cat").classList.add("hidden");
     $("scr-lang").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
     $("scr-prof").classList.remove("hidden");
     renderProfile();
   }
@@ -1255,10 +1512,13 @@ body{
   }
 
   function goBack() {
+    stopSortTimer();
     $("scr-cat").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
     $("scr-lang").classList.remove("hidden");
   }
 
@@ -1270,6 +1530,7 @@ body{
     $("avatar-btn").addEventListener("click", openProfile);
     $("prof-back").addEventListener("click", closeProfile);
     $("sort-cta").addEventListener("click", startSorting);
+    $("hat-go").addEventListener("click", beginQuestions);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
     $("resort-btn").addEventListener("click", function () {
@@ -1290,6 +1551,8 @@ body{
     $("scr-prof").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
