@@ -417,7 +417,6 @@ body{
   <div id="scr-cat" class="screen hidden">
     <div class="cat-head">
       <div style="display:flex;flex-direction:column;gap:2px">
-        <span class="kicker" id="kicker">Katalog</span>
         <h1 id="cat-title">Garri Potter</h1>
       </div>
       <div class="head-tools">
@@ -815,7 +814,7 @@ body{
   }
 
   var T = {
-    uz: { kicker:"Katalog", title:"Garri Potter", watch:"Ko'rish", label:"Progress",
+    uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
           next:"Keyingi film", seen:"Ko'rildi",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
           hintMid:function(n){return "Yana "+n+" ta film qoldi";},
@@ -826,7 +825,7 @@ body{
           cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
-    ru: { kicker:"Каталог", title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
+    ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
           hintMid:function(n){return "Осталось фильмов: "+n;},
@@ -837,7 +836,7 @@ body{
           cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           guest:"Гость", noTag:"Войдите через Telegram" },
-    en: { kicker:"Catalog", title:"Harry Potter", watch:"Watch", label:"Progress",
+    en: { title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched",
           hintStart:"Start the journey", hintDone:"All films watched",
           hintMid:function(n){return n+" films left";},
@@ -1321,7 +1320,6 @@ body{
 
   function renderCatalog() {
     var t = T[lang];
-    $("kicker").textContent = t.kicker;
     $("cat-title").textContent = t.title;
     $("prog-label").textContent = t.label;
     $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
