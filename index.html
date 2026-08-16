@@ -81,6 +81,38 @@ body{
 .avatar-btn:hover{border-color:var(--accent)}
 .avatar-btn:active{transform:scale(.93)}
 .avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-wrap{position:relative;display:block;flex:none}
+.avatar-dot{
+  position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);
+  animation:blip 2.4s ease-in-out infinite;
+}
+@keyframes blip{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.18);opacity:.75}}
+@media (prefers-reduced-motion:reduce){.avatar-dot{animation:none}}
+
+/* --- KATALOGDAGI SARALANISH TAKLIFI --- */
+.sort-card{
+  display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;
+  margin-top:12px;padding:15px;border-radius:18px;
+  background:rgba(255,255,255,.03);
+  border:1px dashed rgba(var(--accent-rgb),.42);
+}
+.sort-card-mark{
+  display:grid;place-items:center;width:56px;height:56px;border-radius:14px;
+  background:rgba(var(--accent-rgb),.10);
+  font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1;color:var(--accent);
+}
+.sort-card-mark img{width:44px;height:44px;object-fit:contain;display:block}
+.sort-card-body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.sort-card-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.2}
+.sort-card-sub{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.sort-card-btn{
+  align-self:start;margin-top:2px;padding:9px 17px;
+  background:var(--accent);color:var(--accent-ink);
+  border:none;border-radius:99px;font:800 12px/1 'Manrope',sans-serif;
+  cursor:pointer;transition:transform .12s;
+}
+.sort-card-btn:active{transform:scale(.95)}
 
 /* --- PROFIL --- */
 .prof-top{display:flex;align-items:center;gap:15px;padding:4px 0 22px}
@@ -390,7 +422,10 @@ body{
       </div>
       <div class="head-tools">
         <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
-        <button class="avatar-btn" id="avatar-btn" aria-label="Profil"></button>
+        <span class="avatar-wrap">
+          <button class="avatar-btn" id="avatar-btn" aria-label="Profil"></button>
+          <span class="avatar-dot hidden" id="avatar-dot"></span>
+        </span>
       </div>
     </div>
 
@@ -410,6 +445,15 @@ body{
         <span class="next-title" id="next-title"></span>
         <button class="next-play" id="next-play">▶ Ko'rish</button>
       </div>
+    </div>
+
+    <div class="sort-card hidden" id="sort-card">
+      <span class="sort-card-mark" id="sort-card-mark">?</span>
+      <span class="sort-card-body">
+        <span class="sort-card-title" id="sort-card-title"></span>
+        <span class="sort-card-sub" id="sort-card-sub"></span>
+        <button class="sort-card-btn" id="sort-card-btn"></button>
+      </span>
     </div>
 
     <div class="grid" id="grid"></div>
@@ -778,7 +822,8 @@ body{
           profKicker:"Profil", profTitle:"Sehrgar", back:"Ortga",
           stats:"Tillar bo'yicha", total:"Jami ko'rilgan",
           houseLbl:"Fakultet", houseName:"Hali aniqlanmagan",
-          houseNote:"Saralovchi shlyapa tez orada sizni kutadi", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
+          houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
+          cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { kicker:"Каталог", title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
@@ -788,7 +833,8 @@ body{
           profKicker:"Профиль", profTitle:"Волшебник", back:"Назад",
           stats:"По языкам", total:"Всего просмотрено",
           houseLbl:"Факультет", houseName:"Пока не определён",
-          houseNote:"Распределяющая шляпа скоро вас ждёт", houseSet:"По решению Распределяющей шляпы",
+          houseNote:"Пройдите распределение и узнайте свой факультет",
+          cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { kicker:"Catalog", title:"Harry Potter", watch:"Watch", label:"Progress",
@@ -798,7 +844,8 @@ body{
           profKicker:"Profile", profTitle:"Wizard", back:"Back",
           stats:"By language", total:"Total watched",
           houseLbl:"House", houseName:"Not sorted yet",
-          houseNote:"The Sorting Hat awaits you soon", houseSet:"As decided by the Sorting Hat",
+          houseNote:"Take the test and discover your house",
+          cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
           sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
           guest:"Guest", noTag:"Open via Telegram" }
   };
@@ -1239,6 +1286,39 @@ body{
     });
   }
 
+  function renderSortCard(t) {
+    var card = $("sort-card");
+    var dot = $("avatar-dot");
+
+    if (house !== "none") {
+      card.classList.add("hidden");
+      dot.classList.add("hidden");
+      return;
+    }
+
+    paintHatSmall($("sort-card-mark"));
+    $("sort-card-title").textContent = t.cardTitle;
+    $("sort-card-sub").textContent = t.cardSub;
+    $("sort-card-btn").textContent = t.sortCta;
+    card.classList.remove("hidden");
+    dot.classList.remove("hidden");
+  }
+
+  function paintHatSmall(el) {
+    if (!el || el.getAttribute("data-done") === "1") { return; }
+    el.innerHTML = "";
+    var img = document.createElement("img");
+    img.src = IMG_DIR + HAT_IMG;
+    img.alt = "";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = "?";
+    };
+    el.appendChild(img);
+    el.setAttribute("data-done", "1");
+  }
+
   function renderCatalog() {
     var t = T[lang];
     $("kicker").textContent = t.kicker;
@@ -1247,6 +1327,7 @@ body{
     $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
     renderProgress(t);
     renderNext(t);
+    renderSortCard(t);
     renderCards(t);
   }
 
@@ -1624,6 +1705,7 @@ body{
     $("avatar-btn").addEventListener("click", openProfile);
     $("prof-back").addEventListener("click", closeProfile);
     $("sort-cta").addEventListener("click", startSorting);
+    $("sort-card-btn").addEventListener("click", startSorting);
     $("hat-go").addEventListener("click", beginQuestions);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
