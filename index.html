@@ -111,8 +111,8 @@ body{
   width:34px;height:26px;border-radius:7px;display:grid;place-items:center;
   font:800 10px/1 'Manrope',sans-serif;color:#0d1117;
 }
-.stat-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
-.stat-fill{height:100%;border-radius:99px;background:var(--accent);transition:width .5s ease}
+.stat-bar{display:block;width:100%;height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+.stat-fill{display:block;height:100%;min-width:0;border-radius:99px;background:var(--accent);transition:width .5s ease}
 .stat-num{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--dim)}
 .stat-num.full{color:var(--accent)}
 .total-row{
@@ -125,12 +125,13 @@ body{
 .house-crest{
   width:46px;height:46px;border-radius:12px;flex:none;display:grid;place-items:center;
   background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);
-  font-size:20px;opacity:.65;transition:all .35s ease;
+  font-family:'Cormorant Garamond',serif;font-size:27px;line-height:1;
+  color:var(--dim);opacity:.9;transition:all .35s ease;
 }
 .house-crest.filled{
   background:rgba(var(--accent-rgb),.14);
   border:1px solid rgba(var(--accent-rgb),.45);
-  opacity:1;
+  font-family:'Manrope',sans-serif;font-size:20px;opacity:1;
 }
 .house-txt b{color:var(--text)}
 .house-empty .house-crest.filled + .house-txt b{color:var(--accent)}
@@ -392,7 +393,7 @@ body{
   // Aniqlangach butun interfeys fakultet rangiga o'tadi.
   var HOUSES = {
     none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
-                  crest:"🎩", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
+                  crest:"?", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
     gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4",
                   crest:"🦁", uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor" },
     slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e",
