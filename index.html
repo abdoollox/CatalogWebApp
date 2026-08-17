@@ -824,6 +824,7 @@ body{
           houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
           cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
+          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено",
@@ -835,6 +836,7 @@ body{
           houseNote:"Пройдите распределение и узнайте свой факультет",
           cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
+          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched",
@@ -846,6 +848,7 @@ body{
           houseNote:"Take the test and discover your house",
           cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
           sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
+          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 open this film?";},
           guest:"Guest", noTag:"Open via Telegram" }
   };
 
@@ -1119,6 +1122,18 @@ body{
     renderCatalog();
   }
 
+  // Kartaga bosilganda tasdiq so'raladi — tasodifiy teginishdan himoya
+  function askPlay(id, title) {
+    var msg = T[lang].confirmWatch(title);
+    if (tg && tg.showConfirm) {
+      tg.showConfirm(msg, function (ok) { if (ok) { play(id); } });
+      return;
+    }
+    var ok = true;
+    try { if (window.confirm) { ok = window.confirm(msg); } } catch (e) {}
+    if (ok) { play(id); }
+  }
+
   function play(id) {
     var link = "https://t.me/" + BOT + "?start=" + id + "_" + lang;
     watched[key(id)] = true;
@@ -1226,6 +1241,7 @@ body{
       var card = document.createElement("div");
       card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : ""));
       card.style.background = CARD_BG;
+      card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
 
       var img = document.createElement("img");
       img.className = "card-img";
