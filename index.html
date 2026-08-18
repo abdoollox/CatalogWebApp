@@ -297,6 +297,10 @@ body{
   display:block;font-family:'Cormorant Garamond',serif;font-size:42px;
   line-height:1.05;color:var(--accent);margin-bottom:13px;
 }
+.reveal-sub{
+  display:block;font:600 12px/1 'Manrope',sans-serif;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dim);margin:-6px 0 15px;
+}
 .reveal-note{
   display:block;max-width:300px;margin:0 auto 28px;
   font:500 13px/1.6 'Manrope',sans-serif;color:var(--dim);
@@ -455,6 +459,15 @@ body{
       </span>
     </div>
 
+    <div class="sort-card hidden" id="wand-card">
+      <span class="sort-card-mark" id="wand-card-mark">✦</span>
+      <span class="sort-card-body">
+        <span class="sort-card-title" id="wand-card-title"></span>
+        <span class="sort-card-sub" id="wand-card-sub"></span>
+        <button class="sort-card-btn" id="wand-card-btn"></button>
+      </span>
+    </div>
+
     <div class="grid" id="grid"></div>
   </div>
 
@@ -496,6 +509,19 @@ body{
       <button class="sort-cta hidden" id="sort-cta"></button>
       <button class="resort hidden" id="resort-btn"></button>
     </div>
+
+    <div class="panel hidden" id="wand-panel">
+      <span class="panel-label" id="wand-label">Tayoqcha</span>
+      <div class="house-empty">
+        <span class="house-crest" id="wand-crest">✦</span>
+        <span class="house-txt">
+          <b id="wand-name"></b>
+          <small id="wand-note"></small>
+        </span>
+      </div>
+      <button class="sort-cta hidden" id="wand-cta"></button>
+      <button class="resort hidden" id="wand-again"></button>
+    </div>
   </div>
 
   <div id="scr-hat" class="screen hidden">
@@ -534,6 +560,7 @@ body{
       <span class="reveal-kicker" id="rv-kicker"></span>
       <span class="rv-place" id="rv-place"></span>
       <span class="reveal-name" id="rv-name"></span>
+      <span class="reveal-sub hidden" id="rv-sub"></span>
       <span class="reveal-note" id="rv-note"></span>
       <button class="reveal-done" id="rv-done"></button>
     </div>
@@ -552,6 +579,7 @@ body{
   var KEY = "watched_movies";
   var LANG_KEY = "pref_lang";
   var HOUSE_KEY = "house";
+  var WAND_KEY = "wand";
 
   var MOVIES = [
     { id: "hp1", uz: "Hikmatlar Toshi",   ru: "Философский Камень", en: "Philosopher's Stone" },
@@ -574,7 +602,7 @@ body{
   var G = "gryffindor", S = "slytherin", R = "ravenclaw", H = "hufflepuff";
 
   var SORTING = [
-    { w: [{a:G,b:R}, {a:R,b:H}, {a:H,b:G}, {a:S,b:R}],
+    { w: [{"gryffindor":3, "ravenclaw":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "gryffindor":1}, {"slytherin":3, "ravenclaw":1}],
       uz: { q:"Kechqurun Taqiqlangan o'rmondan g'alati ovoz keladi. Nima qilasiz?",
             a:["Darhol borib tekshiraman",
                "Avval nima bo'lishi mumkinligini aniqlayman",
@@ -591,7 +619,7 @@ body{
                "Warn my friends and go together",
                "Consider what opportunity this might bring"] } },
 
-    { w: [{a:H,b:S}, {a:R,b:S}, {a:S,b:R}, {a:G,b:H}],
+    { w: [{"hufflepuff":3, "slytherin":1}, {"ravenclaw":3, "slytherin":1}, {"slytherin":3, "ravenclaw":1}, {"gryffindor":3, "hufflepuff":1}],
       uz: { q:"Muhim imtihonga bir kun qoldi. Qanday tayyorlanasiz?",
             a:["Reja tuzib, bosqichma-bosqich takrorlayman",
                "Eng murakkab mavzularni chuqur o'rganaman",
@@ -608,7 +636,7 @@ body{
                "Find the fastest route to a good result",
                "Go in with what I know and manage somehow"] } },
 
-    { w: [{a:G,b:S}, {a:S,b:G}, {a:R,b:H}, {a:H,b:R}],
+    { w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}],
       uz: { q:"Sehrli oyna sizga eng katta orzuingizni ko'rsatadi. Unda nima bor?",
             a:["Men qo'rqmasdan turgan lahza",
                "Menga hurmat bilan qaraydigan odamlar",
@@ -625,7 +653,7 @@ body{
                "Answers to all my questions",
                "My loved ones near me, all well"] } },
 
-    { w: [{a:H,b:G}, {a:G,b:R}, {a:S,b:H}, {a:R,b:S}],
+    { w: [{"hufflepuff":3, "gryffindor":1}, {"gryffindor":3, "ravenclaw":1}, {"slytherin":3, "hufflepuff":1}, {"ravenclaw":3, "slytherin":1}],
       uz: { q:"Do'stingiz qoida buzdi va sizdan yashirishni so'radi.",
             a:["Yashiraman — do'stlik muhimroq",
                "Uni o'zi tan olishga ko'ndiraman",
@@ -642,7 +670,7 @@ body{
                "Decide based on the situation",
                "First consider why that rule exists at all"] } },
 
-    { w: [{a:G,b:H}, {a:S,b:R}, {a:R,b:G}, {a:H,b:S}],
+    { w: [{"gryffindor":3, "hufflepuff":1}, {"slytherin":3, "ravenclaw":1}, {"ravenclaw":3, "gryffindor":1}, {"hufflepuff":3, "slytherin":1}],
       uz: { q:"Qaysi dars sizni ko'proq o'ziga tortadi?",
             a:["Qora sehrga qarshi himoya",
                "Iksirlar tayyorlash",
@@ -659,7 +687,7 @@ body{
                "Ancient Runes",
                "Care of Magical Creatures"] } },
 
-    { w: [{a:G,b:S}, {a:S,b:G}, {a:R,b:S}, {a:H,b:G}],
+    { w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "slytherin":1}, {"hufflepuff":3, "gryffindor":1}],
       uz: { q:"Sizni nima ko'proq qo'rqitadi?",
             a:["Qo'rqoq deb bilishlari",
                "Oddiy bo'lib, izsiz o'tib ketish",
@@ -676,7 +704,7 @@ body{
                "Not knowing, being wrong",
                "Losing the people I love"] } },
 
-    { w: [{a:G,b:S}, {a:R,b:H}, {a:H,b:R}, {a:S,b:G}],
+    { w: [{"gryffindor":3, "slytherin":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}, {"slytherin":3, "gryffindor":1}],
       uz: { q:"Guruh ishida sizning o'rningiz qanday bo'ladi?",
             a:["Yetakchilik qilaman va qaror qabul qilaman",
                "Rejani tuzaman, xatolarni topaman",
@@ -693,13 +721,202 @@ body{
                "I bring people together and share out the work",
                "I find the shortest path to the goal"] } },
 
-    { w: [{a:G}, {a:S}, {a:R}, {a:H}],
+    { w: [{"gryffindor":3}, {"slytherin":3}, {"ravenclaw":3}, {"hufflepuff":3}],
       uz: { q:"Yuz yildan keyin sizni qanday eslashlarini istardingiz?",
             a:["Jasur edi", "Buyuk edi", "Dono edi", "Yaxshi odam edi"] },
       ru: { q:"Каким вас должны запомнить через сто лет?",
             a:["Он был храбрым", "Он был великим", "Он был мудрым", "Он был хорошим человеком"] },
       en: { q:"How would you want to be remembered in a hundred years?",
             a:["As brave", "As great", "As wise", "As good"] } }
+  ];
+
+  /* ---------- TAYOQCHA ---------- */
+
+  var CORES = {
+    phoenix: { uz:"feniks pati", ru:"перо феникса", en:"phoenix feather",
+      note_uz:"Eng tanlovchan o'zak. U kamdan-kam sehrgarga bo'ysunadi, lekin bo'ysunsa — imkoniyatlari cheksiz.",
+      note_ru:"Самая разборчивая сердцевина. Подчиняется немногим, но если подчинилась — предела нет.",
+      note_en:"The most selective core. It yields to few, but where it does, there is no limit." },
+    dragon: { uz:"ajdaho yuragi tolasi", ru:"жила дракона", en:"dragon heartstring",
+      note_uz:"Eng kuchli o'zak. Tez o'rganadi va tez bog'lanadi, lekin jangovar tabiati bor.",
+      note_ru:"Самая мощная сердцевина. Быстро учится и привязывается, но нрав у неё боевой.",
+      note_en:"The most powerful core. It learns fast and bonds fast, but its temper is fierce." },
+    unicorn: { uz:"yakkashox yeli", ru:"волос единорога", en:"unicorn hair",
+      note_uz:"Eng sodiq o'zak. Boshqa egaga o'tishni istamaydi va hech qachon tashlab ketmaydi.",
+      note_ru:"Самая верная сердцевина. Не желает менять хозяина и не предаёт.",
+      note_en:"The most loyal core. It will not change hands, and it never betrays." }
+  };
+
+  var WOODS = {
+    oak:     { uz:"Eman",    ru:"Дуб",        en:"Oak",
+               t_uz:"jasorat va sadoqat yog'ochi", t_ru:"дерево храбрости и верности", t_en:"a wood of courage and loyalty" },
+    yew:     { uz:"Tis",     ru:"Тис",        en:"Yew",
+               t_uz:"kuch va hokimiyat yog'ochi", t_ru:"дерево силы и власти", t_en:"a wood of power and dominion" },
+    cherry:  { uz:"Olcha",   ru:"Вишня",      en:"Cherry",
+               t_uz:"g'ayrioddiy kuch yog'ochi", t_ru:"дерево необычайной силы", t_en:"a wood of uncommon strength" },
+    holly:   { uz:"Padub",   ru:"Остролист",  en:"Holly",
+               t_uz:"himoya yog'ochi", t_ru:"дерево защиты", t_en:"a wood of protection" },
+    aspen:   { uz:"Terak",   ru:"Осина",      en:"Aspen",
+               t_uz:"jangchi ruhi yog'ochi", t_ru:"дерево воинского духа", t_en:"a wood of the warrior spirit" },
+    walnut:  { uz:"Yong'oq", ru:"Орех",       en:"Walnut",
+               t_uz:"zukkolik yog'ochi", t_ru:"дерево изобретательности", t_en:"a wood of ingenuity" }
+  };
+
+  var FLEX = {
+    rigid:    { uz:"qattiq",          ru:"жёсткая",     en:"unyielding",   len:"13" },
+    springy:  { uz:"egiluvchan",      ru:"гибкая",      en:"springy",      len:"9¾" },
+    supple:   { uz:"moslashuvchan",   ru:"податливая",  en:"supple",       len:"11¾" },
+    yielding: { uz:"yumshoq",         ru:"мягкая",      en:"yielding",     len:"12½" }
+  };
+
+  var OLLI = {
+    uz: {
+      introTop: "Ollivander do'koni. 382-yildan beri.",
+      introMid: "Qiziq\u2026 qiziq.",
+      introBot: "Tayoqchani siz tanlamaysiz, bola. Tayoqcha sizni tanlaydi. Keling, qaysi biri sizni kutayotganini ko'ramiz.",
+      ready: "Qo'limni uzataman",
+      before: [
+        ["Qaysi qo'lingiz bilan sehr qilasiz? Har birining o'z og'irligi bor."],
+        ["Sehringiz birinchi marta qachon ko'ringan? Bunday lahzalar tasodifiy emas."],
+        ["O'rmonda yurib borasiz. Qaysi daraxt oldida to'xtaysiz?"],
+        ["Sehr sizga nima uchun kerak? To'g'risini ayting — tayoqcha yolg'onni sezadi."],
+        ["Oxirgi savol. Tayoqcha qo'lingizda uchqun chiqarmasa — nima qilasiz?"]
+      ],
+      after: ["Hmm.", "Shunday deng\u2026", "Ko'rdim.", "Qiziq.", "Yaxshi.", "Davom etamiz."],
+      think: ["Kutib turing\u2026 shu qutida bir narsa bor edi.",
+              "Yo'q, bu emas. Mana bu\u2026 ha.",
+              "Uni oling. Qo'lingizda tuting."],
+      place: "Sizning tayoqchangiz —"
+    },
+    ru: {
+      introTop: "Лавка Олливандера. С 382 года.",
+      introMid: "Любопытно\u2026 весьма любопытно.",
+      introBot: "Не вы выбираете палочку, дитя. Палочка выбирает вас. Что ж, посмотрим, какая из них вас дожидается.",
+      ready: "Протяну руку",
+      before: [
+        ["Какой рукой вы колдуете? У каждой свой вес."],
+        ["Когда впервые проявилась ваша магия? Такие мгновения не случайны."],
+        ["Вы идёте по лесу. У какого дерева остановитесь?"],
+        ["Зачем вам магия? Отвечайте честно — палочка чувствует ложь."],
+        ["Последний вопрос. Палочка не даёт искры в вашей руке. Что сделаете?"]
+      ],
+      after: ["Хм.", "Вот как\u2026", "Вижу.", "Любопытно.", "Хорошо.", "Дальше."],
+      think: ["Погодите\u2026 в той коробке кое-что было.",
+              "Нет, не эта. А вот эта\u2026 да.",
+              "Возьмите её. Подержите в руке."],
+      place: "Ваша палочка —"
+    },
+    en: {
+      introTop: "Ollivanders. Since 382 BC.",
+      introMid: "Curious\u2026 very curious.",
+      introBot: "You do not choose the wand, child. The wand chooses you. Let us see which one has been waiting for you.",
+      ready: "I hold out my hand",
+      before: [
+        ["Which hand do you cast with? Each carries its own weight."],
+        ["When did your magic first show itself? Such moments are never accidents."],
+        ["You are walking through a wood. At which tree do you stop?"],
+        ["What do you want magic for? Answer truly — a wand senses a lie."],
+        ["One last question. The wand gives no spark in your hand. What do you do?"]
+      ],
+      after: ["Hmm.", "Is that so\u2026", "I see.", "Curious.", "Good.", "Onward."],
+      think: ["Wait\u2026 there was something in that box.",
+              "No, not this one. But this\u2026 yes.",
+              "Take it. Hold it in your hand."],
+      place: "Your wand is —"
+    }
+  };
+
+  var WANDQ = [
+    { w: [{"unicorn":1, "oak":1}, {"phoenix":1, "aspen":1}, {"dragon":1, "walnut":1}, {"phoenix":1, "cherry":1}],
+      uz: { q:"Qaysi qo'lingiz bilan sehr qilasiz?",
+            a:["O'ng qo'l — odatdagidek",
+               "Chap qo'l — men boshqacha ushlayman",
+               "Ikkalasi ham — farqi yo'q",
+               "Bilmayman, hali ushlamaganman"] },
+      ru: { q:"Какой рукой вы колдуете?",
+            a:["Правой — как обычно",
+               "Левой — я держу иначе",
+               "Обеими — без разницы",
+               "Не знаю, ещё не держал"] },
+      en: { q:"Which hand do you cast with?",
+            a:["Right — as most do",
+               "Left — I hold it differently",
+               "Either — it makes no difference",
+               "I do not know, I have never held one"] } },
+
+    { w: [{"dragon":3, "aspen":1}, {"phoenix":3, "holly":1}, {"unicorn":3, "oak":1}, {"phoenix":3, "cherry":1}],
+      uz: { q:"Sehringiz birinchi marta qachon ko'ringan?",
+            a:["G'azablanganimda — nimadir sindi",
+               "Qo'rqqanimda — o'zimni himoya qildim",
+               "Kimnidir himoya qilmoqchi bo'lganimda",
+               "Shunchaki — hech qanday sabab yo'q edi"] },
+      ru: { q:"Когда впервые проявилась ваша магия?",
+            a:["В гневе — что-то разбилось",
+               "В страхе — я защитил себя",
+               "Когда хотел защитить другого",
+               "Просто так — без всякой причины"] },
+      en: { q:"When did your magic first show itself?",
+            a:["In anger — something broke",
+               "In fear — I shielded myself",
+               "When I tried to protect someone",
+               "For no reason at all"] } },
+
+    { w: [{"oak":4}, {"yew":4}, {"cherry":4}, {"holly":4}, {"aspen":4}, {"walnut":4}],
+      uz: { q:"O'rmonda yurib borasiz. Qaysi daraxt oldida to'xtaysiz?",
+            a:["Eng qadimgisi, ildizlari yerdan chiqib turgan",
+               "Eng balandi, uchi ko'rinmaydi",
+               "Gullab turgani, oq gullari bilan",
+               "Kuzda ham yashil turgani",
+               "Yaproqlari shitirlagani, shamolsiz ham",
+               "Mevali, shoxlari egilgan"] },
+      ru: { q:"Вы идёте по лесу. У какого дерева остановитесь?",
+            a:["У самого древнего, корни наружу",
+               "У самого высокого, вершины не видно",
+               "У цветущего, в белых цветах",
+               "У того, что зелено и осенью",
+               "У того, чьи листья шелестят без ветра",
+               "У плодового, ветви клонятся"] },
+      en: { q:"You are walking through a wood. At which tree do you stop?",
+            a:["The oldest, roots breaking the earth",
+               "The tallest, its crown out of sight",
+               "The one in bloom, white with flowers",
+               "The one still green in autumn",
+               "The one whose leaves stir without wind",
+               "The fruit tree, branches bowed"] } },
+
+    { w: [{"dragon":3, "yew":1}, {"phoenix":3, "walnut":1}, {"unicorn":3, "holly":1}, {"phoenix":3, "aspen":1}],
+      uz: { q:"Sehr sizga nima uchun kerak?",
+            a:["Kuchli bo'lish uchun",
+               "Bilish va tushunish uchun",
+               "Yaqinlarimni asrash uchun",
+               "Hali bilmayman — shuni topmoqchiman"] },
+      ru: { q:"Зачем вам магия?",
+            a:["Чтобы быть сильным",
+               "Чтобы знать и понимать",
+               "Чтобы беречь близких",
+               "Пока не знаю — это и хочу найти"] },
+      en: { q:"What do you want magic for?",
+            a:["To be strong",
+               "To know and understand",
+               "To keep my people safe",
+               "I do not know yet — that is what I seek"] } },
+
+    { w: [{"rigid":4, "dragon":1}, {"springy":4}, {"supple":4, "phoenix":1}, {"yielding":4, "unicorn":1}],
+      uz: { q:"Tayoqcha qo'lingizda uchqun chiqarmasa — nima qilasiz?",
+            a:["Yana urinib ko'raman, qayta-qayta",
+               "Boshqasini so'rayman",
+               "Nega bo'lmaganini o'ylab ko'raman",
+               "Kutaman — o'zi vaqti kelganda ishlaydi"] },
+      ru: { q:"Палочка не даёт искры в вашей руке. Что сделаете?",
+            a:["Попробую снова, и ещё раз",
+               "Попрошу другую",
+               "Задумаюсь, почему не вышло",
+               "Подожду — придёт время, заработает"] },
+      en: { q:"The wand gives no spark in your hand. What do you do?",
+            a:["Try again, and again",
+               "Ask for another",
+               "Wonder why it failed",
+               "Wait — it will work when it is time"] } }
   ];
 
   // Saralovchi shlyapa nutqi. Har joyda bir nechta variant — tasodifiy tanlanadi.
@@ -824,6 +1041,7 @@ body{
           houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
           cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
+          wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym", wandCardTitle:"Ollivander do'koni ochiq", wandCardSub:"5 ta savol — va tayoqchangizni bilib olasiz",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
@@ -836,6 +1054,7 @@ body{
           houseNote:"Пройдите распределение и узнайте свой факультет",
           cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
+          wandLbl:"Палочка", wandNone:"Пока не выбрана", wandNote:"Лавка Олливандера ждёт вас", wandCta:"Выбрать палочку", wandAgain:"Выбрать заново", wandAskAgain:"Ваша палочка может измениться. Продолжить?", wandKicker:"Олливандер выбрал", inch:"дюйма", wandCardTitle:"Лавка Олливандера открыта", wandCardSub:"5 вопросов — и вы узнаете свою палочку",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
@@ -848,6 +1067,7 @@ body{
           houseNote:"Take the test and discover your house",
           cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
           sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
+          wandLbl:"Wand", wandNone:"Not chosen yet", wandNote:"Ollivanders is waiting for you", wandCta:"Choose a wand", wandAgain:"Choose again", wandAskAgain:"Your wand may change. Continue?", wandKicker:"Ollivander has chosen", inch:"inches", wandCardTitle:"Ollivanders is open", wandCardSub:"5 questions — and you will know your wand",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 open this film?";},
           guest:"Guest", noTag:"Open via Telegram" }
   };
@@ -914,6 +1134,7 @@ body{
 
   var lang = "uz";
   var house = "none";
+  var wand = null;
   var watched = {};
   var cloudOk = false;
 
@@ -975,21 +1196,27 @@ body{
     try { tg.CloudStorage.setItem(LANG_KEY, code, function () {}); } catch (e) {}
   }
 
-  var API_HOUSE = "https://bot.tizimshunos.uz/api/house";
+  var API_PROFILE = "https://bot.tizimshunos.uz/api/profile";
 
-  function reportHouse(id) {
+  // Profil tanlovlarini serverga yuboradi (statistika uchun).
+  // Xato bo'lsa jim o'tadi — foydalanuvchiga bilinmaydi.
+  function report(kind, value) {
     var initData = "";
     try { initData = (tg && tg.initData) || ""; } catch (e) {}
     if (!initData || !window.fetch) { return; }
 
     try {
-      window.fetch(API_HOUSE, {
+      window.fetch(API_PROFILE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ house: id, initData: initData })
+        body: JSON.stringify({ kind: kind, value: value, initData: initData })
       })["catch"](function () {});
     } catch (e) {}
   }
+
+  function reportHouse(id) { report("house", id); }
+
+  function reportWand(w) { report("wand", w.wood + "_" + w.core + "_" + w.flex); }
 
   var IMG_DIR = "img/";
   var HAT_IMG = "sorting_hat.png";
@@ -1047,6 +1274,32 @@ body{
     catch (e) { return null; }
   }
 
+  function validWand(v) {
+    if (!v) { return null; }
+    var o = v;
+    if (typeof v === "string") {
+      try { o = JSON.parse(v); } catch (e) { return null; }
+    }
+    if (!o || !WOODS[o.wood] || !CORES[o.core] || !FLEX[o.flex]) { return null; }
+    return { wood: o.wood, core: o.core, flex: o.flex };
+  }
+
+  function readLocalWand() {
+    try { return validWand(window.localStorage.getItem(WAND_KEY)); }
+    catch (e) { return null; }
+  }
+
+  function setWand(w) {
+    var v = validWand(w);
+    if (!v) { return; }
+    wand = v;
+    var raw = JSON.stringify(v);
+    try { window.localStorage.setItem(WAND_KEY, raw); } catch (e) {}
+    if (cloudOk) {
+      try { tg.CloudStorage.setItem(WAND_KEY, raw, function () {}); } catch (e) {}
+    }
+  }
+
   function setHouse(id) {
     var v = validHouse(id) || "none";
     house = v;
@@ -1073,7 +1326,7 @@ body{
     setTimeout(function () { once(localLang); }, 1200);
 
     try {
-      tg.CloudStorage.getItems([KEY, LANG_KEY, HOUSE_KEY], function (err, vals) {
+      tg.CloudStorage.getItems([KEY, LANG_KEY, HOUSE_KEY, WAND_KEY], function (err, vals) {
         var l = localLang;
         if (!err && vals) {
           if (vals[KEY]) { absorb(vals[KEY].split(",")); writeLocal(); }
@@ -1087,6 +1340,15 @@ body{
             applyHouse(ch);
             try { window.localStorage.setItem(HOUSE_KEY, ch); } catch (e) {}
             houseChanged = true;
+          }
+          var cw = validWand(vals[WAND_KEY]);
+          if (cw) {
+            var same = wand && wand.wood === cw.wood && wand.core === cw.core && wand.flex === cw.flex;
+            if (!same) {
+              wand = cw;
+              try { window.localStorage.setItem(WAND_KEY, JSON.stringify(cw)); } catch (e) {}
+              houseChanged = true;
+            }
           }
         }
         once(l);
@@ -1319,6 +1581,17 @@ body{
     dot.classList.remove("hidden");
   }
 
+  function renderWandCard(t) {
+    var card = $("wand-card");
+    // Faqat fakultet bor, tayoqcha yo'q bo'lganda
+    if (house === "none" || wand) { card.classList.add("hidden"); return; }
+    $("wand-card-title").textContent = t.wandCardTitle;
+    $("wand-card-sub").textContent = t.wandCardSub;
+    $("wand-card-btn").textContent = t.wandCta;
+    card.classList.remove("hidden");
+    $("avatar-dot").classList.remove("hidden");
+  }
+
   function paintHatSmall(el) {
     if (!el || el.getAttribute("data-done") === "1") { return; }
     el.innerHTML = "";
@@ -1342,6 +1615,7 @@ body{
     renderProgress(t);
     renderNext(t);
     renderSortCard(t);
+    renderWandCard(t);
     renderCards(t);
   }
 
@@ -1484,20 +1758,46 @@ body{
     });
 
     $("total-val").textContent = uniqueWatched() + " / " + MOVIES.length;
+
+    renderWandPanel(t);
   }
 
-  /* ---------- SARALASH TESTI ---------- */
+  function renderWandPanel(t) {
+    var panel = $("wand-panel");
+    // Tayoqcha faqat fakultet aniqlangach ochiladi
+    if (house === "none") { panel.classList.add("hidden"); return; }
+    panel.classList.remove("hidden");
 
-  var sortIdx = 0;
-  var sortScore = null;
-  var sortLast = null;
-  var sortPicks = [];
-  var sortBusy = false;
-  var sortTimer = null;
+    $("wand-label").textContent = t.wandLbl;
+    $("wand-cta").textContent = t.wandCta;
+    $("wand-again").textContent = t.wandAgain;
+
+    if (wand) {
+      $("wand-name").textContent = wandLabel(wand, lang);
+      $("wand-note").textContent = FLEX[wand.flex].len + " " + t.inch + ", " + FLEX[wand.flex][lang];
+      $("wand-crest").classList.add("filled");
+      $("wand-cta").classList.add("hidden");
+      $("wand-again").classList.remove("hidden");
+    } else {
+      $("wand-name").textContent = t.wandNone;
+      $("wand-note").textContent = t.wandNote;
+      $("wand-crest").classList.remove("filled");
+      $("wand-cta").classList.remove("hidden");
+      $("wand-again").classList.add("hidden");
+    }
+  }
+
+  /* ---------- UMUMIY SAYOHAT DVIGATELI ----------
+     Saralash, tayoqcha va kelajakdagi patronus/hayvon/fan uchun
+     bitta mexanika: kirish -> savollar -> o'ylanish -> natija.
+     Har sayohat o'z konfiguratsiyasini beradi.                        */
+
+  var QUEST = null;
+  var qIdx = 0, qScore = null, qPicks = [], qBusy = false, qTimer = null;
 
   function stopSortTimer() {
-    if (sortTimer) { clearTimeout(sortTimer); sortTimer = null; }
-    sortBusy = false;
+    if (qTimer) { clearTimeout(qTimer); qTimer = null; }
+    qBusy = false;
   }
 
   function pickOne(arr) {
@@ -1514,57 +1814,57 @@ body{
     $("scr-sort").classList.add("hidden");
   }
 
-  // 1-bosqich: shlyapa bilan tanishuv
-  function startSorting() {
-    var h = HAT[lang];
+  // 1-bosqich: tanishuv
+  function startQuest(cfg) {
+    QUEST = cfg;
+    var v = cfg.voice[lang];
+    stopSortTimer();
     hideSortScreens();
-    paintHat($("hat-mark"));
-    $("hat-top").textContent = h.introTop;
-    $("hat-mid").textContent = h.introMid;
-    $("hat-bot").textContent = h.introBot;
-    $("hat-go").textContent = h.ready;
+    if (cfg.mark) { cfg.mark($("hat-mark")); }
+    $("hat-top").textContent = v.introTop;
+    $("hat-mid").textContent = v.introMid;
+    $("hat-bot").textContent = v.introBot;
+    $("hat-go").textContent = v.ready;
     $("scr-hat").classList.remove("hidden");
   }
 
   // 2-bosqich: savollar
   function beginQuestions() {
-    if (sortTimer) { clearTimeout(sortTimer); sortTimer = null; }
-    sortIdx = 0;
-    sortLast = null;
-    sortPicks = [];
-    sortBusy = false;
-    sortScore = { gryffindor: 0, slytherin: 0, ravenclaw: 0, hufflepuff: 0 };
+    if (!QUEST) { return; }
+    stopSortTimer();
+    qIdx = 0;
+    qPicks = [];
+    qScore = {};
     hideSortScreens();
     $("scr-sort").classList.remove("hidden");
     renderSortQ();
   }
 
   function scoreFor(idx, opt, sign) {
-    var w = SORTING[idx].w[opt];
-    var mult = (idx === SORTING.length - 1) ? 2 : 1;
-    sortScore[w.a] += sign * 3 * mult;
-    if (w.b) { sortScore[w.b] += sign * 1 * mult; }
+    var w = QUEST.q[idx].w[opt] || {};
+    var mult = QUEST.lastWeight && idx === QUEST.q.length - 1 ? 2 : 1;
+    for (var k in w) {
+      qScore[k] = (qScore[k] || 0) + sign * w[k] * mult;
+    }
   }
 
   function sortBack() {
-    if (sortBusy) { return; }
-    if (sortIdx === 0) {
+    if (qBusy || !QUEST) { return; }
+    if (qIdx === 0) {
       hideSortScreens();
       openProfile();
       return;
     }
-    sortIdx--;
-    var prev = sortPicks.pop();
-    scoreFor(sortIdx, prev, -1);
-    if (sortIdx < SORTING.length - 1) { sortLast = null; }
+    qIdx--;
+    scoreFor(qIdx, qPicks.pop(), -1);
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
     renderSortQ();
   }
 
   function renderSortQ() {
     var t = T[lang];
-    var h = HAT[lang];
-    var text = SORTING[sortIdx][lang];
+    var v = QUEST.voice[lang];
+    var text = QUEST.q[qIdx][lang];
 
     $("react-box").classList.add("hidden");
     $("sort-opts").classList.remove("hidden");
@@ -1573,15 +1873,15 @@ body{
 
     var bar = $("sort-bar");
     bar.innerHTML = "";
-    for (var i = 0; i < SORTING.length; i++) {
+    for (var i = 0; i < QUEST.q.length; i++) {
       var seg = document.createElement("span");
-      if (i <= sortIdx) { seg.className = "on"; }
+      if (i <= qIdx) { seg.className = "on"; }
       bar.appendChild(seg);
     }
 
-    $("sort-step").textContent = t.step(sortIdx + 1, SORTING.length);
-    $("sort-back-txt").textContent = sortIdx === 0 ? t.sortExit : t.back;
-    $("hat-say").textContent = pickOne(h.before[sortIdx]);
+    $("sort-step").textContent = t.step(qIdx + 1, QUEST.q.length);
+    $("sort-back-txt").textContent = qIdx === 0 ? t.sortExit : t.back;
+    $("hat-say").textContent = pickOne(v.before[qIdx]);
     $("sort-q").textContent = text.q;
 
     var box = $("sort-opts");
@@ -1596,62 +1896,83 @@ body{
   }
 
   function answerSort(i) {
-    if (sortBusy) { return; }
-    sortBusy = true;
+    if (qBusy) { return; }
+    qBusy = true;
 
-    scoreFor(sortIdx, i, 1);
-    sortPicks.push(i);
-    if (sortIdx === SORTING.length - 1) { sortLast = SORTING[sortIdx].w[i].a; }
+    scoreFor(qIdx, i, 1);
+    qPicks.push(i);
 
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
 
-    // Shlyapaning qisqa reaksiyasi
     $("hat-say").classList.add("hidden");
     $("sort-q").classList.add("hidden");
     $("sort-opts").classList.add("hidden");
-    var line = pickOne(HAT[lang].after);
+    var line = pickOne(QUEST.voice[lang].after);
     $("react-line").textContent = line;
     $("react-box").classList.remove("hidden");
 
-    sortIdx++;
-    sortTimer = setTimeout(function () {
-      sortBusy = false;
-      if (sortIdx < SORTING.length) { renderSortQ(); }
+    qIdx++;
+    qTimer = setTimeout(function () {
+      qBusy = false;
+      if (qIdx < QUEST.q.length) { renderSortQ(); }
       else { runThinking(); }
     }, readMs(line));
   }
 
-  // 3-bosqich: shlyapa o'ylaydi
+  // 3-bosqich: o'ylanish
   function runThinking() {
-    var lines = HAT[lang].think;
+    var lines = QUEST.voice[lang].think;
     hideSortScreens();
     $("scr-think").classList.remove("hidden");
 
     var n = 0;
     function step() {
-      if (n >= lines.length) { finishSorting(); return; }
+      if (n >= lines.length) { QUEST.finish(); return; }
       var el = $("think-line");
       var line = lines[n];
       el.textContent = line;
       el.className = "think-line";
-      // animatsiyani qayta ishga tushirish
       try { void el.offsetWidth; } catch (e) {}
       n++;
-      sortTimer = setTimeout(step, readMs(line));
+      qTimer = setTimeout(step, readMs(line));
     }
     step();
   }
 
-  function pickHouse() {
-    var best = null, top = -1;
-    for (var k in sortScore) {
-      if (sortScore[k] > top) { top = sortScore[k]; best = k; }
+  // Berilgan ro'yxatdan eng ko'p ball to'plaganini tanlaydi
+  function topOf(keys, tieKey) {
+    var best = null, top = -1, tied = [];
+    for (var i = 0; i < keys.length; i++) {
+      var v = qScore[keys[i]] || 0;
+      if (v > top) { top = v; best = keys[i]; tied = [keys[i]]; }
+      else if (v === top) { tied.push(keys[i]); }
     }
-    // Tenglik bo'lsa — oxirgi savoldagi tanlov hal qiladi
-    var tied = [];
-    for (var k2 in sortScore) { if (sortScore[k2] === top) { tied.push(k2); } }
-    if (tied.length > 1 && sortLast && tied.indexOf(sortLast) >= 0) { return sortLast; }
+    if (tied.length > 1 && tieKey && tied.indexOf(tieKey) >= 0) { return tieKey; }
     return best;
+  }
+
+  /* ---------- SARALASH ---------- */
+
+  var HOUSE_IDS = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+
+  var QUEST_HOUSE = {
+    id: "house",
+    q: SORTING,
+    voice: HAT,
+    lastWeight: true,
+    mark: paintHat,
+    finish: finishSorting
+  };
+
+  function startSorting() { startQuest(QUEST_HOUSE); }
+
+  function pickHouse() {
+    // Tenglikda oxirgi savoldagi tanlov hal qiladi
+    var lastPick = qPicks[qPicks.length - 1];
+    var lastW = SORTING[SORTING.length - 1].w[lastPick] || {};
+    var tie = null;
+    for (var k in lastW) { if (lastW[k] === 3) { tie = k; } }
+    return topOf(HOUSE_IDS, tie);
   }
 
   function finishSorting() {
@@ -1665,6 +1986,8 @@ body{
     $("rv-kicker").textContent = t.rvKicker;
     $("rv-place").textContent = HAT[lang].place;
     $("rv-name").textContent = h[lang];
+    $("rv-sub").textContent = "";
+    $("rv-sub").classList.add("hidden");
     $("rv-note").textContent = h["note_" + lang] || "";
     $("rv-done").textContent = t.rvDone;
 
@@ -1674,6 +1997,65 @@ body{
     try {
       if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
     } catch (e) {}
+  }
+
+  /* ---------- TAYOQCHA ---------- */
+
+  var CORE_IDS = ["phoenix", "dragon", "unicorn"];
+  var WOOD_IDS = ["oak", "yew", "cherry", "holly", "aspen", "walnut"];
+  var FLEX_IDS = ["rigid", "springy", "supple", "yielding"];
+
+  var QUEST_WAND = {
+    id: "wand",
+    q: WANDQ,
+    voice: OLLI,
+    lastWeight: false,
+    mark: paintWandMark,
+    finish: finishWand
+  };
+
+  function startWand() { startQuest(QUEST_WAND); }
+
+  function paintWandMark(el) {
+    if (!el) { return; }
+    el.innerHTML = "";
+    el.className = "hat-mark";
+    el.textContent = "\u2726";
+  }
+
+  function finishWand() {
+    var w = {
+      wood: topOf(WOOD_IDS),
+      core: topOf(CORE_IDS),
+      flex: topOf(FLEX_IDS)
+    };
+    setWand(w);
+    reportWand(w);
+
+    var t = T[lang];
+    var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
+
+    $("rv-crest").innerHTML = "";
+    $("rv-crest").textContent = "\u2726";
+    $("rv-kicker").textContent = t.wandKicker;
+    $("rv-place").textContent = OLLI[lang].place;
+    $("rv-name").textContent = wd[lang] + ", " + cr[lang];
+    $("rv-sub").textContent = fl.len + " " + t.inch + ", " + fl[lang];
+    $("rv-sub").classList.remove("hidden");
+    $("rv-note").textContent = wd["t_" + lang] + ". " + cr["note_" + lang];
+    $("rv-done").textContent = t.rvDone;
+
+    hideSortScreens();
+    $("scr-reveal").classList.remove("hidden");
+
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
+  }
+
+  function wandLabel(w, code) {
+    if (!w || !WOODS[w.wood] || !CORES[w.core]) { return ""; }
+    return WOODS[w.wood][code] + ", " + CORES[w.core][code];
   }
 
   function closeReveal() {
@@ -1720,6 +2102,16 @@ body{
     $("prof-back").addEventListener("click", closeProfile);
     $("sort-cta").addEventListener("click", startSorting);
     $("sort-card-btn").addEventListener("click", startSorting);
+    $("wand-cta").addEventListener("click", startWand);
+    $("wand-card-btn").addEventListener("click", startWand);
+    $("wand-again").addEventListener("click", function () {
+      var msg = T[lang].wandAskAgain;
+      if (tg && tg.showConfirm) {
+        tg.showConfirm(msg, function (ok) { if (ok) { startWand(); } });
+      } else if (window.confirm ? window.confirm(msg) : true) {
+        startWand();
+      }
+    });
     $("hat-go").addEventListener("click", beginQuestions);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
@@ -1749,6 +2141,7 @@ body{
     var quick = readLocalLang();
     var localHouse = readLocalHouse();
     if (localHouse) { house = localHouse; }
+    wand = readLocalWand();
     applyHouse(house);
 
     var settled = false;
