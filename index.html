@@ -282,6 +282,97 @@ body{
   display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
   font-size:18px;color:var(--dim);margin-bottom:6px;
 }
+/* --- CHECKLIST --- */
+.checklist{
+  display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;
+  padding:13px 16px;margin-bottom:14px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+}
+.ck-item{display:flex;align-items:center;gap:6px;font:600 11px/1 'Manrope',sans-serif;letter-spacing:.04em}
+.ck-dot{
+  width:15px;height:15px;border-radius:50%;flex:none;display:grid;place-items:center;
+  border:1.5px solid var(--dim);font-size:9px;line-height:1;color:transparent;
+}
+.ck-item.done .ck-dot{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.ck-item.done{color:var(--text)}
+.ck-item.todo{color:var(--dim)}
+.ck-item.soon{color:var(--dim);opacity:.45}
+.ck-item.soon .ck-dot{border-style:dashed}
+
+/* --- TAYOQCHA KARTASI --- */
+.wand-face{display:grid;grid-template-columns:62px 1fr;gap:14px;align-items:center}
+.wand-icon{
+  width:62px;height:62px;display:grid;place-items:center;flex:none;
+  color:var(--accent);
+}
+.wand-icon svg{width:100%;height:auto;display:block}
+.wand-lines{display:flex;flex-direction:column;gap:2px;min-width:0}
+.wand-wood{font-family:'Cormorant Garamond',serif;font-size:21px;line-height:1.15;color:var(--accent)}
+.wand-line{font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.wand-more{
+  display:block;width:100%;margin-top:14px;padding:10px;background:transparent;
+  border:1px solid rgba(var(--accent-rgb),.4);border-radius:10px;color:var(--accent);
+  font:700 11px/1 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:.2s;
+}
+.wand-more:hover{background:rgba(var(--accent-rgb),.08)}
+.wand-more:active{transform:scale(.98)}
+
+/* --- BATAFSIL EKRAN --- */
+.det-hero{text-align:center;padding:10px 0 26px}
+.det-art{width:180px;margin:0 auto 18px;color:var(--accent)}
+.det-art svg{width:100%;height:auto;display:block}
+.det-title{
+  display:block;font-family:'Cormorant Garamond',serif;font-size:32px;
+  line-height:1.1;color:var(--accent);margin-bottom:8px;
+}
+.det-spec{
+  display:block;font:600 11px/1.6 'Manrope',sans-serif;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);
+}
+.det-block{
+  padding:16px 18px;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;margin-bottom:12px;
+}
+.det-h{
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:11px;
+}
+.det-p{margin:0;font:500 13.5px/1.7 'Manrope',sans-serif;color:#c3cbd6}
+.rare-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:12px}
+.rare-row:first-of-type{margin-top:0}
+.rare-k{font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.rare-v{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--accent);white-space:nowrap}
+.famous{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;margin-bottom:12px;border-radius:16px;
+  background:rgba(var(--accent-rgb),.10);
+  border:1px solid rgba(var(--accent-rgb),.38);
+}
+.famous-txt{display:flex;flex-direction:column;gap:3px}
+.famous-txt small{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);
+}
+.famous-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px}
+
+/* --- SVG CHIZMALAR --- */
+.art{color:var(--accent)}
+.art svg{display:block;width:100%;height:100%}
+.art-wand{
+  width:200px!important;height:auto!important;
+  border:none!important;background:none!important;border-radius:0!important;
+  margin:0 auto 22px!important;padding:0;
+}
+.art-wand svg{height:auto;filter:drop-shadow(0 6px 16px rgba(0,0,0,.5))}
+.art-shelf{
+  width:170px!important;height:auto!important;
+  border:none!important;background:none!important;border-radius:0!important;
+  margin:0 auto 24px!important;padding:0;
+}
+.art-shelf svg{height:auto}
+.house-crest .art svg,.sort-card-mark .art svg{width:100%;height:100%}
+
 .reveal{text-align:center;padding:26px 0 10px;animation:riseIn .6s ease both}
 .reveal-crest{
   width:104px;height:104px;margin:0 auto 20px;border-radius:26px;
@@ -480,6 +571,8 @@ body{
       <button class="back-btn" id="prof-back"><span style="font-size:13px">‹</span> <span id="prof-back-txt">Ortga</span></button>
     </div>
 
+    <div class="checklist" id="checklist"></div>
+
     <div class="prof-top">
       <span class="prof-pic" id="prof-pic"></span>
       <span class="prof-id">
@@ -512,15 +605,57 @@ body{
 
     <div class="panel hidden" id="wand-panel">
       <span class="panel-label" id="wand-label">Tayoqcha</span>
-      <div class="house-empty">
-        <span class="house-crest" id="wand-crest">✦</span>
-        <span class="house-txt">
-          <b id="wand-name"></b>
-          <small id="wand-note"></small>
+      <div class="wand-face">
+        <span class="wand-icon" id="wand-icon"></span>
+        <span class="wand-lines">
+          <span class="wand-wood" id="wand-wood"></span>
+          <span class="wand-line" id="wand-l1"></span>
+          <span class="wand-line" id="wand-l2"></span>
+          <span class="wand-line" id="wand-l3"></span>
         </span>
       </div>
+      <button class="wand-more hidden" id="wand-more"></button>
       <button class="sort-cta hidden" id="wand-cta"></button>
       <button class="resort hidden" id="wand-again"></button>
+    </div>
+  </div>
+
+  <div id="scr-detail" class="screen hidden">
+    <div class="cat-head">
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span class="kicker" id="det-kicker">Tayoqcha</span>
+      </div>
+      <button class="back-btn" id="det-back"><span style="font-size:13px">‹</span> <span id="det-back-txt">Ortga</span></button>
+    </div>
+
+    <div class="det-hero">
+      <div class="det-art" id="det-art"></div>
+      <span class="det-title" id="det-title"></span>
+      <span class="det-spec" id="det-spec"></span>
+    </div>
+
+    <div class="famous hidden" id="det-famous">
+      <span class="wand-icon" style="width:44px;height:44px" id="det-famous-icon"></span>
+      <span class="famous-txt">
+        <small id="det-famous-lbl"></small>
+        <b id="det-famous-who"></b>
+      </span>
+    </div>
+
+    <div class="det-block">
+      <span class="det-h" id="det-h-wood"></span>
+      <p class="det-p" id="det-wood"></p>
+    </div>
+
+    <div class="det-block">
+      <span class="det-h" id="det-h-core"></span>
+      <p class="det-p" id="det-core"></p>
+    </div>
+
+    <div class="det-block">
+      <span class="det-h" id="det-h-rare"></span>
+      <div class="rare-row"><span class="rare-k" id="det-rk1"></span><span class="rare-v" id="det-rv1"></span></div>
+      <div class="rare-row"><span class="rare-k" id="det-rk2"></span><span class="rare-v" id="det-rv2"></span></div>
     </div>
   </div>
 
@@ -769,6 +904,61 @@ body{
     yielding: { uz:"yumshoq",         ru:"мягкая",      en:"yielding",     len:"12½" }
   };
 
+  // Testning o'zidan hisoblangan kamyoblik (1536 kombinatsiya)
+  var RARITY_CORE = { unicorn: 45, dragon: 31, phoenix: 23 };
+  var RARITY_PAIR = { unicorn: 7.6, dragon: 5.2, phoenix: 3.9 };
+
+  // Kanondagi mashhur tayoqchalar bilan mos kelishi
+  var FAMOUS = {
+    "holly_phoenix":  { uz:"Garri Potter", ru:"Гарри Поттер", en:"Harry Potter" },
+    "yew_phoenix":    { uz:"Voldemort", ru:"Волан-де-Морт", en:"Voldemort" },
+    "walnut_dragon":  { uz:"Bellatrisa Lestrej", ru:"Беллатриса Лестрейндж", en:"Bellatrix Lestrange" },
+    "cherry_unicorn": { uz:"Nevill Longbottom", ru:"Невилл Долгопупс", en:"Neville Longbottom" }
+  };
+
+  // Yog'ochlarning kengaytirilgan tavsifi — "batafsil" ekrani uchun
+  var WOOD_LORE = {
+    oak: {
+      uz:"Eman egasi kuchli va sodiq bo'ladi. Bunday tayoqcha o'z odamini uzoq sinaydi, lekin bir marta tanlagach, hech qachon voz kechmaydi. Qiyin paytda u eng ishonchli hamroh.",
+      ru:"Владелец дуба силён и верен. Такая палочка долго испытывает своего человека, но однажды выбрав — не отступает. В трудный час она самый надёжный спутник.",
+      en:"An oak owner is strong and steadfast. This wand tests its wizard for a long time, but once it has chosen, it never turns away. In hard hours it is the surest companion." },
+    yew: {
+      uz:"Tis kamdan-kam qo'lga tushadi. U hayot va o'lim chegarasida turadigan tayoqcha — egasiga katta kuch beradi, lekin o'sha kuch bilan nima qilishini so'ramaydi. Javobgarlik egada qoladi.",
+      ru:"Тис достаётся немногим. Это палочка на грани жизни и смерти — она даёт большую силу, но не спрашивает, как ею распорядятся. Ответственность остаётся на владельце.",
+      en:"Yew comes to few. It is a wand that stands at the edge of life and death — it grants great power, but never asks what will be done with it. The responsibility stays with the owner." },
+    cherry: {
+      uz:"Olcha tashqaridan yumshoq ko'rinadi, ichida esa g'ayrioddiy kuch yashiradi. Bunday tayoqcha o'zini tuta biladigan odamni tanlaydi — kuchni ko'z-ko'z qilmaydiganini.",
+      ru:"Вишня кажется мягкой снаружи, но прячет внутри необычайную силу. Такая палочка выбирает того, кто умеет сдерживаться — кто не выставляет силу напоказ.",
+      en:"Cherry looks gentle from the outside and hides uncommon power within. This wand chooses one who can hold back — who does not display strength." },
+    holly: {
+      uz:"Padub himoya yog'ochi. U ko'pincha g'azabini yengishi kerak bo'lgan yoki xavfli yo'ldan boradigan sehrgarga keladi. Bunday tayoqcha egasini o'zidan asraydi.",
+      ru:"Остролист — дерево защиты. Он часто приходит к тому, кому предстоит одолеть свой гнев или пройти опасный путь. Такая палочка бережёт хозяина от него самого.",
+      en:"Holly is a wood of protection. It often comes to one who must master their own anger or walk a dangerous road. This wand guards its owner from himself." },
+    aspen: {
+      uz:"Terak jangchilar yog'ochi. Uning egasi o'z e'tiqodidan qaytmaydi va kerak bo'lsa yolg'iz turadi. Bunday tayoqcha ikkilanishni yoqtirmaydi.",
+      ru:"Осина — дерево воинов. Её владелец не отступает от своих убеждений и, если нужно, стоит один. Такая палочка не любит колебаний.",
+      en:"Aspen is a wood of warriors. Its owner does not abandon a conviction and will stand alone if need be. This wand has no patience for wavering." },
+    walnut: {
+      uz:"Yong'oq zukko va ixtirochi qo'lda ochiladi. U egasining aqliga moslashadi va kutilmagan yechimlarni yaxshi ko'radi. Lekin vijdonsiz qo'lda xavfli bo'lishi mumkin.",
+      ru:"Орех раскрывается в руке изобретательного. Он подстраивается под ум хозяина и любит неожиданные решения. Но в бессовестной руке может стать опасным.",
+      en:"Walnut opens up in an inventive hand. It adapts to its owner's mind and favours unexpected solutions. In an unscrupulous hand, though, it can turn dangerous." }
+  };
+
+  var CORE_LORE = {
+    phoenix: {
+      uz:"Feniks pati — eng kamyob o'zak. Feniks o'z patini kamdan-kam beradi, va bergani ham osonlikcha bo'ysunmaydi. Bunday tayoqcha o'z fikriga ega bo'ladi, ba'zan egasidan mustaqil ish tutadi. Lekin u eng keng sehr doirasiga ega.",
+      ru:"Перо феникса — самая редкая сердцевина. Феникс отдаёт перо неохотно, и отданное подчиняется не сразу. Такая палочка имеет собственное мнение и порой действует независимо. Зато её магический диапазон шире всех.",
+      en:"Phoenix feather is the rarest core. A phoenix gives up a feather reluctantly, and what it gives does not submit easily. Such a wand keeps its own mind and sometimes acts apart from its owner. But its range of magic is the widest of all." },
+    dragon: {
+      uz:"Ajdaho yuragi tolasi eng kuchli o'zak. U tez o'rganadi va yangi egaga tez bog'lanadi — hatto avvalgisini unutib. Jangovar sehrga eng mos, lekin g'azabga moyil: ehtiyotsiz qo'lda tez qiziydi.",
+      ru:"Жила дракона — самая мощная сердцевина. Она быстро учится и быстро привязывается к новому хозяину, забывая прежнего. Лучше всего подходит для боевой магии, но склонна к вспышкам: в неосторожной руке легко перегревается.",
+      en:"Dragon heartstring is the most powerful core. It learns quickly and bonds quickly to a new owner, forgetting the last. Best suited to combative magic, but prone to temper: in a careless hand it overheats." },
+    unicorn: {
+      uz:"Yakkashox yeli eng sodiq o'zak. U bir egaga bog'lanadi va boshqasiga o'tishni istamaydi. Qora sehrga deyarli yaramaydi — shuning uchun uni buzish qiyin. Kuchi boshqalarnikidan pastroq, lekin u hech qachon xiyonat qilmaydi.",
+      ru:"Волос единорога — самая верная сердцевина. Он привязывается к одному хозяину и не желает менять его. Почти не годится для тёмной магии — потому его трудно испортить. Силы в нём меньше, но он никогда не предаёт.",
+      en:"Unicorn hair is the most loyal core. It binds to one owner and will not willingly change hands. It is nearly useless for dark magic — which is why it is hard to corrupt. It carries less raw power, but it never betrays." }
+  };
+
   var OLLI = {
     uz: {
       introTop: "Ollivander do'koni. 382-yildan beri.",
@@ -827,7 +1017,7 @@ body{
   };
 
   var WANDQ = [
-    { w: [{"unicorn":1, "oak":1}, {"phoenix":1, "aspen":1}, {"dragon":1, "walnut":1}, {"phoenix":1, "cherry":1}],
+    { w: [{"unicorn":1, "oak":1}, {"dragon":1, "aspen":1}, {"dragon":1, "walnut":1}, {"unicorn":1, "cherry":1}],
       uz: { q:"Qaysi qo'lingiz bilan sehr qilasiz?",
             a:["O'ng qo'l — odatdagidek",
                "Chap qo'l — men boshqacha ushlayman",
@@ -844,7 +1034,7 @@ body{
                "Either — it makes no difference",
                "I do not know, I have never held one"] } },
 
-    { w: [{"dragon":3, "aspen":1}, {"phoenix":3, "holly":1}, {"unicorn":3, "oak":1}, {"phoenix":3, "cherry":1}],
+    { w: [{"dragon":3, "aspen":1}, {"phoenix":3, "holly":1}, {"unicorn":3, "oak":1}, {"unicorn":2, "cherry":1}],
       uz: { q:"Sehringiz birinchi marta qachon ko'ringan?",
             a:["G'azablanganimda — nimadir sindi",
                "Qo'rqqanimda — o'zimni himoya qildim",
@@ -884,7 +1074,7 @@ body{
                "The one whose leaves stir without wind",
                "The fruit tree, branches bowed"] } },
 
-    { w: [{"dragon":3, "yew":1}, {"phoenix":3, "walnut":1}, {"unicorn":3, "holly":1}, {"phoenix":3, "aspen":1}],
+    { w: [{"dragon":3, "yew":1}, {"phoenix":3, "walnut":1}, {"unicorn":3, "holly":1}, {"unicorn":2, "aspen":1}],
       uz: { q:"Sehr sizga nima uchun kerak?",
             a:["Kuchli bo'lish uchun",
                "Bilish va tushunish uchun",
@@ -901,7 +1091,7 @@ body{
                "To keep my people safe",
                "I do not know yet — that is what I seek"] } },
 
-    { w: [{"rigid":4, "dragon":1}, {"springy":4}, {"supple":4, "phoenix":1}, {"yielding":4, "unicorn":1}],
+    { w: [{"rigid":4, "dragon":1}, {"springy":4, "unicorn":1}, {"supple":4}, {"yielding":4, "unicorn":1}],
       uz: { q:"Tayoqcha qo'lingizda uchqun chiqarmasa — nima qilasiz?",
             a:["Yana urinib ko'raman, qayta-qayta",
                "Boshqasini so'rayman",
@@ -1042,6 +1232,7 @@ body{
           cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym", wandCardTitle:"Ollivander do'koni ochiq", wandCardSub:"5 ta savol — va tayoqchangizni bilib olasiz",
+          ckStart:"Boshlandi", ckHouse:"Fakultet", ckWand:"Tayoqcha", ckPatronus:"Patronus", ckPet:"Uy hayvoni", wandMore:"Batafsil", detKicker:"Sizning tayoqchangiz", hWood:"Yog'och nima deydi", hCore:"O'zak nima deydi", hRare:"Kamyoblik", rareCore:"Shunday o'zak", rarePair:"Shunday tayoqcha", ofWizards:"sehrgarlarda", famousLbl:"Xuddi shunday tayoqcha",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
@@ -1055,6 +1246,7 @@ body{
           cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           wandLbl:"Палочка", wandNone:"Пока не выбрана", wandNote:"Лавка Олливандера ждёт вас", wandCta:"Выбрать палочку", wandAgain:"Выбрать заново", wandAskAgain:"Ваша палочка может измениться. Продолжить?", wandKicker:"Олливандер выбрал", inch:"дюйма", wandCardTitle:"Лавка Олливандера открыта", wandCardSub:"5 вопросов — и вы узнаете свою палочку",
+          ckStart:"Начало", ckHouse:"Факультет", ckWand:"Палочка", ckPatronus:"Патронус", ckPet:"Питомец", wandMore:"Подробнее", detKicker:"Ваша палочка", hWood:"Что говорит дерево", hCore:"Что говорит сердцевина", hRare:"Редкость", rareCore:"Такая сердцевина", rarePair:"Такая палочка", ofWizards:"волшебников", famousLbl:"Точно такая же палочка у",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
@@ -1068,6 +1260,7 @@ body{
           cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
           sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
           wandLbl:"Wand", wandNone:"Not chosen yet", wandNote:"Ollivanders is waiting for you", wandCta:"Choose a wand", wandAgain:"Choose again", wandAskAgain:"Your wand may change. Continue?", wandKicker:"Ollivander has chosen", inch:"inches", wandCardTitle:"Ollivanders is open", wandCardSub:"5 questions — and you will know your wand",
+          ckStart:"Started", ckHouse:"House", ckWand:"Wand", ckPatronus:"Patronus", ckPet:"Pet", wandMore:"Read more", detKicker:"Your wand", hWood:"What the wood says", hCore:"What the core says", hRare:"Rarity", rareCore:"This core", rarePair:"This wand", ofWizards:"of wizards", famousLbl:"The very same wand as",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 open this film?";},
           guest:"Guest", noTag:"Open via Telegram" }
   };
@@ -1217,6 +1410,54 @@ body{
   function reportHouse(id) { report("house", id); }
 
   function reportWand(w) { report("wand", w.wood + "_" + w.core + "_" + w.flex); }
+
+  /* ---------- SVG CHIZMALAR ----------
+     currentColor ishlatadi — fakultet rangiga o'zi moslashadi.        */
+
+  var SVG_WAND =
+    '<svg viewBox="0 0 240 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M14 11.6 L70 13.4 L222 18.7 L233 20 L222 21.3 L70 26.6 L14 28.4 Q8 20 14 11.6 Z" ' +
+        'fill="currentColor" fill-opacity=".16" stroke="currentColor" stroke-width="1.4" ' +
+        'stroke-linejoin="round"/>' +
+      '<path d="M31 12.4 L31 27.6 M43 12.8 L43 27.2 M55 13.1 L55 26.9" ' +
+        'stroke="currentColor" stroke-width="1.2" stroke-opacity=".65" stroke-linecap="round"/>' +
+      '<path d="M70 13.4 L70 26.6" stroke="currentColor" stroke-width="1.4" stroke-opacity=".8"/>' +
+      '<circle cx="233" cy="20" r="4.5" fill="currentColor" fill-opacity=".22"/>' +
+      '<circle cx="233" cy="20" r="1.7" fill="currentColor"/>' +
+    '</svg>';
+
+  // Ollivander javoni: tayoqcha qutilari, bittasi tortib olingan
+  var SVG_SHELF =
+    '<svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<g stroke="currentColor" stroke-width="1.3" stroke-opacity=".38">' +
+        '<rect x="14" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="37" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="37" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="121" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="121" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="121" width="52" height="17" rx="2"/>' +
+      '</g>' +
+      '<g stroke="currentColor" stroke-width="1.1" stroke-opacity=".2">' +
+        '<path d="M8 33 H192 M8 92 H192 M8 117 H192"/>' +
+      '</g>' +
+      '<rect x="58" y="63" width="84" height="24" rx="3" ' +
+        'fill="currentColor" fill-opacity=".10" stroke="currentColor" stroke-width="1.5"/>' +
+      '<path d="M70 75 L126 75 L131 75" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-opacity=".9"/>' +
+      '<circle cx="133" cy="75" r="2.6" fill="currentColor"/>' +
+      '<circle cx="133" cy="75" r="6.5" fill="currentColor" fill-opacity=".16"/>' +
+    '</svg>';
+
+  function drawSvg(el, svg, cls) {
+    if (!el) { return; }
+    el.className = cls;
+    el.innerHTML = svg;
+  }
 
   var IMG_DIR = "img/";
   var HAT_IMG = "sorting_hat.png";
@@ -1623,6 +1864,7 @@ body{
     lang = code;
     if (remember) { saveLang(code); }
     stopSortTimer();
+    $("scr-detail").classList.add("hidden");
     $("scr-lang").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
@@ -1760,6 +2002,7 @@ body{
     $("total-val").textContent = uniqueWatched() + " / " + MOVIES.length;
 
     renderWandPanel(t);
+    renderChecklist(t);
   }
 
   function renderWandPanel(t) {
@@ -1771,20 +2014,103 @@ body{
     $("wand-label").textContent = t.wandLbl;
     $("wand-cta").textContent = t.wandCta;
     $("wand-again").textContent = t.wandAgain;
+    $("wand-more").textContent = t.wandMore;
+
+    var icon = $("wand-icon");
 
     if (wand) {
-      $("wand-name").textContent = wandLabel(wand, lang);
-      $("wand-note").textContent = FLEX[wand.flex].len + " " + t.inch + ", " + FLEX[wand.flex][lang];
-      $("wand-crest").classList.add("filled");
+      icon.innerHTML = SVG_WAND;
+      $("wand-wood").textContent = WOODS[wand.wood][lang];
+      $("wand-l1").textContent = CORES[wand.core][lang];
+      $("wand-l2").textContent = FLEX[wand.flex].len + " " + t.inch;
+      $("wand-l3").textContent = FLEX[wand.flex][lang];
+      $("wand-more").classList.remove("hidden");
       $("wand-cta").classList.add("hidden");
       $("wand-again").classList.remove("hidden");
     } else {
-      $("wand-name").textContent = t.wandNone;
-      $("wand-note").textContent = t.wandNote;
-      $("wand-crest").classList.remove("filled");
+      icon.innerHTML = SVG_WAND;
+      $("wand-wood").textContent = t.wandNone;
+      $("wand-l1").textContent = t.wandNote;
+      $("wand-l2").textContent = "";
+      $("wand-l3").textContent = "";
+      $("wand-more").classList.add("hidden");
       $("wand-cta").classList.remove("hidden");
       $("wand-again").classList.add("hidden");
     }
+  }
+
+  /* ---------- CHECKLIST ---------- */
+
+  function renderChecklist(t) {
+    var box = $("checklist");
+    box.innerHTML = "";
+
+    var items = [
+      { label: t.ckStart,    state: "done" },
+      { label: t.ckHouse,    state: house !== "none" ? "done" : "todo" },
+      { label: t.ckWand,     state: wand ? "done" : (house !== "none" ? "todo" : "soon") },
+      { label: t.ckPatronus, state: "soon" },
+      { label: t.ckPet,      state: "soon" }
+    ];
+
+    items.forEach(function (it) {
+      var el = document.createElement("span");
+      el.className = "ck-item " + it.state;
+      var dot = document.createElement("span");
+      dot.className = "ck-dot";
+      dot.textContent = "\u2713";
+      var tx = document.createElement("span");
+      tx.textContent = it.label;
+      el.appendChild(dot);
+      el.appendChild(tx);
+      box.appendChild(el);
+    });
+  }
+
+  /* ---------- TAYOQCHA: BATAFSIL ---------- */
+
+  function openWandDetail() {
+    if (!wand) { return; }
+    var t = T[lang];
+    var wd = WOODS[wand.wood], cr = CORES[wand.core], fl = FLEX[wand.flex];
+
+    $("det-kicker").textContent = t.detKicker;
+    $("det-back-txt").textContent = t.back;
+
+    $("det-art").innerHTML = SVG_WAND;
+    $("det-title").textContent = wd[lang];
+    $("det-spec").textContent = cr[lang] + " \u00b7 " + fl.len + " " + t.inch + " \u00b7 " + fl[lang];
+
+    var key = wand.wood + "_" + wand.core;
+    var fam = FAMOUS[key];
+    if (fam) {
+      $("det-famous-icon").innerHTML = SVG_WAND;
+      $("det-famous-lbl").textContent = t.famousLbl;
+      $("det-famous-who").textContent = fam[lang];
+      $("det-famous").classList.remove("hidden");
+    } else {
+      $("det-famous").classList.add("hidden");
+    }
+
+    $("det-h-wood").textContent = t.hWood;
+    $("det-wood").textContent = WOOD_LORE[wand.wood][lang];
+    $("det-h-core").textContent = t.hCore;
+    $("det-core").textContent = CORE_LORE[wand.core][lang];
+
+    $("det-h-rare").textContent = t.hRare;
+    $("det-rk1").textContent = t.rareCore;
+    $("det-rv1").textContent = RARITY_CORE[wand.core] + "%";
+    $("det-rk2").textContent = t.rarePair;
+    $("det-rv2").textContent = RARITY_PAIR[wand.core] + "%";
+
+    hideSortScreens();
+    $("scr-prof").classList.add("hidden");
+    $("scr-detail").classList.remove("hidden");
+  }
+
+  function closeWandDetail() {
+    $("scr-detail").classList.add("hidden");
+    openProfile();
   }
 
   /* ---------- UMUMIY SAYOHAT DVIGATELI ----------
@@ -1806,6 +2132,7 @@ body{
   }
 
   function hideSortScreens() {
+    $("scr-detail").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
@@ -2017,10 +2344,7 @@ body{
   function startWand() { startQuest(QUEST_WAND); }
 
   function paintWandMark(el) {
-    if (!el) { return; }
-    el.innerHTML = "";
-    el.className = "hat-mark";
-    el.textContent = "\u2726";
+    drawSvg(el, SVG_SHELF, "hat-mark art art-shelf");
   }
 
   function finishWand() {
@@ -2035,8 +2359,7 @@ body{
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
 
-    $("rv-crest").innerHTML = "";
-    $("rv-crest").textContent = "\u2726";
+    drawSvg($("rv-crest"), SVG_WAND, "reveal-crest art art-wand");
     $("rv-kicker").textContent = t.wandKicker;
     $("rv-place").textContent = OLLI[lang].place;
     $("rv-name").textContent = wd[lang] + ", " + cr[lang];
@@ -2065,6 +2388,7 @@ body{
 
   function openProfile() {
     stopSortTimer();
+    $("scr-detail").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-lang").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
@@ -2083,6 +2407,7 @@ body{
 
   function goBack() {
     stopSortTimer();
+    $("scr-detail").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
     $("scr-sort").classList.add("hidden");
@@ -2103,6 +2428,8 @@ body{
     $("sort-cta").addEventListener("click", startSorting);
     $("sort-card-btn").addEventListener("click", startSorting);
     $("wand-cta").addEventListener("click", startWand);
+    $("wand-more").addEventListener("click", openWandDetail);
+    $("det-back").addEventListener("click", closeWandDetail);
     $("wand-card-btn").addEventListener("click", startWand);
     $("wand-again").addEventListener("click", function () {
       var msg = T[lang].wandAskAgain;
@@ -2135,6 +2462,7 @@ body{
     $("scr-reveal").classList.add("hidden");
     $("scr-hat").classList.add("hidden");
     $("scr-think").classList.add("hidden");
+    $("scr-detail").classList.add("hidden");
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
