@@ -1877,6 +1877,36 @@ body{
     $("scr-think").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
+    maybeAutoSort();
+  }
+
+  // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda
+  // katalog o'rniga to'g'ridan-to'g'ri saralash boshlanadi. Bir marta
+  // ishlaydi va majburiy emas: saralash ekranidagi "Ortga" katalogga qaytaradi.
+  var pendingSort = false;
+  var cameForSort = false;      // bot taklifi orqali kelindimi
+  try {
+    pendingSort = /(^|[?&])screen=sort(&|$)/.test(window.location.search || "");
+  } catch (e) { pendingSort = false; }
+
+  function maybeAutoSort() {
+    if (!pendingSort) { return; }
+    pendingSort = false;
+    if (house === "none") {
+      cameForSort = true;
+      startSorting();
+    }
+  }
+
+  // Bot orqali saralashga kelgan foydalanuvchi uchun chiqish yo'li.
+  // Oddiy holatda "Ortga" til tanlashga qaytaradi, lekin bu yerda til
+  // allaqachon tanlangan - o'tkazib yuborgan odam kinolar ro'yxatini
+  // ko'rishi kerak (spetsifikatsiya 7-bo'lim).
+  function leaveSort() {
+    if (!cameForSort) { return false; }
+    cameForSort = false;
+    openCatalog(lang, false);
+    return true;
   }
 
   /* ---------- PROFIL ---------- */
@@ -2182,6 +2212,7 @@ body{
     if (qBusy || !QUEST) { return; }
     if (qIdx === 0) {
       hideSortScreens();
+      if (leaveSort()) { return; }
       openProfile();
       return;
     }
@@ -2417,6 +2448,7 @@ body{
     $("scr-reveal").classList.add("hidden");
     $("scr-hat").classList.add("hidden");
     $("scr-think").classList.add("hidden");
+    if (leaveSort()) { return; }
     $("scr-lang").classList.remove("hidden");
   }
 
