@@ -1413,6 +1413,10 @@ body{
           cupGate:"Yana %n — va hissangiz %s hisobiga qo'shiladi.",
           cupGatePts:"%d ball", cupSortCta:"Saralanish",
           cupInvite:"Do'stlaringizni taklif qiling",
+          cupNoHouse:"Fakultetingiz hali aniqlanmagan", cupNoHouseHint:"Saralanmasdan turib musobaqada qatnasha olmaysiz.",
+          cupNeedMembers:"%s musobaqaga qo'shilishi uchun %n kerak", cupNeedCount:"yana %d a'zo",
+          cupNeedHint:"A'zo — mavsumda kamida 30 ball to'plagan odam.",
+          cupEarly:"Mavsum endi boshlandi", cupEarlyHint:"Raqib aniqlanishi bilan farq shu yerda ko'rinadi.",
           cupFoot:"Reyting o'rtacha ball bo'yicha — katta fakultet avtomatik yutmasligi uchun.",
           cupGateTail:"Bu %d ta kunlik savol.",
           cupHoldPre:"Farq ozgina. ", cupHoldBold:"Bugun to'xtasangiz, kubok qo'ldan ketadi.",
@@ -1448,6 +1452,10 @@ body{
           cupGate:"Ещё %n — и ваш вклад пойдёт в зачёт %s.",
           cupGatePts:"%d очков", cupSortCta:"Пройти распределение",
           cupInvite:"Пригласите друзей",
+          cupNoHouse:"Ваш факультет ещё не определён", cupNoHouseHint:"Без распределения участвовать в соревновании нельзя.",
+          cupNeedMembers:"%s присоединится к соревнованию, если будет %n", cupNeedCount:"ещё %d участников",
+          cupNeedHint:"Участник — тот, кто набрал минимум 30 очков за сезон.",
+          cupEarly:"Сезон только начался", cupEarlyHint:"Как только появится соперник, разрыв покажется здесь.",
           cupFoot:"Рейтинг по среднему баллу — чтобы большой факультет не побеждал автоматически.",
           cupGateTail:"Это %d ежедневных вопроса.",
           cupHoldPre:"Разрыв невелик. ", cupHoldBold:"Если сегодня остановитесь, кубок уйдёт.",
@@ -1483,6 +1491,10 @@ body{
           cupGate:"%n more — and your score counts for %s.",
           cupGatePts:"%d points", cupSortCta:"Get sorted",
           cupInvite:"Invite your friends",
+          cupNoHouse:"You have not been sorted yet", cupNoHouseHint:"You cannot take part in the cup without a house.",
+          cupNeedMembers:"%s joins the cup once there are %n", cupNeedCount:"%d more members",
+          cupNeedHint:"A member is someone with at least 30 points this season.",
+          cupEarly:"The season has just begun", cupEarlyHint:"The gap will appear here as soon as a rival emerges.",
           cupFoot:"Ranked by average points — so the biggest house cannot win by size alone.",
           cupGateTail:"That is %d daily questions.",
           cupHoldPre:"The gap is small. ", cupHoldBold:"Stop today and the cup slips away.",
@@ -1725,6 +1737,11 @@ body{
 
   function cupMe() { return (cupData && cupData.me) || {}; }
 
+  // Gerb 34px + 9px pastdan = naycha balandligining 23%. To'ldirish
+  // undan past bo'lsa, gerb havoda osilib qolgandek ko'rinadi.
+  var MIN_FILL = 28;
+  var SCALE_FLOOR = 100;   // mavsumdagi maksimum 350
+
   // Farq bugun yopilsa - nuqtalar yaqin, yopilmasa - uzoq.
   // closable yuborilmagan bo'lsa (eski server) - neytral masofa.
   function gapRatio(diff, closable) {
@@ -1823,12 +1840,19 @@ body{
       var tube = document.createElement("div");
       tube.className = "tube";
 
-      // Naycha hech qachon butunlay bo'sh qolmasin - bo'sh naycha
-      // buzilgandek ko'rinadi (maket talabi: minimal 8%).
-      var pct = top > 0 ? Math.round((row.avg_points || 0) / top * 78) : 8;
+      // Minimal to'ldirish gerbni to'liq sig'diradigan balandlikda bo'lishi
+      // shart. 8% (15px) da 34px gerb to'ldirishdan chiqib turadi va naycha
+      // buzilgandek ko'rinadi - skrinshotda aynan shu ko'rindi.
+      //
+      // Shkalada quyi chegara bor: yetakchi SCALE_FLOOR dan past bo'lsa,
+      // balandlik o'sha chegaraga nisbatan hisoblanadi. Aks holda mavsum
+      // boshida 40 ball (350 dan) naychani deyarli to'ldirib, "poyga
+      // tugagan" degan yolg'on taassurot berardi.
+      var scale = Math.max(top, SCALE_FLOOR);
+      var pct = Math.round((row.avg_points || 0) / scale * 78);
       var fill = document.createElement("span");
       fill.className = "tube-fill";
-      fill.style.height = Math.max(8, pct) + "%";
+      fill.style.height = Math.max(MIN_FILL, pct) + "%";
       tube.appendChild(fill);
 
       var crest = document.createElement("span");
@@ -1862,12 +1886,56 @@ body{
 
   /* ---------- taranglik bloki ---------- */
 
+  // Uchta yiqilgan holat: fakultetsiz, fakultet chegaradan o'tmagan,
+  // yoki raqib hali aniqlanmagan (mavsum endi boshlangan).
+  function renderGapFallback(block, list, me, t) {
+    var h = HOUSES[me.house] || {};
+    block.style.setProperty("--rc", h.accent || "#97a1ae");
+    block.style.setProperty("--rc-rgb", h.rgb || "151,161,174");
+
+    var crestBox = $("gap-crest");
+    crestBox.innerHTML = "";
+    if (me.house) {
+      var img = cupCrestImg(me.house, 30);
+      if (img) { crestBox.appendChild(img); }
+    }
+
+    $("gap-track").innerHTML = "";
+    var el = $("gap-txt");
+    el.innerHTML = "";
+    var hint = $("gap-hint");
+    hint.innerHTML = "";
+
+    var row = cupRowOf(list, me.house);
+    if (!me.house) {
+      el.textContent = t.cupNoHouse;
+      hint.textContent = t.cupNoHouseHint;
+    } else if (row && !row.qualified) {
+      var need = Math.max(0, (row.needed || 0));
+      var parts = t.cupNeedMembers.split("%n");
+      el.appendChild(document.createTextNode(
+        parts[0].replace("%s", cupHouseName(me.house))));
+      var em = document.createElement("em");
+      em.textContent = t.cupNeedCount.replace("%d", need);
+      el.appendChild(em);
+      if (parts.length > 1) { el.appendChild(document.createTextNode(parts[1])); }
+      hint.textContent = t.cupNeedHint;
+    } else {
+      el.textContent = t.cupEarly;
+      hint.textContent = t.cupEarlyHint;
+    }
+    block.classList.remove("hidden");
+  }
+
   function renderGap(list, me) {
     var block = $("cup-gap");
     var t = T[lang];
     var g = me.gap;
 
-    if (!g) { block.classList.add("hidden"); return; }
+    // Taranglik bloki ekranning markazi. g bo'lmasa uni yashirish emas,
+    // holatga mos xabar ko'rsatish kerak (spetsifikatsiya 7.3) - aks holda
+    // mavsum boshida ekran bo'sh va maqsadsiz ko'rinadi.
+    if (!g) { renderGapFallback(block, list, me, t); return; }
 
     var rival = HOUSES[g.house] || {};
     block.style.setProperty("--rc", rival.accent || "#97a1ae");
