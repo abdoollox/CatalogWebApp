@@ -575,6 +575,7 @@ body{
 }
 .gap-crest img{width:30px;height:30px;object-fit:contain;display:block}
 .gap-track{position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.08)}
+.gap-span{position:absolute;top:0;height:100%;border-radius:2px;opacity:.55}
 .gap-dot{
   position:absolute;top:50%;width:11px;height:11px;border-radius:50%;
   transform:translate(-50%,-50%);border:2px solid var(--card);
@@ -1395,7 +1396,7 @@ body{
           houseLbl:"Fakultet", houseName:"Hali aniqlanmagan",
           houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
           cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
-          sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
+          sortCta:"Saralanish", resort:"Qayta saralanish", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym", wandCardTitle:"Ollivander do'koni ochiq", wandCardSub:"5 ta savol — va tayoqchangizni bilib olasiz",
           ckHouse:"Fakultet", ckWand:"Tayoqcha", ckPatronus:"Patronus", ckPet:"Uy hayvoni", wandMore:"Batafsil", detKicker:"Sizning tayoqchangiz", hWood:"Yog'och nima deydi", hCore:"O'zak nima deydi", hRare:"Kamyoblik", rareCore:"Shunday o'zak", rarePair:"Shunday tayoqcha", ofWizards:"sehrgarlarda", famousLbl:"Xuddi shunday tayoqcha",
           cupKicker:"Haftalik musobaqa", cupTitle:"Xogvarts kubogi", cupBack:"Ortga",
@@ -1430,7 +1431,7 @@ body{
           houseLbl:"Факультет", houseName:"Пока не определён",
           houseNote:"Пройдите распределение и узнайте свой факультет",
           cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
-          sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
+          sortCta:"Пройти распределение", resort:"Пройти заново", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           wandLbl:"Палочка", wandNone:"Пока не выбрана", wandNote:"Лавка Олливандера ждёт вас", wandCta:"Выбрать палочку", wandAgain:"Выбрать заново", wandAskAgain:"Ваша палочка может измениться. Продолжить?", wandKicker:"Олливандер выбрал", inch:"дюйма", wandCardTitle:"Лавка Олливандера открыта", wandCardSub:"5 вопросов — и вы узнаете свою палочку",
           ckHouse:"Факультет", ckWand:"Палочка", ckPatronus:"Патронус", ckPet:"Питомец", wandMore:"Подробнее", detKicker:"Ваша палочка", hWood:"Что говорит дерево", hCore:"Что говорит сердцевина", hRare:"Редкость", rareCore:"Такая сердцевина", rarePair:"Такая палочка", ofWizards:"волшебников", famousLbl:"Точно такая же палочка у",
           cupKicker:"Еженедельное соревнование", cupTitle:"Кубок Хогвартса", cupBack:"Назад",
@@ -1465,7 +1466,7 @@ body{
           houseLbl:"House", houseName:"Not sorted yet",
           houseNote:"Take the test and discover your house",
           cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
-          sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
+          sortCta:"Get sorted", resort:"Retake the test", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
           wandLbl:"Wand", wandNone:"Not chosen yet", wandNote:"Ollivanders is waiting for you", wandCta:"Choose a wand", wandAgain:"Choose again", wandAskAgain:"Your wand may change. Continue?", wandKicker:"Ollivander has chosen", inch:"inches", wandCardTitle:"Ollivanders is open", wandCardSub:"5 questions — and you will know your wand",
           ckHouse:"House", ckWand:"Wand", ckPatronus:"Patronus", ckPet:"Pet", wandMore:"Read more", detKicker:"Your wand", hWood:"What the wood says", hCore:"What the core says", hRare:"Rarity", rareCore:"This core", rarePair:"This wand", ofWizards:"of wizards", famousLbl:"The very same wand as",
           cupKicker:"Weekly contest", cupTitle:"The Hogwarts Cup", cupBack:"Back",
@@ -1724,6 +1725,19 @@ body{
 
   function cupMe() { return (cupData && cupData.me) || {}; }
 
+  // Farq bugun yopilsa - nuqtalar yaqin, yopilmasa - uzoq.
+  // closable yuborilmagan bo'lsa (eski server) - neytral masofa.
+  function gapRatio(diff, closable) {
+    var d = (typeof diff === "number" && diff > 0) ? diff : 0;
+    // closable 0 - bu muvaffaqiyatsizlik emas, "bugun hammasi qilingan".
+    // Bunday holatda uzun masofa ko'rsatish matnga zid bo'lardi.
+    if (typeof closable !== "number" || closable <= 0) { return 0.6; }
+    var r = d / (d + closable);
+    if (r < 0.12) { return 0.12; }
+    if (r > 0.9) { return 0.9; }   // hech qachon umidsiz ko'rinmasin
+    return r;
+  }
+
   // Chegaradan o'tganlar orasidagi o'rin (1 dan boshlab), yoki null
   function cupPlaceOf(house) {
     var place = 0, list = cupSorted(), i;
@@ -1876,19 +1890,31 @@ body{
     if (img) { crestBox.appendChild(img); }
 
     // Ikki nuqta: yetakchi o'ng chetda, ikkinchisi o'z nisbatida
-    var mineRow = cupRowOf(list, me.house);
-    var rivalRow = cupRowOf(list, g.house);
-    var mineAvg = (mineRow && mineRow.avg_points) || 0;
-    var rivalAvg = (rivalRow && rivalRow.avg_points) || 0;
-    var leader = Math.max(mineAvg, rivalAvg) || 1;
+    // Chiziq mutlaq ballarni emas, farqni BUGUNGI imkoniyatga nisbatan
+    // ko'rsatadi. Avval nuqtalar avg/leader bo'yicha qo'yilardi va poyga
+    // qanchalik qizg'in bo'lsa, ular shunchalik yopishib turardi - ya'ni
+    // taranglik eng yuqori paytda chiziq hech narsa ko'rsatmasdi.
     var track = $("gap-track");
     track.innerHTML = "";
-    [[mineAvg, (HOUSES[me.house] || {}).accent],
-     [rivalAvg, rival.accent]].forEach(function (pair) {
+
+    var ratio = gapRatio(g.diff, g.closable);
+    var LEAD = 90, span = Math.round(ratio * 70), back = LEAD - span;
+    var mineColor = (HOUSES[me.house] || {}).accent || "#97a1ae";
+    var rivalColor = rival.accent || "#97a1ae";
+
+    var seg = document.createElement("span");
+    seg.className = "gap-span";
+    seg.style.left = back + "%";
+    seg.style.width = span + "%";
+    seg.style.background = g.ahead ? mineColor : rivalColor;
+    track.appendChild(seg);
+
+    [[back, g.ahead ? rivalColor : mineColor],
+     [LEAD, g.ahead ? mineColor : rivalColor]].forEach(function (pair) {
       var dot = document.createElement("span");
       dot.className = "gap-dot";
-      dot.style.left = Math.max(20, Math.round(pair[0] / leader * 100)) + "%";
-      dot.style.background = pair[1] || "#97a1ae";
+      dot.style.left = pair[0] + "%";
+      dot.style.background = pair[1];
       track.appendChild(dot);
     });
 
@@ -3168,14 +3194,9 @@ body{
     $("hat-go").addEventListener("click", confirmSorting);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
-    $("resort-btn").addEventListener("click", function () {
-      var msg = T[lang].resortAsk;
-      if (tg && tg.showConfirm) {
-        tg.showConfirm(msg, function (ok) { if (ok) { startSorting(); } });
-      } else if (window.confirm ? window.confirm(msg) : true) {
-        startSorting();
-      }
-    });
+    // Ogohlantirish shlyapa ekranidagi confirmSorting() da beriladi.
+    // Bu yerda ikkinchi oyna ko'rsatilmaydi - u lockAsk ga zid edi.
+    $("resort-btn").addEventListener("click", startSorting);
 
     var u = tgUser();
     fillAvatar($("avatar-btn"), u, u ? fullName(u) : "?", false);
