@@ -495,83 +495,134 @@ body{
 }
 .card.seen .card-meta{color:var(--dim)}
 
-/* --- XOGVARTS KUBOGI --- */
+/* --- XOGVARTS KUBOGI (maket 2.0) --- */
+
+/* katalogdagi tasma - kirish nuqtasi */
 .cup-strip{
-  display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
   background:var(--card);border:1px solid var(--line);
-  border-left:3px solid var(--accent);border-radius:12px;
-  padding:11px 13px;margin-bottom:14px;cursor:pointer;
+  border-left:3px solid var(--accent);border-radius:18px;
+  padding:14px 16px;margin-bottom:14px;cursor:pointer;
   font-family:'Manrope',sans-serif;transition:.2s;
 }
 .cup-strip:active{transform:scale(.99)}
-.cup-strip-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.cup-strip-crest{width:28px;height:28px;flex:none;display:grid;place-items:center}
+.cup-strip-crest img{width:28px;height:28px;object-fit:contain;display:block}
+.cup-strip-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .cup-strip-kicker{
-  font:800 9px/1 'Manrope',sans-serif;letter-spacing:.16em;
+  font:800 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
   text-transform:uppercase;color:var(--dim);
 }
-.cup-strip-line{font:600 12.5px/1.35 'Manrope',sans-serif;color:var(--text)}
+.cup-strip-line{font:600 13px/1.35 'Manrope',sans-serif;color:var(--text)}
 .cup-strip-line b{color:var(--accent);font-weight:800}
 .cup-strip-arrow{color:var(--accent);font-size:18px;line-height:1;flex:none}
 
-.cup-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:6px 0 18px}
+/* ekran sarlavhasi */
+.cup-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.cup-timer{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);
+  font:600 11px/1 'Manrope',sans-serif;color:var(--dim);
+}
+.cup-timer i{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none}
+.cup-head{text-align:center;margin-bottom:22px}
 .cup-kick{
-  font:600 9.5px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
   text-transform:uppercase;color:var(--dim);
 }
 .cup-title{
-  font-family:'Cormorant Garamond',serif;font-size:31px;line-height:1.15;
-  color:var(--accent);margin:8px 0 5px;
+  display:block;font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:32px;line-height:1.1;margin:9px 0 0;color:var(--text);
 }
-.cup-left{font:500 11px/1.4 'Manrope',sans-serif;color:var(--dim)}
 
-.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end;margin-bottom:10px}
-.pod{
-  background:var(--card);border:1px solid var(--line);border-radius:13px;
-  padding:11px 6px;text-align:center;
+/* qum soatlari - Katta zaldagi to'rtta soat */
+.glasses{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.glass{text-align:center}
+.tube{
+  position:relative;height:184px;border-radius:11px 11px 14px 14px;overflow:hidden;
+  background:rgba(255,255,255,.035);border:1px solid var(--line);
 }
-.pod.first{padding-top:17px;padding-bottom:17px}
-.pod-crest{
-  width:36px;height:36px;border-radius:11px;margin:0 auto 7px;display:grid;place-items:center;
-  background:rgba(var(--pc-rgb),.16);border:1px solid rgba(var(--pc-rgb),.45);
+.glass.mine .tube{border-color:rgba(var(--hc-rgb),.55)}
+.glass.out .tube{opacity:.42}
+.tube-fill{
+  position:absolute;left:0;right:0;bottom:0;background:rgba(var(--hc-rgb),.42);
+  background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.20) 1px,transparent 1.6px);
+  background-size:9px 9px;transition:height .5s ease;
 }
-.pod-crest img{width:26px;height:26px;object-fit:contain;display:block}
-.pod-name{display:block;font:600 10.5px/1.2 'Manrope',sans-serif;margin-bottom:3px;color:var(--text)}
-.pod-pts{display:block;font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--pc)}
+.tube-fill::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--hc)}
+.tube-crest{
+  position:absolute;left:50%;bottom:9px;transform:translateX(-50%);
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:rgba(12,15,20,.72);border:1px solid rgba(var(--hc-rgb),.5);
+}
+.tube-crest img{width:26px;height:26px;object-fit:contain;display:block}
+.g-name{display:block;font:600 11px/1.3 'Manrope',sans-serif;margin-top:11px;color:var(--dim)}
+.glass.mine .g-name{color:var(--text)}
+.g-val{display:block;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--hc);margin-top:2px}
+.g-need{display:block;font:500 10px/1.35 'Manrope',sans-serif;color:var(--dim);margin-top:3px}
 
-.cup-list{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 13px}
-.cup-row{display:grid;grid-template-columns:17px 1fr auto;gap:9px;align-items:center;padding:9px 0}
-.cup-row + .cup-row{border-top:1px solid rgba(255,255,255,.05)}
-.cup-pos{font:800 11px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
-.cup-name{font:600 13px/1.25 'Manrope',sans-serif;color:var(--text)}
-.cup-name .you{color:var(--accent);font-weight:800}
-.cup-need{font:500 10.5px/1.45 'Manrope',sans-serif;color:var(--dim);margin-top:2px}
-.cup-bar{height:4px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}
-.cup-bar i{display:block;height:100%;border-radius:3px;background:var(--hc)}
-.cup-pts{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--hc);white-space:nowrap}
-.cup-row.faded .cup-name,.cup-row.faded .cup-pts{opacity:.55}
-
-.cup-me{
-  margin-top:12px;background:var(--card);border:1px solid var(--line);
-  border-radius:14px;padding:4px 13px;
+/* taranglik - ramka RAQIB rangida, o'z rangida emas */
+.cup-gap{
+  border:1px solid rgba(var(--rc-rgb),.34);background:var(--card);
+  border-radius:18px;padding:16px 18px;margin-top:20px;
 }
-.cup-me-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
-.cup-me-row + .cup-me-row{border-top:1px solid rgba(255,255,255,.05)}
-.cup-me-row small{
-  font:600 9.5px/1 'Manrope',sans-serif;letter-spacing:.14em;
+.gap-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.gap-txt{font:600 13.5px/1.45 'Manrope',sans-serif;color:var(--text)}
+.gap-txt em{font-style:normal;color:var(--rc);font-weight:800}
+.gap-crest{
+  width:44px;height:44px;flex:none;border-radius:13px;display:grid;place-items:center;
+  background:rgba(var(--rc-rgb),.13);border:1px solid rgba(var(--rc-rgb),.42);
+}
+.gap-crest img{width:30px;height:30px;object-fit:contain;display:block}
+.gap-track{position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.08)}
+.gap-dot{
+  position:absolute;top:50%;width:11px;height:11px;border-radius:50%;
+  transform:translate(-50%,-50%);border:2px solid var(--card);
+}
+.gap-hint{font:500 11.5px/1.5 'Manrope',sans-serif;color:var(--dim);margin-top:13px}
+.gap-hint b{color:var(--text);font-weight:600}
+
+/* shaxsiy blok - ball HECH QACHON fakultet o'rtachasi bilan yonma-yon emas */
+.cup-you{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:16px 18px;margin-top:12px;
+}
+.you-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.you-lbl{
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.18em;
   text-transform:uppercase;color:var(--dim);
 }
-.cup-me-row b{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--accent)}
+.you-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--accent)}
+.you-val s{text-decoration:none;font-size:16px;color:var(--dim)}
+.you-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
+.you-bar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .5s ease}
+.you-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
+  font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);
+}
+.you-foot b{color:var(--text);font-weight:600}
+
+/* 30 ballga yetmaganlar uchun - ayblov emas, qancha qolgani */
+.cup-you.gate{border-color:rgba(232,185,60,.38)}
+.cup-you.gate .you-val{color:#e8b93c}
+.cup-you.gate .you-bar i{background:#e8b93c}
+.gate-msg{
+  font:500 12.5px/1.55 'Manrope',sans-serif;color:var(--dim);
+  margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
+}
+.gate-msg b{color:#e8b93c;font-weight:700}
 
 .cup-cta{
-  display:block;width:100%;margin-top:13px;padding:12px;border-radius:11px;
+  display:block;width:100%;margin-top:14px;padding:13px;border-radius:14px;
   background:rgba(var(--accent-rgb),.12);border:1px solid rgba(var(--accent-rgb),.4);
-  color:var(--accent);font:800 10.5px/1 'Manrope',sans-serif;letter-spacing:.1em;
+  color:var(--accent);font:800 11px/1 'Manrope',sans-serif;letter-spacing:.1em;
   text-transform:uppercase;cursor:pointer;transition:.2s;
 }
 .cup-cta:active{transform:scale(.98)}
 .cup-foot{
-  font:italic 400 11.5px/1.6 'Cormorant Garamond',serif;
-  color:var(--dim);text-align:center;margin:16px 0 0;padding:0 6px;
+  font:italic 400 12px/1.6 'Cormorant Garamond',serif;
+  color:var(--dim);text-align:center;margin:18px 0 0;padding:0 6px;
 }
 </style>
 </head>
@@ -619,6 +670,7 @@ body{
     </div>
 
     <button class="cup-strip hidden" id="cup-strip">
+      <span class="cup-strip-crest" id="cup-strip-crest"></span>
       <span class="cup-strip-body">
         <span class="cup-strip-kicker" id="cup-strip-kicker"></span>
         <span class="cup-strip-line" id="cup-strip-line"></span>
@@ -788,19 +840,28 @@ body{
 
   <!-- Xogvarts kubogi: to'liq reyting ekrani -->
   <div id="scr-cup" class="screen hidden">
-    <div class="det-head">
+    <div class="cup-hdr">
       <button class="det-back" id="cup-back">‹ <span id="cup-back-txt">Ortga</span></button>
+      <span class="cup-timer"><i></i><span id="cup-timer-txt"></span></span>
     </div>
 
-    <div class="cup-hero">
+    <div class="cup-head">
       <span class="cup-kick" id="cup-kick"></span>
       <span class="cup-title" id="cup-title"></span>
-      <span class="cup-left" id="cup-left"></span>
     </div>
 
-    <div class="podium hidden" id="cup-podium"></div>
-    <div class="cup-list" id="cup-list"></div>
-    <div class="cup-me hidden" id="cup-me"></div>
+    <div class="glasses" id="cup-glasses"></div>
+
+    <div class="cup-gap hidden" id="cup-gap">
+      <div class="gap-top">
+        <div class="gap-txt" id="gap-txt"></div>
+        <div class="gap-crest" id="gap-crest"></div>
+      </div>
+      <div class="gap-track" id="gap-track"></div>
+      <div class="gap-hint" id="gap-hint"></div>
+    </div>
+
+    <div class="cup-you hidden" id="cup-you"></div>
     <button class="cup-cta hidden" id="cup-cta"></button>
     <p class="cup-foot" id="cup-foot"></p>
   </div>
@@ -1337,15 +1398,27 @@ body{
           sortCta:"Saralanish", resort:"Qayta saralanish", resortAsk:"Fakultetingiz o'zgarishi mumkin. Davom etasizmi?", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym", wandCardTitle:"Ollivander do'koni ochiq", wandCardSub:"5 ta savol — va tayoqchangizni bilib olasiz",
           ckHouse:"Fakultet", ckWand:"Tayoqcha", ckPatronus:"Patronus", ckPet:"Uy hayvoni", wandMore:"Batafsil", detKicker:"Sizning tayoqchangiz", hWood:"Yog'och nima deydi", hCore:"O'zak nima deydi", hRare:"Kamyoblik", rareCore:"Shunday o'zak", rarePair:"Shunday tayoqcha", ofWizards:"sehrgarlarda", famousLbl:"Xuddi shunday tayoqcha",
-          cupKicker:"Haftalik musobaqa", cupTitle:"Xogvarts kubogi", cupUntil:"Yakshanba 23:59 gacha",
-          cupDays:"%d kun qoldi", cupHours:"%d soat qoldi", cupDay1:"%d kun qoldi", cupHour1:"%d soat qoldi", cupEnding:"tugamoqda",
-          cupNeed:"musobaqaga yana %d a'zo kerak", cupNoPoints:"hali ball yo'q",
+          cupKicker:"Haftalik musobaqa", cupTitle:"Xogvarts kubogi", cupBack:"Ortga",
+          cupDays:"%d kun", cupDay1:"%d kun", cupHours:"%d soat", cupHour1:"%d soat",
+          cupLeftFmt:"%s qoldi", cupEnding:"tugamoqda",
+          cupMembers:"%a / %b a'zo", cupPlace:"%d-o'rin", cupPts:"ball",
           cupJoin:"Fakultetingizni aniqlang va musobaqada qatnashing",
-          cupPlace:"%d-o'rin", cupYours:"sizda %d ball", cupYou:"siz",
-          cupYourPts:"Sizning hissangiz", cupPts:"ball", cupInHouse:"Fakultet ichida",
-          cupInvite:"Do'stlaringizni taklif qiling", cupBack:"Ortga",
-          cupEmpty:"Bu haftada hali hech kim ball to'plamagan.",
+          cupStripGate:"hissangiz uchun yana %d ball",
+          cupStripBehind:"%s %n ball oldinda", cupStripAhead:"%s %n ball orqangizda",
+          cupGapBehind:"%s sizdan %n oldinda", cupGapAhead:"%s %n orqangizda",
+          cupGapHint:"Bugungi savol va imtihon — %n",
+          cupGapDrop:"farq %n ballga tushadi.", cupGapDone:"Bugun uchun hammasini qildingiz.",
+          cupYourPts:"Sizning hissangiz", cupInHouse:"%s ichida",
+          cupGate:"Yana %n — va hissangiz %s hisobiga qo'shiladi.",
+          cupGatePts:"%d ball", cupSortCta:"Saralanish",
+          cupInvite:"Do'stlaringizni taklif qiling",
           cupFoot:"Reyting o'rtacha ball bo'yicha — katta fakultet avtomatik yutmasligi uchun.",
+          cupGateTail:"Bu %d ta kunlik savol.",
+          cupHoldPre:"Farq ozgina. ", cupHoldBold:"Bugun to'xtasangiz, kubok qo'ldan ketadi.",
+          lockOnce:"Shlyapa bir marta qaror qiladi. Uning qarori o'zgarmaydi.",
+          lockTitle:"Saralanish", lockYes:"Ha, boshlaymiz", lockNo:"Hozir emas",
+          lockAsk:"Fakultetingiz umrbod qoladi — uni keyin o'zgartira olmaysiz. Xogvarts kubogida shu fakultet uchun kurashasiz. Tayyormisiz?",
+          lockFinal:"Bu sizning fakultetingiz. Endi u o'zgarmaydi.",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
@@ -1360,15 +1433,27 @@ body{
           sortCta:"Пройти распределение", resort:"Пройти заново", resortAsk:"Ваш факультет может измениться. Продолжить?", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
           wandLbl:"Палочка", wandNone:"Пока не выбрана", wandNote:"Лавка Олливандера ждёт вас", wandCta:"Выбрать палочку", wandAgain:"Выбрать заново", wandAskAgain:"Ваша палочка может измениться. Продолжить?", wandKicker:"Олливандер выбрал", inch:"дюйма", wandCardTitle:"Лавка Олливандера открыта", wandCardSub:"5 вопросов — и вы узнаете свою палочку",
           ckHouse:"Факультет", ckWand:"Палочка", ckPatronus:"Патронус", ckPet:"Питомец", wandMore:"Подробнее", detKicker:"Ваша палочка", hWood:"Что говорит дерево", hCore:"Что говорит сердцевина", hRare:"Редкость", rareCore:"Такая сердцевина", rarePair:"Такая палочка", ofWizards:"волшебников", famousLbl:"Точно такая же палочка у",
-          cupKicker:"Еженедельное соревнование", cupTitle:"Кубок Хогвартса", cupUntil:"До воскресенья 23:59",
-          cupDays:"осталось %d дн.", cupHours:"осталось %d ч.", cupDay1:"остался %d день", cupHour1:"остался %d час", cupEnding:"завершается",
-          cupNeed:"нужно ещё %d участников", cupNoPoints:"пока нет очков",
+          cupKicker:"Еженедельное соревнование", cupTitle:"Кубок Хогвартса", cupBack:"Назад",
+          cupDays:"%d дн.", cupDay1:"%d день", cupHours:"%d ч.", cupHour1:"%d час",
+          cupLeftFmt:"осталось %s", cupEnding:"завершается",
+          cupMembers:"%a / %b участников", cupPlace:"%d место", cupPts:"очков",
           cupJoin:"Определите факультет и участвуйте",
-          cupPlace:"%d место", cupYours:"у вас %d очков", cupYou:"вы",
-          cupYourPts:"Ваш вклад", cupPts:"очков", cupInHouse:"На факультете",
-          cupInvite:"Пригласите друзей", cupBack:"Назад",
-          cupEmpty:"На этой неделе очков пока нет.",
+          cupStripGate:"ещё %d очков до вашего вклада",
+          cupStripBehind:"%s впереди на %n", cupStripAhead:"%s позади на %n",
+          cupGapBehind:"%s впереди вас на %n", cupGapAhead:"%s позади вас на %n",
+          cupGapHint:"Сегодняшний вопрос и экзамен — %n",
+          cupGapDrop:"разрыв сократится до %n.", cupGapDone:"На сегодня вы сделали всё.",
+          cupYourPts:"Ваш вклад", cupInHouse:"На факультете %s",
+          cupGate:"Ещё %n — и ваш вклад пойдёт в зачёт %s.",
+          cupGatePts:"%d очков", cupSortCta:"Пройти распределение",
+          cupInvite:"Пригласите друзей",
           cupFoot:"Рейтинг по среднему баллу — чтобы большой факультет не побеждал автоматически.",
+          cupGateTail:"Это %d ежедневных вопроса.",
+          cupHoldPre:"Разрыв невелик. ", cupHoldBold:"Если сегодня остановитесь, кубок уйдёт.",
+          lockOnce:"Шляпа решает один раз. Её решение не меняется.",
+          lockTitle:"Распределение", lockYes:"Да, начнём", lockNo:"Не сейчас",
+          lockAsk:"Ваш факультет останется навсегда — изменить его будет нельзя. В Кубке Хогвартса вы будете бороться за него. Готовы?",
+          lockFinal:"Это ваш факультет. Теперь он не изменится.",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
@@ -1383,15 +1468,27 @@ body{
           sortCta:"Get sorted", resort:"Retake the test", resortAsk:"Your house may change. Continue?", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
           wandLbl:"Wand", wandNone:"Not chosen yet", wandNote:"Ollivanders is waiting for you", wandCta:"Choose a wand", wandAgain:"Choose again", wandAskAgain:"Your wand may change. Continue?", wandKicker:"Ollivander has chosen", inch:"inches", wandCardTitle:"Ollivanders is open", wandCardSub:"5 questions — and you will know your wand",
           ckHouse:"House", ckWand:"Wand", ckPatronus:"Patronus", ckPet:"Pet", wandMore:"Read more", detKicker:"Your wand", hWood:"What the wood says", hCore:"What the core says", hRare:"Rarity", rareCore:"This core", rarePair:"This wand", ofWizards:"of wizards", famousLbl:"The very same wand as",
-          cupKicker:"Weekly contest", cupTitle:"The Hogwarts Cup", cupUntil:"Until Sunday 23:59",
-          cupDays:"%d days left", cupHours:"%d hours left", cupDay1:"%d day left", cupHour1:"%d hour left", cupEnding:"ending",
-          cupNeed:"%d more members needed", cupNoPoints:"no points yet",
+          cupKicker:"Weekly contest", cupTitle:"The Hogwarts Cup", cupBack:"Back",
+          cupDays:"%d days", cupDay1:"%d day", cupHours:"%d hours", cupHour1:"%d hour",
+          cupLeftFmt:"%s left", cupEnding:"ending",
+          cupMembers:"%a / %b members", cupPlace:"place %d", cupPts:"points",
           cupJoin:"Get sorted and join the contest",
-          cupPlace:"place %d", cupYours:"you have %d points", cupYou:"you",
-          cupYourPts:"Your contribution", cupPts:"points", cupInHouse:"Within your house",
-          cupInvite:"Invite your friends", cupBack:"Back",
-          cupEmpty:"No points scored this week yet.",
+          cupStripGate:"%d more points to count",
+          cupStripBehind:"%s ahead by %n", cupStripAhead:"%s behind by %n",
+          cupGapBehind:"%s is ahead of you by %n", cupGapAhead:"%s is behind you by %n",
+          cupGapHint:"Today's question and one exam — %n",
+          cupGapDrop:"the gap drops to %n.", cupGapDone:"You have done everything for today.",
+          cupYourPts:"Your contribution", cupInHouse:"Within %s",
+          cupGate:"%n more — and your score counts for %s.",
+          cupGatePts:"%d points", cupSortCta:"Get sorted",
+          cupInvite:"Invite your friends",
           cupFoot:"Ranked by average points — so the biggest house cannot win by size alone.",
+          cupGateTail:"That is %d daily questions.",
+          cupHoldPre:"The gap is small. ", cupHoldBold:"Stop today and the cup slips away.",
+          lockOnce:"The Hat decides once. Its decision does not change.",
+          lockTitle:"Sorting", lockYes:"Yes, let's begin", lockNo:"Not now",
+          lockAsk:"Your house stays for life — you will not be able to change it. You will compete for it in the Hogwarts Cup. Ready?",
+          lockFinal:"This is your house. It will not change now.",
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 open this film?";},
           guest:"Guest", noTag:"Open via Telegram" }
   };
@@ -1538,9 +1635,10 @@ body{
     } catch (e) {}
   }
 
-  /* ---------- XOGVARTS KUBOGI ---------- */
+  /* ---------- XOGVARTS KUBOGI (2.0) ---------- */
 
   var API_LEADERBOARD = "https://bot.tizimshunos.uz/api/leaderboard";
+  var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;
 
@@ -1566,47 +1664,86 @@ body{
     } catch (e) { done(null); }
   }
 
-  function cupTimeLeft(iso) {
-    try {
-      var diff = new Date(iso).getTime() - Date.now();
-      if (!(diff > 0)) { return null; }
-      return { days: Math.floor(diff / 86400000), hours: Math.floor(diff / 3600000) };
-    } catch (e) { return null; }
-  }
-
-  function cupLeftText(t) {
-    if (!cupData || !cupData.season) { return ""; }
-    var left = cupTimeLeft(cupData.season.ends_at);
-    if (!left) { return t.cupEnding; }
-    if (left.days >= 1) {
-      return (left.days === 1 ? t.cupDay1 : t.cupDays).replace("%d", left.days);
-    }
-    var h = Math.max(1, left.hours);
-    return (h === 1 ? t.cupHour1 : t.cupHours).replace("%d", h);
+  function cupPts(v) {
+    var n = Number(v);
+    return isFinite(n) ? n.toFixed(1) : "0.0";
   }
 
   function cupHouseName(id) {
     return (HOUSES[id] && HOUSES[id][lang]) || id;
   }
 
-  // Server 5.0 ni 5 qilib yuborishi mumkin - jadvalda 6.7 va 5 yonma-yon
-  // turmasligi uchun hammasini bitta o'nlik xonaga keltiramiz.
-  function cupPts(v) {
-    var n = Number(v);
-    return isFinite(n) ? n.toFixed(1) : "—";
+  function cupCrestImg(houseId, size) {
+    var h = HOUSES[houseId];
+    if (!h || !h.img) { return null; }
+    var img = document.createElement("img");
+    img.src = IMG_DIR + h.img;
+    img.alt = "";
+    if (size) { img.style.width = img.style.height = size + "px"; }
+    return img;
   }
 
-  // Chegaradan o'tganlar tepada, o'rtacha ball bo'yicha. O'tmaganlar
-  // yashirilmaydi - ular a'zo taklif qilishga undash uchun ko'rsatiladi.
+  // "2 kun 14 soat qoldi" yoki "9 soat qoldi"
+  function cupTimer(t) {
+    if (!cupData || !cupData.season) { return ""; }
+    var diff;
+    try { diff = new Date(cupData.season.ends_at).getTime() - Date.now(); }
+    catch (e) { return ""; }
+    if (!(diff > 0)) { return t.cupEnding; }
+
+    // Avval muddat yig'iladi, keyin tilga mos qolipga qo'yiladi:
+    // o'zbekchada "... qoldi", ruschada "осталось ..." - so'z tartibi teskari.
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var span;
+    if (days >= 1) {
+      span = (days === 1 ? t.cupDay1 : t.cupDays).replace("%d", days);
+      if (hours >= 1) {
+        span += " " + (hours === 1 ? t.cupHour1 : t.cupHours).replace("%d", hours);
+      }
+    } else {
+      var h = Math.max(1, Math.floor(diff / 3600000));
+      span = (h === 1 ? t.cupHour1 : t.cupHours).replace("%d", h);
+    }
+    return t.cupLeftFmt.replace("%s", span);
+  }
+
+  // Chegaradan o'tganlar tepada, keyin o'rtacha ball bo'yicha.
   function cupSorted() {
     if (!cupData || !cupData.houses) { return []; }
     var list = cupData.houses.slice();
     list.sort(function (a, b) {
       if (a.qualified !== b.qualified) { return a.qualified ? -1 : 1; }
-      return (b.avg_points || 0) - (a.avg_points || 0);
+      if ((b.avg_points || 0) !== (a.avg_points || 0)) {
+        return (b.avg_points || 0) - (a.avg_points || 0);
+      }
+      return HOUSE_ORDER.indexOf(a.house) - HOUSE_ORDER.indexOf(b.house);
     });
     return list;
   }
+
+  function cupMe() { return (cupData && cupData.me) || {}; }
+
+  // Chegaradan o'tganlar orasidagi o'rin (1 dan boshlab), yoki null
+  function cupPlaceOf(house) {
+    var place = 0, list = cupSorted(), i;
+    for (i = 0; i < list.length; i++) {
+      if (!list[i].qualified) { continue; }
+      place++;
+      if (list[i].house === house) { return place; }
+    }
+    return null;
+  }
+
+  function cupRowOf(list, house) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].house === house) { return list[i]; }
+    }
+    return null;
+  }
+
+  /* ---------- katalogdagi tasma ---------- */
 
   function renderCupStrip() {
     var strip = $("cup-strip");
@@ -1615,186 +1752,269 @@ body{
 
     if (!cupData) { strip.classList.add("hidden"); return; }
 
-    $("cup-strip-kicker").textContent = t.cupTitle + " · " + cupLeftText(t);
+    var me = cupMe();
+    var house = me.house;
+
+    var crest = $("cup-strip-crest");
+    crest.innerHTML = "";
+    var img = house ? cupCrestImg(house, 28) : null;
+    if (img) { crest.appendChild(img); }
+
+    $("cup-strip-kicker").textContent = t.cupTitle;
 
     var line = $("cup-strip-line");
-    var mine = cupData.me && cupData.me.house;
+    var name = house ? cupHouseName(house) : "";
+    var place = house ? cupPlaceOf(house) : null;
+    var head = name + (place ? " " + t.cupPlace.replace("%d", place) : "");
+    var row = house ? cupRowOf(cupSorted(), house) : null;
 
-    if (!mine || mine === "none") {
+    if (!house) {
       line.textContent = t.cupJoin;
+    } else if (!me.is_active) {
+      line.textContent = head + " · " + t.cupStripGate.replace("%d", me.to_active || 0);
+    } else if (me.gap) {
+      line.textContent = head + " · " +
+        (me.gap.ahead ? t.cupStripAhead : t.cupStripBehind)
+          .replace("%s", cupHouseName(me.gap.house))
+          .replace("%n", cupPts(me.gap.diff));
+    } else if (row && !row.qualified) {
+      line.textContent = name + " — " + t.cupMembers
+        .replace("%a", row.active_members || 0).replace("%b", 5);
     } else {
-      var row = null, place = 0, i;
-      var list = cupSorted();
-      for (i = 0; i < list.length; i++) {
-        if (list[i].qualified) { place++; }
-        if (list[i].house === mine) { row = list[i]; break; }
-      }
-      if (row && row.qualified) {
-        line.innerHTML = cupHouseName(mine) + " <b>" +
-          t.cupPlace.replace("%d", place) + "</b> · " +
-          t.cupYours.replace("%d", cupData.me.points || 0);
-      } else if (row) {
-        line.textContent = cupHouseName(mine) + " — " +
-          t.cupNeed.replace("%d", row.needed || 1);
-      } else {
-        line.textContent = cupHouseName(mine) + " — " + t.cupNoPoints;
-      }
+      line.textContent = head;
     }
     strip.classList.remove("hidden");
   }
 
-  function cupCrest(houseId) {
-    var wrap = document.createElement("span");
-    wrap.className = "pod-crest";
-    var h = HOUSES[houseId];
-    if (h && h.img) {
-      var img = document.createElement("img");
-      img.src = IMG_DIR + h.img;
-      img.alt = "";
-      wrap.appendChild(img);
-    } else {
-      wrap.textContent = (h && h.crest) || "?";
+  /* ---------- qum soatlari ---------- */
+
+  function renderGlasses(list, me) {
+    var box = $("cup-glasses");
+    box.innerHTML = "";
+    var t = T[lang];
+
+    var top = 0, i;
+    for (i = 0; i < list.length; i++) {
+      if ((list[i].avg_points || 0) > top) { top = list[i].avg_points; }
     }
-    return wrap;
+
+    list.forEach(function (row) {
+      var h = HOUSES[row.house] || {};
+      var cell = document.createElement("div");
+      cell.className = "glass" + (row.house === me.house ? " mine" : "") +
+                       (row.qualified ? "" : " out");
+      cell.style.setProperty("--hc", h.accent || "#97a1ae");
+      cell.style.setProperty("--hc-rgb", h.rgb || "151,161,174");
+
+      var tube = document.createElement("div");
+      tube.className = "tube";
+
+      // Naycha hech qachon butunlay bo'sh qolmasin - bo'sh naycha
+      // buzilgandek ko'rinadi (maket talabi: minimal 8%).
+      var pct = top > 0 ? Math.round((row.avg_points || 0) / top * 78) : 8;
+      var fill = document.createElement("span");
+      fill.className = "tube-fill";
+      fill.style.height = Math.max(8, pct) + "%";
+      tube.appendChild(fill);
+
+      var crest = document.createElement("span");
+      crest.className = "tube-crest";
+      var img = cupCrestImg(row.house, 26);
+      if (img) { crest.appendChild(img); }
+      else { crest.textContent = h.crest || "?"; }
+      tube.appendChild(crest);
+      cell.appendChild(tube);
+
+      var nm = document.createElement("span");
+      nm.className = "g-name";
+      nm.textContent = cupHouseName(row.house);
+      cell.appendChild(nm);
+
+      var val = document.createElement("span");
+      val.className = "g-val";
+      val.textContent = cupPts(row.avg_points);
+      cell.appendChild(val);
+
+      if (!row.qualified) {
+        var need = document.createElement("span");
+        need.className = "g-need";
+        need.textContent = t.cupMembers
+          .replace("%a", row.active_members || 0).replace("%b", 5);
+        cell.appendChild(need);
+      }
+      box.appendChild(cell);
+    });
   }
+
+  /* ---------- taranglik bloki ---------- */
+
+  function renderGap(list, me) {
+    var block = $("cup-gap");
+    var t = T[lang];
+    var g = me.gap;
+
+    if (!g) { block.classList.add("hidden"); return; }
+
+    var rival = HOUSES[g.house] || {};
+    block.style.setProperty("--rc", rival.accent || "#97a1ae");
+    block.style.setProperty("--rc-rgb", rival.rgb || "151,161,174");
+
+    var txt = (g.ahead ? t.cupGapAhead : t.cupGapBehind)
+      .replace("%s", cupHouseName(g.house));
+    var parts = txt.split("%n");
+    var el = $("gap-txt");
+    el.innerHTML = "";
+    el.appendChild(document.createTextNode(parts[0]));
+    var em = document.createElement("em");
+    em.textContent = cupPts(g.diff) + " " + t.cupPts;
+    el.appendChild(em);
+    if (parts.length > 1) { el.appendChild(document.createTextNode(parts[1])); }
+
+    var crestBox = $("gap-crest");
+    crestBox.innerHTML = "";
+    var img = cupCrestImg(g.house, 30);
+    if (img) { crestBox.appendChild(img); }
+
+    // Ikki nuqta: yetakchi o'ng chetda, ikkinchisi o'z nisbatida
+    var mineRow = cupRowOf(list, me.house);
+    var rivalRow = cupRowOf(list, g.house);
+    var mineAvg = (mineRow && mineRow.avg_points) || 0;
+    var rivalAvg = (rivalRow && rivalRow.avg_points) || 0;
+    var leader = Math.max(mineAvg, rivalAvg) || 1;
+    var track = $("gap-track");
+    track.innerHTML = "";
+    [[mineAvg, (HOUSES[me.house] || {}).accent],
+     [rivalAvg, rival.accent]].forEach(function (pair) {
+      var dot = document.createElement("span");
+      dot.className = "gap-dot";
+      dot.style.left = Math.max(20, Math.round(pair[0] / leader * 100)) + "%";
+      dot.style.background = pair[1] || "#97a1ae";
+      track.appendChild(dot);
+    });
+
+    // Ohang holatga qarab o'zgaradi: ortda bo'lsa - quvish, yetakchi
+    // bo'lsa - ushlab qolish (spetsifikatsiya 7.3).
+    var hint = $("gap-hint");
+    hint.innerHTML = "";
+    var bold = document.createElement("b");
+
+    if (g.ahead) {
+      hint.appendChild(document.createTextNode(t.cupHoldPre));
+      bold.textContent = t.cupHoldBold;
+      hint.appendChild(bold);
+    } else if (g.closable > 0) {
+      var left = Math.max(0, Math.round((g.diff - g.closable) * 10) / 10);
+      var hp = t.cupGapHint.split("%n");
+      hint.appendChild(document.createTextNode(hp[0]));
+      bold.textContent = t.cupGapDrop.replace("%n", cupPts(left));
+      hint.appendChild(bold);
+      if (hp.length > 1) { hint.appendChild(document.createTextNode(hp[1])); }
+    } else {
+      hint.textContent = t.cupGapDone;
+    }
+    block.classList.remove("hidden");
+  }
+
+  /* ---------- shaxsiy blok ---------- */
+
+  function renderYou(me) {
+    var box = $("cup-you");
+    var t = T[lang];
+
+    if (!me.house) { box.classList.add("hidden"); return; }
+
+    box.className = "cup-you" + (me.is_active ? "" : " gate");
+    box.innerHTML = "";
+
+    var top = document.createElement("div");
+    top.className = "you-top";
+    var lbl = document.createElement("span");
+    lbl.className = "you-lbl";
+    lbl.textContent = t.cupYourPts;
+    var val = document.createElement("span");
+    val.className = "you-val";
+    val.appendChild(document.createTextNode(String(me.points || 0)));
+    var s = document.createElement("s");
+    s.textContent = " / " + (me.max_points || 350);
+    val.appendChild(s);
+    top.appendChild(lbl);
+    top.appendChild(val);
+    box.appendChild(top);
+
+    var bar = document.createElement("div");
+    bar.className = "you-bar";
+    var fill = document.createElement("i");
+    var pct = Math.round((me.points || 0) / (me.max_points || 350) * 100);
+    fill.style.width = Math.max(0, Math.min(100, pct)) + "%";
+    bar.appendChild(fill);
+    box.appendChild(bar);
+
+    if (!me.is_active) {
+      // Ayblov yo'q: "hisobga kirmaysiz" emas, faqat qancha qolgani
+      var msg = document.createElement("div");
+      msg.className = "gate-msg";
+      var gp = t.cupGate.split("%n");
+      msg.appendChild(document.createTextNode(gp[0]));
+      var b = document.createElement("b");
+      b.textContent = t.cupGatePts.replace("%d", me.to_active || 0);
+      msg.appendChild(b);
+      if (gp.length > 1) {
+        msg.appendChild(document.createTextNode(
+          gp[1].replace("%s", cupHouseName(me.house))));
+      }
+      // "Bu ikkita kunlik savol" - qolgan ballni tushunarli o'lchovga
+      // aylantiradi, shunda 20 ball mavhum raqam bo'lib qolmaydi.
+      var quizzes = Math.ceil((me.to_active || 0) / 10);
+      if (quizzes > 0) {
+        msg.appendChild(document.createTextNode(
+          " " + t.cupGateTail.replace("%d", quizzes)));
+      }
+      box.appendChild(msg);
+    } else if (me.house_rank) {
+      var foot = document.createElement("div");
+      foot.className = "you-foot";
+      var left = document.createElement("span");
+      left.textContent = t.cupInHouse.replace("%s", cupHouseName(me.house));
+      var right = document.createElement("b");
+      right.textContent = t.cupPlace.replace("%d", me.house_rank);
+      foot.appendChild(left);
+      foot.appendChild(right);
+      box.appendChild(foot);
+    }
+    box.classList.remove("hidden");
+  }
+
+  /* ---------- to'liq ekran ---------- */
 
   function renderCupScreen() {
     var t = T[lang];
     var list = cupSorted();
-    var mine = (cupData && cupData.me && cupData.me.house) || null;
+    var me = cupMe();
 
+    $("cup-timer-txt").textContent = cupTimer(t);
     $("cup-kick").textContent = t.cupKicker;
     $("cup-title").textContent = t.cupTitle;
-    $("cup-left").textContent = t.cupUntil + " · " + cupLeftText(t);
     $("cup-foot").textContent = t.cupFoot;
+    $("cup-back-txt").textContent = t.cupBack;
 
-    var qualified = list.filter(function (x) { return x.qualified; });
-    var podium = $("cup-podium");
-    podium.innerHTML = "";
+    renderGlasses(list, me);
+    renderGap(list, me);
+    renderYou(me);
 
-    // Podium faqat kamida uchta fakultet chegaradan o'tgandagina mazmunli.
-    var rest = list;
-    if (qualified.length >= 3) {
-      var order = [qualified[1], qualified[0], qualified[2]];   // 2 - 1 - 3
-      order.forEach(function (row, idx) {
-        var cell = document.createElement("div");
-        cell.className = "pod" + (idx === 1 ? " first" : "");
-        var h = HOUSES[row.house];
-        cell.style.setProperty("--pc", (h && h.accent) || "#97a1ae");
-        cell.style.setProperty("--pc-rgb", (h && h.rgb) || "151,161,174");
-        cell.appendChild(cupCrest(row.house));
-        var nm = document.createElement("span");
-        nm.className = "pod-name";
-        nm.textContent = cupHouseName(row.house);
-        var pt = document.createElement("span");
-        pt.className = "pod-pts";
-        pt.textContent = cupPts(row.avg_points);
-        cell.appendChild(nm);
-        cell.appendChild(pt);
-        podium.appendChild(cell);
-      });
-      podium.classList.remove("hidden");
-      rest = list.slice(3);
-    } else {
-      podium.classList.add("hidden");
-    }
-
-    var box = $("cup-list");
-    box.innerHTML = "";
-    var startPos = (qualified.length >= 3) ? 4 : 1;
-    var pos = startPos;
-
-    rest.forEach(function (row) {
-      var h = HOUSES[row.house];
-      var el = document.createElement("div");
-      el.className = "cup-row" + (row.qualified ? "" : " faded");
-      el.style.setProperty("--hc", (h && h.accent) || "#97a1ae");
-
-      var p = document.createElement("div");
-      p.className = "cup-pos";
-      p.textContent = row.qualified ? String(pos++) : "·";
-
-      var mid = document.createElement("div");
-      var nm = document.createElement("div");
-      nm.className = "cup-name";
-      nm.textContent = cupHouseName(row.house);
-      if (row.house === mine) {
-        var you = document.createElement("span");
-        you.className = "you";
-        you.textContent = " · " + t.cupYou;
-        nm.appendChild(you);
-      }
-      mid.appendChild(nm);
-
-      if (row.qualified) {
-        var bar = document.createElement("div");
-        bar.className = "cup-bar";
-        var fill = document.createElement("i");
-        var top = qualified.length ? (qualified[0].avg_points || 1) : 1;
-        fill.style.width = Math.max(4, Math.round(100 * (row.avg_points || 0) / top)) + "%";
-        bar.appendChild(fill);
-        mid.appendChild(bar);
-      } else {
-        var need = document.createElement("div");
-        need.className = "cup-need";
-        need.textContent = t.cupNeed.replace("%d", row.needed || 1);
-        mid.appendChild(need);
-      }
-
-      var pts = document.createElement("div");
-      pts.className = "cup-pts";
-      pts.textContent = cupPts(row.avg_points);
-
-      el.appendChild(p);
-      el.appendChild(mid);
-      el.appendChild(pts);
-      box.appendChild(el);
-    });
-
-    if (!list.length) {
-      var empty = document.createElement("div");
-      empty.className = "cup-row";
-      var msg = document.createElement("div");
-      msg.className = "cup-need";
-      msg.style.gridColumn = "1 / -1";
-      msg.textContent = t.cupEmpty;
-      empty.appendChild(msg);
-      box.appendChild(empty);
-    }
-
-    var me = $("cup-me");
-    me.innerHTML = "";
-    if (mine && mine !== "none") {
-      me.appendChild(cupMeRow(t.cupYourPts, (cupData.me.points || 0) + " " + t.cupPts));
-      if (cupData.me.house_rank) {
-        me.appendChild(cupMeRow(t.cupInHouse,
-          t.cupPlace.replace("%d", cupData.me.house_rank)));
-      }
-      me.classList.remove("hidden");
-    } else {
-      me.classList.add("hidden");
-    }
-
+    // Taklif tugmasi: fakultetsizga saralanish, chegaradan o'tmaganga a'zo
     var cta = $("cup-cta");
-    var myRow = list.filter(function (x) { return x.house === mine; })[0];
-    if (mine && myRow && !myRow.qualified) {
+    var mineRow = cupRowOf(list, me.house);
+    if (!me.house) {
+      cta.textContent = t.cupSortCta;
+      cta.setAttribute("data-act", "sort");
+      cta.classList.remove("hidden");
+    } else if (mineRow && !mineRow.qualified) {
       cta.textContent = t.cupInvite;
+      cta.setAttribute("data-act", "invite");
       cta.classList.remove("hidden");
     } else {
       cta.classList.add("hidden");
     }
-  }
-
-  function cupMeRow(label, value) {
-    var row = document.createElement("div");
-    row.className = "cup-me-row";
-    var s = document.createElement("small");
-    s.textContent = label;
-    var b = document.createElement("b");
-    b.textContent = value;
-    row.appendChild(s);
-    row.appendChild(b);
-    return row;
   }
 
   function openCup() {
@@ -2228,7 +2448,8 @@ body{
 
     paintHatSmall($("sort-card-mark"));
     $("sort-card-title").textContent = t.cardTitle;
-    $("sort-card-sub").textContent = t.cardSub;
+    // Birinchi ogohlantirish nuqtasi: taklif kartasining o'zida
+    $("sort-card-sub").textContent = t.cardSub + " " + t.lockOnce;
     $("sort-card-btn").textContent = t.sortCta;
     card.classList.remove("hidden");
     dot.classList.remove("hidden");
@@ -2402,7 +2623,11 @@ body{
       again.classList.add("hidden");
     } else {
       cta.classList.add("hidden");
-      again.classList.remove("hidden");
+      // Fakultet UMRBOD: qayta saralanish faqat muhlat ichida ko'rinadi.
+      // Server ham rad etadi, bu yerda tugma shunchaki yashiriladi.
+      var me = cupMe();
+      if (me.can_resort) { again.classList.remove("hidden"); }
+      else { again.classList.add("hidden"); }
     }
 
     $("prof-name").textContent = name;
@@ -2737,6 +2962,39 @@ body{
 
   function startSorting() { startQuest(QUEST_HOUSE); }
 
+  // Fakultet umrbod bo'lgani uchun tasdiq SAVOLLARDAN OLDIN so'raladi.
+  // Yetti savolga javob bergandan keyingi ogohlantirish - ogohlantirish
+  // emas, tuzoq. Tayoqcha uchun bu shart emas - u o'zgartirilishi mumkin.
+  function confirmSorting() {
+    if (QUEST !== QUEST_HOUSE) { beginQuestions(); return; }
+    var t = T[lang];
+
+    function go(agreed) {
+      if (!agreed) { return; }
+      report("sort_start", "1");     // boshlaganlar/tugatganlar nisbati uchun
+      beginQuestions();
+    }
+
+    try {
+      if (tg && tg.showPopup) {
+        tg.showPopup({
+          title: t.lockTitle,
+          message: t.lockAsk,
+          buttons: [
+            { id: "go", type: "default", text: t.lockYes },
+            { id: "no", type: "cancel", text: t.lockNo }
+          ]
+        }, function (id) { go(id === "go"); });
+        return;
+      }
+      if (tg && tg.showConfirm) {
+        tg.showConfirm(t.lockAsk, go);
+        return;
+      }
+    } catch (e) {}
+    go(window.confirm ? window.confirm(t.lockAsk) : true);
+  }
+
   function pickHouse() {
     // Tenglikda oxirgi savoldagi tanlov hal qiladi
     var lastPick = qPicks[qPicks.length - 1];
@@ -2759,7 +3017,9 @@ body{
     $("rv-name").textContent = h[lang];
     $("rv-sub").textContent = "";
     $("rv-sub").classList.add("hidden");
-    $("rv-note").textContent = h["note_" + lang] || "";
+    // Uchinchi ogohlantirish nuqtasi: natija e'lon qilingandan keyin.
+    // Ohang tantanali, xavotirli emas.
+    $("rv-note").textContent = ((h["note_" + lang] || "") + " " + t.lockFinal).trim();
     $("rv-done").textContent = t.rvDone;
 
     hideSortScreens();
@@ -2888,7 +3148,12 @@ body{
     $("cup-strip").addEventListener("click", openCup);
     $("cup-back").addEventListener("click", closeCup);
     $("cup-cta").addEventListener("click", function () {
-      // Taklif havolasi: do'st bot orqali kirsa, u ham fakultetga qo'shiladi
+      // Fakultetsizga - saralanish, chegaradan o'tmaganga - a'zo taklifi
+      if (this.getAttribute("data-act") === "sort") {
+        $("scr-cup").classList.add("hidden");
+        startSorting();
+        return;
+      }
       var url = "https://t.me/" + BOT;
       var text = T[lang].cupJoin;
       try {
@@ -2900,7 +3165,7 @@ body{
       } catch (e) {}
       try { window.open(url, "_blank"); } catch (e) {}
     });
-    $("hat-go").addEventListener("click", beginQuestions);
+    $("hat-go").addEventListener("click", confirmSorting);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
     $("resort-btn").addEventListener("click", function () {
