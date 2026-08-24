@@ -22,24 +22,24 @@ body{
   color:var(--text);min-height:100vh;
   display:flex;justify-content:center;
 }
-.shell{width:100%;max-width:440px;padding:22px 18px 40px}
+.shell{width:100%;max-width:440px;padding:22px 18px 28px}
 @keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .screen{animation:riseIn .4s ease both}
 .hidden{display:none!important}
 @media (prefers-reduced-motion:reduce){.screen{animation:none}*{transition:none!important}}
 
 /* --- TIL EKRANI --- */
-.lang-head{display:flex;flex-direction:column;gap:6px;padding:38px 4px 30px}
+.lang-head{display:flex;flex-direction:column;gap:6px;padding:28px 4px 28px}
 .lang-head h1{
   margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;
-  font-size:40px;line-height:1.05;letter-spacing:-.01em;
+  font-size:42px;line-height:1.05;letter-spacing:-.01em;
 }
 .lang-head h1 em{font-style:italic;color:var(--accent)}
-.lang-head p{margin:8px 0 0;font:400 14px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.lang-head p{margin:6px 0 0;font:400 15px/1.5 'Manrope',sans-serif;color:var(--dim)}
 .lang-list{display:flex;flex-direction:column;gap:12px}
 .lang-btn{
   display:grid;grid-template-columns:52px 1fr 20px;align-items:center;gap:14px;
-  width:100%;text-align:left;padding:16px;background:var(--card);
+  width:100%;text-align:left;padding:14px;background:var(--card);
   border:1px solid var(--line);border-radius:18px;cursor:pointer;color:var(--text);
   font-family:'Manrope',sans-serif;
   transition:border-color .2s,transform .12s,background .2s;
@@ -51,21 +51,21 @@ body{
   font-size:26px;line-height:1;
 }
 .lang-name{display:flex;flex-direction:column;gap:3px}
-.lang-name b{font:600 16px/1.2 'Manrope',sans-serif}
-.lang-name small{font:500 12px/1.2 'Manrope',sans-serif;color:var(--dim);letter-spacing:.04em}
+.lang-name b{font:600 15px/1.2 'Manrope',sans-serif}
+.lang-name small{font:500 12px/1.2 'Manrope',sans-serif;color:var(--dim);letter-spacing:0.06em}
 .chev{color:var(--dim);font-size:16px}
 
 /* --- KATALOG SARLAVHASI --- */
-.cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:2px 0 20px}
+.cat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 18px}
 .cat-head .kicker{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);
 }
-.cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:27px;line-height:1.1}
+.cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:32px;line-height:1.1}
 .back-btn{
-  display:flex;align-items:center;gap:7px;padding:9px 13px;background:transparent;
+  display:flex;align-items:center;gap:7px;padding:10px 14px;background:transparent;
   border:1px solid var(--line);border-radius:99px;color:var(--dim);
-  font:600 12px/1 'Manrope',sans-serif;letter-spacing:.06em;cursor:pointer;transition:.2s;
+  font:600 12px/1 'Manrope',sans-serif;letter-spacing:0.06em;cursor:pointer;transition:.2s;
 }
 .back-btn:hover{color:var(--text);border-color:var(--accent)}
 .back-btn:active{transform:scale(.96)}
@@ -93,7 +93,7 @@ body{
 /* --- KATALOGDAGI SARALANISH TAKLIFI --- */
 .sort-card{
   display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;
-  margin-top:12px;padding:15px;border-radius:18px;
+  margin-top:12px;padding:14px;border-radius:18px;
   background:rgba(255,255,255,.03);
   border:1px dashed rgba(var(--accent-rgb),.42);
 }
@@ -107,7 +107,7 @@ body{
 .sort-card-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.2}
 .sort-card-sub{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
 .sort-card-btn{
-  align-self:start;margin-top:2px;padding:9px 17px;
+  align-self:start;margin-top:2px;padding:10px 18px;
   background:var(--accent);color:var(--accent-ink);
   border:none;border-radius:99px;font:800 12px/1 'Manrope',sans-serif;
   cursor:pointer;transition:transform .12s;
@@ -130,32 +130,32 @@ body{
 }
 .prof-tag{font:500 12px/1.2 'Manrope',sans-serif;color:var(--dim)}
 .panel{
-  padding:16px 18px;background:var(--card);border:1px solid var(--line);
+  padding:14px 18px;background:var(--card);border:1px solid var(--line);
   border-radius:18px;margin-bottom:12px;
 }
 .panel-label{
-  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);margin-bottom:14px;
 }
 .stat-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:11px;margin-bottom:13px}
 .stat-row:last-child{margin-bottom:0}
 .stat-chip{
-  width:34px;height:26px;border-radius:7px;display:grid;place-items:center;
+  width:34px;height:26px;border-radius:10px;display:grid;place-items:center;
   font:800 10px/1 'Manrope',sans-serif;color:#0d1117;
 }
 .stat-bar{display:block;width:100%;height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
 .stat-fill{display:block;height:100%;min-width:0;border-radius:99px;background:var(--accent);transition:width .5s ease}
-.stat-num{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--dim)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--dim)}
 .stat-num.full{color:var(--accent)}
 .total-row{
   display:flex;align-items:baseline;justify-content:space-between;
   padding-top:14px;margin-top:14px;border-top:1px solid var(--line);
 }
 .total-label{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
-.total-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--accent)}
+.total-val{font-family:'Cormorant Garamond',serif;font-size:25px;color:var(--accent)}
 .house-empty{display:flex;align-items:center;gap:13px}
 .house-crest{
-  width:46px;height:46px;border-radius:12px;flex:none;display:grid;place-items:center;
+  width:46px;height:46px;border-radius:14px;flex:none;display:grid;place-items:center;
   background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);
   font-family:'Cormorant Garamond',serif;font-size:27px;line-height:1;
   color:var(--dim);opacity:.9;transition:all .35s ease;
@@ -170,18 +170,18 @@ body{
 .house-txt b{color:var(--text)}
 .house-empty .house-crest.filled + .house-txt b{color:var(--accent)}
 .house-txt{display:flex;flex-direction:column;gap:3px}
-.house-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:17px}
+.house-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px}
 .house-txt small{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
 .sort-cta{
-  display:block;width:100%;margin-top:14px;padding:12px;
-  background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;
+  display:block;width:100%;margin-top:14px;padding:10px;
+  background:var(--accent);color:var(--accent-ink);border:none;border-radius:14px;
   font:800 13px/1 'Manrope',sans-serif;cursor:pointer;transition:transform .12s;
 }
 .sort-cta:active{transform:scale(.97)}
 .resort{
-  display:block;width:100%;margin-top:12px;padding:9px;background:transparent;
+  display:block;width:100%;margin-top:12px;padding:10px;background:transparent;
   border:1px solid var(--line);border-radius:10px;color:var(--dim);
-  font:600 11px/1 'Manrope',sans-serif;cursor:pointer;transition:.2s;
+  font:600 12px/1 'Manrope',sans-serif;cursor:pointer;transition:.2s;
 }
 .resort:hover{color:var(--text);border-color:var(--accent)}
 
@@ -191,34 +191,34 @@ body{
 .sort-bar span.on{background:var(--accent)}
 .sort-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
 .sort-back{
-  display:flex;align-items:center;gap:6px;padding:7px 12px;background:transparent;
+  display:flex;align-items:center;gap:6px;padding:6px 10px;background:transparent;
   border:1px solid var(--line);border-radius:99px;color:var(--dim);
-  font:600 11px/1 'Manrope',sans-serif;letter-spacing:.05em;cursor:pointer;transition:.2s;
+  font:600 12px/1 'Manrope',sans-serif;letter-spacing:0.06em;cursor:pointer;transition:.2s;
 }
 .sort-back:hover{color:var(--text);border-color:var(--accent)}
 .sort-back:active{transform:scale(.95)}
 .sort-step{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);
 }
 .sort-q{
-  margin:9px 0 24px;font-family:'Cormorant Garamond',serif;font-weight:400;
-  font-size:27px;line-height:1.2;
+  margin:10px 0 22px;font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:32px;line-height:1.2;
 }
 .sort-opts{display:flex;flex-direction:column;gap:11px}
 .sort-opt{
-  width:100%;text-align:left;padding:15px 17px;background:var(--card);
-  border:1px solid var(--line);border-radius:15px;color:var(--text);
-  font:500 14px/1.4 'Manrope',sans-serif;cursor:pointer;
+  width:100%;text-align:left;padding:14px 18px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;color:var(--text);
+  font:500 15px/1.4 'Manrope',sans-serif;cursor:pointer;
   transition:border-color .2s,background .2s,transform .12s;
 }
 .sort-opt:hover{border-color:var(--accent);background:var(--bg2)}
 .sort-opt:active{transform:scale(.985)}
 
 /* --- SHLYAPA: KIRISH VA O'YLANISH --- */
-.hat-wrap{text-align:center;padding:34px 4px 10px;animation:riseIn .55s ease both}
+.hat-wrap{text-align:center;padding:28px 4px 10px;animation:riseIn .55s ease both}
 .hat-mark{
-  width:96px;height:96px;margin:0 auto 26px;border-radius:50%;
+  width:96px;height:96px;margin:0 auto 28px;border-radius:50%;
   display:grid;place-items:center;
   background:rgba(var(--accent-rgb),.10);
   border:1px dashed rgba(var(--accent-rgb),.42);
@@ -237,7 +237,7 @@ body{
 @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-11px)}100%{transform:translateY(0)}}
 @media (prefers-reduced-motion:reduce){.hat-img{animation:none}}
 .hat-top{
-  display:block;font-family:'Cormorant Garamond',serif;font-size:31px;
+  display:block;font-family:'Cormorant Garamond',serif;font-size:32px;
   line-height:1.15;margin-bottom:16px;
 }
 .hat-mid{
@@ -245,29 +245,29 @@ body{
   font-size:19px;line-height:1.35;color:var(--accent);margin-bottom:18px;
 }
 .hat-bot{
-  display:block;max-width:320px;margin:0 auto 32px;
+  display:block;max-width:320px;margin:0 auto 28px;
   font:500 13px/1.65 'Manrope',sans-serif;color:var(--dim);
 }
 .hat-go{
-  padding:13px 34px;background:var(--accent);color:var(--accent-ink);
+  padding:14px 28px;background:var(--accent);color:var(--accent-ink);
   border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
   cursor:pointer;transition:transform .12s;
 }
 .hat-go:active{transform:scale(.95)}
 
 .think-wrap{
-  display:grid;place-items:center;min-height:62vh;padding:0 16px;text-align:center;
+  display:grid;place-items:center;min-height:62vh;padding:0 14px;text-align:center;
 }
 .think-line{
   font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:24px;line-height:1.4;color:var(--accent);
+  font-size:25px;line-height:1.4;color:var(--accent);
   max-width:320px;animation:riseIn .5s ease both;
 }
 
 /* --- SAVOL OLDIDAGI NUTQ --- */
 .hat-say{
   display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:17px;line-height:1.45;color:var(--accent);
+  font-size:19px;line-height:1.45;color:var(--accent);
   margin:14px 0 6px;min-height:24px;
 }
 .react-wrap{
@@ -275,20 +275,20 @@ body{
 }
 .react-line{
   font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:23px;line-height:1.35;color:var(--accent);
+  font-size:25px;line-height:1.35;color:var(--accent);
   animation:riseIn .35s ease both;
 }
 .rv-place{
   display:block;font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:18px;color:var(--dim);margin-bottom:6px;
+  font-size:19px;color:var(--dim);margin-bottom:6px;
 }
 /* --- CHECKLIST --- */
 .checklist{
   display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;
-  padding:13px 16px;margin-bottom:14px;
+  padding:14px 14px;margin-bottom:14px;
   background:var(--card);border:1px solid var(--line);border-radius:14px;
 }
-.ck-item{display:flex;align-items:center;gap:6px;font:600 11px/1 'Manrope',sans-serif;letter-spacing:.04em}
+.ck-item{display:flex;align-items:center;gap:6px;font:600 12px/1 'Manrope',sans-serif;letter-spacing:0.06em}
 .ck-dot{
   width:15px;height:15px;border-radius:50%;flex:none;display:grid;place-items:center;
   border:1.5px solid var(--dim);font-size:9px;line-height:1;color:transparent;
@@ -307,19 +307,19 @@ body{
 }
 .wand-icon svg{width:100%;height:auto;display:block}
 .wand-lines{display:flex;flex-direction:column;gap:2px;min-width:0}
-.wand-wood{font-family:'Cormorant Garamond',serif;font-size:21px;line-height:1.15;color:var(--accent)}
+.wand-wood{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.15;color:var(--accent)}
 .wand-line{font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim)}
 .wand-more{
   display:block;width:100%;margin-top:14px;padding:10px;background:transparent;
   border:1px solid rgba(var(--accent-rgb),.4);border-radius:10px;color:var(--accent);
-  font:700 11px/1 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  font:700 12px/1 'Manrope',sans-serif;letter-spacing:0.14em;text-transform:uppercase;
   cursor:pointer;transition:.2s;
 }
 .wand-more:hover{background:rgba(var(--accent-rgb),.08)}
 .wand-more:active{transform:scale(.98)}
 
 /* --- BATAFSIL EKRAN --- */
-.det-hero{text-align:center;padding:10px 0 26px}
+.det-hero{text-align:center;padding:10px 0 28px}
 .det-art{width:132px;margin:0 auto 18px;color:var(--accent)}
 .det-art svg{width:100%;height:auto;display:block}
 .det-title{
@@ -327,31 +327,31 @@ body{
   line-height:1.1;color:var(--accent);margin-bottom:8px;
 }
 .det-spec{
-  display:block;font:600 11px/1.6 'Manrope',sans-serif;letter-spacing:.14em;
+  display:block;font:600 12px/1.6 'Manrope',sans-serif;letter-spacing:0.14em;
   text-transform:uppercase;color:var(--dim);
 }
 .det-block{
-  padding:16px 18px;background:var(--card);border:1px solid var(--line);
+  padding:14px 18px;background:var(--card);border:1px solid var(--line);
   border-radius:18px;margin-bottom:12px;
 }
 .det-h{
-  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);margin-bottom:11px;
 }
-.det-p{margin:0;font:500 13.5px/1.7 'Manrope',sans-serif;color:#c3cbd6}
+.det-p{margin:0;font:500 13px/1.7 'Manrope',sans-serif;color:#c3cbd6}
 .rare-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:12px}
 .rare-row:first-of-type{margin-top:0}
-.rare-k{font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
-.rare-v{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--accent);white-space:nowrap}
+.rare-k{font:500 13px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.rare-v{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--accent);white-space:nowrap}
 .famous{
   display:flex;align-items:center;gap:12px;
-  padding:14px 16px;margin-bottom:12px;border-radius:16px;
+  padding:14px 14px;margin-bottom:12px;border-radius:18px;
   background:rgba(var(--accent-rgb),.10);
   border:1px solid rgba(var(--accent-rgb),.38);
 }
 .famous-txt{display:flex;flex-direction:column;gap:3px}
 .famous-txt small{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.18em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);
 }
 .famous-txt b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px}
@@ -371,15 +371,15 @@ body{
 .art-shelf svg{height:auto}
 .house-crest .art svg,.sort-card-mark .art svg{width:100%;height:100%}
 
-.reveal{text-align:center;padding:26px 0 10px;animation:riseIn .6s ease both}
+.reveal{text-align:center;padding:28px 0 10px;animation:riseIn .6s ease both}
 .reveal-crest{
-  width:104px;height:104px;margin:0 auto 20px;border-radius:26px;
+  width:104px;height:104px;margin:0 auto 18px;border-radius:18px;
   display:grid;place-items:center;font-size:48px;line-height:1;
   background:rgba(var(--accent-rgb),.14);
   border:1px solid rgba(var(--accent-rgb),.45);
 }
 .reveal-kicker{
-  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);margin-bottom:9px;
 }
 .reveal-name{
@@ -387,29 +387,29 @@ body{
   line-height:1.05;color:var(--accent);margin-bottom:13px;
 }
 .reveal-sub{
-  display:block;font:600 12px/1 'Manrope',sans-serif;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--dim);margin:-6px 0 15px;
+  display:block;font:600 12px/1 'Manrope',sans-serif;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--dim);margin:0px 0 14px;
 }
 .reveal-note{
   display:block;max-width:300px;margin:0 auto 28px;
   font:500 13px/1.6 'Manrope',sans-serif;color:var(--dim);
 }
 .reveal-done{
-  padding:13px 30px;background:var(--accent);color:var(--accent-ink);
+  padding:14px 28px;background:var(--accent);color:var(--accent-ink);
   border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
   cursor:pointer;transition:transform .12s;
 }
 .reveal-done:active{transform:scale(.95)}
 
 /* --- PROGRESS --- */
-.prog{padding:16px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
+.prog{padding:14px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
 .prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .prog-label{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);
 }
-.prog-count{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--accent)}
-.prog-ticks{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;margin:13px 0 10px}
+.prog-count{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--accent)}
+.prog-ticks{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;margin:14px 0 10px}
 .prog-ticks span{height:5px;border-radius:99px;background:rgba(255,255,255,.1);transition:background .4s ease}
 .prog-ticks span.on{background:var(--accent)}
 .prog-hint{margin:0;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
@@ -417,19 +417,19 @@ body{
 /* --- KEYINGI FILM --- */
 .next{
   display:grid;grid-template-columns:64px 1fr;gap:15px;align-items:center;
-  margin-top:14px;padding:15px;border-radius:18px;
+  margin-top:14px;padding:14px;border-radius:18px;
   background:linear-gradient(115deg,rgba(var(--accent-rgb),.15),rgba(var(--accent-rgb),.04));
   border:1px solid rgba(var(--accent-rgb),.32);
 }
 .next-art{
-  position:relative;display:grid;place-items:center;height:92px;border-radius:12px;
+  position:relative;display:grid;place-items:center;height:92px;border-radius:14px;
   overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:26px;
   color:rgba(238,241,245,.4);
 }
 .next-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .next-body{display:flex;flex-direction:column;gap:9px;min-width:0}
 .next-kicker{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);
 }
 .next-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.15}
@@ -443,7 +443,7 @@ body{
 /* --- KARTALAR --- */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
 .card{
-  position:relative;aspect-ratio:2/3;border-radius:16px;overflow:hidden;
+  position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;
   border:1px solid var(--line);cursor:pointer;
   transition:transform .14s,border-color .3s;
 }
@@ -454,8 +454,8 @@ body{
 .veil{position:absolute;inset:0;background:transparent;transition:background .3s}
 .card.seen .veil{background:rgba(7,9,13,.6)}
 .numeral{
-  position:absolute;top:0;left:0;padding:11px 13px;
-  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;
+  position:absolute;top:0;left:0;padding:10px 14px;
+  font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;
   line-height:1;color:rgba(238,241,245,.34);
 }
 .card.has-img .numeral{color:rgba(244,246,249,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
@@ -468,11 +468,15 @@ body{
 }
 .card.has-img .check{border-color:rgba(255,255,255,.7)}
 .card.seen .check{background:var(--accent);border-color:var(--accent)}
+.card.exam .check{background:#e8b93c;border-color:#e8b93c;color:#1a1204}
+.card.exam .card-meta{color:#e8b93c;font-weight:700}
+.card.exam{border-color:rgba(232,185,60,.38)}
+.card.exam .veil{background:rgba(7,9,13,.5)}
 .check:active{transform:scale(.86)}
 .card-foot{
   position:absolute;left:0;right:0;bottom:0;
   display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px;
-  padding:28px 13px 13px;
+  padding:28px 14px 14px;
   background:linear-gradient(to top,rgba(6,8,12,.94) 12%,rgba(6,8,12,.65) 55%,transparent);
 }
 .card-text{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -490,7 +494,7 @@ body{
   line-height:1.1;color:#f4f6f9;
 }
 .card-meta{
-  font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:.12em;
+  font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:0.14em;
   text-transform:uppercase;color:var(--accent);
 }
 .card.seen .card-meta{color:var(--dim)}
@@ -502,7 +506,7 @@ body{
   display:flex;align-items:center;gap:12px;width:100%;text-align:left;
   background:var(--card);border:1px solid var(--line);
   border-left:3px solid var(--accent);border-radius:18px;
-  padding:14px 16px;margin-bottom:14px;cursor:pointer;
+  padding:14px 14px;margin-bottom:14px;cursor:pointer;
   font-family:'Manrope',sans-serif;transition:.2s;
 }
 .cup-strip:active{transform:scale(.99)}
@@ -510,7 +514,7 @@ body{
 .cup-strip-crest img{width:28px;height:28px;object-fit:contain;display:block}
 .cup-strip-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
 .cup-strip-kicker{
-  font:800 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);
 }
 .cup-strip-line{font:600 13px/1.35 'Manrope',sans-serif;color:var(--text)}
@@ -520,26 +524,26 @@ body{
 /* ekran sarlavhasi */
 .cup-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
 .cup-timer{
-  display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;
+  display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:99px;
   background:rgba(255,255,255,.05);border:1px solid var(--line);
-  font:600 11px/1 'Manrope',sans-serif;color:var(--dim);
+  font:600 12px/1 'Manrope',sans-serif;color:var(--dim);
 }
 .cup-timer i{width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none}
 .cup-head{text-align:center;margin-bottom:22px}
 .cup-kick{
-  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;
+  display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);
 }
 .cup-title{
   display:block;font-family:'Cormorant Garamond',serif;font-weight:400;
-  font-size:32px;line-height:1.1;margin:9px 0 0;color:var(--text);
+  font-size:32px;line-height:1.1;margin:10px 0 0;color:var(--text);
 }
 
 /* qum soatlari - Katta zaldagi to'rtta soat */
 .glasses{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
 .glass{text-align:center}
 .tube{
-  position:relative;height:184px;border-radius:11px 11px 14px 14px;overflow:hidden;
+  position:relative;height:184px;border-radius:10px 10px 14px 14px;overflow:hidden;
   background:rgba(255,255,255,.035);border:1px solid var(--line);
 }
 .glass.mine .tube{border-color:rgba(var(--hc-rgb),.55)}
@@ -556,45 +560,45 @@ body{
   background:rgba(12,15,20,.72);border:1px solid rgba(var(--hc-rgb),.5);
 }
 .tube-crest img{width:26px;height:26px;object-fit:contain;display:block}
-.g-name{display:block;font:600 11px/1.3 'Manrope',sans-serif;margin-top:11px;color:var(--dim)}
+.g-name{display:block;font:600 12px/1.3 'Manrope',sans-serif;margin-top:11px;color:var(--dim)}
 .glass.mine .g-name{color:var(--text)}
-.g-val{display:block;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--hc);margin-top:2px}
+.g-val{display:block;font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--hc);margin-top:2px}
 .g-need{display:block;font:500 10px/1.35 'Manrope',sans-serif;color:var(--dim);margin-top:3px}
 
 /* taranglik - ramka RAQIB rangida, o'z rangida emas */
 .cup-gap{
   border:1px solid rgba(var(--rc-rgb),.34);background:var(--card);
-  border-radius:18px;padding:16px 18px;margin-top:20px;
+  border-radius:18px;padding:14px 18px;margin-top:20px;
 }
 .gap-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-.gap-txt{font:600 13.5px/1.45 'Manrope',sans-serif;color:var(--text)}
+.gap-txt{font:600 13px/1.45 'Manrope',sans-serif;color:var(--text)}
 .gap-txt em{font-style:normal;color:var(--rc);font-weight:800}
 .gap-crest{
-  width:44px;height:44px;flex:none;border-radius:13px;display:grid;place-items:center;
+  width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;
   background:rgba(var(--rc-rgb),.13);border:1px solid rgba(var(--rc-rgb),.42);
 }
 .gap-crest img{width:30px;height:30px;object-fit:contain;display:block}
-.gap-track{position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.08)}
-.gap-span{position:absolute;top:0;height:100%;border-radius:2px;opacity:.55}
+.gap-track{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.08)}
+.gap-span{position:absolute;top:0;height:100%;border-radius:3px;opacity:.55}
 .gap-dot{
   position:absolute;top:50%;width:11px;height:11px;border-radius:50%;
   transform:translate(-50%,-50%);border:2px solid var(--card);
 }
-.gap-hint{font:500 11.5px/1.5 'Manrope',sans-serif;color:var(--dim);margin-top:13px}
+.gap-hint{font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim);margin-top:13px}
 .gap-hint b{color:var(--text);font-weight:600}
 
 /* shaxsiy blok - ball HECH QACHON fakultet o'rtachasi bilan yonma-yon emas */
 .cup-you{
   background:var(--card);border:1px solid var(--line);
-  border-radius:18px;padding:16px 18px;margin-top:12px;
+  border-radius:18px;padding:14px 18px;margin-top:12px;
 }
 .you-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .you-lbl{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:.18em;
+  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--dim);
 }
-.you-val{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--accent)}
-.you-val s{text-decoration:none;font-size:16px;color:var(--dim)}
+.you-val{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--accent)}
+.you-val s{text-decoration:none;font-size:15px;color:var(--dim)}
 .you-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
 .you-bar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .5s ease}
 .you-foot{
@@ -609,15 +613,15 @@ body{
 .cup-you.gate .you-val{color:#e8b93c}
 .cup-you.gate .you-bar i{background:#e8b93c}
 .gate-msg{
-  font:500 12.5px/1.55 'Manrope',sans-serif;color:var(--dim);
+  font:500 13px/1.55 'Manrope',sans-serif;color:var(--dim);
   margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
 }
 .gate-msg b{color:#e8b93c;font-weight:700}
 
 .cup-cta{
-  display:block;width:100%;margin-top:14px;padding:13px;border-radius:14px;
+  display:block;width:100%;margin-top:14px;padding:14px;border-radius:14px;
   background:rgba(var(--accent-rgb),.12);border:1px solid rgba(var(--accent-rgb),.4);
-  color:var(--accent);font:800 11px/1 'Manrope',sans-serif;letter-spacing:.1em;
+  color:var(--accent);font:800 12px/1 'Manrope',sans-serif;letter-spacing:0.14em;
   text-transform:uppercase;cursor:pointer;transition:.2s;
 }
 .cup-cta:active{transform:scale(.98)}
@@ -1388,7 +1392,8 @@ body{
 
   var T = {
     uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
-          next:"Keyingi film", seen:"Ko'rildi",
+          next:"Keyingi film", seen:"Ko'rildi", examWaiting:"Imtihon kutmoqda",
+          unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
           hintMid:function(n){return "Yana "+n+" ta film qoldi";},
           profKicker:"Profil", profTitle:"Sehrgar", back:"Ortga",
@@ -1427,7 +1432,8 @@ body{
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
-          next:"Следующий фильм", seen:"Просмотрено",
+          next:"Следующий фильм", seen:"Просмотрено", examWaiting:"Экзамен ждёт",
+          unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
           hintMid:function(n){return "Осталось фильмов: "+n;},
           profKicker:"Профиль", profTitle:"Волшебник", back:"Назад",
@@ -1466,7 +1472,8 @@ body{
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
-          next:"Up next", seen:"Watched",
+          next:"Up next", seen:"Watched", examWaiting:"Exam pending",
+          unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
           hintStart:"Start the journey", hintDone:"All films watched",
           hintMid:function(n){return n+" films left";},
           profKicker:"Profile", profTitle:"Wizard", back:"Back",
@@ -1740,6 +1747,18 @@ body{
   // Gerb 34px + 9px pastdan = naycha balandligining 23%. To'ldirish
   // undan past bo'lsa, gerb havoda osilib qolgandek ko'rinadi.
   var MIN_FILL = 28;
+
+  // Bu mavsumda imtihoni topshirilmagan qismlar. Bot bu maydonni hali
+  // yubormasa - bo'sh massiv, ya'ni katalogda hech narsa o'zgarmaydi.
+  function examPending(part) {
+    var me = cupMe();
+    var list = me.exam_pending;
+    if (!list || !list.length) { return false; }
+    for (var i = 0; i < list.length; i++) {
+      if (Number(list[i]) === Number(part)) { return true; }
+    }
+    return false;
+  }
   var SCALE_FLOOR = 100;   // mavsumdagi maksimum 350
 
   // Farq bugun yopilsa - nuqtalar yaqin, yopilmasa - uzoq.
@@ -2466,9 +2485,14 @@ body{
 
     MOVIES.forEach(function (m, i) {
       var seen = !!watched[key(m.id)];
+      // Uchinchi holat: film ko'rilgan, lekin bu mavsumning imtihoni
+      // topshirilmagan. 8 filmni tugatgan 143 foydalanuvchi uchun katalog
+      // "ish tugadi" deb turardi, holbuki kubok ular uchun endi boshlanadi.
+      var pending = seen && examPending(i + 1);
 
       var card = document.createElement("div");
-      card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : ""));
+      card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : "")) +
+                       (pending ? " exam" : "");
       card.style.background = CARD_BG;
       card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
 
@@ -2491,11 +2515,21 @@ body{
 
       var check = document.createElement("button");
       check.className = "check";
-      check.textContent = seen ? "✓" : "";
+      check.textContent = pending ? "?" : (seen ? "✓" : "");
       check.setAttribute("aria-label", m[lang]);
+      // Belgi bir vaqtda holat ko'rsatkichi ham, tugma ham. Foydalanuvchi
+      // uni holat deb o'ylab bosishi mumkin, shuning uchun progressni
+      // O'CHIRADIGAN yo'nalishda tasdiq so'raymiz. Belgilash zararsiz -
+      // u so'roqsiz o'tadi.
       check.addEventListener("click", function (ev) {
         ev.stopPropagation();
-        toggle(m.id);
+        if (!seen) { toggle(m.id); return; }
+        var msg = T[lang].unmarkAsk.replace("%s", m[lang]);
+        if (tg && tg.showConfirm) {
+          tg.showConfirm(msg, function (ok) { if (ok) { toggle(m.id); } });
+        } else if (!window.confirm || window.confirm(msg)) {
+          toggle(m.id);
+        }
       });
       card.appendChild(check);
 
@@ -2509,7 +2543,8 @@ body{
       ttl.textContent = m[lang];
       var meta = document.createElement("span");
       meta.className = "card-meta";
-      meta.textContent = seen ? t.seen : (i === ni ? t.next : YEARS[i]);
+      meta.textContent = pending ? t.examWaiting
+                       : (seen ? t.seen : (i === ni ? t.next : YEARS[i]));
       textCol.appendChild(ttl);
       textCol.appendChild(meta);
       foot.appendChild(textCol);
