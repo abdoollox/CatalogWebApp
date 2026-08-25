@@ -642,6 +642,47 @@ body{
 }
 .gate-msg b{color:#e8b93c;font-weight:700}
 
+/* ---------- fakultet zali ---------- */
+.hall{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
+.hall-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.hall-crest{
+  width:50px;height:50px;flex:none;border-radius:14px;display:grid;place-items:center;
+  background:var(--wash-1);border:1px solid var(--line);
+}
+.hall-crest img{width:34px;height:34px;object-fit:contain;display:block}
+.hall-name{font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.1}
+.hall-sub{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);margin-top:4px}
+.faces{display:flex;align-items:center;margin-bottom:14px;flex-wrap:wrap;row-gap:6px}
+.face{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font:800 12px/1 'Manrope',sans-serif;color:#0b0f14;
+  border:2px solid var(--card);margin-left:-8px;
+}
+.face:first-child{margin-left:0}
+.face.more{background:var(--wash-1);color:var(--dim);font-size:10px}
+.hall-row{display:grid;grid-template-columns:19px 30px 1fr auto;gap:10px;align-items:center;padding:10px 0}
+.hall-row + .hall-row{border-top:1px solid var(--line)}
+.hall-pos{font:800 12px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
+.hall-face{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font:800 12px/1 'Manrope',sans-serif;color:#0b0f14}
+.hall-nm{font:600 13px/1.3 'Manrope',sans-serif}
+.hall-nm i{font-style:normal;font-size:10px;font-weight:800;letter-spacing:0.14em;
+  text-transform:uppercase;margin-left:6px}
+.hall-pts{font-family:'Cormorant Garamond',serif;font-size:19px}
+.hall-wait{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+  font:500 12px/1.55 'Manrope',sans-serif;color:var(--dim)}
+.hall-wait b{color:var(--text);font-weight:600}
+/* ---------- jonli tasma ---------- */
+.feed{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
+.feed-kick{font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.feed-row{display:flex;gap:12px;align-items:center;padding:10px 0}
+.feed-row + .feed-row{border-top:1px solid var(--line)}
+.feed-crest{width:32px;height:32px;flex:none;border-radius:10px;display:grid;place-items:center}
+.feed-crest img{width:22px;height:22px;object-fit:contain;display:block}
+.feed-txt{font:500 12px/1.45 'Manrope',sans-serif;min-width:0}
+.feed-txt b{font-weight:700;color:var(--text)}
+.feed-time{font:500 10px/1 'Manrope',sans-serif;color:var(--dim);margin-left:auto;flex:none}
 .cup-cta{
   display:block;width:100%;margin-top:14px;padding:14px;border-radius:14px;
   background:rgba(var(--accent-rgb),.12);border:1px solid rgba(var(--accent-rgb),.4);
@@ -895,6 +936,28 @@ body{
     </div>
 
     <div class="cup-you hidden" id="cup-you"></div>
+
+    <!-- Fakultet zali: saralangan barcha a'zolar, faol yoki faol emas.
+         Bot hall ma'lumotini yubormasa - butunlay yashiriladi. -->
+    <div class="hall hidden" id="cup-hall">
+      <div class="hall-top">
+        <div class="hall-crest" id="hall-crest"></div>
+        <div>
+          <div class="hall-name" id="hall-name"></div>
+          <div class="hall-sub" id="hall-sub"></div>
+        </div>
+      </div>
+      <div class="faces" id="hall-faces"></div>
+      <div id="hall-list"></div>
+      <div class="hall-wait hidden" id="hall-wait"></div>
+    </div>
+
+    <!-- Jonli tasma: butun Xogvartsda so'nggi saralanishlar. -->
+    <div class="feed hidden" id="cup-feed">
+      <div class="feed-kick" id="feed-kick"></div>
+      <div id="feed-list"></div>
+    </div>
+
     <button class="cup-cta hidden" id="cup-cta"></button>
     <p class="cup-foot" id="cup-foot"></p>
   </div>
@@ -1446,6 +1509,10 @@ body{
           cupGate:"Yana %n — va hissangiz %s hisobiga qo'shiladi.",
           cupGatePts:"%d ball", cupSortCta:"Saralanish",
           cupInvite:"Do'stlaringizni taklif qiling",
+          hallName:"%s zali", hallSub:"%a sehrgar \u00b7 %b tasi bu hafta faol",
+          hallYou:"siz", hallWaiting:"Yana %d sehrgar saralangan, lekin bu hafta hali boshlamagan.",
+          feedKick:"Xogvartsda", feedSorted:" %h ga saralandi",
+          agoMin:"%d daqiqa", agoHour:"%d soat", agoDay:"%d kun",
           cupNoHouse:"Fakultetingiz hali aniqlanmagan", cupNoHouseHint:"Saralanmasdan turib musobaqada qatnasha olmaysiz.",
           cupNeedMembers:"%s musobaqaga qo'shilishi uchun %n kerak", cupNeedCount:"yana %d a'zo",
           cupNeedHint:"A'zo — mavsumda kamida 30 ball to'plagan odam.",
@@ -1486,6 +1553,10 @@ body{
           cupGate:"Ещё %n — и ваш вклад пойдёт в зачёт %s.",
           cupGatePts:"%d очков", cupSortCta:"Пройти распределение",
           cupInvite:"Пригласите друзей",
+          hallName:"Зал \u00ab%s\u00bb", hallSub:"%a волшебников \u00b7 %b активны на этой неделе",
+          hallYou:"вы", hallWaiting:"Ещё %d волшебников распределены, но пока не начали на этой неделе.",
+          feedKick:"В Хогвартсе", feedSorted:" \u2014 %h",
+          agoMin:"%d мин", agoHour:"%d ч", agoDay:"%d дн",
           cupNoHouse:"Ваш факультет ещё не определён", cupNoHouseHint:"Без распределения участвовать в соревновании нельзя.",
           cupNeedMembers:"%s присоединится к соревнованию, если будет %n", cupNeedCount:"ещё %d участников",
           cupNeedHint:"Участник — тот, кто набрал минимум 30 очков за сезон.",
@@ -1526,6 +1597,10 @@ body{
           cupGate:"%n more — and your score counts for %s.",
           cupGatePts:"%d points", cupSortCta:"Get sorted",
           cupInvite:"Invite your friends",
+          hallName:"%s hall", hallSub:"%a wizards \u00b7 %b active this week",
+          hallYou:"you", hallWaiting:"%d more wizards are sorted but have not started this week.",
+          feedKick:"At Hogwarts", feedSorted:" was sorted into %h",
+          agoMin:"%d min", agoHour:"%d h", agoDay:"%d d",
           cupNoHouse:"You have not been sorted yet", cupNoHouseHint:"You cannot take part in the cup without a house.",
           cupNeedMembers:"%s joins the cup once there are %n", cupNeedCount:"%d more members",
           cupNeedHint:"A member is someone with at least 30 points this season.",
@@ -1975,6 +2050,184 @@ body{
     });
   }
 
+  /* ---------- fakultet zali va jonli tasma ---------- */
+
+  // Ism va fakultetdan barqaror rang: bir odam har safar bir xil doira oladi.
+  function faceColor(name, houseId) {
+    var hh = HOUSES[houseId] || {};
+    if (hh.accent) { return hh.accent; }
+    var s = String(name || "?"), n = 0;
+    for (var i = 0; i < s.length; i++) { n = (n * 31 + s.charCodeAt(i)) % 360; }
+    return "hsl(" + n + ",42%,66%)";
+  }
+
+  // Telegram ismlarida emoji tez uchraydi. charAt(0) emojini ikkiga bo'lib
+  // buzuq belgi chiqaradi, shuning uchun avval birinchi HARFNI qidiramiz.
+  function initialOf(name) {
+    var s = String(name || "").trim();
+    if (!s) { return "?"; }
+    var letter = s.match(/[\p{L}\p{N}]/u);
+    if (letter) { return letter[0].toUpperCase(); }
+    return "?";
+  }
+
+  function faceEl(cls, name, houseId) {
+    var el = document.createElement("span");
+    el.className = cls;
+    el.textContent = initialOf(name);
+    el.style.background = faceColor(name, houseId);
+    return el;
+  }
+
+  // "45 daqiqa" / "3 soat" / "2 kun"
+  function agoText(mins, t) {
+    var m = Number(mins);
+    if (!isFinite(m) || m < 0) { return ""; }
+    if (m < 60) { return t.agoMin.replace("%d", Math.max(1, Math.round(m))); }
+    if (m < 1440) { return t.agoHour.replace("%d", Math.round(m / 60)); }
+    return t.agoDay.replace("%d", Math.round(m / 1440));
+  }
+
+  function renderHall() {
+    var box = $("cup-hall");
+    if (!box) { return; }
+    var me = cupMe();
+    var hall = cupData && cupData.hall;
+
+    // Bot hall yubormasa - blok umuman ko'rinmaydi.
+    if (!hall || !me.house) { box.classList.add("hidden"); return; }
+
+    var t = T[lang];
+    var hh = HOUSES[me.house] || {};
+
+    var crest = $("hall-crest");
+    crest.innerHTML = "";
+    var img = cupCrestImg(me.house, 34);
+    if (img) { crest.appendChild(img); }
+    crest.style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.42)";
+    crest.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.13)";
+
+    var nm = $("hall-name");
+    nm.textContent = t.hallName.replace("%s", cupHouseName(me.house));
+    nm.style.color = hh.accent || "var(--accent)";
+
+    $("hall-sub").textContent = t.hallSub
+      .replace("%a", hall.total || 0).replace("%b", hall.active || 0);
+
+    // Avatarlar bir xil ko'rinadi - kimnidir "faol emas" deb belgilamaymiz.
+    var faces = $("hall-faces");
+    faces.innerHTML = "";
+    var shown = Math.min(hall.total || 0, 6);
+    var members = hall.members || [];
+    for (var i = 0; i < shown; i++) {
+      var who = members[i] ? members[i].name : "";
+      faces.appendChild(faceEl("face", who, me.house));
+    }
+    if ((hall.total || 0) > shown) {
+      var more = document.createElement("span");
+      more.className = "face more";
+      more.textContent = "+" + ((hall.total || 0) - shown);
+      faces.appendChild(more);
+    }
+
+    // Ro'yxatda faqat faol a'zolar. 0 ballni ko'rsatish keraksiz noqulaylik.
+    var list = $("hall-list");
+    list.innerHTML = "";
+    members.forEach(function (m, idx) {
+      var row = document.createElement("div");
+      row.className = "hall-row";
+
+      var pos = document.createElement("div");
+      pos.className = "hall-pos";
+      pos.textContent = idx + 1;
+      row.appendChild(pos);
+
+      row.appendChild(faceEl("hall-face", m.name, me.house));
+
+      var who = document.createElement("div");
+      who.className = "hall-nm";
+      who.appendChild(document.createTextNode(m.name || ""));
+      if (m.me) {
+        var tag = document.createElement("i");
+        tag.textContent = t.hallYou;
+        tag.style.color = hh.accent || "var(--accent)";
+        who.appendChild(tag);
+      }
+      row.appendChild(who);
+
+      var pts = document.createElement("div");
+      pts.className = "hall-pts";
+      pts.textContent = m.points || 0;
+      pts.style.color = hh.accent || "var(--accent)";
+      row.appendChild(pts);
+
+      list.appendChild(row);
+    });
+
+    var wait = $("hall-wait");
+    var idle = (hall.total || 0) - (hall.active || 0);
+    if (idle > 0) {
+      wait.innerHTML = "";
+      var parts = t.hallWaiting.split("%d");
+      wait.appendChild(document.createTextNode(parts[0]));
+      var b = document.createElement("b");
+      b.textContent = idle;
+      wait.appendChild(b);
+      if (parts.length > 1) { wait.appendChild(document.createTextNode(parts[1])); }
+      wait.classList.remove("hidden");
+    } else {
+      wait.classList.add("hidden");
+    }
+
+    box.classList.remove("hidden");
+  }
+
+  function renderFeed() {
+    var box = $("cup-feed");
+    if (!box) { return; }
+    var feed = cupData && cupData.feed;
+
+    if (!feed || !feed.length) { box.classList.add("hidden"); return; }
+
+    var t = T[lang];
+    $("feed-kick").textContent = t.feedKick;
+
+    var list = $("feed-list");
+    list.innerHTML = "";
+    feed.slice(0, 5).forEach(function (ev) {
+      var hh = HOUSES[ev.house] || {};
+      var row = document.createElement("div");
+      row.className = "feed-row";
+
+      var cr = document.createElement("div");
+      cr.className = "feed-crest";
+      cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+      var im = cupCrestImg(ev.house, 22);
+      if (im) { cr.appendChild(im); }
+      row.appendChild(cr);
+
+      var txt = document.createElement("div");
+      txt.className = "feed-txt";
+      var parts = t.feedSorted.split("%h");
+      var b = document.createElement("b");
+      b.textContent = ev.name || "";
+      txt.appendChild(b);
+      txt.appendChild(document.createTextNode(parts[0]));
+      txt.appendChild(document.createTextNode(cupHouseName(ev.house)));
+      if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
+      row.appendChild(txt);
+
+      var tm = document.createElement("div");
+      tm.className = "feed-time";
+      tm.textContent = agoText(ev.ago_minutes, t);
+      row.appendChild(tm);
+
+      list.appendChild(row);
+    });
+
+    box.classList.remove("hidden");
+  }
+
   /* ---------- taranglik bloki ---------- */
 
   // Uchta yiqilgan holat: fakultetsiz, fakultet chegaradan o'tmagan,
@@ -2185,6 +2438,8 @@ body{
     renderGlasses(list, me);
     renderGap(list, me);
     renderYou(me);
+    renderHall();
+    renderFeed();
 
     // Taklif tugmasi: fakultetsizga saralanish, chegaradan o'tmaganga a'zo
     var cta = $("cup-cta");
