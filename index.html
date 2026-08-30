@@ -442,6 +442,9 @@ body{
 
 /* --- KARTALAR --- */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.section-divider{grid-column:1 / -1;display:flex;align-items:center;gap:12px;margin:22px 0 6px}
+.section-divider::before,.section-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.section-divider span{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--accent);letter-spacing:0.05em}
 .card{
   position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;
   border:1px solid var(--line);cursor:pointer;
@@ -986,6 +989,12 @@ body{
     { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка",   en: "Half-Blood Prince" },
     { id: "hp7", uz: "Ajal Tuhfasi 1",    ru: "Дары Смерти 1",      en: "Deathly Hallows 1" },
     { id: "hp8", uz: "Ajal Tuhfasi 2",    ru: "Дары Смерти 2",      en: "Deathly Hallows 2" }
+  ];
+
+  var MOVIES_FB = [
+    { id: "fb1", num: "I", year: "2016", uz: "Fantastik Maxluqlar 1", ru: "Фантастические твари 1", en: "Fantastic Beasts 1" },
+    { id: "fb2", num: "II", year: "2018", uz: "Fantastik Maxluqlar 2", ru: "Фантастические твари 2", en: "Fantastic Beasts 2" },
+    { id: "fb3", num: "III", year: "2022", uz: "Fantastik Maxluqlar 3", ru: "Фантастические твари 3", en: "Fantastic Beasts 3" }
   ];
 
   var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
@@ -2721,7 +2730,12 @@ body{
 
   /* ---------- CHIZISH ---------- */
 
-  function poster(id) { return "img/" + id + "_" + lang + ".jpg"; }
+  function poster(id) {
+    if (id.startsWith("fb")) {
+      return "img/" + id + "_" + lang + ".png";
+    }
+    return "img/" + id + "_" + lang + ".jpg";
+  }
 
   function nextIndex() {
     for (var i = 0; i < MOVIES.length; i++) { if (!watched[key(MOVIES[i].id)]) { return i; } }
@@ -2890,6 +2904,89 @@ body{
 
       grid.appendChild(card);
     });
+
+    if (typeof MOVIES_FB !== "undefined" && MOVIES_FB && MOVIES_FB.length) {
+      var fbHead = document.createElement("div");
+      fbHead.className = "section-divider";
+      var fbTitle = (lang === "ru" ? "Фантастические твари" : (lang === "en" ? "Fantastic Beasts" : "Fantastik Maxluqlar"));
+      fbHead.innerHTML = '<span>' + fbTitle + '</span>';
+      grid.appendChild(fbHead);
+
+      MOVIES_FB.forEach(function (m) {
+        var seen = !!watched[key(m.id)];
+        var card = document.createElement("div");
+        card.className = "card" + (seen ? " seen" : "");
+        card.style.background = CARD_BG;
+        card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+
+        var img = document.createElement("img");
+        img.className = "card-img";
+        img.src = poster(m.id);
+        img.alt = m[lang];
+        img.onerror = function () {
+          if (!this.src.endsWith("uz.png")) {
+            this.src = "img/" + m.id + "_uz.png";
+          } else {
+            this.remove();
+          }
+        };
+        img.onload = function () { card.classList.add("has-img"); };
+        card.appendChild(img);
+
+        var veil = document.createElement("span");
+        veil.className = "veil";
+        card.appendChild(veil);
+
+        var num = document.createElement("span");
+        num.className = "numeral";
+        num.textContent = m.num;
+        card.appendChild(num);
+
+        var check = document.createElement("button");
+        check.className = "check";
+        check.textContent = seen ? "✓" : "";
+        check.setAttribute("aria-label", m[lang]);
+        check.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          if (!seen) { toggle(m.id); return; }
+          var msg = T[lang].unmarkAsk.replace("%s", m[lang]);
+          if (tg && tg.showConfirm) {
+            tg.showConfirm(msg, function (ok) { if (ok) { toggle(m.id); } });
+          } else if (!window.confirm || window.confirm(msg)) {
+            toggle(m.id);
+          }
+        });
+        card.appendChild(check);
+
+        var foot = document.createElement("span");
+        foot.className = "card-foot";
+
+        var textCol = document.createElement("span");
+        textCol.className = "card-text";
+        var ttl = document.createElement("span");
+        ttl.className = "card-title";
+        ttl.textContent = m[lang];
+        var meta = document.createElement("span");
+        meta.className = "card-meta";
+        meta.textContent = seen ? t.seen : m.year;
+        textCol.appendChild(ttl);
+        textCol.appendChild(meta);
+        foot.appendChild(textCol);
+
+        var pl = document.createElement("button");
+        pl.className = "card-play";
+        pl.textContent = "▶";
+        pl.setAttribute("aria-label", t.watch + " — " + m[lang]);
+        pl.addEventListener("click", function (ev) {
+          ev.stopPropagation();
+          play(m.id);
+        });
+        foot.appendChild(pl);
+
+        card.appendChild(foot);
+        grid.appendChild(card);
+      });
+    }
   }
 
   function renderSortCard(t) {
