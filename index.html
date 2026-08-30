@@ -2731,9 +2731,6 @@ body{
   /* ---------- CHIZISH ---------- */
 
   function poster(id) {
-    if (id.startsWith("fb")) {
-      return "img/" + id + "_" + lang + ".png";
-    }
     return "img/" + id + "_" + lang + ".jpg";
   }
 
@@ -2839,9 +2836,17 @@ body{
 
       var img = document.createElement("img");
       img.className = "card-img";
+      img.loading = "lazy";
+      img.decoding = "async";
       img.src = poster(m.id);
       img.alt = m[lang];
-      img.onerror = function () { this.remove(); };
+      img.onerror = function () {
+        if (!this.src.endsWith("uz.jpg")) {
+          this.src = "img/" + m.id + "_uz.jpg";
+        } else {
+          this.remove();
+        }
+      };
       img.onload = function () { card.classList.add("has-img"); };
       card.appendChild(img);
 
@@ -2921,11 +2926,13 @@ body{
 
         var img = document.createElement("img");
         img.className = "card-img";
+        img.loading = "lazy";
+        img.decoding = "async";
         img.src = poster(m.id);
         img.alt = m[lang];
         img.onerror = function () {
-          if (!this.src.endsWith("uz.png")) {
-            this.src = "img/" + m.id + "_uz.png";
+          if (!this.src.endsWith("uz.jpg")) {
+            this.src = "img/" + m.id + "_uz.jpg";
           } else {
             this.remove();
           }
