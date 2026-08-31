@@ -4482,18 +4482,18 @@ body{
   /* ---------- SEHRGAR SHAXMATI (WIZARD'S CHESS) ---------- */
 
   var CHESS_PIECES = {
-    P: { symbol: "♟", name: "Oq Piyoda", val: 100 },
-    N: { symbol: "♞", name: "Oq Ot", val: 320 },
-    B: { symbol: "♝", name: "Oq Fil", val: 330 },
-    R: { symbol: "♜", name: "Oq Rux", val: 500 },
-    Q: { symbol: "♛", name: "Oq Farzin", val: 900 },
-    K: { symbol: "♚", name: "Oq Shoh", val: 20000 },
-    p: { symbol: "♟", name: "Qora Piyoda", val: 100 },
-    n: { symbol: "♞", name: "Qora Ot", val: 320 },
-    b: { symbol: "♝", name: "Qora Fil", val: 330 },
-    r: { symbol: "♜", name: "Qora Rux", val: 500 },
-    q: { symbol: "♛", name: "Qora Farzin", val: 900 },
-    k: { symbol: "♚", name: "Qora Shoh", val: 20000 }
+    P: { img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_plt45.svg", name: "Oq Piyoda", val: 100 },
+    N: { img: "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg", name: "Oq Ot", val: 320 },
+    B: { img: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg", name: "Oq Fil", val: 330 },
+    R: { img: "https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg", name: "Oq Rux", val: 500 },
+    Q: { img: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg", name: "Oq Farzin", val: 900 },
+    K: { img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg", name: "Oq Shoh", val: 20000 },
+    p: { img: "https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg", name: "Qora Piyoda", val: 100 },
+    n: { img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Chess_ndt45.svg", name: "Qora Ot", val: 320 },
+    b: { img: "https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg", name: "Qora Fil", val: 330 },
+    r: { img: "https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg", name: "Qora Rux", val: 500 },
+    q: { img: "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg", name: "Qora Farzin", val: 900 },
+    k: { img: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg", name: "Qora Shoh", val: 20000 }
   };
 
   var PST = {
@@ -4948,8 +4948,60 @@ body{
     }
   }
 
+  function pollChessState() {
+    if (chessState.gameOver || chessState.gameMode !== "pvp" || !chessState.pvpGameId) return;
+    
+    var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
+    fetch(API_CHESS_STATE + "?game_id=" + encodeURIComponent(chessState.pvpGameId) + "&initData=" + encodeURIComponent(d))
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.ok && res.game) {
+          var game = res.game;
+          
+          // Opponent joined!
+          if (chessState.myColor === "w" && game.black_uid && $("chess-opp-name").textContent === "Do'stingiz") {
+             $("chess-opp-name").textContent = game.black_name || "Raqib";
+          } else if (chessState.myColor === "b" && game.white_uid && $("chess-opp-name").textContent === "Do'stingiz") {
+             $("chess-opp-name").textContent = game.white_name || "Raqib";
+          }
+
+          // If turn advanced or opponent made a move
+          if (game.fen) {
+             var p = JSON.parse(game.fen);
+             if (game.turn !== chessState.turn || (chessState.lastMove && p.lastMove && (chessState.lastMove.from.r !== p.lastMove.from.r || chessState.lastMove.from.c !== p.lastMove.from.c))) {
+               chessState.board = p.board;
+               chessState.castling = p.castling;
+               chessState.ep = p.ep;
+               chessState.lastMove = p.lastMove;
+               chessState.turn = game.turn;
+               chessState.whiteTime = game.white_time;
+               chessState.blackTime = game.black_time;
+               renderChessBoard();
+               updateChessClocks();
+
+               var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
+               if (nextLegal.length === 0) {
+                 if (isKingInCheck(chessState.board, chessState.turn)) {
+                   finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
+                 } else {
+                   finishChessGame("draw", "Pat (Durang)");
+                 }
+               }
+             }
+          }
+          
+          if (game.status === "finished" && !chessState.gameOver) {
+             var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+             finishChessGame(game.winner_uid == (tgUser.id||0) ? "win" : "loss", game.win_reason || "O'yin tugadi");
+          }
+        }
+      }).catch(function(){});
+  }
+
   function startChessClock() {
     if (chessState.clockTimer) clearInterval(chessState.clockTimer);
+    if (chessState.pollTimer) clearInterval(chessState.pollTimer);
+
     chessState.clockTimer = setInterval(function() {
       if (chessState.gameOver) return;
       if (chessState.turn === "w") {
@@ -4961,6 +5013,10 @@ body{
       }
       updateChessClocks();
     }, 1000);
+
+    if (chessState.gameMode === "pvp") {
+      chessState.pollTimer = setInterval(pollChessState, 1500);
+    }
   }
 
   function renderChessBoard() {
@@ -5007,18 +5063,12 @@ body{
         // Piece
         var p = chessState.board[r][c];
         if (p) {
-          var pieceSpan = document.createElement("span");
-          pieceSpan.textContent = CHESS_PIECES[p] ? CHESS_PIECES[p].symbol : "";
-          pieceSpan.style.fontSize = "32px";
-          pieceSpan.style.lineHeight = "1";
-          if (isWhitePiece(p)) {
-            pieceSpan.style.color = "#fff";
-            pieceSpan.style.textShadow = "0 1px 3px rgba(0,0,0,0.8), 0 0 1px #000";
-          } else {
-            pieceSpan.style.color = "#151515";
-            pieceSpan.style.textShadow = "0 0 2px rgba(255,255,255,0.4)";
-          }
-          sq.appendChild(pieceSpan);
+          var pieceImg = document.createElement("img");
+          pieceImg.src = CHESS_PIECES[p] ? CHESS_PIECES[p].img : "";
+          pieceImg.style.width = "85%";
+          pieceImg.style.height = "85%";
+          pieceImg.style.pointerEvents = "none";
+          sq.appendChild(pieceImg);
         }
 
         // Legal move indicator
@@ -5097,14 +5147,40 @@ body{
     renderChessBoard();
     updateChessClocks();
 
-    // Check game over
+    // Check game over local
     var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
+    var isMate = false, isDraw = false;
     if (nextLegal.length === 0) {
-      if (isKingInCheck(chessState.board, chessState.turn)) {
-        finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
-      } else {
-        finishChessGame("draw", "Pat (Durang)");
-      }
+      if (isKingInCheck(chessState.board, chessState.turn)) isMate = true;
+      else isDraw = true;
+    }
+
+    // Sync to server for PvP
+    if (chessState.gameMode === "pvp") {
+      var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
+      var stateJson = JSON.stringify({
+        board: chessState.board, castling: chessState.castling, ep: chessState.ep, lastMove: chessState.lastMove
+      });
+      fetch(API_CHESS_MOVE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+        body: JSON.stringify({
+          game_id: chessState.pvpGameId,
+          fen: stateJson,
+          turn: chessState.turn,
+          white_time: chessState.whiteTime,
+          black_time: chessState.blackTime,
+          initData: d
+        })
+      }).catch(function(){});
+    }
+
+    if (isMate) {
+      finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
+      return;
+    }
+    if (isDraw) {
+      finishChessGame("draw", "Pat (Durang)");
       return;
     }
 
@@ -5129,23 +5205,14 @@ body{
     var icon = $("chess-overlay-icon");
     var title = $("chess-overlay-title");
     var desc = $("chess-overlay-desc");
+    
+    var myUid = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0);
 
     if (result === "win") {
       icon.textContent = "🏆";
       title.textContent = "G'alaba!";
       title.style.color = "#2ecc71";
       desc.textContent = reason + ". Fakultetingiz hisobiga +10 ball qo'shildi!";
-      
-      // Post reward to server
-      var d = "";
-      try { d = (tg && tg.initData) || ""; } catch(e) {}
-      if (d) {
-        fetch(API_CHESS_FINISH, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-          body: JSON.stringify({ game_id: chessState.pvpGameId, winner_uid: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0), reason: reason, initData: d })
-        }).catch(function() {});
-      }
     } else if (result === "loss") {
       icon.textContent = "💀";
       title.textContent = "Mag'lubiyat";
@@ -5156,6 +5223,22 @@ body{
       title.textContent = "Durang";
       title.style.color = "#f1c40f";
       desc.textContent = reason + ". Kuchlar teng keldi!";
+    }
+
+    // Har qanday natijada serverga xabar berish (faqat PvP bo'lsa)
+    if (chessState.gameMode === "pvp" && chessState.pvpGameId) {
+       var winnerUid = null;
+       if (result === "win") winnerUid = myUid;
+       // Agar biz mag'lub bo'lsak yoki taslim bo'lsak, raqib yutganini serverga aytamiz.
+       // Eslatma: Backend buni validate qilmaydi, g'olibni bemalol yozib qo'yadi.
+       var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
+       if (d) {
+         fetch(API_CHESS_FINISH, {
+           method: "POST",
+           headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+           body: JSON.stringify({ game_id: chessState.pvpGameId, winner_uid: winnerUid, reason: reason, initData: d })
+         }).catch(function() {});
+       }
     }
 
     if (overlay) overlay.classList.remove("hidden");
