@@ -1016,9 +1016,13 @@ body{
   <div id="scr-chat" class="screen hidden" style="padding-bottom: 75px;">
     <div class="cup-hdr">
       <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt">Ortga</span></button>
-      <div id="chat-house-name" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;"></div>
+      <div id="chat-title-txt" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;">Muloqot</div>
     </div>
-    <div id="chat-messages" style="padding: 16px 4px; display:flex; flex-direction:column; gap:12px; min-height: 200px;">
+    <div class="chat-tabs" style="display:flex; gap:8px; margin:12px 0 6px; background:var(--bg2); padding:4px; border-radius:14px; border:1px solid var(--line);">
+      <button type="button" id="tab-house" style="flex:1; padding:9px 6px; border-radius:10px; border:none; font-weight:600; font-size:13px; cursor:pointer; transition:all .2s; background:var(--card); color:var(--text);">Umumiy xona</button>
+      <button type="button" id="tab-global" style="flex:1; padding:9px 6px; border-radius:10px; border:none; font-weight:600; font-size:13px; cursor:pointer; transition:all .2s; background:transparent; color:var(--dim);">Katta zal (Global)</button>
+    </div>
+    <div id="chat-messages" style="padding: 10px 4px; display:flex; flex-direction:column; gap:12px; min-height: 200px;">
     </div>
     <form id="chat-form" onsubmit="return false;" style="position:fixed; bottom:0; left:0; right:0; max-width:440px; margin:0 auto; padding:12px 18px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
       <input type="text" id="chat-input" placeholder="Xabar yozing..." autocomplete="off" style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; font-size:15px;">
@@ -4100,22 +4104,72 @@ body{
 
   /* ---------- CHAT LGC ---------- */
   var chatTimer = null;
-  var lastChatMsgs = [];
-  
+  var chatRoom = "house"; // "house" or "global"
+  var chatMsgsByRoom = { house: [], global: [] };
+  var chatSending = false;
+
+  function setChatRoom(room) {
+    if (chatRoom === room) return;
+    chatRoom = room;
+    updateChatRoomUI();
+    fetchChat(true);
+  }
+
+  function updateChatRoomUI() {
+    var me = cupMe();
+    var hh = HOUSES[me.house] || {};
+    
+    var tabHouse = $("tab-house");
+    var tabGlobal = $("tab-global");
+    var titleTxt = $("chat-title-txt");
+    var input = $("chat-input");
+
+    if (chatRoom === "house") {
+      if (tabHouse) {
+        tabHouse.style.background = "var(--card)";
+        tabHouse.style.color = "var(--text)";
+        tabHouse.textContent = (hh.name && hh.name[lang] ? hh.name[lang] : "Fakultet");
+      }
+      if (tabGlobal) {
+        tabGlobal.style.background = "transparent";
+        tabGlobal.style.color = "var(--dim)";
+      }
+      if (titleTxt) {
+        titleTxt.textContent = cupHouseName(me.house) + " Umumiy Xonasi";
+        titleTxt.style.color = hh.accent || "var(--accent)";
+      }
+      if (input) input.placeholder = "Fakultetdoshlarga yozing...";
+    } else {
+      if (tabHouse) {
+        tabHouse.style.background = "transparent";
+        tabHouse.style.color = "var(--dim)";
+        tabHouse.textContent = (hh.name && hh.name[lang] ? hh.name[lang] : "Fakultet");
+      }
+      if (tabGlobal) {
+        tabGlobal.style.background = "var(--card)";
+        tabGlobal.style.color = "var(--text)";
+      }
+      if (titleTxt) {
+        titleTxt.textContent = "Katta Zal (Umumiy)";
+        titleTxt.style.color = "var(--text)";
+      }
+      if (input) input.placeholder = "Barcha o'quvchilarga yozing...";
+    }
+
+    var msgs = chatMsgsByRoom[chatRoom] || [];
+    if (msgs.length > 0) {
+      renderChat(msgs);
+    } else {
+      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
+    }
+  }
+
   function openChat() {
     $("scr-cup").classList.add("hidden");
     $("scr-chat").classList.remove("hidden");
     
-    var me = cupMe();
-    var hh = HOUSES[me.house] || {};
-    $("chat-house-name").textContent = cupHouseName(me.house) + " Umumiy Xonasi";
-    $("chat-house-name").style.color = hh.accent || "var(--accent)";
-    
-    if (lastChatMsgs && lastChatMsgs.length > 0) {
-      renderChat(lastChatMsgs);
-    } else {
-      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
-    }
+    chatRoom = "house";
+    updateChatRoomUI();
     
     fetchChat(true);
     if (chatTimer) clearInterval(chatTimer);
@@ -4141,11 +4195,14 @@ body{
     
     var tgUser = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) || {};
     var meUid = tgUser.id || 0;
-    var hh = HOUSES[cupMe().house] || {};
-    var accent = hh.accent || "var(--accent)";
+    var myHouse = cupMe().house;
+    var myHh = HOUSES[myHouse] || {};
+    var myAccent = myHh.accent || "var(--accent)";
     
     messages.forEach(function(m) {
       var isMe = (m.uid == meUid);
+      var senderHouse = m.house || (isMe ? myHouse : null);
+      var senderHh = HOUSES[senderHouse] || {};
       
       var wrap = document.createElement("div");
       wrap.style.display = "flex";
@@ -4155,24 +4212,43 @@ body{
       
       if (!isMe) {
         var sender = document.createElement("div");
-        sender.textContent = m.name;
+        sender.style.display = "flex";
+        sender.style.alignItems = "center";
+        sender.style.gap = "6px";
         sender.style.fontSize = "12px";
         sender.style.color = "var(--dim)";
         sender.style.marginBottom = "4px";
         sender.style.marginLeft = "4px";
+        
+        var nameSpan = document.createElement("span");
+        nameSpan.textContent = m.name;
+        sender.appendChild(nameSpan);
+        
+        if (chatRoom === "global" && senderHouse && senderHh.name) {
+          var badge = document.createElement("span");
+          badge.textContent = senderHh.name[lang] || senderHouse;
+          badge.style.fontSize = "10px";
+          badge.style.fontWeight = "600";
+          badge.style.padding = "1px 6px";
+          badge.style.borderRadius = "6px";
+          badge.style.background = "rgba(" + (senderHh.rgb || "151,161,174") + ",.18)";
+          badge.style.color = senderHh.accent || "var(--accent)";
+          sender.appendChild(badge);
+        }
+        
         wrap.appendChild(sender);
       }
       
       var bubble = document.createElement("div");
       bubble.style.padding = "10px 14px";
       bubble.style.borderRadius = "16px";
-      bubble.style.maxWidth = "80%";
+      bubble.style.maxWidth = "82%";
       bubble.style.wordBreak = "break-word";
       bubble.style.lineHeight = "1.4";
       bubble.style.fontSize = "15px";
       
       if (isMe) {
-        bubble.style.background = accent;
+        bubble.style.background = myAccent;
         bubble.style.color = "#fff";
         bubble.style.borderBottomRightRadius = "4px";
       } else {
@@ -4190,8 +4266,6 @@ body{
     // scroll to bottom
     box.scrollTop = box.scrollHeight;
   }
-  
-  var chatSending = false;
 
   function fetchChat(force) {
     if (chatSending) return;
@@ -4199,20 +4273,22 @@ body{
     try { d = (tg && tg.initData) || ""; } catch(e) {}
     if (!d) return;
     
-    fetch(API_CHAT, {
+    var currentRoom = chatRoom;
+    fetch(API_CHAT + "?room=" + currentRoom, {
       headers: { "X-Telegram-Init-Data": d }
     }).then(function(r) { return r.json(); })
       .then(function(res) {
-        if (res.ok && res.messages && !chatSending) {
-          var needsRender = force || (res.messages.length !== lastChatMsgs.length);
+        if (res.ok && res.messages && !chatSending && chatRoom === currentRoom) {
+          var lastMsgs = chatMsgsByRoom[currentRoom] || [];
+          var needsRender = force || (res.messages.length !== lastMsgs.length);
           if (!needsRender && res.messages.length > 0) {
             var lastNew = res.messages[res.messages.length - 1];
-            var lastOld = lastChatMsgs[lastChatMsgs.length - 1] || {};
+            var lastOld = lastMsgs[lastMsgs.length - 1] || {};
             if (lastNew.id !== lastOld.id) needsRender = true;
           }
+          chatMsgsByRoom[currentRoom] = res.messages;
           if (needsRender) {
-            lastChatMsgs = res.messages;
-            renderChat(lastChatMsgs);
+            renderChat(res.messages);
           }
         }
       }).catch(function(e) {});
@@ -4228,6 +4304,7 @@ body{
     
     inp.value = "";
     chatSending = true;
+    var currentRoom = chatRoom;
     
     // Optimistik render
     var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
@@ -4235,22 +4312,26 @@ body{
       id: "temp_" + Date.now(),
       uid: tgUser.id || 0,
       name: tgUser.first_name || "Sehrgar",
+      house: cupMe().house,
       text: text,
       time: new Date().toISOString()
     };
-    lastChatMsgs.push(tempMsg);
-    renderChat(lastChatMsgs);
+    if (!chatMsgsByRoom[currentRoom]) chatMsgsByRoom[currentRoom] = [];
+    chatMsgsByRoom[currentRoom].push(tempMsg);
+    renderChat(chatMsgsByRoom[currentRoom]);
     
     fetch(API_CHAT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-      body: JSON.stringify({ text: text, initData: d })
+      body: JSON.stringify({ text: text, initData: d, room: currentRoom })
     }).then(function(r) { return r.json(); })
       .then(function(res) {
         chatSending = false;
         if (res.ok && res.messages) {
-          lastChatMsgs = res.messages;
-          renderChat(lastChatMsgs);
+          chatMsgsByRoom[currentRoom] = res.messages;
+          if (chatRoom === currentRoom) {
+            renderChat(res.messages);
+          }
         }
       }).catch(function(e) {
         chatSending = false;
@@ -4293,6 +4374,9 @@ body{
     
     $("chat-strip").addEventListener("click", openChat);
     $("chat-back").addEventListener("click", closeChat);
+    $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
+    $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
+    
     var chatForm = $("chat-form");
     if (chatForm) {
       chatForm.addEventListener("submit", function(e) {
