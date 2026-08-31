@@ -5555,5 +5555,38 @@ body{
   }
 })();
 </script>
+
+  <div id="cup-info-overlay" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+    <div style="background:var(--bg); border-radius:16px; padding:20px; max-width:400px; width:100%; border:1px solid var(--line); position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+      <h3 style="margin-top:0; font-size:18px; color:var(--text); display:flex; align-items:center; gap:8px;">?? Xogvarts Kubogi</h3>
+      <p style="font-size:14px; color:var(--dim); line-height:1.5;">Fakultetingizni g'alabaga yetaklang! Qanday qilib ball ishlash mumkin?</p>
+      
+      <div style="display:flex; flex-direction:column; gap:12px; margin:20px 0;">
+        <div style="display:flex; gap:12px; align-items:flex-start; padding-bottom:10px; border-bottom:1px solid var(--line);">
+          <span style="font-size:24px;">??</span>
+          <div>
+            <strong style="font-size:14px; color:var(--text);">Sehrgar Shaxmati</strong>
+            <div style="font-size:13px; color:var(--dim); margin-top:4px;">G'alaba uchun <b>+10 ball</b>, durang uchun <b>+5 ball</b>.</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; padding-bottom:10px; border-bottom:1px solid var(--line);">
+          <span style="font-size:24px;">??</span>
+          <div>
+            <strong style="font-size:14px; color:var(--text);">O.U.T imtihonlari va Viktorinalar</strong>
+            <div style="font-size:13px; color:var(--dim); margin-top:4px;">Har bir to'g'ri javob uchun <b>+5 ball</b>.</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="font-size:24px;">?</span>
+          <div>
+            <strong style="font-size:14px; color:var(--text);">Faollik va Tadqiqot</strong>
+            <div style="font-size:13px; color:var(--dim); margin-top:4px;">Saralanish marosimi va tayoqcha tanlash uchun <b>+10 balldan</b>.</div>
+          </div>
+        </div>
+      </div>
+      
+      <button id="cup-info-close" style="width:100%; padding:12px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer;">Tushunarli</button>
+    </div>
+  </div>
 </body>
 </html>
