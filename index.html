@@ -930,6 +930,13 @@ body{
 
 
     <div class="cup-you hidden" id="cup-you"></div>
+    
+    <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 20px;">
+      <span class="cup-strip-head" style="margin-bottom: 5px;">
+        <span class="cup-strip-kicker" id="chat-kicker">UMUMIY XONA</span>
+      </span>
+      <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Fakultetdoshlar bilan suhbat ›</span>
+    </button>
 
     <!-- Fakultet zali: saralangan barcha a'zolar, faol yoki faol emas.
          Bot hall ma'lumotini yubormasa - butunlay yashiriladi. -->
@@ -1003,6 +1010,21 @@ body{
     <div style="margin-top:20px;margin-bottom:30px;">
       <h3 id="quiz-title" style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:20px;line-height:1.3;color:var(--text);"></h3>
       <div id="quiz-options" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+
+  <div id="scr-chat" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt">Ortga</span></button>
+      <div id="chat-house-name" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;"></div>
+    </div>
+    <div id="chat-messages" style="flex:1; overflow-y:auto; padding: 20px 16px; display:flex; flex-direction:column; gap:12px; margin-bottom: 60px;">
+    </div>
+    <div style="position:fixed; bottom:0; left:0; right:0; padding:12px 16px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
+      <input type="text" id="chat-input" placeholder="Xabar yozing..." style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--bg-mid); color:var(--text); outline:none; font-size:15px;">
+      <button id="chat-send" style="background:var(--accent); color:#fff; border:none; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
     </div>
   </div>
 
@@ -2822,6 +2844,13 @@ body{
     renderGlasses(list, me);
 
     renderYou(me);
+    
+    if (me && me.house) {
+      $("chat-strip").classList.remove("hidden");
+    } else {
+      $("chat-strip").classList.add("hidden");
+    }
+    
     renderHall();
     renderFeed();
 
@@ -4068,6 +4097,147 @@ body{
     $("scr-lang").classList.remove("hidden");
   }
 
+  /* ---------- CHAT LGC ---------- */
+  var chatTimer = null;
+  var lastChatMsgs = [];
+  
+  function openChat() {
+    $("scr-cup").classList.add("hidden");
+    $("scr-chat").classList.remove("hidden");
+    
+    var me = cupMe();
+    var hh = HOUSES[me.house] || {};
+    $("chat-house-name").textContent = cupHouseName(me.house) + " Umumiy Xonasi";
+    $("chat-house-name").style.color = hh.accent || "var(--accent)";
+    
+    $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
+    
+    fetchChat();
+    chatTimer = setInterval(fetchChat, 3000);
+  }
+  
+  function closeChat() {
+    $("scr-chat").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+    if (chatTimer) {
+      clearInterval(chatTimer);
+      chatTimer = null;
+    }
+  }
+  
+  function renderChat(messages) {
+    var box = $("chat-messages");
+    box.innerHTML = "";
+    if (messages.length === 0) {
+      box.innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Hozircha xabarlar yo\'q. Birinchi bo\'lib yozing!</div>';
+      return;
+    }
+    
+    var meUid = cupMe().user_id;
+    var hh = HOUSES[cupMe().house] || {};
+    var accent = hh.accent || "var(--accent)";
+    
+    messages.forEach(function(m) {
+      var isMe = (m.uid == meUid);
+      
+      var wrap = document.createElement("div");
+      wrap.style.display = "flex";
+      wrap.style.flexDirection = "column";
+      wrap.style.alignItems = isMe ? "flex-end" : "flex-start";
+      wrap.style.marginBottom = "8px";
+      
+      if (!isMe) {
+        var sender = document.createElement("div");
+        sender.textContent = m.name;
+        sender.style.fontSize = "12px";
+        sender.style.color = "var(--dim)";
+        sender.style.marginBottom = "4px";
+        sender.style.marginLeft = "4px";
+        wrap.appendChild(sender);
+      }
+      
+      var bubble = document.createElement("div");
+      bubble.style.padding = "10px 14px";
+      bubble.style.borderRadius = "16px";
+      bubble.style.maxWidth = "80%";
+      bubble.style.wordBreak = "break-word";
+      bubble.style.lineHeight = "1.4";
+      bubble.style.fontSize = "15px";
+      
+      if (isMe) {
+        bubble.style.background = accent;
+        bubble.style.color = "#fff";
+        bubble.style.borderBottomRightRadius = "4px";
+      } else {
+        bubble.style.background = "var(--bg-mid)";
+        bubble.style.color = "var(--text)";
+        bubble.style.borderBottomLeftRadius = "4px";
+      }
+      
+      bubble.textContent = m.text;
+      wrap.appendChild(bubble);
+      box.appendChild(wrap);
+    });
+    
+    // scroll to bottom
+    box.scrollTop = box.scrollHeight;
+  }
+  
+  function fetchChat() {
+    if (!initData) return;
+    fetch(API_URL + "/chat", {
+      headers: { "X-Telegram-Init-Data": initData }
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.ok && res.messages) {
+          // If lengths are different or last message ID is different, re-render
+          var needsRender = false;
+          if (res.messages.length !== lastChatMsgs.length) {
+            needsRender = true;
+          } else if (res.messages.length > 0) {
+            var lastNew = res.messages[res.messages.length - 1];
+            var lastOld = lastChatMsgs[lastChatMsgs.length - 1] || {};
+            if (lastNew.id !== lastOld.id) needsRender = true;
+          }
+          if (needsRender) {
+            lastChatMsgs = res.messages;
+            renderChat(lastChatMsgs);
+          }
+        }
+      }).catch(function(e) {});
+  }
+  
+  function sendChat() {
+    var inp = $("chat-input");
+    var text = inp.value.trim();
+    if (!text || !initData) return;
+    inp.value = "";
+    
+    // Optimistik render
+    var me = cupMe();
+    var tempMsg = {
+      id: Date.now(),
+      uid: me.user_id,
+      name: me.first_name,
+      text: text,
+      time: new Date().toISOString()
+    };
+    lastChatMsgs.push(tempMsg);
+    renderChat(lastChatMsgs);
+    
+    fetch(API_URL + "/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": initData },
+      body: JSON.stringify({ text: text })
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.ok && res.messages) {
+          lastChatMsgs = res.messages;
+          renderChat(lastChatMsgs);
+        }
+      }).catch(function(e) {});
+  }
+
   /* ---------- ISHGA TUSHIRISH ---------- */
 
   function init() {
@@ -4101,6 +4271,14 @@ body{
       $("scr-quiz").classList.add("hidden");
       openTasks();
     });
+    
+    $("chat-strip").addEventListener("click", openChat);
+    $("chat-back").addEventListener("click", closeChat);
+    $("chat-send").addEventListener("click", sendChat);
+    $("chat-input").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendChat();
+    });
+    
     $("cup-strip").addEventListener("click", openCup);
     $("cup-back").addEventListener("click", closeCup);
     $("hall-back").addEventListener("click", function() {
