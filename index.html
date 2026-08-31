@@ -4128,11 +4128,12 @@ body{
       if (tabHouse) {
         tabHouse.style.background = "var(--card)";
         tabHouse.style.color = "var(--text)";
-        tabHouse.textContent = (hh.name && hh.name[lang] ? hh.name[lang] : "Fakultet");
+        tabHouse.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
       }
       if (tabGlobal) {
         tabGlobal.style.background = "transparent";
         tabGlobal.style.color = "var(--dim)";
+        tabGlobal.textContent = "🏰 Katta zal";
       }
       if (titleTxt) {
         titleTxt.textContent = cupHouseName(me.house) + " Umumiy Xonasi";
@@ -4143,11 +4144,12 @@ body{
       if (tabHouse) {
         tabHouse.style.background = "transparent";
         tabHouse.style.color = "var(--dim)";
-        tabHouse.textContent = (hh.name && hh.name[lang] ? hh.name[lang] : "Fakultet");
+        tabHouse.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
       }
       if (tabGlobal) {
         tabGlobal.style.background = "var(--card)";
         tabGlobal.style.color = "var(--text)";
+        tabGlobal.textContent = "🏰 Katta zal";
       }
       if (titleTxt) {
         titleTxt.textContent = "Katta Zal (Umumiy)";
@@ -4224,12 +4226,13 @@ body{
         nameSpan.textContent = m.name;
         sender.appendChild(nameSpan);
         
-        if (chatRoom === "global" && senderHouse && senderHh.name) {
+        if (chatRoom === "global" && senderHouse && HOUSES[senderHouse]) {
           var badge = document.createElement("span");
-          badge.textContent = senderHh.name[lang] || senderHouse;
-          badge.style.fontSize = "10px";
+          var crest = senderHh.crest ? senderHh.crest + " " : "";
+          badge.textContent = crest + cupHouseName(senderHouse);
+          badge.style.fontSize = "11px";
           badge.style.fontWeight = "600";
-          badge.style.padding = "1px 6px";
+          badge.style.padding = "2px 6px";
           badge.style.borderRadius = "6px";
           badge.style.background = "rgba(" + (senderHh.rgb || "151,161,174") + ",.18)";
           badge.style.color = senderHh.accent || "var(--accent)";
