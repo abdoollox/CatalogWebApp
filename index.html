@@ -4205,7 +4205,7 @@ body{
       $("feed-back-txt").textContent = T[lang].cupBack;
       if (!$("scr-cat").classList.contains("hidden")) { renderCupStrip(); }
       fetchTasks(function() {
-        if (!$("scr-cat").classList.contains("hidden")) { renderTasksStrip(); }
+        renderTasksStrip();
       });
     });
   }
