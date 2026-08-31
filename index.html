@@ -2419,10 +2419,16 @@ body{
     var list = $("hall-list");
     list.innerHTML = "";
     var MAX_SHOWN = 10;
-    members.forEach(function (m, idx) {
-      var row = document.createElement("div");
+    
+    function createMemberRow(m, idx) {
+      var row = document.createElement(m.me ? "div" : "a");
+      if (!m.me && m.uid) {
+        row.href = "tg://user?id=" + m.uid;
+        row.style.textDecoration = "none";
+        row.style.display = "flex";
+      }
       row.className = "hall-row";
-      if (idx >= MAX_SHOWN) { row.classList.add("hidden", "hall-row-extra"); }
+      if (m.active === false) { row.style.opacity = "0.45"; }
 
       var pos = document.createElement("div");
       pos.className = "hall-pos";
@@ -2447,7 +2453,12 @@ body{
       pts.textContent = m.points || 0;
       pts.style.color = hh.accent || "var(--accent)";
       row.appendChild(pts);
+      return row;
+    }
 
+    members.forEach(function (m, idx) {
+      var row = createMemberRow(m, idx);
+      if (idx >= MAX_SHOWN) { row.classList.add("hidden", "hall-row-extra"); }
       list.appendChild(row);
     });
 
@@ -2479,34 +2490,7 @@ body{
         fList.innerHTML = "";
         
         members.forEach(function(m, idx) {
-          var row = document.createElement("div");
-          row.className = "hall-row";
-
-          var pos = document.createElement("div");
-          pos.className = "hall-pos";
-          pos.textContent = idx + 1;
-          row.appendChild(pos);
-
-          row.appendChild(faceEl("hall-face", m.name, me.house));
-
-          var who = document.createElement("div");
-          who.className = "hall-nm";
-          who.appendChild(document.createTextNode(m.name || ""));
-          if (m.me) {
-            var tag = document.createElement("i");
-            tag.textContent = t.hallYou;
-            tag.style.color = hh.accent || "var(--accent)";
-            who.appendChild(tag);
-          }
-          row.appendChild(who);
-
-          var pts = document.createElement("div");
-          pts.className = "hall-pts";
-          pts.textContent = m.points || 0;
-          pts.style.color = hh.accent || "var(--accent)";
-          row.appendChild(pts);
-
-          fList.appendChild(row);
+          fList.appendChild(createMemberRow(m, idx));
         });
       };
       list.appendChild(expandBtn);
