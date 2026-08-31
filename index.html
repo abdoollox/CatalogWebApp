@@ -931,11 +931,19 @@ body{
 
     <div class="cup-you hidden" id="cup-you"></div>
     
-    <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 20px;">
+    <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 10px;">
       <span class="cup-strip-head" style="margin-bottom: 5px;">
         <span class="cup-strip-kicker" id="chat-kicker">UMUMIY XONA</span>
       </span>
       <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Fakultetdoshlar bilan suhbat ›</span>
+    </button>
+
+    <button class="cup-strip hidden" id="chess-strip" style="border-left-color: #9b59b6; margin-bottom: 20px;">
+      <span class="cup-strip-head" style="margin-bottom: 5px;">
+        <span class="cup-strip-kicker" id="chess-kicker" style="color: #9b59b6;">SEHRGAR SHAXMATI</span>
+        <span class="cup-strip-time"><i style="background:#9b59b6"></i><span>BLITZ 5:00</span></span>
+      </span>
+      <span id="chess-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Botlar va Do'stlar bilan jangga kiring ›</span>
     </button>
 
     <!-- Fakultet zali: saralangan barcha a'zolar, faol yoki faol emas.
@@ -1030,6 +1038,126 @@ body{
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
     </form>
+  </div>
+
+  <!-- SEHRGAR SHAXMATI: HUB -->
+  <div id="scr-chess-hub" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="chess-hub-back"><span style="font-size:13px">‹</span> <span id="chess-hub-back-txt">Ortga</span></button>
+      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #9b59b6;">Sehrgar Shaxmati</div>
+    </div>
+    
+    <div style="margin-top: 15px; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 18px;">
+      <div style="font-size: 40px; margin-bottom: 8px;">♟️ ♞ ♚</div>
+      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0 0 6px; color: var(--text);">Sehrgarlar Shaxmat Jangi</h2>
+      <p style="color: var(--dim); font-size: 14px; margin: 0; line-height: 1.4;">"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!" — 5 daqiqalik Blitz bahslarida qatnashing.</p>
+    </div>
+
+    <!-- BOT BILAN O'YNASH REJIMI -->
+    <div style="margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
+      <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span>🤖</span> <span>Botga qarshi o'ynash (Mashg'ulot)</span>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
+          <input type="radio" name="chess-bot-diff" value="easy" checked style="accent-color: #9b59b6;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px;">🟢 Ron Uizli (Oson)</div>
+            <div style="color: var(--dim); font-size: 12px;">Yangi boshlovchilar uchun</div>
+          </div>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
+          <input type="radio" name="chess-bot-diff" value="med" style="accent-color: #9b59b6;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px;">🟡 Germiona Grenjer (O'rta)</div>
+            <div style="color: var(--dim); font-size: 12px;">Mantiqiy va taktik yurishlar</div>
+          </div>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
+          <input type="radio" name="chess-bot-diff" value="hard" style="accent-color: #9b59b6;">
+          <div>
+            <div style="font-weight: 600; font-size: 14px;">🔴 Prof. Makgonagall (Qiyin)</div>
+            <div style="color: var(--dim); font-size: 12px;">Sehrgar grossmeyster darajasi</div>
+          </div>
+        </label>
+      </div>
+
+      <button id="btn-start-bot-game" class="btn" style="width: 100%; background: #9b59b6; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer;">
+        ⚔️ Bot bilan o'yinni boshlash (5:00)
+      </button>
+    </div>
+
+    <!-- DO'ST BILAN O'YNASH REJIMI -->
+    <div style="margin-top: 18px; margin-bottom: 30px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
+      <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span>⚔️</span> <span>Do'st bilan 1v1 PvP Blitz</span>
+      </div>
+      
+      <button id="btn-create-pvp-game" style="width: 100%; background: var(--bg2); border: 1px solid var(--line); color: var(--text); padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; margin-bottom: 12px; cursor: pointer;">
+        ➕ Yangi o'yin yaratish
+      </button>
+
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="input-join-code" placeholder="O'yin kodi (masalan: 9a3f2b1c)" style="flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); outline: none; font-size: 14px;">
+        <button id="btn-join-pvp-game" style="background: #9b59b6; color: #fff; border: none; padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;">
+          Ulanish
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEHRGAR SHAXMATI: GAMEPLAY -->
+  <div id="scr-chess-game" class="screen hidden" style="padding-bottom: 30px;">
+    <div class="cup-hdr">
+      <button class="back-btn" id="chess-game-back"><span style="font-size:13px">‹</span> <span id="chess-game-back-txt">Chiqish</span></button>
+      <div id="chess-status-badge" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 14px; color: #f1c40f;">Sizning navbatingiz</div>
+    </div>
+
+    <!-- RAQIB MA'LUMOTI -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 6px; margin-top: 5px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div id="chess-opp-avatar" style="width: 38px; height: 38px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); display: grid; place-items: center; font-size: 20px;">🤖</div>
+        <div>
+          <div id="chess-opp-name" style="font-weight: 600; font-size: 14px;">Ron Uizli</div>
+          <div id="chess-opp-sub" style="font-size: 12px; color: var(--dim);">Qora donalar</div>
+        </div>
+      </div>
+      <div id="chess-opp-clock" style="font-family: monospace; font-size: 20px; font-weight: 700; padding: 6px 12px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: var(--text);">05:00</div>
+    </div>
+
+    <!-- SHAXMAT DOSKASI CONTAINER -->
+    <div style="margin: 8px auto; width: 100%; max-width: 380px; aspect-ratio: 1; border: 4px solid #2d1808; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); overflow: hidden; background: #2d1808; position: relative;">
+      <div id="chess-board" style="display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); width: 100%; height: 100%;">
+      </div>
+      <div id="chess-board-overlay" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; padding: 20px; text-align: center;">
+        <div id="chess-overlay-icon" style="font-size: 48px; margin-bottom: 10px;">🏆</div>
+        <div id="chess-overlay-title" style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px;">G'alaba!</div>
+        <div id="chess-overlay-desc" style="font-size: 14px; color: var(--dim); margin-bottom: 16px;">Mot qildingiz. Fakultetingizga +10 ball qo'shildi!</div>
+        <button id="btn-chess-overlay-ok" style="background: #9b59b6; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+          Davom etish
+        </button>
+      </div>
+    </div>
+
+    <!-- FOYDALANUVCHI MA'LUMOTI -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 4px 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div id="chess-my-avatar" style="width: 38px; height: 38px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); display: grid; place-items: center; font-size: 20px;">🧙‍♂️</div>
+        <div>
+          <div id="chess-my-name" style="font-weight: 600; font-size: 14px;">Siz</div>
+          <div id="chess-my-sub" style="font-size: 12px; color: var(--dim);">Oq donalar</div>
+        </div>
+      </div>
+      <div id="chess-my-clock" style="font-family: monospace; font-size: 20px; font-weight: 700; padding: 6px 12px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: #2ecc71;">05:00</div>
+    </div>
+
+    <!-- O'YIN BOSHQARUVI -->
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <button id="btn-chess-resign" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: #e74c3c; font-weight: 600; font-size: 14px; cursor: pointer;">
+        🏳️ Taslim bo'lish
+      </button>
+    </div>
   </div>
 
 </div>
@@ -1840,6 +1968,11 @@ body{
   var API_TASKS = "https://bot.tizimshunos.uz/api/tasks";
   var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
   var API_CHAT = "https://bot.tizimshunos.uz/api/chat";
+  var API_CHESS_CREATE = "https://bot.tizimshunos.uz/api/chess/create";
+  var API_CHESS_JOIN = "https://bot.tizimshunos.uz/api/chess/join";
+  var API_CHESS_STATE = "https://bot.tizimshunos.uz/api/chess/state";
+  var API_CHESS_MOVE = "https://bot.tizimshunos.uz/api/chess/move";
+  var API_CHESS_FINISH = "https://bot.tizimshunos.uz/api/chess/finish";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;
@@ -2852,8 +2985,10 @@ body{
     
     if (me && me.house) {
       $("chat-strip").classList.remove("hidden");
+      $("chess-strip").classList.remove("hidden");
     } else {
       $("chat-strip").classList.add("hidden");
+      $("chess-strip").classList.add("hidden");
     }
     
     renderHall();
@@ -4098,6 +4233,9 @@ body{
     $("scr-tasks").classList.add("hidden");
     $("scr-quiz").classList.add("hidden");
     $("scr-cup").classList.add("hidden");
+    $("scr-chat").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
     if (leaveSort()) { return; }
     $("scr-lang").classList.remove("hidden");
   }
@@ -4341,6 +4479,798 @@ body{
       });
   }
 
+  /* ---------- SEHRGAR SHAXMATI (WIZARD'S CHESS) ---------- */
+
+  var CHESS_PIECES = {
+    P: { symbol: "♟", name: "Oq Piyoda", val: 100 },
+    N: { symbol: "♞", name: "Oq Ot", val: 320 },
+    B: { symbol: "♝", name: "Oq Fil", val: 330 },
+    R: { symbol: "♜", name: "Oq Rux", val: 500 },
+    Q: { symbol: "♛", name: "Oq Farzin", val: 900 },
+    K: { symbol: "♚", name: "Oq Shoh", val: 20000 },
+    p: { symbol: "♟", name: "Qora Piyoda", val: 100 },
+    n: { symbol: "♞", name: "Qora Ot", val: 320 },
+    b: { symbol: "♝", name: "Qora Fil", val: 330 },
+    r: { symbol: "♜", name: "Qora Rux", val: 500 },
+    q: { symbol: "♛", name: "Qora Farzin", val: 900 },
+    k: { symbol: "♚", name: "Qora Shoh", val: 20000 }
+  };
+
+  var PST = {
+    P: [
+      [0,  0,  0,  0,  0,  0,  0,  0],
+      [50, 50, 50, 50, 50, 50, 50, 50],
+      [10, 10, 20, 30, 30, 20, 10, 10],
+      [5,  5, 10, 25, 25, 10,  5,  5],
+      [0,  0,  0, 20, 20,  0,  0,  0],
+      [5, -5,-10,  0,  0,-10, -5,  5],
+      [5, 10, 10,-20,-20, 10, 10,  5],
+      [0,  0,  0,  0,  0,  0,  0,  0]
+    ],
+    N: [
+      [-50,-40,-30,-30,-30,-30,-40,-50],
+      [-40,-20,  0,  0,  0,  0,-20,-40],
+      [-30,  0, 10, 15, 15, 10,  0,-30],
+      [-30,  5, 15, 20, 20, 15,  5,-30],
+      [-30,  0, 15, 20, 20, 15,  0,-30],
+      [-30,  5, 10, 15, 15, 10,  5,-30],
+      [-40,-20,  0,  5,  5,  0,-20,-40],
+      [-50,-40,-30,-30,-30,-30,-40,-50]
+    ],
+    B: [
+      [-20,-10,-10,-10,-10,-10,-10,-20],
+      [-10,  0,  0,  0,  0,  0,  0,-10],
+      [-10,  0,  5, 10, 10,  5,  0,-10],
+      [-10,  5,  5, 10, 10,  5,  5,-10],
+      [-10,  0, 10, 10, 10, 10,  0,-10],
+      [-10, 10, 10, 10, 10, 10, 10,-10],
+      [-10,  5,  0,  0,  0,  0,  5,-10],
+      [-20,-10,-10,-10,-10,-10,-10,-20]
+    ],
+    R: [
+      [0,  0,  0,  0,  0,  0,  0,  0],
+      [5, 10, 10, 10, 10, 10, 10,  5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [0,  0,  0,  5,  5,  0,  0,  0]
+    ],
+    Q: [
+      [-20,-10,-10, -5, -5,-10,-10,-20],
+      [-10,  0,  0,  0,  0,  0,  0,-10],
+      [-10,  0,  5,  5,  5,  5,  0,-10],
+      [-5,  0,  5,  5,  5,  5,  0, -5],
+      [0,  0,  5,  5,  5,  5,  0, -5],
+      [-10,  5,  5,  5,  5,  5,  0,-10],
+      [-10,  0,  5,  0,  0,  0,  0,-10],
+      [-20,-10,-10, -5, -5,-10,-10,-20]
+    ],
+    K: [
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-20,-30,-30,-40,-40,-30,-20,-20],
+      [-10,-20,-20,-20,-20,-20,-10,-10],
+      [20, 20,  0,  0,  0,  0, 20, 20],
+      [20, 30, 10,  0,  0, 10, 30, 20]
+    ]
+  };
+
+  var chessState = {
+    board: [],
+    turn: "w", // "w" or "b"
+    castling: { wK: true, wQ: true, bK: true, bQ: true },
+    ep: null,
+    history: [],
+    selectedSq: null,
+    legalMoves: [],
+    lastMove: null,
+    gameMode: "bot", // "bot" or "pvp"
+    botDiff: "easy",
+    myColor: "w",
+    pvpGameId: null,
+    whiteTime: 300,
+    blackTime: 300,
+    clockTimer: null,
+    pollTimer: null,
+    gameOver: false
+  };
+
+  function initChessEngine() {
+    chessState.board = [
+      ["r","n","b","q","k","b","n","r"],
+      ["p","p","p","p","p","p","p","p"],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      ["P","P","P","P","P","P","P","P"],
+      ["R","N","B","Q","K","B","N","R"]
+    ];
+    chessState.turn = "w";
+    chessState.castling = { wK: true, wQ: true, bK: true, bQ: true };
+    chessState.ep = null;
+    chessState.history = [];
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessState.lastMove = null;
+    chessState.whiteTime = 300;
+    chessState.blackTime = 300;
+    chessState.gameOver = false;
+  }
+
+  function cloneBoard(b) {
+    return b.map(function(r) { return r.slice(); });
+  }
+
+  function isWhitePiece(p) { return p && p === p.toUpperCase(); }
+  function isBlackPiece(p) { return p && p === p.toLowerCase(); }
+  function getPieceColor(p) { if (!p) return null; return isWhitePiece(p) ? "w" : "b"; }
+
+  function isSquareAttacked(board, r, c, byColor) {
+    // Knight attacks
+    var knightDeltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+    var targetKnight = (byColor === "w" ? "N" : "n");
+    for (var i = 0; i < knightDeltas.length; i++) {
+      var nr = r + knightDeltas[i][0], nc = c + knightDeltas[i][1];
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && board[nr][nc] === targetKnight) return true;
+    }
+
+    // Pawn attacks
+    var pawnDir = (byColor === "w" ? 1 : -1);
+    var targetPawn = (byColor === "w" ? "P" : "p");
+    if (r + pawnDir >= 0 && r + pawnDir < 8) {
+      if (c - 1 >= 0 && board[r + pawnDir][c - 1] === targetPawn) return true;
+      if (c + 1 < 8 && board[r + pawnDir][c + 1] === targetPawn) return true;
+    }
+
+    // King attacks
+    var kingDeltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    var targetKing = (byColor === "w" ? "K" : "k");
+    for (var k = 0; k < kingDeltas.length; k++) {
+      var kr = r + kingDeltas[k][0], kc = c + kingDeltas[k][1];
+      if (kr >= 0 && kr < 8 && kc >= 0 && kc < 8 && board[kr][kc] === targetKing) return true;
+    }
+
+    // Straight (Rook/Queen)
+    var straights = [[-1,0],[1,0],[0,-1],[0,1]];
+    var targetR = (byColor === "w" ? "R" : "r"), targetQ = (byColor === "w" ? "Q" : "q");
+    for (var s = 0; s < straights.length; s++) {
+      var sr = r + straights[s][0], sc = c + straights[s][1];
+      while (sr >= 0 && sr < 8 && sc >= 0 && sc < 8) {
+        var p = board[sr][sc];
+        if (p) {
+          if (p === targetR || p === targetQ) return true;
+          break;
+        }
+        sr += straights[s][0]; sc += straights[s][1];
+      }
+    }
+
+    // Diagonal (Bishop/Queen)
+    var diags = [[-1,-1],[-1,1],[1,-1],[1,1]];
+    var targetB = (byColor === "w" ? "B" : "b");
+    for (var d = 0; d < diags.length; d++) {
+      var dr = r + diags[d][0], dc = c + diags[d][1];
+      while (dr >= 0 && dr < 8 && dc >= 0 && dc < 8) {
+        var dp = board[dr][dc];
+        if (dp) {
+          if (dp === targetB || dp === targetQ) return true;
+          break;
+        }
+        dr += diags[d][0]; dc += diags[d][1];
+      }
+    }
+
+    return false;
+  }
+
+  function findKing(board, color) {
+    var target = (color === "w" ? "K" : "k");
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        if (board[r][c] === target) return { r: r, c: c };
+      }
+    }
+    return null;
+  }
+
+  function isKingInCheck(board, color) {
+    var kp = findKing(board, color);
+    if (!kp) return false;
+    var opp = (color === "w" ? "b" : "w");
+    return isSquareAttacked(board, kp.r, kp.c, opp);
+  }
+
+  function getRawMoves(board, r, c, castling, ep) {
+    var p = board[r][c];
+    if (!p) return [];
+    var color = isWhitePiece(p) ? "w" : "b";
+    var moves = [];
+    var type = p.toUpperCase();
+
+    if (type === "P") {
+      var dir = (color === "w" ? -1 : 1);
+      var startRow = (color === "w" ? 6 : 1);
+      // 1 step forward
+      if (r + dir >= 0 && r + dir < 8 && !board[r + dir][c]) {
+        moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: c } });
+        // 2 steps forward
+        if (r === startRow && !board[r + dir * 2][c]) {
+          moves.push({ from: { r: r, c: c }, to: { r: r + dir * 2, c: c }, isDoublePawn: true });
+        }
+      }
+      // Captures
+      var capCols = [c - 1, c + 1];
+      for (var i = 0; i < capCols.length; i++) {
+        var cc = capCols[i];
+        if (cc >= 0 && cc < 8 && r + dir >= 0 && r + dir < 8) {
+          var target = board[r + dir][cc];
+          if (target && getPieceColor(target) !== color) {
+            moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: cc } });
+          } else if (ep && ep.r === r + dir && ep.c === cc) {
+            moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: cc }, isEnPassant: true });
+          }
+        }
+      }
+    } else if (type === "N") {
+      var nDeltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+      for (var ni = 0; ni < nDeltas.length; ni++) {
+        var nr = r + nDeltas[ni][0], nc = c + nDeltas[ni][1];
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+          var nt = board[nr][nc];
+          if (!nt || getPieceColor(nt) !== color) moves.push({ from: { r: r, c: c }, to: { r: nr, c: nc } });
+        }
+      }
+    } else if (type === "B" || type === "R" || type === "Q") {
+      var dirs = [];
+      if (type === "B" || type === "Q") dirs.push([-1,-1],[-1,1],[1,-1],[1,1]);
+      if (type === "R" || type === "Q") dirs.push([-1,0],[1,0],[0,-1],[0,1]);
+      for (var di = 0; di < dirs.length; di++) {
+        var dr = r + dirs[di][0], dc = c + dirs[di][1];
+        while (dr >= 0 && dr < 8 && dc >= 0 && dc < 8) {
+          var dt = board[dr][dc];
+          if (!dt) {
+            moves.push({ from: { r: r, c: c }, to: { r: dr, c: dc } });
+          } else {
+            if (getPieceColor(dt) !== color) moves.push({ from: { r: r, c: c }, to: { r: dr, c: dc } });
+            break;
+          }
+          dr += dirs[di][0]; dc += dirs[di][1];
+        }
+      }
+    } else if (type === "K") {
+      var kDeltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+      for (var ki = 0; ki < kDeltas.length; ki++) {
+        var kr = r + kDeltas[ki][0], kc = c + kDeltas[ki][1];
+        if (kr >= 0 && kr < 8 && kc >= 0 && kc < 8) {
+          var kt = board[kr][kc];
+          if (!kt || getPieceColor(kt) !== color) moves.push({ from: { r: r, c: c }, to: { r: kr, c: kc } });
+        }
+      }
+      // Castling
+      var opp = (color === "w" ? "b" : "w");
+      if (color === "w" && r === 7 && c === 4 && !isSquareAttacked(board, 7, 4, opp)) {
+        if (castling.wK && !board[7][5] && !board[7][6] && !isSquareAttacked(board, 7, 5, opp) && !isSquareAttacked(board, 7, 6, opp) && board[7][7] === "R") {
+          moves.push({ from: { r: 7, c: 4 }, to: { r: 7, c: 6 }, isCastle: "wK" });
+        }
+        if (castling.wQ && !board[7][3] && !board[7][2] && !board[7][1] && !isSquareAttacked(board, 7, 3, opp) && !isSquareAttacked(board, 7, 2, opp) && board[7][0] === "R") {
+          moves.push({ from: { r: 7, c: 4 }, to: { r: 7, c: 2 }, isCastle: "wQ" });
+        }
+      }
+      if (color === "b" && r === 0 && c === 4 && !isSquareAttacked(board, 0, 4, opp)) {
+        if (castling.bK && !board[0][5] && !board[0][6] && !isSquareAttacked(board, 0, 5, opp) && !isSquareAttacked(board, 0, 6, opp) && board[0][7] === "r") {
+          moves.push({ from: { r: 0, c: 4 }, to: { r: 0, c: 6 }, isCastle: "bK" });
+        }
+        if (castling.bQ && !board[0][3] && !board[0][2] && !board[0][1] && !isSquareAttacked(board, 0, 3, opp) && !isSquareAttacked(board, 0, 2, opp) && board[0][0] === "r") {
+          moves.push({ from: { r: 0, c: 4 }, to: { r: 0, c: 2 }, isCastle: "bQ" });
+        }
+      }
+    }
+
+    return moves;
+  }
+
+  function makeSimMove(board, move) {
+    var nb = cloneBoard(board);
+    var p = nb[move.from.r][move.from.c];
+    nb[move.from.r][move.from.c] = null;
+    
+    if (move.isEnPassant) {
+      var capRow = (p === "P" ? move.to.r + 1 : move.to.r - 1);
+      nb[capRow][move.to.c] = null;
+    }
+    
+    if (move.isCastle === "wK") { nb[7][7] = null; nb[7][5] = "R"; }
+    else if (move.isCastle === "wQ") { nb[7][0] = null; nb[7][3] = "R"; }
+    else if (move.isCastle === "bK") { nb[0][7] = null; nb[0][5] = "r"; }
+    else if (move.isCastle === "bQ") { nb[0][0] = null; nb[0][3] = "r"; }
+
+    // Auto promotion to Queen in simulation
+    if (p === "P" && move.to.r === 0) p = "Q";
+    if (p === "p" && move.to.r === 7) p = "q";
+
+    nb[move.to.r][move.to.c] = p;
+    return nb;
+  }
+
+  function getLegalMovesForSquare(board, r, c, castling, ep) {
+    var raw = getRawMoves(board, r, c, castling, ep);
+    var color = getPieceColor(board[r][c]);
+    var legal = [];
+    for (var i = 0; i < raw.length; i++) {
+      var simulated = makeSimMove(board, raw[i]);
+      if (!isKingInCheck(simulated, color)) {
+        legal.push(raw[i]);
+      }
+    }
+    return legal;
+  }
+
+  function getAllLegalMoves(board, color, castling, ep) {
+    var all = [];
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        if (getPieceColor(board[r][c]) === color) {
+          all = all.concat(getLegalMovesForSquare(board, r, c, castling, ep));
+        }
+      }
+    }
+    return all;
+  }
+
+  /* --- AI ENGINE --- */
+
+  function evaluateBoard(board) {
+    var total = 0;
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var p = board[r][c];
+        if (p) {
+          var type = p.toUpperCase();
+          var val = (CHESS_PIECES[p] ? CHESS_PIECES[p].val : 0);
+          var pstTable = PST[type];
+          var posVal = 0;
+          if (pstTable) {
+            posVal = isWhitePiece(p) ? pstTable[r][c] : pstTable[7 - r][c];
+          }
+          if (isWhitePiece(p)) {
+            total += val + posVal;
+          } else {
+            total -= (val + posVal);
+          }
+        }
+      }
+    }
+    return total;
+  }
+
+  function minimax(board, depth, alpha, beta, isMaximizing, castling, ep) {
+    if (depth === 0) return { score: evaluateBoard(board) };
+
+    var color = isMaximizing ? "w" : "b";
+    var moves = getAllLegalMoves(board, color, castling, ep);
+    if (moves.length === 0) {
+      if (isKingInCheck(board, color)) {
+        return { score: isMaximizing ? -50000 + (3 - depth) : 50000 - (3 - depth) };
+      }
+      return { score: 0 }; // Stalemate
+    }
+
+    var bestMove = moves[Math.floor(Math.random() * moves.length)];
+
+    if (isMaximizing) {
+      var maxEval = -999999;
+      for (var i = 0; i < moves.length; i++) {
+        var nextBoard = makeSimMove(board, moves[i]);
+        var nextEp = moves[i].isDoublePawn ? { r: (moves[i].from.r + moves[i].to.r)/2, c: moves[i].from.c } : null;
+        var evaluation = minimax(nextBoard, depth - 1, alpha, beta, false, castling, nextEp).score;
+        if (evaluation > maxEval) {
+          maxEval = evaluation;
+          bestMove = moves[i];
+        }
+        alpha = Math.max(alpha, evaluation);
+        if (beta <= alpha) break;
+      }
+      return { score: maxEval, move: bestMove };
+    } else {
+      var minEval = 999999;
+      for (var j = 0; j < moves.length; j++) {
+        var nBoard = makeSimMove(board, moves[j]);
+        var nEp = moves[j].isDoublePawn ? { r: (moves[j].from.r + moves[j].to.r)/2, c: moves[j].from.c } : null;
+        var ev = minimax(nBoard, depth - 1, alpha, beta, true, castling, nEp).score;
+        if (ev < minEval) {
+          minEval = ev;
+          bestMove = moves[j];
+        }
+        beta = Math.min(beta, ev);
+        if (beta <= alpha) break;
+      }
+      return { score: minEval, move: bestMove };
+    }
+  }
+
+  function getBestBotMove(board, diff, color, castling, ep) {
+    var moves = getAllLegalMoves(board, color, castling, ep);
+    if (moves.length === 0) return null;
+
+    if (diff === "easy") {
+      // 70% random, 30% capture
+      var captures = moves.filter(function(m) { return !!board[m.to.r][m.to.c]; });
+      if (captures.length > 0 && Math.random() < 0.3) {
+        return captures[Math.floor(Math.random() * captures.length)];
+      }
+      return moves[Math.floor(Math.random() * moves.length)];
+    } else if (diff === "med") {
+      // Depth 2
+      var res2 = minimax(board, 2, -999999, 999999, (color === "w"), castling, ep);
+      return res2.move || moves[0];
+    } else {
+      // Depth 3
+      var res3 = minimax(board, 3, -999999, 999999, (color === "w"), castling, ep);
+      return res3.move || moves[0];
+    }
+  }
+
+  /* --- UI CONTROLLER & CLOCK --- */
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (sec < 10 ? "0" + sec : sec);
+  }
+
+  function updateChessClocks() {
+    var myClock = $("chess-my-clock");
+    var oppClock = $("chess-opp-clock");
+    if (!myClock || !oppClock) return;
+
+    var isMyTurn = (chessState.turn === chessState.myColor);
+    var mySecs = (chessState.myColor === "w" ? chessState.whiteTime : chessState.blackTime);
+    var oppSecs = (chessState.myColor === "w" ? chessState.blackTime : chessState.whiteTime);
+
+    myClock.textContent = formatTime(mySecs);
+    oppClock.textContent = formatTime(oppSecs);
+
+    if (isMyTurn) {
+      myClock.style.color = (mySecs <= 30 ? "#e74c3c" : "#2ecc71");
+      oppClock.style.color = "var(--dim)";
+      $("chess-status-badge").textContent = "Sizning navbatingiz";
+      $("chess-status-badge").style.color = "#f1c40f";
+    } else {
+      oppClock.style.color = (oppSecs <= 30 ? "#e74c3c" : "#f1c40f");
+      myClock.style.color = "var(--dim)";
+      $("chess-status-badge").textContent = "Raqib o'ylamoqda...";
+      $("chess-status-badge").style.color = "var(--dim)";
+    }
+  }
+
+  function startChessClock() {
+    if (chessState.clockTimer) clearInterval(chessState.clockTimer);
+    chessState.clockTimer = setInterval(function() {
+      if (chessState.gameOver) return;
+      if (chessState.turn === "w") {
+        chessState.whiteTime = Math.max(0, chessState.whiteTime - 1);
+        if (chessState.whiteTime === 0) finishChessGame(chessState.myColor === "w" ? "loss" : "win", "Vaqt tugadi");
+      } else {
+        chessState.blackTime = Math.max(0, chessState.blackTime - 1);
+        if (chessState.blackTime === 0) finishChessGame(chessState.myColor === "b" ? "loss" : "win", "Vaqt tugadi");
+      }
+      updateChessClocks();
+    }, 1000);
+  }
+
+  function renderChessBoard() {
+    var boardEl = $("chess-board");
+    if (!boardEl) return;
+    boardEl.innerHTML = "";
+
+    var checkKing = isKingInCheck(chessState.board, chessState.turn) ? findKing(chessState.board, chessState.turn) : null;
+    var flipped = (chessState.myColor === "b");
+
+    for (var ri = 0; ri < 8; ri++) {
+      for (var ci = 0; ci < 8; ci++) {
+        var r = flipped ? 7 - ri : ri;
+        var c = flipped ? 7 - ci : ci;
+
+        var sq = document.createElement("div");
+        var isLight = ((r + c) % 2 === 0);
+        sq.style.display = "flex";
+        sq.style.alignItems = "center";
+        sq.style.justifyContent = "center";
+        sq.style.position = "relative";
+        sq.style.cursor = "pointer";
+        sq.style.userSelect = "none";
+        sq.style.background = isLight ? "#dfc7a7" : "#885c35";
+
+        // Last move highlight
+        if (chessState.lastMove) {
+          if ((chessState.lastMove.from.r === r && chessState.lastMove.from.c === c) ||
+              (chessState.lastMove.to.r === r && chessState.lastMove.to.c === c)) {
+            sq.style.background = isLight ? "#ced782" : "#98a443";
+          }
+        }
+
+        // Selected square highlight
+        if (chessState.selectedSq && chessState.selectedSq.r === r && chessState.selectedSq.c === c) {
+          sq.style.background = isLight ? "#f6f669" : "#baca44";
+        }
+
+        // King check highlight
+        if (checkKing && checkKing.r === r && checkKing.c === c) {
+          sq.style.background = "#e74c3c";
+        }
+
+        // Piece
+        var p = chessState.board[r][c];
+        if (p) {
+          var pieceSpan = document.createElement("span");
+          pieceSpan.textContent = CHESS_PIECES[p] ? CHESS_PIECES[p].symbol : "";
+          pieceSpan.style.fontSize = "32px";
+          pieceSpan.style.lineHeight = "1";
+          if (isWhitePiece(p)) {
+            pieceSpan.style.color = "#fff";
+            pieceSpan.style.textShadow = "0 1px 3px rgba(0,0,0,0.8), 0 0 1px #000";
+          } else {
+            pieceSpan.style.color = "#151515";
+            pieceSpan.style.textShadow = "0 0 2px rgba(255,255,255,0.4)";
+          }
+          sq.appendChild(pieceSpan);
+        }
+
+        // Legal move indicator
+        var isLegalTarget = chessState.legalMoves.some(function(m) { return m.to.r === r && m.to.c === c; });
+        if (isLegalTarget) {
+          var dot = document.createElement("div");
+          if (p) {
+            dot.style.position = "absolute";
+            dot.style.inset = "2px";
+            dot.style.borderRadius = "50%";
+            dot.style.border = "4px solid rgba(46, 204, 113, 0.75)";
+          } else {
+            dot.style.width = "12px";
+            dot.style.height = "12px";
+            dot.style.borderRadius = "50%";
+            dot.style.background = "rgba(46, 204, 113, 0.75)";
+          }
+          sq.appendChild(dot);
+        }
+
+        (function(row, col) {
+          sq.addEventListener("click", function() { handleSquareClick(row, col); });
+        })(r, c);
+
+        boardEl.appendChild(sq);
+      }
+    }
+  }
+
+  function handleSquareClick(r, c) {
+    if (chessState.gameOver) return;
+    if (chessState.turn !== chessState.myColor) return;
+
+    var p = chessState.board[r][c];
+
+    // If a square is already selected, check if clicked square is a legal move
+    if (chessState.selectedSq) {
+      var move = chessState.legalMoves.find(function(m) { return m.to.r === r && m.to.c === c; });
+      if (move) {
+        executeMove(move);
+        return;
+      }
+    }
+
+    // Select new piece
+    if (p && getPieceColor(p) === chessState.myColor) {
+      chessState.selectedSq = { r: r, c: c };
+      chessState.legalMoves = getLegalMovesForSquare(chessState.board, r, c, chessState.castling, chessState.ep);
+    } else {
+      chessState.selectedSq = null;
+      chessState.legalMoves = [];
+    }
+    renderChessBoard();
+  }
+
+  function executeMove(move) {
+    var p = chessState.board[move.from.r][move.from.c];
+    
+    // Handle castling rights
+    if (p === "K") { chessState.castling.wK = false; chessState.castling.wQ = false; }
+    if (p === "k") { chessState.castling.bK = false; chessState.castling.bQ = false; }
+    if (p === "R" && move.from.r === 7 && move.from.c === 7) chessState.castling.wK = false;
+    if (p === "R" && move.from.r === 7 && move.from.c === 0) chessState.castling.wQ = false;
+    if (p === "r" && move.from.r === 0 && move.from.c === 7) chessState.castling.bK = false;
+    if (p === "r" && move.from.r === 0 && move.from.c === 0) chessState.castling.bQ = false;
+
+    // Apply move
+    chessState.board = makeSimMove(chessState.board, move);
+    chessState.ep = move.isDoublePawn ? { r: (move.from.r + move.to.r) / 2, c: move.from.c } : null;
+    chessState.lastMove = move;
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+
+    // Switch turn
+    chessState.turn = (chessState.turn === "w" ? "b" : "w");
+    renderChessBoard();
+    updateChessClocks();
+
+    // Check game over
+    var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
+    if (nextLegal.length === 0) {
+      if (isKingInCheck(chessState.board, chessState.turn)) {
+        finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
+      } else {
+        finishChessGame("draw", "Pat (Durang)");
+      }
+      return;
+    }
+
+    // Bot move if in bot mode
+    if (chessState.gameMode === "bot" && chessState.turn !== chessState.myColor && !chessState.gameOver) {
+      setTimeout(function() {
+        if (chessState.gameOver) return;
+        var botMove = getBestBotMove(chessState.board, chessState.botDiff, chessState.turn, chessState.castling, chessState.ep);
+        if (botMove) {
+          executeMove(botMove);
+        }
+      }, 400);
+    }
+  }
+
+  function finishChessGame(result, reason) {
+    chessState.gameOver = true;
+    if (chessState.clockTimer) clearInterval(chessState.clockTimer);
+    if (chessState.pollTimer) clearInterval(chessState.pollTimer);
+
+    var overlay = $("chess-board-overlay");
+    var icon = $("chess-overlay-icon");
+    var title = $("chess-overlay-title");
+    var desc = $("chess-overlay-desc");
+
+    if (result === "win") {
+      icon.textContent = "🏆";
+      title.textContent = "G'alaba!";
+      title.style.color = "#2ecc71";
+      desc.textContent = reason + ". Fakultetingiz hisobiga +10 ball qo'shildi!";
+      
+      // Post reward to server
+      var d = "";
+      try { d = (tg && tg.initData) || ""; } catch(e) {}
+      if (d) {
+        fetch(API_CHESS_FINISH, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+          body: JSON.stringify({ game_id: chessState.pvpGameId, winner_uid: (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0), reason: reason, initData: d })
+        }).catch(function() {});
+      }
+    } else if (result === "loss") {
+      icon.textContent = "💀";
+      title.textContent = "Mag'lubiyat";
+      title.style.color = "#e74c3c";
+      desc.textContent = reason + ". Yana bir bor mashq qilib ko'ring!";
+    } else {
+      icon.textContent = "🤝";
+      title.textContent = "Durang";
+      title.style.color = "#f1c40f";
+      desc.textContent = reason + ". Kuchlar teng keldi!";
+    }
+
+    if (overlay) overlay.classList.remove("hidden");
+  }
+
+  function openChessHub() {
+    $("scr-cup").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-hub").classList.remove("hidden");
+  }
+
+  function closeChessHub() {
+    $("scr-chess-hub").classList.add("hidden");
+    openCup();
+  }
+
+  function startBotGame() {
+    var diff = "easy";
+    var diffRadios = document.getElementsByName("chess-bot-diff");
+    for (var i = 0; i < diffRadios.length; i++) {
+      if (diffRadios[i].checked) diff = diffRadios[i].value;
+    }
+
+    chessState.gameMode = "bot";
+    chessState.botDiff = diff;
+    chessState.myColor = "w";
+    chessState.pvpGameId = null;
+
+    initChessEngine();
+
+    // Setup UI names & avatars
+    $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || "Siz";
+    $("chess-my-sub").textContent = "Oq donalar • " + cupHouseName(cupMe().house);
+    
+    var botNames = { easy: "Ron Uizli", med: "Germiona Grenjer", hard: "Prof. Makgonagall" };
+    var botAvatars = { easy: "🦁", med: "📚", hard: "🧙‍♀️" };
+    $("chess-opp-name").textContent = botNames[diff] || "Bot";
+    $("chess-opp-sub").textContent = "Qora donalar • Blitz 5:00";
+    $("chess-opp-avatar").textContent = botAvatars[diff] || "🤖";
+
+    $("chess-board-overlay").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.remove("hidden");
+
+    renderChessBoard();
+    updateChessClocks();
+    startChessClock();
+  }
+
+  function createPvPGame() {
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch(e) {}
+    if (!d) return;
+
+    fetch(API_CHESS_CREATE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ time_control: 300, initData: d })
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.ok && res.game_id) {
+          var code = res.game_id;
+          var shareText = "Garri Potter 4K da men bilan 5 daqiqalik Sehrgar Shaxmati Blitz o'ynaysizmi? O'yin kodi: " + code;
+          if (tg && tg.openTelegramLink) {
+            tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(shareText));
+          } else {
+            prompt("Do'stingizga yuborish uchun o'yin kodi:", code);
+          }
+          joinPvPGame(code, true);
+        }
+      }).catch(function(e) {});
+  }
+
+  function joinPvPGame(code, isCreator) {
+    if (!code) {
+      code = ($("input-join-code").value || "").trim();
+    }
+    if (!code) return;
+
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch(e) {}
+    if (!d) return;
+
+    fetch(API_CHESS_JOIN, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ game_id: code, initData: d })
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.ok) {
+          chessState.gameMode = "pvp";
+          chessState.pvpGameId = code;
+          chessState.myColor = isCreator ? "w" : "b";
+          initChessEngine();
+
+          $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || "Siz";
+          $("chess-my-sub").textContent = (isCreator ? "Oq" : "Qora") + " donalar";
+          $("chess-opp-name").textContent = "Do'stingiz";
+          $("chess-opp-sub").textContent = (isCreator ? "Qora" : "Oq") + " donalar • Blitz 5:00";
+          $("chess-opp-avatar").textContent = "⚔️";
+
+          $("chess-board-overlay").classList.add("hidden");
+          $("scr-chess-hub").classList.add("hidden");
+          $("scr-chess-game").classList.remove("hidden");
+
+          renderChessBoard();
+          updateChessClocks();
+          startChessClock();
+        } else {
+          alert("O'yinga ulanib bo'lmadi: " + (res.error || "Xato"));
+        }
+      }).catch(function(e) {});
+  }
+
   /* ---------- ISHGA TUSHIRISH ---------- */
 
   function init() {
@@ -4390,6 +5320,31 @@ body{
     $("chat-send").addEventListener("click", function(e) {
       e.preventDefault();
       sendChat();
+    });
+
+    // Chess events
+    $("chess-strip").addEventListener("click", openChessHub);
+    $("chess-hub-back").addEventListener("click", closeChessHub);
+    $("btn-start-bot-game").addEventListener("click", startBotGame);
+    $("btn-create-pvp-game").addEventListener("click", createPvPGame);
+    $("btn-join-pvp-game").addEventListener("click", function() { joinPvPGame(null, false); });
+    $("chess-game-back").addEventListener("click", function() {
+      if (chessState.gameOver) {
+        openChessHub();
+      } else {
+        if (confirm("O'yindan chiqmoqchimisiz? (O'yin bekor qilinadi)")) {
+          finishChessGame("loss", "O'yinni tark etdingiz");
+          openChessHub();
+        }
+      }
+    });
+    $("btn-chess-resign").addEventListener("click", function() {
+      if (!chessState.gameOver && confirm("Rostdan ham taslim bo'lmoqchimisiz?")) {
+        finishChessGame("loss", "Taslim bo'ldingiz");
+      }
+    });
+    $("btn-chess-overlay-ok").addEventListener("click", function() {
+      openChessHub();
     });
     
     $("cup-strip").addEventListener("click", openCup);
