@@ -1835,6 +1835,7 @@ body{
   var API_LEADERBOARD = "https://bot.tizimshunos.uz/api/leaderboard";
   var API_TASKS = "https://bot.tizimshunos.uz/api/tasks";
   var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
+  var API_CHAT = "https://bot.tizimshunos.uz/api/chat";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;
@@ -4189,7 +4190,7 @@ body{
     try { d = (tg && tg.initData) || ""; } catch(e) {}
     if (!d) return;
     
-    fetch(API_URL + "/chat", {
+    fetch(API_CHAT, {
       headers: { "X-Telegram-Init-Data": d }
     }).then(function(r) { return r.json(); })
       .then(function(res) {
@@ -4231,7 +4232,7 @@ body{
     lastChatMsgs.push(tempMsg);
     renderChat(lastChatMsgs);
     
-    fetch(API_URL + "/chat", {
+    fetch(API_CHAT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
       body: JSON.stringify({ text: text })
