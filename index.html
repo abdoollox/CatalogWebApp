@@ -508,7 +508,7 @@ body{
 .cup-strip{
   display:block;width:100%;text-align:left;background:var(--card);
   border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:18px;
-  padding:14px;margin-bottom:14px;cursor:pointer;
+  padding:14px;margin-top:14px;margin-bottom:14px;cursor:pointer;
   font-family:'Manrope',sans-serif;transition:.2s;
 }
 .cup-strip:active{transform:scale(.99)}
@@ -540,13 +540,7 @@ body{
 .cup-strip-name{text-align:center;font:600 10px/1.3 'Manrope',sans-serif;color:var(--dim)}
 .cup-strip-name.mine{color:var(--text)}
 .cup-strip-name b{display:block;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;margin-top:2px}
-.cup-strip-foot{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
-}
-.cup-strip-line{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);min-width:0}
-.cup-strip-line b{color:var(--text);font-weight:600}
-.cup-strip-arrow{color:var(--accent);font-size:18px;line-height:1;flex:none}
+
 
 /* ekran sarlavhasi */
 .cup-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
@@ -742,6 +736,7 @@ body{
       </div>
     </div>
 
+
     <button class="cup-strip hidden" id="cup-strip">
       <span class="cup-strip-head">
         <span class="cup-strip-kicker" id="cup-strip-kicker"></span>
@@ -749,10 +744,6 @@ body{
       </span>
       <span class="cup-strip-tubes" id="cup-strip-tubes"></span>
       <span class="cup-strip-names" id="cup-strip-names"></span>
-      <span class="cup-strip-foot">
-        <span class="cup-strip-line" id="cup-strip-line"></span>
-        <span class="cup-strip-arrow">›</span>
-      </span>
     </button>
 
     <div class="sort-card hidden" id="sort-card">
@@ -929,14 +920,14 @@ body{
 
     <div class="glasses" id="cup-glasses"></div>
 
-    <div class="cup-gap hidden" id="cup-gap">
-      <div class="gap-top">
-        <div class="gap-txt" id="gap-txt"></div>
-        <div class="gap-crest" id="gap-crest"></div>
-      </div>
-      <div class="gap-track" id="gap-track"></div>
-      <div class="gap-hint" id="gap-hint"></div>
-    </div>
+    <button class="cup-strip hidden" id="tasks-strip" style="border-left-color: #f39c12">
+      <span class="cup-strip-head" style="margin-bottom: 5px;">
+        <span class="cup-strip-kicker" id="tasks-kicker">VAZIFALAR</span>
+        <span class="cup-strip-time"><i style="background:#f39c12"></i><span id="tasks-count"></span></span>
+      </span>
+      <span id="tasks-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Imtihonlar va Kunlik savollar ›</span>
+    </button>
+
 
     <div class="cup-you hidden" id="cup-you"></div>
 
@@ -963,6 +954,56 @@ body{
 
     <button class="cup-cta hidden" id="cup-cta"></button>
     <p class="cup-foot" id="cup-foot"></p>
+  </div>
+
+  <!-- Fakultet zali to'liq ro'yxati -->
+  <div id="scr-hall-full" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="hall-back"><span style="font-size:13px">‹</span> <span id="hall-back-txt">Ortga</span></button>
+    </div>
+    <div class="hall" style="margin-top: 15px; margin-bottom: 30px;">
+      <div class="hall-top">
+        <div class="hall-crest" id="hall-full-crest"></div>
+        <div>
+          <div class="hall-name" id="hall-full-name"></div>
+          <div class="hall-sub" id="hall-full-sub"></div>
+        </div>
+      </div>
+      <div id="hall-full-list"></div>
+    </div>
+  </div>
+
+  <!-- Feed to'liq ro'yxati -->
+  <div id="scr-feed-full" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="feed-back"><span style="font-size:13px">‹</span> <span id="feed-back-txt">Ortga</span></button>
+    </div>
+    <div class="feed" style="margin-top: 15px; margin-bottom: 30px;">
+      <div class="feed-kick" id="feed-full-kick"></div>
+      <div id="feed-full-list"></div>
+    </div>
+  </div>
+
+  <div id="scr-tasks" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="tasks-back"><span style="font-size:13px">‹</span> <span id="tasks-back-txt">Katalog</span></button>
+    </div>
+    <div class="hall" style="margin-top: 15px; margin-bottom: 30px;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:15px;" id="tasks-header">Kutilayotgan vazifalar</h2>
+      <div id="tasks-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+      <div id="tasks-empty" class="hidden" style="text-align:center;color:var(--dim);margin-top:30px;">Hozircha barcha vazifalarni bajargansiz.</div>
+    </div>
+  </div>
+
+  <div id="scr-quiz" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="quiz-back"><span style="font-size:13px">‹</span> <span id="quiz-back-txt">Vazifalar</span></button>
+      <span class="cup-timer"><span id="quiz-progress" style="font-weight:600;font-size:13px;">1/1</span></span>
+    </div>
+    <div style="margin-top:20px;margin-bottom:30px;">
+      <h3 id="quiz-title" style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:20px;line-height:1.3;color:var(--text);"></h3>
+      <div id="quiz-options" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
   </div>
 
 </div>
@@ -1770,15 +1811,57 @@ body{
   /* ---------- XOGVARTS KUBOGI (2.0) ---------- */
 
   var API_LEADERBOARD = "https://bot.tizimshunos.uz/api/leaderboard";
+  var API_TASKS = "https://bot.tizimshunos.uz/api/tasks";
+  var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;
+  var tasksData = null;
+  var tasksBusy = false;
 
   // Reytingni serverdan oladi. report() kabi jim ishlaydi: xato bo'lsa
   // foydalanuvchi sezmaydi, tasma shunchaki ko'rinmaydi.
   function fetchCup(cb) {
     var initData = "";
     try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      cupData = {
+        houses: [
+          {house: "gryffindor", total_points: 1500, active_members: 12, qualified: true},
+          {house: "slytherin", total_points: 1200, active_members: 10, qualified: true},
+          {house: "ravenclaw", total_points: 900, active_members: 8, qualified: true},
+          {house: "hufflepuff", total_points: 500, active_members: 4, qualified: true}
+        ],
+        me: {house: "gryffindor", can_resort: true},
+        hall: {
+          total: 15, active: 12,
+          members: [
+            {name: "Harry", points: 300, me: true},
+            {name: "Hermione", points: 250},
+            {name: "Ron", points: 200},
+            {name: "Neville", points: 150},
+            {name: "Seamus", points: 100},
+            {name: "Dean", points: 100},
+            {name: "Parvati", points: 100},
+            {name: "Lavender", points: 100},
+            {name: "Colin", points: 100},
+            {name: "Dennis", points: 50},
+            {name: "Katie", points: 25},
+            {name: "Cormac", points: 25}
+          ]
+        },
+        feed: [
+          {name: "Harry", house: "gryffindor", ago_minutes: 5},
+          {name: "Draco", house: "slytherin", ago_minutes: 10},
+          {name: "Luna", house: "ravenclaw", ago_minutes: 15},
+          {name: "Cedric", house: "hufflepuff", ago_minutes: 20},
+          {name: "Cho", house: "ravenclaw", ago_minutes: 25},
+          {name: "Ginny", house: "gryffindor", ago_minutes: 30}
+        ]
+      };
+      if (cb) { cb(cupData); }
+      return;
+    }
     if (!initData || !window.fetch || cupBusy) { if (cb) { cb(cupData); } return; }
 
     cupBusy = true;
@@ -1796,9 +1879,214 @@ body{
     } catch (e) { done(null); }
   }
 
+  function fetchTasks(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      tasksData = {
+        tasks: [
+          {
+            id: "daily", type: "daily", title: "Kunlik savol",
+            questions: [{id: 1, body: "Garri Potterning boyqushining ismi nima?", options: ["Hedwig", "Errol", "Pigwidgeon", "Crookshanks"]}]
+          },
+          {
+            id: "quiz_hp1", type: "film_quiz", film_id: "hp1", title: "Garri Potter 1-qism imtihoni",
+            questions: [
+              {id: 2, body: "Hikmatlar toshini kim himoya qiladi?", options: ["Fluffy", "Norbert", "Fang", "Aragog"]}
+            ]
+          }
+        ]
+      };
+      if (cb) { cb(tasksData); }
+      return;
+    }
+    if (!initData || !window.fetch || tasksBusy) { if (cb) { cb(tasksData); } return; }
+
+    tasksBusy = true;
+    function done(d) {
+      tasksBusy = false;
+      if (d && d.tasks) { tasksData = d; }
+      if (cb) { cb(tasksData); }
+    }
+    try {
+      window.fetch(API_TASKS, {
+        method: "GET",
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(done)["catch"](function () { done(null); });
+    } catch (e) { done(null); }
+  }
+
+  function submitTaskAnswer(taskType, questionId, selectedIndex, cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      setTimeout(function() {
+        cb({ok: true, correct: selectedIndex === 0, points: 10, correct_index: 0});
+      }, 500);
+      return;
+    }
+    if (!initData || !window.fetch) { cb({ok: false}); return; }
+    
+    window.fetch(API_SUBMIT_TASK, {
+      method: "POST",
+      headers: { "X-Telegram-Init-Data": initData, "Content-Type": "application/json" },
+      body: JSON.stringify({ task_type: taskType, question_id: questionId, selected_index: selectedIndex })
+    }).then(function(r) { return r.ok ? r.json() : {ok: false}; })
+      .then(cb)["catch"](function() { cb({ok: false}); });
+  }
+
+  var currentTask = null;
+  var currentQuestionIndex = 0;
+
+  function renderTasksStrip() {
+    var strip = $("tasks-strip");
+    if (!strip) return;
+    if (!tasksData || !tasksData.tasks || tasksData.tasks.length === 0) {
+      strip.classList.add("hidden");
+      return;
+    }
+    strip.classList.remove("hidden");
+    $("tasks-kicker").textContent = lang === "uz" ? "VAZIFALAR" : lang === "ru" ? "ЗАДАЧИ" : "TASKS";
+    $("tasks-title").textContent = lang === "uz" ? "Imtihonlar va Kunlik savollar ›" : lang === "ru" ? "Экзамены и Ежедневные вопросы ›" : "Exams and Daily questions ›";
+    $("tasks-count").textContent = tasksData.tasks.length + (lang === "uz" ? " ta yangi" : " new");
+  }
+
+  function openTasks() {
+    $("scr-cup").classList.add("hidden");
+    $("scr-tasks").classList.remove("hidden");
+    
+    $("tasks-header").textContent = lang === "uz" ? "Kutilayotgan vazifalar" : lang === "ru" ? "Ожидающие задачи" : "Pending tasks";
+    $("tasks-empty").textContent = lang === "uz" ? "Hozircha barcha vazifalarni bajargansiz." : lang === "ru" ? "Пока все задачи выполнены." : "You have completed all tasks for now.";
+    $("tasks-back-txt").textContent = T[lang].cupBack;
+    $("quiz-back-txt").textContent = lang === "uz" ? "Vazifalar" : lang === "ru" ? "Задачи" : "Tasks";
+    
+    var list = $("tasks-list");
+    list.innerHTML = "";
+    
+    if (!tasksData || !tasksData.tasks || tasksData.tasks.length === 0) {
+      $("tasks-empty").classList.remove("hidden");
+      return;
+    }
+    $("tasks-empty").classList.add("hidden");
+    
+    tasksData.tasks.forEach(function(task) {
+      var btn = document.createElement("button");
+      btn.className = "btn w-100";
+      btn.style.textAlign = "left";
+      btn.style.padding = "16px";
+      btn.style.background = "var(--card)";
+      btn.style.border = "1px solid var(--line)";
+      btn.style.borderRadius = "12px";
+      btn.style.display = "flex";
+      btn.style.alignItems = "center";
+      btn.style.justifyContent = "space-between";
+      
+      var txt = document.createElement("span");
+      txt.style.fontWeight = "600";
+      txt.textContent = task.title;
+      btn.appendChild(txt);
+      
+      var ar = document.createElement("span");
+      ar.textContent = "›";
+      ar.style.color = "var(--accent)";
+      ar.style.fontSize = "20px";
+      btn.appendChild(ar);
+      
+      btn.onclick = function() {
+        startTask(task);
+      };
+      
+      list.appendChild(btn);
+    });
+  }
+  
+  function startTask(task) {
+    currentTask = task;
+    currentQuestionIndex = 0;
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.remove("hidden");
+    renderQuizQuestion();
+  }
+  
+  function renderQuizQuestion() {
+    if (!currentTask) return;
+    if (currentQuestionIndex >= currentTask.questions.length) {
+      var idx = tasksData.tasks.indexOf(currentTask);
+      if (idx > -1) { tasksData.tasks.splice(idx, 1); }
+      currentTask = null;
+      openTasks();
+      $("scr-quiz").classList.add("hidden");
+      renderTasksStrip();
+      if (window.tg && window.tg.HapticFeedback) {
+        window.tg.HapticFeedback.notificationOccurred("success");
+      }
+      return;
+    }
+    
+    var q = currentTask.questions[currentQuestionIndex];
+    $("quiz-progress").textContent = (currentQuestionIndex + 1) + " / " + currentTask.questions.length;
+    $("quiz-title").textContent = q.body;
+    
+    var opts = $("quiz-options");
+    opts.innerHTML = "";
+    
+    q.options.forEach(function(optText, idx) {
+      var btn = document.createElement("button");
+      btn.className = "btn w-100";
+      btn.style.padding = "14px";
+      btn.style.borderRadius = "12px";
+      btn.style.background = "var(--bg-mid)";
+      btn.style.border = "1px solid var(--line)";
+      btn.style.textAlign = "left";
+      btn.style.fontSize = "16px";
+      btn.textContent = optText;
+      
+      btn.onclick = function() {
+        var allBtns = opts.querySelectorAll("button");
+        for (var i=0; i<allBtns.length; i++) {
+          allBtns[i].disabled = true;
+          allBtns[i].style.opacity = "0.7";
+        }
+        btn.style.opacity = "1";
+        
+        submitTaskAnswer(currentTask.type, q.id, idx, function(res) {
+          if (res.ok) {
+            if (res.correct) {
+              btn.style.background = "rgba(46, 204, 113, 0.2)";
+              btn.style.borderColor = "#2ecc71";
+              if (window.tg && window.tg.HapticFeedback) window.tg.HapticFeedback.notificationOccurred("success");
+            } else {
+              btn.style.background = "rgba(231, 76, 60, 0.2)";
+              btn.style.borderColor = "#e74c3c";
+              if (res.correct_index !== undefined && allBtns[res.correct_index]) {
+                allBtns[res.correct_index].style.background = "rgba(46, 204, 113, 0.2)";
+                allBtns[res.correct_index].style.borderColor = "#2ecc71";
+                allBtns[res.correct_index].style.opacity = "1";
+              }
+              if (window.tg && window.tg.HapticFeedback) window.tg.HapticFeedback.notificationOccurred("error");
+            }
+            if (res.points && res.points > 0 && cupData && cupData.me) {
+               cupData.me.points = (cupData.me.points || 0) + res.points;
+            }
+          } else {
+            btn.style.background = "rgba(231, 76, 60, 0.2)";
+          }
+          
+          setTimeout(function() {
+            currentQuestionIndex++;
+            renderQuizQuestion();
+          }, 1500);
+        });
+      };
+      
+      opts.appendChild(btn);
+    });
+  }
+
   function cupPts(v) {
     var n = Number(v);
-    return isFinite(n) ? n.toFixed(1) : "0.0";
+    return isFinite(n) ? Math.round(n).toString() : "0";
   }
 
   function cupHouseName(id) {
@@ -1846,8 +2134,8 @@ body{
     var list = cupData.houses.slice();
     list.sort(function (a, b) {
       if (a.qualified !== b.qualified) { return a.qualified ? -1 : 1; }
-      if ((b.avg_points || 0) !== (a.avg_points || 0)) {
-        return (b.avg_points || 0) - (a.avg_points || 0);
+      if ((b.total_points || 0) !== (a.total_points || 0)) {
+        return (b.total_points || 0) - (a.total_points || 0);
       }
       return HOUSE_ORDER.indexOf(a.house) - HOUSE_ORDER.indexOf(b.house);
     });
@@ -1937,7 +2225,7 @@ body{
     // to'lib ketgandek ko'rinadi.
     var top = 0;
     for (var i = 0; i < list.length; i++) {
-      if ((list[i].avg_points || 0) > top) { top = list[i].avg_points || 0; }
+      if ((list[i].total_points || 0) > top) { top = list[i].total_points || 0; }
     }
     var scale = Math.max(top, SCALE_FLOOR);
 
@@ -1955,7 +2243,7 @@ body{
       if (mine) { tube.style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.6)"; }
 
       var fill = document.createElement("i");
-      fill.style.width = Math.max(4, Math.round((row.avg_points || 0) / scale * 100)) + "%";
+      fill.style.width = Math.max(4, Math.round((row.total_points || 0) / scale * 100)) + "%";
       fill.style.background = "rgba(" + (hh.rgb || "151,161,174") + "," + (mine ? ".62" : ".5") + ")";
       tube.appendChild(fill);
       tubes.appendChild(tube);
@@ -1964,31 +2252,13 @@ body{
       nm.className = "cup-strip-name" + (mine ? " mine" : "");
       nm.appendChild(document.createTextNode(cupHouseName(row.house)));
       var val = document.createElement("b");
-      val.textContent = Math.round(row.avg_points || 0);
+      val.textContent = Math.round(row.total_points || 0);
       val.style.color = hh.accent || "var(--accent)";
       nm.appendChild(val);
       names.appendChild(nm);
     });
 
-    var line = $("cup-strip-line");
-    line.innerHTML = "";
-    var row = house ? cupRowOf(list, house) : null;
 
-    if (!house) {
-      line.textContent = t.cupJoin;
-    } else if (!me.is_active) {
-      line.textContent = t.cupStripGate.replace("%d", me.to_active || 0);
-    } else if (row && !row.qualified) {
-      line.textContent = t.cupMembers
-        .replace("%a", row.active_members || 0).replace("%b", 5);
-    } else {
-      var parts = t.cupStripMine.split("%s");
-      line.appendChild(document.createTextNode(parts[0]));
-      var b = document.createElement("b");
-      b.textContent = (me.points || 0) + " / " + (me.max_points || 350);
-      line.appendChild(b);
-      if (parts.length > 1) { line.appendChild(document.createTextNode(parts[1])); }
-    }
 
     strip.classList.remove("hidden");
   }
@@ -2001,7 +2271,7 @@ body{
 
     var top = 0, i;
     for (i = 0; i < list.length; i++) {
-      if ((list[i].avg_points || 0) > top) { top = list[i].avg_points; }
+      if ((list[i].total_points || 0) > top) { top = list[i].total_points; }
     }
 
     list.forEach(function (row) {
@@ -2024,7 +2294,7 @@ body{
       // boshida 40 ball (350 dan) naychani deyarli to'ldirib, "poyga
       // tugagan" degan yolg'on taassurot berardi.
       var scale = Math.max(top, SCALE_FLOOR);
-      var pct = Math.round((row.avg_points || 0) / scale * 78);
+      var pct = Math.round((row.total_points || 0) / scale * 78);
       var fill = document.createElement("span");
       fill.className = "tube-fill";
       fill.style.height = Math.max(MIN_FILL, pct) + "%";
@@ -2045,7 +2315,7 @@ body{
 
       var val = document.createElement("span");
       val.className = "g-val";
-      val.textContent = cupPts(row.avg_points);
+      val.textContent = cupPts(row.total_points);
       cell.appendChild(val);
 
       if (!row.qualified) {
@@ -2139,12 +2409,13 @@ body{
       faces.appendChild(more);
     }
 
-    // Ro'yxatda faqat faol a'zolar. 0 ballni ko'rsatish keraksiz noqulaylik.
     var list = $("hall-list");
     list.innerHTML = "";
+    var MAX_SHOWN = 10;
     members.forEach(function (m, idx) {
       var row = document.createElement("div");
       row.className = "hall-row";
+      if (idx >= MAX_SHOWN) { row.classList.add("hidden", "hall-row-extra"); }
 
       var pos = document.createElement("div");
       pos.className = "hall-pos";
@@ -2172,6 +2443,67 @@ body{
 
       list.appendChild(row);
     });
+
+    if (members.length > MAX_SHOWN) {
+      var expandBtn = document.createElement("button");
+      expandBtn.className = "btn w-100 mt-16";
+      expandBtn.style.padding = "14px";
+      expandBtn.style.borderRadius = "12px";
+      expandBtn.style.background = hh.accent || "var(--accent)";
+      expandBtn.style.color = "#fff";
+      expandBtn.style.border = "none";
+      expandBtn.style.fontWeight = "600";
+      expandBtn.style.fontSize = "15px";
+      expandBtn.textContent = (lang === "uz" ? "To'liq ro'yxatni ko'rish" : lang === "ru" ? "Показать полный список" : "Show full list");
+      expandBtn.onclick = function() {
+        $("scr-cup").classList.add("hidden");
+        $("scr-hall-full").classList.remove("hidden");
+        
+        $("hall-full-crest").innerHTML = "";
+        var fImg = cupCrestImg(me.house, 34);
+        if (fImg) { $("hall-full-crest").appendChild(fImg); }
+        $("hall-full-crest").style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.42)";
+        $("hall-full-crest").style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.13)";
+        $("hall-full-name").textContent = $("hall-name").textContent;
+        $("hall-full-name").style.color = hh.accent || "var(--accent)";
+        $("hall-full-sub").textContent = $("hall-sub").textContent;
+        
+        var fList = $("hall-full-list");
+        fList.innerHTML = "";
+        
+        members.forEach(function(m, idx) {
+          var row = document.createElement("div");
+          row.className = "hall-row";
+
+          var pos = document.createElement("div");
+          pos.className = "hall-pos";
+          pos.textContent = idx + 1;
+          row.appendChild(pos);
+
+          row.appendChild(faceEl("hall-face", m.name, me.house));
+
+          var who = document.createElement("div");
+          who.className = "hall-nm";
+          who.appendChild(document.createTextNode(m.name || ""));
+          if (m.me) {
+            var tag = document.createElement("i");
+            tag.textContent = t.hallYou;
+            tag.style.color = hh.accent || "var(--accent)";
+            who.appendChild(tag);
+          }
+          row.appendChild(who);
+
+          var pts = document.createElement("div");
+          pts.className = "hall-pts";
+          pts.textContent = m.points || 0;
+          pts.style.color = hh.accent || "var(--accent)";
+          row.appendChild(pts);
+
+          fList.appendChild(row);
+        });
+      };
+      list.appendChild(expandBtn);
+    }
 
     var wait = $("hall-wait");
     var idle = (hall.total || 0) - (hall.active || 0);
@@ -2203,10 +2535,12 @@ body{
 
     var list = $("feed-list");
     list.innerHTML = "";
-    feed.slice(0, 5).forEach(function (ev) {
+    var MAX_FEED = 5;
+    feed.forEach(function (ev, idx) {
       var hh = HOUSES[ev.house] || {};
       var row = document.createElement("div");
       row.className = "feed-row";
+      if (idx >= MAX_FEED) { row.classList.add("hidden", "feed-row-extra"); }
 
       var cr = document.createElement("div");
       cr.className = "feed-crest";
@@ -2233,6 +2567,59 @@ body{
 
       list.appendChild(row);
     });
+
+    if (feed.length > MAX_FEED) {
+      var expandBtn = document.createElement("button");
+      expandBtn.className = "btn w-100 mt-16";
+      expandBtn.style.padding = "14px";
+      expandBtn.style.borderRadius = "12px";
+      expandBtn.style.background = "var(--bg-mid)";
+      expandBtn.style.color = "var(--text)";
+      expandBtn.style.border = "none";
+      expandBtn.style.fontWeight = "600";
+      expandBtn.style.fontSize = "15px";
+      expandBtn.textContent = (lang === "uz" ? "Barcha tasmani ko'rish" : lang === "ru" ? "Показать всю ленту" : "Show all feed");
+      expandBtn.onclick = function() {
+        $("scr-cup").classList.add("hidden");
+        $("scr-feed-full").classList.remove("hidden");
+        
+        $("feed-full-kick").textContent = t.feedKick;
+        var fList = $("feed-full-list");
+        fList.innerHTML = "";
+        
+        feed.forEach(function(ev) {
+          var hh = HOUSES[ev.house] || {};
+          var row = document.createElement("div");
+          row.className = "feed-row";
+
+          var cr = document.createElement("div");
+          cr.className = "feed-crest";
+          cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+          var im = cupCrestImg(ev.house, 22);
+          if (im) { cr.appendChild(im); }
+          row.appendChild(cr);
+
+          var txt = document.createElement("div");
+          txt.className = "feed-txt";
+          var parts = t.feedSorted.split("%h");
+          var b = document.createElement("b");
+          b.textContent = ev.name || "";
+          txt.appendChild(b);
+          txt.appendChild(document.createTextNode(parts[0]));
+          txt.appendChild(document.createTextNode(cupHouseName(ev.house)));
+          if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
+          row.appendChild(txt);
+
+          var tm = document.createElement("div");
+          tm.className = "feed-time";
+          tm.textContent = agoText(ev.ago_minutes, t);
+          row.appendChild(tm);
+
+          fList.appendChild(row);
+        });
+      };
+      list.appendChild(expandBtn);
+    }
 
     box.classList.remove("hidden");
   }
@@ -2443,9 +2830,11 @@ body{
     $("cup-title").textContent = t.cupTitle;
     $("cup-foot").textContent = t.cupFoot;
     $("cup-back-txt").textContent = t.cupBack;
+    $("hall-back-txt").textContent = t.cupBack;
+    $("feed-back-txt").textContent = t.cupBack;
 
     renderGlasses(list, me);
-    renderGap(list, me);
+
     renderYou(me);
     renderHall();
     renderFeed();
@@ -3065,9 +3454,14 @@ body{
     $("scr-reveal").classList.add("hidden");
     $("scr-hat").classList.add("hidden");
     $("scr-think").classList.add("hidden");
+    $("scr-hall-full").classList.add("hidden");
+    $("scr-feed-full").classList.add("hidden");
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.add("hidden");
     $("scr-cup").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
+    renderCupStrip();
     maybeAutoSort();
   }
 
@@ -3667,6 +4061,7 @@ body{
     $("scr-prof").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
+    renderCupStrip();
   }
 
   function goBack() {
@@ -3678,6 +4073,10 @@ body{
     $("scr-reveal").classList.add("hidden");
     $("scr-hat").classList.add("hidden");
     $("scr-think").classList.add("hidden");
+    $("scr-hall-full").classList.add("hidden");
+    $("scr-feed-full").classList.add("hidden");
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.add("hidden");
     $("scr-cup").classList.add("hidden");
     if (leaveSort()) { return; }
     $("scr-lang").classList.remove("hidden");
@@ -3705,8 +4104,27 @@ body{
         startWand();
       }
     });
+    $("tasks-strip").addEventListener("click", openTasks);
+    $("tasks-back").addEventListener("click", function() {
+      $("scr-tasks").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+      renderTasksStrip();
+    });
+    $("quiz-back").addEventListener("click", function() {
+      // confirm exit?
+      $("scr-quiz").classList.add("hidden");
+      openTasks();
+    });
     $("cup-strip").addEventListener("click", openCup);
     $("cup-back").addEventListener("click", closeCup);
+    $("hall-back").addEventListener("click", function() {
+      $("scr-hall-full").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+    });
+    $("feed-back").addEventListener("click", function() {
+      $("scr-feed-full").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+    });
     $("cup-cta").addEventListener("click", function () {
       // Fakultetsizga - saralanish, chegaradan o'tmaganga - a'zo taklifi
       if (this.getAttribute("data-act") === "sort") {
@@ -3746,6 +4164,8 @@ body{
     $("scr-detail").classList.add("hidden");
     $("scr-cup").classList.add("hidden");
     $("cup-back-txt").textContent = T[lang].cupBack;
+    $("hall-back-txt").textContent = T[lang].cupBack;
+    $("feed-back-txt").textContent = T[lang].cupBack;
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
@@ -3776,7 +4196,12 @@ body{
     // katalog baribir ochiladi, tasma shunchaki ko'rinmaydi.
     fetchCup(function () {
       $("cup-back-txt").textContent = T[lang].cupBack;
+      $("hall-back-txt").textContent = T[lang].cupBack;
+      $("feed-back-txt").textContent = T[lang].cupBack;
       if (!$("scr-cat").classList.contains("hidden")) { renderCupStrip(); }
+      fetchTasks(function() {
+        if (!$("scr-cat").classList.contains("hidden")) { renderTasksStrip(); }
+      });
     });
   }
 
