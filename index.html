@@ -1013,19 +1013,19 @@ body{
     </div>
   </div>
 
-  <div id="scr-chat" class="screen hidden">
+  <div id="scr-chat" class="screen hidden" style="padding-bottom: 75px;">
     <div class="cup-hdr">
       <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt">Ortga</span></button>
       <div id="chat-house-name" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;"></div>
     </div>
-    <div id="chat-messages" style="flex:1; overflow-y:auto; padding: 20px 16px; display:flex; flex-direction:column; gap:12px; margin-bottom: 60px;">
+    <div id="chat-messages" style="padding: 16px 4px; display:flex; flex-direction:column; gap:12px; min-height: 200px;">
     </div>
-    <div style="position:fixed; bottom:0; left:0; right:0; padding:12px 16px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
-      <input type="text" id="chat-input" placeholder="Xabar yozing..." style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--bg-mid); color:var(--text); outline:none; font-size:15px;">
-      <button id="chat-send" style="background:var(--accent); color:#fff; border:none; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+    <form id="chat-form" onsubmit="return false;" style="position:fixed; bottom:0; left:0; right:0; max-width:440px; margin:0 auto; padding:12px 18px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
+      <input type="text" id="chat-input" placeholder="Xabar yozing..." autocomplete="off" style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; font-size:15px;">
+      <button type="submit" id="chat-send" style="background:var(--accent); color:#fff; border:none; border-radius:50%; width:44px; height:44px; min-width:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
-    </div>
+    </form>
   </div>
 
 </div>
@@ -4171,8 +4171,9 @@ body{
         bubble.style.color = "#fff";
         bubble.style.borderBottomRightRadius = "4px";
       } else {
-        bubble.style.background = "var(--bg-mid)";
+        bubble.style.background = "var(--card)";
         bubble.style.color = "var(--text)";
+        bubble.style.border = "1px solid var(--line)";
         bubble.style.borderBottomLeftRadius = "4px";
       }
       
@@ -4185,7 +4186,10 @@ body{
     box.scrollTop = box.scrollHeight;
   }
   
+  var chatSending = false;
+
   function fetchChat() {
+    if (chatSending) return;
     var d = "";
     try { d = (tg && tg.initData) || ""; } catch(e) {}
     if (!d) return;
@@ -4194,8 +4198,7 @@ body{
       headers: { "X-Telegram-Init-Data": d }
     }).then(function(r) { return r.json(); })
       .then(function(res) {
-        if (res.ok && res.messages) {
-          // If lengths are different or last message ID is different, re-render
+        if (res.ok && res.messages && !chatSending) {
           var needsRender = false;
           if (res.messages.length !== lastChatMsgs.length) {
             needsRender = true;
@@ -4214,16 +4217,19 @@ body{
   
   function sendChat() {
     var inp = $("chat-input");
-    var text = inp.value.trim();
+    var text = (inp && inp.value ? inp.value.trim() : "");
+    if (!text) return;
+    
     var d = "";
     try { d = (tg && tg.initData) || ""; } catch(e) {}
-    if (!text || !d) return;
+    
     inp.value = "";
+    chatSending = true;
     
     // Optimistik render
     var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
     var tempMsg = {
-      id: Date.now(),
+      id: "temp_" + Date.now(),
       uid: tgUser.id || 0,
       name: tgUser.first_name || "Sehrgar",
       text: text,
@@ -4235,14 +4241,17 @@ body{
     fetch(API_CHAT, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-      body: JSON.stringify({ text: text })
+      body: JSON.stringify({ text: text, initData: d })
     }).then(function(r) { return r.json(); })
       .then(function(res) {
+        chatSending = false;
         if (res.ok && res.messages) {
           lastChatMsgs = res.messages;
           renderChat(lastChatMsgs);
         }
-      }).catch(function(e) {});
+      }).catch(function(e) {
+        chatSending = false;
+      });
   }
 
   /* ---------- ISHGA TUSHIRISH ---------- */
@@ -4281,9 +4290,16 @@ body{
     
     $("chat-strip").addEventListener("click", openChat);
     $("chat-back").addEventListener("click", closeChat);
-    $("chat-send").addEventListener("click", sendChat);
-    $("chat-input").addEventListener("keypress", function(e) {
-      if (e.key === "Enter") sendChat();
+    var chatForm = $("chat-form");
+    if (chatForm) {
+      chatForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        sendChat();
+      });
+    }
+    $("chat-send").addEventListener("click", function(e) {
+      e.preventDefault();
+      sendChat();
     });
     
     $("cup-strip").addEventListener("click", openCup);
