@@ -1942,14 +1942,19 @@ body{
   function renderTasksStrip() {
     var strip = $("tasks-strip");
     if (!strip) return;
-    if (!tasksData || !tasksData.tasks || tasksData.tasks.length === 0) {
-      strip.classList.add("hidden");
-      return;
-    }
     strip.classList.remove("hidden");
+    
+    var count = (tasksData && tasksData.tasks) ? tasksData.tasks.length : 0;
     $("tasks-kicker").textContent = lang === "uz" ? "VAZIFALAR" : lang === "ru" ? "ЗАДАЧИ" : "TASKS";
     $("tasks-title").textContent = lang === "uz" ? "Imtihonlar va Kunlik savollar ›" : lang === "ru" ? "Экзамены и Ежедневные вопросы ›" : "Exams and Daily questions ›";
-    $("tasks-count").textContent = tasksData.tasks.length + (lang === "uz" ? " ta yangi" : " new");
+    
+    if (count > 0) {
+      $("tasks-count").textContent = count + (lang === "uz" ? " ta yangi" : " new");
+      $("tasks-count").parentNode.querySelector("i").style.display = "";
+    } else {
+      $("tasks-count").textContent = (lang === "uz" ? "Bajarildi" : "Done");
+      $("tasks-count").parentNode.querySelector("i").style.display = "none";
+    }
   }
 
   function openTasks() {
