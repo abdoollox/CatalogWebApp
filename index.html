@@ -4133,7 +4133,8 @@ body{
       return;
     }
     
-    var meUid = cupMe().user_id;
+    var tgUser = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) || {};
+    var meUid = tgUser.id || 0;
     var hh = HOUSES[cupMe().house] || {};
     var accent = hh.accent || "var(--accent)";
     
@@ -4184,9 +4185,12 @@ body{
   }
   
   function fetchChat() {
-    if (!initData) return;
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch(e) {}
+    if (!d) return;
+    
     fetch(API_URL + "/chat", {
-      headers: { "X-Telegram-Init-Data": initData }
+      headers: { "X-Telegram-Init-Data": d }
     }).then(function(r) { return r.json(); })
       .then(function(res) {
         if (res.ok && res.messages) {
@@ -4210,15 +4214,17 @@ body{
   function sendChat() {
     var inp = $("chat-input");
     var text = inp.value.trim();
-    if (!text || !initData) return;
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch(e) {}
+    if (!text || !d) return;
     inp.value = "";
     
     // Optimistik render
-    var me = cupMe();
+    var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
     var tempMsg = {
       id: Date.now(),
-      uid: me.user_id,
-      name: me.first_name,
+      uid: tgUser.id || 0,
+      name: tgUser.first_name || "Sehrgar",
       text: text,
       time: new Date().toISOString()
     };
@@ -4227,7 +4233,7 @@ body{
     
     fetch(API_URL + "/chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": initData },
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
       body: JSON.stringify({ text: text })
     }).then(function(r) { return r.json(); })
       .then(function(res) {
