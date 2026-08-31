@@ -4111,10 +4111,15 @@ body{
     $("chat-house-name").textContent = cupHouseName(me.house) + " Umumiy Xonasi";
     $("chat-house-name").style.color = hh.accent || "var(--accent)";
     
-    $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
+    if (lastChatMsgs && lastChatMsgs.length > 0) {
+      renderChat(lastChatMsgs);
+    } else {
+      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
+    }
     
-    fetchChat();
-    chatTimer = setInterval(fetchChat, 3000);
+    fetchChat(true);
+    if (chatTimer) clearInterval(chatTimer);
+    chatTimer = setInterval(function() { fetchChat(false); }, 4000);
   }
   
   function closeChat() {
@@ -4129,7 +4134,7 @@ body{
   function renderChat(messages) {
     var box = $("chat-messages");
     box.innerHTML = "";
-    if (messages.length === 0) {
+    if (!messages || messages.length === 0) {
       box.innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Hozircha xabarlar yo\'q. Birinchi bo\'lib yozing!</div>';
       return;
     }
@@ -4188,7 +4193,7 @@ body{
   
   var chatSending = false;
 
-  function fetchChat() {
+  function fetchChat(force) {
     if (chatSending) return;
     var d = "";
     try { d = (tg && tg.initData) || ""; } catch(e) {}
@@ -4199,10 +4204,8 @@ body{
     }).then(function(r) { return r.json(); })
       .then(function(res) {
         if (res.ok && res.messages && !chatSending) {
-          var needsRender = false;
-          if (res.messages.length !== lastChatMsgs.length) {
-            needsRender = true;
-          } else if (res.messages.length > 0) {
+          var needsRender = force || (res.messages.length !== lastChatMsgs.length);
+          if (!needsRender && res.messages.length > 0) {
             var lastNew = res.messages[res.messages.length - 1];
             var lastOld = lastChatMsgs[lastChatMsgs.length - 1] || {};
             if (lastNew.id !== lastOld.id) needsRender = true;
