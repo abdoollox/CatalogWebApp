@@ -2421,21 +2421,7 @@ body{
     var MAX_SHOWN = 10;
     
     function createMemberRow(m, idx) {
-      var isClickable = !m.me && m.username;
-      var row = document.createElement(isClickable ? "a" : "div");
-      if (isClickable) {
-        var url = "https://t.me/" + m.username;
-        row.href = url;
-        row.onclick = function(e) {
-          if (window.Telegram && Telegram.WebApp && Telegram.WebApp.openTelegramLink) {
-            e.preventDefault();
-            Telegram.WebApp.openTelegramLink(url);
-          }
-        };
-        row.target = "_blank";
-        row.style.textDecoration = "none";
-        row.style.display = "flex";
-      }
+      var row = document.createElement("div");
       row.className = "hall-row";
       if (m.active === false) { row.style.opacity = "0.45"; }
 
