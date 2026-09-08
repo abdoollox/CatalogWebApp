@@ -13,6 +13,7 @@
   --bg:#0c0f14; --bg2:#14181f; --card:#161b23; --line:rgba(255,255,255,.09);
   --text:#eef1f5; --dim:#98a2b3;
   --accent:#97a1ae; --accent-2:#5a6472; --accent-rgb:151,161,174; --accent-ink:#0e1117; --wash-1:rgba(255,255,255,.05);
+  --ok:#5f9e7a;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:var(--bg)}
@@ -700,6 +701,37 @@ body{
   font:italic 400 12px/1.6 'Cormorant Garamond',serif;
   color:var(--dim);text-align:center;margin:18px 0 0;padding:0 6px;
 }
+/* --- XABAR OYNALARI (pastda chiqadi) ---
+   Film yuborilgani shu yerda ko'rsatiladi. Tasdiq oynasi o'rniga
+   "bekor qilish" ishlatiladi: to'g'ri bosgan odam to'siqni sezmaydi. */
+.notes{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  z-index:1200;display:flex;flex-direction:column;gap:9px;
+  align-items:center;width:max-content;max-width:88%;
+  pointer-events:none;
+}
+.note{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:12px 18px;
+  font:600 13.5px/1.35 'Manrope',sans-serif;color:var(--text);
+  box-shadow:0 10px 30px rgba(0,0,0,.55);
+  opacity:0;transform:translateY(14px);
+  transition:opacity .22s ease,transform .22s ease;
+  text-align:center;max-width:100%;
+}
+.note.on{opacity:1;transform:translateY(0)}
+.note.ok{border-color:var(--ok)}
+.note.err{border-color:#c96a6a}
+/* Bekor qilish taklifi — tugmasi bosiladigan bo'lishi kerak */
+.note-undo{display:flex;align-items:center;gap:12px;pointer-events:auto;text-align:left}
+.note-undo .u-txt{flex:1}
+.note-undo .u-btn{
+  flex:none;border:0;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:.3px;
+  color:var(--ok);padding:4px 2px;white-space:nowrap;
+}
+.note-undo .u-btn:active{opacity:.6}
+.note-undo .u-btn:disabled{color:var(--dim);cursor:default}
 </style>
 </head>
 <body>
@@ -1714,6 +1746,7 @@ body{
   var T = {
     uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
           next:"Keyingi film", seen:"Ko'rildi", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
+          sending:"⏳ Yuborilmoqda…", sentTo:function(t){return t+" — botga yuborildi";}, undoBtn:"BEKOR QILISH", undone:"Bekor qilindi", undoFail:"Bekor qilib bo'lmadi", undoExpired:"Vaqti o'tdi — filmni chatdan o'zingiz o'chiring", notSubscribed:"🔒 Avval kanalga obuna bo'ling", notReadyMsg:"⏳ Bu film tez orada qo'shiladi",
           unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
           hintMid:function(n){return "Yana "+n+" ta film qoldi";},
@@ -1754,10 +1787,10 @@ body{
           lockTitle:"Saralanish", lockYes:"Ha, boshlaymiz", lockNo:"Hozir emas",
           lockAsk:"Fakultetingiz umrbod qoladi — uni keyin o'zgartira olmaysiz. Xogvarts kubogida shu fakultet uchun kurashasiz. Tayyormisiz?",
           lockFinal:"Bu sizning fakultetingiz. Endi u o'zgarmaydi.",
-          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено", examWaiting:"Экзамен ждёт", soon:"Скоро",
+          sending:"⏳ Отправляется…", sentTo:function(t){return t+" — отправлено в бот";}, undoBtn:"ОТМЕНИТЬ", undone:"Отменено", undoFail:"Не удалось отменить", undoExpired:"Время истекло — удалите фильм из чата сами", notSubscribed:"🔒 Сначала подпишитесь на канал", notReadyMsg:"⏳ Этот фильм скоро появится",
           unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
           hintMid:function(n){return "Осталось фильмов: "+n;},
@@ -1798,10 +1831,10 @@ body{
           lockTitle:"Распределение", lockYes:"Да, начнём", lockNo:"Не сейчас",
           lockAsk:"Ваш факультет останется навсегда — изменить его будет нельзя. В Кубке Хогвартса вы будете бороться за него. Готовы?",
           lockFinal:"Это ваш факультет. Теперь он не изменится.",
-          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched", examWaiting:"Exam pending", soon:"Coming soon",
+          sending:"⏳ Sending…", sentTo:function(t){return t+" — sent to the bot";}, undoBtn:"UNDO", undone:"Undone", undoFail:"Could not undo", undoExpired:"Too late — please delete the film from the chat yourself", notSubscribed:"🔒 Please subscribe to the channel first", notReadyMsg:"⏳ This film is coming soon",
           unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
           hintStart:"Start the journey", hintDone:"All films watched",
           hintMid:function(n){return n+" films left";},
@@ -1842,7 +1875,6 @@ body{
           lockTitle:"Sorting", lockYes:"Yes, let's begin", lockNo:"Not now",
           lockAsk:"Your house stays for life — you will not be able to change it. You will compete for it in the Hogwarts Cup. Ready?",
           lockFinal:"This is your house. It will not change now.",
-          confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 open this film?";},
           guest:"Guest", noTag:"Open via Telegram" }
   };
 
@@ -1999,6 +2031,8 @@ body{
   var API_CHESS_STATE = "https://bot.tizimshunos.uz/api/chess/state";
   var API_CHESS_MOVE = "https://bot.tizimshunos.uz/api/chess/move";
   var API_CHESS_FINISH = "https://bot.tizimshunos.uz/api/chess/finish";
+  var API_SEND = "https://bot.tizimshunos.uz/api/send";
+  var API_UNDO = "https://bot.tizimshunos.uz/api/undo";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;
@@ -3277,24 +3311,152 @@ body{
   }
 
   // Kartaga bosilganda tasdiq so'raladi — tasodifiy teginishdan himoya
-  function askPlay(id, title) {
-    var msg = T[lang].confirmWatch(title);
-    if (tg && tg.showConfirm) {
-      tg.showConfirm(msg, function (ok) { if (ok) { play(id); } });
-      return;
-    }
-    var ok = true;
-    try { if (window.confirm) { ok = window.confirm(msg); } } catch (e) {}
-    if (ok) { play(id); }
+  /* ---------- XABAR OYNALARI ---------- */
+
+  // Xabarlar bir-birini o'chirmaydi - bir vaqtda bir nechtasi ko'rinishi mumkin.
+  function addNote(el, life) {
+    var box = $("notes");
+    if (!box) { return null; }
+    box.appendChild(el);
+    // Brauzer o'lchamni hisoblab ulgursin, keyin ochamiz
+    setTimeout(function () { el.classList.add("on"); }, 20);
+    setTimeout(function () { dismissNote(el); }, life);
+    return el;
   }
 
-  function play(id) {
+  // Xabarni vaqtidan oldin yopadi ("Yuborilmoqda..." natija kelgach qolib
+  // ketmasligi uchun kerak).
+  function dismissNote(el) {
+    if (!el || !el.parentNode) { return; }
+    el.classList.remove("on");
+    setTimeout(function () {
+      if (el.parentNode) { el.parentNode.removeChild(el); }
+    }, 260);
+  }
+
+  function showToast(text, kind) {
+    var el = document.createElement("div");
+    el.className = "note" + (kind ? " " + kind : "");
+    el.textContent = text;
+    return addNote(el, 3400);
+  }
+
+  // Film yuborilgach chiqadigan xabar. Tasdiq oynasi o'rniga shu ishlatiladi:
+  // to'g'ri bosgan odam to'siqni sezmaydi, xato bosgan esa qaytara oladi.
+  function showUndoNote(id, title, messageId) {
+    var t = T[lang];
+    var el = document.createElement("div");
+    el.className = "note ok note-undo";
+
+    var txt = document.createElement("span");
+    txt.className = "u-txt";
+    txt.textContent = "✅ " + t.sentTo(title);
+
+    var btn = document.createElement("button");
+    btn.className = "u-btn";
+    btn.textContent = t.undoBtn;
+    btn.addEventListener("click", function () {
+      btn.disabled = true;
+      btn.textContent = "…";
+      undoSend(id, messageId, el);
+    });
+
+    el.appendChild(txt);
+    el.appendChild(btn);
+    return addNote(el, 7000);
+  }
+
+  function undoSend(id, messageId, noteEl) {
+    var t = T[lang];
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init || !window.fetch || !messageId) {
+      dismissNote(noteEl); showToast(t.undoFail, "err"); return;
+    }
+
+    window.fetch(API_UNDO, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ message_id: messageId })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      dismissNote(noteEl);
+      if (d && d.ok) {
+        watched[key(id)] = false;
+        renderCatalog();
+        persist();
+        showToast(t.undone);
+        return;
+      }
+      showToast(d && d.error === "expired" ? t.undoExpired : t.undoFail, "err");
+    })["catch"](function () {
+      dismissNote(noteEl); showToast(t.undoFail, "err");
+    });
+  }
+
+  /* ---------- FILM YUBORISH ---------- */
+
+  // Eski usul: botga o'tish. Ilova YOPILADI. Telegram tashqarisida yoki
+  // API ishlamay qolganda zaxira yo'l sifatida qoladi.
+  //
+  // belgilash === false: film yetib BORMASLIGI aniq (masalan obuna yo'q).
+  // Qolgan hollarda natijani bilmaymiz - ilova yopiladi va javob kelmaydi -
+  // shuning uchun eski xatti-harakat saqlanadi.
+  function openInBot(id, belgilash) {
     var link = "https://t.me/" + BOT + "?start=" + id + "_" + lang;
-    watched[key(id)] = true;
-    renderCatalog();
+    if (belgilash !== false) {
+      watched[key(id)] = true;
+      renderCatalog();
+    }
     persist(function () {
       if (tg && tg.openTelegramLink) { tg.openTelegramLink(link); tg.close(); }
       else { window.open(link, "_blank"); }
+    });
+  }
+
+  var sending = false;
+
+  function play(id) {
+    if (sending) { return; }
+    var t = T[lang];
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init || !window.fetch) { openInBot(id); return; }
+
+    sending = true;
+    var pending = showToast(t.sending);
+
+    window.fetch(API_SEND, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ movie_id: id, lang: lang })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      sending = false;
+      dismissNote(pending);
+
+      if (res && res.ok) {
+        // Belgi endi HAQIQIY: film chindan yuborilgandan keyin qo'yiladi.
+        // Ilgari u bosilgan zahoti qo'yilardi - obuna yo'q bo'lsa ham.
+        watched[key(id)] = true;
+        renderCatalog();
+        persist();
+        showUndoNote(id, res.title || "", res.message_id);
+        return;
+      }
+
+      var err = res && res.error;
+      if (err === "not_ready") { showToast(t.notReadyMsg, "err"); return; }
+      // Obuna yo'q: bot filmni emas, obuna taklifini ko'rsatadi -
+      // shuning uchun "ko'rilgan" deb belgilamaymiz.
+      if (err === "not_subscribed") {
+        showToast(t.notSubscribed, "err");
+        openInBot(id, false);
+        return;
+      }
+      openInBot(id);   // qolgan xatolarda jim eski usulga o'tamiz
+    })["catch"](function () {
+      sending = false;
+      dismissNote(pending);
+      openInBot(id);
     });
   }
 
@@ -3417,7 +3579,7 @@ body{
                        (pending ? " exam" : "");
       card.style.background = CARD_BG;
       if (ready) {
-        card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+        card.addEventListener("click", function () { play(m.id); });
       }
 
       var img = document.createElement("img");
@@ -3512,7 +3674,7 @@ body{
         card.className = "card" + (!ready ? " soon" : (seen ? " seen" : ""));
         card.style.background = CARD_BG;
         if (ready) {
-          card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+          card.addEventListener("click", function () { play(m.id); });
         }
 
         var img = document.createElement("img");
@@ -5632,5 +5794,6 @@ body{
       <button id="cup-info-close" style="width:100%; padding:12px; background:var(--primary); color:#fff; border:none; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer;">Tushunarli</button>
     </div>
   </div>
+  <div class="notes" id="notes"></div>
 </body>
 </html>
