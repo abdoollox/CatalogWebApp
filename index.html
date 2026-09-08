@@ -474,6 +474,15 @@ body{
 .card.exam .check{background:#e8b93c;border-color:#e8b93c;color:#1a1204}
 .card.exam .card-meta{color:#e8b93c;font-weight:700}
 .card.exam{border-color:rgba(232,185,60,.38)}
+/* "Tez orada" — film shu tilda hali yuklanmagan (catalog.py da
+   message_id = 0). Karta kulrang bo'ladi va bosilmaydi. */
+.card.soon{cursor:default;border-color:rgba(255,255,255,.07)}
+.card.soon .card-img{filter:grayscale(1)}
+.card.soon .veil{background:rgba(7,9,13,.72)}
+.card.soon .numeral{color:rgba(238,241,245,.22)}
+.card.soon .card-title{color:rgba(244,246,249,.48)}
+.card.soon .card-meta{color:var(--dim)}
+.card.soon:active{transform:none}
 .card.exam .veil{background:rgba(7,9,13,.5)}
 .check:active{transform:scale(.86)}
 .card-foot{
@@ -1178,25 +1187,39 @@ body{
   var HOUSE_KEY = "house";
   var WAND_KEY = "wand";
 
+  /* ===== KATALOG BOSHI — AVTOMATIK YOZILADI, QO'LDA TAHRIRLAMANG =====
+     Manba:     CatalogBot/catalog.py
+     Yangilash: python3 tools/webappdata.py                          */
+
   var MOVIES = [
-    { id: "hp1", uz: "Hikmatlar Toshi",   ru: "Философский Камень", en: "Philosopher's Stone" },
-    { id: "hp2", uz: "Maxfiy Hujra",      ru: "Тайная Комната",     en: "Chamber of Secrets" },
-    { id: "hp3", uz: "Azkaban Mahbusi",   ru: "Узник Азкабана",     en: "Prisoner of Azkaban" },
-    { id: "hp4", uz: "Alanga Kubogi",     ru: "Кубок Огня",         en: "Goblet of Fire" },
-    { id: "hp5", uz: "Feniks Jamiyati",   ru: "Орден Феникса",      en: "Order of the Phoenix" },
-    { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка",   en: "Half-Blood Prince" },
-    { id: "hp7", uz: "Ajal Tuhfasi 1",    ru: "Дары Смерти 1",      en: "Deathly Hallows 1" },
-    { id: "hp8", uz: "Ajal Tuhfasi 2",    ru: "Дары Смерти 2",      en: "Deathly Hallows 2" }
+    { id: "hp1", uz: "Hikmatlar Toshi", ru: "Философский Камень", en: "Philosopher's Stone" },
+    { id: "hp2", uz: "Maxfiy Hujra", ru: "Тайная Комната", en: "Chamber of Secrets" },
+    { id: "hp3", uz: "Azkaban Mahbusi", ru: "Узник Азкабана", en: "Prisoner of Azkaban" },
+    { id: "hp4", uz: "Alanga Kubogi", ru: "Кубок Огня", en: "Goblet of Fire" },
+    { id: "hp5", uz: "Feniks Jamiyati", ru: "Орден Феникса", en: "Order of the Phoenix" },
+    { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка", en: "Half-Blood Prince" },
+    { id: "hp7", uz: "Ajal Tuhfasi 1", ru: "Дары Смерти 1", en: "Deathly Hallows 1" },
+    { id: "hp8", uz: "Ajal Tuhfasi 2", ru: "Дары Смерти 2", en: "Deathly Hallows 2" }
   ];
 
   var MOVIES_FB = [
-    { id: "fb1", num: "I", year: "2016", uz: "Fantastik Maxluqlar", ru: "Фантастические твари 1", en: "Fantastic Beasts 1" },
-    { id: "fb2", num: "II", year: "2018", uz: "Fantastik Maxluqlar 2", ru: "Фантастические твари 2", en: "Fantastic Beasts 2" },
-    { id: "fb3", num: "III", year: "2022", uz: "Fantastik Maxluqlar 3", ru: "Фантастические твари 3", en: "Fantastic Beasts 3" }
+    { id: "fb1",  num: "I",   year: "2016", uz: "Fantastik Maxluqlar", ru: "Фантастические твари 1", en: "Fantastic Beasts 1" },
+    { id: "fb2",  num: "II",  year: "2018", uz: "Fantastik Maxluqlar 2", ru: "Фантастические твари 2", en: "Fantastic Beasts 2" },
+    { id: "fb3",  num: "III", year: "2022", uz: "Fantastik Maxluqlar 3", ru: "Фантастические твари 3", en: "Fantastic Beasts 3" }
   ];
 
   var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
   var YEARS = ["2001","2002","2004","2005","2007","2009","2010","2011"];
+
+  // Qaysi film qaysi tilda hali yuklanmagan (catalog.py da message_id = 0).
+  // Bunday kartalar kulrang bo'lib ko'rinadi va bosilmaydi.
+  var NOT_READY = {
+    uz: [],
+    ru: ["fb1","fb2","fb3"],
+    en: []
+  };
+
+  /* ===== KATALOG OXIRI ===== */
   // Posterlar yuklanmaganda ko'rinadigan yagona neytral fon
   var CARD_BG = "linear-gradient(155deg,#39414e,#171c24)";
 
@@ -1690,7 +1713,7 @@ body{
 
   var T = {
     uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
-          next:"Keyingi film", seen:"Ko'rildi", examWaiting:"Imtihon kutmoqda",
+          next:"Keyingi film", seen:"Ko'rildi", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
           unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
           hintMid:function(n){return "Yana "+n+" ta film qoldi";},
@@ -1734,7 +1757,7 @@ body{
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 filmni ochamizmi?";},
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
-          next:"Следующий фильм", seen:"Просмотрено", examWaiting:"Экзамен ждёт",
+          next:"Следующий фильм", seen:"Просмотрено", examWaiting:"Экзамен ждёт", soon:"Скоро",
           unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
           hintMid:function(n){return "Осталось фильмов: "+n;},
@@ -1778,7 +1801,7 @@ body{
           confirmWatch:function(t){return "\u00ab"+t+"\u00bb \u2014 открыть фильм?";},
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
-          next:"Up next", seen:"Watched", examWaiting:"Exam pending",
+          next:"Up next", seen:"Watched", examWaiting:"Exam pending", soon:"Coming soon",
           unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
           hintStart:"Start the journey", hintDone:"All films watched",
           hintMid:function(n){return n+" films left";},
@@ -3281,8 +3304,18 @@ body{
     return "img/" + id + "_" + lang + ".jpg";
   }
 
+  // Film shu tilda yuklanganmi? NOT_READY ro'yxati catalog.py dan
+  // generatsiya qilinadi: u yerda message_id = 0 bo'lgan filmlar.
+  function isReady(id) {
+    var yoq = (typeof NOT_READY !== "undefined" && NOT_READY && NOT_READY[lang]) || [];
+    for (var i = 0; i < yoq.length; i++) { if (yoq[i] === id) { return false; } }
+    return true;
+  }
+
   function nextIndex() {
-    for (var i = 0; i < MOVIES.length; i++) { if (!watched[key(MOVIES[i].id)]) { return i; } }
+    for (var i = 0; i < MOVIES.length; i++) {
+      if (isReady(MOVIES[i].id) && !watched[key(MOVIES[i].id)]) { return i; }
+    }
     return -1;
   }
 
@@ -3369,17 +3402,23 @@ body{
     grid.innerHTML = "";
 
     MOVIES.forEach(function (m, i) {
-      var seen = !!watched[key(m.id)];
+      // Film shu tilda yuklanmagan bo'lsa - kulrang, bosilmaydigan karta.
+      var ready = isReady(m.id);
+      var seen = ready && !!watched[key(m.id)];
       // Uchinchi holat: film ko'rilgan, lekin bu mavsumning imtihoni
       // topshirilmagan. 8 filmni tugatgan 143 foydalanuvchi uchun katalog
       // "ish tugadi" deb turardi, holbuki kubok ular uchun endi boshlanadi.
       var pending = seen && examPending(i + 1);
 
       var card = document.createElement("div");
-      card.className = "card" + (seen ? " seen" : (i === ni ? " next-up" : "")) +
+      card.className = "card" +
+                       (!ready ? " soon"
+                              : (seen ? " seen" : (i === ni ? " next-up" : ""))) +
                        (pending ? " exam" : "");
       card.style.background = CARD_BG;
-      card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+      if (ready) {
+        card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+      }
 
       var img = document.createElement("img");
       img.className = "card-img";
@@ -3424,7 +3463,7 @@ body{
           toggle(m.id);
         }
       });
-      card.appendChild(check);
+      if (ready) { card.appendChild(check); }
 
       var foot = document.createElement("span");
       foot.className = "card-foot";
@@ -3436,8 +3475,9 @@ body{
       ttl.textContent = m[lang];
       var meta = document.createElement("span");
       meta.className = "card-meta";
-      meta.textContent = pending ? t.examWaiting
-                       : (seen ? t.seen : (i === ni ? t.next : YEARS[i]));
+      meta.textContent = !ready ? t.soon
+                       : (pending ? t.examWaiting
+                       : (seen ? t.seen : (i === ni ? t.next : YEARS[i])));
       textCol.appendChild(ttl);
       textCol.appendChild(meta);
       foot.appendChild(textCol);
@@ -3450,7 +3490,7 @@ body{
         ev.stopPropagation();
         play(m.id);
       });
-      foot.appendChild(pl);
+      if (ready) { foot.appendChild(pl); }
 
       card.appendChild(foot);
 
@@ -3465,11 +3505,15 @@ body{
       grid.appendChild(fbHead);
 
       MOVIES_FB.forEach(function (m) {
-        var seen = !!watched[key(m.id)];
+        // Film shu tilda yuklanmagan bo'lsa - kulrang, bosilmaydigan karta.
+        var ready = isReady(m.id);
+        var seen = ready && !!watched[key(m.id)];
         var card = document.createElement("div");
-        card.className = "card" + (seen ? " seen" : "");
+        card.className = "card" + (!ready ? " soon" : (seen ? " seen" : ""));
         card.style.background = CARD_BG;
-        card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+        if (ready) {
+          card.addEventListener("click", function () { askPlay(m.id, m[lang]); });
+        }
 
         var img = document.createElement("img");
         img.className = "card-img";
@@ -3510,7 +3554,7 @@ body{
             toggle(m.id);
           }
         });
-        card.appendChild(check);
+        if (ready) { card.appendChild(check); }
 
         var foot = document.createElement("span");
         foot.className = "card-foot";
@@ -3522,7 +3566,7 @@ body{
         ttl.textContent = m[lang];
         var meta = document.createElement("span");
         meta.className = "card-meta";
-        meta.textContent = seen ? t.seen : m.year;
+        meta.textContent = !ready ? t.soon : (seen ? t.seen : m.year);
         textCol.appendChild(ttl);
         textCol.appendChild(meta);
         foot.appendChild(textCol);
@@ -3535,7 +3579,7 @@ body{
           ev.stopPropagation();
           play(m.id);
         });
-        foot.appendChild(pl);
+        if (ready) { foot.appendChild(pl); }
 
         card.appendChild(foot);
         grid.appendChild(card);
