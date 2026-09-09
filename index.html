@@ -729,9 +729,31 @@ body{
   flex:none;border:0;background:transparent;cursor:pointer;
   font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:.3px;
   color:var(--ok);padding:4px 2px;white-space:nowrap;
+  display:flex;align-items:center;gap:7px;
 }
 .note-undo .u-btn:active{opacity:.6}
 .note-undo .u-btn:disabled{color:var(--dim);cursor:default}
+
+/* Bekor qilish belgisi: strelka atrofidagi aylana muhlat tugashi bilan
+   bo'shab boradi - vaqt ketayotgani ko'rinib turadi (Telegram uslubi).
+   Animatsiya davomiyligi JS dan beriladi, shunda muhlat bir joydan
+   boshqariladi va ikkisi bir-biridan ajralib qolmaydi. */
+.u-ring{display:block;width:19px;height:19px;flex:none}
+.u-ring svg{width:100%;height:100%;display:block;overflow:visible}
+.u-ring .u-track{fill:none;stroke:rgba(255,255,255,.16);stroke-width:2}
+.u-ring .u-prog{
+  fill:none;stroke:var(--ok);stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:62.83;stroke-dashoffset:0;
+  animation:u-drain linear forwards;
+}
+.u-ring .u-arrow{fill:var(--ok)}
+.u-btn:disabled .u-ring .u-prog,
+.u-btn:disabled .u-ring .u-arrow{stroke:var(--dim);fill:var(--dim)}
+@keyframes u-drain{to{stroke-dashoffset:62.83}}
+/* Harakatni kamaytirish so'ralgan bo'lsa aylana to'liq turadi */
+@media (prefers-reduced-motion: reduce){
+  .u-ring .u-prog{animation:none}
+}
 </style>
 </head>
 <body>
@@ -3343,6 +3365,28 @@ body{
 
   // Film yuborilgach chiqadigan xabar. Tasdiq oynasi o'rniga shu ishlatiladi:
   // to'g'ri bosgan odam to'siqni sezmaydi, xato bosgan esa qaytara oladi.
+  // Bekor qilish muhlati. Aylana animatsiyasi ham shu vaqtga moslanadi:
+  // ikkalasi shu yerdan boshqariladi, shuning uchun ajralib qolmaydi.
+  var UNDO_LIFE = 5000;
+
+  // Strelka + atrofida bo'shab boruvchi aylana.
+  function undoIcon(ms) {
+    var wrap = document.createElement("span");
+    wrap.className = "u-ring";
+    wrap.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<circle class="u-track" cx="12" cy="12" r="10"></circle>' +
+        '<circle class="u-prog" cx="12" cy="12" r="10" transform="rotate(-90 12 12)"></circle>' +
+        '<path class="u-arrow" transform="translate(6 6) scale(0.5)" ' +
+              'd="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 ' +
+                 '3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 ' +
+                 '11.03 17.15 8 12.5 8z"></path>' +
+      '</svg>';
+    var prog = wrap.querySelector(".u-prog");
+    if (prog) { prog.style.animationDuration = ms + "ms"; }
+    return wrap;
+  }
+
   function showUndoNote(id, title, messageId) {
     var t = T[lang];
     var el = document.createElement("div");
@@ -3354,16 +3398,25 @@ body{
 
     var btn = document.createElement("button");
     btn.className = "u-btn";
-    btn.textContent = t.undoBtn;
+    var ring = undoIcon(UNDO_LIFE);
+    var label = document.createElement("span");
+    label.textContent = t.undoBtn;
+    btn.appendChild(ring);
+    btn.appendChild(label);
+
     btn.addEventListener("click", function () {
       btn.disabled = true;
-      btn.textContent = "…";
+      // Faqat yozuvni almashtiramiz - belgi joyida qoladi, aks holda
+      // tugma bosilgan zahoti "sakrab" ketardi.
+      label.textContent = "…";
+      var p = ring.querySelector(".u-prog");
+      if (p) { p.style.animationPlayState = "paused"; }
       undoSend(id, messageId, el);
     });
 
     el.appendChild(txt);
     el.appendChild(btn);
-    return addNote(el, 7000);
+    return addNote(el, UNDO_LIFE);
   }
 
   function undoSend(id, messageId, noteEl) {
