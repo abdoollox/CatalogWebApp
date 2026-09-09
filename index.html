@@ -2018,6 +2018,16 @@ body{
     catch (e) { return null; }
   }
 
+  // Bot tilni allaqachon so'ragan va havolaga ?lang=uz qo'shib yuboradi.
+  // Busiz ilova o'z til ekranini qaytadan ko'rsatardi va foydalanuvchi
+  // tilni ikki marta tanlashiga to'g'ri kelardi.
+  function urlLang() {
+    try {
+      var m = /(^|[?&])lang=(uz|ru|en)(&|$)/.exec(window.location.search || "");
+      return m ? m[2] : null;
+    } catch (e) { return null; }
+  }
+
   function saveLang(code) {
     try { window.localStorage.setItem(LANG_KEY, code); } catch (e) {}
     if (!cloudOk) { return; }
@@ -5781,7 +5791,10 @@ body{
 
     // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
     absorb(readLocal());
-    var quick = readLocalLang();
+    // Tartib: botdan kelgan til -> ilovada saqlangani -> so'rash.
+    var fromBot = urlLang();
+    var quick = fromBot || readLocalLang();
+    if (fromBot) { saveLang(fromBot); }
     var localHouse = readLocalHouse();
     if (localHouse) { house = localHouse; }
     wand = readLocalWand();
@@ -5798,8 +5811,9 @@ body{
     if (quick) { migrate(quick); show(quick); }
 
     load(function (saved, houseChanged) {
-      migrate(saved || quick || "uz");
-      show(saved);
+      // Botdan kelgan til bulutdagi eski tanlovdan ustun turadi.
+      migrate(fromBot || saved || quick || "uz");
+      show(fromBot || saved);
       if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
       if (houseChanged) { refreshHouseView(); }
     });
