@@ -679,6 +679,32 @@ body{
 .hall-wait{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
   font:500 12px/1.55 'Manrope',sans-serif;color:var(--dim)}
 .hall-wait b{color:var(--text);font-weight:600}
+/* ---------- do'stlar reytingi ---------- */
+.refs-me{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px}
+.refs-lbl{font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim)}
+.refs-rank{font-family:'Cormorant Garamond',serif;font-size:28px;line-height:1.1;color:var(--accent);margin-top:8px}
+.refs-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.refs-num{background:var(--wash-1);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.refs-num b{display:block;font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.1;color:var(--text);font-weight:600}
+.refs-num span{display:block;margin-top:4px;font:600 10px/1.3 'Manrope',sans-serif;color:var(--dim);letter-spacing:0.06em;text-transform:uppercase}
+.refs-bar{height:6px;border-radius:99px;background:var(--wash-1);overflow:hidden;margin-top:14px}
+.refs-bar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.refs-next{font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim);margin-top:8px}
+.refs-info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:14px;margin-bottom:30px}
+.refs-info h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1.1;margin:0 0 6px}
+.refs-info h4{font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);margin:20px 0 8px}
+.refs-step{display:flex;gap:12px;align-items:flex-start;padding:7px 0}
+.refs-step b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(var(--accent-rgb),.14);color:var(--accent);font:800 11px/1 'Manrope',sans-serif}
+.refs-step p,.refs-rule{font:500 13px/1.55 'Manrope',sans-serif;color:var(--text);margin:0}
+.refs-rule{color:var(--dim);padding:4px 0 4px 14px;position:relative}
+.refs-rule:before{content:"";position:absolute;left:2px;top:12px;width:4px;height:4px;border-radius:50%;background:var(--dim)}
+.refs-lvl{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;font:500 13px/1.3 'Manrope',sans-serif}
+.refs-lvl + .refs-lvl{border-top:1px solid var(--line)}
+.refs-lvl span{color:var(--dim);font-size:12px;flex:none}
+.refs-lvl.on{color:var(--accent);font-weight:700}
+.refs-empty{font:500 13px/1.55 'Manrope',sans-serif;color:var(--dim);padding:8px 0 2px}
+.refs-gap{text-align:center;color:var(--dim);font:600 12px/1 'Manrope',sans-serif;padding:6px 0;border-top:1px solid var(--line)}
 /* ---------- jonli tasma ---------- */
 .feed{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
 .feed-kick{font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
@@ -1009,6 +1035,15 @@ body{
       <span id="chess-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Botlar va Do'stlar bilan jangga kiring ›</span>
     </button>
 
+    <!-- Do'stlar reytingi: fakultetdan qat'i nazar hammaga ko'rinadi. -->
+    <button class="cup-strip" id="refs-strip" style="border-left-color: #e0b25b; margin-bottom: 20px;">
+      <span class="cup-strip-head" style="margin-bottom: 5px;">
+        <span class="cup-strip-kicker" id="refs-kicker" style="color: #e0b25b;"></span>
+        <span class="cup-strip-time hidden" id="refs-pill"><i style="background:#e0b25b"></i><span id="refs-count"></span></span>
+      </span>
+      <span id="refs-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;"></span>
+    </button>
+
     <!-- Fakultet zali: saralangan barcha a'zolar, faol yoki faol emas.
          Bot hall ma'lumotini yubormasa - butunlay yashiriladi. -->
     <div class="hall hidden" id="cup-hall">
@@ -1032,6 +1067,24 @@ body{
 
     <button class="cup-cta hidden" id="cup-cta"></button>
     <p class="cup-foot" id="cup-foot"></p>
+  </div>
+
+  <!-- Do'stlar reytingi: kim ko'proq do'st taklif qilgan + qanday ishlashi -->
+  <div id="scr-refs" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="refs-back"><span style="font-size:13px">‹</span> <span id="refs-back-txt">Ortga</span></button>
+    </div>
+    <div class="cup-head">
+      <span class="cup-kick" id="refs-kick"></span>
+      <span class="cup-title" id="refs-head"></span>
+    </div>
+    <div class="refs-me" id="refs-me"></div>
+    <button class="cup-cta" id="refs-share"></button>
+    <div class="hall" id="refs-board">
+      <div class="feed-kick" id="refs-top-kick"></div>
+      <div id="refs-list"></div>
+    </div>
+    <div class="refs-info" id="refs-info"></div>
   </div>
 
   <!-- Fakultet zali to'liq ro'yxati -->
@@ -2169,6 +2222,316 @@ body{
     } catch (e) { done(null); }
   }
 
+  /* ---------- DO'STLAR REYTINGI ---------- */
+  // Ma'lumot /api/referrals dan keladi. Daraja NOMLARI ham serverdan (bot
+  // xabari bilan bir xil bo'lsin) - bu yerda faqat oyna matnlari.
+  var API_REFERRALS = "https://bot.tizimshunos.uz/api/referrals";
+  var refsData = null;
+  var refsBusy = false;
+
+  var REF_T = {
+    uz: {
+      kick: "Do'stlar reytingi", head: "Taklif qilganlar",
+      stripTitle: "Do'st taklif qiling — darajangizni oshiring ›",
+      rankLbl: "Sizning darajangiz",
+      friends: "Do'stlar", place: "O'rin", cup: "Kubok bali",
+      next: "Keyingi daraja — %s: yana %f", top: "Eng yuqori darajadasiz!",
+      share: "Filmni do'stga ulashish", topKick: "Eng ko'p do'st taklif qilganlar",
+      empty: "Hali hech kim do'st taklif qilmagan. Birinchi bo'ling!", you: "siz",
+      howTitle: "Qanday ishlaydi?",
+      steps: [
+        "Istalgan filmni do'stingizga ulashing — film ostidagi «Ulashish» tugmasi yoki yuqoridagi tugma orqali. Kartadagi havola sizniki, boshqa hech narsa qilish shart emas.",
+        "Do'stingiz havolani bosib botga kiradi va kanalga obuna bo'ladi. O'sha filmni u darhol oladi.",
+        "Shu zahoti sizga +1 do'st yoziladi, Xogvarts kubogida esa +%d ball. Bot sizga xabar yuboradi."
+      ],
+      rulesTitle: "Qoidalar",
+      rules: [
+        "Faqat botga birinchi marta kelgan odam hisoblanadi.",
+        "Do'stingiz kanalga obuna bo'lmaguncha ball berilmaydi.",
+        "Har bir do'st uchun ball faqat bir marta beriladi.",
+        "Do'stingiz bir nechta havolani bossa, birinchi bosgani hisoblanadi.",
+        "O'zingizni o'zingiz taklif qila olmaysiz."
+      ],
+      ratingTitle: "Reyting",
+      rating: [
+        "O'rin taklif qilingan do'stlar soniga qarab belgilanadi. Teng bo'lsa — shu songa birinchi yetgan yuqorida turadi.",
+        "Do'stlar soni doimiy saqlanadi, haftalik mavsum bilan nolga tushmaydi. Kubok ballari esa o'sha haftaning musobaqasiga qo'shiladi.",
+        "Fakultetga hali saralanmagan bo'lsangiz ham ball yoziladi — shu hafta ichida saralansangiz, u fakultetingiz hisobiga o'tadi."
+      ],
+      ranksTitle: "Darajalar",
+      fr: function (n) { return n + " ta do'st"; }
+    },
+    ru: {
+      kick: "Рейтинг друзей", head: "Пригласившие",
+      stripTitle: "Приглашайте друзей — повышайте уровень ›",
+      rankLbl: "Ваш уровень",
+      friends: "Друзья", place: "Место", cup: "Очки кубка",
+      next: "Следующий уровень — %s: ещё %f", top: "У вас высший уровень!",
+      share: "Поделиться фильмом с другом", topKick: "Больше всех пригласили",
+      empty: "Пока никто не пригласил друзей. Будьте первым!", you: "вы",
+      howTitle: "Как это работает?",
+      steps: [
+        "Поделитесь любым фильмом с другом — кнопкой «Поделиться» под фильмом или кнопкой выше. Ссылка в карточке ваша, больше ничего делать не нужно.",
+        "Друг переходит по ссылке в бот и подписывается на канал. Этот фильм он получает сразу.",
+        "В тот же момент вам засчитывается +1 друг, а в Кубке Хогвартса +%d очков. Бот пришлёт вам сообщение."
+      ],
+      rulesTitle: "Правила",
+      rules: [
+        "Считается только тот, кто пришёл в бот впервые.",
+        "Пока друг не подписался на канал, очки не начисляются.",
+        "За каждого друга очки начисляются только один раз.",
+        "Если друг перешёл по нескольким ссылкам, засчитывается первая.",
+        "Пригласить самого себя нельзя."
+      ],
+      ratingTitle: "Рейтинг",
+      rating: [
+        "Место зависит от числа приглашённых друзей. При равенстве выше тот, кто набрал это число раньше.",
+        "Число друзей сохраняется навсегда и не обнуляется с недельным сезоном. Очки кубка идут в соревнование той недели.",
+        "Даже если вы ещё не распределены на факультет, очки записываются — распределитесь на этой неделе, и они перейдут вашему факультету."
+      ],
+      ranksTitle: "Уровни",
+      fr: function (n) {
+        var a = n % 10, b = n % 100;
+        var w = (a === 1 && b !== 11) ? "друг" : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? "друга" : "друзей";
+        return n + " " + w;
+      }
+    },
+    en: {
+      kick: "Friends leaderboard", head: "Top inviters",
+      stripTitle: "Invite friends — raise your rank ›",
+      rankLbl: "Your rank",
+      friends: "Friends", place: "Place", cup: "Cup points",
+      next: "Next rank — %s: %f more", top: "You have the highest rank!",
+      share: "Share a film with a friend", topKick: "Most friends invited",
+      empty: "Nobody has invited a friend yet. Be the first!", you: "you",
+      howTitle: "How does it work?",
+      steps: [
+        "Share any film with a friend — with the “Share” button under the film or the button above. The link in the card is yours, nothing else to do.",
+        "Your friend opens the bot through the link and subscribes to the channel. They get that film right away.",
+        "At that moment you get +1 friend and +%d points in the Hogwarts Cup. The bot sends you a message."
+      ],
+      rulesTitle: "Rules",
+      rules: [
+        "Only people who open the bot for the first time count.",
+        "No points until your friend subscribes to the channel.",
+        "Each friend counts only once.",
+        "If a friend opens several links, the first one counts.",
+        "You can't invite yourself."
+      ],
+      ratingTitle: "Leaderboard",
+      rating: [
+        "Places depend on the number of friends invited. On a tie, whoever reached that number first ranks higher.",
+        "Your friend count is kept forever and doesn't reset with the weekly season. Cup points go to that week's contest.",
+        "Even if you haven't been sorted yet, points are recorded — get sorted this week and they go to your house."
+      ],
+      ranksTitle: "Ranks",
+      fr: function (n) { return n + (n === 1 ? " friend" : " friends"); }
+    }
+  };
+
+  function refT() { return REF_T[lang] || REF_T.uz; }
+
+  function fetchRefs(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      refsData = {
+        ok: true, total: 14, pts_per_friend: 20,
+        top: [
+          {pos: 1, name: "Hermione", house: "gryffindor", refs: 23},
+          {pos: 2, name: "Luna", house: "ravenclaw", refs: 11},
+          {pos: 3, name: "Cedric", house: "hufflepuff", refs: 7},
+          {pos: 4, name: "Draco", house: "slytherin", refs: 5},
+          {pos: 5, name: "Neville", house: "gryffindor", refs: 4},
+          {pos: 6, name: "Cho", house: "ravenclaw", refs: 3},
+          {pos: 7, name: "Ginny", house: "gryffindor", refs: 3},
+          {pos: 8, name: "Blaise", house: "slytherin", refs: 2},
+          {pos: 9, name: "Hannah", house: "hufflepuff", refs: 2},
+          {pos: 10, name: "Dean", house: "gryffindor", refs: 1}
+        ],
+        me: {refs: 1, place: 12, rank: "first_year", rank_name: "Birinchi kurs talabasi",
+             next_need: 5, next_name: "Prefekt", cup_points: 20},
+        ranks: [
+          {need: 0, code: "muggle", name: "Maggl"}, {need: 1, code: "first_year", name: "Birinchi kurs talabasi"},
+          {need: 5, code: "prefect", name: "Prefekt"}, {need: 10, code: "quidditch_captain", name: "Kvidich sardori"},
+          {need: 20, code: "auror", name: "Auror"}, {need: 50, code: "great_wizard", name: "Buyuk sehrgar"}
+        ]
+      };
+      if (cb) { cb(refsData); }
+      return;
+    }
+    if (!initData || !window.fetch || refsBusy) { if (cb) { cb(refsData); } return; }
+    refsBusy = true;
+    function done(d) {
+      refsBusy = false;
+      if (d && d.ok) { refsData = d; }
+      if (cb) { cb(refsData); }
+    }
+    try {
+      window.fetch(API_REFERRALS + "?lang=" + encodeURIComponent(lang), {
+        method: "GET",
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(done)["catch"](function () { done(null); });
+    } catch (e) { done(null); }
+  }
+
+  function renderRefsStrip() {
+    var r = refT();
+    $("refs-kicker").textContent = r.kick;
+    $("refs-title").textContent = r.stripTitle;
+    var me = refsData && refsData.me;
+    if (me && me.refs > 0) {
+      $("refs-count").textContent = r.fr(me.refs);
+      $("refs-pill").classList.remove("hidden");
+    } else {
+      $("refs-pill").classList.add("hidden");
+    }
+  }
+
+  function refsEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text !== undefined) { el.textContent = text; }
+    return el;
+  }
+
+  function refsRow(m, t) {
+    var row = refsEl("div", "hall-row");
+    row.appendChild(refsEl("div", "hall-pos", String(m.pos)));
+    row.appendChild(faceEl("hall-face", m.name, m.house));
+    var who = refsEl("div", "hall-nm");
+    who.appendChild(document.createTextNode(m.name || ""));
+    if (m.me) {
+      var tag = refsEl("i", "", t.you);
+      tag.style.color = "var(--accent)";
+      who.appendChild(tag);
+    }
+    row.appendChild(who);
+    row.appendChild(refsEl("div", "hall-pts", String(m.refs || 0)));
+    return row;
+  }
+
+  function renderRefs() {
+    var t = refT();
+    var d = refsData || {};
+    var me = d.me || {refs: 0};
+    var pts = d.pts_per_friend || 20;
+
+    $("refs-back-txt").textContent = T[lang].cupBack;
+    $("refs-kick").textContent = t.kick;
+    $("refs-head").textContent = t.head;
+    $("refs-share").textContent = t.share;
+
+    // --- sizning holatingiz
+    var box = $("refs-me");
+    box.innerHTML = "";
+    box.appendChild(refsEl("div", "refs-lbl", t.rankLbl));
+    box.appendChild(refsEl("div", "refs-rank", me.rank_name || ""));
+    var nums = refsEl("div", "refs-nums");
+    [[me.refs || 0, t.friends], [me.place ? me.place + (d.total ? " / " + d.total : "") : "—", t.place],
+     [me.cup_points || 0, t.cup]].forEach(function (n) {
+      var c = refsEl("div", "refs-num");
+      c.appendChild(refsEl("b", "", String(n[0])));
+      c.appendChild(refsEl("span", "", n[1]));
+      nums.appendChild(c);
+    });
+    box.appendChild(nums);
+
+    // Keyingi darajagacha qancha qolgani
+    var ranks = d.ranks || [];
+    var prev = 0;
+    ranks.forEach(function (x) { if (x.need <= (me.refs || 0)) { prev = x.need; } });
+    var bar = refsEl("div", "refs-bar");
+    var fill = refsEl("i");
+    if (me.next_need) {
+      var pct = Math.round(((me.refs || 0) - prev) / Math.max(1, me.next_need - prev) * 100);
+      fill.style.width = Math.max(4, Math.min(100, pct)) + "%";
+    } else {
+      fill.style.width = "100%";
+    }
+    bar.appendChild(fill);
+    box.appendChild(bar);
+    box.appendChild(refsEl("div", "refs-next", me.next_need
+      ? t.next.replace("%s", me.next_name || "").replace("%f", t.fr(me.next_need - (me.refs || 0)))
+      : t.top));
+
+    // --- TOP 10 (+ o'z qatori, agar tashqarida bo'lsa)
+    $("refs-top-kick").textContent = t.topKick;
+    var list = $("refs-list");
+    list.innerHTML = "";
+    var top = d.top || [];
+    if (!top.length) {
+      list.appendChild(refsEl("div", "refs-empty", t.empty));
+    }
+    top.forEach(function (m) { list.appendChild(refsRow(m, t)); });
+    if (me.place && me.place > top.length) {
+      list.appendChild(refsEl("div", "refs-gap", "···"));
+      var u = tgUser();
+      list.appendChild(refsRow({pos: me.place, name: (u && u.first_name) || "—",
+        house: cupMe().house, refs: me.refs, me: true}, t));
+    }
+
+    // --- qanday ishlaydi
+    var info = $("refs-info");
+    info.innerHTML = "";
+    info.appendChild(refsEl("h3", "", t.howTitle));
+    t.steps.forEach(function (txt, i) {
+      var st = refsEl("div", "refs-step");
+      st.appendChild(refsEl("b", "", String(i + 1)));
+      st.appendChild(refsEl("p", "", txt.replace("%d", pts)));
+      info.appendChild(st);
+    });
+    info.appendChild(refsEl("h4", "", t.rulesTitle));
+    t.rules.forEach(function (txt) { info.appendChild(refsEl("p", "refs-rule", txt)); });
+    info.appendChild(refsEl("h4", "", t.ratingTitle));
+    t.rating.forEach(function (txt) { info.appendChild(refsEl("p", "refs-rule", txt)); });
+    if (ranks.length) {
+      info.appendChild(refsEl("h4", "", t.ranksTitle));
+      ranks.forEach(function (x) {
+        var lv = refsEl("div", "refs-lvl" + (x.code === me.rank ? " on" : ""));
+        lv.appendChild(document.createTextNode(x.name));
+        lv.appendChild(refsEl("span", "", t.fr(x.need)));
+        info.appendChild(lv);
+      });
+    }
+  }
+
+  function openRefs() {
+    renderRefs();
+    $("scr-cup").classList.add("hidden");
+    $("scr-refs").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    // Eng yangi holat - ochilganda qayta so'raymiz
+    fetchRefs(function () { renderRefs(); renderRefsStrip(); });
+  }
+
+  function closeRefs() {
+    $("scr-refs").classList.add("hidden");
+    openCup();
+  }
+
+  // Ulashish: bot kartasini tanlangan chatga qo'yadi (inline qidiruv).
+  // Karta ichidagi havola ulashgan odamning id sini olib yuradi.
+  function shareRefs() {
+    try {
+      if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+        tg.switchInlineQuery("", ["users", "groups", "channels"]);
+        return;
+      }
+    } catch (e) {}
+    // Eski mijozlar: oddiy havola, lekin baribir taklif qilgan odam bilan.
+    var u = tgUser();
+    var url = "https://t.me/" + BOT + (u ? "?start=ref" + u.id : "");
+    try {
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url));
+        return;
+      }
+    } catch (e) {}
+    try { window.open(url, "_blank"); } catch (e) {}
+  }
+
   function submitTaskAnswer(taskType, questionId, selectedIndex, cb) {
     var initData = "";
     try { initData = (tg && tg.initData) || ""; } catch (e) {}
@@ -3083,6 +3446,7 @@ body{
       $("chess-strip").classList.add("hidden");
     }
     
+    renderRefsStrip();
     renderHall();
     renderFeed();
 
@@ -3111,6 +3475,7 @@ body{
     $("scr-detail").classList.add("hidden");
     $("scr-cup").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
+    fetchRefs(renderRefsStrip);
   }
 
   function closeCup() {
@@ -4507,6 +4872,7 @@ body{
     $("scr-cup").classList.add("hidden");
     $("scr-chat").classList.add("hidden");
     $("scr-chess-hub").classList.add("hidden");
+    $("scr-refs").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
     if (leaveSort()) { return; }
     $("scr-lang").classList.remove("hidden");
@@ -5714,6 +6080,9 @@ body{
 
     // Chess events
     $("chess-strip").addEventListener("click", openChessHub);
+    $("refs-strip").addEventListener("click", openRefs);
+    $("refs-back").addEventListener("click", closeRefs);
+    $("refs-share").addEventListener("click", shareRefs);
     $("chess-hub-back").addEventListener("click", closeChessHub);
     $("btn-start-bot-game").addEventListener("click", startBotGame);
     $("btn-create-pvp-game").addEventListener("click", createPvPGame);
