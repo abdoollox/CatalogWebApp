@@ -522,6 +522,7 @@ body{
   font-family:'Manrope',sans-serif;transition:.2s;
 }
 .cup-strip:active{transform:scale(.99)}
+.chat-strip-n{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--accent);color:var(--accent-ink);font:800 12px/22px 'Manrope',sans-serif;text-align:center}
 .cup-strip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .cup-strip-kicker{
   font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
@@ -844,7 +845,7 @@ body{
 @media (pointer:coarse){.cm-b{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}}
 .chat-menu{position:absolute;inset:0;z-index:200;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:cmFade .15s ease both}
 @keyframes cmFade{from{opacity:0}to{opacity:1}}
-.cm-ghost{position:absolute;margin:0;pointer-events:none}
+.cm.cm-ghost{position:absolute;margin:0;pointer-events:none;animation:none}
 .cm-ghost .cm-b{max-width:none}
 .chat-menu-box{position:absolute;width:236px;animation:cmPop .16s ease both}
 @keyframes cmPop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
@@ -867,6 +868,18 @@ body{
 .chat-at button{flex:none;padding:6px 12px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font:600 13px 'Manrope',sans-serif;cursor:pointer}
 .chat-foot{border-top:1px solid var(--line);background:var(--bg)}
 .chat-foot .chat-form{border-top:none}
+/* o'qilmaganlar, bir xil chiziqli belgilar */
+.cm-unread{margin:14px 0 6px;padding:5px 0;border-radius:10px;text-align:center;background:rgba(var(--me-rgb,151,161,174),.14);color:var(--me-bg,var(--accent));font-size:12.5px;font-weight:700}
+.chat-tab-n{display:inline-block;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:9px;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:11px;line-height:18px;vertical-align:1px}
+.chat-menu-list i{display:flex;align-items:center;justify-content:center;color:var(--dim)}
+.chat-menu-list i svg{width:20px;height:20px}
+.chat-menu-list button.danger i{color:inherit}
+.cm-swipe svg{width:15px;height:15px}
+.chat-bar-ic{display:flex}
+.chat-bar-ic svg{width:20px;height:20px}
+.chat-bar-x{display:flex}
+.chat-bar-x svg{width:18px;height:18px}
+.chat-down svg{width:20px;height:20px}
 </style>
 </head>
 <body>
@@ -1110,6 +1123,7 @@ body{
     <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 10px;">
       <span class="cup-strip-head" style="margin-bottom: 5px;">
         <span class="cup-strip-kicker" id="chat-kicker" data-xt="chatKicker">UMUMIY XONA</span>
+        <b id="chat-strip-n" class="chat-strip-n hidden"></b>
       </span>
       <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;" data-xt="chatStrip">Fakultetdoshlar bilan suhbat ›</span>
     </button>
@@ -1236,13 +1250,13 @@ body{
     </div>
     <div class="chat-wrap">
       <div id="chat-messages" class="chat-list"></div>
-      <button type="button" id="chat-down" class="chat-down hidden" aria-label="↓">↓<b id="chat-down-n" class="hidden"></b></button>
+      <button type="button" id="chat-down" class="chat-down hidden" aria-label="↓"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg><b id="chat-down-n" class="hidden"></b></button>
     </div>
     <div class="chat-foot">
     <div id="chat-bar" class="chat-bar hidden">
-      <span id="chat-bar-ic" class="chat-bar-ic">↩</span>
+      <span id="chat-bar-ic" class="chat-bar-ic"></span>
       <div class="chat-bar-tx"><b id="chat-bar-t"></b><span id="chat-bar-s"></span></div>
-      <button type="button" id="chat-bar-x" class="chat-bar-x" aria-label="✕">✕</button>
+      <button type="button" id="chat-bar-x" class="chat-bar-x" aria-label="✕"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
     <div id="chat-at" class="chat-at hidden"></div>
     <form id="chat-form" class="chat-form" onsubmit="return false;">
@@ -3544,6 +3558,7 @@ body{
     if (me && me.house) {
       $("chat-strip").classList.remove("hidden");
       $("chess-strip").classList.remove("hidden");
+      chatRefreshCounts();
     } else {
       $("chat-strip").classList.add("hidden");
       $("chess-strip").classList.add("hidden");
@@ -4981,7 +4996,7 @@ body{
       chatDeleteAsk: "Xabar hamma uchun o'chirilsinmi?", chatCopied: "Nusxa olindi", chatEdited: "tahrirlandi",
       chatEditing: "Xabarni tahrirlash", chatReplyTo: "Javob: %s", chatDeletedMsg: "O'chirilgan xabar",
       chatNotLoaded: "Bu xabar ancha tepada — yuqoriga suring", chatActFail: "Bajarilmadi, qayta urinib ko'ring",
-      chatSlowAct: "Juda tez — %s soniya kuting", chatTooOld: "Bu xabarni endi tahrirlab bo'lmaydi",
+      chatSlowAct: "Juda tez — %s soniya kuting", chatTooOld: "Bu xabarni endi tahrirlab bo'lmaydi", chatUnreadBar: "Yangi xabarlar",
       chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
       chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
       chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
@@ -5024,7 +5039,7 @@ body{
       chatDeleteAsk: "Удалить сообщение для всех?", chatCopied: "Скопировано", chatEdited: "изменено",
       chatEditing: "Редактирование", chatReplyTo: "Ответ: %s", chatDeletedMsg: "Удалённое сообщение",
       chatNotLoaded: "Это сообщение выше — прокрутите вверх", chatActFail: "Не получилось, попробуйте ещё раз",
-      chatSlowAct: "Слишком быстро — подождите %s с", chatTooOld: "Это сообщение уже нельзя изменить",
+      chatSlowAct: "Слишком быстро — подождите %s с", chatTooOld: "Это сообщение уже нельзя изменить", chatUnreadBar: "Непрочитанные сообщения",
       chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
       chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
       chessBotHead: "Игра против бота (тренировка)",
@@ -5067,7 +5082,7 @@ body{
       chatDeleteAsk: "Delete this message for everyone?", chatCopied: "Copied", chatEdited: "edited",
       chatEditing: "Editing message", chatReplyTo: "Reply to %s", chatDeletedMsg: "Deleted message",
       chatNotLoaded: "That message is further up — scroll up", chatActFail: "Didn't work, try again",
-      chatSlowAct: "Too fast — wait %s s", chatTooOld: "This message can no longer be edited",
+      chatSlowAct: "Too fast — wait %s s", chatTooOld: "This message can no longer be edited", chatUnreadBar: "Unread messages",
       chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
       chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
       chessBotHead: "Play against a bot (practice)",
@@ -5160,7 +5175,8 @@ body{
   var chatCtl = null;         // hozirgi so'rovni uzish uchun
   var chatFails = 0;
   var chatStick = true;       // ro'yxat pastida turibmizmi
-  var chatUnread = 0;
+  var chatCounts = {};        // { house: n, global: n } - o'qilmaganlar
+  var chatReadTimer = null;
   var chatNewIds = {};
   var chatCompose = null;     // { mode: "reply" | "edit", id }
   var chatPress = null;       // barmoq xabar ustida: uzoq bosish yoki surish
@@ -5172,13 +5188,40 @@ body{
   // Server ro'yxati bilan bir xil bo'lishi shart (hpcup.CHAT_REACTIONS).
   var CHAT_REACTS = ["\ud83d\udc4d", "\u2764\ufe0f", "\ud83d\ude02", "\ud83d\udd25", "\ud83d\ude2e", "\u26a1"];
   var CHAT_EDIT_MS = 48 * 3600 * 1000;
+  // Menyu va tugmalardagi belgilar: bir xil chiziqli uslub (emoji har telefonda har xil chiqadi).
+  function chatSvg(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+      'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+  }
+  var CHAT_SVG = {
+    reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
+    copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+    edit: chatSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+    trash: chatSvg('<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>')
+  };
   var CHAT_ICON = {
     sending: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2 1.3"/></svg>',
     sent: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 8.4l3 3 6.6-6.8"/></svg>',
     failed: '<b>!</b>'
   };
 
-  function chatNewRoom() { return { msgs: [], loaded: false, more: false, loadingOld: false, oldFail: 0, rev: 0 }; }
+  // read    - qaysi xabargacha o'qilgan (serverda ham saqlanadi);
+  // divider - "Yangi xabarlar" chizig'i shu id dan keyin (chat ochilgandagi holat);
+  // moreNew - pastda hali yuklanmagan xabarlar bor (o'qilmaganlar ko'p bo'lsa);
+  // hidden  - o'shalardan nechtasi o'qilmagan.
+  function chatNewRoom() {
+    return { msgs: [], loaded: false, more: false, loadingOld: false, oldFail: 0, rev: 0,
+             read: 0, sentRead: 0, divider: 0, moreNew: false, loadingNew: false, newFail: 0,
+             hidden: 0, hiddenIds: {}, latest: false };
+  }
+
+  // Xonani qayta yuklashga tayyorlaydi (yuborilayotgan xabarlar saqlanib qoladi).
+  function chatResetRoom(room, latest) {
+    var fresh = chatNewRoom();
+    fresh.msgs = chatRooms[room].msgs.filter(function(m) { return m.tmp; });
+    fresh.latest = !!latest;
+    chatRooms[room] = fresh;
+  }
   function chatInitData() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
   function chatUser() { return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {}; }
   // Ism o'z fakultetining rangida (fakulteti yo'q bo'lsa - umumiy kulrang).
@@ -5210,7 +5253,8 @@ body{
   // o'zimiz yuborib javobini kutayotgan nusxani (cid) haqiqiysi bilan almashtiradi.
   // live - jonli yangilanish: yuklanmagan eski xabarning o'zgarishi e'tiborsiz qoladi.
   function chatMerge(R, list, live) {
-    var map = {}, tmps = [], added = [], changed = false, first = chatFirstId(R);
+    var map = {}, tmps = [], added = [], changed = false, first = chatFirstId(R), last = chatLastId(R);
+    var me = chatUser().id || 0;
     R.msgs.forEach(function(m) { if (m.tmp) tmps.push(m); else map[m.id] = m; });
     (list || []).forEach(function(m) {
       var old = map[m.id], k;
@@ -5229,6 +5273,10 @@ body{
         return;
       }
       if (live && first && m.id < first) return;
+      if (live && R.moreNew && m.id > last) {
+        if (m.uid != me && !R.hiddenIds[m.id]) { R.hiddenIds[m.id] = 1; R.hidden++; }
+        return;
+      }
       if (m.cid) tmps = tmps.filter(function(x) { return x.cid !== m.cid; });
       map[m.id] = m;
       added.push(m);
@@ -5294,7 +5342,7 @@ body{
     var meUid = chatUser().id || 0, myTag = chatMyTag();
     var frag = document.createDocumentFragment();
     if (R.loadingOld) frag.appendChild(chatHint(L("loading")));
-    var prev = null, lastDay = "", GAP = 5 * 60000;
+    var prev = null, lastDay = "", GAP = 5 * 60000, divided = false;
 
     R.msgs.forEach(function(m, i) {
       var d = chatDate(m), day = chatDayKey(d), next = R.msgs[i + 1];
@@ -5307,6 +5355,15 @@ body{
         prev = null;
       }
       var mine = m.uid == meUid;
+      if (R.divider && !divided && !m.tmp && !mine && m.id > R.divider) {
+        var bar = document.createElement("div");
+        bar.className = "cm-unread";
+        bar.id = "chat-unread-bar";
+        bar.textContent = L("chatUnreadBar");
+        frag.appendChild(bar);
+        divided = true;
+        prev = null;
+      }
       // Bir odamning 5 daqiqa ichidagi ketma-ket xabarlari bitta to'da bo'ladi.
       var first = !prev || prev.uid != m.uid || (d - chatDate(prev)) > GAP;
       var nd = next ? chatDate(next) : null;
@@ -5391,7 +5448,7 @@ body{
       if (!m.tmp) {
         var sw = document.createElement("span");
         sw.className = "cm-swipe";
-        sw.textContent = "↩";
+        sw.innerHTML = CHAT_SVG.reply;
         line.appendChild(sw);
       }
       row.appendChild(line);
@@ -5418,7 +5475,9 @@ body{
     if (chatPress && mode !== "prepend") { chatPendingPaint = true; return; }
     var oldH = box.scrollHeight, oldTop = box.scrollTop;
     renderChat();
-    if (mode === "bottom") box.scrollTop = box.scrollHeight;
+    var bar = mode === "divider" ? $("chat-unread-bar") : null;
+    if (bar) box.scrollTop = Math.max(0, bar.offsetTop - 56);
+    else if (mode === "bottom" || mode === "divider") box.scrollTop = box.scrollHeight;
     else if (mode === "prepend") box.scrollTop = oldTop + (box.scrollHeight - oldH);
     else box.scrollTop = oldTop;
     chatScrolled();
@@ -5427,17 +5486,54 @@ body{
   function chatScrolled() {
     var box = $("chat-messages");
     if (!box) return;
-    var gap = box.scrollHeight - box.scrollTop - box.clientHeight;
-    chatStick = gap < 80;
-    if (chatStick) chatUnread = 0;
-    $("chat-down").classList.toggle("hidden", !(gap > 300 || (chatUnread > 0 && !chatStick)));
-    var n = $("chat-down-n");
-    n.textContent = chatUnread > 99 ? "99+" : String(chatUnread);
-    n.classList.toggle("hidden", !chatUnread);
     var R = chatRooms[chatRoom];
+    var gap = box.scrollHeight - box.scrollTop - box.clientHeight;
+    chatStick = gap < 80 && !R.moreNew;
+    chatSeen();
+    var below = chatBelow(R);
+    $("chat-down").classList.toggle("hidden", chatStick || !(gap > 300 || below > 0 || R.moreNew));
+    var n = $("chat-down-n");
+    n.textContent = chatBadge(below);
+    n.classList.toggle("hidden", !below);
     if (box.scrollTop < 200 && R.loaded && R.more && !R.loadingOld && Date.now() - R.oldFail > 3000) {
       chatLoadOlder();
     }
+    if (gap < 300 && R.loaded && R.moreNew && !R.loadingNew && Date.now() - R.newFail > 3000) {
+      chatLoadNewer();
+    }
+  }
+
+  // Pastda qolgan o'qilmaganlar: yuklanganlar + hali yuklanmaganlar.
+  function chatBelow(R) {
+    var me = chatUser().id || 0, n = 0;
+    R.msgs.forEach(function(m) { if (!m.tmp && m.uid != me && m.id > R.read) n++; });
+    return n + (R.moreNew ? R.hidden : 0);
+  }
+
+  // Ekranning pastki chetigacha ko'ringan eng oxirgi xabar - o'qilgan.
+  function chatSeen() {
+    var box = $("chat-messages"), R = chatRooms[chatRoom];
+    if (!R.loaded || !chatOpen || document.hidden) return;
+    var edge = box.scrollTop + box.clientHeight + 4, rows = box.querySelectorAll(".cm");
+    for (var i = rows.length - 1; i >= 0; i--) {
+      var id = parseInt(rows[i].getAttribute("data-id"), 10);
+      if (!id) continue;
+      if (rows[i].offsetTop + rows[i].offsetHeight <= edge) {
+        if (id > R.read) { R.read = id; chatSendRead(chatRoom); }
+        return;
+      }
+    }
+  }
+
+  // Serverga "shu yergacha o'qidim" - tez-tez emas, bir oz to'plab.
+  function chatSendRead(room) {
+    clearTimeout(chatReadTimer);
+    chatReadTimer = setTimeout(function() {
+      var R = chatRooms[room];
+      if (R.read <= R.sentRead) return;
+      R.sentRead = R.read;
+      chatAct(room, { action: "read", id: R.read }).catch(function() { R.sentRead = 0; });
+    }, 800);
   }
 
   function chatPoll() {
@@ -5449,7 +5545,8 @@ body{
     if (chatCtl) { try { chatCtl.abort(); } catch (e) {} }
     var ctl = window.AbortController ? new AbortController() : null;
     chatCtl = ctl;
-    var url = API_CHAT + "?room=" + room + (R.loaded ? "&since=" + R.rev + "&wait=1" : "");
+    var url = API_CHAT + "?room=" + room +
+      (R.loaded ? "&since=" + R.rev + "&wait=1" : (R.latest ? "" : "&unread=1"));
     var started = Date.now();
     fetch(url, { headers: { "X-Telegram-Init-Data": d }, signal: ctl ? ctl.signal : undefined })
       .then(function(r) { return r.json(); })
@@ -5460,9 +5557,17 @@ body{
         if (!R.loaded) {
           R.loaded = true;
           R.more = !!res.more;
+          R.moreNew = !!res.more_new;
           R.rev = res.rev || 0;
+          R.read = R.sentRead = res.read || 0;
+          R.divider = res.unread ? R.read : 0;
           chatMerge(R, res.messages, false);
-          chatPaint("bottom");
+          if (R.moreNew) {
+            var me = chatUser().id || 0, loadedNew = 0;
+            R.msgs.forEach(function(m) { if (!m.tmp && m.uid != me && m.id > R.read) loadedNew++; });
+            R.hidden = Math.max(0, (res.unread || 0) - loadedNew);
+          }
+          chatPaint(R.divider ? "divider" : "bottom");
         } else {
           if (res.rev) R.rev = Math.max(R.rev, res.rev);
           var r = chatMerge(R, res.messages, true);
@@ -5483,13 +5588,37 @@ body{
   }
 
   function chatArrived(added) {
-    var me = chatUser().id || 0, others = 0;
-    added.forEach(function(m) {
-      if (m.uid != me) { others++; chatNewIds[m.id] = true; }
-    });
-    if (chatStick) { chatPaint("bottom"); return; }
-    chatUnread += others;
-    chatPaint("keep");
+    var me = chatUser().id || 0;
+    added.forEach(function(m) { if (m.uid != me) chatNewIds[m.id] = true; });
+    chatPaint(chatStick ? "bottom" : "keep");
+  }
+
+  // O'qilmaganlar ko'p bo'lsa pastga surgan sari keyingi sahifa yuklanadi.
+  function chatLoadNewer() {
+    var room = chatRoom, R = chatRooms[room], d = chatInitData(), after = chatLastId(R);
+    if (!d || !after) return;
+    R.loadingNew = true;
+    fetch(API_CHAT + "?room=" + room + "&after=" + after, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        R.loadingNew = false;
+        if (!(res && res.ok)) { R.newFail = Date.now(); return; }
+        var me = chatUser().id || 0;
+        chatMerge(R, res.messages, false).added.forEach(function(m) {
+          if (m.uid != me && R.hidden > 0) R.hidden--;
+        });
+        R.moreNew = !!res.more_new;
+        if (!R.moreNew) { R.hidden = 0; R.hiddenIds = {}; }
+        if (chatRoom === room) chatPaint("keep");
+      })
+      .catch(function() { R.loadingNew = false; R.newFail = Date.now(); });
+  }
+
+  // Eng so'nggi xabarlarga o'tish (o'rtadan pastdagi tugma yoki xabar yozganda).
+  function chatJumpLatest() {
+    chatResetRoom(chatRoom, true);
+    chatPaint("bottom");
+    chatPoll();
   }
 
   function chatLoadOlder() {
@@ -5535,6 +5664,7 @@ body{
       if (rm) reply = { id: rm.id, uid: rm.uid, name: rm.name, house: rm.house, text: String(rm.text).slice(0, 120) };
       chatCancelCompose();
     }
+    if (R.moreNew) { chatJumpLatest(); R = chatRooms[chatRoom]; }
     var u = chatUser();
     var m = {
       tmp: true, anim: true, st: "sending",
@@ -5570,7 +5700,11 @@ body{
         m.tries = 0;
         if (res && res.ok && (res.message || res.messages)) {
           R.msgs = R.msgs.filter(function(x) { return x !== m; });
-          if (res.message) res.message.cid = m.cid;
+          if (res.message) {
+            res.message.cid = m.cid;
+            R.read = R.sentRead = Math.max(R.read, res.message.id);
+            R.divider = 0;
+          }
           chatMerge(R, res.message ? [res.message] : res.messages, false);
         } else if (res && res.error === "slow") {
           m.st = "failed";
@@ -5703,7 +5837,7 @@ body{
 
   // Yozish maydoni ustidagi "Javob: ..." yoki "Tahrirlash" tasmasi.
   function chatShowBar(icon, title, text) {
-    $("chat-bar-ic").textContent = icon;
+    $("chat-bar-ic").innerHTML = icon;
     $("chat-bar-t").textContent = title;
     $("chat-bar-s").textContent = text;
     $("chat-bar").classList.remove("hidden");
@@ -5715,7 +5849,7 @@ body{
     if (m.tmp) return;
     if (chatCompose && chatCompose.mode === "edit") $("chat-input").value = "";
     chatCompose = { mode: "reply", id: m.id };
-    chatShowBar("↩", L("chatReplyTo").replace("%s", m.name || "Sehrgar"), m.text);
+    chatShowBar(CHAT_SVG.reply, L("chatReplyTo").replace("%s", m.name || "Sehrgar"), m.text);
     chatSendState();
     $("chat-input").focus();
   }
@@ -5723,7 +5857,7 @@ body{
   function chatStartEdit(m) {
     var inp = $("chat-input");
     chatCompose = { mode: "edit", id: m.id };
-    chatShowBar("✎", L("chatEditing"), m.text);
+    chatShowBar(CHAT_SVG.edit, L("chatEditing"), m.text);
     inp.value = m.text;
     chatGrow();
     chatSendState();
@@ -5776,16 +5910,16 @@ body{
       btn.type = "button";
       if (danger) btn.className = "danger";
       var ic = document.createElement("i");
-      ic.textContent = icon;
+      ic.innerHTML = icon;
       btn.appendChild(ic);
       btn.appendChild(document.createTextNode(label));
       btn.addEventListener("click", function() { chatCloseMenu(); fn(); });
       list.appendChild(btn);
     }
-    if (!m.tmp) item("↩", L("chatReply"), function() { chatStartReply(m); });
-    item("⧉", L("chatCopy"), function() { chatCopy(m.text); });
-    if (own && chatCanEdit(m)) item("✎", L("chatEdit"), function() { chatStartEdit(m); });
-    if (own) item("🗑", L("chatDelete"), function() { chatDelete(m); }, true);
+    if (!m.tmp) item(CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
+    item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
+    if (own && chatCanEdit(m)) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
+    if (own) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);
     panel.appendChild(list);
     ov.appendChild(panel);
     ov.addEventListener("click", function(e) { if (e.target === ov) chatCloseMenu(); });
@@ -5854,12 +5988,41 @@ body{
   function setChatRoom(room) {
     if (chatRoom === room) return;
     chatRoom = room;
-    chatUnread = 0;
+    chatResetRoom(room);
     chatCancelCompose();
     $("chat-at").classList.add("hidden");
     updateChatRoomUI();
     chatPaint("bottom");
     chatPoll();
+    chatRefreshCounts();
+  }
+
+  // O'qilmaganlar soni: kubok oynasidagi chat tugmasida (ikkala xona jami)
+  // va chat ichida - hozir ochiq bo'lmagan xona yorlig'ida.
+  function chatRefreshCounts() {
+    var d = chatInitData();
+    if (!d) return;
+    fetch(API_CHAT + "?counts=1", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!(res && res.ok && res.counts)) return;
+        chatCounts = res.counts;
+        chatCountsUI();
+      }).catch(function() {});
+  }
+
+  function chatBadge(n) { return n > 99 ? "99+" : String(n); }
+
+  function chatCountsUI() {
+    var total = (chatCounts.house || 0) + (chatCounts.global || 0);
+    var sb = $("chat-strip-n");
+    if (sb) { sb.textContent = chatBadge(total); sb.classList.toggle("hidden", !total); }
+    ["house", "global"].forEach(function(room) {
+      var tab = $("tab-" + room), n = chatCounts[room] || 0, b = tab.querySelector("b");
+      if (!b) { b = document.createElement("b"); b.className = "chat-tab-n"; tab.appendChild(b); }
+      b.textContent = chatBadge(n);
+      b.classList.toggle("hidden", !n || (chatOpen && chatRoom === room));
+    });
   }
 
   function updateChatRoomUI() {
@@ -5872,6 +6035,7 @@ body{
     $("tab-global").textContent = L("chatGlobalTab");
     $("tab-house").classList.toggle("on", chatRoom === "house");
     $("tab-global").classList.toggle("on", chatRoom === "global");
+    chatCountsUI();
     if (chatRoom === "house") {
       title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
       title.style.color = hh.accent || "var(--accent)";
@@ -5889,11 +6053,14 @@ body{
     $("scr-chat").classList.remove("hidden");
     chatRoom = "house";
     chatOpen = true;
-    chatUnread = 0;
+    // Har ochilishda yangidan: o'qilmaganlar joyidan boshlanadi.
+    chatResetRoom("house");
+    chatResetRoom("global");
     updateChatRoomUI();
     chatSendState();
     chatPaint("bottom");
     chatPoll();
+    chatRefreshCounts();
   }
 
   function chatStop() {
@@ -5908,6 +6075,12 @@ body{
     chatCancelCompose();
     $("scr-chat").classList.add("hidden");
     $("scr-cup").classList.remove("hidden");
+    // O'qilgan joy serverga yetib borgach sonlarni yangilaymiz.
+    var room = chatRoom, R = chatRooms[room];
+    clearTimeout(chatReadTimer);
+    var send = R.read > R.sentRead ? chatAct(room, { action: "read", id: R.read }) : Promise.resolve();
+    R.sentRead = R.read;
+    send.then(chatRefreshCounts, chatRefreshCounts);
   }
 
   function chatGrow() {
@@ -5969,7 +6142,7 @@ body{
     btn.addEventListener("click", function(e) { e.preventDefault(); chatSend(); });
     box.addEventListener("scroll", chatScrolled, { passive: true });
     $("chat-down").addEventListener("click", function() {
-      chatUnread = 0;
+      if (chatRooms[chatRoom].moreNew) { chatJumpLatest(); return; }
       if (box.scrollTo) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
       else box.scrollTop = box.scrollHeight;
     });
