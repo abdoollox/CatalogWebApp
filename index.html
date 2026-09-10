@@ -780,6 +780,42 @@ body{
 @media (prefers-reduced-motion: reduce){
   .u-ring .u-prog{animation:none}
 }
+/* --- CHAT (Telegramdek: o'z ichida suriladigan ro'yxat, pastda yozish maydoni) --- */
+#scr-chat{position:fixed;top:0;left:0;right:0;z-index:50;max-width:440px;margin:0 auto;
+  height:var(--tg-viewport-height,100vh);display:flex;flex-direction:column;
+  padding:22px 18px 0;background:var(--bg)}
+#scr-chat .cup-hdr{margin-bottom:0}
+.chat-tabs{display:flex;gap:8px;margin:12px 0 0;background:var(--bg2);padding:4px;border-radius:14px;border:1px solid var(--line)}
+.chat-tab{flex:1;padding:9px 6px;border-radius:10px;border:none;font:600 13px 'Manrope',sans-serif;cursor:pointer;transition:background .2s,color .2s;background:transparent;color:var(--dim)}
+.chat-tab.on{background:var(--card);color:var(--text)}
+.chat-wrap{position:relative;flex:1;min-height:0}
+.chat-list{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:6px 2px 12px}
+.chat-hint{text-align:center;color:var(--dim);font-size:13px;padding:14px 0}
+.cm-day{align-self:center;margin:14px auto 6px;padding:4px 11px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);color:var(--dim);font-size:12px;font-weight:600;width:max-content}
+.cm{display:flex;flex-direction:column;align-items:flex-start;margin-top:3px}
+.cm.me{align-items:flex-end}
+.cm.first{margin-top:10px}
+.cm.new{animation:cmIn .22s ease both}
+@keyframes cmIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cm-name{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;margin:0 0 3px 12px}
+.cm-house{font-size:11px;font-weight:600;padding:1px 6px;border-radius:6px}
+.cm-b{position:relative;max-width:82%;padding:7px 11px 7px 12px;border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--text);font-size:15px;line-height:1.38;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere}
+.cm.me .cm-b{background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);border-color:transparent}
+.cm.last:not(.me) .cm-b{border-bottom-left-radius:6px}
+.cm.me.last .cm-b{border-bottom-right-radius:6px}
+.cm-sp{display:inline-block;width:36px;height:1px}
+.cm.me .cm-sp{width:52px}
+.cm-meta{position:absolute;right:10px;bottom:5px;display:inline-flex;align-items:center;gap:3px;font-size:11px;line-height:1;opacity:.62;white-space:nowrap}
+.cm-meta svg{width:14px;height:14px}
+.cm.failed .cm-b{cursor:pointer;opacity:.75}
+.cm.failed .cm-meta{opacity:1;color:#ff6b6b;font-weight:700}
+.cm-err{font-size:12px;color:#ff8a8a;margin:4px 6px 0}
+.chat-down{position:absolute;right:4px;bottom:12px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center}
+.chat-down b{position:absolute;top:-7px;left:50%;transform:translateX(-50%);min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:11px;line-height:20px;text-align:center}
+.chat-form{display:flex;align-items:flex-end;gap:10px;padding:10px 0 calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}
+.chat-form textarea{flex:1;resize:none;max-height:120px;padding:11px 16px;border-radius:21px;border:1px solid var(--line);background:var(--card);color:var(--text);outline:none;font:15px/1.35 'Manrope',system-ui,sans-serif}
+.chat-send{background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);border:none;border-radius:50%;width:44px;height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:opacity .15s}
+.chat-send:disabled{opacity:.45}
 </style>
 </head>
 <body>
@@ -1138,20 +1174,22 @@ body{
     </div>
   </div>
 
-  <div id="scr-chat" class="screen hidden" style="padding-bottom: 75px;">
+  <div id="scr-chat" class="screen hidden">
     <div class="cup-hdr">
       <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt" data-xt="back">Ortga</span></button>
       <div id="chat-title-txt" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;" data-xt="chatTitle">Muloqot</div>
     </div>
-    <div class="chat-tabs" style="display:flex; gap:8px; margin:12px 0 6px; background:var(--bg2); padding:4px; border-radius:14px; border:1px solid var(--line);">
-      <button type="button" id="tab-house" style="flex:1; padding:9px 6px; border-radius:10px; border:none; font-weight:600; font-size:13px; cursor:pointer; transition:all .2s; background:var(--card); color:var(--text);">Umumiy xona</button>
-      <button type="button" id="tab-global" style="flex:1; padding:9px 6px; border-radius:10px; border:none; font-weight:600; font-size:13px; cursor:pointer; transition:all .2s; background:transparent; color:var(--dim);">Katta zal (Global)</button>
+    <div class="chat-tabs">
+      <button type="button" id="tab-house" class="chat-tab on">Umumiy xona</button>
+      <button type="button" id="tab-global" class="chat-tab">Katta zal</button>
     </div>
-    <div id="chat-messages" style="padding: 10px 4px; display:flex; flex-direction:column; gap:12px; min-height: 200px;">
+    <div class="chat-wrap">
+      <div id="chat-messages" class="chat-list"></div>
+      <button type="button" id="chat-down" class="chat-down hidden" aria-label="↓">↓<b id="chat-down-n" class="hidden"></b></button>
     </div>
-    <form id="chat-form" onsubmit="return false;" style="position:fixed; bottom:0; left:0; right:0; max-width:440px; margin:0 auto; padding:12px 18px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
-      <input type="text" id="chat-input" placeholder="Xabar yozing..." data-xt-ph="chatPh" autocomplete="off" style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; font-size:15px;">
-      <button type="submit" id="chat-send" style="background:var(--accent); color:#fff; border:none; border-radius:50%; width:44px; height:44px; min-width:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
+    <form id="chat-form" class="chat-form" onsubmit="return false;">
+      <textarea id="chat-input" rows="1" maxlength="1000" placeholder="Xabar yozing..." data-xt-ph="chatPh" autocomplete="off"></textarea>
+      <button type="submit" id="chat-send" class="chat-send" disabled>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
     </form>
@@ -4876,6 +4914,10 @@ body{
       chatGlobalTitle: "Katta zal (hamma uchun)", chatPh: "Xabar yozing...",
       chatPhHouse: "Fakultetdoshlarga yozing...", chatPhGlobal: "Barcha o'quvchilarga yozing...",
       loading: "Yuklanmoqda...", chatEmpty: "Hozircha xabarlar yo'q. Birinchi bo'lib yozing!",
+      chatToday: "Bugun", chatYesterday: "Kecha",
+      chatMonths: ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"],
+      chatSlow: "Juda tez yozyapsiz — %s soniyadan keyin xabarni bosing", chatFailed: "Yuborilmadi — qayta urinish uchun xabarni bosing",
+      chatLong: "Xabar juda uzun (ko'pi bilan 1000 belgi)",
       chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
       chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
       chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
@@ -4910,6 +4952,10 @@ body{
       chatGlobalTitle: "Большой зал (для всех)", chatPh: "Напишите сообщение...",
       chatPhHouse: "Напишите своему факультету...", chatPhGlobal: "Напишите всем ученикам...",
       loading: "Загрузка...", chatEmpty: "Сообщений пока нет. Напишите первым!",
+      chatToday: "Сегодня", chatYesterday: "Вчера",
+      chatMonths: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],
+      chatSlow: "Слишком быстро — нажмите на сообщение через %s с", chatFailed: "Не отправлено — нажмите на сообщение, чтобы повторить",
+      chatLong: "Сообщение слишком длинное (до 1000 символов)",
       chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
       chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
       chessBotHead: "Игра против бота (тренировка)",
@@ -4944,6 +4990,10 @@ body{
       chatGlobalTitle: "Great Hall (everyone)", chatPh: "Write a message...",
       chatPhHouse: "Write to your house...", chatPhGlobal: "Write to all students...",
       loading: "Loading...", chatEmpty: "No messages yet. Be the first to write!",
+      chatToday: "Today", chatYesterday: "Yesterday",
+      chatMonths: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+      chatSlow: "Too fast — tap the message again in %s s", chatFailed: "Not sent — tap the message to retry",
+      chatLong: "Message is too long (max 1000 characters)",
       chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
       chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
       chessBotHead: "Play against a bot (practice)",
@@ -5020,67 +5070,363 @@ body{
     $("scr-lang").classList.remove("hidden");
   }
 
-  /* ---------- CHAT LGC ---------- */
-  var chatTimer = null;
-  var chatRoom = "house"; // "house" or "global"
-  var chatMsgsByRoom = { house: [], global: [] };
-  var chatSending = false;
+  /* ---------- CHAT ----------
+     Telegramdek ishlaydi: ilova serverdan "oxirgi ko'rgan xabarimdan keyin
+     yangisi bormi?" deb so'raydi, server esa yangi xabar chiqquncha javobni
+     ushlab turadi - xabar yozilgan zahoti yetib keladi (ilgari har 4
+     soniyada butun ro'yxat qayta so'ralardi). Ro'yxat qayta chizilganda
+     o'qilayotgan joy saqlanadi: pastda turgan odam yangi xabarga suriladi,
+     yuqorida o'qiyotgan odam esa joyidan qo'zg'almaydi. */
+  var chatRooms = { house: chatNewRoom(), global: chatNewRoom() };
+  var chatRoom = "house";     // "house" yoki "global"
+  var chatOpen = false;
+  var chatSeq = 0;            // so'rovlar zanjiri raqami: eskisi o'zini to'xtatadi
+  var chatCtl = null;         // hozirgi so'rovni uzish uchun
+  var chatFails = 0;
+  var chatStick = true;       // ro'yxat pastida turibmizmi
+  var chatUnread = 0;
+  var chatNewIds = {};
+  var chatTouch = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  var CHAT_COLORS = ["#e17076", "#eda86c", "#a695e7", "#7bc862", "#6ec9cb", "#65aadd", "#ee7aae"];
+  var CHAT_ICON = {
+    sending: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2 1.3"/></svg>',
+    sent: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 8.4l3 3 6.6-6.8"/></svg>',
+    failed: '<b>!</b>'
+  };
+
+  function chatNewRoom() { return { msgs: [], loaded: false, more: false, loadingOld: false, oldFail: 0 }; }
+  function chatInitData() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
+  function chatUser() { return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {}; }
+
+  // Kutilayotgan (hali serverga yetmagan) xabarlar doim ro'yxat oxirida turadi.
+  function chatLastId(R) {
+    for (var i = R.msgs.length - 1; i >= 0; i--) { if (!R.msgs[i].tmp) return R.msgs[i].id; }
+    return 0;
+  }
+  function chatFirstId(R) {
+    for (var i = 0; i < R.msgs.length; i++) { if (!R.msgs[i].tmp) return R.msgs[i].id; }
+    return 0;
+  }
+
+  // Serverdan kelgan xabarlarni qo'shadi: takrorini tashlaydi, o'zimiz yuborib
+  // javobini kutayotgan nusxani (cid bo'yicha) haqiqiysi bilan almashtiradi.
+  function chatMerge(R, list) {
+    var have = {}, added = [];
+    R.msgs.forEach(function(m) { if (!m.tmp) have[m.id] = true; });
+    (list || []).forEach(function(m) {
+      if (have[m.id]) return;
+      have[m.id] = true;
+      if (m.cid) {
+        R.msgs = R.msgs.filter(function(x) { return !(x.tmp && x.cid === m.cid); });
+      }
+      added.push(m);
+    });
+    if (!added.length) return added;
+    var real = R.msgs.filter(function(m) { return !m.tmp; }).concat(added);
+    real.sort(function(a, b) { return a.id - b.id; });
+    R.msgs = real.concat(R.msgs.filter(function(m) { return m.tmp; }));
+    return added;
+  }
+
+  function chatDate(m) { var d = new Date(m.time); return isNaN(d.getTime()) ? new Date() : d; }
+  function chatHM(d) { return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
+  function chatDayKey(d) { return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate(); }
+  function chatDayLabel(d) {
+    var now = new Date();
+    var yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    if (chatDayKey(d) === chatDayKey(now)) return L("chatToday");
+    if (chatDayKey(d) === chatDayKey(yest)) return L("chatYesterday");
+    var mon = L("chatMonths")[d.getMonth()], day = d.getDate(), s;
+    if (lang === "en") s = mon + " " + day;
+    else if (lang === "ru") s = day + " " + mon;
+    else s = day + "-" + mon;
+    if (d.getFullYear() !== now.getFullYear()) s += (lang === "en" ? ", " : " ") + d.getFullYear();
+    return s;
+  }
+
+  function chatHint(text) {
+    var el = document.createElement("div");
+    el.className = "chat-hint";
+    el.textContent = text;
+    return el;
+  }
+
+  function renderChat() {
+    var box = $("chat-messages");
+    if (!box) return;
+    var R = chatRooms[chatRoom];
+    box.innerHTML = "";
+    if (!R.loaded) { box.appendChild(chatHint(L("loading"))); return; }
+    if (!R.msgs.length) { box.appendChild(chatHint(L("chatEmpty"))); return; }
+
+    var meUid = chatUser().id || 0;
+    var frag = document.createDocumentFragment();
+    if (R.loadingOld) frag.appendChild(chatHint(L("loading")));
+    var prev = null, lastDay = "", GAP = 5 * 60000;
+
+    R.msgs.forEach(function(m, i) {
+      var d = chatDate(m), day = chatDayKey(d), next = R.msgs[i + 1];
+      if (day !== lastDay) {
+        var sep = document.createElement("div");
+        sep.className = "cm-day";
+        sep.textContent = chatDayLabel(d);
+        frag.appendChild(sep);
+        lastDay = day;
+        prev = null;
+      }
+      var mine = m.uid == meUid;
+      // Bir odamning 5 daqiqa ichidagi ketma-ket xabarlari bitta to'da bo'ladi.
+      var first = !prev || prev.uid != m.uid || (d - chatDate(prev)) > GAP;
+      var nd = next ? chatDate(next) : null;
+      var last = !next || next.uid != m.uid || chatDayKey(nd) !== day || (nd - d) > GAP;
+
+      var row = document.createElement("div");
+      row.className = "cm" + (mine ? " me" : "") + (first ? " first" : "") + (last ? " last" : "") +
+        (m.st === "failed" ? " failed" : "") + ((chatNewIds[m.id] || m.anim) ? " new" : "");
+
+      if (first && !mine) {
+        var name = document.createElement("div");
+        name.className = "cm-name";
+        var nm = document.createElement("span");
+        nm.textContent = m.name || "Sehrgar";
+        nm.style.color = CHAT_COLORS[Math.abs(parseInt(m.uid, 10) || 0) % CHAT_COLORS.length];
+        name.appendChild(nm);
+        var hh = HOUSES[m.house];
+        if (chatRoom === "global" && hh && m.house !== "none") {
+          var badge = document.createElement("span");
+          badge.className = "cm-house";
+          badge.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house);
+          badge.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.18)";
+          badge.style.color = hh.accent || "var(--accent)";
+          name.appendChild(badge);
+        }
+        row.appendChild(name);
+      }
+
+      var b = document.createElement("div");
+      b.className = "cm-b";
+      b.appendChild(document.createTextNode(m.text));
+      var sp = document.createElement("span");
+      sp.className = "cm-sp";
+      b.appendChild(sp);
+      var meta = document.createElement("span");
+      meta.className = "cm-meta";
+      meta.appendChild(document.createTextNode(chatHM(d)));
+      if (mine) {
+        var st = document.createElement("span");
+        st.innerHTML = CHAT_ICON[m.st || "sent"];
+        meta.appendChild(st);
+      }
+      b.appendChild(meta);
+      if (m.st === "failed") {
+        b.addEventListener("click", function() { chatPost(chatRoom, m); });
+      }
+      row.appendChild(b);
+      if (m.st === "failed" && m.err) {
+        var err = document.createElement("div");
+        err.className = "cm-err";
+        err.textContent = m.err;
+        row.appendChild(err);
+      }
+      frag.appendChild(row);
+      m.anim = false;
+      prev = m;
+    });
+    chatNewIds = {};
+    box.appendChild(frag);
+  }
+
+  // Qayta chizadi va ko'rinib turgan joyni saqlaydi.
+  // "bottom" - pastga tushadi; "keep" - joyida qoladi; "prepend" - tepaga eski xabarlar qo'shildi.
+  function chatPaint(mode) {
+    var box = $("chat-messages");
+    if (!box) return;
+    var oldH = box.scrollHeight, oldTop = box.scrollTop;
+    renderChat();
+    if (mode === "bottom") box.scrollTop = box.scrollHeight;
+    else if (mode === "prepend") box.scrollTop = oldTop + (box.scrollHeight - oldH);
+    else box.scrollTop = oldTop;
+    chatScrolled();
+  }
+
+  function chatScrolled() {
+    var box = $("chat-messages");
+    if (!box) return;
+    var gap = box.scrollHeight - box.scrollTop - box.clientHeight;
+    chatStick = gap < 80;
+    if (chatStick) chatUnread = 0;
+    $("chat-down").classList.toggle("hidden", !(gap > 300 || (chatUnread > 0 && !chatStick)));
+    var n = $("chat-down-n");
+    n.textContent = chatUnread > 99 ? "99+" : String(chatUnread);
+    n.classList.toggle("hidden", !chatUnread);
+    var R = chatRooms[chatRoom];
+    if (box.scrollTop < 200 && R.loaded && R.more && !R.loadingOld && Date.now() - R.oldFail > 3000) {
+      chatLoadOlder();
+    }
+  }
+
+  function chatPoll() {
+    if (!chatOpen) return;
+    if ($("scr-chat").classList.contains("hidden")) { chatStop(); return; }
+    var d = chatInitData();
+    if (!d) return;
+    var room = chatRoom, R = chatRooms[room], seq = ++chatSeq;
+    if (chatCtl) { try { chatCtl.abort(); } catch (e) {} }
+    var ctl = window.AbortController ? new AbortController() : null;
+    chatCtl = ctl;
+    var url = API_CHAT + "?room=" + room + (R.loaded ? "&after=" + chatLastId(R) + "&wait=1" : "");
+    var started = Date.now();
+    fetch(url, { headers: { "X-Telegram-Init-Data": d }, signal: ctl ? ctl.signal : undefined })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (seq !== chatSeq) return;
+        if (!res || !res.ok) throw new Error("chat");
+        chatFails = 0;
+        var got;
+        if (!R.loaded) {
+          R.loaded = true;
+          R.more = !!res.more;
+          chatMerge(R, res.messages);
+          chatPaint("bottom");
+          got = 1;
+        } else {
+          var added = chatMerge(R, res.messages);
+          got = added.length;
+          if (got) chatArrived(added);
+        }
+        // Server javobni ushlab turmay darhol qaytarsa (masalan yangilanish
+        // paytida), tinmay so'rab qolmaslik uchun biroz kutamiz.
+        var delay = (!got && Date.now() - started < 1500) ? 3000 : 0;
+        setTimeout(function() { if (seq === chatSeq) chatPoll(); }, delay);
+      })
+      .catch(function() {
+        if (seq !== chatSeq) return;
+        chatFails++;
+        setTimeout(function() { if (seq === chatSeq) chatPoll(); },
+          Math.min(15000, 1000 * Math.pow(2, chatFails)));
+      });
+  }
+
+  function chatArrived(added) {
+    var me = chatUser().id || 0, others = 0;
+    added.forEach(function(m) {
+      if (m.uid != me) { others++; chatNewIds[m.id] = true; }
+    });
+    if (chatStick) { chatPaint("bottom"); return; }
+    chatUnread += others;
+    chatPaint("keep");
+  }
+
+  function chatLoadOlder() {
+    var room = chatRoom, R = chatRooms[room], d = chatInitData(), before = chatFirstId(R);
+    if (!d || !before) return;
+    R.loadingOld = true;
+    chatPaint("prepend");
+    fetch(API_CHAT + "?room=" + room + "&before=" + before, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        R.loadingOld = false;
+        if (res && res.ok) {
+          R.more = !!res.more;
+          chatMerge(R, res.messages);
+        } else {
+          R.oldFail = Date.now();
+        }
+        if (chatRoom === room) chatPaint("prepend");
+      })
+      .catch(function() {
+        R.loadingOld = false;
+        R.oldFail = Date.now();
+        if (chatRoom === room) chatPaint("prepend");
+      });
+  }
+
+  function chatSend() {
+    var inp = $("chat-input");
+    var text = (inp.value || "").trim();
+    if (!text) return;
+    if (text.length > 1000) { showToast(L("chatLong")); return; }
+    var u = chatUser(), R = chatRooms[chatRoom];
+    var m = {
+      tmp: true, anim: true, st: "sending",
+      id: "t" + Date.now(),
+      cid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      uid: u.id || 0, name: u.first_name || "Sehrgar", house: cupMe().house,
+      text: text, time: new Date().toISOString()
+    };
+    R.msgs.push(m);
+    inp.value = "";
+    chatGrow();
+    chatSendState();
+    chatPaint("bottom");
+    chatPost(chatRoom, m);
+  }
+
+  // Internet uzilsa o'zi 2 marta qayta urinadi; server cid bo'yicha
+  // takrorni taniydi, shuning uchun xabar ikki marta chiqmaydi.
+  function chatPost(room, m) {
+    var R = chatRooms[room], d = chatInitData();
+    if (m.st !== "sending") {
+      m.st = "sending";
+      m.err = "";
+      if (chatRoom === room) chatPaint("keep");
+    }
+    fetch(API_CHAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ text: m.text, room: room, cid: m.cid, v: 2, initData: d })
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        m.tries = 0;
+        if (res && res.ok && (res.message || res.messages)) {
+          R.msgs = R.msgs.filter(function(x) { return x !== m; });
+          if (res.message) res.message.cid = m.cid;
+          chatMerge(R, res.message ? [res.message] : res.messages);
+        } else if (res && res.error === "slow") {
+          m.st = "failed";
+          m.err = L("chatSlow").replace("%s", res.retry || 5);
+        } else {
+          m.st = "failed";
+          m.err = L("chatFailed");
+        }
+        if (chatRoom === room) chatPaint(chatStick ? "bottom" : "keep");
+      })
+      .catch(function() {
+        m.tries = (m.tries || 0) + 1;
+        if (m.tries < 3) { setTimeout(function() { chatPost(room, m); }, 1500 * m.tries); return; }
+        m.tries = 0;
+        m.st = "failed";
+        m.err = L("chatFailed");
+        if (chatRoom === room) chatPaint("keep");
+      });
+  }
 
   function setChatRoom(room) {
     if (chatRoom === room) return;
     chatRoom = room;
+    chatUnread = 0;
     updateChatRoomUI();
-    fetchChat(true);
+    chatPaint("bottom");
+    chatPoll();
   }
 
   function updateChatRoomUI() {
-    var me = cupMe();
-    var hh = HOUSES[me.house] || {};
-    
-    var tabHouse = $("tab-house");
-    var tabGlobal = $("tab-global");
-    var titleTxt = $("chat-title-txt");
-    var input = $("chat-input");
-
+    var me = cupMe(), hh = HOUSES[me.house] || {};
+    var scr = $("scr-chat"), title = $("chat-title-txt"), inp = $("chat-input");
+    scr.style.setProperty("--me-bg", hh.accent || "var(--accent)");
+    scr.style.setProperty("--me-ink", hh.ink || "#fff");
+    $("tab-house").textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
+    $("tab-global").textContent = L("chatGlobalTab");
+    $("tab-house").classList.toggle("on", chatRoom === "house");
+    $("tab-global").classList.toggle("on", chatRoom === "global");
     if (chatRoom === "house") {
-      if (tabHouse) {
-        tabHouse.style.background = "var(--card)";
-        tabHouse.style.color = "var(--text)";
-        tabHouse.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
-      }
-      if (tabGlobal) {
-        tabGlobal.style.background = "transparent";
-        tabGlobal.style.color = "var(--dim)";
-        tabGlobal.textContent = L("chatGlobalTab");
-      }
-      if (titleTxt) {
-        titleTxt.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
-        titleTxt.style.color = hh.accent || "var(--accent)";
-      }
-      if (input) input.placeholder = L("chatPhHouse");
+      title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
+      title.style.color = hh.accent || "var(--accent)";
+      inp.placeholder = L("chatPhHouse");
     } else {
-      if (tabHouse) {
-        tabHouse.style.background = "transparent";
-        tabHouse.style.color = "var(--dim)";
-        tabHouse.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
-      }
-      if (tabGlobal) {
-        tabGlobal.style.background = "var(--card)";
-        tabGlobal.style.color = "var(--text)";
-        tabGlobal.textContent = L("chatGlobalTab");
-      }
-      if (titleTxt) {
-        titleTxt.textContent = L("chatGlobalTitle");
-        titleTxt.style.color = "var(--text)";
-      }
-      if (input) input.placeholder = L("chatPhGlobal");
-    }
-
-    var msgs = chatMsgsByRoom[chatRoom] || [];
-    if (msgs.length > 0) {
-      renderChat(msgs);
-    } else {
-      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">' + L("loading") + '</div>';
+      title.textContent = L("chatGlobalTitle");
+      title.style.color = "var(--text)";
+      inp.placeholder = L("chatPhGlobal");
     }
   }
 
@@ -5088,176 +5434,75 @@ body{
     applyXT();
     $("scr-cup").classList.add("hidden");
     $("scr-chat").classList.remove("hidden");
-    
     chatRoom = "house";
+    chatOpen = true;
+    chatUnread = 0;
     updateChatRoomUI();
-    
-    fetchChat(true);
-    if (chatTimer) clearInterval(chatTimer);
-    chatTimer = setInterval(function() { fetchChat(false); }, 4000);
-  }
-  
-  function closeChat() {
-    $("scr-chat").classList.add("hidden");
-    $("scr-cup").classList.remove("hidden");
-    if (chatTimer) {
-      clearInterval(chatTimer);
-      chatTimer = null;
-    }
-  }
-  
-  function renderChat(messages) {
-    var box = $("chat-messages");
-    box.innerHTML = "";
-    if (!messages || messages.length === 0) {
-      box.innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">' + L("chatEmpty") + '</div>';
-      return;
-    }
-    
-    var tgUser = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) || {};
-    var meUid = tgUser.id || 0;
-    var myHouse = cupMe().house;
-    var myHh = HOUSES[myHouse] || {};
-    var myAccent = myHh.accent || "var(--accent)";
-    
-    messages.forEach(function(m) {
-      var isMe = (m.uid == meUid);
-      var senderHouse = m.house || (isMe ? myHouse : null);
-      var senderHh = HOUSES[senderHouse] || {};
-      
-      var wrap = document.createElement("div");
-      wrap.style.display = "flex";
-      wrap.style.flexDirection = "column";
-      wrap.style.alignItems = isMe ? "flex-end" : "flex-start";
-      wrap.style.marginBottom = "8px";
-      
-      if (!isMe) {
-        var sender = document.createElement("div");
-        sender.style.display = "flex";
-        sender.style.alignItems = "center";
-        sender.style.gap = "6px";
-        sender.style.fontSize = "12px";
-        sender.style.color = "var(--dim)";
-        sender.style.marginBottom = "4px";
-        sender.style.marginLeft = "4px";
-        
-        var nameSpan = document.createElement("span");
-        nameSpan.textContent = m.name;
-        sender.appendChild(nameSpan);
-        
-        if (chatRoom === "global" && senderHouse && HOUSES[senderHouse]) {
-          var badge = document.createElement("span");
-          var crest = senderHh.crest ? senderHh.crest + " " : "";
-          badge.textContent = crest + cupHouseName(senderHouse);
-          badge.style.fontSize = "11px";
-          badge.style.fontWeight = "600";
-          badge.style.padding = "2px 6px";
-          badge.style.borderRadius = "6px";
-          badge.style.background = "rgba(" + (senderHh.rgb || "151,161,174") + ",.18)";
-          badge.style.color = senderHh.accent || "var(--accent)";
-          sender.appendChild(badge);
-        }
-        
-        wrap.appendChild(sender);
-      }
-      
-      var bubble = document.createElement("div");
-      bubble.style.padding = "10px 14px";
-      bubble.style.borderRadius = "16px";
-      bubble.style.maxWidth = "82%";
-      bubble.style.wordBreak = "break-word";
-      bubble.style.lineHeight = "1.4";
-      bubble.style.fontSize = "15px";
-      
-      if (isMe) {
-        bubble.style.background = myAccent;
-        bubble.style.color = "#fff";
-        bubble.style.borderBottomRightRadius = "4px";
-      } else {
-        bubble.style.background = "var(--card)";
-        bubble.style.color = "var(--text)";
-        bubble.style.border = "1px solid var(--line)";
-        bubble.style.borderBottomLeftRadius = "4px";
-      }
-      
-      bubble.textContent = m.text;
-      wrap.appendChild(bubble);
-      box.appendChild(wrap);
-    });
-    
-    // scroll to bottom
-    box.scrollTop = box.scrollHeight;
+    chatSendState();
+    chatPaint("bottom");
+    chatPoll();
   }
 
-  function fetchChat(force) {
-    if (chatSending) return;
-    var d = "";
-    try { d = (tg && tg.initData) || ""; } catch(e) {}
-    if (!d) return;
-    
-    var currentRoom = chatRoom;
-    fetch(API_CHAT + "?room=" + currentRoom, {
-      headers: { "X-Telegram-Init-Data": d }
-    }).then(function(r) { return r.json(); })
-      .then(function(res) {
-        if (res.ok && res.messages && !chatSending && chatRoom === currentRoom) {
-          var lastMsgs = chatMsgsByRoom[currentRoom] || [];
-          var needsRender = force || (res.messages.length !== lastMsgs.length);
-          if (!needsRender && res.messages.length > 0) {
-            var lastNew = res.messages[res.messages.length - 1];
-            var lastOld = lastMsgs[lastMsgs.length - 1] || {};
-            if (lastNew.id !== lastOld.id) needsRender = true;
-          }
-          chatMsgsByRoom[currentRoom] = res.messages;
-          if (needsRender) {
-            renderChat(res.messages);
-          }
-        }
-      }).catch(function(e) {});
+  function chatStop() {
+    chatOpen = false;
+    chatSeq++;
+    if (chatCtl) { try { chatCtl.abort(); } catch (e) {} chatCtl = null; }
   }
-  
-  function sendChat() {
+
+  function closeChat() {
+    chatStop();
+    $("scr-chat").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+  }
+
+  function chatGrow() {
     var inp = $("chat-input");
-    var text = (inp && inp.value ? inp.value.trim() : "");
-    if (!text) return;
-    
-    var d = "";
-    try { d = (tg && tg.initData) || ""; } catch(e) {}
-    
-    inp.value = "";
-    chatSending = true;
-    var currentRoom = chatRoom;
-    
-    // Optimistik render
-    var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-    var tempMsg = {
-      id: "temp_" + Date.now(),
-      uid: tgUser.id || 0,
-      name: tgUser.first_name || "Sehrgar",
-      house: cupMe().house,
-      text: text,
-      time: new Date().toISOString()
-    };
-    if (!chatMsgsByRoom[currentRoom]) chatMsgsByRoom[currentRoom] = [];
-    chatMsgsByRoom[currentRoom].push(tempMsg);
-    renderChat(chatMsgsByRoom[currentRoom]);
-    
-    fetch(API_CHAT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-      body: JSON.stringify({ text: text, initData: d, room: currentRoom })
-    }).then(function(r) { return r.json(); })
-      .then(function(res) {
-        chatSending = false;
-        if (res.ok && res.messages) {
-          chatMsgsByRoom[currentRoom] = res.messages;
-          if (chatRoom === currentRoom) {
-            renderChat(res.messages);
-          }
-        }
-      }).catch(function(e) {
-        chatSending = false;
-      });
+    inp.style.height = "auto";
+    inp.style.height = Math.min(inp.scrollHeight + 2, 120) + "px";
+  }
+
+  function chatSendState() { $("chat-send").disabled = !$("chat-input").value.trim(); }
+
+  function initChatUI() {
+    var inp = $("chat-input"), btn = $("chat-send"), box = $("chat-messages");
+    $("chat-strip").addEventListener("click", openChat);
+    $("chat-back").addEventListener("click", closeChat);
+    $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
+    $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
+    inp.addEventListener("input", function() {
+      var stick = chatStick;
+      chatGrow();
+      chatSendState();
+      if (stick) box.scrollTop = box.scrollHeight;
+    });
+    // Kompyuterda Enter - yuborish, Shift+Enter - yangi qator. Telefonda Enter yangi qator.
+    inp.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !chatTouch) {
+        e.preventDefault();
+        chatSend();
+      }
+    });
+    $("chat-form").addEventListener("submit", function(e) { e.preventDefault(); chatSend(); });
+    // Tugma bosilganda yozish maydoni fokusni yo'qotmaydi - klaviatura yopilib-ochilmaydi.
+    btn.addEventListener("mousedown", function(e) { e.preventDefault(); });
+    btn.addEventListener("touchend", function(e) { e.preventDefault(); chatSend(); });
+    btn.addEventListener("click", function(e) { e.preventDefault(); chatSend(); });
+    box.addEventListener("scroll", chatScrolled, { passive: true });
+    $("chat-down").addEventListener("click", function() {
+      chatUnread = 0;
+      if (box.scrollTo) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
+      else box.scrollTop = box.scrollHeight;
+    });
+    // Klaviatura ochilib oyna kichraysa - pastda turgan odam pastda qoladi.
+    function keepBottom() {
+      setTimeout(function() { if (chatOpen && chatStick) box.scrollTop = box.scrollHeight; }, 60);
+    }
+    window.addEventListener("resize", keepBottom);
+    if (tg && tg.onEvent) tg.onEvent("viewportChanged", keepBottom);
+    // Ilova qaytib ochilganda kutib qolmay darhol yangilanadi.
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden && chatOpen) chatPoll();
+    });
   }
 
   var CHESS_SVGS = {
@@ -6205,22 +6450,7 @@ body{
       openTasks();
     });
     
-    $("chat-strip").addEventListener("click", openChat);
-    $("chat-back").addEventListener("click", closeChat);
-    $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
-    $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
-    
-    var chatForm = $("chat-form");
-    if (chatForm) {
-      chatForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        sendChat();
-      });
-    }
-    $("chat-send").addEventListener("click", function(e) {
-      e.preventDefault();
-      sendChat();
-    });
+    initChatUI();
 
     // Chess events
     $("chess-strip").addEventListener("click", openChessHub);
