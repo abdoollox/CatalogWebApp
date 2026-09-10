@@ -862,7 +862,7 @@ body{
         <span class="kicker" id="prof-kicker">Profil</span>
         <h1 id="prof-heading">Sehrgar</h1>
       </div>
-      <button class="back-btn" id="prof-back"><span style="font-size:13px">‹</span> <span id="prof-back-txt">Ortga</span></button>
+      <button class="back-btn" id="prof-back"><span style="font-size:13px">‹</span> <span id="prof-back-txt" data-xt="back">Ortga</span></button>
     </div>
 
     <div class="checklist" id="checklist"></div>
@@ -919,7 +919,7 @@ body{
       <div style="display:flex;flex-direction:column;gap:2px">
         <span class="kicker" id="det-kicker">Tayoqcha</span>
       </div>
-      <button class="back-btn" id="det-back"><span style="font-size:13px">‹</span> <span id="det-back-txt">Ortga</span></button>
+      <button class="back-btn" id="det-back"><span style="font-size:13px">‹</span> <span id="det-back-txt" data-xt="back">Ortga</span></button>
     </div>
 
     <div class="det-hero">
@@ -973,7 +973,7 @@ body{
     <div class="sort-bar" id="sort-bar"></div>
     <div class="sort-head">
       <span class="sort-step" id="sort-step"></span>
-      <button class="sort-back" id="sort-back"><span style="font-size:12px">‹</span> <span id="sort-back-txt">Ortga</span></button>
+      <button class="sort-back" id="sort-back"><span style="font-size:12px">‹</span> <span id="sort-back-txt" data-xt="back">Ortga</span></button>
     </div>
     <span class="hat-say" id="hat-say"></span>
     <h2 class="sort-q" id="sort-q"></h2>
@@ -998,7 +998,7 @@ body{
   <!-- Xogvarts kubogi: to'liq reyting ekrani -->
   <div id="scr-cup" class="screen hidden">
     <div class="cup-hdr">
-      <button class="back-btn" id="cup-back"><span style="font-size:13px">‹</span> <span id="cup-back-txt">Ortga</span></button>
+      <button class="back-btn" id="cup-back"><span style="font-size:13px">‹</span> <span id="cup-back-txt" data-xt="back">Ortga</span></button>
       <span class="cup-timer"><i></i><span id="cup-timer-txt"></span></span>
     </div>
 
@@ -1022,17 +1022,17 @@ body{
     
     <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 10px;">
       <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="chat-kicker">UMUMIY XONA</span>
+        <span class="cup-strip-kicker" id="chat-kicker" data-xt="chatKicker">UMUMIY XONA</span>
       </span>
-      <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Fakultetdoshlar bilan suhbat ›</span>
+      <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;" data-xt="chatStrip">Fakultetdoshlar bilan suhbat ›</span>
     </button>
 
     <button class="cup-strip hidden" id="chess-strip" style="border-left-color: #9b59b6; margin-bottom: 20px;">
       <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="chess-kicker" style="color: #9b59b6;">SEHRGAR SHAXMATI</span>
+        <span class="cup-strip-kicker" id="chess-kicker" style="color: #9b59b6;" data-xt="chessKicker">SEHRGAR SHAXMATI</span>
         <span class="cup-strip-time"><i style="background:#9b59b6"></i><span>BLITZ 5:00</span></span>
       </span>
-      <span id="chess-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Botlar va Do'stlar bilan jangga kiring ›</span>
+      <span id="chess-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;" data-xt="chessStrip">Botlar va Do'stlar bilan jangga kiring ›</span>
     </button>
 
     <!-- Do'stlar reytingi: fakultetdan qat'i nazar hammaga ko'rinadi. -->
@@ -1072,7 +1072,7 @@ body{
   <!-- Do'stlar reytingi: kim ko'proq do'st taklif qilgan + qanday ishlashi -->
   <div id="scr-refs" class="screen hidden">
     <div class="cup-hdr">
-      <button class="back-btn" id="refs-back"><span style="font-size:13px">‹</span> <span id="refs-back-txt">Ortga</span></button>
+      <button class="back-btn" id="refs-back"><span style="font-size:13px">‹</span> <span id="refs-back-txt" data-xt="back">Ortga</span></button>
     </div>
     <div class="cup-head">
       <span class="cup-kick" id="refs-kick"></span>
@@ -1091,7 +1091,7 @@ body{
   <!-- Fakultet zali to'liq ro'yxati -->
   <div id="scr-hall-full" class="screen hidden">
     <div class="cup-hdr">
-      <button class="back-btn" id="hall-back"><span style="font-size:13px">‹</span> <span id="hall-back-txt">Ortga</span></button>
+      <button class="back-btn" id="hall-back"><span style="font-size:13px">‹</span> <span id="hall-back-txt" data-xt="back">Ortga</span></button>
     </div>
     <div class="hall" style="margin-top: 15px; margin-bottom: 30px;">
       <div class="hall-top">
@@ -1108,7 +1108,7 @@ body{
   <!-- Feed to'liq ro'yxati -->
   <div id="scr-feed-full" class="screen hidden">
     <div class="cup-hdr">
-      <button class="back-btn" id="feed-back"><span style="font-size:13px">‹</span> <span id="feed-back-txt">Ortga</span></button>
+      <button class="back-btn" id="feed-back"><span style="font-size:13px">‹</span> <span id="feed-back-txt" data-xt="back">Ortga</span></button>
     </div>
     <div class="feed" style="margin-top: 15px; margin-bottom: 30px;">
       <div class="feed-kick" id="feed-full-kick"></div>
@@ -1140,8 +1140,8 @@ body{
 
   <div id="scr-chat" class="screen hidden" style="padding-bottom: 75px;">
     <div class="cup-hdr">
-      <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt">Ortga</span></button>
-      <div id="chat-title-txt" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;">Muloqot</div>
+      <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt" data-xt="back">Ortga</span></button>
+      <div id="chat-title-txt" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px;" data-xt="chatTitle">Muloqot</div>
     </div>
     <div class="chat-tabs" style="display:flex; gap:8px; margin:12px 0 6px; background:var(--bg2); padding:4px; border-radius:14px; border:1px solid var(--line);">
       <button type="button" id="tab-house" style="flex:1; padding:9px 6px; border-radius:10px; border:none; font-weight:600; font-size:13px; cursor:pointer; transition:all .2s; background:var(--card); color:var(--text);">Umumiy xona</button>
@@ -1150,7 +1150,7 @@ body{
     <div id="chat-messages" style="padding: 10px 4px; display:flex; flex-direction:column; gap:12px; min-height: 200px;">
     </div>
     <form id="chat-form" onsubmit="return false;" style="position:fixed; bottom:0; left:0; right:0; max-width:440px; margin:0 auto; padding:12px 18px; background:var(--bg); border-top:1px solid var(--line); display:flex; gap:10px; z-index:100;">
-      <input type="text" id="chat-input" placeholder="Xabar yozing..." autocomplete="off" style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; font-size:15px;">
+      <input type="text" id="chat-input" placeholder="Xabar yozing..." data-xt-ph="chatPh" autocomplete="off" style="flex:1; padding:12px 16px; border-radius:20px; border:1px solid var(--line); background:var(--card); color:var(--text); outline:none; font-size:15px;">
       <button type="submit" id="chat-send" style="background:var(--accent); color:#fff; border:none; border-radius:50%; width:44px; height:44px; min-width:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
@@ -1160,47 +1160,47 @@ body{
   <!-- SEHRGAR SHAXMATI: HUB -->
   <div id="scr-chess-hub" class="screen hidden">
     <div class="cup-hdr">
-      <button class="back-btn" id="chess-hub-back"><span style="font-size:13px">‹</span> <span id="chess-hub-back-txt">Ortga</span></button>
-      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #9b59b6;">Sehrgar Shaxmati</div>
+      <button class="back-btn" id="chess-hub-back"><span style="font-size:13px">‹</span> <span id="chess-hub-back-txt" data-xt="back">Ortga</span></button>
+      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #9b59b6;" data-xt="chessHubTitle">Sehrgar Shaxmati</div>
     </div>
     
     <div style="margin-top: 15px; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 18px;">
       <div style="font-size: 40px; margin-bottom: 8px;">♟️ ♞ ♚</div>
-      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0 0 6px; color: var(--text);">Sehrgarlar Shaxmat Jangi</h2>
-      <p style="color: var(--dim); font-size: 14px; margin: 0; line-height: 1.4;">"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!" — 5 daqiqalik Blitz bahslarida qatnashing.</p>
+      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0 0 6px; color: var(--text);" data-xt="chessHero">Sehrgarlar Shaxmat Jangi</h2>
+      <p style="color: var(--dim); font-size: 14px; margin: 0; line-height: 1.4;" data-xt="chessHeroSub">"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!" — 5 daqiqalik Blitz bahslarida qatnashing.</p>
     </div>
 
     <!-- BOT BILAN O'YNASH REJIMI -->
     <div style="margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
       <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>🤖</span> <span>Botga qarshi o'ynash (Mashg'ulot)</span>
+        <span>🤖</span> <span data-xt="chessBotHead">Botga qarshi o'ynash (Mashg'ulot)</span>
       </div>
       
       <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
         <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
           <input type="radio" name="chess-bot-diff" value="easy" checked style="accent-color: #9b59b6;">
           <div>
-            <div style="font-weight: 600; font-size: 14px;">🟢 Ron Uizli (Oson)</div>
-            <div style="color: var(--dim); font-size: 12px;">Yangi boshlovchilar uchun</div>
+            <div style="font-weight: 600; font-size: 14px;" data-xt="botEasy">🟢 Ron Uizli (Oson)</div>
+            <div style="color: var(--dim); font-size: 12px;" data-xt="botEasySub">Yangi boshlovchilar uchun</div>
           </div>
         </label>
         <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
           <input type="radio" name="chess-bot-diff" value="med" style="accent-color: #9b59b6;">
           <div>
-            <div style="font-weight: 600; font-size: 14px;">🟡 Germiona Grenjer (O'rta)</div>
-            <div style="color: var(--dim); font-size: 12px;">Mantiqiy va taktik yurishlar</div>
+            <div style="font-weight: 600; font-size: 14px;" data-xt="botMed">🟡 Germiona Grenjer (O'rta)</div>
+            <div style="color: var(--dim); font-size: 12px;" data-xt="botMedSub">Mantiqiy va taktik yurishlar</div>
           </div>
         </label>
         <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
           <input type="radio" name="chess-bot-diff" value="hard" style="accent-color: #9b59b6;">
           <div>
-            <div style="font-weight: 600; font-size: 14px;">🔴 Prof. Makgonagall (Qiyin)</div>
-            <div style="color: var(--dim); font-size: 12px;">Sehrgar grossmeyster darajasi</div>
+            <div style="font-weight: 600; font-size: 14px;" data-xt="botHard">🔴 Prof. Makgonagall (Qiyin)</div>
+            <div style="color: var(--dim); font-size: 12px;" data-xt="botHardSub">Sehrgar grossmeyster darajasi</div>
           </div>
         </label>
       </div>
 
-      <button id="btn-start-bot-game" class="btn" style="width: 100%; background: #9b59b6; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer;">
+      <button id="btn-start-bot-game" class="btn" style="width: 100%; background: #9b59b6; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer;" data-xt="startBot">
         ⚔️ Bot bilan o'yinni boshlash (5:00)
       </button>
     </div>
@@ -1208,16 +1208,16 @@ body{
     <!-- DO'ST BILAN O'YNASH REJIMI -->
     <div style="margin-top: 18px; margin-bottom: 30px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
       <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>⚔️</span> <span>Do'st bilan 1v1 PvP Blitz</span>
+        <span>⚔️</span> <span data-xt="pvpHead">Do'st bilan 1v1 PvP Blitz</span>
       </div>
       
-      <button id="btn-create-pvp-game" style="width: 100%; background: var(--bg2); border: 1px solid var(--line); color: var(--text); padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; margin-bottom: 12px; cursor: pointer;">
+      <button id="btn-create-pvp-game" style="width: 100%; background: var(--bg2); border: 1px solid var(--line); color: var(--text); padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; margin-bottom: 12px; cursor: pointer;" data-xt="createGame">
         ➕ Yangi o'yin yaratish
       </button>
 
       <div style="display: flex; gap: 8px;">
-        <input type="text" id="input-join-code" placeholder="O'yin kodi (masalan: 9a3f2b1c)" style="flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); outline: none; font-size: 14px;">
-        <button id="btn-join-pvp-game" style="background: #9b59b6; color: #fff; border: none; padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;">
+        <input type="text" id="input-join-code" placeholder="O'yin kodi (masalan: 9a3f2b1c)" data-xt-ph="joinPh" style="flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); outline: none; font-size: 14px;">
+        <button id="btn-join-pvp-game" style="background: #9b59b6; color: #fff; border: none; padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;" data-xt="join">
           Ulanish
         </button>
       </div>
@@ -1227,7 +1227,7 @@ body{
   <!-- SEHRGAR SHAXMATI: GAMEPLAY -->
   <div id="scr-chess-game" class="screen hidden" style="padding-bottom: 30px;">
     <div class="cup-hdr">
-      <button class="back-btn" id="chess-game-back"><span style="font-size:13px">‹</span> <span id="chess-game-back-txt">Chiqish</span></button>
+      <button class="back-btn" id="chess-game-back"><span style="font-size:13px">‹</span> <span id="chess-game-back-txt" data-xt="exit">Chiqish</span></button>
       <div id="chess-status-badge" style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 14px; color: #f1c40f;">Sizning navbatingiz</div>
     </div>
 
@@ -1238,7 +1238,7 @@ body{
         <div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <div id="chess-opp-name" style="font-weight: 600; font-size: 14px;">Ron Uizli</div>
-            <button id="chess-invite-btn" class="hidden" style="padding: 2px 8px; border-radius: 6px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px;">Ulashish</button>
+            <button id="chess-invite-btn" class="hidden" style="padding: 2px 8px; border-radius: 6px; background: var(--accent); color: var(--accent-ink); font-size: 11px; font-weight: 600; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px;" data-xt="share">Ulashish</button>
           </div>
           <div id="chess-opp-sub" style="font-size: 12px; color: var(--dim);">Qora donalar</div>
         </div>
@@ -1254,7 +1254,7 @@ body{
         <div id="chess-overlay-icon" style="font-size: 48px; margin-bottom: 10px;">🏆</div>
         <div id="chess-overlay-title" style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px;">G'alaba!</div>
         <div id="chess-overlay-desc" style="font-size: 14px; color: var(--dim); margin-bottom: 16px;">Mot qildingiz. Fakultetingizga +10 ball qo'shildi!</div>
-        <button id="btn-chess-overlay-ok" style="background: #9b59b6; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+        <button id="btn-chess-overlay-ok" style="background: #9b59b6; color: #fff; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 600; cursor: pointer;" data-xt="cont">
           Davom etish
         </button>
       </div>
@@ -1274,7 +1274,7 @@ body{
 
     <!-- O'YIN BOSHQARUVI -->
     <div style="display: flex; gap: 10px; margin-top: 10px;">
-      <button id="btn-chess-resign" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: #e74c3c; font-weight: 600; font-size: 14px; cursor: pointer;">
+      <button id="btn-chess-resign" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: #e74c3c; font-weight: 600; font-size: 14px; cursor: pointer;" data-xt="resign">
         🏳️ Taslim bo'lish
       </button>
     </div>
@@ -2567,10 +2567,10 @@ body{
     $("tasks-title").textContent = lang === "uz" ? "Imtihonlar va Kunlik savollar ›" : lang === "ru" ? "Экзамены и Ежедневные вопросы ›" : "Exams and Daily questions ›";
     
     if (count > 0) {
-      $("tasks-count").textContent = count + (lang === "uz" ? " ta yangi" : " new");
+      $("tasks-count").textContent = count + (lang === "uz" ? " ta yangi" : lang === "ru" ? " новых" : " new");
       $("tasks-count").parentNode.querySelector("i").style.display = "";
     } else {
-      $("tasks-count").textContent = (lang === "uz" ? "Bajarildi" : "Done");
+      $("tasks-count").textContent = (lang === "uz" ? "Bajarildi" : lang === "ru" ? "Выполнено" : "Done");
       $("tasks-count").parentNode.querySelector("i").style.display = "none";
     }
   }
@@ -3426,6 +3426,9 @@ body{
 
   function renderCupScreen() {
     var t = T[lang];
+    applyXT();
+    // Vazifalar tasmasi til tanlanishidan oldin chizilgan bo'lishi mumkin
+    if (!$("tasks-strip").classList.contains("hidden")) { renderTasksStrip(); }
     var list = cupSorted();
     var me = cupMe();
 
@@ -4240,6 +4243,7 @@ body{
 
   function openCatalog(code, remember) {
     lang = code;
+    applyXT();
     if (remember) { saveLang(code); }
     stopSortTimer();
     $("scr-detail").classList.add("hidden");
@@ -4859,6 +4863,141 @@ body{
     renderCupStrip();
   }
 
+  /* ---------- CHAT VA SHAXMAT MATNLARI (uch tilda) ----------
+     Ekrandagi qat'iy yozuvlar HTML da data-xt="kalit" (placeholder uchun
+     data-xt-ph) bilan belgilangan - applyXT() ularni joriy tilga
+     almashtiradi. Kod ichidagi matnlar L("kalit") orqali olinadi. */
+  var XT = {
+    uz: {
+      back: "Ortga", chatTitle: "Muloqot", chatKicker: "Umumiy xona",
+      chatStrip: "Fakultetdoshlar bilan suhbat ›", chessKicker: "Sehrgar shaxmati",
+      chessStrip: "Botlar va do'stlar bilan jangga kiring ›",
+      chatGlobalTab: "🏰 Katta zal", chatHouseTitle: "%s umumiy xonasi",
+      chatGlobalTitle: "Katta zal (hamma uchun)", chatPh: "Xabar yozing...",
+      chatPhHouse: "Fakultetdoshlarga yozing...", chatPhGlobal: "Barcha o'quvchilarga yozing...",
+      loading: "Yuklanmoqda...", chatEmpty: "Hozircha xabarlar yo'q. Birinchi bo'lib yozing!",
+      chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
+      chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
+      chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
+      botEasy: "🟢 Ron Uizli (oson)", botEasySub: "Yangi boshlovchilar uchun",
+      botMed: "🟡 Germiona Grenjer (o'rta)", botMedSub: "Mantiqiy va taktik yurishlar",
+      botHard: "🔴 Prof. Makgonagall (qiyin)", botHardSub: "Sehrgar grossmeyster darajasi",
+      botNames: { easy: "Ron Uizli", med: "Germiona Grenjer", hard: "Prof. Makgonagall" },
+      startBot: "⚔️ Bot bilan o'yinni boshlash (5:00)", pvpHead: "Do'st bilan 1v1 blits",
+      createGame: "➕ Yangi o'yin yaratish", joinPh: "O'yin kodi (masalan: 9a3f2b1c)", join: "Ulanish",
+      exit: "Chiqish", share: "Ulashish", cont: "Davom etish", resign: "🏳️ Taslim bo'lish",
+      yourTurn: "Sizning navbatingiz", oppThinking: "Raqib o'ylamoqda...", opp: "Raqib", you: "Siz",
+      white: "Oq donalar", black: "Qora donalar", waitFriend: "Do'stingiz (kutilmoqda...)",
+      win: "G'alaba!", loss: "Mag'lubiyat", draw: "Durang",
+      lossTail: "Yana bir bor mashq qilib ko'ring!", drawTail: "Kuchlar teng keldi!",
+      winPts: "Fakultetingizga +%d ball qo'shildi!",
+      limitFull: "Bu mavsumda shaxmat ballari to'lgan (%d ta o'yin).",
+      r_mate: "Mot", r_stalemate: "Pat", r_over: "O'yin tugadi",
+      r_timeout_loss: "Vaqtingiz tugadi", r_timeout_win: "Raqibning vaqti tugadi",
+      r_resign_loss: "Taslim bo'ldingiz", r_resign_win: "Raqib taslim bo'ldi",
+      r_left_loss: "O'yinni tark etdingiz", r_left_win: "Raqib o'yinni tark etdi",
+      inviteText: "Sehrgar shaxmati (blits) o'ynaymizmi? ♟️\n\nHavolani bosing: ",
+      linkPrompt: "Do'stingizga yuborish uchun havola:",
+      joinFail: "O'yinga ulanib bo'lmadi: ", err: "Xato",
+      leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin bekor qilinadi)",
+      resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?"
+    },
+    ru: {
+      back: "Назад", chatTitle: "Общение", chatKicker: "Гостиная",
+      chatStrip: "Беседа с однокурсниками факультета ›", chessKicker: "Волшебные шахматы",
+      chessStrip: "Сразитесь с ботами и друзьями ›",
+      chatGlobalTab: "🏰 Большой зал", chatHouseTitle: "Гостиная: %s",
+      chatGlobalTitle: "Большой зал (для всех)", chatPh: "Напишите сообщение...",
+      chatPhHouse: "Напишите своему факультету...", chatPhGlobal: "Напишите всем ученикам...",
+      loading: "Загрузка...", chatEmpty: "Сообщений пока нет. Напишите первым!",
+      chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
+      chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
+      chessBotHead: "Игра против бота (тренировка)",
+      botEasy: "🟢 Рон Уизли (легко)", botEasySub: "Для новичков",
+      botMed: "🟡 Гермиона Грейнджер (средне)", botMedSub: "Логичные и тактические ходы",
+      botHard: "🔴 Проф. Макгонагалл (сложно)", botHardSub: "Уровень гроссмейстера-волшебника",
+      botNames: { easy: "Рон Уизли", med: "Гермиона Грейнджер", hard: "Проф. Макгонагалл" },
+      startBot: "⚔️ Начать игру с ботом (5:00)", pvpHead: "Блиц 1 на 1 с другом",
+      createGame: "➕ Создать новую игру", joinPh: "Код игры (например: 9a3f2b1c)", join: "Войти",
+      exit: "Выйти", share: "Поделиться", cont: "Продолжить", resign: "🏳️ Сдаться",
+      yourTurn: "Ваш ход", oppThinking: "Соперник думает...", opp: "Соперник", you: "Вы",
+      white: "Белые", black: "Чёрные", waitFriend: "Друг (ожидание...)",
+      win: "Победа!", loss: "Поражение", draw: "Ничья",
+      lossTail: "Потренируйтесь и попробуйте снова!", drawTail: "Силы оказались равны!",
+      winPts: "Вашему факультету +%d очков!",
+      limitFull: "Шахматные очки в этом сезоне исчерпаны (%d игр).",
+      r_mate: "Мат", r_stalemate: "Пат", r_over: "Игра окончена",
+      r_timeout_loss: "Ваше время вышло", r_timeout_win: "Время соперника вышло",
+      r_resign_loss: "Вы сдались", r_resign_win: "Соперник сдался",
+      r_left_loss: "Вы покинули игру", r_left_win: "Соперник покинул игру",
+      inviteText: "Сыграем в волшебные шахматы (блиц)? ♟️\n\nНажмите на ссылку: ",
+      linkPrompt: "Ссылка для друга:",
+      joinFail: "Не удалось подключиться к игре: ", err: "Ошибка",
+      leaveAsk: "Выйти из игры? (Игра будет отменена)",
+      resignAsk: "Вы действительно хотите сдаться?"
+    },
+    en: {
+      back: "Back", chatTitle: "Chat", chatKicker: "Common room",
+      chatStrip: "Chat with your housemates ›", chessKicker: "Wizard's chess",
+      chessStrip: "Battle bots and friends ›",
+      chatGlobalTab: "🏰 Great Hall", chatHouseTitle: "%s common room",
+      chatGlobalTitle: "Great Hall (everyone)", chatPh: "Write a message...",
+      chatPhHouse: "Write to your house...", chatPhGlobal: "Write to all students...",
+      loading: "Loading...", chatEmpty: "No messages yet. Be the first to write!",
+      chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
+      chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
+      chessBotHead: "Play against a bot (practice)",
+      botEasy: "🟢 Ron Weasley (easy)", botEasySub: "For beginners",
+      botMed: "🟡 Hermione Granger (medium)", botMedSub: "Logical, tactical moves",
+      botHard: "🔴 Prof. McGonagall (hard)", botHardSub: "Wizard grandmaster level",
+      botNames: { easy: "Ron Weasley", med: "Hermione Granger", hard: "Prof. McGonagall" },
+      startBot: "⚔️ Start a game with the bot (5:00)", pvpHead: "1v1 blitz with a friend",
+      createGame: "➕ Create a new game", joinPh: "Game code (e.g. 9a3f2b1c)", join: "Join",
+      exit: "Exit", share: "Share", cont: "Continue", resign: "🏳️ Resign",
+      yourTurn: "Your turn", oppThinking: "Opponent is thinking...", opp: "Opponent", you: "You",
+      white: "White", black: "Black", waitFriend: "Your friend (waiting...)",
+      win: "Victory!", loss: "Defeat", draw: "Draw",
+      lossTail: "Practice and try again!", drawTail: "Evenly matched!",
+      winPts: "+%d points for your house!",
+      limitFull: "Chess points for this season are maxed out (%d games).",
+      r_mate: "Checkmate", r_stalemate: "Stalemate", r_over: "Game over",
+      r_timeout_loss: "Your time ran out", r_timeout_win: "Your opponent's time ran out",
+      r_resign_loss: "You resigned", r_resign_win: "Your opponent resigned",
+      r_left_loss: "You left the game", r_left_win: "Your opponent left the game",
+      inviteText: "Up for a game of wizard's chess (blitz)? ♟️\n\nTap the link: ",
+      linkPrompt: "Link to send to your friend:",
+      joinFail: "Couldn't join the game: ", err: "Error",
+      leaveAsk: "Leave the game? (It will be cancelled)",
+      resignAsk: "Do you really want to resign?"
+    }
+  };
+
+  function L(key) {
+    var d = XT[lang] || XT.uz;
+    return d[key] !== undefined ? d[key] : XT.uz[key];
+  }
+
+  function applyXT() {
+    var i, els = document.querySelectorAll("[data-xt]");
+    for (i = 0; i < els.length; i++) { els[i].textContent = L(els[i].getAttribute("data-xt")); }
+    els = document.querySelectorAll("[data-xt-ph]");
+    for (i = 0; i < els.length; i++) { els[i].placeholder = L(els[i].getAttribute("data-xt-ph")); }
+  }
+
+  // Shaxmat natijasi serverda KOD bilan saqlanadi ("resign", "timeout"...)
+  // va har bir o'yinchiga o'z tomonidan ko'rsatiladi: taslim bo'lgan -
+  // "Taslim bo'ldingiz", g'olib - "Raqib taslim bo'ldi". Ilgari matn
+  // saqlanardi va g'olib ham "Taslim bo'ldingiz" ni ko'rardi.
+  // Eski o'yinlarda saqlangan matn kod emas - o'shandayligicha ko'rsatiladi.
+  function reasonText(code, result) {
+    if (code === "checkmate") { code = "mate"; }
+    var side = result === "win" ? "_win" : "_loss";
+    var d = XT[lang] || XT.uz;
+    if (d["r_" + code + side] !== undefined) { return d["r_" + code + side]; }
+    if (d["r_" + code] !== undefined) { return d["r_" + code]; }
+    return String(code || "");
+  }
+
   function goBack() {
     stopSortTimer();
     $("scr-detail").classList.add("hidden");
@@ -4912,13 +5051,13 @@ body{
       if (tabGlobal) {
         tabGlobal.style.background = "transparent";
         tabGlobal.style.color = "var(--dim)";
-        tabGlobal.textContent = "🏰 Katta zal";
+        tabGlobal.textContent = L("chatGlobalTab");
       }
       if (titleTxt) {
-        titleTxt.textContent = cupHouseName(me.house) + " Umumiy Xonasi";
+        titleTxt.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
         titleTxt.style.color = hh.accent || "var(--accent)";
       }
-      if (input) input.placeholder = "Fakultetdoshlarga yozing...";
+      if (input) input.placeholder = L("chatPhHouse");
     } else {
       if (tabHouse) {
         tabHouse.style.background = "transparent";
@@ -4928,24 +5067,25 @@ body{
       if (tabGlobal) {
         tabGlobal.style.background = "var(--card)";
         tabGlobal.style.color = "var(--text)";
-        tabGlobal.textContent = "🏰 Katta zal";
+        tabGlobal.textContent = L("chatGlobalTab");
       }
       if (titleTxt) {
-        titleTxt.textContent = "Katta Zal (Umumiy)";
+        titleTxt.textContent = L("chatGlobalTitle");
         titleTxt.style.color = "var(--text)";
       }
-      if (input) input.placeholder = "Barcha o'quvchilarga yozing...";
+      if (input) input.placeholder = L("chatPhGlobal");
     }
 
     var msgs = chatMsgsByRoom[chatRoom] || [];
     if (msgs.length > 0) {
       renderChat(msgs);
     } else {
-      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Yuklanmoqda...</div>';
+      $("chat-messages").innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">' + L("loading") + '</div>';
     }
   }
 
   function openChat() {
+    applyXT();
     $("scr-cup").classList.add("hidden");
     $("scr-chat").classList.remove("hidden");
     
@@ -4970,7 +5110,7 @@ body{
     var box = $("chat-messages");
     box.innerHTML = "";
     if (!messages || messages.length === 0) {
-      box.innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">Hozircha xabarlar yo\'q. Birinchi bo\'lib yozing!</div>';
+      box.innerHTML = '<div style="text-align:center; color:var(--dim); margin-top:20px;">' + L("chatEmpty") + '</div>';
       return;
     }
     
@@ -5581,12 +5721,12 @@ body{
     if (isMyTurn) {
       myClock.style.color = (mySecs <= 30 ? "#e74c3c" : "#2ecc71");
       oppClock.style.color = "var(--dim)";
-      $("chess-status-badge").textContent = "Sizning navbatingiz";
+      $("chess-status-badge").textContent = L("yourTurn");
       $("chess-status-badge").style.color = "#f1c40f";
     } else {
       oppClock.style.color = (oppSecs <= 30 ? "#e74c3c" : "#f1c40f");
       myClock.style.color = "var(--dim)";
-      $("chess-status-badge").textContent = "Raqib o'ylamoqda...";
+      $("chess-status-badge").textContent = L("oppThinking");
       $("chess-status-badge").style.color = "var(--dim)";
     }
   }
@@ -5603,11 +5743,11 @@ body{
           
           // Opponent joined!
           if (chessState.myColor === "w" && game.black_uid && $("chess-opp-name").textContent.indexOf("Do'stingiz") > -1) {
-             $("chess-opp-name").textContent = game.black_name || "Raqib";
+             $("chess-opp-name").textContent = game.black_name || L("opp");
              $("chess-opp-avatar").textContent = "⚔️";
              var invBtn = $("chess-invite-btn"); if (invBtn) invBtn.classList.add("hidden");
           } else if (chessState.myColor === "b" && game.white_uid && $("chess-opp-name").textContent.indexOf("Do'stingiz") > -1) {
-             $("chess-opp-name").textContent = game.white_name || "Raqib";
+             $("chess-opp-name").textContent = game.white_name || L("opp");
              $("chess-opp-avatar").textContent = "⚔️";
              var invBtn = $("chess-invite-btn"); if (invBtn) invBtn.classList.add("hidden");
           }
@@ -5629,9 +5769,9 @@ body{
                var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
                if (nextLegal.length === 0) {
                  if (isKingInCheck(chessState.board, chessState.turn)) {
-                   finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
+                   finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
                  } else {
-                   finishChessGame("draw", "Pat (Durang)");
+                   finishChessGame("draw", "stalemate");
                  }
                }
              }
@@ -5639,7 +5779,7 @@ body{
           
           if (game.status === "finished" && !chessState.gameOver) {
              var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-             finishChessGame(game.winner_uid == (tgUser.id||0) ? "win" : "loss", game.win_reason || "O'yin tugadi");
+             finishChessGame(game.winner_uid == (tgUser.id||0) ? "win" : "loss", game.win_reason || "over");
           }
         }
       }).catch(function(){});
@@ -5653,10 +5793,10 @@ body{
       if (chessState.gameOver) return;
       if (chessState.turn === "w") {
         chessState.whiteTime = Math.max(0, chessState.whiteTime - 1);
-        if (chessState.whiteTime === 0) finishChessGame(chessState.myColor === "w" ? "loss" : "win", "Vaqt tugadi");
+        if (chessState.whiteTime === 0) finishChessGame(chessState.myColor === "w" ? "loss" : "win", "timeout");
       } else {
         chessState.blackTime = Math.max(0, chessState.blackTime - 1);
-        if (chessState.blackTime === 0) finishChessGame(chessState.myColor === "b" ? "loss" : "win", "Vaqt tugadi");
+        if (chessState.blackTime === 0) finishChessGame(chessState.myColor === "b" ? "loss" : "win", "timeout");
       }
       updateChessClocks();
     }, 1000);
@@ -5826,11 +5966,11 @@ body{
     }
 
     if (isMate) {
-      finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "Mot");
+      finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
       return;
     }
     if (isDraw) {
-      finishChessGame("draw", "Pat (Durang)");
+      finishChessGame("draw", "stalemate");
       return;
     }
 
@@ -5857,24 +5997,25 @@ body{
     var desc = $("chess-overlay-desc");
     
     var myUid = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0);
+    var rtxt = reasonText(reason, result);
 
     if (result === "win") {
       icon.textContent = "🏆";
-      title.textContent = "G'alaba!";
+      title.textContent = L("win");
       title.style.color = "#2ecc71";
       // Ball haqidagi yozuv server javobidan keyin qo'yiladi: bot bilan
       // o'yin ball bermaydi, jonli o'yinda esa mavsumdagi cheklov bor.
-      desc.textContent = reason + ".";
+      desc.textContent = rtxt + ".";
     } else if (result === "loss") {
       icon.textContent = "💀";
-      title.textContent = "Mag'lubiyat";
+      title.textContent = L("loss");
       title.style.color = "#e74c3c";
-      desc.textContent = reason + ". Yana bir bor mashq qilib ko'ring!";
+      desc.textContent = rtxt + ". " + L("lossTail");
     } else {
       icon.textContent = "🤝";
-      title.textContent = "Durang";
+      title.textContent = L("draw");
       title.style.color = "#f1c40f";
-      desc.textContent = reason + ". Kuchlar teng keldi!";
+      desc.textContent = rtxt + ". " + L("drawTail");
     }
 
     // Har qanday natijada serverga xabar berish (faqat PvP bo'lsa)
@@ -5892,10 +6033,9 @@ body{
          }).then(function (r) { return r.json(); }).then(function (res) {
            if (!res) { return; }
            if (res.points) {
-             desc.textContent = reason + ". Fakultetingizga +" + res.points + " ball qo'shildi!";
+             desc.textContent = rtxt + ". " + L("winPts").replace("%d", res.points);
            } else if (res.limit_reached) {
-             desc.textContent = reason + ". Bu mavsumda shaxmat ballari to'lgan ("
-                              + res.limit + " ta o'yin).";
+             desc.textContent = rtxt + ". " + L("limitFull").replace("%d", res.limit);
            }
          })["catch"](function() {});
        }
@@ -5905,6 +6045,7 @@ body{
   }
 
   function openChessHub() {
+    applyXT();
     $("scr-cup").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
@@ -5931,13 +6072,13 @@ body{
     initChessEngine();
 
     // Setup UI names & avatars
-    $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || "Siz";
-    $("chess-my-sub").textContent = "Oq donalar • " + cupHouseName(cupMe().house);
+    $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || L("you");
+    $("chess-my-sub").textContent = L("white") + " • " + cupHouseName(cupMe().house);
     
-    var botNames = { easy: "Ron Uizli", med: "Germiona Grenjer", hard: "Prof. Makgonagall" };
+    var botNames = L("botNames");
     var botAvatars = { easy: "🦁", med: "📚", hard: "🧙‍♀️" };
     $("chess-opp-name").textContent = botNames[diff] || "Bot";
-    $("chess-opp-sub").textContent = "Qora donalar • Blitz 5:00";
+    $("chess-opp-sub").textContent = L("black") + " • Blitz 5:00";
     $("chess-opp-avatar").textContent = botAvatars[diff] || "🤖";
 
     $("chess-board-overlay").classList.add("hidden");
@@ -5963,13 +6104,13 @@ body{
         if (res.ok && res.game_id) {
           var code = res.game_id;
           var botUrl = "https://t.me/garripotterkinobot/catalog?startapp=chess_" + code;
-          var text = "Sehrgar Shaxmati (Blitz) o'ynaymizmi? ♟️\n\nLink ustiga bosing: " + botUrl;
+          var text = L("inviteText") + botUrl;
           var shareUrl = "https://t.me/share/url?text=" + encodeURIComponent(text);
           
           if (tg && tg.openTelegramLink) {
             tg.openTelegramLink(shareUrl);
           } else {
-            prompt("Do'stingizga yuborish uchun havola:", text);
+            prompt(L("linkPrompt"), text);
           }
           joinPvPGame(code, true);
         }
@@ -5998,20 +6139,20 @@ body{
           chessState.myColor = isCreator ? "w" : "b";
           initChessEngine();
 
-          $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || "Siz";
-          $("chess-my-sub").textContent = (isCreator ? "Oq" : "Qora") + " donalar";
-          $("chess-opp-name").textContent = "Do'stingiz (Kutilmoqda...)";
-          $("chess-opp-sub").textContent = (isCreator ? "Qora" : "Oq") + " donalar • Blitz 5:00";
+          $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || L("you");
+          $("chess-my-sub").textContent = isCreator ? L("white") : L("black");
+          $("chess-opp-name").textContent = L("waitFriend");
+          $("chess-opp-sub").textContent = (isCreator ? L("black") : L("white")) + " • Blitz 5:00";
           $("chess-opp-avatar").textContent = "⏳";
           
           var invBtn = $("chess-invite-btn");
           if (isCreator && invBtn) {
              invBtn.classList.remove("hidden");
              var botUrl = "https://t.me/garripotterkinobot/catalog?startapp=chess_" + code;
-             var text = "Sehrgar Shaxmati (Blitz) o'ynaymizmi? ♟️\n\nLink ustiga bosing: " + botUrl;
+             var text = L("inviteText") + botUrl;
              invBtn.onclick = function() {
                if (tg && tg.openTelegramLink) tg.openTelegramLink("https://t.me/share/url?text=" + encodeURIComponent(text));
-               else prompt("Ulashish uchun havola:", text);
+               else prompt(L("linkPrompt"), text);
              };
           } else if (invBtn) {
              invBtn.classList.add("hidden");
@@ -6025,7 +6166,7 @@ body{
           updateChessClocks();
           startChessClock();
         } else {
-          alert("O'yinga ulanib bo'lmadi: " + (res.error || "Xato"));
+          alert(L("joinFail") + (res.error || L("err")));
         }
       }).catch(function(e) {});
   }
@@ -6095,15 +6236,15 @@ body{
       if (chessState.gameOver) {
         openChessHub();
       } else {
-        if (confirm("O'yindan chiqmoqchimisiz? (O'yin bekor qilinadi)")) {
-          finishChessGame("loss", "O'yinni tark etdingiz");
+        if (confirm(L("leaveAsk"))) {
+          finishChessGame("loss", "left");
           openChessHub();
         }
       }
     });
     $("btn-chess-resign").addEventListener("click", function() {
-      if (!chessState.gameOver && confirm("Rostdan ham taslim bo'lmoqchimisiz?")) {
-        finishChessGame("loss", "Taslim bo'ldingiz");
+      if (!chessState.gameOver && confirm(L("resignAsk"))) {
+        finishChessGame("loss", "resign");
       }
     });
     $("btn-chess-overlay-ok").addEventListener("click", function() {
