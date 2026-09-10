@@ -890,6 +890,31 @@ body{
 .chat-dots i:nth-child(3){animation-delay:.4s}
 @keyframes chatDot{0%,60%,100%{opacity:.25}30%{opacity:1}}
 .chat-banned{padding:14px 4px calc(14px + env(safe-area-inset-bottom));text-align:center;color:var(--dim);font-size:13.5px;line-height:1.4}
+/* a'zolar ro'yxati va shaxsiy suhbatlar */
+.chat-head{cursor:pointer}
+.chat-tabs .chat-tab{padding-left:4px;padding-right:4px;white-space:nowrap}
+.chat-people{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;padding:22px 18px 0;background:var(--bg);animation:cmSlide .2s ease both}
+@keyframes cmSlide{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+.chat-people .cup-hdr{margin-bottom:0}
+.chat-people-q{margin:12px 0 0;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:14px 'Manrope',sans-serif;outline:none;-webkit-appearance:none;appearance:none}
+.chat-people-f{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;flex:none}
+.chat-people-f button{flex:none;padding:6px 11px;border-radius:16px;border:1px solid var(--line);background:transparent;color:var(--dim);font:600 12.5px 'Manrope',sans-serif;cursor:pointer;white-space:nowrap}
+.chat-people-f button.on{background:var(--card);color:var(--text);border-color:currentColor}
+.chat-people-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 0 calc(16px + env(safe-area-inset-bottom))}
+.pp{display:flex;align-items:center;gap:12px;width:100%;padding:10px 4px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;font:inherit;cursor:pointer}
+.pp-av{position:relative;flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(var(--pp-rgb,151,161,174),.16)}
+.pp-av.on::after{content:"";position:absolute;right:0;bottom:1px;width:11px;height:11px;border-radius:50%;background:#4cd964;border:2px solid var(--bg)}
+.pp-tx{flex:1;min-width:0}
+.pp-tx b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-tx span{display:block;font-size:12.5px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-tx span.on{color:#4cd964}
+.pp-r{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:12px;color:var(--dim)}
+.pp-r svg{width:20px;height:20px}
+.pp-n{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:11.5px;font-weight:700;line-height:20px;text-align:center}
+.chat-dms-empty{text-align:center;color:var(--dim);font-size:14px;line-height:1.5;padding:40px 16px}
+.chat-dms-empty button{margin-top:14px;padding:10px 18px;border-radius:20px;border:none;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font:600 14px 'Manrope',sans-serif;cursor:pointer}
+.chat-people-f,.chat-at{scrollbar-width:none}
+.chat-people-f::-webkit-scrollbar,.chat-at::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
@@ -1252,7 +1277,7 @@ body{
   <div id="scr-chat" class="screen hidden">
     <div class="cup-hdr">
       <button class="back-btn" id="chat-back"><span style="font-size:13px">‹</span> <span id="chat-back-txt" data-xt="back">Ortga</span></button>
-      <div class="chat-head">
+      <div class="chat-head" id="chat-head">
         <div id="chat-title-txt" class="chat-title" data-xt="chatTitle">Muloqot</div>
         <div id="chat-sub" class="chat-sub"></div>
       </div>
@@ -1260,9 +1285,11 @@ body{
     <div class="chat-tabs">
       <button type="button" id="tab-house" class="chat-tab on">Umumiy xona</button>
       <button type="button" id="tab-global" class="chat-tab">Katta zal</button>
+      <button type="button" id="tab-dm" class="chat-tab">Shaxsiy</button>
     </div>
     <div class="chat-wrap">
       <div id="chat-messages" class="chat-list"></div>
+      <div id="chat-dms" class="chat-list hidden"></div>
       <button type="button" id="chat-down" class="chat-down hidden" aria-label="↓"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg><b id="chat-down-n" class="hidden"></b></button>
     </div>
     <div class="chat-foot">
@@ -1279,6 +1306,15 @@ body{
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
     </form>
+    </div>
+    <div id="chat-people" class="chat-people hidden">
+      <div class="cup-hdr">
+        <button class="back-btn" id="chat-people-back"><span style="font-size:13px">‹</span> <span data-xt="back">Ortga</span></button>
+        <div class="chat-head"><div id="chat-people-title" class="chat-title"></div><div id="chat-people-sub" class="chat-sub"></div></div>
+      </div>
+      <input id="chat-people-q" class="chat-people-q" type="search" autocomplete="off" data-xt-ph="chatSearch" placeholder="Ism bo'yicha qidirish">
+      <div id="chat-people-f" class="chat-people-f"></div>
+      <div id="chat-people-list" class="chat-people-list"></div>
     </div>
   </div>
 
@@ -5016,6 +5052,10 @@ body{
       chatBanForever: "Butunlay bloklash", chatUnban: "Blokdan chiqarish", chatBanAsk: "%s chatda bloklansinmi?",
       chatBanned: "Siz chatda bloklangansiz — %s gacha", chatBannedForever: "Siz chatda bloklangansiz",
       chatBanDone: "%s bloklandi", chatUnbanDone: "%s blokdan chiqarildi",
+      chatDmTab: "💬 Shaxsiy", chatDmTitle: "Shaxsiy suhbatlar", chatDmYou: "Siz: ",
+      chatDmEmpty: "Hali shaxsiy suhbat yo'q. Istalgan fakultet talabasiga yozishingiz mumkin.", chatDmFind: "Talabani tanlash",
+      chatTypingDm: "yozmoqda", chatPeerOnline: "onlayn", chatWrite: "Shaxsiy xabar", chatSearch: "Ism bo'yicha qidirish",
+      chatAll: "Hammasi", chatMembersSub: "%s a'zo, %s onlayn", chatPoints: "%s ball", chatYou: "siz", chatNobody: "Hech kim topilmadi",
       chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
       chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
       chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
@@ -5064,6 +5104,10 @@ body{
       chatBanForever: "Заблокировать навсегда", chatUnban: "Разблокировать", chatBanAsk: "Заблокировать %s в чате?",
       chatBanned: "Вы заблокированы в чате до %s", chatBannedForever: "Вы заблокированы в чате",
       chatBanDone: "%s заблокирован(а)", chatUnbanDone: "%s разблокирован(а)",
+      chatDmTab: "💬 Личные", chatDmTitle: "Личные сообщения", chatDmYou: "Вы: ",
+      chatDmEmpty: "Личных переписок пока нет. Можно написать ученику любого факультета.", chatDmFind: "Выбрать ученика",
+      chatTypingDm: "печатает", chatPeerOnline: "в сети", chatWrite: "Написать лично", chatSearch: "Поиск по имени",
+      chatAll: "Все", chatMembersSub: "%s участников, %s в сети", chatPoints: "%s очков", chatYou: "вы", chatNobody: "Никого не найдено",
       chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
       chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
       chessBotHead: "Игра против бота (тренировка)",
@@ -5112,6 +5156,10 @@ body{
       chatBanForever: "Block permanently", chatUnban: "Unblock", chatBanAsk: "Block %s from the chat?",
       chatBanned: "You are blocked from the chat until %s", chatBannedForever: "You are blocked from the chat",
       chatBanDone: "%s blocked", chatUnbanDone: "%s unblocked",
+      chatDmTab: "💬 Private", chatDmTitle: "Private chats", chatDmYou: "You: ",
+      chatDmEmpty: "No private chats yet. You can write to a student of any house.", chatDmFind: "Choose a student",
+      chatTypingDm: "typing", chatPeerOnline: "online", chatWrite: "Message privately", chatSearch: "Search by name",
+      chatAll: "All", chatMembersSub: "%s members, %s online", chatPoints: "%s pts", chatYou: "you", chatNobody: "Nobody found",
       chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
       chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
       chessBotHead: "Play against a bot (practice)",
@@ -5211,6 +5259,11 @@ body{
   var chatAdmin = false;
   var chatBans = {};          // uid -> until (null - butunlay); faqat admin ko'radi
   var chatBannedUntil = false; // o'zim bloklanganmanmi
+  var chatPeers = {};         // uid -> { uid, name, house, online } - shaxsiy suhbatdoshlar
+  var chatPeople = null;      // a'zolar oynasi: { room, list, filter }
+  var chatDmTimer = null;
+  var chatCountTimer = null;
+  var CHAT_HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
   var chatReadTimer = null;
   var chatNewIds = {};
   var chatCompose = null;     // { mode: "reply" | "edit", id }
@@ -5232,6 +5285,7 @@ body{
     reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
     copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
     edit: chatSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+    dm: chatSvg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),
     ban: chatSvg('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>'),
     ban24: chatSvg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
     unban: chatSvg('<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 5-5.5"/>'),
@@ -5247,6 +5301,13 @@ body{
   // divider - "Yangi xabarlar" chizig'i shu id dan keyin (chat ochilgandagi holat);
   // moreNew - pastda hali yuklanmagan xabarlar bor (o'qilmaganlar ko'p bo'lsa);
   // hidden  - o'shalardan nechtasi o'qilmagan.
+  // Xonalar: "house", "global", "dm:<odam id>" (shaxsiy suhbat); "dms" - suhbatlar ro'yxati.
+  function chatIsDm(room) { return String(room).indexOf("dm:") === 0; }
+  function chatPeerOf(room) {
+    var id = parseInt(String(room).slice(3), 10);
+    return chatPeers[id] || { uid: id, name: "Sehrgar", house: null };
+  }
+
   function chatNewRoom() {
     return { msgs: [], loaded: false, more: false, loadingOld: false, oldFail: 0, rev: 0,
              read: 0, sentRead: 0, divider: 0, moreNew: false, loadingNew: false, newFail: 0,
@@ -5255,8 +5316,8 @@ body{
 
   // Xonani qayta yuklashga tayyorlaydi (yuborilayotgan xabarlar saqlanib qoladi).
   function chatResetRoom(room, latest) {
-    var fresh = chatNewRoom();
-    fresh.msgs = chatRooms[room].msgs.filter(function(m) { return m.tmp; });
+    var fresh = chatNewRoom(), old = chatRooms[room];
+    fresh.msgs = old ? old.msgs.filter(function(m) { return m.tmp; }) : [];
     fresh.latest = !!latest;
     chatRooms[room] = fresh;
   }
@@ -5373,6 +5434,7 @@ body{
     var box = $("chat-messages");
     if (!box) return;
     var R = chatRooms[chatRoom];
+    if (!R) return;
     box.innerHTML = "";
     if (!R.loaded) { box.appendChild(chatHint(L("loading"))); return; }
     if (!R.msgs.length) { box.appendChild(chatHint(L("chatEmpty"))); return; }
@@ -5416,7 +5478,7 @@ body{
         ((chatNewIds[m.id] || m.anim) ? " new" : "");
       row.setAttribute("data-id", m.id);
 
-      if (first && !mine) {
+      if (first && !mine && !chatIsDm(chatRoom)) {
         var name = document.createElement("div");
         name.className = "cm-name";
         var nm = document.createElement("span");
@@ -5525,6 +5587,7 @@ body{
     var box = $("chat-messages");
     if (!box) return;
     var R = chatRooms[chatRoom];
+    if (!R) return;
     var gap = box.scrollHeight - box.scrollTop - box.clientHeight;
     chatStick = gap < 80 && !R.moreNew;
     chatSeen();
@@ -5551,7 +5614,7 @@ body{
   // Ekranning pastki chetigacha ko'ringan eng oxirgi xabar - o'qilgan.
   function chatSeen() {
     var box = $("chat-messages"), R = chatRooms[chatRoom];
-    if (!R.loaded || !chatOpen || document.hidden) return;
+    if (!R || !R.loaded || !chatOpen || document.hidden) return;
     var edge = box.scrollTop + box.clientHeight + 4, rows = box.querySelectorAll(".cm");
     for (var i = rows.length - 1; i >= 0; i--) {
       var id = parseInt(rows[i].getAttribute("data-id"), 10);
@@ -5575,7 +5638,7 @@ body{
   }
 
   function chatPoll() {
-    if (!chatOpen) return;
+    if (!chatOpen || chatRoom === "dms") return;
     if ($("scr-chat").classList.contains("hidden")) { chatStop(); return; }
     var d = chatInitData();
     if (!d) return;
@@ -5636,6 +5699,12 @@ body{
       res.bans.forEach(function(b) { chatBans[b.uid] = b.until; });
     }
     if (res.banned !== undefined) chatSetBanned(res.banned);
+    if (res.peer) {
+      chatPeers[res.peer.uid] = res.peer;
+      chatLive.peerOnline = res.peer.online;
+      updateChatRoomUI();
+    }
+    if (res.peer_online !== undefined) chatLive.peerOnline = res.peer_online;
     chatSubUI();
     clearTimeout(chatLiveTimer);
     if (chatLive.typing.length) chatLiveTimer = setTimeout(chatSubUI, 6600);
@@ -5645,8 +5714,25 @@ body{
     var el = $("chat-sub");
     if (!el) return;
     var t = Date.now() < chatLive.until ? chatLive.typing : [];
-    el.classList.toggle("typing", t.length > 0);
+    el.classList.toggle("typing", t.length > 0 || (chatIsDm(chatRoom) && !!chatLive.peerOnline));
     el.innerHTML = "";
+    if (chatRoom === "dms") return;
+    if (chatIsDm(chatRoom)) {
+      // Shaxsiy suhbat: "yozmoqda" / "onlayn" / suhbatdoshning fakulteti.
+      var p = chatPeerOf(chatRoom), ph = HOUSES[p.house];
+      if (t.length) {
+        el.appendChild(document.createTextNode(L("chatTypingDm")));
+        var d2 = document.createElement("span");
+        d2.className = "chat-dots";
+        d2.innerHTML = "<i></i><i></i><i></i>";
+        el.appendChild(d2);
+      } else if (chatLive.peerOnline) {
+        el.textContent = L("chatPeerOnline");
+      } else if (ph) {
+        el.textContent = (ph.crest ? ph.crest + " " : "") + cupHouseName(p.house);
+      }
+      return;
+    }
     if (t.length) {
       var txt = t.length === 1 ? L("chatTyping1").replace("%s", t[0].name) :
                 t.length === 2 ? L("chatTyping2").replace("%s", t[0].name).replace("%s", t[1].name) :
@@ -6040,6 +6126,9 @@ body{
       list.appendChild(btn);
     }
     if (!m.tmp && chatBannedUntil === false) item(CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
+    if (!own && !m.tmp && !chatIsDm(chatRoom)) {
+      item(CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
+    }
     item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
     if (own && chatCanEdit(m)) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
     if (own || (chatAdmin && !m.tmp)) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);
@@ -6085,7 +6174,7 @@ body{
     var mt = head.match(/(^|\s)@([^\s@]*)$/);
     bar.innerHTML = "";
     if (!mt) { bar.classList.add("hidden"); return; }
-    var q = mt[2].toLowerCase(), me = chatUser().id || 0, seen = {}, names = [], R = chatRooms[chatRoom];
+    var q = mt[2].toLowerCase(), me = chatUser().id || 0, seen = {}, names = [], R = chatRooms[chatRoom] || chatNewRoom();
     for (var i = R.msgs.length - 1; i >= 0 && names.length < 6; i--) {
       var m = R.msgs[i], nm = String(m.name || "").split(/\s+/)[0], key = nm.toLowerCase();
       if (m.uid == me || !nm || seen[key]) continue;
@@ -6119,15 +6208,187 @@ body{
   function setChatRoom(room) {
     if (chatRoom === room) return;
     chatRoom = room;
-    chatResetRoom(room);
+    if (room !== "dms") chatResetRoom(room);
     chatLive = { typing: [], online: 0, until: 0 };
-    chatSubUI();
     chatCancelCompose();
     $("chat-at").classList.add("hidden");
     updateChatRoomUI();
-    chatPaint("bottom");
-    chatPoll();
+    chatSubUI();
+    chatShowView();
+    if (room === "dms") {
+      chatSeq++;
+      if (chatCtl) { try { chatCtl.abort(); } catch (e) {} chatCtl = null; }
+      chatLoadDms();
+    } else {
+      chatPaint("bottom");
+      chatPoll();
+    }
     chatRefreshCounts();
+  }
+
+  // Suhbatlar ro'yxati yoki xabarlar oynasi.
+  function chatShowView() {
+    var list = chatRoom === "dms";
+    $("chat-messages").classList.toggle("hidden", list);
+    $("chat-dms").classList.toggle("hidden", !list);
+    $("scr-chat").querySelector(".chat-foot").classList.toggle("hidden", list);
+    if (list) $("chat-down").classList.add("hidden");
+    clearInterval(chatDmTimer);
+    if (list) chatDmTimer = setInterval(chatLoadDms, 8000);
+  }
+
+  function chatOpenDm(peer) {
+    if (!peer || peer.uid == (chatUser().id || 0)) return;
+    chatPeers[peer.uid] = chatPeers[peer.uid] || peer;
+    chatClosePeople();
+    setChatRoom("dm:" + peer.uid);
+  }
+
+  function chatLoadDms() {
+    var d = chatInitData();
+    if (!d) return;
+    fetch(API_CHAT + "?dms=1", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!(res && res.ok) || chatRoom !== "dms") return;
+        res.dms.forEach(function(x) { chatPeers[x.peer.uid] = x.peer; });
+        chatRenderDms(res.dms);
+      }).catch(function() {});
+  }
+
+  // Bitta odam qatori: fakultet gerbi (onlayn bo'lsa yashil nuqta), ism, izoh, o'ng tomon.
+  function chatPersonRow(p, sub, subOn, right, badge) {
+    var hh = HOUSES[p.house] || HOUSES.none;
+    var row = document.createElement("button");
+    row.type = "button";
+    row.className = "pp";
+    var av = document.createElement("span");
+    av.className = "pp-av" + (p.online ? " on" : "");
+    av.style.setProperty("--pp-rgb", hh.rgb || "151,161,174");
+    av.textContent = hh.crest || "?";
+    var tx = document.createElement("span");
+    tx.className = "pp-tx";
+    var nm = document.createElement("b");
+    nm.textContent = p.name || "Sehrgar";
+    nm.style.color = hh.accent || "var(--text)";
+    var sb = document.createElement("span");
+    sb.textContent = sub;
+    if (subOn) sb.className = "on";
+    tx.appendChild(nm);
+    tx.appendChild(sb);
+    var r = document.createElement("span");
+    r.className = "pp-r";
+    if (right) {
+      var rt = document.createElement("span");
+      if (right.charAt(0) === "<") rt.innerHTML = right; else rt.textContent = right;
+      r.appendChild(rt);
+    }
+    if (badge) {
+      var bd = document.createElement("span");
+      bd.className = "pp-n";
+      bd.textContent = chatBadge(badge);
+      r.appendChild(bd);
+    }
+    row.appendChild(av);
+    row.appendChild(tx);
+    row.appendChild(r);
+    return row;
+  }
+
+  function chatRenderDms(list) {
+    var box = $("chat-dms"), me = chatUser().id || 0;
+    box.innerHTML = "";
+    if (!list.length) {
+      var empty = document.createElement("div");
+      empty.className = "chat-dms-empty";
+      empty.appendChild(document.createTextNode(L("chatDmEmpty")));
+      var go = document.createElement("button");
+      go.type = "button";
+      go.textContent = L("chatDmFind");
+      go.addEventListener("click", function() { chatOpenPeople("global"); });
+      empty.appendChild(document.createElement("br"));
+      empty.appendChild(go);
+      box.appendChild(empty);
+      return;
+    }
+    var today = chatDayKey(new Date());
+    list.forEach(function(x) {
+      var d = chatDate(x.last);
+      var when = chatDayKey(d) === today ? chatHM(d) : chatDayLabel(d);
+      var sub = (x.last.uid == me ? L("chatDmYou") : "") + x.last.text;
+      var row = chatPersonRow(x.peer, sub, false, when, x.unread);
+      row.addEventListener("click", function() { chatOpenDm(x.peer); });
+      box.appendChild(row);
+    });
+  }
+
+  // A'zolar oynasi: xonadagi hamma (Katta zalda - fakultet bo'yicha saralash).
+  function chatOpenPeople(room) {
+    var me = cupMe();
+    chatPeople = { room: room, list: null, filter: "all" };
+    $("chat-people-q").value = "";
+    $("chat-people-title").textContent = room === "global" ? L("chatGlobalTitle") : cupHouseName(me.house);
+    $("chat-people-sub").textContent = "";
+    $("chat-people-f").innerHTML = "";
+    $("chat-people-list").innerHTML = "";
+    $("chat-people-list").appendChild(chatHint(L("loading")));
+    $("chat-people").classList.remove("hidden");
+    var d = chatInitData();
+    fetch(API_CHAT + "?members=" + room, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!chatPeople || chatPeople.room !== room || !(res && res.ok)) return;
+        chatPeople.list = res.members;
+        chatRenderPeople();
+      }).catch(function() {});
+  }
+
+  function chatClosePeople() {
+    chatPeople = null;
+    $("chat-people").classList.add("hidden");
+  }
+
+  function chatRenderPeople() {
+    if (!chatPeople || !chatPeople.list) return;
+    var all = chatPeople.list, f = chatPeople.filter, me = chatUser().id || 0;
+    var q = $("chat-people-q").value.trim().toLowerCase();
+    var fb = $("chat-people-f");
+    fb.innerHTML = "";
+    fb.classList.toggle("hidden", chatPeople.room !== "global");
+    if (chatPeople.room === "global") {
+      ["all"].concat(CHAT_HOUSES).forEach(function(h) {
+        var n = h === "all" ? all.length : all.filter(function(m) { return m.house === h; }).length;
+        var hh = HOUSES[h];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = (h === "all" ? L("chatAll") : (hh.crest ? hh.crest + " " : "") + cupHouseName(h)) + " " + n;
+        if (f === h) { btn.className = "on"; if (hh) btn.style.color = hh.accent; }
+        btn.addEventListener("click", function() { chatPeople.filter = h; chatRenderPeople(); });
+        fb.appendChild(btn);
+      });
+    }
+    var list = all.filter(function(m) {
+      return (f === "all" || m.house === f) && (!q || String(m.name).toLowerCase().indexOf(q) >= 0);
+    });
+    // Onlaynlar tepada, qolgani kubok ballari bo'yicha (server tartibi).
+    list = list.filter(function(m) { return m.online; }).concat(list.filter(function(m) { return !m.online; }));
+    var online = list.filter(function(m) { return m.online; }).length;
+    $("chat-people-sub").textContent = L("chatMembersSub").replace("%s", list.length).replace("%s", online);
+    var box = $("chat-people-list");
+    box.innerHTML = "";
+    if (!list.length) { box.appendChild(chatHint(L("chatNobody"))); return; }
+    var frag = document.createDocumentFragment();
+    list.forEach(function(m) {
+      var hh = HOUSES[m.house] || {};
+      var sub = m.online ? L("chatPeerOnline") :
+        (chatPeople.room === "global" ? (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house) + " · " : "") +
+        L("chatPoints").replace("%s", m.points);
+      var mine = m.uid == me;
+      var row = chatPersonRow(m, sub, m.online, mine ? L("chatYou") : CHAT_SVG.dm);
+      if (!mine) row.addEventListener("click", function() { chatOpenDm(m); });
+      frag.appendChild(row);
+    });
+    box.appendChild(frag);
   }
 
   // O'qilmaganlar soni: kubok oynasidagi chat tugmasida (ikkala xona jami)
@@ -6147,14 +6408,14 @@ body{
   function chatBadge(n) { return n > 99 ? "99+" : String(n); }
 
   function chatCountsUI() {
-    var total = (chatCounts.house || 0) + (chatCounts.global || 0);
+    var total = (chatCounts.house || 0) + (chatCounts.global || 0) + (chatCounts.dm || 0);
     var sb = $("chat-strip-n");
     if (sb) { sb.textContent = chatBadge(total); sb.classList.toggle("hidden", !total); }
-    ["house", "global"].forEach(function(room) {
+    ["house", "global", "dm"].forEach(function(room) {
       var tab = $("tab-" + room), n = chatCounts[room] || 0, b = tab.querySelector("b");
       if (!b) { b = document.createElement("b"); b.className = "chat-tab-n"; tab.appendChild(b); }
       b.textContent = chatBadge(n);
-      b.classList.toggle("hidden", !n || (chatOpen && chatRoom === room));
+      b.classList.toggle("hidden", !n || (chatOpen && chatRoom === (room === "dm" ? "dms" : room)));
     });
   }
 
@@ -6166,10 +6427,20 @@ body{
     scr.style.setProperty("--me-rgb", hh.rgb || "151,161,174");
     $("tab-house").textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
     $("tab-global").textContent = L("chatGlobalTab");
+    $("tab-dm").textContent = L("chatDmTab");
     $("tab-house").classList.toggle("on", chatRoom === "house");
     $("tab-global").classList.toggle("on", chatRoom === "global");
+    $("tab-dm").classList.toggle("on", chatRoom === "dms" || chatIsDm(chatRoom));
     chatCountsUI();
-    if (chatRoom === "house") {
+    if (chatRoom === "dms") {
+      title.textContent = L("chatDmTitle");
+      title.style.color = "var(--text)";
+    } else if (chatIsDm(chatRoom)) {
+      var p = chatPeerOf(chatRoom), ph = HOUSES[p.house] || {};
+      title.textContent = p.name || "Sehrgar";
+      title.style.color = ph.accent || "var(--text)";
+      inp.placeholder = L("chatPh");
+    } else if (chatRoom === "house") {
       title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
       title.style.color = hh.accent || "var(--accent)";
       inp.placeholder = L("chatPhHouse");
@@ -6190,8 +6461,12 @@ body{
     chatResetRoom("house");
     chatResetRoom("global");
     chatLive = { typing: [], online: 0, until: 0 };
-    chatSubUI();
+    chatClosePeople();
     updateChatRoomUI();
+    chatSubUI();
+    chatShowView();
+    clearInterval(chatCountTimer);
+    chatCountTimer = setInterval(chatRefreshCounts, 20000);
     chatSendState();
     chatPaint("bottom");
     chatPoll();
@@ -6208,10 +6483,13 @@ body{
     chatStop();
     chatCloseMenu();
     chatCancelCompose();
+    chatClosePeople();
+    clearInterval(chatDmTimer);
+    clearInterval(chatCountTimer);
     $("scr-chat").classList.add("hidden");
     $("scr-cup").classList.remove("hidden");
     // O'qilgan joy serverga yetib borgach sonlarni yangilaymiz.
-    var room = chatRoom, R = chatRooms[room];
+    var room = chatRoom, R = chatRooms[room] || chatNewRoom();
     clearTimeout(chatReadTimer);
     var send = R.read > R.sentRead ? chatAct(room, { action: "read", id: R.read }) : Promise.resolve();
     R.sentRead = R.read;
@@ -6248,9 +6526,18 @@ body{
   function initChatUI() {
     var inp = $("chat-input"), btn = $("chat-send"), box = $("chat-messages");
     $("chat-strip").addEventListener("click", openChat);
-    $("chat-back").addEventListener("click", closeChat);
+    // Shaxsiy suhbatdan "Ortga" - suhbatlar ro'yxatiga, qolgan joyda - chatdan chiqish.
+    $("chat-back").addEventListener("click", function() {
+      if (chatIsDm(chatRoom)) setChatRoom("dms"); else closeChat();
+    });
     $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
     $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
+    $("tab-dm").addEventListener("click", function() { setChatRoom("dms"); });
+    $("chat-head").addEventListener("click", function() {
+      if (chatRoom === "house" || chatRoom === "global") chatOpenPeople(chatRoom);
+    });
+    $("chat-people-back").addEventListener("click", chatClosePeople);
+    $("chat-people-q").addEventListener("input", chatRenderPeople);
     $("chat-bar-x").addEventListener("mousedown", function(e) { e.preventDefault(); });
     $("chat-bar-x").addEventListener("click", chatCancelCompose);
     inp.addEventListener("input", function() {
