@@ -1080,6 +1080,7 @@ body{
     </div>
     <div class="refs-me" id="refs-me"></div>
     <button class="cup-cta" id="refs-share"></button>
+    <button class="cup-cta" id="refs-promo" style="margin-top:8px;background:transparent;"></button>
     <div class="hall" id="refs-board">
       <div class="feed-kick" id="refs-top-kick"></div>
       <div id="refs-list"></div>
@@ -2236,7 +2237,7 @@ body{
       rankLbl: "Sizning darajangiz",
       friends: "Do'stlar", place: "O'rin", cup: "Kubok bali",
       next: "Keyingi daraja — %s: yana %f", top: "Eng yuqori darajadasiz!",
-      share: "Filmni do'stga ulashish", topKick: "Eng ko'p do'st taklif qilganlar",
+      share: "Filmni do'stga ulashish", promo: "Kolleksiyani taklif qilish", topKick: "Eng ko'p do'st taklif qilganlar",
       empty: "Hali hech kim do'st taklif qilmagan. Birinchi bo'ling!", you: "siz",
       howTitle: "Qanday ishlaydi?",
       steps: [
@@ -2267,7 +2268,7 @@ body{
       rankLbl: "Ваш уровень",
       friends: "Друзья", place: "Место", cup: "Очки кубка",
       next: "Следующий уровень — %s: ещё %f", top: "У вас высший уровень!",
-      share: "Поделиться фильмом с другом", topKick: "Больше всех пригласили",
+      share: "Поделиться фильмом с другом", promo: "Пригласить в коллекцию", topKick: "Больше всех пригласили",
       empty: "Пока никто не пригласил друзей. Будьте первым!", you: "вы",
       howTitle: "Как это работает?",
       steps: [
@@ -2302,7 +2303,7 @@ body{
       rankLbl: "Your rank",
       friends: "Friends", place: "Place", cup: "Cup points",
       next: "Next rank — %s: %f more", top: "You have the highest rank!",
-      share: "Share a film with a friend", topKick: "Most friends invited",
+      share: "Share a film with a friend", promo: "Invite to the collection", topKick: "Most friends invited",
       empty: "Nobody has invited a friend yet. Be the first!", you: "you",
       howTitle: "How does it work?",
       steps: [
@@ -2422,6 +2423,7 @@ body{
     $("refs-kick").textContent = t.kick;
     $("refs-head").textContent = t.head;
     $("refs-share").textContent = t.share;
+    $("refs-promo").textContent = t.promo;
 
     // --- sizning holatingiz
     var box = $("refs-me");
@@ -2513,10 +2515,11 @@ body{
 
   // Ulashish: bot kartasini tanlangan chatga qo'yadi (inline qidiruv).
   // Karta ichidagi havola ulashgan odamning id sini olib yuradi.
-  function shareRefs() {
+  // query: "" - film qidiruvi, "taklif" - kolleksiyaning reklama kartasi.
+  function shareRefs(query) {
     try {
       if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
-        tg.switchInlineQuery("", ["users", "groups", "channels"]);
+        tg.switchInlineQuery(typeof query === "string" ? query : "", ["users", "groups", "channels"]);
         return;
       }
     } catch (e) {}
@@ -6082,7 +6085,8 @@ body{
     $("chess-strip").addEventListener("click", openChessHub);
     $("refs-strip").addEventListener("click", openRefs);
     $("refs-back").addEventListener("click", closeRefs);
-    $("refs-share").addEventListener("click", shareRefs);
+    $("refs-share").addEventListener("click", function () { shareRefs(""); });
+    $("refs-promo").addEventListener("click", function () { shareRefs("taklif"); });
     $("chess-hub-back").addEventListener("click", closeChessHub);
     $("btn-start-bot-game").addEventListener("click", startBotGame);
     $("btn-create-pvp-game").addEventListener("click", createPvPGame);
@@ -6123,7 +6127,16 @@ body{
         startSorting();
         return;
       }
-      var url = "https://t.me/" + BOT;
+      // Kolleksiya kartasi - ichidagi havola taklif qilgan odam bilan,
+      // ya'ni do'st kelsa ball ham tushadi. Eski mijozda - pastdagi yo'l.
+      try {
+        if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+          tg.switchInlineQuery("taklif", ["users", "groups", "channels"]);
+          return;
+        }
+      } catch (e) {}
+      var me0 = tgUser();
+      var url = "https://t.me/" + BOT + (me0 ? "?start=ref" + me0.id : "");
       var text = T[lang].cupJoin;
       try {
         if (tg && tg.openTelegramLink) {
