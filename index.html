@@ -7323,6 +7323,7 @@ body{
     chessState.seen = {};
     chessState.seen[posKey()] = 1;
     chessState.sans = [];
+    chessState.ucis = [];
     chessState.hist = [{ board: cloneBoard(chessState.board), last: null, turn: "w" }];
   }
 
@@ -8685,6 +8686,7 @@ body{
     var key = posKey();
     chessState.seen[key] = (chessState.seen[key] || 0) + 1;
     chessState.sans.push(san);
+    chessState.ucis.push(moveUci(move));
     chessState.hist.push({ board: cloneBoard(chessState.board), last: move, turn: chessState.turn });
     renderChessBoard();
     updateChessClocks();
@@ -8703,16 +8705,62 @@ body{
     if (chessState.halfmove >= 100) { finishChessGame("draw", "fifty"); return; }
     if (chessState.seen[key] >= 3) { finishChessGame("draw", "repetition"); return; }
 
-    // Bot move if in bot mode
-    if (chessState.turn !== chessState.myColor && !chessState.gameOver) {
-      setTimeout(function() {
-        if (chessState.gameOver || chessState.gameMode !== "bot") return;
-        var botMove = getBestBotMove(chessState.board, chessState.botDiff, chessState.turn, chessState.castling, chessState.ep);
-        if (botMove) {
-          executeMove(botMove);
-        }
-      }, 400);
+    if (chessState.turn !== chessState.myColor && !chessState.gameOver) { botMove(400); }
+  }
+
+  /* --- BOT: fon oqimidagi miya (chessbot.js) ---
+     Bot alohida oqimda o'ylaydi - ekran qotmaydi. Har daraja o'z vaqtida
+     javob beradi (soat kam qolsa - tezroq). Fon oqimi ishlamasa (juda eski
+     telefon) - eski sodda hisob, lekin faqat sayoz (qotmasin). */
+
+  var chessBot = { worker: null, failed: false, id: 0 };
+  var BOT_TIME = { easy: 250, med: 700, hard: 1500 };
+
+  function chessBotWorker() {
+    if (chessBot.worker || chessBot.failed) { return chessBot.worker; }
+    try {
+      chessBot.worker = new Worker("chessbot.js?v=1");
+      chessBot.worker.onerror = function () { chessBot.failed = true; chessBot.worker = null; };
+    } catch (e) { chessBot.failed = true; }
+    return chessBot.worker;
+  }
+
+  function uciToLocal(u) {
+    var from = uciSq(u.slice(0, 2)), to = uciSq(u.slice(2, 4));
+    var m = getLegalMovesForSquare(chessState.board, from.r, from.c, chessState.castling, chessState.ep)
+      .find(function (x) { return x.to.r === to.r && x.to.c === to.c; });
+    if (m && u.length > 4) { m.promo = u.charAt(4); }
+    return m || null;
+  }
+
+  function botMove(minDelay) {
+    var seq = chessState.botSeq, started = Date.now();
+    function play(m) {
+      if (!m || seq !== chessState.botSeq || chessState.gameOver || chessState.gameMode !== "bot" ||
+          chessState.turn === chessState.myColor) { return; }
+      setTimeout(function () {
+        if (seq !== chessState.botSeq || chessState.gameOver || chessState.turn === chessState.myColor) { return; }
+        executeMove(m);
+      }, Math.max(0, minDelay - (Date.now() - started)));
     }
+    function fallback() {
+      play(getBestBotMove(chessState.board, chessState.botDiff === "easy" ? "easy" : "med",
+                          chessState.turn, chessState.castling, chessState.ep));
+    }
+    var w = chessBotWorker();
+    if (!w) { setTimeout(fallback, 50); return; }
+    var id = ++chessBot.id, answered = false;
+    var left = (chessState.turn === "w" ? chessState.whiteTime : chessState.blackTime) * 1000;
+    var budget = Math.max(100, Math.min(BOT_TIME[chessState.botDiff] || 700, left / 25));
+    w.onmessage = function (e) {
+      if (!e.data || e.data.id !== id) { return; }
+      answered = true;
+      var m = e.data.uci ? uciToLocal(e.data.uci) : null;
+      if (m) { play(m); } else { fallback(); }
+    };
+    w.postMessage({ cmd: "move", id: id, moves: chessState.ucis.slice(), level: chessState.botDiff, time: budget });
+    // Javob kelmasa (oqim osilib qolsa) - baribir yuramiz.
+    setTimeout(function () { if (!answered && id === chessBot.id) { answered = true; fallback(); } }, budget + 4000);
   }
 
   // Bot bilan o'yin natijasi (jonli o'yinda natijani server aytadi - pvpShowEnd).
@@ -8894,6 +8942,7 @@ body{
 
   function startBotGame() {
     chessSoundUnlock();
+    chessBotWorker();
     var diff = "easy";
     var diffRadios = document.getElementsByName("chess-bot-diff");
     for (var i = 0; i < diffRadios.length; i++) {
@@ -8905,6 +8954,7 @@ body{
     pvpStopPoll();
     stopBotClock();
     chessNet.game = null;
+    chessState.botSeq = (chessState.botSeq || 0) + 1;     // eski o'yinning kechikkan javobi e'tiborsiz
     chessState.gameMode = "bot";
     chessState.botDiff = diff;
     chessState.myColor = color;
@@ -8937,14 +8987,7 @@ body{
     updateChessClocks();
     startBotClock();
     chessSound("start");
-    if (color === "b") {
-      // Bot oq donalarda - birinchi yurish uniki.
-      setTimeout(function () {
-        if (chessState.gameOver || chessState.gameMode !== "bot" || chessState.turn === chessState.myColor) return;
-        var m = getBestBotMove(chessState.board, chessState.botDiff, chessState.turn, chessState.castling, chessState.ep);
-        if (m) { executeMove(m); }
-      }, 700);
-    }
+    if (color === "b") { botMove(700); }     // bot oq donalarda - birinchi yurish uniki
   }
   function chessInvite(code, shareId) {
     var canShare = false;
@@ -9054,6 +9097,7 @@ body{
   }
 
   function leaveChessGame() {
+    chessState.botSeq = (chessState.botSeq || 0) + 1;     // bot o'ylayotgan bo'lsa - javobi kerak emas
     pvpStopPoll();
     stopBotClock();
     closePromo();
