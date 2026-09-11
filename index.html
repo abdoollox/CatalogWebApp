@@ -915,6 +915,20 @@ body{
 .chat-dms-empty button{margin-top:14px;padding:10px 18px;border-radius:20px;border:none;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font:600 14px 'Manrope',sans-serif;cursor:pointer}
 .chat-people-f,.chat-at{scrollbar-width:none}
 .chat-people-f::-webkit-scrollbar,.chat-at::-webkit-scrollbar{display:none}
+/* shaxsiy xabar sozlamalari va bloklar */
+.chat-sheet{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));animation:cmPop .16s ease both}
+.chat-sheet-t{padding:14px 16px 4px;font-weight:700;font-size:15px;color:var(--text)}
+.chat-sheet-n{padding:2px 16px 12px;font-size:12.5px;color:var(--dim);line-height:1.4}
+.chat-sheet-t+button,.chat-sheet-n+button,.chat-sheet-h+button{border-top:1px solid var(--line)!important}
+.chat-sheet-h{padding:14px 16px 6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line)}
+.chat-sheet-ck{margin-left:auto;display:flex;color:var(--me-bg,var(--accent))}
+.chat-sheet-ck svg{width:20px;height:20px}
+.chat-dms-set{display:flex;align-items:center;gap:12px;width:100%;padding:12px 4px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);font:500 14px 'Manrope',sans-serif;text-align:left;cursor:pointer}
+.chat-dms-set i{display:flex;justify-content:center;width:42px;color:var(--dim)}
+.chat-dms-set i svg{width:20px;height:20px}
+.chat-dms-set span{flex:1}
+.chat-dms-set em{font-style:normal;color:var(--dim);font-size:13px}
+#chat-dmnote button{display:inline-block;margin-top:8px;padding:8px 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--text);font:600 13px 'Manrope',sans-serif;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1300,6 +1314,7 @@ body{
     </div>
     <div id="chat-at" class="chat-at hidden"></div>
     <div id="chat-banned" class="chat-banned hidden"></div>
+    <div id="chat-dmnote" class="chat-banned hidden"></div>
     <form id="chat-form" class="chat-form" onsubmit="return false;">
       <textarea id="chat-input" rows="1" maxlength="1000" placeholder="Xabar yozing..." data-xt-ph="chatPh" autocomplete="off"></textarea>
       <button type="submit" id="chat-send" class="chat-send" disabled>
@@ -5056,6 +5071,10 @@ body{
       chatDmEmpty: "Hali shaxsiy suhbat yo'q. Istalgan fakultet talabasiga yozishingiz mumkin.", chatDmFind: "Talabani tanlash",
       chatTypingDm: "yozmoqda", chatPeerOnline: "onlayn", chatWrite: "Shaxsiy xabar", chatSearch: "Ism bo'yicha qidirish",
       chatAll: "Hammasi", chatMembersSub: "%s a'zo, %s onlayn", chatPoints: "%s ball", chatYou: "siz", chatNobody: "Hech kim topilmadi",
+      chatDmWho: "Kim menga shaxsiy xabar yoza oladi", chatDmWhoShort: "Kim menga yoza oladi", chatDmAll: "Hamma",
+      chatDmHouse: "Faqat fakultetdoshlarim", chatDmNone: "Hech kim", chatDmWhoNote: "Siz o'zingiz yozgan odam baribir javob bera oladi.",
+      chatDmBlock: "Bloklash", chatDmUnblock: "Blokdan chiqarish", chatDmBlockAsk: "%s sizga shaxsiy xabar yoza olmasin?",
+      chatDmYouBlocked: "Siz bu talabani bloklagansiz", chatDmClosed: "Bu talaba hozir shaxsiy xabar qabul qilmaydi", chatDmBlockedList: "Bloklanganlar",
       chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
       chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
       chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
@@ -5108,6 +5127,10 @@ body{
       chatDmEmpty: "Личных переписок пока нет. Можно написать ученику любого факультета.", chatDmFind: "Выбрать ученика",
       chatTypingDm: "печатает", chatPeerOnline: "в сети", chatWrite: "Написать лично", chatSearch: "Поиск по имени",
       chatAll: "Все", chatMembersSub: "%s участников, %s в сети", chatPoints: "%s очков", chatYou: "вы", chatNobody: "Никого не найдено",
+      chatDmWho: "Кто может писать мне лично", chatDmWhoShort: "Кто может мне писать", chatDmAll: "Все",
+      chatDmHouse: "Только мой факультет", chatDmNone: "Никто", chatDmWhoNote: "Тот, кому вы написали сами, всё равно сможет ответить.",
+      chatDmBlock: "Заблокировать", chatDmUnblock: "Разблокировать", chatDmBlockAsk: "Запретить %s писать вам?",
+      chatDmYouBlocked: "Вы заблокировали этого ученика", chatDmClosed: "Этот ученик сейчас не принимает личные сообщения", chatDmBlockedList: "Заблокированные",
       chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
       chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
       chessBotHead: "Игра против бота (тренировка)",
@@ -5160,6 +5183,10 @@ body{
       chatDmEmpty: "No private chats yet. You can write to a student of any house.", chatDmFind: "Choose a student",
       chatTypingDm: "typing", chatPeerOnline: "online", chatWrite: "Message privately", chatSearch: "Search by name",
       chatAll: "All", chatMembersSub: "%s members, %s online", chatPoints: "%s pts", chatYou: "you", chatNobody: "Nobody found",
+      chatDmWho: "Who can message me privately", chatDmWhoShort: "Who can message me", chatDmAll: "Everyone",
+      chatDmHouse: "Only my house", chatDmNone: "Nobody", chatDmWhoNote: "People you have written to can still reply.",
+      chatDmBlock: "Block", chatDmUnblock: "Unblock", chatDmBlockAsk: "Stop %s from messaging you?",
+      chatDmYouBlocked: "You have blocked this student", chatDmClosed: "This student isn't accepting private messages right now", chatDmBlockedList: "Blocked",
       chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
       chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
       chessBotHead: "Play against a bot (practice)",
@@ -5260,6 +5287,8 @@ body{
   var chatBans = {};          // uid -> until (null - butunlay); faqat admin ko'radi
   var chatBannedUntil = false; // o'zim bloklanganmanmi
   var chatPeers = {};         // uid -> { uid, name, house, online } - shaxsiy suhbatdoshlar
+  var chatDmState = "ok";     // ochiq shaxsiy suhbatda yoza olamanmi: ok / blocked_by_me / closed
+  var chatDmSet = null;       // { privacy: all|house|none, blocked: [...] } - o'z sozlamalarim
   var chatPeople = null;      // a'zolar oynasi: { room, list, filter }
   var chatDmTimer = null;
   var chatCountTimer = null;
@@ -5285,6 +5314,8 @@ body{
     reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
     copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
     edit: chatSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+    check: chatSvg('<path d="m5 12.5 4.5 4.5L19 7"/>'),
+    lock: chatSvg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
     dm: chatSvg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),
     ban: chatSvg('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>'),
     ban24: chatSvg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
@@ -5705,6 +5736,7 @@ body{
       updateChatRoomUI();
     }
     if (res.peer_online !== undefined) chatLive.peerOnline = res.peer_online;
+    if (res.dm_state !== undefined) { chatDmState = res.dm_state; chatFootUI(); }
     chatSubUI();
     clearTimeout(chatLiveTimer);
     if (chatLive.typing.length) chatLiveTimer = setTimeout(chatSubUI, 6600);
@@ -5755,17 +5787,153 @@ body{
   // Bloklangan odam yozish maydoni o'rnida sababini ko'radi.
   function chatSetBanned(until) {
     chatBannedUntil = until === undefined ? false : until;
-    var on = chatBannedUntil !== false, note = $("chat-banned");
-    note.textContent = !on ? "" : chatBannedUntil ? L("chatBanned").replace("%s", chatWhen(chatBannedUntil))
-                                                  : L("chatBannedForever");
-    note.classList.toggle("hidden", !on);
-    $("chat-form").classList.toggle("hidden", on);
-    if (on) { chatCancelCompose(); $("chat-at").classList.add("hidden"); }
+    var on = chatBannedUntil !== false;
+    $("chat-banned").textContent = !on ? "" : chatBannedUntil ?
+      L("chatBanned").replace("%s", chatWhen(chatBannedUntil)) : L("chatBannedForever");
+    chatFootUI();
+  }
+
+  // Pastki qism: yozish maydoni, yoki chatdan blok izohi, yoki shaxsiy suhbat yopiqligi izohi.
+  function chatFootUI() {
+    var banned = chatBannedUntil !== false;
+    var dmNo = !banned && chatIsDm(chatRoom) && chatDmState !== "ok";
+    $("chat-banned").classList.toggle("hidden", !banned);
+    var note = $("chat-dmnote");
+    note.classList.toggle("hidden", !dmNo);
+    note.innerHTML = "";
+    if (dmNo) {
+      var mine = chatDmState === "blocked_by_me";
+      note.appendChild(document.createTextNode(L(mine ? "chatDmYouBlocked" : "chatDmClosed")));
+      if (mine) {
+        var p = chatPeerOf(chatRoom), btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = L("chatDmUnblock");
+        btn.addEventListener("click", function() { chatBlock(p, false); });
+        note.appendChild(document.createElement("br"));
+        note.appendChild(btn);
+      }
+    }
+    $("chat-form").classList.toggle("hidden", banned || dmNo);
+    if (banned || dmNo) { chatCancelCompose(); $("chat-at").classList.add("hidden"); }
+  }
+
+  // Pastdan chiqadigan tanlov oynasi (sozlamalar, bloklash).
+  function chatSheet(title, note, items) {
+    chatCloseMenu();
+    var ov = document.createElement("div");
+    ov.className = "chat-menu";
+    var panel = document.createElement("div");
+    panel.className = "chat-sheet";
+    var list = document.createElement("div");
+    list.className = "chat-menu-list";
+    if (title) {
+      var t = document.createElement("div");
+      t.className = "chat-sheet-t";
+      t.textContent = title;
+      list.appendChild(t);
+    }
+    if (note) {
+      var n = document.createElement("div");
+      n.className = "chat-sheet-n";
+      n.textContent = note;
+      list.appendChild(n);
+    }
+    items.forEach(function(it) {
+      if (it.head) {
+        var h = document.createElement("div");
+        h.className = "chat-sheet-h";
+        h.textContent = it.head;
+        list.appendChild(h);
+        return;
+      }
+      var btn = document.createElement("button");
+      btn.type = "button";
+      if (it.danger) btn.className = "danger";
+      var ic = document.createElement("i");
+      ic.innerHTML = it.icon || "";
+      btn.appendChild(ic);
+      btn.appendChild(document.createTextNode(it.label));
+      if (it.on) {
+        var ck = document.createElement("span");
+        ck.className = "chat-sheet-ck";
+        ck.innerHTML = CHAT_SVG.check;
+        btn.appendChild(ck);
+      }
+      btn.addEventListener("click", function() { chatCloseMenu(); it.fn(); });
+      list.appendChild(btn);
+    });
+    panel.appendChild(list);
+    ov.appendChild(panel);
+    ov.addEventListener("click", function(e) { if (e.target === ov) chatCloseMenu(); });
+    $("scr-chat").appendChild(ov);
+    chatMenuEl = ov;
+  }
+
+  function chatPrivacyLabel(v) {
+    return L(v === "house" ? "chatDmHouse" : v === "none" ? "chatDmNone" : "chatDmAll");
+  }
+
+  // "Kim menga yoza oladi" + bloklanganlar ro'yxati.
+  function chatPrivacySheet() {
+    var set = chatDmSet || { privacy: "all", blocked: [] };
+    var items = ["all", "house", "none"].map(function(v) {
+      return { label: chatPrivacyLabel(v), on: set.privacy === v, fn: function() { chatSetPrivacy(v); } };
+    });
+    if (set.blocked.length) {
+      items.push({ head: L("chatDmBlockedList") });
+      set.blocked.forEach(function(p) {
+        items.push({ icon: CHAT_SVG.unban, label: L("chatDmUnblock") + ": " + (p.name || "Sehrgar"),
+                     fn: function() { chatBlock(p, false); } });
+      });
+    }
+    chatSheet(L("chatDmWho"), L("chatDmWhoNote"), items);
+  }
+
+  function chatSetPrivacy(v) {
+    chatAct("global", { action: "dm_privacy", value: v }).then(function(res) {
+      if (!(res && res.ok)) { chatActFail(res); return; }
+      chatDmSet = res.settings;
+      if (chatRoom === "dms") chatLoadDms();
+    }).catch(function() { chatActFail(); });
+  }
+
+  // Shaxsiy suhbat sarlavhasi bosilganda: bloklash / blokdan chiqarish.
+  function chatPeerSheet() {
+    var p = chatPeerOf(chatRoom), blocked = chatDmState === "blocked_by_me";
+    chatSheet(p.name || "Sehrgar", null, [blocked ?
+      { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
+      { icon: CHAT_SVG.ban, label: L("chatDmBlock"), danger: true, fn: function() { chatBlock(p, true); } }]);
+  }
+
+  function chatBlock(p, on) {
+    function go() {
+      chatAct("global", { action: on ? "block" : "unblock", uid: p.uid }).then(function(res) {
+        if (!(res && res.ok)) { chatActFail(res); return; }
+        chatDmSet = res.settings;
+        showToast(L(on ? "chatBanDone" : "chatUnbanDone").replace("%s", p.name || "Sehrgar"), "ok");
+        if (chatIsDm(chatRoom) && chatPeerOf(chatRoom).uid == p.uid) {
+          // Holatni serverdan qayta olamiz (blokdan chiqqach ham sozlama yopiq bo'lishi mumkin).
+          chatResetRoom(chatRoom);
+          chatPaint("bottom");
+          chatPoll();
+        } else if (chatRoom === "dms") {
+          chatLoadDms();
+        }
+      }).catch(function() { chatActFail(); });
+    }
+    if (!on) { go(); return; }
+    var ask = L("chatDmBlockAsk").replace("%s", p.name || "Sehrgar");
+    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+      tg.showConfirm(ask, function(ok) { if (ok) go(); });
+    } else if (window.confirm(ask)) {
+      go();
+    }
   }
 
   // "Yozmoqda" - 4 soniyada bir martadan ko'p yuborilmaydi.
   function chatTyping() {
     if (chatBannedUntil !== false || (chatCompose && chatCompose.mode === "edit")) return;
+    if (chatIsDm(chatRoom) && chatDmState !== "ok") return;
     if (!$("chat-input").value.trim() || Date.now() - chatTypingSent < 4000) return;
     chatTypingSent = Date.now();
     chatAct(chatRoom, { action: "typing" }).catch(function() {});
@@ -5917,6 +6085,11 @@ body{
           m.st = "failed";
           m.err = "";
           chatSetBanned(res.until);
+        } else if (res && (res.error === "dm_closed" || res.error === "dm_blocked_by_me")) {
+          m.st = "failed";
+          m.err = "";
+          chatDmState = res.error.slice(3);
+          chatFootUI();
         } else {
           m.st = "failed";
           m.err = L("chatFailed");
@@ -5948,6 +6121,7 @@ body{
   function chatActFail(res) {
     var e = res && res.error;
     if (e === "banned") { chatSetBanned(res.until); return; }
+    if (e === "dm_closed" || e === "dm_blocked_by_me") { chatDmState = e.slice(3); chatFootUI(); return; }
     showToast(e === "slow" ? L("chatSlowAct").replace("%s", res.retry || 5) :
               e === "too_old" ? L("chatTooOld") : L("chatActFail"));
   }
@@ -6210,11 +6384,13 @@ body{
     chatRoom = room;
     if (room !== "dms") chatResetRoom(room);
     chatLive = { typing: [], online: 0, until: 0 };
+    chatDmState = "ok";
     chatCancelCompose();
     $("chat-at").classList.add("hidden");
     updateChatRoomUI();
     chatSubUI();
     chatShowView();
+    chatFootUI();
     if (room === "dms") {
       chatSeq++;
       if (chatCtl) { try { chatCtl.abort(); } catch (e) {} chatCtl = null; }
@@ -6252,6 +6428,7 @@ body{
       .then(function(res) {
         if (!(res && res.ok) || chatRoom !== "dms") return;
         res.dms.forEach(function(x) { chatPeers[x.peer.uid] = x.peer; });
+        if (res.settings) chatDmSet = res.settings;
         chatRenderDms(res.dms);
       }).catch(function() {});
   }
@@ -6298,6 +6475,18 @@ body{
   function chatRenderDms(list) {
     var box = $("chat-dms"), me = chatUser().id || 0;
     box.innerHTML = "";
+    var set = document.createElement("button");
+    set.type = "button";
+    set.className = "chat-dms-set";
+    set.innerHTML = "<i>" + CHAT_SVG.lock + "</i>";
+    var sl = document.createElement("span");
+    sl.textContent = L("chatDmWhoShort");
+    var sv = document.createElement("em");
+    sv.textContent = chatPrivacyLabel(chatDmSet && chatDmSet.privacy) + " ›";
+    set.appendChild(sl);
+    set.appendChild(sv);
+    set.addEventListener("click", chatPrivacySheet);
+    box.appendChild(set);
     if (!list.length) {
       var empty = document.createElement("div");
       empty.className = "chat-dms-empty";
@@ -6535,6 +6724,7 @@ body{
     $("tab-dm").addEventListener("click", function() { setChatRoom("dms"); });
     $("chat-head").addEventListener("click", function() {
       if (chatRoom === "house" || chatRoom === "global") chatOpenPeople(chatRoom);
+      else if (chatIsDm(chatRoom)) chatPeerSheet();
     });
     $("chat-people-back").addEventListener("click", chatClosePeople);
     $("chat-people-q").addEventListener("input", chatRenderPeople);
