@@ -728,6 +728,163 @@ body{
   font:italic 400 12px/1.6 'Cormorant Garamond',serif;
   color:var(--dim);text-align:center;margin:18px 0 0;padding:0 6px;
 }
+/* ---------- kubok 3.0: sarlavha, soatlar, manbalar, tugmalar ---------- */
+.cup-head{position:relative}
+.cup-emblem{display:block;width:46px;height:46px;margin:0 auto 10px;filter:drop-shadow(0 6px 16px rgba(224,178,91,.35))}
+.cup-emblem svg{width:100%;height:100%;display:block}
+.cup-prev{display:inline-block;margin-top:10px;padding:6px 12px;border-radius:99px;
+  background:rgba(224,178,91,.08);border:1px solid rgba(224,178,91,.28);
+  font:600 11px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.cup-prev b{font-weight:800}
+button.glass{display:block;width:100%;padding:0;margin:0;border:0;background:none;color:inherit;
+  font:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+button.glass:active .tube{transform:scale(.97)}
+.tube{transition:transform .12s}
+.glass.lead .tube{border-color:rgba(var(--hc-rgb),.7);box-shadow:0 0 22px rgba(var(--hc-rgb),.22)}
+.g-place{position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  min-width:22px;height:22px;padding:0 6px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(12,15,20,.72);border:1px solid var(--line);
+  font:800 11px/1 'Manrope',sans-serif;color:var(--dim)}
+.g-place svg{width:13px;height:13px;display:block}
+.glass.lead .g-place{color:#f3d58f;border-color:rgba(224,178,91,.6);background:rgba(40,30,10,.8)}
+.cup-tap-hint{margin:12px 0 0;text-align:center;font:500 11px/1.4 'Manrope',sans-serif;color:var(--dim);opacity:.8}
+
+.cup-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
+.cc-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cc-kick{font:800 10px/1.2 'Manrope',sans-serif;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim)}
+.cc-note{margin:6px 0 0;font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
+
+/* manba belgilari va chiziqlar */
+.src-legend,.src-nums{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.src-legend{margin:12px 0 4px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.src-leg{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;
+  font:600 10px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.src-leg svg{width:18px;height:18px;display:block}
+.src-row{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;
+  padding:12px 0 10px;cursor:pointer;font:inherit;-webkit-appearance:none;appearance:none}
+.src-row + .src-row{border-top:1px solid var(--line)}
+.src-row:active{opacity:.75}
+.src-row-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.src-crest{width:26px;height:26px;flex:none;border-radius:8px;display:grid;place-items:center}
+.src-crest img{display:block;object-fit:contain}
+.src-name{flex:1;min-width:0;font:700 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.src-name em{font-style:normal;font-weight:600;font-size:11px;color:var(--dim);margin-left:7px}
+.src-total{font-family:'Cormorant Garamond',serif;font-size:21px;line-height:1;font-weight:600;color:var(--text)}
+.src-bar{height:8px;border-radius:99px;background:var(--wash-1);overflow:hidden}
+.src-bar-in{display:flex;gap:2px;height:100%;transition:width .5s ease}
+.src-bar-in i{display:block;height:100%;min-width:3px;flex-basis:0}
+.src-bar-in i:first-child{border-radius:99px 0 0 99px}
+.src-bar-in i:last-child{border-radius:0 99px 99px 0}
+.src-bar-in i:only-child{border-radius:99px}
+.src-bar.you{margin-top:12px;height:7px}
+.src-bar.big{margin-top:12px;height:12px}
+.src-nums{margin-top:7px;text-align:center;font:700 12px/1 'Manrope',sans-serif;color:var(--text)}
+.src-nums .zero{color:var(--dim);opacity:.5;font-weight:500}
+.src-empty{display:block;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.src-chips{display:flex;flex-wrap:wrap;gap:3px 9px;margin-top:4px}
+.src-chip{display:inline-flex;align-items:center;gap:3px;font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
+.src-chip svg{width:12px;height:12px;display:block;flex:none}
+
+/* shaxsiy blok: manbalar ro'yxati */
+.you-src{margin-top:12px;border-top:1px solid var(--line)}
+.you-src-row{display:grid;grid-template-columns:34px 1fr 64px;gap:11px;align-items:center;width:100%;
+  padding:10px 0;background:none;border:0;color:inherit;text-align:left;cursor:pointer;font:inherit;
+  -webkit-appearance:none;appearance:none}
+.you-src-row + .you-src-row{border-top:1px solid var(--line)}
+.you-src-row:active{opacity:.75}
+.you-src-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center}
+.you-src-ic svg{width:19px;height:19px;display:block}
+.you-src-mid{display:flex;flex-direction:column;gap:3px;min-width:0}
+.you-src-mid b{font:700 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.you-src-mid small{font:500 11px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.you-src-bar{height:3px;border-radius:3px;background:var(--wash-1);overflow:hidden;margin-top:3px}
+.you-src-bar i{display:block;height:100%;border-radius:3px}
+.you-src-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text);white-space:nowrap;text-align:right}
+.you-src-num s{text-decoration:none;font-size:13px;color:var(--dim);margin-left:1px}
+.you-src-num.full{color:#f3d58f}
+
+/* tugmalar: 2 x 2 */
+.cup-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.cup-tile{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;text-align:left;
+  padding:13px;border-radius:16px;cursor:pointer;color:var(--text);font-family:'Manrope',sans-serif;
+  background:linear-gradient(150deg,rgba(var(--tc-rgb),.14),var(--card) 62%);
+  border:1px solid rgba(var(--tc-rgb),.28);transition:transform .12s}
+.cup-tile:active{transform:scale(.97)}
+.ct-top{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:6px}
+.ct-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:var(--tc);
+  background:rgba(var(--tc-rgb),.16)}
+.ct-ic svg{width:20px;height:20px;display:block}
+.ct-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:99px;
+  background:rgba(var(--tc-rgb),.14);font:700 10px/1 'Manrope',sans-serif;color:var(--tc)}
+.ct-badge i{width:5px;height:5px;border-radius:50%;background:var(--tc)}
+.ct-t{font:800 13px/1.25 'Manrope',sans-serif;color:var(--text)}
+.ct-s{font:500 11.5px/1.35 'Manrope',sans-serif;color:var(--dim)}
+
+/* zal */
+.hall-top{margin-bottom:10px}
+.hall-top-txt{min-width:0}
+.hall-about{display:inline-flex;align-items:center;margin:0 0 6px;padding:8px 12px;border-radius:99px;
+  background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.32);color:var(--accent);
+  font:700 12px/1 'Manrope',sans-serif;cursor:pointer}
+.hall-row.idle{opacity:.45}
+.hall-nm{min-width:0}
+.hall-nm-t{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cup-more{display:block;width:100%;margin-top:10px;padding:12px;border-radius:12px;cursor:pointer;
+  background:var(--wash-1);border:1px solid var(--line);color:var(--text);font:700 13px/1 'Manrope',sans-serif}
+.cup-more:active{transform:scale(.98)}
+.cup-rules{margin-bottom:30px}
+.cup-rules .refs-rule{margin-top:6px}
+
+/* ---------- fakultet sahifasi ---------- */
+.hh-hero{position:relative;overflow:hidden;text-align:center;padding:24px 16px 18px;border-radius:22px;
+  background:radial-gradient(120% 80% at 50% 0%,rgba(var(--hc-rgb),.30),rgba(var(--hc-rgb),.06) 60%,var(--card));
+  border:1px solid rgba(var(--hc-rgb),.38)}
+.hh-crest{width:96px;height:96px;margin:0 auto 12px;border-radius:26px;display:grid;place-items:center;
+  background:rgba(12,15,20,.55);border:1px solid rgba(var(--hc-rgb),.5);box-shadow:0 10px 30px rgba(var(--hc-rgb),.25)}
+.hh-crest img{display:block;object-fit:contain}
+.hh-kick{display:block;font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim)}
+.hh-name{margin:8px 0 0;font:600 36px/1.05 'Cormorant Garamond',serif;color:var(--hc)}
+.hh-traits{margin:8px 0 0;font:600 12px/1.4 'Manrope',sans-serif;color:var(--text);letter-spacing:.02em}
+.hh-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.hh-fact{padding:10px 6px;border-radius:12px;background:rgba(12,15,20,.45);border:1px solid var(--line)}
+.hh-fact span{display:block;font:700 9px/1 'Manrope',sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim)}
+.hh-fact b{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:7px;
+  font:700 12px/1.25 'Manrope',sans-serif;color:var(--text)}
+.hh-sw{display:inline-flex;flex:none}
+.hh-sw u{display:block;width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.35)}
+.hh-sw u + u{margin-left:-3px}
+.hh-note{margin:14px 4px 0;font:italic 500 15px/1.45 'Cormorant Garamond',serif;color:var(--dim)}
+.hc-place{font:800 11px/1 'Manrope',sans-serif;color:var(--hc);padding:6px 10px;border-radius:99px;
+  background:rgba(var(--hc-rgb),.12);border:1px solid rgba(var(--hc-rgb),.35)}
+.hc-big{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.hc-big b{font:600 38px/1 'Cormorant Garamond',serif;color:var(--hc)}
+.hc-big span{font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.hc-src{margin-top:8px}
+.hc-src-row{display:grid;grid-template-columns:22px 1fr auto 44px;gap:10px;align-items:center;padding:9px 0}
+.hc-src-row + .hc-src-row{border-top:1px solid var(--line)}
+.hc-src-row.zero{opacity:.45}
+.hc-src-ic svg{width:18px;height:18px;display:block}
+.hc-src-name{font:600 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.hc-src-pct{font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
+.hc-src-val{font:600 19px/1 'Cormorant Garamond',serif;color:var(--text);text-align:right}
+.lore-row{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:13px 0}
+.lore-row + .lore-row{border-top:1px solid var(--line)}
+.cc-kick + .lore-row{margin-top:4px}
+.lore-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:var(--hc);
+  background:rgba(var(--hc-rgb),.12);border:1px solid rgba(var(--hc-rgb),.25)}
+.lore-ic svg{width:20px;height:20px;display:block}
+.lore-body{min-width:0}
+.lore-lbl{display:block;font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim)}
+.lore-name{display:block;margin-top:5px;font:600 20px/1.15 'Cormorant Garamond',serif;color:var(--text)}
+.lore-note{margin:4px 0 0;font:500 12.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.lore-note.strong{margin-top:6px;color:var(--text)}
+.lore-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lore-chips span{padding:6px 10px;border-radius:99px;background:rgba(var(--hc-rgb),.1);
+  border:1px solid rgba(var(--hc-rgb),.25);font:600 12px/1.2 'Manrope',sans-serif;color:var(--text)}
+.lore-src{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);
+  font:italic 400 13px/1.5 'Cormorant Garamond',serif;color:var(--dim);text-align:center}
+#house-members{margin-bottom:30px}
+#house-members .cc-kick{margin-bottom:4px}
 /* --- XABAR OYNALARI (pastda chiqadi) ---
    Film yuborilgani shu yerda ko'rsatiladi. Tasdiq oynasi o'rniga
    "bekor qilish" ishlatiladi: to'g'ri bosgan odam to'siqni sezmaydi. */
@@ -1152,59 +1309,70 @@ body{
     </div>
 
     <div class="cup-head">
+      <span class="cup-emblem" id="cup-emblem"></span>
       <span class="cup-kick" id="cup-kick"></span>
       <span class="cup-title" id="cup-title"></span>
+      <span class="cup-prev hidden" id="cup-prev"></span>
     </div>
 
+    <!-- Katta zaldagi to'rtta qum soati. Bosilsa - fakultet sahifasi. -->
     <div class="glasses" id="cup-glasses"></div>
+    <p class="cup-tap-hint" id="cup-tap-hint"></p>
+    <!-- Fakultetsizga: avval saralanish -->
+    <button class="cup-cta hidden" id="cup-cta"></button>
 
-    <button class="cup-strip hidden" id="tasks-strip" style="border-left-color: #f39c12">
-      <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="tasks-kicker">VAZIFALAR</span>
-        <span class="cup-strip-time"><i style="background:#f39c12"></i><span id="tasks-count"></span></span>
-      </span>
-      <span id="tasks-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;">Imtihonlar va Kunlik savollar ›</span>
-    </button>
-
+    <!-- Fakultet ballari qayerdan kelgan: kino, imtihon, kunlik savol, shaxmat, do'stlar -->
+    <div class="cup-card" id="cup-src"></div>
 
     <div class="cup-you hidden" id="cup-you"></div>
-    
-    <button class="cup-strip hidden" id="chat-strip" style="border-left-color: var(--accent); margin-bottom: 10px;">
-      <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="chat-kicker" data-xt="chatKicker">UMUMIY XONA</span>
-        <b id="chat-strip-n" class="chat-strip-n hidden"></b>
-      </span>
-      <span id="chat-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;" data-xt="chatStrip">Fakultetdoshlar bilan suhbat ›</span>
-    </button>
 
-    <button class="cup-strip hidden" id="chess-strip" style="border-left-color: #9b59b6; margin-bottom: 20px;">
-      <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="chess-kicker" style="color: #9b59b6;" data-xt="chessKicker">SEHRGAR SHAXMATI</span>
-        <span class="cup-strip-time"><i style="background:#9b59b6"></i><span>BLITZ 5:00</span></span>
-      </span>
-      <span id="chess-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;" data-xt="chessStrip">Botlar va Do'stlar bilan jangga kiring ›</span>
-    </button>
-
-    <!-- Do'stlar reytingi: fakultetdan qat'i nazar hammaga ko'rinadi. -->
-    <button class="cup-strip" id="refs-strip" style="border-left-color: #e0b25b; margin-bottom: 20px;">
-      <span class="cup-strip-head" style="margin-bottom: 5px;">
-        <span class="cup-strip-kicker" id="refs-kicker" style="color: #e0b25b;"></span>
-        <span class="cup-strip-time hidden" id="refs-pill"><i style="background:#e0b25b"></i><span id="refs-count"></span></span>
-      </span>
-      <span id="refs-title" style="font-weight: 500; font-size: 13px; color: var(--text); display: block; margin-top: 4px;"></span>
-    </button>
+    <!-- Tugmalar: vazifalar, chat, shaxmat, do'stlar -->
+    <div class="cup-tiles">
+      <button class="cup-tile hidden" id="tasks-strip" style="--tc:#e8843c;--tc-rgb:232,132,60">
+        <span class="ct-top">
+          <span class="ct-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/></svg></span>
+          <span class="ct-badge"><i></i><span id="tasks-count"></span></span>
+        </span>
+        <b class="ct-t" id="tasks-kicker"></b>
+        <span class="ct-s" id="tasks-title"></span>
+      </button>
+      <button class="cup-tile hidden" id="chat-strip" style="--tc:var(--accent);--tc-rgb:var(--accent-rgb)">
+        <span class="ct-top">
+          <span class="ct-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5"/></svg></span>
+          <b id="chat-strip-n" class="chat-strip-n hidden"></b>
+        </span>
+        <b class="ct-t" id="chat-kicker"></b>
+        <span class="ct-s" id="chat-title"></span>
+      </button>
+      <button class="cup-tile hidden" id="chess-strip" style="--tc:#a57fe0;--tc-rgb:165,127,224">
+        <span class="ct-top">
+          <span class="ct-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/></svg></span>
+        </span>
+        <b class="ct-t" id="chess-kicker"></b>
+        <span class="ct-s" id="chess-title"></span>
+      </button>
+      <!-- Do'stlar reytingi: fakultetdan qat'i nazar hammaga ko'rinadi. -->
+      <button class="cup-tile" id="refs-strip" style="--tc:#e0b25b;--tc-rgb:224,178,91">
+        <span class="ct-top">
+          <span class="ct-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/></svg></span>
+          <span class="ct-badge hidden" id="refs-pill"><i></i><span id="refs-count"></span></span>
+        </span>
+        <b class="ct-t" id="refs-kicker"></b>
+        <span class="ct-s" id="refs-title"></span>
+      </button>
+    </div>
 
     <!-- Fakultet zali: saralangan barcha a'zolar, faol yoki faol emas.
          Bot hall ma'lumotini yubormasa - butunlay yashiriladi. -->
     <div class="hall hidden" id="cup-hall">
       <div class="hall-top">
         <div class="hall-crest" id="hall-crest"></div>
-        <div>
+        <div class="hall-top-txt">
           <div class="hall-name" id="hall-name"></div>
           <div class="hall-sub" id="hall-sub"></div>
         </div>
       </div>
-      <div class="faces" id="hall-faces"></div>
+      <button class="hall-about" id="hall-about" type="button"></button>
       <div id="hall-list"></div>
       <div class="hall-wait hidden" id="hall-wait"></div>
     </div>
@@ -1215,8 +1383,21 @@ body{
       <div id="feed-list"></div>
     </div>
 
-    <button class="cup-cta hidden" id="cup-cta"></button>
-    <p class="cup-foot" id="cup-foot"></p>
+    <div class="cup-card cup-rules">
+      <div class="cc-kick" id="cup-rules-kick"></div>
+      <div id="cup-rules-list"></div>
+    </div>
+  </div>
+
+  <!-- Fakultet sahifasi: kubokdagi o'rni, ballari manbasi, asardagi odamlari -->
+  <div id="scr-house" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="house-back"><span style="font-size:13px">‹</span> <span id="house-back-txt">Ortga</span></button>
+    </div>
+    <div class="hh-hero" id="house-hero"></div>
+    <div class="cup-card" id="house-cup"></div>
+    <div class="cup-card" id="house-people"></div>
+    <div class="hall" id="house-members"></div>
   </div>
 
   <!-- Do'stlar reytingi: kim ko'proq do'st taklif qilgan + qanday ishlashi -->
@@ -2847,7 +3028,7 @@ body{
   function renderRefsStrip() {
     var r = refT();
     $("refs-kicker").textContent = r.kick;
-    $("refs-title").textContent = r.stripTitle;
+    $("refs-title").textContent = cupT().refsS;
     var me = refsData && refsData.me;
     if (me && me.refs > 0) {
       $("refs-count").textContent = r.fr(me.refs);
@@ -3030,14 +3211,14 @@ body{
     strip.classList.remove("hidden");
     
     var count = (tasksData && tasksData.tasks) ? tasksData.tasks.length : 0;
-    $("tasks-kicker").textContent = lang === "uz" ? "VAZIFALAR" : lang === "ru" ? "ЗАДАЧИ" : "TASKS";
-    $("tasks-title").textContent = lang === "uz" ? "Imtihonlar va Kunlik savollar ›" : lang === "ru" ? "Экзамены и Ежедневные вопросы ›" : "Exams and Daily questions ›";
-    
+    var c = cupT();
+    $("tasks-kicker").textContent = c.tasksT;
+    $("tasks-title").textContent = c.tasksS;
     if (count > 0) {
-      $("tasks-count").textContent = count + (lang === "uz" ? " ta yangi" : lang === "ru" ? " новых" : " new");
+      $("tasks-count").textContent = c.tasksNew.replace("%d", count);
       $("tasks-count").parentNode.querySelector("i").style.display = "";
     } else {
-      $("tasks-count").textContent = (lang === "uz" ? "Bajarildi" : lang === "ru" ? "Выполнено" : "Done");
+      $("tasks-count").textContent = c.tasksDone;
       $("tasks-count").parentNode.querySelector("i").style.display = "none";
     }
   }
@@ -3354,6 +3535,340 @@ body{
 
     strip.classList.remove("hidden");
   }
+  /* ---------- FAKULTETLAR HAQIDA (kitoblar asosida) ----------
+     Ismlar ilovadagi boshqa matnlar bilan bir xil yozilgan: uz - savollardagi
+     (Sneyp, Uizli, Slaggorn, Tom Ridl), ru - "Росмэн" tarjimasi (fakultet
+     nomlari ham shundan: Когтевран, Пуффендуй). Har rol: [ism, izoh]. */
+  var HOUSE_LORE = {
+    gryffindor: {
+      colors: ["#ae0001", "#d3a625"],
+      uz: {
+        traits: "Jasorat · matonat · olijanoblik", symbol: "Sher", element: "Olov", colors: "Qizil va oltin",
+        founder: ["Godrik Grifindor", "Jasur duelchi. Uning qilichi haqiqiy grifindorlikka kerak bo'lganda Saralovchi shlyapadan chiqadi."],
+        head: ["Minerva Makgonagall", "Transfiguratsiya ustozi, maktab direktorining o'rinbosari."],
+        ghost: ["Deyarli Boshsiz Nik", "Ser Nikolas de Mimsi-Porpington — boshi oxirigacha kesilmay qolgan."],
+        captain: ["Oliver Vud", "1–3-kitoblarda. Keyin Anjelina Jonson (5) va Garri Potter (6)."],
+        prefects: ["Persi Uizli", "Keyin maktabning Bosh o'quvchisi bo'ldi. 5-kitobdan — Ron Uizli va Germiona Greynjer."],
+        room: "Grifindor minorasida. Kirish — Semiz xonim portreti ortida: parolni aytsangiz, portret ochiladi.",
+        famous: ["Garri Potter", "Germiona Greynjer", "Ron Uizli", "Nevill Longbottom", "Jinni Uizli", "Jeyms va Lili Potter", "Sirius Blek"]
+      },
+      ru: {
+        traits: "Храбрость · отвага · благородство", symbol: "Лев", element: "Огонь", colors: "Алый и золотой",
+        founder: ["Годрик Гриффиндор", "Храбрый дуэлянт. Его меч появляется из Распределяющей шляпы, когда он нужен настоящему гриффиндорцу."],
+        head: ["Минерва Макгонагалл", "Преподаёт трансфигурацию, заместитель директора школы."],
+        ghost: ["Почти Безголовый Ник", "Сэр Николас де Мимси-Дельфингтон — голову ему отрубили не до конца."],
+        captain: ["Оливер Вуд", "В 1–3 книгах. Затем Анджелина Джонсон (5) и Гарри Поттер (6)."],
+        prefects: ["Перси Уизли", "Позже стал старостой школы. С 5-й книги — Рон Уизли и Гермиона Грейнджер."],
+        room: "В башне Гриффиндора. Вход — за портретом Полной Дамы: назовите пароль, и портрет откроется.",
+        famous: ["Гарри Поттер", "Гермиона Грейнджер", "Рон Уизли", "Невилл Долгопупс", "Джинни Уизли", "Джеймс и Лили Поттер", "Сириус Блэк"]
+      },
+      en: {
+        traits: "Bravery · daring · chivalry", symbol: "Lion", element: "Fire", colors: "Scarlet and gold",
+        founder: ["Godric Gryffindor", "A brave duellist. His sword comes out of the Sorting Hat when a true Gryffindor needs it."],
+        head: ["Minerva McGonagall", "Transfiguration teacher and Deputy Headmistress."],
+        ghost: ["Nearly Headless Nick", "Sir Nicholas de Mimsy-Porpington — his head was never quite cut off."],
+        captain: ["Oliver Wood", "Books 1–3. Then Angelina Johnson (5) and Harry Potter (6)."],
+        prefects: ["Percy Weasley", "Later Head Boy. From book 5 — Ron Weasley and Hermione Granger."],
+        room: "In Gryffindor Tower. The entrance is behind the portrait of the Fat Lady: say the password and she swings open.",
+        famous: ["Harry Potter", "Hermione Granger", "Ron Weasley", "Neville Longbottom", "Ginny Weasley", "James and Lily Potter", "Sirius Black"]
+      }
+    },
+    slytherin: {
+      colors: ["#1a472a", "#aaaaaa"],
+      uz: {
+        traits: "Maqsad · zukkolik · tadbirkorlik", symbol: "Ilon", element: "Suv", colors: "Yashil va kumush",
+        founder: ["Salazar Sliterin", "Ilonlar tilini bilgan. Qasr ichida Maxfiy hujrani yashirincha qurib ketgan."],
+        head: ["Severus Sneyp", "Iksirlar ustozi. 7-kitobda mudirlik Horas Slaggornga o'tadi."],
+        ghost: ["Qonli Baron", "Kiyimi kumushrang qon dog'lari bilan qoplangan. Hatto Pivz ham undan qo'rqadi."],
+        captain: ["Markus Flint", "1–3-kitoblarda. 5-kitobda — Grexem Montegyu."],
+        prefects: ["Drako Malfoy va Pensi Parkinson", "5-kitobdan boshlab."],
+        room: "Zindonlarda, Qora ko'l ostida — derazalardan ko'l suvi ko'rinadi, xona yashil tusda tovlanadi. Kirish — tosh devordagi yashirin eshik, parol bilan.",
+        famous: ["Tom Ridl (Voldemort)", "Severus Sneyp", "Horas Slaggorn", "Drako Malfoy", "Krabb va Goyl"]
+      },
+      ru: {
+        traits: "Амбиции · хитрость · находчивость", symbol: "Змея", element: "Вода", colors: "Зелёный и серебряный",
+        founder: ["Салазар Слизерин", "Владел змеиным языком. Тайно построил в замке Тайную комнату."],
+        head: ["Северус Снегг", "Преподаёт зельеварение. В 7-й книге деканом становится Гораций Слизнорт."],
+        ghost: ["Кровавый Барон", "Его одежда в серебристых пятнах крови. Даже Пивз его боится."],
+        captain: ["Маркус Флинт", "В 1–3 книгах. В 5-й — Грэхэм Монтегю."],
+        prefects: ["Драко Малфой и Пэнси Паркинсон", "С 5-й книги."],
+        room: "В подземельях, под Чёрным озером — в окнах видна вода, комната светится зелёным. Вход — потайная дверь в каменной стене, по паролю.",
+        famous: ["Том Реддл (Волан-де-Морт)", "Северус Снегг", "Гораций Слизнорт", "Драко Малфой", "Крэбб и Гойл"]
+      },
+      en: {
+        traits: "Ambition · cunning · resourcefulness", symbol: "Serpent", element: "Water", colors: "Green and silver",
+        founder: ["Salazar Slytherin", "A Parselmouth. He secretly built the Chamber of Secrets inside the castle."],
+        head: ["Severus Snape", "Potions master. In book 7 Horace Slughorn takes over the house."],
+        ghost: ["The Bloody Baron", "His robes are stained with silver blood. Even Peeves is afraid of him."],
+        captain: ["Marcus Flint", "Books 1–3. In book 5 — Graham Montague."],
+        prefects: ["Draco Malfoy and Pansy Parkinson", "From book 5."],
+        room: "In the dungeons, under the Black Lake — the windows look into the water and the room glows green. The entrance is a hidden door in a stone wall, opened by password.",
+        famous: ["Tom Riddle (Voldemort)", "Severus Snape", "Horace Slughorn", "Draco Malfoy", "Crabbe and Goyle"]
+      }
+    },
+    ravenclaw: {
+      colors: ["#222f5b", "#946b2d"],
+      uz: {
+        traits: "Aql · donolik · ijodkorlik", symbol: "Burgut", element: "Havo", colors: "Ko'k va bronza",
+        founder: ["Rovena Reyvenklo", "O'z davrining eng aqlli sehrgar ayoli. Uning yo'qolgan diademasi taqqanga donolik berardi."],
+        head: ["Filius Flitvik", "Afsunlar ustozi. Bo'yi kichkina, lekin kuchli duelchi."],
+        ghost: ["Kulrang xonim", "Aslida Xelena Reyvenklo — asoschining qizi. Diadema sirini Garriga aynan u aytgan."],
+        captain: ["Rojer Devis", "4–5-kitoblarda. Yul balida Fler Delakur bilan raqsga tushgan."],
+        prefects: ["Padma Patil va Entoni Goldsteyn", "5-kitobdan. Ulardan oldin — Penelopa Klirvoter."],
+        room: "Reyvenklo minorasida. Parol yo'q: burgut shaklidagi bronza taqillatgich topishmoq so'raydi — to'g'ri javob bergan kiradi.",
+        famous: ["Luna Lavgud", "Cho Chang", "Padma Patil", "Terri But", "Maykl Korner"]
+      },
+      ru: {
+        traits: "Ум · мудрость · творчество", symbol: "Орёл", element: "Воздух", colors: "Синий и бронзовый",
+        founder: ["Кандида Когтевран", "Самая умная волшебница своего времени. Её утерянная диадема дарила мудрость."],
+        head: ["Филиус Флитвик", "Преподаёт заклинания. Маленького роста, но сильный дуэлянт."],
+        ghost: ["Серая Дама", "На самом деле Елена Когтевран, дочь основательницы. Именно она открыла Гарри тайну диадемы."],
+        captain: ["Роджер Дэвис", "В 4–5 книгах. На Святочном балу танцевал с Флёр Делакур."],
+        prefects: ["Падма Патил и Энтони Голдстейн", "С 5-й книги. До них — Пенелопа Кристалл."],
+        room: "В башне Когтеврана. Пароля нет: бронзовый молоток в виде орла задаёт загадку — войдёт тот, кто ответит.",
+        famous: ["Полумна Лавгуд", "Чжоу Чанг", "Падма Патил", "Терри Бут", "Майкл Корнер"]
+      },
+      en: {
+        traits: "Wit · wisdom · creativity", symbol: "Eagle", element: "Air", colors: "Blue and bronze",
+        founder: ["Rowena Ravenclaw", "The cleverest witch of her age. Her lost diadem granted wisdom to whoever wore it."],
+        head: ["Filius Flitwick", "Charms teacher. Tiny, but a formidable duellist."],
+        ghost: ["The Grey Lady", "Really Helena Ravenclaw, the founder's daughter. She told Harry the secret of the diadem."],
+        captain: ["Roger Davies", "Books 4–5. He took Fleur Delacour to the Yule Ball."],
+        prefects: ["Padma Patil and Anthony Goldstein", "From book 5. Before them — Penelope Clearwater."],
+        room: "In Ravenclaw Tower. There is no password: a bronze eagle knocker asks a riddle, and whoever answers may enter.",
+        famous: ["Luna Lovegood", "Cho Chang", "Padma Patil", "Terry Boot", "Michael Corner"]
+      }
+    },
+    hufflepuff: {
+      colors: ["#ecb939", "#000000"],
+      uz: {
+        traits: "Mehnatsevarlik · sadoqat · adolat", symbol: "Bo'rsiq", element: "Yer", colors: "Sariq va qora",
+        founder: ["Xelga Xaffelpaff", "Hech kimni ajratmay, hammani o'qitgan. Uning oltin kosasi keyin Voldemort qo'liga tushgan."],
+        head: ["Pomona Spraut", "O'simlikshunoslik ustozi. 2-kitobda mandragora o'stirib, toshga aylanganlarni qutqargan."],
+        ghost: ["Semiz rohib", "Xushchaqchaq arvoh — hammani, hatto Pivzni ham kechirishga tayyor."],
+        captain: ["Sedrik Diggori", "3-kitobda sardor va izlovchi — Grifindorni yenggan."],
+        prefects: ["Erni Makmillan va Xanna Ebbot", "5-kitobdan. Ulardan oldin — Sedrik Diggori."],
+        room: "Oshxona yaqinida, yerto'lada. Kirish — bochkalar uyumi ortida: kerakli bochkani maxsus ritmda taqillatish kerak.",
+        famous: ["Sedrik Diggori", "Nyut Skamander («Fantastik maxluqlar»)", "Xanna Ebbot", "Erni Makmillan", "Jastin Finch-Fletchli", "Syuzan Bouns"]
+      },
+      ru: {
+        traits: "Трудолюбие · верность · справедливость", symbol: "Барсук", element: "Земля", colors: "Жёлтый и чёрный",
+        founder: ["Пенелопа Пуффендуй", "Принимала всех без разбора. Её золотая чаша позже попала к Волан-де-Морту."],
+        head: ["Помона Стебль", "Преподаёт травологию. Во 2-й книге вырастила мандрагоры и спасла окаменевших."],
+        ghost: ["Толстый Монах", "Добродушное привидение — готов простить всех, даже Пивза."],
+        captain: ["Седрик Диггори", "В 3-й книге — капитан и ловец, обыграл Гриффиндор."],
+        prefects: ["Эрни Макмиллан и Ханна Аббот", "С 5-й книги. До них — Седрик Диггори."],
+        room: "Рядом с кухней, в подвале. Вход — за штабелем бочек: нужную бочку надо простучать в особом ритме.",
+        famous: ["Седрик Диггори", "Ньют Скамандер («Фантастические твари»)", "Ханна Аббот", "Эрни Макмиллан", "Джастин Финч-Флетчли", "Сьюзен Боунс"]
+      },
+      en: {
+        traits: "Hard work · loyalty · fair play", symbol: "Badger", element: "Earth", colors: "Yellow and black",
+        founder: ["Helga Hufflepuff", "She took in every student. Her golden cup later fell into Voldemort's hands."],
+        head: ["Pomona Sprout", "Herbology teacher. In book 2 she grew the Mandrakes that saved the petrified."],
+        ghost: ["The Fat Friar", "A cheerful ghost, ready to forgive everyone — even Peeves."],
+        captain: ["Cedric Diggory", "Book 3 — captain and Seeker, beat Gryffindor."],
+        prefects: ["Ernie Macmillan and Hannah Abbott", "From book 5. Before them — Cedric Diggory."],
+        room: "Near the kitchens, in the basement. The entrance hides behind a stack of barrels: tap the right one in a special rhythm.",
+        famous: ["Cedric Diggory", "Newt Scamander (Fantastic Beasts)", "Hannah Abbott", "Ernie Macmillan", "Justin Finch-Fletchley", "Susan Bones"]
+      }
+    }
+  };
+
+  /* ---------- ball manbalari ----------
+     Kalitlar serverdagi hpcup.SOURCE_KEYS bilan bir xil. Ranglar rang ko'rlikka
+     tekshirilgan (qo'shni juftlar ajraladi), belgi har doim rang yonida turadi. */
+  var SRC_ICON = {
+    film: '<path d="M4 5h16v14H4z M8 5v14 M16 5v14 M4 9.5h4 M4 14.5h4 M16 9.5h4 M16 14.5h4"/>',
+    exam: '<path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/>',
+    daily: '<path d="M4.5 6h15v14h-15z M4.5 10h15 M8.5 3.5v4 M15.5 3.5v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/>',
+    chess: '<path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/>',
+    friends: '<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/>'
+  };
+  var CUP_SRC = [
+    { key: "film",    color: "#3987e5" },
+    { key: "exam",    color: "#d95926" },
+    { key: "daily",   color: "#199e70" },
+    { key: "chess",   color: "#9085e9" },
+    { key: "friends", color: "#c98500" }
+  ];
+
+  // Fakultet sahifasidagi rollar belgilari
+  var ROLE_ICON = {
+    founder: '<path d="M12 3l7 3v5.2c0 4.3-3 7.9-7 9.8c-4-1.9-7-5.5-7-9.8V6z M12 8v7 M9 11h6"/>',
+    head: '<path d="M2.5 9.5L12 5l9.5 4.5L12 14z M6.5 11.5v4.3c0 1.3 2.5 2.7 5.5 2.7s5.5-1.4 5.5-2.7v-4.3 M21.5 9.5v5"/>',
+    ghost: '<path d="M6 20.5V10.5a6 6 0 0 1 12 0v10l-2-1.6-2 1.6-2-1.6-2 1.6-2-1.6z"/><ellipse cx="9.8" cy="10.6" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="14.2" cy="10.6" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="14.6" rx="1" ry="1.3"/>',
+    captain: '<path d="M20.5 3.5l-9.6 9.6 M9.2 11.6l3.2 3.2 M10.6 13.4C8.2 12.9 5 15 3.5 20.5c5.5-1.5 7.6-4.7 7.1-7.1z M7.3 16.8l-2.2 2.2 M9 17.6l-1.4 1.8"/>',
+    prefects: '<path d="M12 3.2l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/>',
+    room: '<path d="M5.5 11V8a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3v3 M3.5 12.5a1.5 1.5 0 0 1 3 0V15h11v-2.5a1.5 1.5 0 0 1 3 0V18h-17z M6 18v2 M18 18v2"/>',
+    famous: '<path d="M12 3.5l1.7 4.3 4.3 1.7-4.3 1.7L12 15.5l-1.7-4.3L6 9.5l4.3-1.7z M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z M5.5 15.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>'
+  };
+  var CUP_TROPHY =
+    '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
+      '<path d="M15 7h18v9.5c0 5.2-4 9.5-9 9.5s-9-4.3-9-9.5z" fill="url(#cupGold)" stroke="#f3d58f" stroke-width="1.2"/>' +
+      '<path d="M15 10.5H9.5c0 5 2.6 8 6.8 8.6 M33 10.5h5.5c0 5-2.6 8-6.8 8.6" stroke="#e0b25b" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M24 26v6 M18.5 40.5h11 M20 32h8l1.6 8.5H18.4z" stroke="#e0b25b" stroke-width="2" stroke-linejoin="round" fill="rgba(224,178,91,.18)"/>' +
+      '<path d="M24 11.2l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#fff6dc" opacity=".9"/>' +
+      '<defs><linearGradient id="cupGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc98"/><stop offset="1" stop-color="#b8862f"/></linearGradient></defs>' +
+    '</svg>';
+
+  function svgIcon(paths, cls) {
+    return '<svg class="' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
+  }
+
+  var CUP_T = {
+    uz: {
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", friends: "Do'stlar" },
+      rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
+              daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
+              friends: "Har do'st uchun +20 · cheklanmagan" },
+      srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
+      tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
+      prevWin: "O'tgan hafta kubogi: %s", place: "%d-o'rin", total: "Jami", none: "Bu hafta hali ball yo'q",
+      tasksT: "Vazifalar", tasksS: "Imtihon va kunlik savol", tasksNew: "%d ta yangi", tasksDone: "Bajarildi",
+      chatT: "Umumiy xona", chatS: "Fakultetdoshlar bilan suhbat",
+      chessT: "Sehrgar shaxmati", chessS: "Botlar va do'stlar bilan jang",
+      refsS: "Taklif qiling — darajangiz oshadi",
+      youHow: "Qayerdan qancha", about: "Fakultet haqida",
+      hKick: "Xogvarts fakulteti", hSymbol: "Ramzi", hElement: "Unsuri", hColors: "Ranglari",
+      hCup: "Bu haftaki kubokda", hActive: "%d faol a'zo", hPeople: "Fakultet ahli",
+      founder: "Asoschisi", head: "Mudiri", ghost: "Arvohi", captain: "Kvidich sardori", prefects: "Prefektlar",
+      room: "Umumiy xonasi", famous: "Mashhur a'zolari", members: "Bu haftaning a'zolari",
+      showAll: "Hammasini ko'rish (%d)", loading: "Yuklanmoqda…", empty: "Bu hafta hali hech kim ball to'plamagan.",
+      lore: "Ma'lumotlar J. K. Rouling kitoblari va uning rasmiy yozuvlari asosida.",
+      rulesKick: "Kubok qoidalari",
+      rules: ["Mavsum — bir hafta: dushanba 00:00 dan yakshanba 23:59 gacha (Toshkent vaqti).",
+              "Fakultet bali — uning faol a'zolari ballari yig'indisi. Faol a'zo — mavsumda kamida 30 ball to'plagan sehrgar.",
+              "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
+              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 400 ball.",
+              "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
+    },
+    ru: {
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", friends: "Друзья" },
+      rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
+              daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
+              friends: "+20 за каждого друга · без лимита" },
+      srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
+      tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
+      prevWin: "Кубок прошлой недели: %s", place: "%d место", total: "Всего", none: "На этой неделе очков пока нет",
+      tasksT: "Задания", tasksS: "Экзамены и вопрос дня", tasksNew: "%d новых", tasksDone: "Готово",
+      chatT: "Гостиная", chatS: "Беседа с однокурсниками",
+      chessT: "Волшебные шахматы", chessS: "Бои с ботами и друзьями",
+      refsS: "Приглашайте — растёт уровень",
+      youHow: "Откуда сколько", about: "О факультете",
+      hKick: "Факультет Хогвартса", hSymbol: "Символ", hElement: "Стихия", hColors: "Цвета",
+      hCup: "В кубке этой недели", hActive: "%d активных", hPeople: "Люди факультета",
+      founder: "Основатель", head: "Декан", ghost: "Привидение", captain: "Капитан по квиддичу", prefects: "Старосты",
+      room: "Гостиная", famous: "Известные ученики", members: "Участники этой недели",
+      showAll: "Показать всех (%d)", loading: "Загрузка…", empty: "На этой неделе очков пока ни у кого нет.",
+      lore: "По книгам Дж. К. Роулинг и её официальным материалам.",
+      rulesKick: "Правила кубка",
+      rules: ["Сезон длится неделю: с понедельника 00:00 до воскресенья 23:59 (по Ташкенту).",
+              "Очки факультета — сумма очков его активных участников. Активный — набравший за сезон минимум 30 очков.",
+              "В конце недели кубок получает факультет с наибольшей суммой.",
+              "У всех источников, кроме приглашений, есть лимит за сезон — всего 400 очков.",
+              "Игра с ботом очков не даёт — только партии с живым соперником."]
+    },
+    en: {
+      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", friends: "Friends" },
+      rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
+              daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
+              friends: "+20 per friend · no limit" },
+      srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
+      tapHint: "Tap a house — its founder, head, ghost and members",
+      prevWin: "Last week's cup: %s", place: "#%d", total: "Total", none: "No points yet this week",
+      tasksT: "Tasks", tasksS: "Exams and daily question", tasksNew: "%d new", tasksDone: "Done",
+      chatT: "Common room", chatS: "Chat with your housemates",
+      chessT: "Wizard chess", chessS: "Duel bots and friends",
+      refsS: "Invite friends and rank up",
+      youHow: "Where from", about: "About the house",
+      hKick: "Hogwarts house", hSymbol: "Emblem", hElement: "Element", hColors: "Colours",
+      hCup: "In this week's cup", hActive: "%d active", hPeople: "House figures",
+      founder: "Founder", head: "Head of House", ghost: "House ghost", captain: "Quidditch captain", prefects: "Prefects",
+      room: "Common room", famous: "Famous members", members: "Members this week",
+      showAll: "Show all (%d)", loading: "Loading…", empty: "Nobody has scored yet this week.",
+      lore: "Based on J.K. Rowling's books and her official writing.",
+      rulesKick: "Cup rules",
+      rules: ["A season is one week: Monday 00:00 to Sunday 23:59 (Tashkent time).",
+              "A house's score is the sum of its active members' points. Active means at least 30 points this season.",
+              "At the end of the week the house with the most points wins the cup.",
+              "Every source except inviting friends has a season cap — 400 points in total.",
+              "Chess against a bot gives no points — only live games do."]
+    }
+  };
+
+  function cupT() { return CUP_T[lang] || CUP_T.uz; }
+
+  // "#3987e5" -> "rgba(57,135,229,.16)" (color-mix eski Android'da yo'q)
+  function hexA(hex, a) {
+    var n = parseInt(String(hex).slice(1), 16);
+    return "rgba(" + (n >> 16 & 255) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")";
+  }
+
+  function cupEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text !== undefined && text !== null) { el.textContent = text; }
+    return el;
+  }
+
+  function srcSum(by) {
+    var s = 0;
+    CUP_SRC.forEach(function (x) { s += (by && by[x.key]) || 0; });
+    return s;
+  }
+
+  // Ustma-ust chiziq: har manba o'z rangida, oralarida 2px bo'shliq.
+  // width - chiziqning umumiy uzunligi (%), shunda fakultetlar solishtiriladi.
+  function srcBar(by, width, cls) {
+    var bar = cupEl("div", "src-bar" + (cls ? " " + cls : ""));
+    var sum = srcSum(by);
+    var inner = cupEl("div", "src-bar-in");
+    inner.style.width = Math.max(0, Math.min(100, width)) + "%";
+    if (sum > 0) {
+      CUP_SRC.forEach(function (x) {
+        var v = (by && by[x.key]) || 0;
+        if (!v) { return; }
+        var seg = cupEl("i");
+        seg.style.flexGrow = v;
+        seg.style.background = x.color;
+        seg.title = cupT().src[x.key] + ": " + v;
+        inner.appendChild(seg);
+      });
+    }
+    bar.appendChild(inner);
+    return bar;
+  }
+
+  // Kichik belgilar: faqat ball bor manbalar ("🎞 35  📅 60")
+  function srcChips(by) {
+    var box = cupEl("span", "src-chips");
+    CUP_SRC.forEach(function (x) {
+      var v = (by && by[x.key]) || 0;
+      if (!v) { return; }
+      var chip = cupEl("span", "src-chip");
+      chip.title = cupT().src[x.key];
+      chip.innerHTML = svgIcon(SRC_ICON[x.key]);
+      chip.firstChild.style.color = x.color;
+      chip.appendChild(document.createTextNode(String(v)));
+      box.appendChild(chip);
+    });
+    return box;
+  }
+
+  function srcLegend() {
+    var row = cupEl("div", "src-legend");
+    var c = cupT();
+    CUP_SRC.forEach(function (x) {
+      var cell = cupEl("span", "src-leg");
+      cell.innerHTML = svgIcon(SRC_ICON[x.key]);
+      cell.firstChild.style.color = x.color;
+      cell.appendChild(cupEl("span", "", c.src[x.key]));
+      row.appendChild(cell);
+    });
+    return row;
+  }
+
   /* ---------- qum soatlari ---------- */
 
   function renderGlasses(list, me) {
@@ -3366,25 +3881,23 @@ body{
       if ((list[i].total_points || 0) > top) { top = list[i].total_points; }
     }
 
-    list.forEach(function (row) {
+    list.forEach(function (row, idx) {
       var h = HOUSES[row.house] || {};
-      var cell = document.createElement("div");
+      var cell = document.createElement("button");
+      cell.type = "button";
       cell.className = "glass" + (row.house === me.house ? " mine" : "") +
-                       (row.qualified ? "" : " out");
+                       (row.qualified ? "" : " out") + (idx === 0 && top > 0 ? " lead" : "");
       cell.style.setProperty("--hc", h.accent || "#97a1ae");
       cell.style.setProperty("--hc-rgb", h.rgb || "151,161,174");
+      cell.addEventListener("click", function () { openHouse(row.house); });
 
       var tube = document.createElement("div");
       tube.className = "tube";
 
       // Minimal to'ldirish gerbni to'liq sig'diradigan balandlikda bo'lishi
-      // shart. 8% (15px) da 34px gerb to'ldirishdan chiqib turadi va naycha
-      // buzilgandek ko'rinadi - skrinshotda aynan shu ko'rindi.
-      //
-      // Shkalada quyi chegara bor: yetakchi SCALE_FLOOR dan past bo'lsa,
-      // balandlik o'sha chegaraga nisbatan hisoblanadi. Aks holda mavsum
-      // boshida 40 ball (350 dan) naychani deyarli to'ldirib, "poyga
-      // tugagan" degan yolg'on taassurot berardi.
+      // shart (34px gerb). Shkalada quyi chegara bor: yetakchi SCALE_FLOOR
+      // dan past bo'lsa, balandlik o'sha chegaraga nisbatan hisoblanadi -
+      // aks holda mavsum boshida naycha "to'lib" ketgandek ko'rinardi.
       var scale = Math.max(top, SCALE_FLOOR);
       var pct = Math.round((row.total_points || 0) / scale * 78);
       var fill = document.createElement("span");
@@ -3398,6 +3911,13 @@ body{
       if (img) { crest.appendChild(img); }
       else { crest.textContent = h.crest || "?"; }
       tube.appendChild(crest);
+
+      // O'rin belgisi: yetakchiga toj
+      var place = cupEl("span", "g-place", String(idx + 1));
+      if (idx === 0 && top > 0) {
+        place.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16l1-10-5 4-4-7-4 7-5-4z" fill="currentColor"/></svg>';
+      }
+      tube.appendChild(place);
       cell.appendChild(tube);
 
       var nm = document.createElement("span");
@@ -3410,14 +3930,61 @@ body{
       val.textContent = cupPts(row.total_points);
       cell.appendChild(val);
 
-      if (!row.qualified) {
-        var need = document.createElement("span");
-        need.className = "g-need";
-        need.textContent = t.cupMembers
-          .replace("%a", row.active_members || 0).replace("%b", 5);
-        cell.appendChild(need);
-      }
+      cell.appendChild(cupEl("span", "g-need", cupT().hActive.replace("%d", row.active_members || 0)));
       box.appendChild(cell);
+    });
+  }
+
+  /* ---------- ballar qayerdan keldi ---------- */
+
+  function renderSources(list) {
+    var box = $("cup-src");
+    if (!box) { return; }
+    var c = cupT();
+    box.innerHTML = "";
+
+    var head = cupEl("div", "cc-head");
+    head.appendChild(cupEl("span", "cc-kick", c.srcKick));
+    box.appendChild(head);
+    box.appendChild(cupEl("p", "cc-note", c.srcNote));
+    box.appendChild(srcLegend());
+
+    var top = 0;
+    list.forEach(function (r) { if ((r.total_points || 0) > top) { top = r.total_points || 0; } });
+
+    list.forEach(function (r, idx) {
+      var hh = HOUSES[r.house] || {};
+      var by = r.by || {};
+      var row = cupEl("button", "src-row");
+      row.type = "button";
+      row.addEventListener("click", function () { openHouse(r.house); });
+
+      var line = cupEl("span", "src-row-top");
+      var crest = cupEl("span", "src-crest");
+      crest.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+      var im = cupCrestImg(r.house, 18);
+      if (im) { crest.appendChild(im); }
+      line.appendChild(crest);
+      var nm = cupEl("span", "src-name", cupHouseName(r.house));
+      nm.appendChild(cupEl("em", "", T[lang].cupPlace.replace("%d", idx + 1)));
+      line.appendChild(nm);
+      var tot = cupEl("b", "src-total", cupPts(r.total_points));
+      line.appendChild(tot);
+      row.appendChild(line);
+
+      if (srcSum(by) > 0) {
+        row.appendChild(srcBar(by, top ? (r.total_points || 0) / top * 100 : 0));
+        var nums = cupEl("span", "src-nums");
+        CUP_SRC.forEach(function (x) {
+          var v = by[x.key] || 0;
+          var n = cupEl("span", v ? "" : "zero", v ? String(v) : "—");
+          nums.appendChild(n);
+        });
+        row.appendChild(nums);
+      } else {
+        row.appendChild(cupEl("span", "src-empty", c.none));
+      }
+      box.appendChild(row);
     });
   }
 
@@ -3459,6 +4026,51 @@ body{
     return t.agoDay.replace("%d", Math.round(m / 1440));
   }
 
+  // A'zo qatori: o'rni, ism, ball va uning qayerdan kelgani
+  function memberRow(m, idx, houseId) {
+    var t = T[lang];
+    var hh = HOUSES[houseId] || {};
+    var row = cupEl("div", "hall-row" + (m.active === false ? " idle" : ""));
+    row.appendChild(cupEl("div", "hall-pos", String(idx + 1)));
+    row.appendChild(faceEl("hall-face", m.name, houseId));
+
+    var who = cupEl("div", "hall-nm");
+    var nm = cupEl("span", "hall-nm-t", m.name || "");
+    if (m.me) {
+      var tag = cupEl("i", "", t.hallYou);
+      tag.style.color = hh.accent || "var(--accent)";
+      nm.appendChild(tag);
+    }
+    who.appendChild(nm);
+    if (srcSum(m.by) > 0) { who.appendChild(srcChips(m.by)); }
+    row.appendChild(who);
+
+    var pts = cupEl("div", "hall-pts", String(m.points || 0));
+    pts.style.color = hh.accent || "var(--accent)";
+    row.appendChild(pts);
+    return row;
+  }
+
+  // Ro'yxat: dastlab `shown` ta, qolgani "Hammasini ko'rish" tugmasi ortida
+  function memberList(box, members, houseId, shown) {
+    box.innerHTML = "";
+    members.forEach(function (m, idx) {
+      var row = memberRow(m, idx, houseId);
+      if (idx >= shown) { row.classList.add("hidden"); }
+      box.appendChild(row);
+    });
+    if (members.length > shown) {
+      var more = cupEl("button", "cup-more", cupT().showAll.replace("%d", members.length));
+      more.type = "button";
+      more.addEventListener("click", function () {
+        var rows = box.querySelectorAll(".hall-row.hidden");
+        for (var i = 0; i < rows.length; i++) { rows[i].classList.remove("hidden"); }
+        more.remove();
+      });
+      box.appendChild(more);
+    }
+  }
+
   function renderHall() {
     var box = $("cup-hall");
     if (!box) { return; }
@@ -3484,97 +4096,9 @@ body{
 
     $("hall-sub").textContent = t.hallSub
       .replace("%a", hall.total || 0).replace("%b", hall.active || 0);
+    $("hall-about").textContent = cupT().about + " ›";
 
-    // Avatarlar bir xil ko'rinadi - kimnidir "faol emas" deb belgilamaymiz.
-    var faces = $("hall-faces");
-    faces.innerHTML = "";
-    var shown = Math.min(hall.total || 0, 6);
-    var members = hall.members || [];
-    for (var i = 0; i < shown; i++) {
-      var who = members[i] ? members[i].name : "";
-      faces.appendChild(faceEl("face", who, me.house));
-    }
-    if ((hall.total || 0) > shown) {
-      var more = document.createElement("span");
-      more.className = "face more";
-      more.textContent = "+" + ((hall.total || 0) - shown);
-      faces.appendChild(more);
-    }
-
-    var list = $("hall-list");
-    list.innerHTML = "";
-    var MAX_SHOWN = 10;
-    
-    function createMemberRow(m, idx) {
-      var row = document.createElement("div");
-      row.className = "hall-row";
-      if (m.active === false) { row.style.opacity = "0.45"; }
-
-      var pos = document.createElement("div");
-      pos.className = "hall-pos";
-      pos.textContent = idx + 1;
-      row.appendChild(pos);
-
-      row.appendChild(faceEl("hall-face", m.name, me.house));
-
-      var who = document.createElement("div");
-      who.className = "hall-nm";
-      who.appendChild(document.createTextNode(m.name || ""));
-      if (m.me) {
-        var tag = document.createElement("i");
-        tag.textContent = t.hallYou;
-        tag.style.color = hh.accent || "var(--accent)";
-        who.appendChild(tag);
-      }
-      row.appendChild(who);
-
-      var pts = document.createElement("div");
-      pts.className = "hall-pts";
-      pts.textContent = m.points || 0;
-      pts.style.color = hh.accent || "var(--accent)";
-      row.appendChild(pts);
-      return row;
-    }
-
-    members.forEach(function (m, idx) {
-      var row = createMemberRow(m, idx);
-      if (idx >= MAX_SHOWN) { row.classList.add("hidden", "hall-row-extra"); }
-      list.appendChild(row);
-    });
-
-    if (members.length > MAX_SHOWN) {
-      var expandBtn = document.createElement("button");
-      expandBtn.className = "btn w-100 mt-16";
-      expandBtn.style.padding = "14px";
-      expandBtn.style.borderRadius = "12px";
-      expandBtn.style.background = hh.accent || "var(--accent)";
-      expandBtn.style.color = "#fff";
-      expandBtn.style.border = "none";
-      expandBtn.style.fontWeight = "600";
-      expandBtn.style.fontSize = "15px";
-      expandBtn.textContent = (lang === "uz" ? "To'liq ro'yxatni ko'rish" : lang === "ru" ? "Показать полный список" : "Show full list");
-      expandBtn.onclick = function() {
-        $("scr-cup").classList.add("hidden");
-        $("scr-hall-full").classList.remove("hidden");
-        
-        $("hall-full-crest").innerHTML = "";
-        var fImg = cupCrestImg(me.house, 34);
-        if (fImg) { $("hall-full-crest").appendChild(fImg); }
-        $("hall-full-crest").style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.42)";
-        $("hall-full-crest").style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.13)";
-        $("hall-full-name").textContent = $("hall-name").textContent;
-        $("hall-full-name").style.color = hh.accent || "var(--accent)";
-        $("hall-full-sub").textContent = $("hall-sub").textContent;
-        
-        var fList = $("hall-full-list");
-        fList.innerHTML = "";
-        
-        members.forEach(function(m, idx) {
-          fList.appendChild(createMemberRow(m, idx));
-        });
-      };
-      list.appendChild(expandBtn);
-    }
+    memberList($("hall-list"), hall.members || [], me.house, 10);
 
     var wait = $("hall-wait");
     var idle = (hall.total || 0) - (hall.active || 0);
@@ -3594,6 +4118,29 @@ body{
     box.classList.remove("hidden");
   }
 
+  function feedRow(ev, t) {
+    var hh = HOUSES[ev.house] || {};
+    var row = cupEl("div", "feed-row");
+    var cr = cupEl("div", "feed-crest");
+    cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+    var im = cupCrestImg(ev.house, 22);
+    if (im) { cr.appendChild(im); }
+    row.appendChild(cr);
+
+    var txt = cupEl("div", "feed-txt");
+    var parts = t.feedSorted.split("%h");
+    txt.appendChild(cupEl("b", "", ev.name || ""));
+    txt.appendChild(document.createTextNode(parts[0]));
+    var hn = cupEl("span", "", cupHouseName(ev.house));
+    hn.style.color = hh.accent || "inherit";
+    txt.appendChild(hn);
+    if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
+    row.appendChild(txt);
+
+    row.appendChild(cupEl("div", "feed-time", agoText(ev.ago_minutes, t)));
+    return row;
+  }
+
   function renderFeed() {
     var box = $("cup-feed");
     if (!box) { return; }
@@ -3608,291 +4155,132 @@ body{
     list.innerHTML = "";
     var MAX_FEED = 5;
     feed.forEach(function (ev, idx) {
-      var hh = HOUSES[ev.house] || {};
-      var row = document.createElement("div");
-      row.className = "feed-row";
-      if (idx >= MAX_FEED) { row.classList.add("hidden", "feed-row-extra"); }
-
-      var cr = document.createElement("div");
-      cr.className = "feed-crest";
-      cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
-      var im = cupCrestImg(ev.house, 22);
-      if (im) { cr.appendChild(im); }
-      row.appendChild(cr);
-
-      var txt = document.createElement("div");
-      txt.className = "feed-txt";
-      var parts = t.feedSorted.split("%h");
-      var b = document.createElement("b");
-      b.textContent = ev.name || "";
-      txt.appendChild(b);
-      txt.appendChild(document.createTextNode(parts[0]));
-      txt.appendChild(document.createTextNode(cupHouseName(ev.house)));
-      if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
-      row.appendChild(txt);
-
-      var tm = document.createElement("div");
-      tm.className = "feed-time";
-      tm.textContent = agoText(ev.ago_minutes, t);
-      row.appendChild(tm);
-
+      var row = feedRow(ev, t);
+      if (idx >= MAX_FEED) { row.classList.add("hidden"); }
       list.appendChild(row);
     });
 
     if (feed.length > MAX_FEED) {
-      var expandBtn = document.createElement("button");
-      expandBtn.className = "btn w-100 mt-16";
-      expandBtn.style.padding = "14px";
-      expandBtn.style.borderRadius = "12px";
-      expandBtn.style.background = "var(--bg-mid)";
-      expandBtn.style.color = "var(--text)";
-      expandBtn.style.border = "none";
-      expandBtn.style.fontWeight = "600";
-      expandBtn.style.fontSize = "15px";
-      expandBtn.textContent = (lang === "uz" ? "Barcha tasmani ko'rish" : lang === "ru" ? "Показать всю ленту" : "Show all feed");
-      expandBtn.onclick = function() {
-        $("scr-cup").classList.add("hidden");
-        $("scr-feed-full").classList.remove("hidden");
-        
-        $("feed-full-kick").textContent = t.feedKick;
-        var fList = $("feed-full-list");
-        fList.innerHTML = "";
-        
-        feed.forEach(function(ev) {
-          var hh = HOUSES[ev.house] || {};
-          var row = document.createElement("div");
-          row.className = "feed-row";
-
-          var cr = document.createElement("div");
-          cr.className = "feed-crest";
-          cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
-          var im = cupCrestImg(ev.house, 22);
-          if (im) { cr.appendChild(im); }
-          row.appendChild(cr);
-
-          var txt = document.createElement("div");
-          txt.className = "feed-txt";
-          var parts = t.feedSorted.split("%h");
-          var b = document.createElement("b");
-          b.textContent = ev.name || "";
-          txt.appendChild(b);
-          txt.appendChild(document.createTextNode(parts[0]));
-          txt.appendChild(document.createTextNode(cupHouseName(ev.house)));
-          if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
-          row.appendChild(txt);
-
-          var tm = document.createElement("div");
-          tm.className = "feed-time";
-          tm.textContent = agoText(ev.ago_minutes, t);
-          row.appendChild(tm);
-
-          fList.appendChild(row);
-        });
-      };
-      list.appendChild(expandBtn);
+      var more = cupEl("button", "cup-more",
+        lang === "uz" ? "Barcha tasmani ko'rish" : lang === "ru" ? "Показать всю ленту" : "Show the whole feed");
+      more.type = "button";
+      more.addEventListener("click", function () {
+        var rows = list.querySelectorAll(".feed-row.hidden");
+        for (var i = 0; i < rows.length; i++) { rows[i].classList.remove("hidden"); }
+        more.remove();
+      });
+      list.appendChild(more);
     }
 
     box.classList.remove("hidden");
   }
 
-  /* ---------- taranglik bloki ---------- */
-
-  // Uchta yiqilgan holat: fakultetsiz, fakultet chegaradan o'tmagan,
-  // yoki raqib hali aniqlanmagan (mavsum endi boshlangan).
-  function renderGapFallback(block, list, me, t) {
-    var h = HOUSES[me.house] || {};
-    block.style.setProperty("--rc", h.accent || "#97a1ae");
-    block.style.setProperty("--rc-rgb", h.rgb || "151,161,174");
-
-    var crestBox = $("gap-crest");
-    crestBox.innerHTML = "";
-    if (me.house) {
-      var img = cupCrestImg(me.house, 30);
-      if (img) { crestBox.appendChild(img); }
-    }
-
-    $("gap-track").innerHTML = "";
-    var el = $("gap-txt");
-    el.innerHTML = "";
-    var hint = $("gap-hint");
-    hint.innerHTML = "";
-
-    var row = cupRowOf(list, me.house);
-    if (!me.house) {
-      el.textContent = t.cupNoHouse;
-      hint.textContent = t.cupNoHouseHint;
-    } else if (row && !row.qualified) {
-      var need = Math.max(0, (row.needed || 0));
-      var parts = t.cupNeedMembers.split("%n");
-      el.appendChild(document.createTextNode(
-        parts[0].replace("%s", cupHouseName(me.house))));
-      var em = document.createElement("em");
-      em.textContent = t.cupNeedCount.replace("%d", need);
-      el.appendChild(em);
-      if (parts.length > 1) { el.appendChild(document.createTextNode(parts[1])); }
-      hint.textContent = t.cupNeedHint;
-    } else {
-      el.textContent = t.cupEarly;
-      hint.textContent = t.cupEarlyHint;
-    }
-    block.classList.remove("hidden");
-  }
-
-  function renderGap(list, me) {
-    var block = $("cup-gap");
-    var t = T[lang];
-    var g = me.gap;
-
-    // Taranglik bloki ekranning markazi. g bo'lmasa uni yashirish emas,
-    // holatga mos xabar ko'rsatish kerak (spetsifikatsiya 7.3) - aks holda
-    // mavsum boshida ekran bo'sh va maqsadsiz ko'rinadi.
-    if (!g) { renderGapFallback(block, list, me, t); return; }
-
-    var rival = HOUSES[g.house] || {};
-    block.style.setProperty("--rc", rival.accent || "#97a1ae");
-    block.style.setProperty("--rc-rgb", rival.rgb || "151,161,174");
-
-    var txt = (g.ahead ? t.cupGapAhead : t.cupGapBehind)
-      .replace("%s", cupHouseName(g.house));
-    var parts = txt.split("%n");
-    var el = $("gap-txt");
-    el.innerHTML = "";
-    el.appendChild(document.createTextNode(parts[0]));
-    var em = document.createElement("em");
-    em.textContent = cupPts(g.diff) + " " + t.cupPts;
-    el.appendChild(em);
-    if (parts.length > 1) { el.appendChild(document.createTextNode(parts[1])); }
-
-    var crestBox = $("gap-crest");
-    crestBox.innerHTML = "";
-    var img = cupCrestImg(g.house, 30);
-    if (img) { crestBox.appendChild(img); }
-
-    // Ikki nuqta: yetakchi o'ng chetda, ikkinchisi o'z nisbatida
-    // Chiziq mutlaq ballarni emas, farqni BUGUNGI imkoniyatga nisbatan
-    // ko'rsatadi. Avval nuqtalar avg/leader bo'yicha qo'yilardi va poyga
-    // qanchalik qizg'in bo'lsa, ular shunchalik yopishib turardi - ya'ni
-    // taranglik eng yuqori paytda chiziq hech narsa ko'rsatmasdi.
-    var track = $("gap-track");
-    track.innerHTML = "";
-
-    var ratio = gapRatio(g.diff, g.closable);
-    var LEAD = 90, span = Math.round(ratio * 70), back = LEAD - span;
-    var mineColor = (HOUSES[me.house] || {}).accent || "#97a1ae";
-    var rivalColor = rival.accent || "#97a1ae";
-
-    var seg = document.createElement("span");
-    seg.className = "gap-span";
-    seg.style.left = back + "%";
-    seg.style.width = span + "%";
-    seg.style.background = g.ahead ? mineColor : rivalColor;
-    track.appendChild(seg);
-
-    [[back, g.ahead ? rivalColor : mineColor],
-     [LEAD, g.ahead ? mineColor : rivalColor]].forEach(function (pair) {
-      var dot = document.createElement("span");
-      dot.className = "gap-dot";
-      dot.style.left = pair[0] + "%";
-      dot.style.background = pair[1];
-      track.appendChild(dot);
-    });
-
-    // Ohang holatga qarab o'zgaradi: ortda bo'lsa - quvish, yetakchi
-    // bo'lsa - ushlab qolish (spetsifikatsiya 7.3).
-    var hint = $("gap-hint");
-    hint.innerHTML = "";
-    var bold = document.createElement("b");
-
-    if (g.ahead) {
-      hint.appendChild(document.createTextNode(t.cupHoldPre));
-      bold.textContent = t.cupHoldBold;
-      hint.appendChild(bold);
-    } else if (g.closable > 0) {
-      var left = Math.max(0, Math.round((g.diff - g.closable) * 10) / 10);
-      var hp = t.cupGapHint.split("%n");
-      hint.appendChild(document.createTextNode(hp[0]));
-      bold.textContent = t.cupGapDrop.replace("%n", cupPts(left));
-      hint.appendChild(bold);
-      if (hp.length > 1) { hint.appendChild(document.createTextNode(hp[1])); }
-    } else {
-      hint.textContent = t.cupGapDone;
-    }
-    block.classList.remove("hidden");
-  }
-
   /* ---------- shaxsiy blok ---------- */
+
+  // Manba qatorini bosganda - o'sha ballni olish joyiga
+  function srcGo(key) {
+    if (key === "exam" || key === "daily") { openTasks(); }
+    else if (key === "chess") { openChessHub(); }
+    else if (key === "friends") { openRefs(); }
+    else { closeCup(); }
+  }
 
   function renderYou(me) {
     var box = $("cup-you");
     var t = T[lang];
+    var c = cupT();
 
     if (!me.house) { box.classList.add("hidden"); return; }
 
     box.className = "cup-you" + (me.is_active ? "" : " gate");
     box.innerHTML = "";
 
-    var top = document.createElement("div");
-    top.className = "you-top";
-    var lbl = document.createElement("span");
-    lbl.className = "you-lbl";
-    lbl.textContent = t.cupYourPts;
-    var val = document.createElement("span");
-    val.className = "you-val";
-    val.appendChild(document.createTextNode(String(me.points || 0)));
-    var s = document.createElement("s");
-    s.textContent = " / " + (me.max_points || 350);
-    val.appendChild(s);
-    top.appendChild(lbl);
+    var top = cupEl("div", "you-top");
+    top.appendChild(cupEl("span", "you-lbl", t.cupYourPts));
+    var val = cupEl("span", "you-val", String(me.points || 0));
+    val.appendChild(cupEl("s", "", " / " + (me.max_points || 400)));
     top.appendChild(val);
     box.appendChild(top);
 
-    var bar = document.createElement("div");
-    bar.className = "you-bar";
-    var fill = document.createElement("i");
-    var pct = Math.round((me.points || 0) / (me.max_points || 350) * 100);
-    fill.style.width = Math.max(0, Math.min(100, pct)) + "%";
-    bar.appendChild(fill);
-    box.appendChild(bar);
+    // Chiziq manbalar bo'yicha bo'lingan (do'st bali 400 dan oshirib yuborishi mumkin)
+    var by = me.by || {};
+    var pct = (me.points || 0) / (me.max_points || 400) * 100;
+    box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
 
     if (!me.is_active) {
       // Ayblov yo'q: "hisobga kirmaysiz" emas, faqat qancha qolgani
-      var msg = document.createElement("div");
-      msg.className = "gate-msg";
+      var msg = cupEl("div", "gate-msg");
       var gp = t.cupGate.split("%n");
       msg.appendChild(document.createTextNode(gp[0]));
-      var b = document.createElement("b");
-      b.textContent = t.cupGatePts.replace("%d", me.to_active || 0);
-      msg.appendChild(b);
+      msg.appendChild(cupEl("b", "", t.cupGatePts.replace("%d", me.to_active || 0)));
       if (gp.length > 1) {
-        msg.appendChild(document.createTextNode(
-          gp[1].replace("%s", cupHouseName(me.house))));
+        msg.appendChild(document.createTextNode(gp[1].replace("%s", cupHouseName(me.house))));
       }
-      // "Bu ikkita kunlik savol" - qolgan ballni tushunarli o'lchovga
-      // aylantiradi, shunda 20 ball mavhum raqam bo'lib qolmaydi.
       var quizzes = Math.ceil((me.to_active || 0) / 10);
       if (quizzes > 0) {
-        msg.appendChild(document.createTextNode(
-          " " + t.cupGateTail.replace("%d", quizzes)));
+        msg.appendChild(document.createTextNode(" " + t.cupGateTail.replace("%d", quizzes)));
       }
       box.appendChild(msg);
     } else if (me.house_rank) {
-      var foot = document.createElement("div");
-      foot.className = "you-foot";
-      var left = document.createElement("span");
-      left.textContent = t.cupInHouse.replace("%s", cupHouseName(me.house));
-      var right = document.createElement("b");
-      right.textContent = t.cupPlace.replace("%d", me.house_rank);
-      foot.appendChild(left);
-      foot.appendChild(right);
+      var foot = cupEl("div", "you-foot");
+      foot.appendChild(cupEl("span", "", t.cupInHouse.replace("%s", cupHouseName(me.house))));
+      foot.appendChild(cupEl("b", "", t.cupPlace.replace("%d", me.house_rank)));
       box.appendChild(foot);
     }
+
+    // Har manba: qancha oldingiz, chegarasi, qanday olinadi - bosilsa o'sha joyga
+    var caps = me.caps || {};
+    var rows = cupEl("div", "you-src");
+    CUP_SRC.forEach(function (x) {
+      var v = by[x.key] || 0;
+      var cap = caps[x.key];
+      var row = cupEl("button", "you-src-row");
+      row.type = "button";
+      row.addEventListener("click", function () { srcGo(x.key); });
+
+      var ic = cupEl("span", "you-src-ic");
+      ic.innerHTML = svgIcon(SRC_ICON[x.key]);
+      ic.style.color = x.color;
+      ic.style.background = hexA(x.color, .16);
+      row.appendChild(ic);
+
+      var mid = cupEl("span", "you-src-mid");
+      mid.appendChild(cupEl("b", "", c.src[x.key]));
+      mid.appendChild(cupEl("small", "", c.rule[x.key]));
+      if (cap) {
+        var mb = cupEl("span", "you-src-bar");
+        var fi = cupEl("i");
+        fi.style.width = Math.min(100, v / cap * 100) + "%";
+        fi.style.background = x.color;
+        mb.appendChild(fi);
+        mid.appendChild(mb);
+      }
+      row.appendChild(mid);
+
+      var num = cupEl("span", "you-src-num" + (cap && v >= cap ? " full" : ""), String(v));
+      if (cap) { num.appendChild(cupEl("s", "", "/" + cap)); }
+      row.appendChild(num);
+      rows.appendChild(row);
+    });
+    box.appendChild(rows);
     box.classList.remove("hidden");
+  }
+
+  /* ---------- tugmalar (vazifalar, chat, shaxmat, do'stlar) ---------- */
+
+  function renderCupTiles() {
+    var c = cupT();
+    $("chat-kicker").textContent = c.chatT;
+    $("chat-title").textContent = c.chatS;
+    $("chess-kicker").textContent = c.chessT;
+    $("chess-title").textContent = c.chessS;
   }
 
   /* ---------- to'liq ekran ---------- */
 
   function renderCupScreen() {
     var t = T[lang];
+    var c = cupT();
     applyXT();
     // Vazifalar tasmasi til tanlanishidan oldin chizilgan bo'lishi mumkin
     if (!$("tasks-strip").classList.contains("hidden")) { renderTasksStrip(); }
@@ -3902,15 +4290,32 @@ body{
     $("cup-timer-txt").textContent = cupTimer(t);
     $("cup-kick").textContent = t.cupKicker;
     $("cup-title").textContent = t.cupTitle;
-    $("cup-foot").textContent = t.cupFoot;
+    $("cup-emblem").innerHTML = CUP_TROPHY;
     $("cup-back-txt").textContent = t.cupBack;
     $("hall-back-txt").textContent = t.cupBack;
     $("feed-back-txt").textContent = t.cupBack;
+    $("cup-tap-hint").textContent = c.tapHint;
+
+    var prev = cupData && cupData.season && cupData.season.prev_winner;
+    var pw = $("cup-prev");
+    if (prev && HOUSES[prev]) {
+      pw.innerHTML = "";
+      var parts = c.prevWin.split("%s");
+      pw.appendChild(document.createTextNode(parts[0]));
+      var b = cupEl("b", "", cupHouseName(prev));
+      b.style.color = HOUSES[prev].accent;
+      pw.appendChild(b);
+      if (parts.length > 1) { pw.appendChild(document.createTextNode(parts[1])); }
+      pw.classList.remove("hidden");
+    } else {
+      pw.classList.add("hidden");
+    }
 
     renderGlasses(list, me);
-
+    renderSources(list);
     renderYou(me);
-    
+    renderCupTiles();
+
     if (me && me.house) {
       $("chat-strip").classList.remove("hidden");
       $("chess-strip").classList.remove("hidden");
@@ -3919,25 +4324,248 @@ body{
       $("chat-strip").classList.add("hidden");
       $("chess-strip").classList.add("hidden");
     }
-    
+
     renderRefsStrip();
     renderHall();
     renderFeed();
 
-    // Taklif tugmasi: fakultetsizga saralanish, chegaradan o'tmaganga a'zo
+    // Qoidalar
+    $("cup-rules-kick").textContent = c.rulesKick;
+    var rl = $("cup-rules-list");
+    rl.innerHTML = "";
+    c.rules.forEach(function (r) { rl.appendChild(cupEl("p", "refs-rule", r)); });
+
+    // Taklif tugmasi: fakultetsizga saralanish
     var cta = $("cup-cta");
-    var mineRow = cupRowOf(list, me.house);
     if (!me.house) {
       cta.textContent = t.cupSortCta;
       cta.setAttribute("data-act", "sort");
       cta.classList.remove("hidden");
-    } else if (mineRow && !mineRow.qualified) {
-      cta.textContent = t.cupInvite;
-      cta.setAttribute("data-act", "invite");
-      cta.classList.remove("hidden");
     } else {
       cta.classList.add("hidden");
     }
+  }
+
+  /* ---------- FAKULTET SAHIFASI ---------- */
+
+  var API_CUP_HOUSE = "https://bot.tizimshunos.uz/api/cup/house";
+  var houseBoards = {};       // fakultet -> /api/cup/house javobi
+  var houseOpen = null;
+
+  function fetchHouseBoard(id, cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { cb(null); return; }
+    try {
+      window.fetch(API_CUP_HOUSE + "?house=" + encodeURIComponent(id), {
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.ok) { houseBoards[id] = d; } cb(d && d.ok ? d : null); })
+        ["catch"](function () { cb(null); });
+    } catch (e) { cb(null); }
+  }
+
+  function openHouse(id) {
+    if (!HOUSE_LORE[id]) { return; }
+    houseOpen = id;
+    renderHousePage(id);
+    $("scr-cup").classList.add("hidden");
+    $("scr-house").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    // O'z fakulteti uchun zal ma'lumoti allaqachon bor, boshqalar - so'raladi
+    var me = cupMe();
+    if (id === me.house && cupData && cupData.hall) {
+      houseBoards[id] = cupData.hall;
+      renderHouseMembers(id);
+    }
+    fetchHouseBoard(id, function () { if (houseOpen === id) { renderHouseMembers(id); } });
+  }
+
+  function closeHouse() {
+    houseOpen = null;
+    $("scr-house").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+  }
+
+  function loreRow(icon, label, pair) {
+    var row = cupEl("div", "lore-row");
+    var ic = cupEl("span", "lore-ic");
+    ic.innerHTML = svgIcon(ROLE_ICON[icon]);
+    row.appendChild(ic);
+    var body = cupEl("div", "lore-body");
+    body.appendChild(cupEl("span", "lore-lbl", label));
+    body.appendChild(cupEl("b", "lore-name", pair[0]));
+    if (pair[1]) { body.appendChild(cupEl("p", "lore-note", pair[1])); }
+    row.appendChild(body);
+    return row;
+  }
+
+  function renderHousePage(id) {
+    var c = cupT();
+    var t = T[lang];
+    var hh = HOUSES[id] || {};
+    var lore = HOUSE_LORE[id];
+    var L2 = lore[lang] || lore.uz;
+    var scr = $("scr-house");
+    scr.style.setProperty("--hc", hh.accent || "#97a1ae");
+    scr.style.setProperty("--hc-rgb", hh.rgb || "151,161,174");
+    $("house-back-txt").textContent = t.cupBack;
+
+    // Bosh qism
+    var hero = $("house-hero");
+    hero.innerHTML = "";
+    var crest = cupEl("div", "hh-crest");
+    var img = cupCrestImg(id, 74);
+    if (img) { crest.appendChild(img); }
+    hero.appendChild(crest);
+    hero.appendChild(cupEl("span", "hh-kick", c.hKick));
+    hero.appendChild(cupEl("h2", "hh-name", cupHouseName(id)));
+    hero.appendChild(cupEl("p", "hh-traits", L2.traits));
+    var facts = cupEl("div", "hh-facts");
+    function fact(label, value, swatches) {
+      var f = cupEl("div", "hh-fact");
+      f.appendChild(cupEl("span", "", label));
+      var v = cupEl("b", "", value);
+      if (swatches) {
+        var sw = cupEl("i", "hh-sw");
+        swatches.forEach(function (col) { var d = cupEl("u"); d.style.background = col; sw.appendChild(d); });
+        v.insertBefore(sw, v.firstChild);
+      }
+      f.appendChild(v);
+      facts.appendChild(f);
+    }
+    fact(c.hSymbol, L2.symbol);
+    fact(c.hElement, L2.element);
+    fact(c.hColors, L2.colors, lore.colors);
+    hero.appendChild(facts);
+    var note = hh["note_" + lang] || hh.note_uz;
+    if (note) { hero.appendChild(cupEl("p", "hh-note", note)); }
+
+    // Kubokdagi o'rni va ballar manbasi
+    var cupBox = $("house-cup");
+    cupBox.innerHTML = "";
+    var list = cupSorted();
+    var idx = -1;
+    list.forEach(function (r, i) { if (r.house === id) { idx = i; } });
+    var row = idx >= 0 ? list[idx] : null;
+    var head = cupEl("div", "cc-head");
+    head.appendChild(cupEl("span", "cc-kick", c.hCup));
+    if (row) { head.appendChild(cupEl("span", "hc-place", t.cupPlace.replace("%d", idx + 1))); }
+    cupBox.appendChild(head);
+    if (row) {
+      var big = cupEl("div", "hc-big");
+      var num = cupEl("b", "", cupPts(row.total_points));
+      big.appendChild(num);
+      big.appendChild(cupEl("span", "", t.cupPts + " · " + c.hActive.replace("%d", row.active_members || 0)));
+      cupBox.appendChild(big);
+      var by = row.by || {};
+      var sum = srcSum(by);
+      if (sum > 0) {
+        cupBox.appendChild(srcBar(by, 100, "big"));
+        var tbl = cupEl("div", "hc-src");
+        CUP_SRC.forEach(function (x) {
+          var v = by[x.key] || 0;
+          var r2 = cupEl("div", "hc-src-row" + (v ? "" : " zero"));
+          var ic = cupEl("span", "hc-src-ic");
+          ic.innerHTML = svgIcon(SRC_ICON[x.key]);
+          ic.style.color = x.color;
+          r2.appendChild(ic);
+          r2.appendChild(cupEl("span", "hc-src-name", c.src[x.key]));
+          r2.appendChild(cupEl("span", "hc-src-pct", sum ? Math.round(v / sum * 100) + "%" : ""));
+          r2.appendChild(cupEl("b", "hc-src-val", String(v)));
+          tbl.appendChild(r2);
+        });
+        cupBox.appendChild(tbl);
+      } else {
+        cupBox.appendChild(cupEl("p", "cc-note", c.none));
+      }
+    }
+
+    // Fakultet ahli
+    var people = $("house-people");
+    people.innerHTML = "";
+    people.appendChild(cupEl("div", "cc-kick", c.hPeople));
+    people.appendChild(loreRow("founder", c.founder, L2.founder));
+    people.appendChild(loreRow("head", c.head, L2.head));
+    people.appendChild(loreRow("ghost", c.ghost, L2.ghost));
+    people.appendChild(loreRow("captain", c.captain, L2.captain));
+    people.appendChild(loreRow("prefects", c.prefects, L2.prefects));
+    people.appendChild(loreRow("room", c.room, ["", ""]));
+    var roomRow = people.lastChild;
+    roomRow.querySelector(".lore-name").remove();
+    roomRow.querySelector(".lore-body").appendChild(cupEl("p", "lore-note strong", L2.room));
+
+    var fam = cupEl("div", "lore-row");
+    var fic = cupEl("span", "lore-ic");
+    fic.innerHTML = svgIcon(ROLE_ICON.famous);
+    fam.appendChild(fic);
+    var fb = cupEl("div", "lore-body");
+    fb.appendChild(cupEl("span", "lore-lbl", c.famous));
+    var chips = cupEl("div", "lore-chips");
+    L2.famous.forEach(function (n) { chips.appendChild(cupEl("span", "", n)); });
+    fb.appendChild(chips);
+    fam.appendChild(fb);
+    people.appendChild(fam);
+    people.appendChild(cupEl("p", "lore-src", c.lore));
+
+    // A'zolar - serverdan keladi
+    var mem = $("house-members");
+    mem.innerHTML = "";
+    mem.appendChild(cupEl("div", "cc-kick", c.members));
+    var ml = cupEl("div", "", null);
+    ml.id = "house-members-list";
+    ml.appendChild(cupEl("p", "cc-note", c.loading));
+    mem.appendChild(ml);
+    if (houseBoards[id]) { renderHouseMembers(id); }
+  }
+
+  function renderHouseMembers(id) {
+    var box = $("house-members-list");
+    if (!box) { return; }
+    var d = houseBoards[id];
+    var c = cupT();
+    if (!d) { box.innerHTML = ""; box.appendChild(cupEl("p", "cc-note", c.empty)); return; }
+    var members = (d.members || []).filter(function (m) { return (m.points || 0) > 0; });
+    if (!members.length) { box.innerHTML = ""; box.appendChild(cupEl("p", "cc-note", c.empty)); return; }
+    memberList(box, members, id, 10);
+  }
+
+  /* ---------- ONLAYN ----------
+     Ilova ochiq turganda serverga har 20 soniyada "shu yerdaman" yuboriladi.
+     Chatdagi onlayn belgisi shunga qaraydi - odam chatga kirmagan bo'lsa ham
+     ilovada bo'lsa, onlayn ko'rinadi. Ilova yashirilsa/yopilsa - darhol oflayn.
+     text/plain - brauzer oldindan "ruxsat so'rovi" yubormasin (keepalive bilan
+     yopilish paytida ham yetib boradi). */
+  var API_PRESENCE = "https://bot.tizimshunos.uz/api/presence";
+  var presenceTimer = null;
+  var presenceLast = { off: null, t: 0 };
+
+  function presencePing(off) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { return; }
+    // Bir xil holat qisqa vaqtda qayta yuborilmaydi (oyna tez-tez yashirinib-ochilsa)
+    var now = Date.now();
+    if (presenceLast.off === !!off && now - presenceLast.t < 5000) { return; }
+    presenceLast = { off: !!off, t: now };
+    try {
+      window.fetch(API_PRESENCE, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ initData: initData, off: off ? 1 : 0 }),
+        keepalive: true
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
+  function presenceStart() {
+    if (presenceTimer) { return; }
+    presencePing(false);
+    presenceTimer = setInterval(function () {
+      if (!document.hidden) { presencePing(false); }
+    }, 20000);
+    document.addEventListener("visibilitychange", function () { presencePing(document.hidden); });
+    window.addEventListener("pagehide", function () { presencePing(true); });
   }
 
   function openCup() {
@@ -10012,6 +10640,8 @@ body{
     
     $("cup-strip").addEventListener("click", openCup);
     $("cup-back").addEventListener("click", closeCup);
+    $("house-back").addEventListener("click", closeHouse);
+    $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
     $("hall-back").addEventListener("click", function() {
       $("scr-hall-full").classList.add("hidden");
       $("scr-cup").classList.remove("hidden");
@@ -10100,6 +10730,9 @@ body{
       if (houseChanged) { refreshHouseView(); }
     });
 
+    // Ilova ochiq - chatdagi "onlayn" belgisi shunga qaraydi
+    presenceStart();
+
     // Reyting fon rejimida yuklanadi - kechiksa yoki xato bo'lsa,
     // katalog baribir ochiladi, tasma shunchaki ko'rinmaydi.
     fetchCup(function () {
@@ -10121,38 +10754,6 @@ body{
 })();
 </script>
 
-  <div id="cup-info-overlay" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
-    <div style="background:var(--bg); border-radius:16px; padding:20px; max-width:400px; width:100%; border:1px solid var(--line); position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-      <h3 style="margin-top:0; font-size:18px; color:var(--text); display:flex; align-items:center; gap:8px;">🏆 Xogvarts Kubogi</h3>
-      <p style="font-size:14px; color:var(--dim); line-height:1.5;">Fakultetingizni g'alabaga yetaklang! Ball qanday yig'iladi?</p>
-
-      <div style="display:flex; flex-direction:column; gap:12px; margin:20px 0;">
-        <div style="display:flex; gap:12px; align-items:flex-start; padding-bottom:10px; border-bottom:1px solid var(--line);">
-          <span style="font-size:24px;">🎬</span>
-          <div>
-            <strong style="font-size:14px; color:var(--text);">Film ko'rish</strong>
-            <div style="font-size:13px; color:var(--dim); margin-top:4px;">Har bir film uchun <b>+5 ball</b> — mavsumda bir marta.</div>
-          </div>
-        </div>
-        <div style="display:flex; gap:12px; align-items:flex-start; padding-bottom:10px; border-bottom:1px solid var(--line);">
-          <span style="font-size:24px;">📜</span>
-          <div>
-            <strong style="font-size:14px; color:var(--text);">Imtihon va kunlik savol</strong>
-            <div style="font-size:13px; color:var(--dim); margin-top:4px;">Har bir to'g'ri javob uchun <b>+10 ball</b>.</div>
-          </div>
-        </div>
-        <div style="display:flex; gap:12px; align-items:flex-start;">
-          <span style="font-size:24px;">♟️</span>
-          <div>
-            <strong style="font-size:14px; color:var(--text);">Sehrgar shaxmati</strong>
-            <div style="font-size:13px; color:var(--dim); margin-top:4px;">Jonli raqib ustidan g'alaba <b>+10 ball</b>, durang <b>+5 ball</b>. Mavsumda 5 tagacha o'yin hisobga olinadi; bot bilan o'ynash ball bermaydi.</div>
-          </div>
-        </div>
-      </div>
-
-      <button id="cup-info-close" style="width:100%; padding:12px; background:var(--accent); color:var(--accent-ink); border:none; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer;">Tushunarli</button>
-    </div>
-  </div>
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
     <defs>
       <linearGradient id="hpIvory" x1="0" y1="0" x2="0.35" y2="1"><stop offset="0" stop-color="#fffdf6"/><stop offset=".55" stop-color="#eee4cf"/><stop offset="1" stop-color="#c9ba98"/></linearGradient>
