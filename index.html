@@ -732,10 +732,15 @@ body{
 .cup-head{position:relative}
 .cup-emblem{display:block;width:46px;height:46px;margin:0 auto 10px;filter:drop-shadow(0 6px 16px rgba(224,178,91,.35))}
 .cup-emblem svg{width:100%;height:100%;display:block}
-.cup-prev{display:inline-block;margin-top:10px;padding:6px 12px;border-radius:99px;
-  background:rgba(224,178,91,.08);border:1px solid rgba(224,178,91,.28);
-  font:600 11px/1.3 'Manrope',sans-serif;color:var(--dim)}
-.cup-prev b{font-weight:800}
+.cup-prev{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 13px;border-radius:99px;
+  background:rgba(224,178,91,.08);border:1px solid rgba(224,178,91,.32);cursor:pointer;
+  font:600 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.cup-prev:active{transform:scale(.97)}
+.cup-prev b{font-weight:800;margin-left:3px}
+.cup-prev em{font-style:normal;color:#f3d58f;font-weight:700}
+.svg-i{display:inline-flex;flex:none}
+.svg-i svg{width:100%;height:100%;display:block}
+.cup-prev .svg-i{width:15px;height:15px;color:#e0b25b}
 button.glass{display:block;width:100%;padding:0;margin:0;border:0;background:none;color:inherit;
   font:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
 button.glass:active .tube{transform:scale(.97)}
@@ -885,6 +890,52 @@ button.glass:active .tube{transform:scale(.97)}
   font:italic 400 13px/1.5 'Cormorant Garamond',serif;color:var(--dim);text-align:center}
 #house-members{margin-bottom:30px}
 #house-members .cc-kick{margin-bottom:4px}
+
+/* ---------- kubok tarixi ---------- */
+.hist-wins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.hist-win-cell{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px 10px;border-radius:14px;
+  cursor:pointer;background:rgba(var(--hc-rgb),.08);border:1px solid rgba(var(--hc-rgb),.25);color:var(--text);font-family:'Manrope',sans-serif}
+.hist-win-cell:active{transform:scale(.96)}
+.hist-win-cell.top{border-color:rgba(224,178,91,.7);box-shadow:0 0 18px rgba(224,178,91,.18);background:rgba(224,178,91,.08)}
+.hist-win-cell.none{opacity:.5}
+.hist-win-crest img{display:block;object-fit:contain}
+.hist-win-cell b{font:600 28px/1 'Cormorant Garamond',serif;color:var(--hc)}
+.hist-win-cell.top b{color:#f3d58f}
+.hist-win-cell > span:last-child{font:600 10.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center}
+.hist-card{background:linear-gradient(160deg,rgba(var(--hc-rgb),.12),var(--card) 55%);border:1px solid rgba(var(--hc-rgb),.35);
+  border-radius:18px;padding:14px;margin-top:14px}
+.hist-card.nowin{background:var(--card);border-color:var(--line)}
+.hist-card.live{border-style:dashed}
+#hist-list{margin-bottom:30px}
+.hist-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hist-when{font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
+.hist-hero{display:flex;align-items:center;gap:12px;margin-top:12px}
+.hist-crest{width:52px;height:52px;flex:none;border-radius:15px;display:grid;place-items:center;color:var(--dim);
+  background:rgba(12,15,20,.55);border:1px solid rgba(var(--hc-rgb),.45)}
+.hist-crest img{display:block;object-fit:contain}
+.hist-crest .svg-i{width:24px;height:24px}
+.hist-hero-txt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.hist-lbl{font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:0.16em;text-transform:uppercase;color:var(--dim)}
+.hist-name{font:600 26px/1.05 'Cormorant Garamond',serif;color:var(--hc)}
+.hist-pts{font:600 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.hist-cup{width:30px;height:30px;color:#e0b25b;filter:drop-shadow(0 3px 10px rgba(224,178,91,.35))}
+.hist-live{display:inline-flex;align-items:center;gap:6px;margin-bottom:3px;padding:4px 9px;border-radius:99px;
+  background:rgba(95,158,122,.14);border:1px solid rgba(95,158,122,.4);font:700 10px/1 'Manrope',sans-serif;color:#8fd3a8}
+.hist-live i{width:6px;height:6px;border-radius:50%;background:#5fce8a;animation:blip 2.4s ease-in-out infinite}
+.hist-rows{margin-top:12px;padding-top:6px;border-top:1px solid var(--line)}
+.hist-row{display:grid;grid-template-columns:14px 20px 82px 1fr 42px;gap:8px;align-items:center;padding:6px 0}
+.hist-pos{font:800 11px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
+.hist-rc img{display:block;object-fit:contain}
+.hist-rn{font:600 12px/1.2 'Manrope',sans-serif;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-bar{height:6px;border-radius:99px;background:var(--wash-1);overflow:hidden}
+.hist-bar i{display:block;height:100%;border-radius:99px;opacity:.85}
+.hist-rp{font:600 16px/1 'Cormorant Garamond',serif;color:var(--text);text-align:right}
+.hist-best{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+  font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
+.hist-best .svg-i{width:16px;height:16px;color:#e0b25b;margin-top:1px}
+.hist-best em{font-style:normal}
+.hist-best b{color:var(--text);font-weight:700}
+.hist-wait{text-align:center;padding:20px 0}
 /* --- XABAR OYNALARI (pastda chiqadi) ---
    Film yuborilgani shu yerda ko'rsatiladi. Tasdiq oynasi o'rniga
    "bekor qilish" ishlatiladi: to'g'ri bosgan odam to'siqni sezmaydi. */
@@ -1312,7 +1363,7 @@ button.glass:active .tube{transform:scale(.97)}
       <span class="cup-emblem" id="cup-emblem"></span>
       <span class="cup-kick" id="cup-kick"></span>
       <span class="cup-title" id="cup-title"></span>
-      <span class="cup-prev hidden" id="cup-prev"></span>
+      <button class="cup-prev hidden" id="cup-prev" type="button"></button>
     </div>
 
     <!-- Katta zaldagi to'rtta qum soati. Bosilsa - fakultet sahifasi. -->
@@ -1386,7 +1437,22 @@ button.glass:active .tube{transform:scale(.97)}
     <div class="cup-card cup-rules">
       <div class="cc-kick" id="cup-rules-kick"></div>
       <div id="cup-rules-list"></div>
+      <button class="cup-more" id="cup-hist-btn" type="button"></button>
     </div>
+  </div>
+
+  <!-- Kubok tarixi: har hafta g'olibi, yakuniy ballar, haftaning sehrgari -->
+  <div id="scr-cup-hist" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="hist-back"><span style="font-size:13px">‹</span> <span id="hist-back-txt">Ortga</span></button>
+    </div>
+    <div class="cup-head">
+      <span class="cup-emblem" id="hist-emblem"></span>
+      <span class="cup-kick" id="hist-kick"></span>
+      <span class="cup-title" id="hist-title"></span>
+    </div>
+    <div class="cup-card" id="hist-wins"></div>
+    <div id="hist-list"></div>
   </div>
 
   <!-- Fakultet sahifasi: kubokdagi o'rni, ballari manbasi, asardagi odamlari -->
@@ -3722,6 +3788,11 @@ button.glass:active .tube{transform:scale(.97)}
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
               friends: "Har do'st uchun +20 · cheklanmagan" },
+      histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
+      histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
+      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Hech bir fakultet hisobga kirmadi (hech kim 30 ballga yetmagan).",
+      noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.", best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
+      months: ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"],
       srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
       tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
       prevWin: "O'tgan hafta kubogi: %s", place: "%d-o'rin", total: "Jami", none: "Bu hafta hali ball yo'q",
@@ -3748,6 +3819,11 @@ button.glass:active .tube{transform:scale(.97)}
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
               friends: "+20 за каждого друга · без лимита" },
+      histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
+      histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
+      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "Ни один факультет не прошёл в зачёт (никто не набрал 30 очков).",
+      noWinnerSet: "Победитель этой недели не объявлялся.", best: "Волшебник недели", bestLive: "Пока больше всех",
+      months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
       srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
       tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
       prevWin: "Кубок прошлой недели: %s", place: "%d место", total: "Всего", none: "На этой неделе очков пока нет",
@@ -3774,6 +3850,11 @@ button.glass:active .tube{transform:scale(.97)}
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
               friends: "+20 per friend · no limit" },
+      histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
+      histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
+      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house qualified (nobody reached 30 points).",
+      noWinnerSet: "No winner was announced this week.", best: "Wizard of the week", bestLive: "Top scorer so far",
+      months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
       tapHint: "Tap a house — its founder, head, ghost and members",
       prevWin: "Last week's cup: %s", place: "#%d", total: "Total", none: "No points yet this week",
@@ -4296,20 +4377,24 @@ button.glass:active .tube{transform:scale(.97)}
     $("feed-back-txt").textContent = t.cupBack;
     $("cup-tap-hint").textContent = c.tapHint;
 
+    // Tepadagi yorliq: o'tgan hafta g'olibi (bo'lsa) va kubok tarixiga yo'l
     var prev = cupData && cupData.season && cupData.season.prev_winner;
     var pw = $("cup-prev");
+    pw.innerHTML = "";
+    pw.appendChild(svgNode(CUP_MINI));
     if (prev && HOUSES[prev]) {
-      pw.innerHTML = "";
       var parts = c.prevWin.split("%s");
       pw.appendChild(document.createTextNode(parts[0]));
       var b = cupEl("b", "", cupHouseName(prev));
       b.style.color = HOUSES[prev].accent;
       pw.appendChild(b);
       if (parts.length > 1) { pw.appendChild(document.createTextNode(parts[1])); }
-      pw.classList.remove("hidden");
+      pw.appendChild(cupEl("em", "", " · " + c.histLink + " ›"));
     } else {
-      pw.classList.add("hidden");
+      pw.appendChild(document.createTextNode(c.histLink + " ›"));
     }
+    pw.classList.remove("hidden");
+    $("cup-hist-btn").textContent = c.histAll + " ›";
 
     renderGlasses(list, me);
     renderSources(list);
@@ -4346,6 +4431,185 @@ button.glass:active .tube{transform:scale(.97)}
     }
   }
 
+  /* ---------- KUBOK TARIXI ---------- */
+
+  var API_CUP_HISTORY = "https://bot.tizimshunos.uz/api/cup/history";
+  var cupHistory = null;
+  var CUP_MINI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z M7.5 6H5a2.5 2.5 0 0 0 2.8 3.4 M16.5 6H19a2.5 2.5 0 0 1-2.8 3.4 M12 13v3.5 M9 20h6 M10 16.5h4l.6 3.5H9.4z"/></svg>';
+
+  function svgNode(html) {
+    var box = document.createElement("span");
+    box.className = "svg-i";
+    box.innerHTML = html;
+    return box;
+  }
+
+  // Server vaqti UTC; hafta Toshkent vaqti bilan (+5) dushanbadan yakshanbagacha
+  function histDay(iso) {
+    var d = new Date(Date.parse(iso) + 5 * 3600000);
+    var m = cupT().months[d.getUTCMonth()];
+    var n = d.getUTCDate();
+    if (lang === "en") { return m + " " + n; }
+    if (lang === "ru") { return n + " " + m; }
+    return n + "-" + m;
+  }
+
+  function fetchCupHistory(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { cb(null); return; }
+    try {
+      window.fetch(API_CUP_HISTORY, { headers: { "X-Telegram-Init-Data": initData } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.ok) { cupHistory = d; } cb(d && d.ok ? d : null); })
+        ["catch"](function () { cb(null); });
+    } catch (e) { cb(null); }
+  }
+
+  function openCupHistory() {
+    var c = cupT();
+    $("hist-back-txt").textContent = T[lang].cupBack;
+    $("hist-emblem").innerHTML = CUP_TROPHY;
+    $("hist-kick").textContent = c.histKick;
+    $("hist-title").textContent = c.histTitle;
+    $("scr-cup").classList.add("hidden");
+    $("scr-cup-hist").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    if (cupHistory) { renderCupHistory(); }
+    else {
+      $("hist-wins").innerHTML = "";
+      $("hist-list").innerHTML = "";
+      $("hist-list").appendChild(cupEl("p", "cc-note hist-wait", c.loading));
+    }
+    fetchCupHistory(function () { renderCupHistory(); });
+  }
+
+  function closeCupHistory() {
+    $("scr-cup-hist").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+  }
+
+  function renderCupHistory() {
+    var c = cupT();
+    var t = T[lang];
+    var d = cupHistory;
+    var winsBox = $("hist-wins");
+    var list = $("hist-list");
+    winsBox.innerHTML = "";
+    list.innerHTML = "";
+    if (!d) { list.appendChild(cupEl("p", "cc-note hist-wait", c.empty)); return; }
+
+    // Kim nechta kubok olgan
+    var wins = d.wins || {};
+    var order = HOUSE_ORDER.slice().sort(function (a, b) {
+      return (wins[b] || 0) - (wins[a] || 0) || HOUSE_ORDER.indexOf(a) - HOUSE_ORDER.indexOf(b);
+    });
+    var most = wins[order[0]] || 0;
+    winsBox.appendChild(cupEl("div", "cc-kick", c.histWins));
+    var grid = cupEl("div", "hist-wins");
+    order.forEach(function (h) {
+      var hh = HOUSES[h] || {};
+      var n = wins[h] || 0;
+      var cell = cupEl("button", "hist-win-cell" + (n && n === most ? " top" : "") + (n ? "" : " none"));
+      cell.type = "button";
+      cell.style.setProperty("--hc", hh.accent || "#97a1ae");
+      cell.style.setProperty("--hc-rgb", hh.rgb || "151,161,174");
+      cell.addEventListener("click", function () { $("scr-cup-hist").classList.add("hidden"); openHouse(h); houseFromHist = true; });
+      var cr = cupEl("span", "hist-win-crest");
+      var im = cupCrestImg(h, 30);
+      if (im) { cr.appendChild(im); }
+      cell.appendChild(cr);
+      cell.appendChild(cupEl("b", "", String(n)));
+      cell.appendChild(cupEl("span", "", cupHouseName(h)));
+      grid.appendChild(cell);
+    });
+    winsBox.appendChild(grid);
+
+    // Haftalar - yangisi tepada
+    (d.seasons || []).forEach(function (s) {
+      var live = s.status !== "closed";
+      var houses = s.houses || [];
+      var top = houses.length ? (houses[0].total_points || 0) : 0;
+      var win = live ? (top > 0 ? houses[0].house : null) : s.winner;
+      var wh = HOUSES[win] || {};
+      var card = cupEl("div", "hist-card" + (live ? " live" : "") + (win ? "" : " nowin"));
+      card.style.setProperty("--hc", wh.accent || "#97a1ae");
+      card.style.setProperty("--hc-rgb", wh.rgb || "151,161,174");
+
+      var head = cupEl("div", "hist-head");
+      head.appendChild(cupEl("span", "cc-kick", c.week.replace("%d", s.number)));
+      var when = cupEl("span", "hist-when", histDay(s.starts_at) + " – " + histDay(s.ends_at));
+      head.appendChild(when);
+      card.appendChild(head);
+
+      var hero = cupEl("div", "hist-hero");
+      var cr = cupEl("span", "hist-crest");
+      if (win) { var im = cupCrestImg(win, 34); if (im) { cr.appendChild(im); } }
+      else { cr.appendChild(svgNode(CUP_MINI)); }
+      hero.appendChild(cr);
+      var txt = cupEl("span", "hist-hero-txt");
+      if (live) {
+        var badge = cupEl("span", "hist-live");
+        badge.appendChild(cupEl("i"));
+        badge.appendChild(document.createTextNode(c.live));
+        txt.appendChild(badge);
+      }
+      txt.appendChild(cupEl("span", "hist-lbl", win ? (live ? c.leading : c.winner) : c.noWinner));
+      if (win) {
+        var wr = houses.filter(function (x) { return x.house === win; })[0] || {};
+        var nm = cupEl("b", "hist-name", cupHouseName(win));
+        txt.appendChild(nm);
+        txt.appendChild(cupEl("span", "hist-pts", cupPts(wr.total_points) + " " + t.cupPts));
+      } else {
+        txt.appendChild(cupEl("span", "hist-pts", top > 0 ? c.noWinnerSet : c.noWinnerZero));
+      }
+      hero.appendChild(txt);
+      if (win && !live) { hero.appendChild(svgNode(CUP_MINI)); hero.lastChild.classList.add("hist-cup"); }
+      card.appendChild(hero);
+
+      // Yakuniy jadval
+      if (top > 0) {
+        var rows = cupEl("div", "hist-rows");
+        houses.forEach(function (x, i) {
+          var hh = HOUSES[x.house] || {};
+          var r = cupEl("div", "hist-row");
+          r.appendChild(cupEl("span", "hist-pos", String(i + 1)));
+          var c2 = cupEl("span", "hist-rc");
+          var im2 = cupCrestImg(x.house, 16);
+          if (im2) { c2.appendChild(im2); }
+          r.appendChild(c2);
+          r.appendChild(cupEl("span", "hist-rn", cupHouseName(x.house)));
+          var bar = cupEl("span", "hist-bar");
+          var fill = cupEl("i");
+          fill.style.width = Math.max(x.total_points ? 3 : 0, Math.round((x.total_points || 0) / top * 100)) + "%";
+          fill.style.background = hh.accent || "#97a1ae";
+          bar.appendChild(fill);
+          r.appendChild(bar);
+          r.appendChild(cupEl("b", "hist-rp", cupPts(x.total_points)));
+          rows.appendChild(r);
+        });
+        card.appendChild(rows);
+      }
+
+      if (s.best && s.best.points > 0) {
+        var bh = HOUSES[s.best.house] || {};
+        var best = cupEl("div", "hist-best");
+        best.appendChild(svgNode(svgIcon(ROLE_ICON.prefects)));
+        var bt = cupEl("span", "");
+        bt.appendChild(cupEl("em", "", (live ? c.bestLive : c.best) + ": "));
+        bt.appendChild(cupEl("b", "", s.best.name));
+        var bn = cupEl("span", "", " · " + cupHouseName(s.best.house));
+        bn.style.color = bh.accent || "inherit";
+        bt.appendChild(bn);
+        bt.appendChild(document.createTextNode(" · " + s.best.points + " " + t.cupPts));
+        best.appendChild(bt);
+        card.appendChild(best);
+      }
+      list.appendChild(card);
+    });
+  }
+
   /* ---------- FAKULTET SAHIFASI ---------- */
 
   var API_CUP_HOUSE = "https://bot.tizimshunos.uz/api/cup/house";
@@ -4368,6 +4632,7 @@ button.glass:active .tube{transform:scale(.97)}
   function openHouse(id) {
     if (!HOUSE_LORE[id]) { return; }
     houseOpen = id;
+    houseFromHist = false;
     renderHousePage(id);
     $("scr-cup").classList.add("hidden");
     $("scr-house").classList.remove("hidden");
@@ -4381,10 +4646,13 @@ button.glass:active .tube{transform:scale(.97)}
     fetchHouseBoard(id, function () { if (houseOpen === id) { renderHouseMembers(id); } });
   }
 
+  var houseFromHist = false;
+
   function closeHouse() {
     houseOpen = null;
     $("scr-house").classList.add("hidden");
-    $("scr-cup").classList.remove("hidden");
+    $(houseFromHist ? "scr-cup-hist" : "scr-cup").classList.remove("hidden");
+    houseFromHist = false;
   }
 
   function loreRow(icon, label, pair) {
@@ -10642,6 +10910,9 @@ button.glass:active .tube{transform:scale(.97)}
     $("cup-back").addEventListener("click", closeCup);
     $("house-back").addEventListener("click", closeHouse);
     $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
+    $("cup-prev").addEventListener("click", openCupHistory);
+    $("cup-hist-btn").addEventListener("click", openCupHistory);
+    $("hist-back").addEventListener("click", closeCupHistory);
     $("hall-back").addEventListener("click", function() {
       $("scr-hall-full").classList.add("hidden");
       $("scr-cup").classList.remove("hidden");
