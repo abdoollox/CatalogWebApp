@@ -8162,11 +8162,13 @@ body{
 
   function chessInvite(code) {
     var url = "https://t.me/" + BOT + "/catalog?startapp=chess_" + code;
+    // Kod ham yoziladi: havola ochilmasa, do'st uni shaxmat bo'limida qo'lda kirita oladi.
+    var text = L("inviteText") + "\n" + L("codeLbl") + " " + code;
     if (tg && tg.openTelegramLink) {
       tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url) +
-        "&text=" + encodeURIComponent(L("inviteText")));
+        "&text=" + encodeURIComponent(text));
     } else {
-      prompt(L("linkPrompt"), L("inviteText") + url);
+      prompt(L("linkPrompt"), text + "\n" + url);
     }
   }
 
