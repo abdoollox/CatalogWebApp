@@ -1346,6 +1346,16 @@ body{
       <p style="color: var(--dim); font-size: 14px; margin: 0; line-height: 1.4;" data-xt="chessHeroSub">"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!" — 5 daqiqalik Blitz bahslarida qatnashing.</p>
     </div>
 
+    <!-- DAVOM ETAYOTGAN O'YIN -->
+    <div id="chess-resume" class="hidden" style="margin-top: 16px; background: var(--card); border: 1px solid #9b59b6; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 10px;">
+      <div style="flex: 1; min-width: 0;">
+        <div id="chess-resume-head" style="font-weight: 700; font-size: 14px;"></div>
+        <div id="chess-resume-sub" style="color: var(--dim); font-size: 12px; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>
+      </div>
+      <button id="chess-resume-cancel" class="hidden" style="background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 9px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;" data-xt="abortBtn">Bekor qilish</button>
+      <button id="chess-resume-go" style="background: #9b59b6; color: #fff; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;" data-xt="resumeBtn">Qaytish</button>
+    </div>
+
     <!-- BOT BILAN O'YNASH REJIMI -->
     <div style="margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
       <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
@@ -1434,6 +1444,10 @@ body{
           Davom etish
         </button>
       </div>
+      <div id="chess-promo" class="hidden" style="position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; z-index: 40;">
+        <div style="color: #fff; font-weight: 600; font-size: 14px;" data-xt="promoTitle">Piyoda qaysi donaga aylansin?</div>
+        <div id="chess-promo-row" style="display: flex; gap: 8px;"></div>
+      </div>
     </div>
 
     <!-- FOYDALANUVCHI MA'LUMOTI -->
@@ -1448,8 +1462,16 @@ body{
       <div id="chess-my-clock" style="font-family: monospace; font-size: 20px; font-weight: 700; padding: 6px 12px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); color: #2ecc71;">05:00</div>
     </div>
 
+    <!-- DURANG TAKLIFI (raqibdan) -->
+    <div id="chess-offer" class="hidden" style="margin-top: 10px; background: var(--card); border: 1px solid #f1c40f; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 8px;">
+      <div style="flex: 1; font-size: 13px; font-weight: 600;" data-xt="drawIn">Raqib durang taklif qilmoqda</div>
+      <button id="chess-offer-no" style="background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 8px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;" data-xt="decline">Rad etish</button>
+      <button id="chess-offer-yes" style="background: #f1c40f; color: #1a1a1a; border: none; padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer;" data-xt="accept">Qabul qilish</button>
+    </div>
+
     <!-- O'YIN BOSHQARUVI -->
     <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <button id="btn-chess-draw" class="hidden" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-weight: 600; font-size: 14px; cursor: pointer;" data-xt="drawBtn">½ Durang taklifi</button>
       <button id="btn-chess-resign" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: #e74c3c; font-weight: 600; font-size: 14px; cursor: pointer;" data-xt="resign">
         🏳️ Taslim bo'lish
       </button>
@@ -2288,11 +2310,6 @@ body{
   var API_TASKS = "https://bot.tizimshunos.uz/api/tasks";
   var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
   var API_CHAT = "https://bot.tizimshunos.uz/api/chat";
-  var API_CHESS_CREATE = "https://bot.tizimshunos.uz/api/chess/create";
-  var API_CHESS_JOIN = "https://bot.tizimshunos.uz/api/chess/join";
-  var API_CHESS_STATE = "https://bot.tizimshunos.uz/api/chess/state";
-  var API_CHESS_MOVE = "https://bot.tizimshunos.uz/api/chess/move";
-  var API_CHESS_FINISH = "https://bot.tizimshunos.uz/api/chess/finish";
   var API_SEND = "https://bot.tizimshunos.uz/api/send";
   var API_UNDO = "https://bot.tizimshunos.uz/api/undo";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
@@ -4439,6 +4456,7 @@ body{
     renderCatalog();
     renderCupStrip();
     maybeAutoSort();
+    maybeChessLink();
   }
 
   // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda
@@ -5095,11 +5113,46 @@ body{
       r_timeout_loss: "Vaqtingiz tugadi", r_timeout_win: "Raqibning vaqti tugadi",
       r_resign_loss: "Taslim bo'ldingiz", r_resign_win: "Raqib taslim bo'ldi",
       r_left_loss: "O'yinni tark etdingiz", r_left_win: "Raqib o'yinni tark etdi",
-      inviteText: "Sehrgar shaxmati (blits) o'ynaymizmi? ♟️\n\nHavolani bosing: ",
+      inviteText: "Sehrgar shaxmati (blits) o'ynaymizmi? ♟️ Yuqoridagi havolani bosing — o'yinga to'g'ri tushasiz.",
       linkPrompt: "Do'stingizga yuborish uchun havola:",
       joinFail: "O'yinga ulanib bo'lmadi: ", err: "Xato",
-      leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin bekor qilinadi)",
-      resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?"
+      leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin tugaydi)",
+      resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?",
+      abortBtn: "Bekor qilish",
+      abortAsk: "O'yin bekor qilinsinmi? Ball berilmaydi.",
+      drawBtn: "½ Durang taklifi",
+      drawSent: "Durang taklif qilindi",
+      drawIn: "Raqib durang taklif qilmoqda",
+      accept: "Qabul qilish",
+      decline: "Rad etish",
+      leaveLive: "O'yin davom etadi va soatingiz yuradi. Shu yerga istalgan payt qaytishingiz mumkin. Chiqasizmi?",
+      firstMove: "Birinchi yurish · %s",
+      oppFirstMove: "Raqib kutilmoqda · %s",
+      waitShort: "Do'stingiz kutilmoqda…",
+      reconnect: "Aloqa uzildi, qayta ulanmoqda…",
+      offline: "aloqada emas",
+      codeLbl: "Kod:",
+      resumeHead: "Davom etayotgan o'yin",
+      waitHead: "Do'stingizni kutayotgan o'yin",
+      resumeBtn: "Qaytish",
+      aborted: "Bekor qilindi",
+      promoTitle: "Piyoda qaysi donaga aylansin?",
+      moveRejected: "Yurish qabul qilinmadi — taxta yangilandi",
+      offerLimit: "Keyingi taklif — navbatdagi yurishingizdan keyin",
+      netErr: "Aloqa xatosi. Qayta urinib ko'ring.",
+      hasActive: "Sizda tugallanmagan o'yin bor — o'shanga qaytamiz",
+      jNotFound: "o'yin topilmadi",
+      jStarted: "bu o'yin allaqachon boshlangan",
+      badCode: "O'yin kodini to'g'ri kiriting (8 ta belgi)",
+      slowCreate: "Juda tez-tez. Bir daqiqadan keyin urinib ko'ring.",
+      r_aborted: "O'yin boshlanmay turib bekor qilindi",
+      r_cancelled: "Taklif bekor qilindi",
+      r_expired: "Taklif muddati o'tdi",
+      r_agreement: "Kelishuv bo'yicha durang",
+      r_repetition: "Bir xil holat uch marta takrorlandi",
+      r_fifty: "50 yurish davomida urish ham, piyoda yurishi ham bo'lmadi",
+      r_insufficient: "Mot qilishga dona yetarli emas",
+      r_timeout_draw: "Vaqt tugadi, lekin raqibda mot qilishga dona yetarli emas"
     },
     ru: {
       back: "Назад", chatTitle: "Общение", chatKicker: "Гостиная",
@@ -5151,11 +5204,46 @@ body{
       r_timeout_loss: "Ваше время вышло", r_timeout_win: "Время соперника вышло",
       r_resign_loss: "Вы сдались", r_resign_win: "Соперник сдался",
       r_left_loss: "Вы покинули игру", r_left_win: "Соперник покинул игру",
-      inviteText: "Сыграем в волшебные шахматы (блиц)? ♟️\n\nНажмите на ссылку: ",
+      inviteText: "Сыграем в волшебные шахматы (блиц)? ♟️ Нажмите на ссылку выше — попадёте прямо в игру.",
       linkPrompt: "Ссылка для друга:",
       joinFail: "Не удалось подключиться к игре: ", err: "Ошибка",
-      leaveAsk: "Выйти из игры? (Игра будет отменена)",
-      resignAsk: "Вы действительно хотите сдаться?"
+      leaveAsk: "Выйти из игры? (Игра закончится)",
+      resignAsk: "Вы действительно хотите сдаться?",
+      abortBtn: "Отменить",
+      abortAsk: "Отменить игру? Очки не начисляются.",
+      drawBtn: "½ Предложить ничью",
+      drawSent: "Ничья предложена",
+      drawIn: "Соперник предлагает ничью",
+      accept: "Принять",
+      decline: "Отклонить",
+      leaveLive: "Игра продолжится, и ваше время идёт. Вернуться сюда можно в любой момент. Выйти?",
+      firstMove: "Первый ход · %s",
+      oppFirstMove: "Ждём соперника · %s",
+      waitShort: "Ждём друга…",
+      reconnect: "Нет связи, переподключение…",
+      offline: "не в сети",
+      codeLbl: "Код:",
+      resumeHead: "Текущая партия",
+      waitHead: "Партия ждёт друга",
+      resumeBtn: "Вернуться",
+      aborted: "Отменено",
+      promoTitle: "В какую фигуру превратить пешку?",
+      moveRejected: "Ход не принят — доска обновлена",
+      offerLimit: "Следующее предложение — после вашего хода",
+      netErr: "Ошибка связи. Попробуйте ещё раз.",
+      hasActive: "У вас есть незаконченная партия — возвращаемся к ней",
+      jNotFound: "игра не найдена",
+      jStarted: "эта игра уже началась",
+      badCode: "Введите код игры (8 символов)",
+      slowCreate: "Слишком часто. Попробуйте через минуту.",
+      r_aborted: "Игра отменена до начала",
+      r_cancelled: "Приглашение отменено",
+      r_expired: "Срок приглашения истёк",
+      r_agreement: "Ничья по соглашению",
+      r_repetition: "Троекратное повторение позиции",
+      r_fifty: "Правило 50 ходов",
+      r_insufficient: "Недостаточно фигур для мата",
+      r_timeout_draw: "Время вышло, но у соперника недостаточно фигур для мата"
     },
     en: {
       back: "Back", chatTitle: "Chat", chatKicker: "Common room",
@@ -5207,11 +5295,46 @@ body{
       r_timeout_loss: "Your time ran out", r_timeout_win: "Your opponent's time ran out",
       r_resign_loss: "You resigned", r_resign_win: "Your opponent resigned",
       r_left_loss: "You left the game", r_left_win: "Your opponent left the game",
-      inviteText: "Up for a game of wizard's chess (blitz)? ♟️\n\nTap the link: ",
+      inviteText: "Up for a game of wizard's chess (blitz)? ♟️ Tap the link above to jump straight into the game.",
       linkPrompt: "Link to send to your friend:",
       joinFail: "Couldn't join the game: ", err: "Error",
-      leaveAsk: "Leave the game? (It will be cancelled)",
-      resignAsk: "Do you really want to resign?"
+      leaveAsk: "Leave the game? (It will end)",
+      resignAsk: "Do you really want to resign?",
+      abortBtn: "Abort",
+      abortAsk: "Abort the game? No points are awarded.",
+      drawBtn: "½ Offer draw",
+      drawSent: "Draw offered",
+      drawIn: "Your opponent offers a draw",
+      accept: "Accept",
+      decline: "Decline",
+      leaveLive: "The game continues and your clock keeps running. You can come back here any time. Leave?",
+      firstMove: "First move · %s",
+      oppFirstMove: "Waiting for opponent · %s",
+      waitShort: "Waiting for your friend…",
+      reconnect: "Connection lost, reconnecting…",
+      offline: "offline",
+      codeLbl: "Code:",
+      resumeHead: "Game in progress",
+      waitHead: "Game waiting for your friend",
+      resumeBtn: "Resume",
+      aborted: "Aborted",
+      promoTitle: "Promote the pawn to:",
+      moveRejected: "Move not accepted — board refreshed",
+      offerLimit: "You can offer again after your next move",
+      netErr: "Connection error. Please try again.",
+      hasActive: "You have an unfinished game — taking you back",
+      jNotFound: "game not found",
+      jStarted: "this game has already started",
+      badCode: "Enter the game code (8 characters)",
+      slowCreate: "Too often. Try again in a minute.",
+      r_aborted: "The game was aborted before it started",
+      r_cancelled: "Invitation cancelled",
+      r_expired: "Invitation expired",
+      r_agreement: "Draw by agreement",
+      r_repetition: "Threefold repetition",
+      r_fifty: "50-move rule",
+      r_insufficient: "Insufficient material",
+      r_timeout_draw: "Time ran out, but the opponent can't checkmate"
     }
   };
 
@@ -6870,6 +6993,14 @@ body{
     return svg;
   }
 
+  // Donalar qiymati (bot baholashi uchun). Ilgari bu jadval yo'q edi va
+  // "o'rta" / "qiyin" bot birinchi yurishdayoq xatoga uchrab to'xtab qolardi.
+  var CHESS_PIECES = (function () {
+    var v = { P: 100, N: 320, B: 330, R: 500, Q: 900, K: 20000 }, out = {};
+    for (var k in v) { out[k] = { val: v[k] }; out[k.toLowerCase()] = { val: v[k] }; }
+    return out;
+  })();
+
   var PST = {
     P: [
       [0,  0,  0,  0,  0,  0,  0,  0],
@@ -6974,6 +7105,9 @@ body{
     chessState.whiteTime = 300;
     chessState.blackTime = 300;
     chessState.gameOver = false;
+    chessState.halfmove = 0;
+    chessState.seen = {};
+    chessState.seen[posKey()] = 1;
   }
 
   function cloneBoard(b) {
@@ -7163,9 +7297,10 @@ body{
     else if (move.isCastle === "bK") { nb[0][7] = null; nb[0][5] = "r"; }
     else if (move.isCastle === "bQ") { nb[0][0] = null; nb[0][3] = "r"; }
 
-    // Auto promotion to Queen in simulation
-    if (p === "P" && move.to.r === 0) p = "Q";
-    if (p === "p" && move.to.r === 7) p = "q";
+    // Piyoda aylanishi: o'yinchi tanlagan dona, tanlanmagan bo'lsa (bot) - farzin
+    var promo = move.promo || "q";
+    if (p === "P" && move.to.r === 0) p = promo.toUpperCase();
+    if (p === "p" && move.to.r === 7) p = promo;
 
     nb[move.to.r][move.to.c] = p;
     return nb;
@@ -7297,89 +7432,374 @@ body{
     return (m < 10 ? "0" + m : m) + ":" + (sec < 10 ? "0" + sec : sec);
   }
 
+  function fmtClock(ms) {
+    ms = Math.max(0, ms);
+    if (ms >= 10000) { return formatTime(Math.ceil(ms / 1000)); }
+    // So'nggi 10 soniyada o'ndan bir soniya ham ko'rinadi (chess.com dagidek).
+    return "00:0" + (Math.floor(ms / 100) / 10).toFixed(1);
+  }
+
   function updateChessClocks() {
     var myClock = $("chess-my-clock");
     var oppClock = $("chess-opp-clock");
     if (!myClock || !oppClock) return;
 
-    var isMyTurn = (chessState.turn === chessState.myColor);
-    var mySecs = (chessState.myColor === "w" ? chessState.whiteTime : chessState.blackTime);
-    var oppSecs = (chessState.myColor === "w" ? chessState.blackTime : chessState.whiteTime);
+    var pvp = chessState.gameMode === "pvp";
+    var me = chessState.myColor, opp = (me === "w" ? "b" : "w");
+    var myMs = pvp ? pvpClockMs(me) : (me === "w" ? chessState.whiteTime : chessState.blackTime) * 1000;
+    var oppMs = pvp ? pvpClockMs(opp) : (me === "w" ? chessState.blackTime : chessState.whiteTime) * 1000;
+    var isMyTurn = (chessState.turn === me);
 
-    myClock.textContent = formatTime(mySecs);
-    oppClock.textContent = formatTime(oppSecs);
+    myClock.textContent = fmtClock(myMs);
+    oppClock.textContent = fmtClock(oppMs);
 
+    var badge = $("chess-status-badge");
+    var text = isMyTurn ? L("yourTurn") : L("oppThinking");
+    var color = isMyTurn ? "#f1c40f" : "var(--dim)";
     if (isMyTurn) {
-      myClock.style.color = (mySecs <= 30 ? "#e74c3c" : "#2ecc71");
+      myClock.style.color = (myMs <= 30000 ? "#e74c3c" : "#2ecc71");
       oppClock.style.color = "var(--dim)";
-      $("chess-status-badge").textContent = L("yourTurn");
-      $("chess-status-badge").style.color = "#f1c40f";
     } else {
-      oppClock.style.color = (oppSecs <= 30 ? "#e74c3c" : "#f1c40f");
+      oppClock.style.color = (oppMs <= 30000 ? "#e74c3c" : "#f1c40f");
       myClock.style.color = "var(--dim)";
-      $("chess-status-badge").textContent = L("oppThinking");
-      $("chess-status-badge").style.color = "var(--dim)";
+    }
+    if (pvp) {
+      var g = chessNet.game;
+      if (!g || g.status !== "active") {
+        text = (!g || g.status === "waiting") ? L("waitShort") : L("r_over");
+        color = "var(--dim)";
+        myClock.style.color = "var(--dim)"; oppClock.style.color = "var(--dim)";
+      } else if (g.ply < 2 && g.first_move_left !== null) {
+        var left = Math.max(0, g.first_move_left - (Date.now() - chessNet.recvAt));
+        text = L(isMyTurn ? "firstMove" : "oppFirstMove").replace("%s", formatTime(Math.ceil(left / 1000)));
+      }
+      if (chessNet.fails >= 2) { text = L("reconnect"); color = "#e74c3c"; }
+    }
+    badge.textContent = text;
+    badge.style.color = color;
+  }
+
+  /* --- JONLI O'YIN (PvP) ---
+     Hakam - server (bot.tizimshunos.uz/api/chess/*). Ilova faqat yurishni
+     ("e2e4", piyoda aylansa "e7e8n") yuboradi; qaysi yurishlar mumkinligi,
+     soat, natija va ball - hammasi serverdan keladi, ilova ularni faqat
+     ko'rsatadi. O'zgarishlar chatdagi kabi jonli: ilova "shu raqamdan keyin
+     nima o'zgardi?" deb so'raydi, server javobni o'zgarish bo'lguncha
+     (25 soniyagacha) ushlab turadi. Soat ham server vaqti bo'yicha: ilova
+     yig'ilib qolsa ham raqibning vaqti to'g'ri yuradi. */
+
+  var API_CHESS = "https://bot.tizimshunos.uz/api/chess/";
+  var FILES = "abcdefgh";
+  var chessNet = { game: null, pollGen: 0, ctrl: null, busy: false, frozen: null,
+                   recvAt: 0, fails: 0, ended: false, tick: null };
+
+  function sqName(r, c) { return FILES.charAt(c) + (8 - r); }
+  function uciSq(s) { return { r: 8 - parseInt(s.charAt(1), 10), c: FILES.indexOf(s.charAt(0)) }; }
+  function moveUci(m) { return sqName(m.from.r, m.from.c) + sqName(m.to.r, m.to.c) + (m.promo || ""); }
+
+  // Server holatni FEN ko'rinishida yuboradi - ilova uni o'z taxtasiga o'giradi.
+  function fenState(fen) {
+    var parts = String(fen || "").split(" ");
+    var rows = (parts[0] || "").split("/");
+    var board = [];
+    for (var r = 0; r < 8; r++) {
+      var row = [], src = rows[r] || "8";
+      for (var i = 0; i < src.length; i++) {
+        var ch = src.charAt(i);
+        if (/[1-8]/.test(ch)) { for (var k = 0; k < +ch; k++) { row.push(null); } }
+        else { row.push(ch); }
+      }
+      while (row.length < 8) { row.push(null); }
+      board.push(row.slice(0, 8));
+    }
+    var cs = parts[2] || "-";
+    return {
+      board: board,
+      turn: parts[1] === "b" ? "b" : "w",
+      castling: { wK: cs.indexOf("K") > -1, wQ: cs.indexOf("Q") > -1, bK: cs.indexOf("k") > -1, bQ: cs.indexOf("q") > -1 },
+      ep: (parts[3] && parts[3] !== "-") ? uciSq(parts[3]) : null
+    };
+  }
+
+  function chessApi(what, body, query, ctrl) {
+    var d = ""; try { d = (tg && tg.initData) || ""; } catch (e) {}
+    var opt = { method: body ? "POST" : "GET", headers: { "X-Telegram-Init-Data": d } };
+    if (body) { opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+    if (ctrl) { opt.signal = ctrl.signal; }
+    return fetch(API_CHESS + what + (query || ""), opt).then(function (r) { return r.json(); });
+  }
+
+  function chessAsk(msg, cb) {
+    try {
+      if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+        tg.showConfirm(msg, function (ok) { if (ok) { cb(); } });
+        return;
+      }
+    } catch (e) {}
+    if (window.confirm(msg)) { cb(); }
+  }
+
+  function chessHaptic(kind) {
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred(kind); } } catch (e) {}
+  }
+
+  function pvpIs(gid) { return !!(chessNet.game && chessNet.game.id === gid); }
+
+  function pvpClockMs(color) {
+    var g = chessNet.game;
+    if (!g) { return 0; }
+    if (chessNet.frozen) { return chessNet.frozen[color]; }
+    var ms = g.clock[color];
+    if (g.clock.running && g.status === "active" && g.turn === color) {
+      ms -= (Date.now() - chessNet.recvAt);
+    }
+    return Math.max(0, ms);
+  }
+
+  function timeLabel(g) {
+    return formatTime(g.base) + (g.inc ? " +" + g.inc : "");
+  }
+
+  // Tanlangan dona uchun mumkin bo'lgan yurishlar - serverning ro'yxatidan.
+  function pvpLegalFor(r, c) {
+    var g = chessNet.game, from = sqName(r, c), out = [], seen = {};
+    if (!g || chessNet.busy) { return out; }
+    var p = chessState.board[r][c];
+    (g.legal || []).forEach(function (u) {
+      var to = u.slice(2, 4);
+      if (u.slice(0, 2) !== from || seen[to]) { return; }
+      seen[to] = 1;
+      var m = { from: { r: r, c: c }, to: uciSq(to) };
+      if (p && p.toUpperCase() === "K" && Math.abs(m.to.c - c) === 2) {
+        m.isCastle = (p === "K" ? "w" : "b") + (m.to.c === 6 ? "K" : "Q");
+      }
+      if (p && p.toUpperCase() === "P" && m.to.c !== c && !chessState.board[m.to.r][m.to.c]) {
+        m.isEnPassant = true;
+      }
+      out.push(m);
+    });
+    return out;
+  }
+
+  function pvpRenderPlayers(g) {
+    var mine = g.you === "b" ? g.black : g.white;
+    var opp = g.you === "b" ? g.white : g.black;
+    var myCol = g.you === "b" ? L("black") : L("white");
+    var oppCol = g.you === "b" ? L("white") : L("black");
+    $("chess-my-name").textContent = (mine && mine.name) || L("you");
+    $("chess-my-sub").textContent = myCol + (mine && mine.house ? " • " + cupHouseName(mine.house) : "");
+    var invBtn = $("chess-invite-btn");
+    if (opp) {
+      $("chess-opp-name").textContent = opp.name || L("opp");
+      $("chess-opp-avatar").textContent = "⚔️";
+      $("chess-opp-sub").textContent = oppCol + " • " + timeLabel(g) +
+        (g.status === "active" && !opp.online ? " • " + L("offline") : "");
+      invBtn.classList.add("hidden");
+    } else {
+      $("chess-opp-name").textContent = L("waitFriend");
+      $("chess-opp-avatar").textContent = "⏳";
+      $("chess-opp-sub").textContent = L("codeLbl") + " " + g.id + " • " + timeLabel(g);
+      invBtn.classList.toggle("hidden", g.status !== "waiting");
     }
   }
 
-  function pollChessState() {
-    if (chessState.gameOver || chessState.gameMode !== "pvp" || !chessState.pvpGameId) return;
-    
-    var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
-    fetch(API_CHESS_STATE + "?game_id=" + encodeURIComponent(chessState.pvpGameId) + "&initData=" + encodeURIComponent(d))
-      .then(function(r) { return r.json(); })
-      .then(function(res) {
-        if (res.ok && res.game) {
-          var game = res.game;
-          
-          // Opponent joined!
-          if (chessState.myColor === "w" && game.black_uid && $("chess-opp-name").textContent.indexOf("Do'stingiz") > -1) {
-             $("chess-opp-name").textContent = game.black_name || L("opp");
-             $("chess-opp-avatar").textContent = "⚔️";
-             var invBtn = $("chess-invite-btn"); if (invBtn) invBtn.classList.add("hidden");
-          } else if (chessState.myColor === "b" && game.white_uid && $("chess-opp-name").textContent.indexOf("Do'stingiz") > -1) {
-             $("chess-opp-name").textContent = game.white_name || L("opp");
-             $("chess-opp-avatar").textContent = "⚔️";
-             var invBtn = $("chess-invite-btn"); if (invBtn) invBtn.classList.add("hidden");
-          }
-
-          // If turn advanced or opponent made a move
-          if (game.fen) {
-             var p = JSON.parse(game.fen);
-             if (game.turn !== chessState.turn || (chessState.lastMove && p.lastMove && (chessState.lastMove.from.r !== p.lastMove.from.r || chessState.lastMove.from.c !== p.lastMove.from.c))) {
-               chessState.board = p.board;
-               chessState.castling = p.castling;
-               chessState.ep = p.ep;
-               chessState.lastMove = p.lastMove;
-               chessState.turn = game.turn;
-               chessState.whiteTime = game.white_time;
-               chessState.blackTime = game.black_time;
-               renderChessBoard();
-               updateChessClocks();
-
-               var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
-               if (nextLegal.length === 0) {
-                 if (isKingInCheck(chessState.board, chessState.turn)) {
-                   finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
-                 } else {
-                   finishChessGame("draw", "stalemate");
-                 }
-               }
-             }
-          }
-          
-          if (game.status === "finished" && !chessState.gameOver) {
-             var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
-             finishChessGame(game.winner_uid == (tgUser.id||0) ? "win" : "loss", game.win_reason || "over");
-          }
-        }
-      }).catch(function(){});
+  function pvpRenderControls(g) {
+    var live = g.status === "active";
+    var early = g.status === "waiting" || (live && g.ply < 2);
+    var resign = $("btn-chess-resign"), draw = $("btn-chess-draw");
+    resign.classList.toggle("hidden", !(live || g.status === "waiting"));
+    resign.textContent = early ? L("abortBtn") : L("resign");
+    draw.classList.toggle("hidden", !live || g.ply < 2);
+    draw.disabled = !g.can_offer;
+    draw.style.opacity = g.can_offer ? "1" : "0.5";
+    draw.textContent = g.draw_offer === g.you ? L("drawSent") : L("drawBtn");
+    $("chess-offer").classList.toggle("hidden", !(live && g.draw_offer && g.draw_offer !== g.you));
   }
 
-  function startChessClock() {
-    if (chessState.clockTimer) clearInterval(chessState.clockTimer);
-    if (chessState.pollTimer) clearInterval(chessState.pollTimer);
+  function pvpApply(g) {
+    if (!g || g.v !== 2) { return; }
+    var cur = chessNet.game;
+    if (cur && cur.id === g.id && g.rev < cur.rev) { return; }   // eskirgan javob
+    var wasMyTurn = cur && cur.id === g.id && cur.turn === cur.you;
+    chessNet.game = g;
+    chessNet.recvAt = Date.now();
+    chessNet.frozen = null;
 
+    var st = fenState(g.fen);
+    chessState.board = st.board;
+    chessState.turn = st.turn;
+    chessState.castling = st.castling;
+    chessState.ep = st.ep;
+    chessState.myColor = g.you || "w";
+    chessState.pvpGameId = g.id;
+    chessState.lastMove = g.last ? { from: uciSq(g.last.slice(0, 2)), to: uciSq(g.last.slice(2, 4)) } : null;
+    chessState.gameOver = (g.status === "finished" || g.status === "aborted");
+
+    if (chessState.selectedSq && !chessState.gameOver) {
+      chessState.legalMoves = pvpLegalFor(chessState.selectedSq.r, chessState.selectedSq.c);
+      if (!chessState.legalMoves.length) { chessState.selectedSq = null; }
+    } else {
+      chessState.selectedSq = null;
+      chessState.legalMoves = [];
+    }
+    if (chessState.gameOver || g.turn !== g.you) { closePromo(); }
+
+    pvpRenderPlayers(g);
+    pvpRenderControls(g);
+    renderChessBoard();
+    updateChessClocks();
+
+    if (g.status === "active" && g.turn === g.you && cur && !wasMyTurn) {
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    }
+    if (chessState.gameOver && !chessNet.ended) {
+      chessNet.ended = true;
+      pvpStopPoll();
+      pvpShowEnd(g);
+    }
+  }
+
+  function pvpShowEnd(g) {
+    if (g.status === "aborted") {
+      showChessOverlay("aborted", g.reason, "");
+      return;
+    }
+    var mine = g.you === "b" ? g.black : g.white;
+    var res = g.result === "1/2-1/2" ? "draw" : (mine && g.winner_uid === mine.uid ? "win" : "loss");
+    var extra = "";
+    if (g.award && g.award.points) {
+      extra = L("winPts").replace("%d", g.award.points);
+    } else if (g.award && g.award.limit_reached) {
+      extra = L("limitFull").replace("%d", g.award.limit);
+    }
+    showChessOverlay(res, g.reason, extra);
+    chessHaptic(res === "win" ? "success" : res === "loss" ? "error" : "warning");
+  }
+
+  function pvpPoll() {
+    var g = chessNet.game, gen = chessNet.pollGen;
+    if (!g || g.status === "finished" || g.status === "aborted") { return; }
+    var ctrl = null;
+    try { ctrl = new AbortController(); } catch (e) {}
+    chessNet.ctrl = ctrl;
+    chessApi("state", null, "?game_id=" + encodeURIComponent(g.id) + "&since=" + g.rev + "&wait=1", ctrl)
+      .then(function (res) {
+        if (gen !== chessNet.pollGen) { return; }
+        if (!res || !res.game) { throw new Error("bad"); }
+        chessNet.fails = 0;
+        if (chessNet.busy) { setTimeout(function () { if (gen === chessNet.pollGen) { pvpPoll(); } }, 300); return; }
+        pvpApply(res.game);
+        pvpPoll();
+      })["catch"](function () {
+        if (gen !== chessNet.pollGen) { return; }
+        chessNet.fails++;
+        updateChessClocks();
+        setTimeout(function () { if (gen === chessNet.pollGen) { pvpPoll(); } },
+                   Math.min(1000 * chessNet.fails, 5000));
+      });
+  }
+
+  function pvpStopPoll() {
+    chessNet.pollGen++;
+    if (chessNet.ctrl) { try { chessNet.ctrl.abort(); } catch (e) {} }
+    chessNet.ctrl = null;
+    if (chessNet.tick) { clearInterval(chessNet.tick); chessNet.tick = null; }
+  }
+
+  function pvpStartPoll() {
+    pvpStopPoll();
+    if (!chessNet.game || chessState.gameOver) { return; }
+    chessNet.tick = setInterval(updateChessClocks, 200);
+    pvpPoll();
+  }
+
+  function pvpRefresh() {
+    var g = chessNet.game;
+    if (!g) { return; }
+    chessApi("state", null, "?game_id=" + encodeURIComponent(g.id)).then(function (res) {
+      if (res && res.game && pvpIs(g.id)) { pvpApply(res.game); }
+    })["catch"](function () {});
+  }
+
+  function pvpSendMove(move) {
+    var g = chessNet.game;
+    if (!g || chessNet.busy) { return; }
+    var uci = moveUci(move);
+    // Yurish darhol ko'rinadi; server javobi kelgach uning holati ustun turadi.
+    chessNet.frozen = { w: pvpClockMs("w"), b: pvpClockMs("b") };
+    chessState.board = makeSimMove(chessState.board, move);
+    chessState.lastMove = move;
+    chessState.turn = (chessState.turn === "w" ? "b" : "w");
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessNet.busy = true;
+    renderChessBoard();
+    updateChessClocks();
+    var tries = 0;
+    (function send() {
+      chessApi("move", { game_id: g.id, uci: uci, ply: g.ply }).then(function (res) {
+        if (!pvpIs(g.id)) { return; }
+        chessNet.busy = false;
+        if (res && res.game) { pvpApply(res.game); } else { pvpRefresh(); }
+        if (res && !res.ok && res.error !== "not_active") { showToast(L("moveRejected"), "err"); }
+      })["catch"](function () {
+        if (!pvpIs(g.id)) { return; }
+        // Takror yuborish xavfsiz: server bir yurishni ikki marta qabul qilmaydi.
+        if (++tries < 4) { setTimeout(send, 800 * tries); return; }
+        chessNet.busy = false;
+        showToast(L("netErr"), "err");
+        pvpRefresh();
+      });
+    })();
+  }
+
+  function pvpAction(action) {
+    var g = chessNet.game;
+    if (!g) { return; }
+    chessApi("action", { game_id: g.id, action: action }).then(function (res) {
+      if (!pvpIs(g.id)) { return; }
+      if (res && res.game) { pvpApply(res.game); }
+      if (res && res.ok && action === "draw_offer") { showToast(L("drawSent")); }
+      if (res && res.error === "offer_limit") { showToast(L("offerLimit"), "err"); }
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  function openPvP(g) {
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
+    chessState.gameMode = "pvp";
+    chessNet.game = null;
+    chessNet.busy = false;
+    chessNet.frozen = null;
+    chessNet.fails = 0;
+    chessNet.ended = false;
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    $("chess-board-overlay").classList.add("hidden");
+    $("scr-lang").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-cup").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.remove("hidden");
+    pvpApply(g);
+    pvpStartPoll();
+  }
+
+  // Ilova qayta ochilganda (telefonda yig'ilib turgan bo'lsa) darhol yangilaymiz:
+  // yo'lda qolgan so'rov o'lik bo'lishi mumkin.
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden || chessState.gameMode !== "pvp" || chessState.gameOver) { return; }
+    if (!chessNet.game || $("scr-chess-game").classList.contains("hidden")) { return; }
+    pvpStartPoll();
+  });
+
+  function stopBotClock() {
+    if (chessState.clockTimer) { clearInterval(chessState.clockTimer); chessState.clockTimer = null; }
+  }
+
+  function startBotClock() {
+    stopBotClock();
     chessState.clockTimer = setInterval(function() {
       if (chessState.gameOver) return;
       if (chessState.turn === "w") {
@@ -7391,10 +7811,6 @@ body{
       }
       updateChessClocks();
     }, 1000);
-
-    if (chessState.gameMode === "pvp") {
-      chessState.pollTimer = setInterval(pollChessState, 1500);
-    }
   }
 
   function renderChessBoard() {
@@ -7479,9 +7895,40 @@ body{
     }
   }
 
+  function isPromotion(move) {
+    var p = chessState.board[move.from.r][move.from.c];
+    return (p === "P" && move.to.r === 0) || (p === "p" && move.to.r === 7);
+  }
+
+  // Piyoda oxirgi qatorga yetganda - qaysi donaga aylanishini o'yinchi tanlaydi.
+  function askPromo(color, cb) {
+    var row = $("chess-promo-row");
+    row.innerHTML = "";
+    ["q", "r", "b", "n"].forEach(function (k) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.style.cssText = "width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:#dfc7a7;cursor:pointer;padding:6px;";
+      b.innerHTML = getPieceSVG(color === "w" ? k.toUpperCase() : k);
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        closePromo();
+        cb(k);
+      });
+      row.appendChild(b);
+    });
+    $("chess-promo").classList.remove("hidden");
+  }
+
+  function closePromo() {
+    var el = $("chess-promo");
+    if (el) { el.classList.add("hidden"); }
+  }
+
   function handleSquareClick(r, c) {
     if (chessState.gameOver) return;
     if (chessState.turn !== chessState.myColor) return;
+    var pvp = chessState.gameMode === "pvp";
+    if (pvp && (chessNet.busy || !chessNet.game || chessNet.game.status !== "active")) return;
 
     var p = chessState.board[r][c];
 
@@ -7489,7 +7936,15 @@ body{
     if (chessState.selectedSq) {
       var move = chessState.legalMoves.find(function(m) { return m.to.r === r && m.to.c === c; });
       if (move) {
-        executeMove(move);
+        if (isPromotion(move)) {
+          askPromo(chessState.myColor, function (k) {
+            if (chessState.gameOver || chessState.turn !== chessState.myColor) return;
+            move.promo = k;
+            executeMove(move);
+          });
+        } else {
+          executeMove(move);
+        }
         return;
       }
     }
@@ -7497,7 +7952,8 @@ body{
     // Select new piece
     if (p && getPieceColor(p) === chessState.myColor) {
       chessState.selectedSq = { r: r, c: c };
-      chessState.legalMoves = getLegalMovesForSquare(chessState.board, r, c, chessState.castling, chessState.ep);
+      chessState.legalMoves = pvp ? pvpLegalFor(r, c)
+        : getLegalMovesForSquare(chessState.board, r, c, chessState.castling, chessState.ep);
     } else {
       chessState.selectedSq = null;
       chessState.legalMoves = [];
@@ -7505,16 +7961,44 @@ body{
     renderChessBoard();
   }
 
+  // Bot bilan o'yin uchun durang qoidalari (jonli o'yinda buni server qiladi).
+  function posKey() {
+    var cs = chessState.castling;
+    return chessState.board.map(function (row) {
+      return row.map(function (p) { return p || "."; }).join("");
+    }).join("/") + chessState.turn + (cs.wK ? "K" : "") + (cs.wQ ? "Q" : "") +
+      (cs.bK ? "k" : "") + (cs.bQ ? "q" : "") + (chessState.ep ? sqName(chessState.ep.r, chessState.ep.c) : "-");
+  }
+
+  function insufficientMaterial(board) {
+    var rest = [];
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var p = board[r][c];
+        if (p && p.toUpperCase() !== "K") { rest.push({ p: p, sq: (r + c) % 2 }); }
+      }
+    }
+    if (rest.length === 0) return true;
+    if (rest.length === 1) return /[NBnb]/.test(rest[0].p);
+    if (rest.length === 2 && rest[0].p.toUpperCase() === "B" && rest[1].p.toUpperCase() === "B") {
+      return rest[0].sq === rest[1].sq;     // bir xil rangli katakdagi fillar
+    }
+    return false;
+  }
+
   function executeMove(move) {
+    if (chessState.gameMode === "pvp") { pvpSendMove(move); return; }
+
     var p = chessState.board[move.from.r][move.from.c];
-    
+    var target = chessState.board[move.to.r][move.to.c];
+
     // Handle castling rights
     if (p === "K") { chessState.castling.wK = false; chessState.castling.wQ = false; }
     if (p === "k") { chessState.castling.bK = false; chessState.castling.bQ = false; }
-    if (p === "R" && move.from.r === 7 && move.from.c === 7) chessState.castling.wK = false;
-    if (p === "R" && move.from.r === 7 && move.from.c === 0) chessState.castling.wQ = false;
-    if (p === "r" && move.from.r === 0 && move.from.c === 7) chessState.castling.bK = false;
-    if (p === "r" && move.from.r === 0 && move.from.c === 0) chessState.castling.bQ = false;
+    if (move.from.r === 7 && move.from.c === 7 || move.to.r === 7 && move.to.c === 7) chessState.castling.wK = false;
+    if (move.from.r === 7 && move.from.c === 0 || move.to.r === 7 && move.to.c === 0) chessState.castling.wQ = false;
+    if (move.from.r === 0 && move.from.c === 7 || move.to.r === 0 && move.to.c === 7) chessState.castling.bK = false;
+    if (move.from.r === 0 && move.from.c === 0 || move.to.r === 0 && move.to.c === 0) chessState.castling.bQ = false;
 
     // Apply move
     chessState.board = makeSimMove(chessState.board, move);
@@ -7522,53 +8006,33 @@ body{
     chessState.lastMove = move;
     chessState.selectedSq = null;
     chessState.legalMoves = [];
+    chessState.halfmove = (target || move.isEnPassant || p.toUpperCase() === "P") ? 0 : chessState.halfmove + 1;
 
     // Switch turn
     chessState.turn = (chessState.turn === "w" ? "b" : "w");
+    var key = posKey();
+    chessState.seen[key] = (chessState.seen[key] || 0) + 1;
     renderChessBoard();
     updateChessClocks();
 
     // Check game over local
     var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
-    var isMate = false, isDraw = false;
     if (nextLegal.length === 0) {
-      if (isKingInCheck(chessState.board, chessState.turn)) isMate = true;
-      else isDraw = true;
-    }
-
-    // Sync to server for PvP
-    if (chessState.gameMode === "pvp") {
-      var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
-      var stateJson = JSON.stringify({
-        board: chessState.board, castling: chessState.castling, ep: chessState.ep, lastMove: chessState.lastMove
-      });
-      fetch(API_CHESS_MOVE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-        body: JSON.stringify({
-          game_id: chessState.pvpGameId,
-          fen: stateJson,
-          turn: chessState.turn,
-          white_time: chessState.whiteTime,
-          black_time: chessState.blackTime,
-          initData: d
-        })
-      }).catch(function(){});
-    }
-
-    if (isMate) {
-      finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
+      if (isKingInCheck(chessState.board, chessState.turn)) {
+        finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
+      } else {
+        finishChessGame("draw", "stalemate");
+      }
       return;
     }
-    if (isDraw) {
-      finishChessGame("draw", "stalemate");
-      return;
-    }
+    if (insufficientMaterial(chessState.board)) { finishChessGame("draw", "insufficient"); return; }
+    if (chessState.halfmove >= 100) { finishChessGame("draw", "fifty"); return; }
+    if (chessState.seen[key] >= 3) { finishChessGame("draw", "repetition"); return; }
 
     // Bot move if in bot mode
-    if (chessState.gameMode === "bot" && chessState.turn !== chessState.myColor && !chessState.gameOver) {
+    if (chessState.turn !== chessState.myColor && !chessState.gameOver) {
       setTimeout(function() {
-        if (chessState.gameOver) return;
+        if (chessState.gameOver || chessState.gameMode !== "bot") return;
         var botMove = getBestBotMove(chessState.board, chessState.botDiff, chessState.turn, chessState.castling, chessState.ep);
         if (botMove) {
           executeMove(botMove);
@@ -7577,70 +8041,77 @@ body{
     }
   }
 
+  // Bot bilan o'yin natijasi (jonli o'yinda natijani server aytadi - pvpShowEnd).
   function finishChessGame(result, reason) {
     chessState.gameOver = true;
-    if (chessState.clockTimer) clearInterval(chessState.clockTimer);
-    if (chessState.pollTimer) clearInterval(chessState.pollTimer);
+    stopBotClock();
+    closePromo();
+    showChessOverlay(result, reason, "");
+  }
 
-    var overlay = $("chess-board-overlay");
+  function showChessOverlay(result, reason, extra) {
     var icon = $("chess-overlay-icon");
     var title = $("chess-overlay-title");
     var desc = $("chess-overlay-desc");
-    
-    var myUid = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : 0);
     var rtxt = reasonText(reason, result);
 
     if (result === "win") {
       icon.textContent = "🏆";
       title.textContent = L("win");
       title.style.color = "#2ecc71";
-      // Ball haqidagi yozuv server javobidan keyin qo'yiladi: bot bilan
-      // o'yin ball bermaydi, jonli o'yinda esa mavsumdagi cheklov bor.
-      desc.textContent = rtxt + ".";
+      desc.textContent = rtxt + "." + (extra ? " " + extra : "");
     } else if (result === "loss") {
       icon.textContent = "💀";
       title.textContent = L("loss");
       title.style.color = "#e74c3c";
-      desc.textContent = rtxt + ". " + L("lossTail");
-    } else {
+      desc.textContent = rtxt + ". " + (extra || L("lossTail"));
+    } else if (result === "draw") {
       icon.textContent = "🤝";
       title.textContent = L("draw");
       title.style.color = "#f1c40f";
-      desc.textContent = rtxt + ". " + L("drawTail");
+      desc.textContent = rtxt + ". " + (extra || L("drawTail"));
+    } else {
+      icon.textContent = "🚫";
+      title.textContent = L("aborted");
+      title.style.color = "var(--dim)";
+      desc.textContent = rtxt + ".";
     }
+    $("chess-board-overlay").classList.remove("hidden");
+  }
 
-    // Har qanday natijada serverga xabar berish (faqat PvP bo'lsa)
-    if (chessState.gameMode === "pvp" && chessState.pvpGameId) {
-       var winnerUid = null;
-       if (result === "win") winnerUid = myUid;
-       // Agar biz mag'lub bo'lsak yoki taslim bo'lsak, raqib yutganini serverga aytamiz.
-       // Eslatma: Backend buni validate qilmaydi, g'olibni bemalol yozib qo'yadi.
-       var d = ""; try { d = (tg && tg.initData) || ""; } catch(e) {}
-       if (d) {
-         fetch(API_CHESS_FINISH, {
-           method: "POST",
-           headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-           body: JSON.stringify({ game_id: chessState.pvpGameId, winner_uid: winnerUid, reason: reason, initData: d })
-         }).then(function (r) { return r.json(); }).then(function (res) {
-           if (!res) { return; }
-           if (res.points) {
-             desc.textContent = rtxt + ". " + L("winPts").replace("%d", res.points);
-           } else if (res.limit_reached) {
-             desc.textContent = rtxt + ". " + L("limitFull").replace("%d", res.limit);
-           }
-         })["catch"](function() {});
-       }
-    }
+  var chessResume = null;
 
-    if (overlay) overlay.classList.remove("hidden");
+  // Hubda: davom etayotgan yoki do'st kutayotgan o'yin - qaytish tugmasi bilan.
+  function chessRefreshMine() {
+    var box = $("chess-resume");
+    chessApi("mine").then(function (res) {
+      var g = res && res.games && res.games[0];
+      chessResume = g || null;
+      if (!g) { box.classList.add("hidden"); return; }
+      var opp = g.you === "b" ? g.white : g.black;
+      if (g.status === "waiting") {
+        $("chess-resume-head").textContent = L("waitHead");
+        $("chess-resume-sub").textContent = L("codeLbl") + " " + g.id + " • " + timeLabel(g);
+      } else {
+        $("chess-resume-head").textContent = L("resumeHead");
+        $("chess-resume-sub").textContent = ((opp && opp.name) || L("opp")) + " • " +
+          (g.turn === g.you ? L("yourTurn") : L("oppThinking"));
+      }
+      $("chess-resume-cancel").classList.toggle("hidden", g.status !== "waiting");
+      box.classList.remove("hidden");
+    })["catch"](function () {});
   }
 
   function openChessHub() {
     applyXT();
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
     $("scr-cup").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
     $("scr-chess-hub").classList.remove("hidden");
+    chessRefreshMine();
   }
 
   function closeChessHub() {
@@ -7655,6 +8126,8 @@ body{
       if (diffRadios[i].checked) diff = diffRadios[i].value;
     }
 
+    pvpStopPoll();
+    chessNet.game = null;
     chessState.gameMode = "bot";
     chessState.botDiff = diff;
     chessState.myColor = "w";
@@ -7665,12 +8138,18 @@ body{
     // Setup UI names & avatars
     $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || L("you");
     $("chess-my-sub").textContent = L("white") + " • " + cupHouseName(cupMe().house);
-    
+
     var botNames = L("botNames");
     var botAvatars = { easy: "🦁", med: "📚", hard: "🧙‍♀️" };
     $("chess-opp-name").textContent = botNames[diff] || "Bot";
     $("chess-opp-sub").textContent = L("black") + " • Blitz 5:00";
     $("chess-opp-avatar").textContent = botAvatars[diff] || "🤖";
+    $("chess-invite-btn").classList.add("hidden");
+    $("btn-chess-resign").classList.remove("hidden");
+    $("btn-chess-resign").textContent = L("resign");
+    $("btn-chess-draw").classList.add("hidden");
+    $("chess-offer").classList.add("hidden");
+    closePromo();
 
     $("chess-board-overlay").classList.add("hidden");
     $("scr-chess-hub").classList.add("hidden");
@@ -7678,88 +8157,141 @@ body{
 
     renderChessBoard();
     updateChessClocks();
-    startChessClock();
+    startBotClock();
   }
+
+  function chessInvite(code) {
+    var url = "https://t.me/" + BOT + "/catalog?startapp=chess_" + code;
+    if (tg && tg.openTelegramLink) {
+      tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url) +
+        "&text=" + encodeURIComponent(L("inviteText")));
+    } else {
+      prompt(L("linkPrompt"), L("inviteText") + url);
+    }
+  }
+
+  function joinErrText(code) {
+    if (code === "not_found") return L("jNotFound");
+    if (code === "game_already_started") return L("jStarted");
+    return L("err");
+  }
+
+  var chessCreating = false;
 
   function createPvPGame() {
-    var d = "";
-    try { d = (tg && tg.initData) || ""; } catch(e) {}
-    if (!d) return;
-
-    fetch(API_CHESS_CREATE, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-      body: JSON.stringify({ time_control: 300, initData: d })
-    }).then(function(r) { return r.json(); })
-      .then(function(res) {
-        if (res.ok && res.game_id) {
-          var code = res.game_id;
-          var botUrl = "https://t.me/garripotterkinobot/catalog?startapp=chess_" + code;
-          var text = L("inviteText") + botUrl;
-          var shareUrl = "https://t.me/share/url?text=" + encodeURIComponent(text);
-          
-          if (tg && tg.openTelegramLink) {
-            tg.openTelegramLink(shareUrl);
-          } else {
-            prompt(L("linkPrompt"), text);
-          }
-          joinPvPGame(code, true);
-        }
-      }).catch(function(e) {});
+    if (chessCreating) return;
+    chessCreating = true;
+    chessApi("create", { base: 300, inc: 0 }).then(function (res) {
+      chessCreating = false;
+      if (res && res.ok && res.game) {
+        openPvP(res.game);
+        chessInvite(res.game.id);
+        return;
+      }
+      if (res && res.error === "has_active" && res.game_id) {
+        showToast(L("hasActive"));
+        joinPvPGame(res.game_id);
+        return;
+      }
+      showToast(res && res.error === "slow" ? L("slowCreate") : L("err"), "err");
+    })["catch"](function () {
+      chessCreating = false;
+      showToast(L("netErr"), "err");
+    });
   }
 
-  function joinPvPGame(code, isCreator) {
-    if (!code) {
-      code = ($("input-join-code").value || "").trim();
+  // Kod qo'lda yozilsa ham, butun taklif havolasi tashlansa ham ishlaydi.
+  function joinPvPGame(code) {
+    var text = String(code || "");
+    var m = /chess_([0-9a-f]{8})/i.exec(text) || /\b([0-9a-f]{8})\b/i.exec(text);
+    if (!m) { showToast(L("badCode"), "err"); return; }
+    chessApi("join", { game_id: m[1].toLowerCase() }).then(function (res) {
+      if (res && res.ok && res.game) {
+        $("input-join-code").value = "";
+        openPvP(res.game);
+        return;
+      }
+      if (res && res.error === "has_active" && res.game_id) {
+        showToast(L("hasActive"));
+        joinPvPGame(res.game_id);
+        return;
+      }
+      showToast(L("joinFail") + joinErrText(res && res.error), "err");
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  // Taklif havolasi (t.me/<bot>/catalog?startapp=chess_<kod>) bilan kelgan
+  // do'st katalog ochilishi bilan to'g'ridan-to'g'ri o'yinga tushadi.
+  var pendingChess = null;
+  try {
+    var sp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
+    if (!sp) {
+      var spm = /[?&#]tgWebAppStartParam=([^&#]+)/.exec((window.location.search || "") + (window.location.hash || ""));
+      if (spm) { sp = decodeURIComponent(spm[1]); }
     }
-    if (!code) return;
+    var cm = /^chess_([0-9a-f]{8})$/i.exec(sp);
+    if (cm) { pendingChess = cm[1].toLowerCase(); }
+  } catch (e) { pendingChess = null; }
 
-    var d = "";
-    try { d = (tg && tg.initData) || ""; } catch(e) {}
-    if (!d) return;
+  function maybeChessLink() {
+    if (!pendingChess) { return; }
+    var code = pendingChess;
+    pendingChess = null;
+    joinPvPGame(code);
+  }
 
-    fetch(API_CHESS_JOIN, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
-      body: JSON.stringify({ game_id: code, initData: d })
-    }).then(function(r) { return r.json(); })
-      .then(function(res) {
-        if (res.ok) {
-          chessState.gameMode = "pvp";
-          chessState.pvpGameId = code;
-          chessState.myColor = isCreator ? "w" : "b";
-          initChessEngine();
+  function leaveChessGame() {
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
+    openChessHub();
+  }
 
-          $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || L("you");
-          $("chess-my-sub").textContent = isCreator ? L("white") : L("black");
-          $("chess-opp-name").textContent = L("waitFriend");
-          $("chess-opp-sub").textContent = (isCreator ? L("black") : L("white")) + " • Blitz 5:00";
-          $("chess-opp-avatar").textContent = "⏳";
-          
-          var invBtn = $("chess-invite-btn");
-          if (isCreator && invBtn) {
-             invBtn.classList.remove("hidden");
-             var botUrl = "https://t.me/garripotterkinobot/catalog?startapp=chess_" + code;
-             var text = L("inviteText") + botUrl;
-             invBtn.onclick = function() {
-               if (tg && tg.openTelegramLink) tg.openTelegramLink("https://t.me/share/url?text=" + encodeURIComponent(text));
-               else prompt(L("linkPrompt"), text);
-             };
-          } else if (invBtn) {
-             invBtn.classList.add("hidden");
-          }
-
-          $("chess-board-overlay").classList.add("hidden");
-          $("scr-chess-hub").classList.add("hidden");
-          $("scr-chess-game").classList.remove("hidden");
-
-          renderChessBoard();
-          updateChessClocks();
-          startChessClock();
-        } else {
-          alert(L("joinFail") + (res.error || L("err")));
-        }
-      }).catch(function(e) {});
+  function initChessUI() {
+    $("chess-hub-back").addEventListener("click", closeChessHub);
+    $("btn-start-bot-game").addEventListener("click", startBotGame);
+    $("btn-create-pvp-game").addEventListener("click", createPvPGame);
+    $("btn-join-pvp-game").addEventListener("click", function() { joinPvPGame($("input-join-code").value); });
+    $("chess-invite-btn").addEventListener("click", function () {
+      if (chessNet.game) { chessInvite(chessNet.game.id); }
+    });
+    $("chess-resume-go").addEventListener("click", function () {
+      if (chessResume) { joinPvPGame(chessResume.id); }
+    });
+    $("chess-resume-cancel").addEventListener("click", function () {
+      if (!chessResume) return;
+      chessApi("action", { game_id: chessResume.id, action: "abort" })
+        .then(chessRefreshMine)["catch"](function () { showToast(L("netErr"), "err"); });
+    });
+    $("chess-game-back").addEventListener("click", function() {
+      if (chessState.gameMode === "pvp") {
+        // Jonli o'yin serverda davom etadi - chiqish taslim bo'lish EMAS.
+        var g = chessNet.game;
+        if (g && g.status === "active" && g.ply >= 2) { chessAsk(L("leaveLive"), leaveChessGame); }
+        else { leaveChessGame(); }
+        return;
+      }
+      if (chessState.gameOver) { leaveChessGame(); return; }
+      chessAsk(L("leaveAsk"), leaveChessGame);
+    });
+    $("btn-chess-resign").addEventListener("click", function() {
+      if (chessState.gameOver) return;
+      if (chessState.gameMode !== "pvp") {
+        chessAsk(L("resignAsk"), function () { finishChessGame("loss", "resign"); });
+        return;
+      }
+      var g = chessNet.game;
+      if (!g) return;
+      if (g.status === "waiting" || g.ply < 2) { chessAsk(L("abortAsk"), function () { pvpAction("abort"); }); }
+      else { chessAsk(L("resignAsk"), function () { pvpAction("resign"); }); }
+    });
+    $("btn-chess-draw").addEventListener("click", function () {
+      if (chessState.gameMode === "pvp" && chessNet.game && chessNet.game.can_offer) { pvpAction("draw_offer"); }
+    });
+    $("chess-offer-yes").addEventListener("click", function () { pvpAction("draw_accept"); });
+    $("chess-offer-no").addEventListener("click", function () { pvpAction("draw_decline"); });
+    $("chess-promo").addEventListener("click", function (e) { if (e.target === this) { closePromo(); } });
+    $("btn-chess-overlay-ok").addEventListener("click", leaveChessGame);
   }
 
   /* ---------- ISHGA TUSHIRISH ---------- */
@@ -7804,28 +8336,7 @@ body{
     $("refs-back").addEventListener("click", closeRefs);
     $("refs-share").addEventListener("click", function () { shareRefs(""); });
     $("refs-promo").addEventListener("click", function () { shareRefs("taklif"); });
-    $("chess-hub-back").addEventListener("click", closeChessHub);
-    $("btn-start-bot-game").addEventListener("click", startBotGame);
-    $("btn-create-pvp-game").addEventListener("click", createPvPGame);
-    $("btn-join-pvp-game").addEventListener("click", function() { joinPvPGame(null, false); });
-    $("chess-game-back").addEventListener("click", function() {
-      if (chessState.gameOver) {
-        openChessHub();
-      } else {
-        if (confirm(L("leaveAsk"))) {
-          finishChessGame("loss", "left");
-          openChessHub();
-        }
-      }
-    });
-    $("btn-chess-resign").addEventListener("click", function() {
-      if (!chessState.gameOver && confirm(L("resignAsk"))) {
-        finishChessGame("loss", "resign");
-      }
-    });
-    $("btn-chess-overlay-ok").addEventListener("click", function() {
-      openChessHub();
-    });
+    initChessUI();
     
     $("cup-strip").addEventListener("click", openCup);
     $("cup-back").addEventListener("click", closeCup);
