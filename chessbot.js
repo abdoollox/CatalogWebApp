@@ -12,7 +12,7 @@
  * jadvallari (o'rta o'yin / endshpil aralash), fil jufti, o'tgan piyoda.
  *
  * Xabarlar:
- *   {cmd:"move", id, moves:[uci...], level:"easy"|"med"|"hard", time:ms}
+ *   {cmd:"move", id, moves:[uci...], level:"novice"|"easy"|"med"|"hard"|"master", time:ms}
  *       -> {id, uci, depth, score, nodes}
  *   {cmd:"perft", id, fen, depth} -> {id, nodes}   (sinov uchun)
  */
@@ -505,10 +505,13 @@ function rootScores(depth) {
 
 function gauss() { return (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 0.58; }
 
+// Beshta sehrgar: Nevill (boshlovchi) -> Ron -> Germiona -> Makgonagall -> Dambldor (usta).
 var LEVELS = {
+  novice: { depth: 1, noise: 260, random: 0.3, time: 150 },
   easy: { depth: 2, noise: 170, random: 0.12, time: 250 },
   med: { depth: 4, noise: 40, random: 0, time: 700 },
-  hard: { depth: 64, noise: 0, random: 0, time: 1500 }
+  hard: { depth: 6, noise: 10, random: 0, time: 900 },
+  master: { depth: 64, noise: 0, random: 0, time: 2000 }
 };
 
 function think(level, timeMs) {
