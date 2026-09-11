@@ -1418,6 +1418,56 @@ body{
     .cmc-s{font:500 13px/1.4 'Manrope',sans-serif;margin:8px 0 2px}
     .cmc-b{display:block;width:100%;margin-top:8px;padding:9px 10px;border-radius:10px;border:1px solid rgba(155,89,182,.6);background:rgba(155,89,182,.18);color:inherit;font:800 13px/1 'Manrope',sans-serif;cursor:pointer}
     .cmc-b.gold{background:linear-gradient(135deg,#f0cf85,#c0913a);color:#1b1305;border-color:transparent}
+    .ch-rate{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;color:var(--text);
+      background:linear-gradient(135deg,rgba(217,167,74,.12),var(--card) 65%);border-color:rgba(217,167,74,.35)}
+    .ch-rate-pc{flex:none;width:52px;height:52px;border-radius:14px;background:#d3cab8;padding:6px;box-sizing:border-box;border:1px solid rgba(217,167,74,.7);box-shadow:0 4px 14px rgba(217,167,74,.2)}
+    .ch-rate-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+    .ch-rate-m .lbl{font:700 11px/1 'Manrope',sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--dim)}
+    .ch-rate-m .num b{font:800 26px/1 'Manrope',sans-serif;color:#f3d58f;font-variant-numeric:tabular-nums}
+    .ch-rate-m .num em{font:700 13px/1 'Manrope',sans-serif;font-style:normal;color:#e7c170;margin-left:8px}
+    .ch-rate-m .sub{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+    .ch-rate-go{flex:none;font:700 13px/1 'Manrope',sans-serif;color:#dcbfe9}
+    .ch-bot .t{position:relative}
+    .ch-bot .won{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#d9a74a;color:#1b1305;display:grid;place-items:center}
+    .ch-bot .won svg{width:10px;height:10px;stroke-width:3}
+    /* REYTING EKRANI */
+    .cs-prof{display:flex;gap:14px;align-items:center}
+    .cs-prof .pc{flex:none;width:64px;height:64px;border-radius:16px;background:#d3cab8;padding:7px;box-sizing:border-box;border:1px solid rgba(217,167,74,.75);box-shadow:0 6px 20px rgba(217,167,74,.22)}
+    .cs-prof .r{font:800 32px/1 'Manrope',sans-serif;color:#f3d58f;font-variant-numeric:tabular-nums}
+    .cs-prof .t{font:700 13px/1.3 'Manrope',sans-serif;color:#e7c170;margin-top:4px}
+    .cs-prof .s{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);margin-top:2px}
+    .cs-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+    .cs-stats div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 4px;text-align:center}
+    .cs-stats b{display:block;font:800 16px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums}
+    .cs-stats span{display:block;font:600 10.5px/1 'Manrope',sans-serif;color:var(--dim);margin-top:5px;text-transform:uppercase;letter-spacing:.5px}
+    .cs-spark{margin-top:12px;height:54px}
+    .cs-spark svg{width:100%;height:100%;display:block}
+    .cs-tabs{margin-top:14px}
+    .cs-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer;font:600 13.5px/1.3 'Manrope',sans-serif}
+    .cs-row:last-child{border-bottom:none}
+    .cs-row.me{background:rgba(217,167,74,.10)}
+    .cs-row .rk{flex:none;width:24px;font:800 13px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
+    .cs-row .rk.top{color:#f3d58f}
+    .cs-row .av{flex:none;width:30px;height:30px;display:grid;place-items:center}
+    .cs-row .av img{width:26px;height:26px;object-fit:contain}
+    .cs-row .nm{flex:1;min-width:0}
+    .cs-row .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+    .cs-row .nm span{display:block;font:500 11.5px/1.3 'Manrope',sans-serif;color:var(--dim);margin-top:2px}
+    .cs-row .pc{flex:none;width:22px;height:22px}
+    .cs-row .rt{flex:none;font:800 15px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;min-width:40px;text-align:right}
+    .cs-row .res{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font:800 12px/1 'Manrope',sans-serif}
+    .cs-row .res.win{background:rgba(46,204,113,.18);color:#5fd98f}
+    .cs-row .res.loss{background:rgba(231,76,60,.18);color:#ff8a7a}
+    .cs-row .res.draw{background:rgba(241,196,15,.16);color:#f3d58f}
+    .cs-row .dl{flex:none;font:800 13px/1 'Manrope',sans-serif;min-width:34px;text-align:right}
+    .cs-row .dl.up{color:#5fd98f}.cs-row .dl.dn{color:#ff8a7a}
+    .cs-list{padding:4px 0}
+    .cs-empty{padding:22px 10px;text-align:center;color:var(--dim);font:500 13px/1.5 'Manrope',sans-serif}
+    .cs-lad .pc{width:34px;height:34px;border-radius:10px;background:#d3cab8;padding:3px;box-sizing:border-box}
+    .cs-badge{flex:none;font:800 11px/1 'Manrope',sans-serif;padding:6px 8px;border-radius:999px;background:var(--bg2);color:var(--dim);border:1px solid var(--line)}
+    .cs-badge.won{background:linear-gradient(135deg,#f0cf85,#c0913a);color:#1b1305;border-color:transparent}
+    .cs-sheet{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+    .cs-sheet .box{width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 16px 26px;box-sizing:border-box}
     .ch-rules{color:var(--dim);font:500 12px/1.55 'Manrope',sans-serif;margin:14px 4px 30px}
     </style>
     <div class="cup-hdr">
@@ -1441,6 +1491,17 @@ body{
         <span class="ch-pill hidden" id="ch-pill-season"></span>
       </div>
     </div>
+
+    <!-- REYTING -->
+    <button id="ch-rate" class="ch-card ch-rate" type="button">
+      <span class="ch-rate-pc" id="ch-rate-piece"></span>
+      <span class="ch-rate-m">
+        <span class="lbl" data-xt="myRating">Sizning reytingingiz</span>
+        <span class="num"><b id="ch-rate-num">1200</b><em id="ch-rate-title"></em></span>
+        <span class="sub" id="ch-rate-sub"></span>
+      </span>
+      <span class="ch-rate-go"><span data-xt="ratingsBtn">Jadval</span> ›</span>
+    </button>
 
     <!-- DAVOM ETAYOTGAN O'YIN -->
     <div id="chess-resume" class="ch-card ch-resume hidden">
@@ -1520,6 +1581,37 @@ body{
     <div class="ch-rules" data-xt="rulesText">Birinchi yurish uchun 60 soniya beriladi. Ilovadan chiqsangiz ham o'yin davom etadi va soatingiz yuradi. Mavsumda 5 ta o'yin ballanadi.</div>
   </div>
 
+
+  <!-- SEHRGAR SHAXMATI: REYTING, TARIX, ZINAPOYA -->
+  <div id="scr-chess-stats" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="chess-stats-back"><span style="font-size:13px">‹</span> <span data-xt="back">Ortga</span></button>
+      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #f3d58f;" data-xt="statsTitle">Shaxmat reytingi</div>
+    </div>
+    <div class="ch-card">
+      <div class="cs-prof">
+        <span class="pc" id="cs-piece"></span>
+        <div style="min-width:0">
+          <div class="r" id="cs-rating">1200</div>
+          <div class="t" id="cs-title"></div>
+          <div class="s" id="cs-sub"></div>
+        </div>
+      </div>
+      <div class="cs-stats">
+        <div><b id="cs-games">0</b><span data-xt="statGames">O'yin</span></div>
+        <div><b id="cs-wins" style="color:#5fd98f">0</b><span data-xt="statWins">G'alaba</span></div>
+        <div><b id="cs-draws" style="color:#f3d58f">0</b><span data-xt="statDraws">Durang</span></div>
+        <div><b id="cs-losses" style="color:#ff8a7a">0</b><span data-xt="statLosses">Mag'lubiyat</span></div>
+      </div>
+      <div class="cs-spark" id="cs-spark"></div>
+    </div>
+    <div class="ch-seg cs-tabs" id="cs-tabs"><button data-v="top" data-xt="tabTop">Jadval</button><button data-v="hist" data-xt="tabHist">Tarix</button><button data-v="lad" data-xt="tabLadder">Zinapoya</button></div>
+    <div class="ch-card" style="padding:6px 4px">
+      <div id="cs-top-filter" class="ch-seg" style="margin:8px 10px 6px"><button data-v="all" data-xt="filterAll">Hammasi</button><button data-v="house" data-xt="filterHouse">Fakultetim</button></div>
+      <div id="cs-list" class="cs-list"></div>
+    </div>
+    <div class="ch-rules" id="cs-note" data-xt="ratingNote">Reyting faqat jonli o'yinlarda o'zgaradi: kuchliroq raqibni yengsangiz ko'proq qo'shiladi. Hamma 1200 dan boshlaydi.</div>
+  </div>
   <!-- SEHRGAR SHAXMATI: GAMEPLAY -->
   <div id="scr-chess-game" class="screen hidden" style="padding-bottom: 30px;">
     <style>
@@ -5300,6 +5392,39 @@ body{
       joinFail: "O'yinga ulanib bo'lmadi: ", err: "Xato",
       leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin tugaydi)",
       resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?",
+      myRating: "Sizning reytingingiz",
+      ratingsBtn: "Jadval",
+      rateSub: "%r-o'rin · %g ta o'yin",
+      rateNew: "Birinchi jonli o'yiningizdan keyin reyting paydo bo'ladi",
+      statsTitle: "Shaxmat reytingi",
+      titleLine: "Unvon: %s",
+      rankLine: "Jadvalda %r-o'rin · eng yuqorisi %b",
+      statGames: "O'yin",
+      statWins: "G'alaba",
+      statDraws: "Durang",
+      statLosses: "Mag'lubiyat",
+      tabTop: "Jadval",
+      tabHist: "Tarix",
+      tabLadder: "Zinapoya",
+      filterAll: "Hammasi",
+      filterHouse: "Fakultetim",
+      topEmpty: "Hali hech kim jonli o'yin o'ynamagan. Birinchi bo'ling!",
+      histEmpty: "Jonli o'yinlaringiz shu yerda ko'rinadi.",
+      gamesN: "%d ta o'yin",
+      resW: "G",
+      resL: "M",
+      resD: "D",
+      wdl: "%w G · %d D · %l M",
+      beaten: "Yengildi",
+      notBeaten: "Hali yo'q",
+      ratingNote: "Reyting faqat jonli o'yinlarda o'zgaradi: kuchliroq raqibni yengsangiz ko'proq qo'shiladi. Hamma 1200 dan boshlaydi. Unvonlar: hamma Piyodadan boshlaydi, keyin Ot (1250+), Fil (1400+), Ruh (1550+), Farzin (1700+), Shoh (1850+).",
+      ratingAfter: "Reyting: %r (%d).",
+      title_pawn: "Piyoda",
+      title_knight: "Ot",
+      title_bishop: "Fil",
+      title_rook: "Ruh",
+      title_queen: "Farzin",
+      title_king: "Shoh",
       pvpTitle2: "Jonli jang",
       pvpNote2: "Tasodifiy raqib toping yoki do'stingizni chaqiring — g'alaba fakultetingizga ball keltiradi.",
       seekBtn: "Raqib topish",
@@ -5448,6 +5573,39 @@ body{
       joinFail: "Не удалось подключиться к игре: ", err: "Ошибка",
       leaveAsk: "Выйти из игры? (Игра закончится)",
       resignAsk: "Вы действительно хотите сдаться?",
+      myRating: "Ваш рейтинг",
+      ratingsBtn: "Таблица",
+      rateSub: "%r-е место · игр: %g",
+      rateNew: "Рейтинг появится после первой живой партии",
+      statsTitle: "Шахматный рейтинг",
+      titleLine: "Звание: %s",
+      rankLine: "%r-е место · лучший %b",
+      statGames: "Игры",
+      statWins: "Победы",
+      statDraws: "Ничьи",
+      statLosses: "Пораж.",
+      tabTop: "Таблица",
+      tabHist: "История",
+      tabLadder: "Лестница",
+      filterAll: "Все",
+      filterHouse: "Мой факультет",
+      topEmpty: "Живых партий ещё не было. Будьте первым!",
+      histEmpty: "Здесь появятся ваши живые партии.",
+      gamesN: "игр: %d",
+      resW: "В",
+      resL: "П",
+      resD: "Н",
+      wdl: "%w В · %d Н · %l П",
+      beaten: "Побеждён",
+      notBeaten: "Пока нет",
+      ratingNote: "Рейтинг меняется только в живых партиях: победа над сильным соперником даёт больше. Все начинают с 1200. Звания: все начинают Пешкой, затем Конь (1250+), Слон (1400+), Ладья (1550+), Ферзь (1700+), Король (1850+).",
+      ratingAfter: "Рейтинг: %r (%d).",
+      title_pawn: "Пешка",
+      title_knight: "Конь",
+      title_bishop: "Слон",
+      title_rook: "Ладья",
+      title_queen: "Ферзь",
+      title_king: "Король",
       pvpTitle2: "Живой бой",
       pvpNote2: "Найдите случайного соперника или позовите друга — победа принесёт очки факультету.",
       seekBtn: "Найти соперника",
@@ -5596,6 +5754,39 @@ body{
       joinFail: "Couldn't join the game: ", err: "Error",
       leaveAsk: "Leave the game? (It will end)",
       resignAsk: "Do you really want to resign?",
+      myRating: "Your rating",
+      ratingsBtn: "Table",
+      rateSub: "#%r · %g games",
+      rateNew: "Your rating appears after your first live game",
+      statsTitle: "Chess rating",
+      titleLine: "Title: %s",
+      rankLine: "#%r in the table · best %b",
+      statGames: "Games",
+      statWins: "Wins",
+      statDraws: "Draws",
+      statLosses: "Losses",
+      tabTop: "Table",
+      tabHist: "History",
+      tabLadder: "Ladder",
+      filterAll: "All",
+      filterHouse: "My house",
+      topEmpty: "No live games yet. Be the first!",
+      histEmpty: "Your live games will appear here.",
+      gamesN: "%d games",
+      resW: "W",
+      resL: "L",
+      resD: "D",
+      wdl: "%w W · %d D · %l L",
+      beaten: "Beaten",
+      notBeaten: "Not yet",
+      ratingNote: "Your rating changes only in live games: beating a stronger opponent gains more. Everyone starts at 1200. Titles: everyone starts as a Pawn, then Knight (1250+), Bishop (1400+), Rook (1550+), Queen (1700+), King (1850+).",
+      ratingAfter: "Rating: %r (%d).",
+      title_pawn: "Pawn",
+      title_knight: "Knight",
+      title_bishop: "Bishop",
+      title_rook: "Rook",
+      title_queen: "Queen",
+      title_king: "King",
       pvpTitle2: "Live battle",
       pvpNote2: "Find a random opponent or invite a friend — a win brings points to your house.",
       seekBtn: "Find an opponent",
@@ -5735,6 +5926,7 @@ body{
     $("scr-chess-hub").classList.add("hidden");
     $("scr-refs").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
     if (leaveSort()) { return; }
     $("scr-lang").classList.remove("hidden");
   }
@@ -8018,7 +8210,7 @@ body{
     if (chessState.gameOver && !chessNet.ended) {
       chessNet.ended = true;
       pvpStopPoll();
-      pvpShowEnd(g);
+      if (!chessNet.review) { pvpShowEnd(g); }
     }
   }
 
@@ -8034,6 +8226,11 @@ body{
       extra = L("winPts").replace("%d", g.award.points);
     } else if (g.award && g.award.limit_reached) {
       extra = L("limitFull").replace("%d", g.award.limit);
+    }
+    var rt = g.rating && g.rating[g.you];
+    if (rt) {
+      // Reyting o'zgarishi: "Reyting: 1216 (+16)"
+      extra += (extra ? " " : "") + L("ratingAfter").replace("%r", rt.r + rt.d).replace("%d", (rt.d > 0 ? "+" : "") + rt.d);
     }
     showChessOverlay(res, g.reason, extra);
     chessHaptic(res === "win" ? "success" : res === "loss" ? "error" : "warning");
@@ -8127,7 +8324,7 @@ body{
     })["catch"](function () { showToast(L("netErr"), "err"); });
   }
 
-  function openPvP(g) {
+  function openPvP(g, review) {
     chessSoundUnlock();
     seekStop(false);
     stopHubTimer();
@@ -8142,6 +8339,7 @@ body{
     chessNet.frozen = null;
     chessNet.fails = 0;
     chessNet.ended = false;
+    chessNet.review = !!review;       // tarixdan: natija oynasisiz, faqat ko'rish
     chessState.selectedSq = null;
     chessState.legalMoves = [];
     chessResetView();
@@ -8150,9 +8348,15 @@ body{
     $("scr-cat").classList.add("hidden");
     $("scr-cup").classList.add("hidden");
     $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
     $("scr-chess-game").classList.remove("hidden");
     pvpApply(g);
     pvpStartPoll();
+    if (review) {
+      $("chess-controls").classList.add("hidden");
+      $("btn-chess-again").classList.add("hidden");
+      $("chess-end-row").classList.remove("hidden");
+    }
     if (g.status === "active" && g.ply === 0) { chessSound("start"); }
   }
 
@@ -8917,6 +9121,15 @@ body{
     stopBotClock();
     closePromo();
     showChessOverlay(result, reason, "");
+    // Sehrgarlar zinapoyasi: botlar ustidan natija (bezak - ball va reyting bermaydi).
+    if (chessState.gameMode === "bot" && chessState.sans.length >= 2) {
+      chessApi("botresult", { level: chessState.botDiff, result: result }).then(function () {
+        var b = chessStats.bots || {}, r = b[chessState.botDiff] || { w: 0, d: 0, l: 0 };
+        r[{ win: "w", draw: "d", loss: "l" }[result]]++;
+        b[chessState.botDiff] = r;
+        chessStats.bots = b;
+      })["catch"](function () {});
+    }
   }
 
   function showChessOverlay(result, reason, extra) {
@@ -9058,6 +9271,8 @@ body{
     chessApi("mine").then(function (res) {
       if (res && res.seeking) { chessSeekers = res.seeking; }
       if (res && res.season) { chessSeason = res.season; }
+      if (res && res.rating) { renderRateCard(res.rating); }
+      if (res && res.bots) { renderBotBadges(res.bots); }
       renderChessHub();
       var g = res && res.games && res.games[0];
       chessResume = g || null;
@@ -9085,8 +9300,10 @@ body{
     $("scr-cup").classList.add("hidden");
     $("scr-cat").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
     $("scr-chess-hub").classList.remove("hidden");
     renderChessHub();
+    renderBotBadges();
     chessRefreshMine();
     // Hub ochiq turganda raqib qidirayotganlar soni yangilanib turadi.
     stopHubTimer();
@@ -9422,6 +9639,13 @@ body{
     pvpStopPoll();
     stopBotClock();
     closePromo();
+    // Reyting ekranidan kelingan bo'lsa (tarix, zinapoya, chaqiruv) - o'shanga qaytamiz.
+    if (chessStats.from === "stats") {
+      chessStats.from = null;
+      $("scr-chess-game").classList.add("hidden");
+      openChessStats();
+      return;
+    }
     openChessHub();
   }
 
@@ -9505,6 +9729,241 @@ body{
     var radios = document.getElementsByName("chess-bot-diff");
     for (var ri = 0; ri < radios.length; ri++) { radios[ri].addEventListener("change", renderChessHub); }
     initChessBoardInput();
+    initChessStatsUI();
+  }
+
+  /* --- REYTING, TARIX, SEHRGARLAR ZINAPOYASI ---
+     Reyting (Elo) faqat jonli o'yinlarda o'zgaradi, hisobni server qiladi.
+     Unvon - shaxmat donasi: Piyoda -> Ot -> Fil -> Ruh -> Farzin -> Shoh.
+     Tarixdagi o'yinni bosib, uni yurishma-yurish qayta ko'rish mumkin.
+     Zinapoya - beshta sehrgar botdan qaysilari yengilgani (bezak, ball yo'q). */
+
+  var TITLE_PIECE = { pawn: "P", knight: "N", bishop: "B", rook: "R", queen: "Q", king: "K" };
+  var BOT_ORDER = ["novice", "easy", "med", "hard", "master"];
+  var chessStats = { tab: "top", filter: "all", prof: null, top: {}, bots: null, from: null };
+
+  function titleName(t) { return L("title_" + (t || "pawn")); }
+
+  function renderRateCard(r) {
+    if (!r) { return; }
+    $("ch-rate-piece").innerHTML = getPieceSVG(TITLE_PIECE[r.title] || "P", "marble");
+    $("ch-rate-num").textContent = r.rating;
+    $("ch-rate-title").textContent = titleName(r.title);
+    $("ch-rate-sub").textContent = r.games
+      ? L("rateSub").replace("%r", r.rank || "—").replace("%g", r.games)
+      : L("rateNew");
+  }
+
+  function renderBotBadges(bots) {
+    chessStats.bots = bots || chessStats.bots || {};
+    var els = document.querySelectorAll('#scr-chess-hub input[name="chess-bot-diff"]');
+    for (var i = 0; i < els.length; i++) {
+      var t = els[i].nextElementSibling, won = (chessStats.bots[els[i].value] || {}).w > 0;
+      var mark = t.querySelector(".won");
+      if (won && !mark) { t.insertAdjacentHTML("beforeend", '<span class="won">' + CHAT_SVG.check + "</span>"); }
+      if (!won && mark) { mark.parentNode.removeChild(mark); }
+    }
+  }
+
+  function csDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) { return ""; }
+    return ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + " · " +
+      ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+  }
+
+  function csSpark(series) {
+    var box = $("cs-spark");
+    if (!series || series.length < 2) { box.innerHTML = ""; box.style.display = "none"; return; }
+    box.style.display = "";
+    var w = 300, h = 54, lo = Math.min.apply(null, series), hi = Math.max.apply(null, series), span = Math.max(20, hi - lo);
+    var pts = series.map(function (v, i) {
+      return (i * w / (series.length - 1)).toFixed(1) + "," + (h - 6 - (v - lo) / span * (h - 12)).toFixed(1);
+    });
+    box.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none">' +
+      '<defs><linearGradient id="csg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(217,167,74,.35)"/><stop offset="1" stop-color="rgba(217,167,74,0)"/></linearGradient></defs>' +
+      '<polygon fill="url(#csg)" points="0,' + h + " " + pts.join(" ") + " " + w + "," + h + '"/>' +
+      '<polyline fill="none" stroke="#e7c170" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="' + pts.join(" ") + '"/></svg>';
+  }
+
+  function renderStatsProfile(p) {
+    $("cs-piece").innerHTML = getPieceSVG(TITLE_PIECE[p.title] || "P", "marble");
+    $("cs-rating").textContent = p.rating;
+    $("cs-title").textContent = L("titleLine").replace("%s", titleName(p.title));
+    $("cs-sub").textContent = p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew");
+    $("cs-games").textContent = p.games;
+    $("cs-wins").textContent = p.wins;
+    $("cs-draws").textContent = p.draws;
+    $("cs-losses").textContent = p.losses;
+    csSpark(p.series);
+  }
+
+  function csRow(html, attrs, me) {
+    return '<button type="button" class="cs-row' + (me ? " me" : "") + '"' + (attrs || "") + ">" + html + "</button>";
+  }
+
+  function crestHtml(house) {
+    var h = HOUSES[house];
+    return h && h.img ? '<img src="' + IMG_DIR + h.img + '" alt="">' : "";
+  }
+
+  function renderStatsList() {
+    var box = $("cs-list"), tab = chessStats.tab, html = "", me = chatUser().id || 0;
+    $("cs-top-filter").classList.toggle("hidden", tab !== "top");
+    chessSegs("cs-tabs", tab, function (v) { return L({ top: "tabTop", hist: "tabHist", lad: "tabLadder" }[v]); });
+    chessSegs("cs-top-filter", chessStats.filter, function (v) { return L(v === "all" ? "filterAll" : "filterHouse"); });
+    if (tab === "top") {
+      var data = chessStats.top[chessStats.filter];
+      if (!data) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("loading")) + "</div>"; return; }
+      if (!data.top.length) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("topEmpty")) + "</div>"; return; }
+      var inTop = false;
+      data.top.forEach(function (x, i) {
+        var mine = x.uid == me;
+        inTop = inTop || mine;
+        html += csRow('<span class="rk' + (i < 3 ? " top" : "") + '">' + (i + 1) + '</span><span class="av">' + crestHtml(x.house) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(x.name) + "</b><span>" + escapeHtmlChess(titleName(x.title)) + " · " +
+          L("gamesN").replace("%d", x.games) + '</span></span><span class="pc">' + getPieceSVG(TITLE_PIECE[x.title] || "P", "marble") +
+          '</span><span class="rt">' + x.rating + "</span>", ' data-uid="' + x.uid + '"', mine);
+      });
+      if (!inTop && data.me) {
+        html += csRow('<span class="rk">' + data.me.rank + '</span><span class="av">' + crestHtml(cupMe().house) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(L("you")) + "</b><span>" + escapeHtmlChess(titleName(data.me.title)) +
+          '</span></span><span class="rt">' + data.me.rating + "</span>", "", true);
+      }
+    } else if (tab === "hist") {
+      var hist = chessStats.prof ? chessStats.prof.history : null;
+      if (!hist) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("loading")) + "</div>"; return; }
+      if (!hist.length) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("histEmpty")) + "</div>"; return; }
+      hist.forEach(function (h) {
+        var mark = { win: L("resW"), loss: L("resL"), draw: L("resD") }[h.result];
+        var d = h.delta;
+        html += csRow('<span class="res ' + h.result + '">' + escapeHtmlChess(mark) + '</span><span class="nm"><b>' +
+          escapeHtmlChess(h.opp.name) + "</b><span>" + escapeHtmlChess(reasonText(h.reason, h.result)) + " · " +
+          escapeHtmlChess(chessTcLabel(h.base + "+" + (h.inc || 0))) + " · " + csDate(h.time) + '</span></span>' +
+          (d !== null && d !== undefined ? '<span class="dl ' + (d >= 0 ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>" : ""),
+          ' data-game="' + escapeHtmlChess(h.id) + '"');
+      });
+    } else {
+      var bots = chessStats.bots || {}, names = L("botNames");
+      BOT_ORDER.forEach(function (lv, i) {
+        var r = bots[lv] || { w: 0, d: 0, l: 0 }, won = r.w > 0;
+        html += csRow('<span class="rk">' + (i + 1) + '</span><span class="pc">' + getPieceSVG(BOT_PIECE[lv]) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(names[lv]) + "</b><span>" +
+          escapeHtmlChess(L({ novice: "lvlNovice", easy: "lvlEasy", med: "lvlMed", hard: "lvlHard", master: "lvlMaster" }[lv])) +
+          " · " + L("wdl").replace("%w", r.w).replace("%d", r.d).replace("%l", r.l) + '</span></span><span class="cs-badge' +
+          (won ? " won" : "") + '">' + escapeHtmlChess(won ? L("beaten") : L("notBeaten")) + "</span>", ' data-bot="' + lv + '"');
+      });
+    }
+    box.innerHTML = html;
+    var lad = box.querySelectorAll("[data-bot] .pc");
+    for (var i = 0; i < lad.length; i++) { lad[i].parentNode.classList.add("cs-lad"); }
+  }
+
+  function loadStatsTop(filter) {
+    var q = filter === "house" && cupMe().house ? "?house=" + encodeURIComponent(cupMe().house) : "";
+    chessApi("top", null, q).then(function (res) {
+      if (res && res.ok) { chessStats.top[filter] = res; if (chessStats.tab === "top") { renderStatsList(); } }
+    })["catch"](function () {});
+  }
+
+  function loadStatsProfile() {
+    chessApi("profile").then(function (res) {
+      if (!res || !res.ok) { return; }
+      chessStats.prof = res;
+      chessStats.bots = res.bots || {};
+      renderStatsProfile(res);
+      renderStatsList();
+    })["catch"](function () {});
+  }
+
+  function openChessStats(tab) {
+    applyXT();
+    seekStop(true);
+    stopHubTimer();
+    chessStats.tab = tab || chessStats.tab || "top";
+    chessStats.top = {};
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.remove("hidden");
+    window.scrollTo(0, 0);
+    renderStatsList();
+    loadStatsProfile();
+    loadStatsTop(chessStats.filter);
+  }
+
+  function closeChessStats() {
+    $("scr-chess-stats").classList.add("hidden");
+    openChessHub();
+  }
+
+  // Jadvaldagi o'yinchi: qisqa ma'lumot va "Shaxmatga chaqirish".
+  function chessPlayerSheet(uid) {
+    chessApi("profile", null, "?uid=" + encodeURIComponent(uid)).then(function (p) {
+      if (!p || !p.ok) { return; }
+      var me = uid == (chatUser().id || 0);
+      var ov = document.createElement("div");
+      ov.className = "cs-sheet";
+      ov.innerHTML = '<div class="box"><div class="cs-prof"><span class="pc">' + getPieceSVG(TITLE_PIECE[p.title] || "P", "marble") +
+        '</span><div style="min-width:0"><div class="r" style="font-size:26px">' + escapeHtmlChess(p.name) + '</div><div class="t">' +
+        p.rating + " · " + escapeHtmlChess(titleName(p.title)) + (p.house ? " · " + escapeHtmlChess(cupHouseName(p.house)) : "") +
+        '</div><div class="s">' + (p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew")) +
+        '</div></div></div><div class="cs-stats"><div><b>' + p.games + "</b><span>" + L("statGames") + '</span></div><div><b style="color:#5fd98f">' +
+        p.wins + "</b><span>" + L("statWins") + '</span></div><div><b style="color:#f3d58f">' + p.draws + "</b><span>" + L("statDraws") +
+        '</span></div><div><b style="color:#ff8a7a">' + p.losses + "</b><span>" + L("statLosses") + "</span></div></div>" +
+        (me ? "" : '<button type="button" class="ch-btn ch-gold" style="margin-top:14px" data-challenge="1">' + CHESS_IC.swords + "<span>" +
+          escapeHtmlChess(L("chatChess")) + "</span></button>") + "</div>";
+      ov.addEventListener("click", function (e) {
+        if (e.target === ov) { ov.parentNode.removeChild(ov); return; }
+        if (e.target.closest && e.target.closest("[data-challenge]")) {
+          ov.parentNode.removeChild(ov);
+          chessStats.from = "stats";
+          chessAnnounce("dm:" + uid);
+        }
+      });
+      document.body.appendChild(ov);
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  // Tarixdagi o'yinni ko'rish: tugagan holat, yurishlar ro'yxati bilan orqaga-oldinga.
+  function chessReview(gid) {
+    chessApi("state", null, "?game_id=" + encodeURIComponent(gid)).then(function (res) {
+      if (!res || !res.game || res.game.v !== 2) { showToast(L("err"), "err"); return; }
+      chessStats.from = "stats";
+      $("scr-chess-stats").classList.add("hidden");
+      openPvP(res.game, true);
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  function initChessStatsUI() {
+    $("ch-rate").addEventListener("click", function () { openChessStats("top"); });
+    $("chess-stats-back").addEventListener("click", closeChessStats);
+    $("cs-tabs").addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-v]") : null;
+      if (!b) return;
+      chessStats.tab = b.getAttribute("data-v");
+      renderStatsList();
+    });
+    $("cs-top-filter").addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-v]") : null;
+      if (!b) return;
+      chessStats.filter = b.getAttribute("data-v");
+      if (!chessStats.top[chessStats.filter]) { loadStatsTop(chessStats.filter); }
+      renderStatsList();
+    });
+    $("cs-list").addEventListener("click", function (e) {
+      var row = e.target.closest ? e.target.closest(".cs-row") : null;
+      if (!row) return;
+      if (row.getAttribute("data-uid")) { chessPlayerSheet(row.getAttribute("data-uid")); return; }
+      if (row.getAttribute("data-game")) { chessReview(row.getAttribute("data-game")); return; }
+      var lv = row.getAttribute("data-bot");
+      if (lv) {
+        var radio = document.querySelector('input[name="chess-bot-diff"][value="' + lv + '"]');
+        if (radio) { radio.checked = true; }
+        chessStats.from = "stats";
+        $("scr-chess-stats").classList.add("hidden");
+        startBotGame();
+      }
+    });
   }
 
   /* ---------- ISHGA TUSHIRISH ---------- */
