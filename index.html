@@ -1335,79 +1335,105 @@ body{
 
   <!-- SEHRGAR SHAXMATI: HUB -->
   <div id="scr-chess-hub" class="screen hidden">
+    <style>
+    .ch-card{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+    .ch-hero{display:flex;gap:14px;align-items:center}
+    .ch-mark{flex:none;width:62px;height:62px;border-radius:16px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;overflow:hidden;position:relative;border:1px solid rgba(155,89,182,.55);box-shadow:0 6px 20px rgba(155,89,182,.28)}
+    .ch-mark i{display:block;background:#885c35}
+    .ch-mark i:nth-child(1),.ch-mark i:nth-child(4){background:#dfc7a7}
+    .ch-mark span{position:absolute;inset:9px}
+    .ch-kick{font:800 11px/1 'Manrope',sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:#b784d1}
+    .ch-title{font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.1;margin:5px 0 4px;color:var(--text)}
+    .ch-sub{color:var(--dim);font:500 13px/1.4 'Manrope',sans-serif}
+    .ch-pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+    .ch-pill{font:600 12px/1 'Manrope',sans-serif;padding:8px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--dim)}
+    .ch-pill b{color:#d9a74a;font-weight:800}
+    .ch-h{display:flex;align-items:center;gap:8px;font:800 15px/1.2 'Manrope',sans-serif;margin-bottom:6px;color:var(--text)}
+    .ch-h svg{width:18px;height:18px;color:#b784d1;flex:none}
+    .ch-note{color:var(--dim);font:500 13px/1.45 'Manrope',sans-serif;margin-bottom:14px}
+    .ch-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;border-radius:12px;padding:14px;font:700 15px/1 'Manrope',sans-serif;cursor:pointer}
+    .ch-btn svg{width:18px;height:18px;flex:none}
+    .ch-primary{background:#9b59b6;color:#fff;border:1px solid #9b59b6}
+    .ch-ghost{background:rgba(155,89,182,.08);color:#dcbfe9;border:1px solid rgba(155,89,182,.55)}
+    .ch-or{display:flex;align-items:center;gap:10px;color:var(--dim);font:600 12px/1 'Manrope',sans-serif;margin:16px 0 10px}
+    .ch-or:before,.ch-or:after{content:"";flex:1;height:1px;background:var(--line)}
+    .ch-join{display:flex;gap:8px}
+    .ch-join input{flex:1;min-width:0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);outline:none;font:600 14px 'Manrope',sans-serif;letter-spacing:.5px}
+    .ch-join input:focus{border-color:rgba(155,89,182,.7)}
+    .ch-join button{flex:none;background:var(--bg2);color:var(--text);border:1px solid var(--line);padding:0 16px;border-radius:12px;font:700 14px 'Manrope',sans-serif;cursor:pointer}
+    .ch-bots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+    .ch-bot{position:relative;cursor:pointer;display:block}
+    .ch-bot input{position:absolute;opacity:0;pointer-events:none}
+    .ch-bot .t{height:100%;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 11px;border-radius:14px;background:var(--bg2);border:1px solid var(--line);text-align:center;transition:border-color .15s,background .15s}
+    .ch-bot .pc{width:42px;height:42px;border-radius:12px;background:#dfc7a7;padding:5px;box-sizing:border-box}
+    .ch-bot .n{font:700 12.5px/1.25 'Manrope',sans-serif;color:var(--text)}
+    .ch-bot .lv{font:600 11px/1 'Manrope',sans-serif;color:var(--dim);display:flex;gap:3px;align-items:center;margin-top:auto}
+    .ch-bot .lv i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);display:block}
+    .ch-bot .lv i.on{background:#b784d1}
+    .ch-bot .lv em{font-style:normal;margin-left:4px}
+    .ch-bot input:checked + .t{border-color:#9b59b6;background:rgba(155,89,182,.14)}
+    .ch-resume{border-color:rgba(155,89,182,.7);display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(155,89,182,.16),var(--card) 70%)}
+    .ch-resume .dot{flex:none;width:9px;height:9px;border-radius:50%;background:#2ecc71;box-shadow:0 0 0 4px rgba(46,204,113,.18)}
+    .ch-rules{color:var(--dim);font:500 12px/1.55 'Manrope',sans-serif;margin:14px 4px 30px}
+    </style>
     <div class="cup-hdr">
       <button class="back-btn" id="chess-hub-back"><span style="font-size:13px">‹</span> <span id="chess-hub-back-txt" data-xt="back">Ortga</span></button>
-      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #9b59b6;" data-xt="chessHubTitle">Sehrgar Shaxmati</div>
+      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #b784d1;" data-xt="chessHubTitle">Sehrgar shaxmati</div>
     </div>
-    
-    <div style="margin-top: 15px; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 18px;">
-      <div style="font-size: 40px; margin-bottom: 8px;">♟️ ♞ ♚</div>
-      <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 26px; margin: 0 0 6px; color: var(--text);" data-xt="chessHero">Sehrgarlar Shaxmat Jangi</h2>
-      <p style="color: var(--dim); font-size: 14px; margin: 0; line-height: 1.4;" data-xt="chessHeroSub">"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!" — 5 daqiqalik Blitz bahslarida qatnashing.</p>
+
+    <!-- SARLAVHA -->
+    <div class="ch-card">
+      <div class="ch-hero">
+        <div class="ch-mark"><i></i><i></i><i></i><i></i><span id="ch-mark-piece"></span></div>
+        <div style="min-width:0">
+          <div class="ch-kick" data-xt="hubKicker">Jonli blits</div>
+          <div class="ch-title" data-xt="chessHero">Sehrgarlar shaxmat jangi</div>
+          <div class="ch-sub" data-xt="hubSub">Raqibni yenging — fakultetingizga ball olib keling.</div>
+        </div>
+      </div>
+      <div class="ch-pills">
+        <span class="ch-pill" id="ch-pill-win"></span>
+        <span class="ch-pill" id="ch-pill-draw"></span>
+        <span class="ch-pill hidden" id="ch-pill-season"></span>
+      </div>
     </div>
 
     <!-- DAVOM ETAYOTGAN O'YIN -->
-    <div id="chess-resume" class="hidden" style="margin-top: 16px; background: var(--card); border: 1px solid #9b59b6; border-radius: 18px; padding: 14px 16px; display: flex; align-items: center; gap: 10px;">
+    <div id="chess-resume" class="ch-card ch-resume hidden">
+      <span class="dot"></span>
       <div style="flex: 1; min-width: 0;">
-        <div id="chess-resume-head" style="font-weight: 700; font-size: 14px;"></div>
-        <div id="chess-resume-sub" style="color: var(--dim); font-size: 12px; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>
+        <div id="chess-resume-head" style="font: 800 14px/1.2 'Manrope',sans-serif;"></div>
+        <div id="chess-resume-sub" style="color: var(--dim); font: 500 12px/1.3 'Manrope',sans-serif; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"></div>
       </div>
-      <button id="chess-resume-cancel" class="hidden" style="background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 9px 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;" data-xt="abortBtn">Bekor qilish</button>
-      <button id="chess-resume-go" style="background: #9b59b6; color: #fff; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;" data-xt="resumeBtn">Qaytish</button>
+      <button id="chess-resume-cancel" class="hidden" style="background: transparent; color: var(--dim); border: 1px solid var(--line); padding: 9px 12px; border-radius: 10px; font: 700 13px 'Manrope',sans-serif; cursor: pointer;" data-xt="abortBtn">Bekor qilish</button>
+      <button id="chess-resume-go" style="background: #9b59b6; color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font: 700 13px 'Manrope',sans-serif; cursor: pointer;" data-xt="resumeBtn">Qaytish</button>
     </div>
 
-    <!-- BOT BILAN O'YNASH REJIMI -->
-    <div style="margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
-      <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>🤖</span> <span data-xt="chessBotHead">Botga qarshi o'ynash (Mashg'ulot)</span>
-      </div>
-      
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
-          <input type="radio" name="chess-bot-diff" value="easy" checked style="accent-color: #9b59b6;">
-          <div>
-            <div style="font-weight: 600; font-size: 14px;" data-xt="botEasy">🟢 Ron Uizli (Oson)</div>
-            <div style="color: var(--dim); font-size: 12px;" data-xt="botEasySub">Yangi boshlovchilar uchun</div>
-          </div>
-        </label>
-        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
-          <input type="radio" name="chess-bot-diff" value="med" style="accent-color: #9b59b6;">
-          <div>
-            <div style="font-weight: 600; font-size: 14px;" data-xt="botMed">🟡 Germiona Grenjer (O'rta)</div>
-            <div style="color: var(--dim); font-size: 12px;" data-xt="botMedSub">Mantiqiy va taktik yurishlar</div>
-          </div>
-        </label>
-        <label style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg2); border-radius: 12px; cursor: pointer; border: 1px solid var(--line);">
-          <input type="radio" name="chess-bot-diff" value="hard" style="accent-color: #9b59b6;">
-          <div>
-            <div style="font-weight: 600; font-size: 14px;" data-xt="botHard">🔴 Prof. Makgonagall (Qiyin)</div>
-            <div style="color: var(--dim); font-size: 12px;" data-xt="botHardSub">Sehrgar grossmeyster darajasi</div>
-          </div>
-        </label>
-      </div>
-
-      <button id="btn-start-bot-game" class="btn" style="width: 100%; background: #9b59b6; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer;" data-xt="startBot">
-        ⚔️ Bot bilan o'yinni boshlash (5:00)
-      </button>
-    </div>
-
-    <!-- DO'ST BILAN O'YNASH REJIMI -->
-    <div style="margin-top: 18px; margin-bottom: 30px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px;">
-      <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>⚔️</span> <span data-xt="pvpHead">Do'st bilan 1v1 PvP Blitz</span>
-      </div>
-      
-      <button id="btn-create-pvp-game" style="width: 100%; background: var(--bg2); border: 1px solid var(--line); color: var(--text); padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; margin-bottom: 12px; cursor: pointer;" data-xt="createGame">
-        ➕ Yangi o'yin yaratish
-      </button>
-
-      <div style="display: flex; gap: 8px;">
-        <input type="text" id="input-join-code" placeholder="O'yin kodi (masalan: 9a3f2b1c)" data-xt-ph="joinPh" style="flex: 1; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); outline: none; font-size: 14px;">
-        <button id="btn-join-pvp-game" style="background: #9b59b6; color: #fff; border: none; padding: 0 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;" data-xt="join">
-          Ulanish
-        </button>
+    <!-- DO'ST BILAN O'YNASH -->
+    <div class="ch-card">
+      <div class="ch-h"><span class="ch-ic" data-ic="swords"></span><span data-xt="pvpTitle">Do'st bilan jang</span></div>
+      <div class="ch-note" data-xt="pvpNote">Do'stingizga taklif yuboring — u kartadagi tugmani bosishi bilan o'yin boshlanadi.</div>
+      <button id="btn-create-pvp-game" class="ch-btn ch-primary"><span class="ch-ic" data-ic="send"></span><span data-xt="inviteBtn">Do'stni jangga chaqirish</span></button>
+      <div class="ch-or"><span data-xt="orCode">yoki kod bilan qo'shiling</span></div>
+      <div class="ch-join">
+        <input type="text" id="input-join-code" placeholder="9a3f2b1c" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button id="btn-join-pvp-game" data-xt="join">Ulanish</button>
       </div>
     </div>
+
+    <!-- BOT BILAN MASHG'ULOT -->
+    <div class="ch-card">
+      <div class="ch-h"><span class="ch-ic" data-ic="bot"></span><span data-xt="botTitle">Mashg'ulot: bot bilan</span></div>
+      <div class="ch-note" data-xt="botNote">Ball berilmaydi — qo'lni charxlash uchun.</div>
+      <div class="ch-bots">
+        <label class="ch-bot"><input type="radio" name="chess-bot-diff" value="easy" checked><span class="t"><span class="pc" data-piece="p"></span><span class="n" data-bot="easy"></span><span class="lv"><i class="on"></i><i></i><i></i><em data-xt="lvlEasy">Oson</em></span></span></label>
+        <label class="ch-bot"><input type="radio" name="chess-bot-diff" value="med"><span class="t"><span class="pc" data-piece="n"></span><span class="n" data-bot="med"></span><span class="lv"><i class="on"></i><i class="on"></i><i></i><em data-xt="lvlMed">O'rta</em></span></span></label>
+        <label class="ch-bot"><input type="radio" name="chess-bot-diff" value="hard"><span class="t"><span class="pc" data-piece="q"></span><span class="n" data-bot="hard"></span><span class="lv"><i class="on"></i><i class="on"></i><i class="on"></i><em data-xt="lvlHard">Qiyin</em></span></span></label>
+      </div>
+      <button id="btn-start-bot-game" class="ch-btn ch-ghost"><span class="ch-ic" data-ic="play"></span><span data-xt="startBot2">Bot bilan boshlash</span></button>
+    </div>
+
+    <div class="ch-rules" data-xt="rulesText">Birinchi yurish uchun 60 soniya beriladi. Ilovadan chiqsangiz ham o'yin davom etadi va soatingiz yuradi. Mavsumda 5 ta o'yin ballanadi.</div>
   </div>
 
   <!-- SEHRGAR SHAXMATI: GAMEPLAY -->
@@ -5118,6 +5144,22 @@ body{
       joinFail: "O'yinga ulanib bo'lmadi: ", err: "Xato",
       leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin tugaydi)",
       resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?",
+      hubKicker: "Jonli blits",
+      hubSub: "Raqibni yenging — fakultetingizga ball olib keling.",
+      pillWin: "G'alaba %s",
+      pillDraw: "Durang %s",
+      pillSeason: "Mavsumda %s o'yin",
+      pvpTitle: "Do'st bilan jang",
+      pvpNote: "Do'stingizga taklif kartasini yuboring — u tugmani bosishi bilan o'yin boshlanadi.",
+      inviteBtn: "Do'stni jangga chaqirish",
+      orCode: "yoki kod bilan qo'shiling",
+      botTitle: "Mashg'ulot: bot bilan",
+      botNote: "Ball berilmaydi — qo'lni charxlash uchun.",
+      lvlEasy: "Oson",
+      lvlMed: "O'rta",
+      lvlHard: "Qiyin",
+      startBot2: "Bot bilan boshlash",
+      rulesText: "Birinchi yurish uchun 60 soniya beriladi. Ilovadan chiqsangiz ham o'yin davom etadi va soatingiz yuradi. Mavsumda 5 ta o'yin ballanadi.",
       abortBtn: "Bekor qilish",
       abortAsk: "O'yin bekor qilinsinmi? Ball berilmaydi.",
       drawBtn: "½ Durang taklifi",
@@ -5209,6 +5251,22 @@ body{
       joinFail: "Не удалось подключиться к игре: ", err: "Ошибка",
       leaveAsk: "Выйти из игры? (Игра закончится)",
       resignAsk: "Вы действительно хотите сдаться?",
+      hubKicker: "Живой блиц",
+      hubSub: "Победите соперника — принесите очки своему факультету.",
+      pillWin: "Победа %s",
+      pillDraw: "Ничья %s",
+      pillSeason: "В сезоне %s игр",
+      pvpTitle: "Бой с другом",
+      pvpNote: "Отправьте другу карточку-приглашение — игра начнётся, как только он нажмёт кнопку.",
+      inviteBtn: "Вызвать друга на бой",
+      orCode: "или войдите по коду",
+      botTitle: "Тренировка с ботом",
+      botNote: "Очки не начисляются — только для практики.",
+      lvlEasy: "Легко",
+      lvlMed: "Средне",
+      lvlHard: "Сложно",
+      startBot2: "Начать с ботом",
+      rulesText: "На первый ход даётся 60 секунд. Если выйти из приложения, игра продолжится и ваше время будет идти. В сезоне засчитываются 5 игр.",
       abortBtn: "Отменить",
       abortAsk: "Отменить игру? Очки не начисляются.",
       drawBtn: "½ Предложить ничью",
@@ -5300,6 +5358,22 @@ body{
       joinFail: "Couldn't join the game: ", err: "Error",
       leaveAsk: "Leave the game? (It will end)",
       resignAsk: "Do you really want to resign?",
+      hubKicker: "Live blitz",
+      hubSub: "Beat your opponent — bring points to your house.",
+      pillWin: "Win %s",
+      pillDraw: "Draw %s",
+      pillSeason: "This season %s games",
+      pvpTitle: "Play a friend",
+      pvpNote: "Send your friend an invitation card — the game starts as soon as they tap the button.",
+      inviteBtn: "Challenge a friend",
+      orCode: "or join with a code",
+      botTitle: "Practice with a bot",
+      botNote: "No points — just for practice.",
+      lvlEasy: "Easy",
+      lvlMed: "Medium",
+      lvlHard: "Hard",
+      startBot2: "Start vs bot",
+      rulesText: "You get 60 seconds for the first move. If you leave the app, the game goes on and your clock keeps running. 5 games per season earn points.",
       abortBtn: "Abort",
       abortAsk: "Abort the game? No points are awarded.",
       drawBtn: "½ Offer draw",
@@ -6988,7 +7062,9 @@ body{
     var type = p.toUpperCase();
     var svg = CHESS_SVGS[type] || "";
     if (p === p.toLowerCase()) {
-      svg = svg.replace(/fill="#fff"/g, 'fill="#000"').replace(/stroke="#000"/g, 'stroke="#fff"');
+      // Oq va qora o'rin almashadi - atributda ham, style ichida ham (ot
+      // ranglari style="fill:#ffffff" da edi va qora ot oq bo'lib qolardi).
+      svg = svg.replace(/#(?:ffffff|fff)\b/g, "#@@@").replace(/#(?:000000|000)\b/g, "#fff").replace(/#@@@/g, "#000");
     }
     // O'lcham ANIQ yoziladi: busiz iPhone/Mac dagi Telegram (Safari dvigateli)
     // donani 0x0 qilib chizardi - taxta bo'sh ko'rinardi.
@@ -7589,16 +7665,18 @@ body{
     var myCol = g.you === "b" ? L("black") : L("white");
     var oppCol = g.you === "b" ? L("white") : L("black");
     $("chess-my-name").textContent = (mine && mine.name) || L("you");
+    chessAvatar($("chess-my-avatar"), mine && mine.house);
     $("chess-my-sub").textContent = myCol + (mine && mine.house ? " • " + cupHouseName(mine.house) : "");
     var invBtn = $("chess-invite-btn");
     if (opp) {
       $("chess-opp-name").textContent = opp.name || L("opp");
-      $("chess-opp-avatar").textContent = "⚔️";
+      chessAvatar($("chess-opp-avatar"), opp.house);
       $("chess-opp-sub").textContent = oppCol + " • " + timeLabel(g) +
         (g.status === "active" && !opp.online ? " • " + L("offline") : "");
       invBtn.classList.add("hidden");
     } else {
       $("chess-opp-name").textContent = L("waitFriend");
+      $("chess-opp-avatar").setAttribute("data-k", "wait");
       $("chess-opp-avatar").textContent = "⏳";
       $("chess-opp-sub").textContent = L("codeLbl") + " " + g.id + " • " + timeLabel(g);
       invBtn.classList.toggle("hidden", g.status !== "waiting");
@@ -8083,10 +8161,58 @@ body{
 
   var chessResume = null;
 
+  var CHESS_IC = {
+    swords: chatSvg('<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5"/><path d="m5 14 4 4"/><path d="m7 17-3 3"/><path d="m3 19 2 2"/>'),
+    send: chatSvg('<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>'),
+    bot: chatSvg('<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/>'),
+    play: chatSvg('<path d="M7 4.5v15l12-7.5Z"/>')
+  };
+  var chessHubDrawn = false;
+  var chessSeason = null;
+
+  function renderChessHub() {
+    var i, els;
+    if (!chessHubDrawn) {
+      chessHubDrawn = true;
+      $("ch-mark-piece").innerHTML = getPieceSVG("N");
+      els = document.querySelectorAll("#scr-chess-hub [data-ic]");
+      for (i = 0; i < els.length; i++) { els[i].innerHTML = CHESS_IC[els[i].getAttribute("data-ic")] || ""; }
+      els = document.querySelectorAll("#scr-chess-hub [data-piece]");
+      for (i = 0; i < els.length; i++) { els[i].innerHTML = getPieceSVG(els[i].getAttribute("data-piece")); }
+    }
+    var names = L("botNames");
+    els = document.querySelectorAll("#scr-chess-hub [data-bot]");
+    for (i = 0; i < els.length; i++) { els[i].textContent = names[els[i].getAttribute("data-bot")] || ""; }
+    $("ch-pill-win").innerHTML = L("pillWin").replace("%s", "<b>+10</b>");
+    $("ch-pill-draw").innerHTML = L("pillDraw").replace("%s", "<b>+5</b>");
+    var sp = $("ch-pill-season");
+    if (chessSeason) {
+      sp.innerHTML = L("pillSeason").replace("%s", "<b>" + chessSeason.used + "/" + chessSeason.limit + "</b>");
+      sp.classList.remove("hidden");
+    } else {
+      sp.classList.add("hidden");
+    }
+  }
+
+  // O'yinchi belgisi: fakultet gerbi; bot uchun - uning donasi.
+  function chessAvatar(el, house, piece) {
+    var key = piece ? "p:" + piece : "h:" + (house || "");
+    if (el.getAttribute("data-k") === key) { return; }
+    el.setAttribute("data-k", key);
+    el.innerHTML = "";
+    if (piece) {
+      el.innerHTML = '<span style="display:block;width:30px;height:30px;border-radius:8px;background:#dfc7a7;padding:3px;box-sizing:border-box">' + getPieceSVG(piece) + "</span>";
+      return;
+    }
+    var img = house ? cupCrestImg(house, 28) : null;
+    if (img) { el.appendChild(img); } else { el.textContent = "🧙"; }
+  }
+
   // Hubda: davom etayotgan yoki do'st kutayotgan o'yin - qaytish tugmasi bilan.
   function chessRefreshMine() {
     var box = $("chess-resume");
     chessApi("mine").then(function (res) {
+      if (res && res.season) { chessSeason = res.season; renderChessHub(); }
       var g = res && res.games && res.games[0];
       chessResume = g || null;
       if (!g) { box.classList.add("hidden"); return; }
@@ -8113,6 +8239,7 @@ body{
     $("scr-cat").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
     $("scr-chess-hub").classList.remove("hidden");
+    renderChessHub();
     chessRefreshMine();
   }
 
@@ -8142,10 +8269,10 @@ body{
     $("chess-my-sub").textContent = L("white") + " • " + cupHouseName(cupMe().house);
 
     var botNames = L("botNames");
-    var botAvatars = { easy: "🦁", med: "📚", hard: "🧙‍♀️" };
     $("chess-opp-name").textContent = botNames[diff] || "Bot";
     $("chess-opp-sub").textContent = L("black") + " • Blitz 5:00";
-    $("chess-opp-avatar").textContent = botAvatars[diff] || "🤖";
+    chessAvatar($("chess-opp-avatar"), null, { easy: "p", med: "n", hard: "q" }[diff] || "p");
+    chessAvatar($("chess-my-avatar"), cupMe().house);
     $("chess-invite-btn").classList.add("hidden");
     $("btn-chess-resign").classList.remove("hidden");
     $("btn-chess-resign").textContent = L("resign");
@@ -8162,7 +8289,34 @@ body{
     startBotClock();
   }
 
-  function chessInvite(code) {
+  // Taklif: Telegram'ning "Ulashish" oynasi tayyor rasmli karta bilan ochiladi
+  // (server tayyorlaydi). Eski Telegram'da - film kartalaridagi kabi inline;
+  // undan ham eskisida - oddiy havola.
+  function chessInvite(code, shareId) {
+    var canShare = false;
+    try { canShare = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+    if (canShare && shareId) { chessShare(code, shareId); return; }
+    if (canShare) {
+      chessApi("share", { game_id: code, lang: lang }).then(function (res) {
+        if (res && res.ok && res.id) { chessShare(code, res.id); } else { chessInviteInline(code); }
+      })["catch"](function () { chessInviteInline(code); });
+      return;
+    }
+    chessInviteInline(code);
+  }
+
+  function chessShare(code, id) {
+    try { tg.shareMessage(id, function () {}); }
+    catch (e) { chessInviteInline(code); }
+  }
+
+  function chessInviteInline(code) {
+    try {
+      if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+        tg.switchInlineQuery("chess_" + code, ["users", "groups"]);
+        return;
+      }
+    } catch (e) {}
     var url = "https://t.me/" + BOT + "/catalog?startapp=chess_" + code;
     // Kod ham yoziladi: havola ochilmasa, do'st uni shaxmat bo'limida qo'lda kirita oladi.
     var text = L("inviteText") + "\n" + L("codeLbl") + " " + code;
@@ -8185,11 +8339,11 @@ body{
   function createPvPGame() {
     if (chessCreating) return;
     chessCreating = true;
-    chessApi("create", { base: 300, inc: 0 }).then(function (res) {
+    chessApi("create", { base: 300, inc: 0, lang: lang }).then(function (res) {
       chessCreating = false;
       if (res && res.ok && res.game) {
         openPvP(res.game);
-        chessInvite(res.game.id);
+        chessInvite(res.game.id, res.share_id);
         return;
       }
       if (res && res.error === "has_active" && res.game_id) {
