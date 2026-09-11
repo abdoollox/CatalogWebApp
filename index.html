@@ -6990,7 +6990,9 @@ body{
     if (p === p.toLowerCase()) {
       svg = svg.replace(/fill="#fff"/g, 'fill="#000"').replace(/stroke="#000"/g, 'stroke="#fff"');
     }
-    return svg;
+    // O'lcham ANIQ yoziladi: busiz iPhone/Mac dagi Telegram (Safari dvigateli)
+    // donani 0x0 qilib chizardi - taxta bo'sh ko'rinardi.
+    return svg.replace("<svg ", '<svg width="100%" height="100%" style="display:block" ');
   }
 
   // Donalar qiymati (bot baholashi uchun). Ilgari bu jadval yo'q edi va
