@@ -1245,6 +1245,58 @@ button.glass:active .tube{transform:scale(.97)}
 }
 @keyframes wPulse{0%,100%{box-shadow:0 0 0 3px rgba(40,26,12,.55),0 0 10px rgba(243,211,138,.7)}50%{box-shadow:0 0 0 3px rgba(40,26,12,.55),0 0 20px rgba(243,211,138,1)}}
 @media (prefers-reduced-motion:reduce){.w-dot{animation:none}}
+
+/* --- 9¾: g'isht devor ochiladi --- */
+.gate{position:fixed;inset:0;z-index:90;pointer-events:none;overflow:hidden}
+.gate-half{
+  position:absolute;top:-2%;bottom:-2%;width:51%;
+  background-color:#5a2c20;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(0,0,0,.38) 0 2px,transparent 2px 40px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.32) 0 2px,transparent 2px 96px),
+    radial-gradient(120% 60% at 50% 0%,rgba(255,255,255,.07),transparent 70%);
+  box-shadow:inset 0 0 60px rgba(0,0,0,.55);
+}
+.gate-l{left:0;transform:translateX(-101%)}
+.gate-r{right:0;background-position:0 20px,48px 0,0 0;transform:translateX(101%)}
+.gate-glow{
+  position:absolute;left:50%;top:50%;width:220px;height:220px;margin:-110px 0 0 -110px;
+  border-radius:50%;opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(circle,rgba(255,244,214,.95) 0%,rgba(231,170,80,.55) 38%,rgba(231,170,80,0) 70%);
+}
+.gate.shut .gate-l{animation:gateShutL .42s cubic-bezier(.36,.04,.28,1) forwards}
+.gate.shut .gate-r{animation:gateShutR .42s cubic-bezier(.36,.04,.28,1) forwards}
+.gate.shut .gate-glow{opacity:1}
+.gate.open .gate-l{animation:gateOpenL .52s cubic-bezier(.36,.04,.28,1) forwards}
+.gate.open .gate-r{animation:gateOpenR .52s cubic-bezier(.36,.04,.28,1) forwards}
+.gate.open .gate-glow{opacity:0}
+@keyframes gateShutL{from{transform:translateX(-101%)}to{transform:translateX(0)}}
+@keyframes gateShutR{from{transform:translateX(101%)}to{transform:translateX(0)}}
+@keyframes gateOpenL{from{transform:translateX(0)}to{transform:translateX(-101%)}}
+@keyframes gateOpenR{from{transform:translateX(0)}to{transform:translateX(101%)}}
+/* --- Olam sozlamasi --- */
+.w-sheet{position:absolute;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,10,14,.55)}
+.w-sheet-box{
+  width:100%;max-width:440px;box-sizing:border-box;
+  padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  border-radius:20px 20px 0 0;background:#f6ecd2;color:#2b1d12;
+  box-shadow:0 -20px 40px rgba(20,12,4,.45);animation:wSheetUp .22s ease both;
+}
+@keyframes wSheetUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.w-sheet-box h3{margin:0 0 4px;font:400 23px/1.15 'Cormorant Garamond',serif}
+.w-sheet-box p{margin:0;font:500 12.5px/1.5 'Manrope',sans-serif;color:#6d5436}
+.w-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 10px}
+.w-seg button{
+  display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 8px;border:none;
+  border-radius:8px;background:transparent;box-shadow:inset 0 0 0 1.4px rgba(59,42,26,.32);
+  color:#6d5436;font:700 13px/1 'Manrope',sans-serif;cursor:pointer;
+}
+.w-seg button svg{width:20px;height:20px}
+.w-seg button.on{background:#3b2a1a;color:#f6ecd2;box-shadow:none}
+.w-sheet-close{
+  width:100%;margin-top:14px;padding:13px;border:none;border-radius:8px;
+  background:rgba(59,42,26,.1);color:#3b2a1a;font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -1299,6 +1351,25 @@ button.glass:active .tube{transform:scale(.97)}
       <span id="w-sub"></span>
     </div>
     <div id="w-pins"></div>
+
+    <!-- Sozlama: ilova qayerdan ochilsin -->
+    <div id="w-set" class="w-sheet hidden">
+      <div class="w-sheet-box">
+        <h3 id="w-set-title">Ilova ochilganda</h3>
+        <p id="w-set-note"></p>
+        <div class="w-seg">
+          <button type="button" id="w-set-lib"></button>
+          <button type="button" id="w-set-map"></button>
+        </div>
+        <button class="w-sheet-close" type="button" id="w-set-close">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="w-gate" class="gate hidden" aria-hidden="true">
+    <span class="gate-half gate-l"></span>
+    <span class="gate-half gate-r"></span>
+    <span class="gate-glow"></span>
   </div>
 
   <div id="scr-prof" class="screen hidden">
@@ -3360,6 +3431,7 @@ button.glass:active .tube{transform:scale(.97)}
   var currentQuestionIndex = 0;
 
   function renderTasksStrip() {
+    setTimeout(worldRefresh, 0);
     var strip = $("tasks-strip");
     if (!strip) return;
     strip.classList.remove("hidden");
@@ -6270,6 +6342,116 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
 
+
+  // ---------------------------------------------------------------- 9¾ eshigi
+  // G'isht devor yopiladi, o'rtasi yorishadi va ochilib xaritani ko'rsatadi.
+  function playGate(after) {
+    var gate = $("w-gate");
+    var slow = false;
+    try { slow = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+    catch (e) { slow = false; }
+    if (!gate || slow) { after(); return; }
+
+    gate.className = "gate";
+    // brauzer yangi animatsiyani sezishi uchun bir oz kutamiz (rAF ekran
+    // yashiringanda ishlamay qolishi mumkin - shuning uchun setTimeout)
+    setTimeout(function () {
+      gate.classList.add("shut");
+      setTimeout(function () {
+        after();
+        gate.classList.remove("shut");
+        gate.classList.add("open");
+        setTimeout(function () { gate.className = "gate hidden"; }, 540);
+      }, 460);
+    }, 20);
+  }
+
+  // ---------------------------------------------------------------- sozlama
+  var START_KEY = "hp_start";        // "lib" (kutubxona) yoki "world" (xarita)
+
+  function readStart() {
+    try { return window.localStorage.getItem(START_KEY) === "world" ? "world" : "lib"; }
+    catch (e) { return "lib"; }
+  }
+
+  function saveStart(v) {
+    try { window.localStorage.setItem(START_KEY, v); } catch (e) {}
+  }
+
+  var W_SET_TX = {
+    title: { uz: "Ilova ochilganda", ru: "При открытии", en: "When the app opens" },
+    note: {
+      uz: "Xarita tanlansa, ilovani ochganingizda to'g'ridan-to'g'ri sehrli olamga tushasiz.",
+      ru: "Если выбрать карту, приложение будет открываться сразу в волшебном мире.",
+      en: "Choose the map and the app will open straight into the wizarding world."
+    },
+    lib: { uz: "Kutubxona", ru: "Библиотека", en: "Library" },
+    map: { uz: "Xarita", ru: "Карта", en: "Map" },
+    close: { uz: "Yopish", ru: "Закрыть", en: "Close" }
+  };
+
+  function renderWorldSettings() {
+    var cur = readStart();
+    $("w-set-title").textContent = W_SET_TX.title[lang];
+    $("w-set-note").textContent = W_SET_TX.note[lang];
+    $("w-set-close").textContent = W_SET_TX.close[lang];
+    $("w-set-lib").innerHTML = worldIcon("book") + "<span>" + W_SET_TX.lib[lang] + "</span>";
+    $("w-set-map").innerHTML = worldIcon("map") + "<span>" + W_SET_TX.map[lang] + "</span>";
+    $("w-set-lib").className = cur === "lib" ? "on" : "";
+    $("w-set-map").className = cur === "world" ? "on" : "";
+  }
+
+  function openWorldSettings() {
+    renderWorldSettings();
+    $("w-set").classList.remove("hidden");
+  }
+
+  function setStart(v) {
+    saveStart(v);
+    renderWorldSettings();
+  }
+
+  // ---------------------------------------------------------------- sonlar
+  function worldChatN() {
+    try { return (chatCounts.house || 0) + (chatCounts.global || 0) + (chatCounts.dm || 0); }
+    catch (e) { return 0; }
+  }
+
+  function worldTasksN() {
+    try { return (tasksData && tasksData.tasks) ? tasksData.tasks.length : 0; }
+    catch (e) { return 0; }
+  }
+
+  // Xarita ochiq bo'lsa sonlarni yangilab turamiz.
+  function worldRefresh() {
+    var w = $("scr-world");
+    if (w && !w.classList.contains("hidden")) { renderWorld(); }
+  }
+
+  // ---------------------------------------------------------------- qaytish
+  // Xaritadan ochilgan ekran "Ortga" bosilganda xaritaga qaytsin.
+  var worldFrom = null;
+
+  function worldReturnTo() {
+    if (!worldFrom) { return false; }
+    var place = worldFrom;
+    worldFrom = null;
+    ["scr-cup", "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-prof",
+     "scr-chess-hub", "scr-chess-stats", "scr-hall-full", "scr-feed-full"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+    openWorld(place);
+    return true;
+  }
+
+  function worldGuard(fn) {
+    return function () {
+      if (worldReturnTo()) { return; }
+      return fn.apply(this, arguments);
+    };
+  }
+
   // ---------------------------------------------------------------- SEHRLI OLAM
   // Uch xarita: olam -> Xogvarts qasri va Diagon xiyoboni. Rasm soatga qarab
   // almashadi: tong 05-07, kun 07-17, oqshom 17-19, tun 19-05.
@@ -6286,7 +6468,8 @@ button.glass:active .tube{transform:scale(.97)}
     wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2",
     bank: "M3 20h18 M4 20V9h16v11 M12 3l9 6H3z M8 20v-6h3v6 M14 14h3v3h-3z",
     gear: "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-2 1.2l-.3 2h-4l-.3-2a7 7 0 0 1-2-1.2l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-2.9L3 9.3l2-3.4 1.9.7a7 7 0 0 1 2-1.2l.3-2h4l.3 2a7 7 0 0 1 2 1.2l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 2.9z",
-    back: "M15 6l-6 6 6 6"
+    back: "M15 6l-6 6 6 6",
+    map: "M3.5 6.5l6-2.5 5 2.5 6-2.5v13.5l-6 2.5-5-2.5-6 2.5z M9.5 4v13.5 M14.5 6.5V20"
   };
 
   var WORLD_SOON = { uz: "Tez orada", ru: "Скоро", en: "Coming soon" };
@@ -6299,6 +6482,7 @@ button.glass:active .tube{transform:scale(.97)}
         { dot: [22, 12], side: "l", top: 15.5, icon: "castle",
           name: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
           sub: { uz: "6 ta joy", ru: "6 мест", en: "6 places" },
+          badge: function () { return worldChatN() + worldTasksN(); },
           go: function () { openWorld("castle"); } },
         { dot: [73, 58], side: "r", top: 61.5, icon: "village", soon: true,
           name: { uz: "Xogsmid", ru: "Хогсмид", en: "Hogsmeade" },
@@ -6317,11 +6501,12 @@ button.glass:active .tube{transform:scale(.97)}
         { dot: [50, 9], side: "r", top: 13, icon: "owl",
           name: { uz: "Boyqushxona", ru: "Совятня", en: "Owlery" },
           sub: { uz: "Do'stlarni taklif qilish", ru: "Пригласить друзей", en: "Invite friends" },
-          go: function () { leaveWorld(true); openRefs(); } },
+          go: function () { worldFrom = "castle"; leaveWorld(true); openRefs(); } },
         { dot: [50, 27], side: "l", top: 24, icon: "chat",
           name: { uz: "Umumiy xona", ru: "Гостиная", en: "Common Room" },
           sub: { uz: "Muloqot", ru: "Общение", en: "Chat" },
-          go: function () { leaveWorld(true); openChat(); } },
+          badge: worldChatN,
+          go: function () { worldFrom = "castle"; leaveWorld(true); openChat(); } },
         { dot: [50, 43], side: "r", top: 40, icon: "book",
           name: { uz: "Kutubxona", ru: "Библиотека", en: "Library" },
           sub: { uz: "Filmlar", ru: "Фильмы", en: "Films" },
@@ -6329,15 +6514,16 @@ button.glass:active .tube{transform:scale(.97)}
         { dot: [50, 58], side: "l", top: 55, icon: "quiz",
           name: { uz: "Darsxona", ru: "Класс", en: "Classroom" },
           sub: { uz: "Kunlik savol", ru: "Вопрос дня", en: "Daily question" },
-          go: function () { leaveWorld(true); openTasks(); } },
+          badge: worldTasksN,
+          go: function () { worldFrom = "castle"; leaveWorld(true); openTasks(); } },
         { dot: [50, 73], side: "r", top: 70, icon: "hall",
           name: { uz: "Katta zal", ru: "Большой зал", en: "Great Hall" },
           sub: { uz: "Kubok · imtihon", ru: "Кубок · экзамен", en: "Cup · exam" },
-          go: function () { leaveWorld(true); openCup(); } },
+          go: function () { worldFrom = "castle"; leaveWorld(true); openCup(); } },
         { dot: [50, 89], side: "l", top: 86, icon: "chess",
           name: { uz: "Shaxmat kamerasi", ru: "Шахматный зал", en: "Chess Chamber" },
           sub: { uz: "Sehrgar shaxmati", ru: "Волшебные шахматы", en: "Wizard chess" },
-          go: function () { leaveWorld(true); openChessHub(); } }
+          go: function () { worldFrom = "castle"; leaveWorld(true); openChessHub(); } }
       ]
     },
     alley: {
@@ -6351,7 +6537,7 @@ button.glass:active .tube{transform:scale(.97)}
         { dot: [78, 70], side: "l", top: 74, icon: "wand",
           name: { uz: "Olivander do'koni", ru: "Лавка Олливандера", en: "Ollivanders" },
           sub: { uz: "Tayoqchangizni toping", ru: "Найдите палочку", en: "Find your wand" },
-          go: function () { leaveWorld(true); if (wand) { openProfile(); } else { startWand(); } } }
+          go: function () { worldFrom = "alley"; leaveWorld(true); if (wand) { openProfile(); } else { startWand(); } } }
       ]
     }
   };
@@ -6399,17 +6585,17 @@ button.glass:active .tube{transform:scale(.97)}
       var crest = document.createElement("span");
       paintCrest(crest, house);
       right.appendChild(crest);
-      right.onclick = function () { leaveWorld(true); openProfile(); };
+      right.onclick = function () { worldFrom = worldPlace; leaveWorld(true); openProfile(); };
     } else {
       left.innerHTML = "";
       left.appendChild(document.createTextNode(meShort()));
       var crest2 = document.createElement("span");
       paintCrest(crest2, house);
       left.appendChild(crest2);
-      left.onclick = function () { leaveWorld(true); openProfile(); };
+      left.onclick = function () { worldFrom = worldPlace; leaveWorld(true); openProfile(); };
       right.className = "w-glass w-ic";
       right.innerHTML = worldIcon("gear");
-      right.onclick = function () { leaveWorld(true); openProfile(); };
+      right.onclick = openWorldSettings;
     }
 
     var box = $("w-pins");
@@ -6428,6 +6614,13 @@ button.glass:active .tube{transform:scale(.97)}
       if (p.side === "l") { pin.style.left = "14px"; } else { pin.style.right = "14px"; }
       pin.innerHTML = worldIcon(p.icon) +
                       '<span class="w-pin-tx"><b>' + p.name[lang] + '</b><i>' + p.sub[lang] + '</i></span>';
+      var n = p.badge ? p.badge() : 0;
+      if (n > 0) {
+        var wax = document.createElement("span");
+        wax.className = "w-wax";
+        wax.textContent = n > 99 ? "99+" : String(n);
+        pin.appendChild(wax);
+      }
       pin.onclick = function () {
         if (!p.go) { showToast(WORLD_SOON[lang]); return; }
         p.go();
@@ -6456,6 +6649,7 @@ button.glass:active .tube{transform:scale(.97)}
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
+    $("w-set").classList.add("hidden");
     $("scr-world").classList.remove("hidden");
     renderWorld();
     try {
@@ -8442,6 +8636,7 @@ button.glass:active .tube{transform:scale(.97)}
   function chatBadge(n) { return n > 99 ? "99+" : String(n); }
 
   function chatCountsUI() {
+    setTimeout(worldRefresh, 0);
     var total = (chatCounts.house || 0) + (chatCounts.global || 0) + (chatCounts.dm || 0);
     var sb = $("chat-strip-n");
     if (sb) { sb.textContent = chatBadge(total); sb.classList.toggle("hidden", !total); }
@@ -8562,7 +8757,9 @@ button.glass:active .tube{transform:scale(.97)}
     $("chat-strip").addEventListener("click", openChat);
     // Shaxsiy suhbatdan "Ortga" - suhbatlar ro'yxatiga, qolgan joyda - chatdan chiqish.
     $("chat-back").addEventListener("click", function() {
-      if (chatIsDm(chatRoom)) setChatRoom("dms"); else closeChat();
+      if (chatIsDm(chatRoom)) { setChatRoom("dms"); return; }
+      if (worldReturnTo()) { return; }
+      closeChat();
     });
     $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
     $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
@@ -10824,7 +11021,7 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
   function initChessUI() {
-    $("chess-hub-back").addEventListener("click", closeChessHub);
+    $("chess-hub-back").addEventListener("click", worldGuard(closeChessHub));
     $("btn-start-bot-game").addEventListener("click", startBotGame);
     $("btn-create-pvp-game").addEventListener("click", createPvPGame);
     $("btn-join-pvp-game").addEventListener("click", function() { joinPvPGame($("input-join-code").value); });
@@ -11146,8 +11343,16 @@ button.glass:active .tube{transform:scale(.97)}
     preloadCrests();
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
-    $("world-btn").addEventListener("click", function () { openWorld("world"); });
-    $("prof-back").addEventListener("click", closeProfile);
+    $("world-btn").addEventListener("click", function () {
+      playGate(function () { openWorld("world"); });
+    });
+    $("w-set-lib").addEventListener("click", function () { setStart("lib"); });
+    $("w-set-map").addEventListener("click", function () { setStart("world"); });
+    $("w-set-close").addEventListener("click", function () { $("w-set").classList.add("hidden"); });
+    $("w-set").addEventListener("click", function (ev) {
+      if (ev.target === $("w-set")) { $("w-set").classList.add("hidden"); }
+    });
+    $("prof-back").addEventListener("click", worldGuard(closeProfile));
     $("sort-cta").addEventListener("click", startSorting);
     if ($("sort-card-btn")) { $("sort-card-btn").addEventListener("click", startSorting); }
     $("wand-cta").addEventListener("click", startWand);
@@ -11164,6 +11369,7 @@ button.glass:active .tube{transform:scale(.97)}
     });
     $("tasks-strip").addEventListener("click", openTasks);
     $("tasks-back").addEventListener("click", function() {
+      if (worldReturnTo()) { return; }
       $("scr-tasks").classList.add("hidden");
       $("scr-cup").classList.remove("hidden");
       renderTasksStrip();
@@ -11179,13 +11385,13 @@ button.glass:active .tube{transform:scale(.97)}
     // Chess events
     $("chess-strip").addEventListener("click", openChessHub);
     $("refs-strip").addEventListener("click", openRefs);
-    $("refs-back").addEventListener("click", closeRefs);
+    $("refs-back").addEventListener("click", worldGuard(closeRefs));
     $("refs-share").addEventListener("click", function () { shareRefs(""); });
     $("refs-promo").addEventListener("click", function () { shareRefs("taklif"); });
     initChessUI();
     
     if ($("cup-strip")) { $("cup-strip").addEventListener("click", openCup); }
-    $("cup-back").addEventListener("click", closeCup);
+    $("cup-back").addEventListener("click", worldGuard(closeCup));
     $("house-back").addEventListener("click", closeHouse);
     $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
     $("cup-prev").addEventListener("click", openCupHistory);
@@ -11265,8 +11471,11 @@ button.glass:active .tube{transform:scale(.97)}
     function show(saved) {
       if (settled) { return; }
       settled = true;
-      if (saved) { openCatalog(saved, false); }
-      else { $("scr-lang").classList.remove("hidden"); }
+      if (saved) {
+        openCatalog(saved, false);
+        // Foydalanuvchi shunday sozlagan bo'lsa - to'g'ridan-to'g'ri xaritaga.
+        if (readStart() === "world") { openWorld("world"); }
+      } else { $("scr-lang").classList.remove("hidden"); }
     }
 
     if (quick) { migrate(quick); show(quick); }
