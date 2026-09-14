@@ -1297,6 +1297,112 @@ button.glass:active .tube{transform:scale(.97)}
   width:100%;margin-top:14px;padding:13px;border:none;border-radius:8px;
   background:rgba(59,42,26,.1);color:#3b2a1a;font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer;
 }
+
+/* --- SEHRLI OLAM (A uslubi): profil, kubok, bo'limlar --- */
+#scr-hub{position:relative}
+#scr-hub::before{
+  content:"";position:fixed;left:0;right:0;top:0;height:320px;pointer-events:none;z-index:-1;
+  background:radial-gradient(120% 70% at 50% -10%,rgba(var(--hub-rgb,224,178,91),.16),transparent 70%);
+}
+.hub-head{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:10px;padding:2px 0 18px}
+.hub-ic{
+  display:grid;place-items:center;width:42px;height:42px;border-radius:50%;padding:0;cursor:pointer;
+  background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--dim);transition:color .2s,border-color .2s;
+}
+.hub-ic:active{transform:scale(.94)}
+.hub-ic svg{width:20px;height:20px}
+.hub-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.hub-ttl .kicker{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#e0b25b}
+.hub-ttl h1{margin:0;font:400 30px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+
+.hub-me{
+  display:flex;align-items:center;gap:14px;width:100%;padding:16px;margin:0 0 14px;cursor:pointer;
+  border-radius:20px;text-align:left;color:var(--text);font-family:inherit;
+  background:linear-gradient(150deg,rgba(var(--hub-rgb,151,161,174),.16),var(--card) 55%);
+  border:1px solid rgba(var(--hub-rgb,151,161,174),.28);transition:transform .14s;
+}
+.hub-me:active{transform:scale(.99)}
+.hub-crest{flex:none;width:58px;height:66px;display:grid;place-items:center}
+.hub-crest img,.hub-crest .art{width:58px;height:66px;object-fit:contain;display:block}
+.hub-me-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.hub-me-tx b{font:400 24px/1.1 'Cormorant Garamond',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-me-tx span{font:600 12.5px/1.25 'Manrope',sans-serif;color:var(--hub-accent,var(--dim))}
+.hub-pts{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hub-pts b{font:600 25px/1 'Cormorant Garamond',serif;color:#e7c170}
+.hub-pts span{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+.hub-cup{
+  display:flex;flex-direction:column;gap:16px;width:100%;padding:16px 16px 18px;margin:0 0 14px;cursor:pointer;
+  border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--text);font-family:inherit;text-align:left;
+}
+.hub-cup-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hub-cup-top b{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#e0b25b}
+.hub-cup-top span{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
+.hub-tubes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hub-tube{display:flex;flex-direction:column;align-items:center;gap:8px}
+.hub-tube-g{position:relative;width:44px;height:96px;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.hub-tube.mine .hub-tube-g{border-color:rgba(var(--tc-rgb),.7);box-shadow:0 0 14px rgba(var(--tc-rgb),.3)}
+.hub-tube-f{position:absolute;left:0;right:0;bottom:0;border-radius:0 0 22px 22px;transition:height .6s ease}
+.hub-tube-n{font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
+.hub-tube.mine .hub-tube-n{color:var(--text)}
+.hub-tube-p{font:600 16px/1 'Cormorant Garamond',serif}
+
+.hub-sort{
+  display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;margin:0 0 14px;cursor:pointer;
+  border-radius:18px;background:var(--card);border:1px dashed rgba(224,178,91,.4);color:var(--text);font-family:inherit;text-align:left;
+}
+.hub-sort-mark{flex:none;width:44px;height:44px;display:grid;place-items:center}
+.hub-sort-mark .art,.hub-sort-mark img,.hub-sort-mark svg{width:44px;height:44px;display:block}
+.hub-sort b{display:block;font:400 19px/1.2 'Cormorant Garamond',serif}
+.hub-sort span{display:block;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);margin-top:3px}
+
+.hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 10px}
+.hub-tile{
+  position:relative;display:flex;flex-direction:column;gap:6px;min-height:122px;padding:14px;cursor:pointer;
+  border-radius:18px;border:1px solid var(--line);color:var(--text);font-family:inherit;text-align:left;
+  background:linear-gradient(160deg,rgba(var(--tc-rgb),.14),var(--card) 60%);transition:transform .14s;
+}
+.hub-tile:active{transform:scale(.98)}
+.hub-tile-ic{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:rgba(var(--tc-rgb),.16);color:rgb(var(--tc-rgb))}
+.hub-tile-ic svg{width:22px;height:22px}
+.hub-tile b{margin-top:auto;font:700 15px/1.2 'Manrope',sans-serif}
+.hub-tile span{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.hub-tile i{
+  position:absolute;right:12px;top:14px;min-width:22px;height:22px;padding:0 7px;box-sizing:border-box;border-radius:11px;
+  background:rgb(var(--tc-rgb));color:#14100a;font:800 11.5px/22px 'Manrope',sans-serif;font-style:normal;text-align:center;
+}
+
+.hub-row{
+  display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;cursor:pointer;
+  border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--text);font-family:inherit;text-align:left;
+}
+.hub-row-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(224,178,91,.12);color:#e7c170}
+.hub-row-ic svg{width:24px;height:24px}
+.hub-row-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.hub-row-tx b{font:700 14.5px/1.2 'Manrope',sans-serif}
+.hub-row-tx span{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-row > svg{flex:none;width:18px;height:18px;color:var(--dim)}
+
+.hub-sheet{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,8,11,.62)}
+.hub-sheet-box{
+  width:100%;max-width:440px;box-sizing:border-box;padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  border-radius:20px 20px 0 0;background:#141920;border-top:1px solid rgba(224,178,91,.35);
+  box-shadow:0 -20px 40px rgba(0,0,0,.5);animation:wSheetUp .22s ease both;
+}
+.hub-sheet-box h3{margin:0 0 4px;font:400 23px/1.15 'Cormorant Garamond',serif;color:var(--text)}
+.hub-sheet-box p{margin:0;font:500 12.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.hub-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0 4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.hub-seg button{
+  display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px;border:none;border-radius:10px;
+  background:transparent;color:var(--dim);font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer;
+}
+.hub-seg button svg{width:20px;height:20px}
+.hub-seg button.on{background:var(--card);box-shadow:inset 0 0 0 1px rgba(224,178,91,.55);color:#e7c170}
+.hub-seg .n934{font:600 18px/20px 'Cormorant Garamond',serif}
+.hub-sheet-close{
+  width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:rgba(255,255,255,.06);
+  color:var(--text);font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -1335,6 +1441,54 @@ button.glass:active .tube{transform:scale(.97)}
     </button>
 
     <div id="rows"></div>
+  </div>
+
+  <!-- Sehrli olam (web ko'rinish): 9¾ ortidagi bosh sahifa -->
+  <div id="scr-hub" class="screen hidden">
+    <div class="hub-head">
+      <button class="hub-ic" id="hub-back" type="button" aria-label="Kutubxona"></button>
+      <div class="hub-ttl">
+        <span class="kicker" id="hub-kick"></span>
+        <h1 id="hub-title"></h1>
+      </div>
+      <button class="hub-ic" id="hub-gear" type="button" aria-label="Sozlamalar"></button>
+    </div>
+
+    <button class="hub-me" id="hub-me" type="button">
+      <span class="hub-crest" id="hub-crest"></span>
+      <span class="hub-me-tx"><b id="hub-name"></b><span id="hub-house"></span></span>
+      <span class="hub-pts"><b id="hub-pts">0</b><span id="hub-pts-l"></span></span>
+    </button>
+
+    <button class="hub-sort hidden" id="hub-sort" type="button">
+      <span class="hub-sort-mark" id="hub-sort-mark"></span>
+      <span><b id="hub-sort-t"></b><span id="hub-sort-s"></span></span>
+    </button>
+
+    <button class="hub-cup hidden" id="hub-cup" type="button">
+      <span class="hub-cup-top"><b id="hub-cup-t"></b><span id="hub-cup-time"></span></span>
+      <span class="hub-tubes" id="hub-tubes"></span>
+    </button>
+
+    <div class="hub-grid" id="hub-grid"></div>
+
+    <button class="hub-row" id="hub-wand" type="button">
+      <span class="hub-row-ic" id="hub-wand-ic"></span>
+      <span class="hub-row-tx"><b id="hub-wand-t"></b><span id="hub-wand-s"></span></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+    </button>
+
+    <div id="hub-set" class="hub-sheet hidden">
+      <div class="hub-sheet-box">
+        <h3 id="hub-set-title"></h3>
+        <p id="hub-set-note"></p>
+        <div class="hub-seg">
+          <button type="button" id="hub-set-lib"></button>
+          <button type="button" id="hub-set-hub"></button>
+        </div>
+        <button class="hub-sheet-close" type="button" id="hub-set-close"></button>
+      </div>
+    </div>
   </div>
 
   <!-- Sehrli olam: 9¾ ortidagi xarita. Rasm butun ekranni egallaydi,
@@ -6343,6 +6497,225 @@ button.glass:active .tube{transform:scale(.97)}
 
 
 
+
+  // ---------------------------------------------------------------- SEHRLI OLAM (A)
+  // 9¾ ortidagi bosh sahifa: profil, kubok, bo'limlar. Xarita (WORLD_MAPS) keyinroq
+  // ikkinchi ko'rinish bo'lib qaytadi, hozircha 9¾ shu yerga olib keladi.
+  var HUB_TX = {
+    kick: { uz: "Platforma 9¾ ortida", ru: "За платформой 9¾", en: "Beyond Platform 9¾" },
+    title: { uz: "Sehrli olam", ru: "Волшебный мир", en: "The Wizarding World" },
+    pts: { uz: "ball", ru: "очков", en: "points" },
+    wandT: { uz: "Tayoqcha", ru: "Волшебная палочка", en: "Wand" },
+    wandNone: { uz: "Olivander do'koni: tayoqcha sizni tanlaydi",
+                ru: "Лавка Олливандера: палочка выбирает волшебника",
+                en: "Ollivanders: the wand chooses the wizard" },
+    chessNone: { uz: "Botlar va do'stlar bilan jang", ru: "Бои с ботами и друзьями", en: "Battle bots and friends" },
+    rating: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" }
+  };
+
+  var HUB_ICONS = {
+    tasks: "M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3",
+    chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
+    chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
+    refs: "M9 5.5a3 3 0 1 1 0 6a3 3 0 1 1 0-6z M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5",
+    wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2"
+  };
+
+  var hubChess = null;     // {rating, title, games} - shaxmat serveridan
+
+  function hubSvg(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"></path></svg>';
+  }
+
+  function hubVisible() {
+    var el = $("scr-hub");
+    return !!el && !el.classList.contains("hidden");
+  }
+
+  // Bo'limga o'tish: "Ortga" bosilganda shu sahifaga qaytadi.
+  function hubGo(fn) {
+    return function () {
+      worldFrom = "hub";
+      $("scr-hub").classList.add("hidden");
+      hubBackButton(false);
+      fn();
+    };
+  }
+
+  function renderHub() {
+    var t = T[lang];
+    var c = cupT();
+    var me = cupMe();
+    var hid = me.house || house || "none";
+    var hh = HOUSES[hid] || HOUSES.none;
+    var root = $("scr-hub");
+    root.style.setProperty("--hub-rgb", hh.rgb);
+    root.style.setProperty("--hub-accent", hh.accent);
+
+    $("hub-back").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13");
+    $("hub-gear").innerHTML = worldIcon("gear");
+    $("hub-kick").textContent = HUB_TX.kick[lang];
+    $("hub-title").textContent = HUB_TX.title[lang];
+
+    // Profil kartasi
+    var u = tgUser();
+    $("hub-name").textContent = u ? (u.first_name || fullName(u)) : t.guest;
+    var rank = refsData && refsData.me && refsData.me.rank_name;
+    $("hub-house").textContent = hid === "none" ? t.houseNote : (cupHouseName(hid) + (rank ? " · " + rank : ""));
+    paintCrest($("hub-crest"), hid, hh.crest);
+    $("hub-pts").textContent = String(me.points || 0);
+    $("hub-pts-l").textContent = HUB_TX.pts[lang];
+
+    // Fakultetsiz: avval saralanish
+    var sort = $("hub-sort");
+    if (hid === "none") {
+      sort.classList.remove("hidden");
+      paintHatSmall($("hub-sort-mark"));
+      $("hub-sort-t").textContent = t.cardTitle;
+      $("hub-sort-s").textContent = t.cardSub;
+    } else {
+      sort.classList.add("hidden");
+    }
+
+    // Kubok: to'rtta qum soati
+    var cup = $("hub-cup");
+    if (!cupData) {
+      cup.classList.add("hidden");
+    } else {
+      cup.classList.remove("hidden");
+      $("hub-cup-t").textContent = t.cupTitle;
+      $("hub-cup-time").textContent = cupTimer(t);
+      var list = cupSorted();
+      var top = 0;
+      list.forEach(function (row) { if ((row.total_points || 0) > top) { top = row.total_points || 0; } });
+      var scale = Math.max(top, SCALE_FLOOR);
+      var tubes = $("hub-tubes");
+      tubes.innerHTML = "";
+      list.forEach(function (row) {
+        var rh = HOUSES[row.house] || HOUSES.none;
+        var cell = document.createElement("span");
+        cell.className = "hub-tube" + (row.house === hid ? " mine" : "");
+        cell.style.setProperty("--tc-rgb", rh.rgb);
+        var g = document.createElement("span");
+        g.className = "hub-tube-g";
+        var f = document.createElement("span");
+        f.className = "hub-tube-f";
+        f.style.height = Math.max(6, Math.round((row.total_points || 0) / scale * 100)) + "%";
+        f.style.background = "linear-gradient(" + rh.accent + ", " + (rh.accent2 || rh.accent) + ")";
+        g.appendChild(f);
+        cell.appendChild(g);
+        var n = document.createElement("span");
+        n.className = "hub-tube-n";
+        n.textContent = cupHouseName(row.house);
+        cell.appendChild(n);
+        var p = document.createElement("span");
+        p.className = "hub-tube-p";
+        p.style.color = rh.accent;
+        p.textContent = String(row.total_points || 0);
+        cell.appendChild(p);
+        tubes.appendChild(cell);
+      });
+    }
+
+    // Bo'limlar
+    var grid = $("hub-grid");
+    grid.innerHTML = "";
+    var tasksN = worldTasksN();
+    var chatN = worldChatN();
+    var refsN = (refsData && refsData.me && refsData.me.refs) || 0;
+    var tiles = [
+      { key: "tasks", rgb: "232,132,60", title: c.tasksT, sub: c.tasksS, badge: tasksN, go: openTasks },
+      { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
+      { key: "chess", rgb: "165,127,224", title: c.chessT,
+        sub: hubChess && hubChess.rating ? HUB_TX.rating[lang].replace("%d", hubChess.rating) : HUB_TX.chessNone[lang],
+        badge: 0, go: openChessHub, needHouse: true },
+      { key: "refs", rgb: "224,178,91", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
+    ];
+    tiles.forEach(function (tile) {
+      if (tile.needHouse && hid === "none") { return; }
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "hub-tile";
+      el.style.setProperty("--tc-rgb", tile.rgb);
+      el.innerHTML = '<span class="hub-tile-ic">' + hubSvg(HUB_ICONS[tile.key]) + "</span>";
+      if (tile.badge > 0) {
+        var bd = document.createElement("i");
+        bd.textContent = tile.badge > 99 ? "99+" : String(tile.badge);
+        el.appendChild(bd);
+      }
+      var bt = document.createElement("b");
+      bt.textContent = tile.title;
+      el.appendChild(bt);
+      var sp = document.createElement("span");
+      sp.textContent = tile.sub;
+      el.appendChild(sp);
+      el.onclick = hubGo(tile.go);
+      grid.appendChild(el);
+    });
+
+    // Tayoqcha
+    $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
+    $("hub-wand-t").textContent = HUB_TX.wandT[lang];
+    $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
+  }
+
+  function hubBackButton(on) {
+    try {
+      if (!tg || !tg.BackButton) { return; }
+      if (on) { tg.BackButton.show(); tg.BackButton.onClick(leaveHub); }
+      else { tg.BackButton.offClick(leaveHub); tg.BackButton.hide(); }
+    } catch (e) {}
+  }
+
+  function openHub() {
+    stopSortTimer();
+    ["scr-cat", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
+     "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
+     "scr-chess-hub", "scr-chess-stats"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+    $("hub-set").classList.add("hidden");
+    $("scr-hub").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    renderHub();
+    hubBackButton(true);
+
+    // Sonlar va reyting fonda yangilanadi
+    fetchRefs(function () { if (hubVisible()) { renderHub(); } });
+    fetchTasks(function () { if (hubVisible()) { renderHub(); } });
+    try { chatRefreshCounts(); } catch (e) {}
+    try {
+      chessApi("mine").then(function (res) {
+        if (res && res.rating) { hubChess = res.rating; if (hubVisible()) { renderHub(); } }
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
+  function leaveHub() {
+    $("scr-hub").classList.add("hidden");
+    hubBackButton(false);
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+  }
+
+  function renderHubSettings() {
+    var cur = readStart();
+    $("hub-set-title").textContent = W_SET_TX.title[lang];
+    $("hub-set-note").textContent = {
+      uz: "Sehrli olam tanlansa, ilovani ochganingizda to'g'ridan-to'g'ri shu yerga tushasiz.",
+      ru: "Если выбрать волшебный мир, приложение будет открываться сразу здесь.",
+      en: "Choose the wizarding world and the app will open straight here."
+    }[lang];
+    $("hub-set-close").textContent = W_SET_TX.close[lang];
+    $("hub-set-lib").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13") +
+                                 "<span>" + W_SET_TX.lib[lang] + "</span>";
+    $("hub-set-hub").innerHTML = '<span class="n934">9¾</span><span>' + HUB_TX.title[lang] + "</span>";
+    $("hub-set-lib").className = cur === "lib" ? "on" : "";
+    $("hub-set-hub").className = cur === "world" ? "on" : "";
+  }
+
   // ---------------------------------------------------------------- 9¾ eshigi
   // G'isht devor yopiladi, o'rtasi yorishadi va ochilib xaritani ko'rsatadi.
   function playGate(after) {
@@ -6426,6 +6799,7 @@ button.glass:active .tube{transform:scale(.97)}
   function worldRefresh() {
     var w = $("scr-world");
     if (w && !w.classList.contains("hidden")) { renderWorld(); }
+    if (hubVisible()) { renderHub(); }
   }
 
   // ---------------------------------------------------------------- qaytish
@@ -6441,7 +6815,7 @@ button.glass:active .tube{transform:scale(.97)}
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
-    openWorld(place);
+    if (place === "hub") { openHub(); } else { openWorld(place); }
     return true;
   }
 
@@ -11344,8 +11718,18 @@ button.glass:active .tube{transform:scale(.97)}
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
     $("world-btn").addEventListener("click", function () {
-      playGate(function () { openWorld("world"); });
+      playGate(openHub);
     });
+    $("hub-back").addEventListener("click", leaveHub);
+    $("hub-me").addEventListener("click", hubGo(openProfile));
+    $("hub-cup").addEventListener("click", hubGo(openCup));
+    $("hub-sort").addEventListener("click", hubGo(startSorting));
+    $("hub-wand").addEventListener("click", hubGo(function () { if (wand) { openProfile(); } else { startWand(); } }));
+    $("hub-gear").addEventListener("click", function () { renderHubSettings(); $("hub-set").classList.remove("hidden"); });
+    $("hub-set-lib").addEventListener("click", function () { saveStart("lib"); renderHubSettings(); });
+    $("hub-set-hub").addEventListener("click", function () { saveStart("world"); renderHubSettings(); });
+    $("hub-set-close").addEventListener("click", function () { $("hub-set").classList.add("hidden"); });
+    $("hub-set").addEventListener("click", function (ev) { if (ev.target === $("hub-set")) { $("hub-set").classList.add("hidden"); } });
     $("w-set-lib").addEventListener("click", function () { setStart("lib"); });
     $("w-set-map").addEventListener("click", function () { setStart("world"); });
     $("w-set-close").addEventListener("click", function () { $("w-set").classList.add("hidden"); });
@@ -11474,7 +11858,7 @@ button.glass:active .tube{transform:scale(.97)}
       if (saved) {
         openCatalog(saved, false);
         // Foydalanuvchi shunday sozlagan bo'lsa - to'g'ridan-to'g'ri xaritaga.
-        if (readStart() === "world") { openWorld("world"); }
+        if (readStart() === "world") { openHub(); }
       } else { $("scr-lang").classList.remove("hidden"); }
     }
 
