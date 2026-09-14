@@ -475,7 +475,8 @@ body{
 .card-badge:active{transform:scale(.88)}
 .card.seen .card-badge{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px rgba(0,0,0,.45);cursor:default}
 .card.seen .card-badge:active{transform:none}
-.card.exam{border-color:rgba(232,185,60,.38)}
+.card.soon .card-badge{color:rgba(244,246,249,.7);box-shadow:0 0 0 1.5px rgba(255,255,255,.28);cursor:default}
+.card.soon .card-badge:active{transform:none}
 /* "Tez orada" — film shu tilda hali yuklanmagan (catalog.py da
    message_id = 0). Karta kulrang bo'ladi va bosilmaydi. */
 .card.soon{cursor:default;border-color:rgba(255,255,255,.07)}
@@ -5693,11 +5694,13 @@ button.glass:active .tube{transform:scale(.97)}
     get: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" ' +
          'stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M7 10.5l5 5 5-5 M5 20h14"></path></svg>',
     got: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" ' +
-         'stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>'
+         'stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>',
+    soon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" ' +
+          'stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>'
   };
 
   // Bitta film kartasi. O'ng tepadagi belgi: yuklab olinmagan bo'lsa "yuklab olish",
-  // olingan bo'lsa ✓. Belgi bir marta qo'yilgach qaytarib olinmaydi.
+  // olingan bo'lsa ✓, hali yuklanmagan bo'lsa soat. ✓ bir marta qo'yilgach qaytarib olinmaydi.
   function filmCard(m, numeral, t, pending) {
     var ready = isReady(m.id);
     var seen = ready && !!watched[key(m.id)];
@@ -5729,7 +5732,14 @@ button.glass:active .tube{transform:scale(.97)}
     num.textContent = numeral;
     card.appendChild(num);
 
-    if (ready) {
+    if (!ready) {
+      var clock = document.createElement("span");
+      clock.className = "card-badge";
+      clock.innerHTML = BADGE_SVG.soon;
+      clock.setAttribute("role", "img");
+      clock.setAttribute("aria-label", t.soon + ": " + m[lang]);
+      card.appendChild(clock);
+    } else {
       var badge = document.createElement("button");
       badge.type = "button";
       badge.className = "card-badge";
