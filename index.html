@@ -13,6 +13,8 @@
   --bg:#0c0f14; --bg2:#14181f; --card:#161b23; --line:rgba(255,255,255,.09);
   --text:#eef1f5; --dim:#98a2b3;
   --accent:#97a1ae; --accent-2:#5a6472; --accent-rgb:151,161,174; --accent-ink:#0e1117; --wash-1:rgba(255,255,255,.05);
+  /* Tilla bezaklar: fakultet tanlangach applyHouse() ularni fakultet rangiga almashtiradi */
+  --gold:#e7c170; --gold-2:#c0913a; --gold-hi:#f3d58f; --gold-rgb:224,178,91; --gold-ink:#1a1204;
   --ok:#5f9e7a;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -636,14 +638,14 @@ body{
 .you-foot b{color:var(--text);font-weight:600}
 
 /* 30 ballga yetmaganlar uchun - ayblov emas, qancha qolgani */
-.cup-you.gate{border-color:rgba(232,185,60,.38)}
-.cup-you.gate .you-val{color:#e8b93c}
-.cup-you.gate .you-bar i{background:#e8b93c}
+.cup-you.gate{border-color:rgba(var(--gold-rgb),.38)}
+.cup-you.gate .you-val{color:var(--gold)}
+.cup-you.gate .you-bar i{background:var(--gold)}
 .gate-msg{
   font:500 13px/1.55 'Manrope',sans-serif;color:var(--dim);
   margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
 }
-.gate-msg b{color:#e8b93c;font-weight:700}
+.gate-msg b{color:var(--gold);font-weight:700}
 
 /* ---------- fakultet zali ---------- */
 .hall{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
@@ -728,14 +730,14 @@ body{
 .cup-emblem{display:block;width:46px;height:46px;margin:0 auto 10px;filter:drop-shadow(0 6px 16px rgba(224,178,91,.35))}
 .cup-emblem svg{width:100%;height:100%;display:block}
 .cup-prev{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 13px;border-radius:99px;
-  background:rgba(224,178,91,.08);border:1px solid rgba(224,178,91,.32);cursor:pointer;
+  background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.32);cursor:pointer;
   font:600 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
 .cup-prev:active{transform:scale(.97)}
 .cup-prev b{font-weight:800;margin-left:3px}
-.cup-prev em{font-style:normal;color:#f3d58f;font-weight:700}
+.cup-prev em{font-style:normal;color:var(--gold-hi);font-weight:700}
 .svg-i{display:inline-flex;flex:none}
 .svg-i svg{width:100%;height:100%;display:block}
-.cup-prev .svg-i{width:15px;height:15px;color:#e0b25b}
+.cup-prev .svg-i{width:15px;height:15px;color:var(--gold)}
 button.glass{display:block;width:100%;padding:0;margin:0;border:0;background:none;color:inherit;
   font:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
 button.glass:active .tube{transform:scale(.97)}
@@ -746,7 +748,7 @@ button.glass:active .tube{transform:scale(.97)}
   background:rgba(12,15,20,.72);border:1px solid var(--line);
   font:800 11px/1 'Manrope',sans-serif;color:var(--dim)}
 .g-place svg{width:13px;height:13px;display:block}
-.glass.lead .g-place{color:#f3d58f;border-color:rgba(224,178,91,.6);background:rgba(40,30,10,.8)}
+.glass.lead .g-place{color:var(--gold-hi);border-color:rgba(var(--gold-rgb),.6);background:rgba(40,30,10,.8)}
 .cup-tap-hint{margin:12px 0 0;text-align:center;font:500 11px/1.4 'Manrope',sans-serif;color:var(--dim);opacity:.8}
 
 .cup-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
@@ -801,7 +803,7 @@ button.glass:active .tube{transform:scale(.97)}
 .you-src-bar i{display:block;height:100%;border-radius:3px}
 .you-src-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text);white-space:nowrap;text-align:right}
 .you-src-num s{text-decoration:none;font-size:13px;color:var(--dim);margin-left:1px}
-.you-src-num.full{color:#f3d58f}
+.you-src-num.full{color:var(--gold-hi)}
 
 /* tugmalar: 2 x 2 */
 .cup-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
@@ -891,11 +893,11 @@ button.glass:active .tube{transform:scale(.97)}
 .hist-win-cell{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px 10px;border-radius:14px;
   cursor:pointer;background:rgba(var(--hc-rgb),.08);border:1px solid rgba(var(--hc-rgb),.25);color:var(--text);font-family:'Manrope',sans-serif}
 .hist-win-cell:active{transform:scale(.96)}
-.hist-win-cell.top{border-color:rgba(224,178,91,.7);box-shadow:0 0 18px rgba(224,178,91,.18);background:rgba(224,178,91,.08)}
+.hist-win-cell.top{border-color:rgba(var(--gold-rgb),.7);box-shadow:0 0 18px rgba(var(--gold-rgb),.18);background:rgba(var(--gold-rgb),.08)}
 .hist-win-cell.none{opacity:.5}
 .hist-win-crest img{display:block;object-fit:contain}
 .hist-win-cell b{font:600 28px/1 'Cormorant Garamond',serif;color:var(--hc)}
-.hist-win-cell.top b{color:#f3d58f}
+.hist-win-cell.top b{color:var(--gold-hi)}
 .hist-win-cell > span:last-child{font:600 10.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center}
 .hist-card{background:linear-gradient(160deg,rgba(var(--hc-rgb),.12),var(--card) 55%);border:1px solid rgba(var(--hc-rgb),.35);
   border-radius:18px;padding:14px;margin-top:14px}
@@ -927,7 +929,7 @@ button.glass:active .tube{transform:scale(.97)}
 .hist-rp{font:600 16px/1 'Cormorant Garamond',serif;color:var(--text);text-align:right}
 .hist-best{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
   font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
-.hist-best .svg-i{width:16px;height:16px;color:#e0b25b;margin-top:1px}
+.hist-best .svg-i{width:16px;height:16px;color:var(--gold);margin-top:1px}
 .hist-best em{font-style:normal}
 .hist-best b{color:var(--text);font-weight:700}
 .hist-wait{text-align:center;padding:20px 0}
@@ -1139,8 +1141,8 @@ button.glass:active .tube{transform:scale(.97)}
   position:relative;display:grid;place-items:center;width:46px;height:46px;
   border-radius:50%;border:none;padding:0;cursor:pointer;flex:none;
   background:radial-gradient(circle at 35% 30%,#2a2f38,#12151b 70%);
-  box-shadow:inset 0 0 0 1.5px #c0913a,0 0 0 3px rgba(224,178,91,.14),0 4px 16px rgba(224,178,91,.25);
-  font:600 19px/1 'Cormorant Garamond',serif;color:#e7c170;letter-spacing:-.02em;
+  box-shadow:inset 0 0 0 1.5px var(--gold-2),0 0 0 3px rgba(var(--gold-rgb),.14),0 4px 16px rgba(var(--gold-rgb),.25);
+  font:600 19px/1 'Cormorant Garamond',serif;color:var(--gold);letter-spacing:-.02em;
   transition:transform .12s,box-shadow .3s;
 }
 .coin:active{transform:scale(.94)}
@@ -1160,18 +1162,18 @@ button.glass:active .tube{transform:scale(.97)}
 .hero-kick{
   position:absolute;left:12px;top:12px;padding:6px 10px;border-radius:99px;
   background:rgba(12,15,20,.72);font:700 10px/1 'Manrope',sans-serif;
-  letter-spacing:.18em;text-transform:uppercase;color:#e7c170;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
 }
 .hero-body{display:flex;align-items:center;gap:14px;padding:14px 16px 16px}
 .hero-tx{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
 .hero-title{font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.1}
 .hero-ticks{display:flex;gap:4px}
 .hero-ticks i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.1)}
-.hero-ticks i.on{background:#e0b25b}
+.hero-ticks i.on{background:var(--gold)}
 .hero-meta{font:500 12px/1 'Manrope',sans-serif;color:var(--dim)}
 .hero-play{
   flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(150deg,#e7c170,#c0913a);color:#1a1204;font-size:17px;
+  background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink);font-size:17px;
 }
 .rowsec{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
 .rowsec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -1299,7 +1301,7 @@ button.glass:active .tube{transform:scale(.97)}
 .hub-ic:active{transform:scale(.94)}
 .hub-ic svg{width:20px;height:20px}
 .hub-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
-.hub-ttl .kicker{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#e0b25b}
+.hub-ttl .kicker{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
 .hub-ttl h1{margin:0;font:400 30px/1.1 'Cormorant Garamond',serif;color:var(--text)}
 
 .hub-me{
@@ -1315,7 +1317,7 @@ button.glass:active .tube{transform:scale(.97)}
 .hub-me-tx b{font:400 24px/1.1 'Cormorant Garamond',serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hub-me-tx span{font:600 12.5px/1.25 'Manrope',sans-serif;color:var(--hub-accent,var(--dim))}
 .hub-pts{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.hub-pts b{font:600 25px/1 'Cormorant Garamond',serif;color:#e7c170}
+.hub-pts b{font:600 25px/1 'Cormorant Garamond',serif;color:var(--gold)}
 .hub-pts span{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 
 .hub-cup{
@@ -1323,7 +1325,7 @@ button.glass:active .tube{transform:scale(.97)}
   border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--text);font-family:inherit;text-align:left;
 }
 .hub-cup-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.hub-cup-top b{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#e0b25b}
+.hub-cup-top b{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .hub-cup-top span{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
 .hub-tubes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .hub-tube{display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -1336,7 +1338,7 @@ button.glass:active .tube{transform:scale(.97)}
 
 .hub-sort{
   display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;margin:0 0 14px;cursor:pointer;
-  border-radius:18px;background:var(--card);border:1px dashed rgba(224,178,91,.4);color:var(--text);font-family:inherit;text-align:left;
+  border-radius:18px;background:var(--card);border:1px dashed rgba(var(--gold-rgb),.4);color:var(--text);font-family:inherit;text-align:left;
 }
 .hub-sort-mark{flex:none;width:44px;height:44px;display:grid;place-items:center}
 .hub-sort-mark .art,.hub-sort-mark img,.hub-sort-mark svg{width:44px;height:44px;display:block}
@@ -1363,7 +1365,7 @@ button.glass:active .tube{transform:scale(.97)}
   display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;cursor:pointer;
   border-radius:18px;background:var(--card);border:1px solid var(--line);color:var(--text);font-family:inherit;text-align:left;
 }
-.hub-row-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(224,178,91,.12);color:#e7c170}
+.hub-row-ic{flex:none;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:rgba(var(--gold-rgb),.12);color:var(--gold)}
 .hub-row-ic svg{width:24px;height:24px}
 .hub-row-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .hub-row-tx b{font:700 14.5px/1.2 'Manrope',sans-serif}
@@ -1373,7 +1375,7 @@ button.glass:active .tube{transform:scale(.97)}
 .hub-sheet{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,8,11,.62)}
 .hub-sheet-box{
   width:100%;max-width:440px;box-sizing:border-box;padding:20px 18px calc(20px + env(safe-area-inset-bottom));
-  border-radius:20px 20px 0 0;background:#141920;border-top:1px solid rgba(224,178,91,.35);
+  border-radius:20px 20px 0 0;background:#141920;border-top:1px solid rgba(var(--gold-rgb),.35);
   box-shadow:0 -20px 40px rgba(0,0,0,.5);animation:wSheetUp .22s ease both;
 }
 .hub-sheet-box h3{margin:0 0 4px;font:400 23px/1.15 'Cormorant Garamond',serif;color:var(--text)}
@@ -1384,7 +1386,7 @@ button.glass:active .tube{transform:scale(.97)}
   background:transparent;color:var(--dim);font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer;
 }
 .hub-seg button svg{width:20px;height:20px}
-.hub-seg button.on{background:var(--card);box-shadow:inset 0 0 0 1px rgba(224,178,91,.55);color:#e7c170}
+.hub-seg button.on{background:var(--card);box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.55);color:var(--gold)}
 .hub-seg .n934{font:600 18px/20px 'Cormorant Garamond',serif}
 .hub-sheet-close{
   width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:rgba(255,255,255,.06);
@@ -1703,7 +1705,7 @@ button.glass:active .tube{transform:scale(.97)}
         <span class="ct-s" id="chess-title"></span>
       </button>
       <!-- Do'stlar reytingi: fakultetdan qat'i nazar hammaga ko'rinadi. -->
-      <button class="cup-tile" id="refs-strip" style="--tc:#e0b25b;--tc-rgb:224,178,91">
+      <button class="cup-tile" id="refs-strip" style="--tc:var(--gold);--tc-rgb:var(--gold-rgb)">
         <span class="ct-top">
           <span class="ct-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/></svg></span>
           <span class="ct-badge hidden" id="refs-pill"><i></i><span id="refs-count"></span></span>
@@ -1894,7 +1896,7 @@ button.glass:active .tube{transform:scale(.97)}
     .ch-sub{color:var(--dim);font:500 13px/1.4 'Manrope',sans-serif}
     .ch-pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
     .ch-pill{font:600 12px/1 'Manrope',sans-serif;padding:8px 11px;border-radius:999px;background:var(--bg2);border:1px solid var(--line);color:var(--dim)}
-    .ch-pill b{color:#d9a74a;font-weight:800}
+    .ch-pill b{color:var(--gold);font-weight:800}
     .ch-h{display:flex;align-items:center;gap:8px;font:800 15px/1.2 'Manrope',sans-serif;margin-bottom:6px;color:var(--text)}
     .ch-h svg{width:18px;height:18px;color:#b784d1;flex:none}
     .ch-note{color:var(--dim);font:500 13px/1.45 'Manrope',sans-serif;margin-bottom:14px}
@@ -1927,22 +1929,22 @@ button.glass:active .tube{transform:scale(.97)}
     .ch-seg button.on{border-color:#9b59b6;background:rgba(155,89,182,.18);color:#fff}
     .ch-themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
     .ch-theme{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 6px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);cursor:pointer;color:var(--dim);font:700 12px/1.2 'Manrope',sans-serif}
-    .ch-theme.on{border-color:#d9a74a;background:rgba(217,167,74,.12);color:#f3d58f}
+    .ch-theme.on{border-color:var(--gold);background:rgba(var(--gold-rgb),.12);color:var(--gold-hi)}
     .ch-theme .mini{position:relative;width:52px;height:52px;border-radius:9px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
     .ch-theme .mini i{display:block}
     .ch-theme .mini span{position:absolute;inset:7px}
-    .ch-gold{background:linear-gradient(135deg,#f0cf85,#c0913a);color:#1b1305;border:1px solid transparent;box-shadow:0 6px 18px rgba(217,167,74,.25)}
+    .ch-gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);border:1px solid transparent;box-shadow:0 6px 18px rgba(var(--gold-rgb),.25)}
     .ch-two{display:flex;gap:8px;margin-top:10px}
     .ch-two .ch-btn{flex:1}
     .ch-btn.sm{padding:12px 6px;font-size:13px;gap:6px;white-space:nowrap}
-    .ch-seekers{margin-top:8px;text-align:center;font:600 12px/1.4 'Manrope',sans-serif;color:#f3d58f}
-    .ch-seg button .n{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:#d9a74a;color:#1b1305;font:800 10px/16px 'Manrope',sans-serif;margin-left:5px;vertical-align:1px}
+    .ch-seekers{margin-top:8px;text-align:center;font:600 12px/1.4 'Manrope',sans-serif;color:var(--gold-hi)}
+    .ch-seg button .n{display:inline-block;min-width:16px;height:16px;line-height:16px;border-radius:8px;background:var(--gold);color:var(--gold-ink);font:800 10px/16px 'Manrope',sans-serif;margin-left:5px;vertical-align:1px}
     .ch-seekp{text-align:center;padding:6px 0 2px}
     .ch-seekp .t{font:800 15px/1.3 'Manrope',sans-serif;color:var(--text);margin-top:10px}
     .ch-seekp .s{font:600 13px/1.3 'Manrope',sans-serif;color:var(--dim);margin:4px 0 12px;font-variant-numeric:tabular-nums}
     .ch-seekp .hint{font:500 12.5px/1.45 'Manrope',sans-serif;color:var(--dim);margin:-4px 4px 10px}
-    .ch-orb{position:relative;width:66px;height:66px;margin:4px auto 0;display:grid;place-items:center;color:#f3d58f}
-    .ch-orb i{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(217,167,74,.18);border-top-color:#e7c170;border-right-color:#b784d1;animation:chspin 1.1s linear infinite}
+    .ch-orb{position:relative;width:66px;height:66px;margin:4px auto 0;display:grid;place-items:center;color:var(--gold-hi)}
+    .ch-orb i{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(var(--gold-rgb),.18);border-top-color:var(--gold);border-right-color:#b784d1;animation:chspin 1.1s linear infinite}
     .ch-orb svg{width:24px;height:24px;animation:chpulse 1.6s ease-in-out infinite}
     @keyframes chspin{to{transform:rotate(360deg)}}
     @keyframes chpulse{50%{opacity:.45;transform:scale(.9)}}
@@ -1959,29 +1961,29 @@ button.glass:active .tube{transform:scale(.97)}
     .cm-b.cm-chess{min-width:230px}
     .cmc{padding:2px 0 4px}
     .cmc-h{display:flex;align-items:center;gap:10px}
-    .cmc-ic{flex:none;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#d3cab8 50%,#5d626b 50%);padding:4px;box-sizing:border-box;border:1px solid rgba(217,167,74,.7)}
+    .cmc-ic{flex:none;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#d3cab8 50%,#5d626b 50%);padding:4px;box-sizing:border-box;border:1px solid rgba(var(--gold-rgb),.7)}
     .cmc-h b{display:block;font:800 13.5px/1.2 'Manrope',sans-serif}
     .cmc-h span{display:block;font:600 11.5px/1.3 'Manrope',sans-serif;opacity:.75;margin-top:2px}
     .cmc-s{font:500 13px/1.4 'Manrope',sans-serif;margin:8px 0 2px}
     .cmc-b{display:block;width:100%;margin-top:8px;padding:9px 10px;border-radius:10px;border:1px solid rgba(155,89,182,.6);background:rgba(155,89,182,.18);color:inherit;font:800 13px/1 'Manrope',sans-serif;cursor:pointer}
-    .cmc-b.gold{background:linear-gradient(135deg,#f0cf85,#c0913a);color:#1b1305;border-color:transparent}
+    .cmc-b.gold{background:linear-gradient(135deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);border-color:transparent}
     .ch-rate{display:flex;align-items:center;gap:14px;width:100%;text-align:left;cursor:pointer;color:var(--text);
-      background:linear-gradient(135deg,rgba(217,167,74,.12),var(--card) 65%);border-color:rgba(217,167,74,.35)}
-    .ch-rate-pc{flex:none;width:52px;height:52px;border-radius:14px;background:#d3cab8;padding:6px;box-sizing:border-box;border:1px solid rgba(217,167,74,.7);box-shadow:0 4px 14px rgba(217,167,74,.2)}
+      background:linear-gradient(135deg,rgba(var(--gold-rgb),.12),var(--card) 65%);border-color:rgba(var(--gold-rgb),.35)}
+    .ch-rate-pc{flex:none;width:52px;height:52px;border-radius:14px;background:#d3cab8;padding:6px;box-sizing:border-box;border:1px solid rgba(var(--gold-rgb),.7);box-shadow:0 4px 14px rgba(var(--gold-rgb),.2)}
     .ch-rate-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
     .ch-rate-m .lbl{font:700 11px/1 'Manrope',sans-serif;letter-spacing:.8px;text-transform:uppercase;color:var(--dim)}
-    .ch-rate-m .num b{font:800 26px/1 'Manrope',sans-serif;color:#f3d58f;font-variant-numeric:tabular-nums}
-    .ch-rate-m .num em{font:700 13px/1 'Manrope',sans-serif;font-style:normal;color:#e7c170;margin-left:8px}
+    .ch-rate-m .num b{font:800 26px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+    .ch-rate-m .num em{font:700 13px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold);margin-left:8px}
     .ch-rate-m .sub{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
     .ch-rate-go{flex:none;font:700 13px/1 'Manrope',sans-serif;color:#dcbfe9}
     .ch-bot .t{position:relative}
-    .ch-bot .won{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#d9a74a;color:#1b1305;display:grid;place-items:center}
+    .ch-bot .won{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:var(--gold);color:var(--gold-ink);display:grid;place-items:center}
     .ch-bot .won svg{width:10px;height:10px;stroke-width:3}
     /* REYTING EKRANI */
     .cs-prof{display:flex;gap:14px;align-items:center}
-    .cs-prof .pc{flex:none;width:64px;height:64px;border-radius:16px;background:#d3cab8;padding:7px;box-sizing:border-box;border:1px solid rgba(217,167,74,.75);box-shadow:0 6px 20px rgba(217,167,74,.22)}
-    .cs-prof .r{font:800 32px/1 'Manrope',sans-serif;color:#f3d58f;font-variant-numeric:tabular-nums}
-    .cs-prof .t{font:700 13px/1.3 'Manrope',sans-serif;color:#e7c170;margin-top:4px}
+    .cs-prof .pc{flex:none;width:64px;height:64px;border-radius:16px;background:#d3cab8;padding:7px;box-sizing:border-box;border:1px solid rgba(var(--gold-rgb),.75);box-shadow:0 6px 20px rgba(var(--gold-rgb),.22)}
+    .cs-prof .r{font:800 32px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+    .cs-prof .t{font:700 13px/1.3 'Manrope',sans-serif;color:var(--gold);margin-top:4px}
     .cs-prof .s{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);margin-top:2px}
     .cs-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
     .cs-stats div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 4px;text-align:center}
@@ -1992,9 +1994,9 @@ button.glass:active .tube{transform:scale(.97)}
     .cs-tabs{margin-top:14px}
     .cs-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer;font:600 13.5px/1.3 'Manrope',sans-serif}
     .cs-row:last-child{border-bottom:none}
-    .cs-row.me{background:rgba(217,167,74,.10)}
+    .cs-row.me{background:rgba(var(--gold-rgb),.10)}
     .cs-row .rk{flex:none;width:24px;font:800 13px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
-    .cs-row .rk.top{color:#f3d58f}
+    .cs-row .rk.top{color:var(--gold-hi)}
     .cs-row .av{flex:none;width:30px;height:30px;display:grid;place-items:center}
     .cs-row .av img{width:26px;height:26px;object-fit:contain}
     .cs-row .nm{flex:1;min-width:0}
@@ -2012,7 +2014,7 @@ button.glass:active .tube{transform:scale(.97)}
     .cs-empty{padding:22px 10px;text-align:center;color:var(--dim);font:500 13px/1.5 'Manrope',sans-serif}
     .cs-lad .pc{width:34px;height:34px;border-radius:10px;background:#d3cab8;padding:3px;box-sizing:border-box}
     .cs-badge{flex:none;font:800 11px/1 'Manrope',sans-serif;padding:6px 8px;border-radius:999px;background:var(--bg2);color:var(--dim);border:1px solid var(--line)}
-    .cs-badge.won{background:linear-gradient(135deg,#f0cf85,#c0913a);color:#1b1305;border-color:transparent}
+    .cs-badge.won{background:linear-gradient(135deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);border-color:transparent}
     .cs-sheet{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
     .cs-sheet .box{width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 16px 26px;box-sizing:border-box}
     .ch-rules{color:var(--dim);font:500 12px/1.55 'Manrope',sans-serif;margin:14px 4px 30px}
@@ -2133,7 +2135,7 @@ button.glass:active .tube{transform:scale(.97)}
   <div id="scr-chess-stats" class="screen hidden">
     <div class="cup-hdr">
       <button class="back-btn" id="chess-stats-back"><span style="font-size:13px">‹</span> <span data-xt="back">Ortga</span></button>
-      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #f3d58f;" data-xt="statsTitle">Shaxmat reytingi</div>
+      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: var(--gold-hi);" data-xt="statsTitle">Shaxmat reytingi</div>
     </div>
     <div class="ch-card">
       <div class="cs-prof">
@@ -2162,7 +2164,7 @@ button.glass:active .tube{transform:scale(.97)}
   <!-- SEHRGAR SHAXMATI: GAMEPLAY -->
   <div id="scr-chess-game" class="screen hidden" style="padding-bottom: 30px;">
     <style>
-    #scr-chess-game{background:radial-gradient(ellipse 90% 45% at 50% 42%, rgba(217,167,74,.10), transparent 70%)}
+    #scr-chess-game{background:radial-gradient(ellipse 90% 45% at 50% 42%, rgba(var(--gold-rgb),.10), transparent 70%)}
     .cg-hdr{display:flex;align-items:center;gap:8px}
     .cg-hdr .cg-badge{flex:1;text-align:center;font:700 14px/1.2 'Manrope',sans-serif;color:#f1c40f;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .cg-icbtn{flex:none;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--dim);display:grid;place-items:center;cursor:pointer;padding:0}
@@ -2178,7 +2180,7 @@ button.glass:active .tube{transform:scale(.97)}
     .cg-caps i.gap{margin-right:3px}
     .cg-caps b{font:800 11px/1 'Manrope',sans-serif;color:var(--dim);margin-left:8px}
     .cg-clock{flex:none;font:800 20px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.5px;padding:8px 12px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);color:var(--dim);min-width:74px;text-align:center;transition:box-shadow .2s,border-color .2s}
-    .cg-clock.on{border-color:rgba(217,167,74,.75);box-shadow:0 0 0 3px rgba(217,167,74,.14),0 0 18px rgba(217,167,74,.22)}
+    .cg-clock.on{border-color:rgba(var(--gold-rgb),.75);box-shadow:0 0 0 3px rgba(var(--gold-rgb),.14),0 0 18px rgba(var(--gold-rgb),.22)}
     .cg-clock.low{border-color:#e74c3c;box-shadow:0 0 0 3px rgba(231,76,60,.16)}
     .cg-moves{display:flex;align-items:center;gap:6px;margin-top:10px}
     .cg-moves .strip{flex:1;min-width:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:2px 0;-webkit-overflow-scrolling:touch}
@@ -2188,7 +2190,7 @@ button.glass:active .tube{transform:scale(.97)}
     .cg-mv{flex:none;display:inline-flex;align-items:center;gap:1px;font:600 13px/1 'Manrope',sans-serif;color:var(--text);padding:6px 7px;border-radius:8px;cursor:pointer;white-space:nowrap}
     .cg-mv .num{color:var(--dim);font-weight:600;margin-right:4px}
     .cg-mv i{display:inline-block;width:14px;height:14px;vertical-align:-2px}
-    .cg-mv.cur{background:rgba(217,167,74,.2);color:#f3d58f}
+    .cg-mv.cur{background:rgba(var(--gold-rgb),.2);color:var(--gold-hi)}
     .cg-mv-empty{font:500 12px/1 'Manrope',sans-serif;color:var(--dim);padding:6px 4px}
     #chess-frame{margin:10px auto 0;width:100%;max-width:400px;aspect-ratio:1;position:relative;border-radius:12px;box-sizing:border-box}
     #chess-frame.chf-gold{padding:5px;background:linear-gradient(135deg,#f3d58f,#9c7424 40%,#e7c170 60%,#7a5a1a);box-shadow:0 14px 34px rgba(0,0,0,.65),0 0 44px rgba(217,167,74,.22)}
@@ -2214,7 +2216,7 @@ button.glass:active .tube{transform:scale(.97)}
     .cg-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font:700 14px/1 'Manrope',sans-serif;cursor:pointer}
     .cg-btn svg{width:17px;height:17px;flex:none}
     .cg-btn.red{color:#e8776b}
-    .cg-btn.gold{background:linear-gradient(135deg,#e7c170,#b98a2e);color:#1b1305;border-color:transparent}
+    .cg-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--gold-ink);border-color:transparent}
     .cg-btn:disabled{opacity:.5}
     #chess-board-overlay{position:absolute;inset:0;background:rgba(6,8,12,.78);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;padding:20px;text-align:center;border-radius:10px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
     #chess-board-overlay .ov-btns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:230px}
@@ -2251,7 +2253,7 @@ button.glass:active .tube{transform:scale(.97)}
         <div id="chess-overlay-title" style="font-family: 'Cormorant Garamond', serif; font-size: 34px; line-height: 1; color: #fff; margin-bottom: 8px;">G'alaba!</div>
         <div id="chess-overlay-desc" style="font: 500 14px/1.45 'Manrope',sans-serif; color: #cfd5de; margin-bottom: 16px;"></div>
         <div class="ov-btns">
-          <button id="btn-chess-overlay-again" class="hidden" style="background: linear-gradient(135deg,#e7c170,#b98a2e); color: #1b1305;" data-xt="playAgain">Yana o'ynash</button>
+          <button id="btn-chess-overlay-again" class="hidden" style="background: linear-gradient(135deg,var(--gold),var(--gold-2)); color: var(--gold-ink);" data-xt="playAgain">Yana o'ynash</button>
           <button id="btn-chess-overlay-ok" style="background: #9b59b6; color: #fff;" data-xt="cont">Davom etish</button>
           <button id="btn-chess-overlay-view" style="background: rgba(255,255,255,.08); color: #e6e9ee;" data-xt="viewBoard">Taxtani ko'rish</button>
         </div>
@@ -2984,25 +2986,25 @@ button.glass:active .tube{transform:scale(.97)}
   var HOUSES = {
     none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
                   crest:"?", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
-    gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4",
+    gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4", hi:"#f08c83",
                   crest:"🦁", img:"Gryffindor_crest.png",
                   uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor",
                   note_uz:"Jasorat, matonat va yurak amri bilan yashash — sizning yo'lingiz.",
                   note_ru:"Храбрость, стойкость и верность зову сердца — ваш путь.",
                   note_en:"Courage, nerve and following your heart — that is your way." },
-    slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e",
+    slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e", hi:"#74d3a3",
                   crest:"🐍", img:"Slytherin_crest.png",
                   uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
                   note_uz:"Maqsad, zukkolik va o'z yo'lini topa bilish — sizning kuchingiz.",
                   note_ru:"Амбиции, хитрость и умение найти свой путь — ваша сила.",
                   note_en:"Ambition, cunning and finding your own path — that is your strength." },
-    ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b",
+    ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b", hi:"#9dc0f2",
                   crest:"🦅", img:"Ravenclaw_crest.png",
                   uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw",
                   note_uz:"Aql, izlanish va bilimga chanqoqlik — sizni yetaklaydi.",
                   note_ru:"Ум, любознательность и жажда знаний — вот что вас ведёт.",
                   note_en:"Wit, curiosity and a thirst for learning — these lead you." },
-    hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204",
+    hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204", hi:"#f3d58f",
                   crest:"🦡", img:"Hufflepuff_crest.png",
                   uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
                   note_uz:"Sadoqat, mehnatsevarlik va adolat — sizning tayanchingiz.",
@@ -3018,6 +3020,13 @@ button.glass:active .tube{transform:scale(.97)}
     root.style.setProperty("--accent-2", h.accent2);
     root.style.setProperty("--accent-rgb", h.rgb);
     root.style.setProperty("--accent-ink", h.ink);
+    // Tilla bezaklar Xaffelpaff sarig'iga o'xshab adashtirmasin: fakultet bor bo'lsa
+    // ular ham fakultet rangida. Saralanmaganlarda asl tilla qoladi.
+    var gold = { "--gold": h.accent, "--gold-2": h.accent2, "--gold-hi": h.hi, "--gold-rgb": h.rgb, "--gold-ink": h.ink };
+    for (var g in gold) {
+      if (HOUSES[id] && id !== "none" && gold[g]) { root.style.setProperty(g, gold[g]); }
+      else { root.style.removeProperty(g); }
+    }
   }
 
   var LANGS = [
@@ -6656,7 +6665,7 @@ button.glass:active .tube{transform:scale(.97)}
       { key: "chess", rgb: "165,127,224", title: c.chessT,
         sub: hubChess && hubChess.rating ? HUB_TX.rating[lang].replace("%d", hubChess.rating) : HUB_TX.chessNone[lang],
         badge: 0, go: openChessHub, needHouse: true },
-      { key: "refs", rgb: "224,178,91", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
+      { key: "refs", rgb: "var(--gold-rgb)", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
     ];
     tiles.forEach(function (tile) {
       if (tile.needHouse && hid === "none") { return; }
@@ -10961,7 +10970,7 @@ button.glass:active .tube{transform:scale(.97)}
     $("ch-mark-piece").innerHTML = getPieceSVG("N");
     els = document.querySelectorAll("#ch-mark i");
     for (i = 0; i < els.length; i++) { els[i].style.background = (i === 0 || i === 3) ? th.sq[0] : th.sq[1]; }
-    $("ch-mark").style.borderColor = th.pieces === "marble" ? "rgba(217,167,74,.75)" : "rgba(155,89,182,.55)";
+    $("ch-mark").style.borderColor = th.pieces === "marble" ? "rgba(var(--gold-rgb),.75)" : "rgba(155,89,182,.55)";
     els = document.querySelectorAll("#scr-chess-hub [data-piece]");
     for (i = 0; i < els.length; i++) {
       els[i].innerHTML = getPieceSVG(els[i].getAttribute("data-piece"));
@@ -11552,9 +11561,9 @@ button.glass:active .tube{transform:scale(.97)}
       return (i * w / (series.length - 1)).toFixed(1) + "," + (h - 6 - (v - lo) / span * (h - 12)).toFixed(1);
     });
     box.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none">' +
-      '<defs><linearGradient id="csg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(217,167,74,.35)"/><stop offset="1" stop-color="rgba(217,167,74,0)"/></linearGradient></defs>' +
+      '<defs><linearGradient id="csg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:rgba(var(--gold-rgb),.35)"/><stop offset="1" style="stop-color:rgba(var(--gold-rgb),0)"/></linearGradient></defs>' +
       '<polygon fill="url(#csg)" points="0,' + h + " " + pts.join(" ") + " " + w + "," + h + '"/>' +
-      '<polyline fill="none" stroke="#e7c170" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="' + pts.join(" ") + '"/></svg>';
+      '<polyline fill="none" style="stroke:var(--gold)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="' + pts.join(" ") + '"/></svg>';
   }
 
   function renderStatsProfile(p) {
