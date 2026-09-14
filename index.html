@@ -1182,7 +1182,8 @@ button.glass:active .tube{transform:scale(.97)}
 .rowscroll .card{border-radius:16px}
 .rowscroll .numeral{padding:10px 13px;font-size:26px}
 .rowscroll .card-foot{padding:36px 13px 13px}
-.rowscroll .card-title{font-size:23px;line-height:1.05}
+.rowscroll .card-title{font-size:var(--title-fs,23px);line-height:1.05;min-height:2.1em}
+.card-title-line{display:block;white-space:nowrap}
 .rowscroll .card-play{width:28px;height:28px;font-size:11px}
 .soonrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .soontile{
@@ -5701,6 +5702,19 @@ button.glass:active .tube{transform:scale(.97)}
 
   // Bitta film kartasi. O'ng tepadagi belgi: yuklab olinmagan bo'lsa "yuklab olish",
   // olingan bo'lsa ✓, hali yuklanmagan bo'lsa soat. ✓ bir marta qo'yilgach qaytarib olinmaydi.
+  // Sarlavha doim ikki qatorda: eng teng bo'ladigan bo'shliqdan bo'linadi
+  // ("Maxfiy / Hujra", "Ajal / Tuhfasi 1"). Kartalar tagi bir tekis turadi.
+  function twoLines(text) {
+    var words = String(text).split(" ");
+    if (words.length < 2) { return [text]; }
+    var best = 1, bestLen = Infinity;
+    for (var i = 1; i < words.length; i++) {
+      var a = words.slice(0, i).join(" ").length, b = words.slice(i).join(" ").length;
+      if (Math.max(a, b) < bestLen) { bestLen = Math.max(a, b); best = i; }
+    }
+    return [words.slice(0, best).join(" "), words.slice(best).join(" ")];
+  }
+
   function filmCard(m, numeral, t, pending) {
     var ready = isReady(m.id);
     var seen = ready && !!watched[key(m.id)];
@@ -5758,13 +5772,42 @@ button.glass:active .tube{transform:scale(.97)}
     textCol.className = "card-text";
     var ttl = document.createElement("span");
     ttl.className = "card-title";
-    ttl.textContent = m[lang];
+    twoLines(m[lang]).forEach(function (part) {
+      var line = document.createElement("span");
+      line.className = "card-title-line";
+      line.textContent = part;
+      ttl.appendChild(line);
+    });
     textCol.appendChild(ttl);
     foot.appendChild(textCol);
     card.appendChild(foot);
 
     return card;
   }
+
+  // Uzun so'z ("Фантастические") kartaga sig'masa, BARCHA sarlavhalar bir xil
+  // miqdorda kichrayadi - kartalar bir-biridan farq qilmasin.
+  var TITLE_FS = 23;
+  function fitTitles() {
+    var rows = $("rows");
+    if (!rows || !rows.clientWidth) { return; }
+    rows.style.removeProperty("--title-fs");
+    var ratio = 1;
+    var lines = rows.querySelectorAll(".card-title-line");
+    for (var i = 0; i < lines.length; i++) {
+      var need = lines[i].scrollWidth, room = lines[i].clientWidth;
+      if (need > room && room > 0) { ratio = Math.min(ratio, room / need); }
+    }
+    if (ratio < 1) {
+      rows.style.setProperty("--title-fs", Math.floor(TITLE_FS * ratio * 2) / 2 + "px");
+    }
+  }
+  try {
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { fitTitles(); }).observe($("rows"));
+    }
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fitTitles); }
+  } catch (e) {}
 
   function renderCards(t) {
     var rows = $("rows");
@@ -5816,6 +5859,7 @@ button.glass:active .tube{transform:scale(.97)}
     });
     soon.appendChild(tiles);
     rows.appendChild(soon);
+    fitTitles();
   }
 
   function renderSortCard(t) {
