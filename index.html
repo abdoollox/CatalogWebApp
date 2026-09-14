@@ -1478,6 +1478,11 @@ button.glass:active .tube{transform:scale(.97)}
 .tr-hat img{width:124px;display:block;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6));animation:float 4.5s ease-in-out infinite}
 .tr-h{margin:0 0 12px;font:400 34px/1.1 'Cormorant Garamond',serif;color:var(--text)}
 @media (prefers-reduced-motion:reduce){.al-step.on .al-mk,.tr-puff,.tr-hat img,.lt-card{animation:none}}
+/* Adminlar: yangi o'quvchi yo'lini ko'rish */
+.hub-pv{margin-top:12px}
+.hub-pv .hub-row-tx span{white-space:normal}
+.al-pv{display:table;margin:-6px auto 16px;padding:6px 12px;border-radius:99px;border:1px dashed rgba(var(--gold-rgb),.5);
+  font:700 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.06em;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -1561,6 +1566,10 @@ button.glass:active .tube{transform:scale(.97)}
           <button type="button" id="hub-set-lib"></button>
           <button type="button" id="hub-set-hub"></button>
         </div>
+        <button class="hub-row hub-pv hidden" type="button" id="hub-set-pv">
+          <span class="hub-row-ic" id="hub-pv-ic"></span>
+          <span class="hub-row-tx"><b id="hub-pv-t"></b><span id="hub-pv-s"></span></span>
+        </button>
         <button class="hub-sheet-close" type="button" id="hub-set-close"></button>
       </div>
     </div>
@@ -1579,6 +1588,7 @@ button.glass:active .tube{transform:scale(.97)}
         <button class="hub-ic" id="al-letter-btn" type="button"></button>
       </div>
       <p class="al-intro" id="al-intro"></p>
+      <span class="al-pv hidden" id="al-pv"></span>
     </div>
     <div class="al-prog"><span id="al-prog-t"></span><i><b id="al-prog-b"></b></i><span id="al-prog-n"></span></div>
     <div class="al-path" id="al-path"></div>
@@ -6544,7 +6554,7 @@ button.glass:active .tube{transform:scale(.97)}
 
     function go(agreed) {
       if (!agreed) { return; }
-      report("sort_start", "1");     // boshlaganlar/tugatganlar nisbati uchun
+      if (!jrPreview) { report("sort_start", "1"); }     // boshlaganlar/tugatganlar nisbati uchun
       beginQuestions();
     }
 
@@ -6579,8 +6589,10 @@ button.glass:active .tube{transform:scale(.97)}
 
   function finishSorting() {
     var id = pickHouse();
-    setHouse(id);
-    reportHouse(id);
+    if (jrPreview) { applyHouse(id); } else {
+      setHouse(id);
+      reportHouse(id);
+    }
 
     var t = T[lang];
     var h = HOUSES[id];
@@ -6630,8 +6642,10 @@ button.glass:active .tube{transform:scale(.97)}
       core: topOf(CORE_IDS),
       flex: topOf(FLEX_IDS)
     };
-    setWand(w);
-    reportWand(w);
+    if (jrPreview) { pv.wand = w; } else {
+      setWand(w);
+      reportWand(w);
+    }
 
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
@@ -6662,7 +6676,9 @@ button.glass:active .tube{transform:scale(.97)}
     $("scr-reveal").classList.add("hidden");
     if (journey) {
       // Tayoqchadan keyin - xiyobonga, saralanishdan keyin - Xogvartsga
+      var was = journey;
       journey = null;
+      if (was === "house" && endPreview()) { return; }
       enterWorld();
       return;
     }
@@ -6862,6 +6878,7 @@ button.glass:active .tube{transform:scale(.97)}
     fetchRefs(function () { if (hubVisible()) { renderHub(); } });
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}
+    try { jrAdminCheck(); } catch (e) {}
     try {
       chessApi("mine").then(function (res) {
         if (res && res.rating) { hubChess = res.rating; if (hubVisible()) { renderHub(); } }
@@ -6889,6 +6906,10 @@ button.glass:active .tube{transform:scale(.97)}
                                  "<span>" + W_SET_TX.lib[lang] + "</span>";
     $("hub-set-hub").innerHTML = '<span class="n934">9¾</span><span>' + HUB_TX.title[lang] + "</span>";
     $("hub-set-lib").className = cur === "lib" ? "on" : "";
+    $("hub-set-pv").classList.toggle("hidden", !jrIsAdmin());
+    $("hub-pv-ic").innerHTML = hubSvg(AL_ICONS.letter);
+    $("hub-pv-t").textContent = al("pvBtn");
+    $("hub-pv-s").textContent = al("pvNote");
     $("hub-set-hub").className = cur === "world" ? "on" : "";
   }
 
@@ -6900,6 +6921,10 @@ button.glass:active .tube{transform:scale(.97)}
   var journey = null;        // "wand" | "house": savollar yo'l ichidan boshlangan
   var jrBackFn = null;
   var trTimer = null;
+  // Ko'rish rejimi (adminlar): o'quvchi saralanmagandek ko'rinadi, hech narsa saqlanmaydi
+  var jrPreview = false;
+  var pv = { wand: null, letter: false, train: false };
+  var jrAdminAsked = false;
 
   var AL_TX = {
     kick: { uz: "London", ru: "Лондон", en: "London" },
@@ -6979,7 +7004,14 @@ button.glass:active .tube{transform:scale(.97)}
             en: "The Sorting Hat is waiting. The house it names is yours for life." },
     endGo: { uz: "Shlyapa oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
-    rvWand: { uz: "Diagon xiyoboniga qaytish", ru: "Вернуться в Косой переулок", en: "Back to Diagon Alley" }
+    rvWand: { uz: "Diagon xiyoboniga qaytish", ru: "Вернуться в Косой переулок", en: "Back to Diagon Alley" },
+
+    pvBtn: { uz: "Yangi o'quvchi yo'lini ko'rish", ru: "Путь нового ученика", en: "New student's journey" },
+    pvNote: { uz: "Faqat adminlar uchun: maktub, Diagon xiyoboni, poyezd va Shlyapa. Hech narsa saqlanmaydi.",
+              ru: "Только для админов: письмо, Косой переулок, поезд и Шляпа. Ничего не сохраняется.",
+              en: "Admins only: letter, Diagon Alley, train and the Hat. Nothing is saved." },
+    pvTag: { uz: "Ko'rish rejimi · hech narsa saqlanmaydi", ru: "Режим просмотра · ничего не сохраняется",
+             en: "Preview · nothing is saved" }
   };
 
   var TR_LINES = {
@@ -7016,8 +7048,17 @@ button.glass:active .tube{transform:scale(.97)}
   };
 
   function al(k) { return (AL_TX[k] && (AL_TX[k][lang] || AL_TX[k].uz)) || ""; }
-  function jrGet(k) { try { return window.localStorage.getItem(k) === "1"; } catch (e) { return false; } }
-  function jrSet(k) { try { window.localStorage.setItem(k, "1"); } catch (e) {} }
+  function jrGet(k) {
+    if (jrPreview) { return k === LETTER_KEY ? pv.letter : pv.train; }
+    try { return window.localStorage.getItem(k) === "1"; } catch (e) { return false; }
+  }
+  function jrSet(k) {
+    if (jrPreview) { if (k === LETTER_KEY) { pv.letter = true; } else { pv.train = true; } return; }
+    try { window.localStorage.setItem(k, "1"); } catch (e) {}
+  }
+
+  // Yo'l ichidagi tayoqcha: ko'rish rejimida haqiqiysi emas
+  function jrWandNow() { return jrPreview ? pv.wand : wand; }
 
   function jrEl(tag, cls, text) {
     var el = document.createElement(tag);
@@ -7026,7 +7067,54 @@ button.glass:active .tube{transform:scale(.97)}
     return el;
   }
 
-  function hasHouse() { return !!validHouse(cupMe().house || house); }
+  function hasHouse() { return !jrPreview && !!validHouse(cupMe().house || house); }
+
+  // Admin ekani chat serveridan bilinadi (umumiy xonaning oddiy so'rovi "admin" qaytaradi)
+  function jrIsAdmin() {
+    if (chatAdmin) { return true; }
+    var local = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    return local && !chatInitData();
+  }
+
+  function jrAdminCheck() {
+    if (jrAdminAsked || chatAdmin || !window.fetch) { return; }
+    var d = chatInitData();
+    if (!d) { return; }
+    jrAdminAsked = true;
+    fetch(API_CHAT + "?room=global", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { if (res && res.admin !== undefined) { chatAdmin = !!res.admin; } })
+      ["catch"](function () { jrAdminAsked = false; });
+  }
+
+  function startPreview() {
+    jrPreview = true;
+    pv = { wand: null, letter: false, train: false };
+    applyHouse("none");
+    $("hub-set").classList.add("hidden");
+    hubBackButton(false);
+    jrBack(null);
+    jrHideAll();
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    openLetter(false);
+  }
+
+  // Ko'rishdan chiqish: asl fakultet ranglari bilan Xogvartsga
+  function endPreview() {
+    if (!jrPreview) { return false; }
+    jrPreview = false;
+    trStop();
+    closeLetter();
+    applyHouse(house);
+    openHub();
+    return true;
+  }
+
+  function jrLetterCancel() {
+    closeLetter();
+    endPreview();
+  }
 
   // 9¾ ortiga: saralangan - Xogvarts (hub), saralanmagan - Diagon xiyoboni.
   function enterWorld() { if (hasHouse()) { openHub(); } else { openAlley(); } }
@@ -7072,6 +7160,7 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
   function leaveAlley() {
+    if (endPreview()) { return; }
     jrBack(null);
     $("scr-alley").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
@@ -7080,6 +7169,9 @@ button.glass:active .tube{transform:scale(.97)}
 
   function renderAlley() {
     var rode = jrGet(TRAIN_KEY);
+    var wand = jrWandNow();
+    $("al-pv").textContent = al("pvTag");
+    $("al-pv").classList.toggle("hidden", !jrPreview);
     $("al-back").innerHTML = hubSvg(AL_ICONS.book);
     $("al-back").setAttribute("aria-label", LIB_TITLE[lang] || "");
     $("al-letter-btn").innerHTML = hubSvg(AL_ICONS.letter);
@@ -7202,7 +7294,7 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
   function openTrain() {
-    if (!wand) { openAlley(); return; }
+    if (!jrWandNow()) { openAlley(); return; }
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");
@@ -12528,8 +12620,12 @@ button.glass:active .tube{transform:scale(.97)}
     $("al-back").addEventListener("click", leaveAlley);
     $("al-letter-btn").addEventListener("click", function () { openLetter(true); });
     $("tr-back").addEventListener("click", openAlley);
-    $("lt-later").addEventListener("click", closeLetter);
-    $("lt").addEventListener("click", function (ev) { if (ev.target === $("lt")) { closeLetter(); } });
+    $("lt-later").addEventListener("click", jrLetterCancel);
+    $("lt").addEventListener("click", function (ev) {
+      if (ev.target !== $("lt")) { return; }
+      if ($("lt-later").classList.contains("hidden")) { closeLetter(); } else { jrLetterCancel(); }
+    });
+    $("hub-set-pv").addEventListener("click", startPreview);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
