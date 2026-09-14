@@ -251,46 +251,87 @@ def s_promote():
     return hall(y, rt=2.4, wet=0.4, bright=8000)
 
 
+def eq_peaks(x, peaks):
+    """Bir necha keng rezonans (markaz, kenglik Hz, kuch) - g'isht tanasining 'rangi'."""
+    n = len(x)
+    f = np.fft.rfftfreq(n, 1 / SR)
+    g = np.zeros_like(f)
+    for fc, w, a in peaks:
+        g += a * np.exp(-0.5 * ((f - fc) / w) ** 2)
+    return np.fft.irfft(np.fft.rfft(x) * g, n)
+
+
+def clay_hit(rng, sec=0.1, pitch=1.0, dull=1.0):
+    """Sopol g'isht urilishi: quruq, jaranglamaydi."""
+    n = int(sec * SR)
+    t = np.arange(n) / SR
+    x = rng.standard_normal(n) * np.exp(-t / 0.010)
+    x[:int(0.0015 * SR)] *= 2.5
+    body = eq_peaks(x, [(430 * pitch, 110, 1.0), (1000 * pitch, 220, 0.85),
+                        (1780 * pitch, 360, 0.55), (3200 * pitch, 800, 0.22)])
+    low = band(rng.standard_normal(n) * np.exp(-t / 0.022), 70, 240) * 0.9 * dull
+    return body + low
+
+
+def wand_tap(rng):
+    """Yog'och tayoqcha g'ishtga tegadi: qisqa 'tiq'."""
+    n = int(0.06 * SR)
+    t = np.arange(n) / SR
+    x = rng.standard_normal(n) * np.exp(-t / 0.004)
+    return eq_peaks(x, [(900, 180, 0.5), (1500, 260, 1.0), (2700, 500, 0.6)]) + \
+        band(rng.standard_normal(n) * np.exp(-t / 0.012), 150, 450) * 0.35
+
+
+def grind(rng, sec, rate0, rate1, bright=1.0, grit=0.5):
+    """Tosh ustida tosh ishqalanishi: yopishib-sirpanish zarblari zanjiri + qum shitirlashi."""
+    n = int(sec * SR)
+    y = np.zeros(n)
+    pos = 0.0
+    while True:
+        rate = rate0 + (rate1 - rate0) * min(1, pos / sec)
+        pos += rng.exponential(1 / rate) * rng.uniform(0.6, 1.4)
+        i = int(pos * SR)
+        if i >= n - 400:
+            break
+        L = int(rng.uniform(0.0015, 0.007) * SR)
+        y[i:i + L] += rng.standard_normal(L) * np.exp(-np.linspace(0, 5, L)) * rng.lognormal(0, 0.6)
+    blk = int(0.003 * SR)
+    gate_env = np.repeat(rng.random(n // blk + 1) ** 3, blk)[:n]
+    y += rng.standard_normal(n) * gate_env * grit * 0.35
+    low = band(y, 45, 200) * 1.4
+    y = eq_peaks(y, [(260 * bright, 90, 0.9), (620 * bright, 160, 1.0), (1150 * bright, 300, 0.8),
+                     (2300 * bright, 700, 0.45), (4300, 1500, 0.2 * grit)]) + low
+    t = np.arange(n) / SR
+    wob = 0.6 + 0.4 * np.abs(np.sin(2 * np.pi * rng.uniform(4, 9) * t + rng.uniform(0, 6)))
+    env = np.minimum(1, t / 0.03) * np.minimum(1, (sec - t) / 0.06)
+    return y * wob * env
+
+
 def s_gate():
-    """9¾ eshigi (Diagon Alley ravog'i ruhida). Vaqtlar index.html dagi GATE_* bilan bir xil:
-    0.00 devor paydo bo'ladi, 0.20/0.29/0.38 tayoqcha g'ishtga tegadi,
-    0.52 dan 1.34 gacha g'ishtlar o'rtadan chetga qarab bittalab ichkariga suriladi."""
-    y = silence(2.2)
-    # devor paydo bo'lishi: past tosh gumburi
-    n = int(0.32 * SR)
-    place(y, band(RNG.standard_normal(n), 35, 170) * np.sin(np.linspace(0, np.pi, n)) ** 1.5 * 0.9, 0.0)
-    # tayoqcha uch marta "tiq" etib tegadi, har birida mayda uchqun
-    for i, at in enumerate((0.20, 0.29, 0.38)):
-        place(y, modal([640, 1260, 2180, 3350], [0.6, 0.4, 0.2, 0.1], [0.022, 0.014, 0.009, 0.006], 0.12, 0.04) * 0.5, at)
-        place(y, click(0.003, 6500, 1500) * 0.45, at)
-        place(y, celesta(note(["B5", "D#6", "F#6"][i]), 0.6, 0.16), at + 0.004)
-    # g'ishtlar suriladi
+    """9¾ eshigi: og'ir tosh g'ishtlar surilishi (sehrli jiringlashsiz - foydalanuvchi tanlagan "A" variant).
+    Vaqtlar index.html dagi GATE_* bilan bir xil: 0.20/0.29/0.38 tayoqcha tegadi,
+    0.52 dan 1.34 gacha g'ishtlar o'rtadan chetga qarab suriladi.
+    O'z RNG si bor - boshqa ovozlar qo'shilsa ham natija o'zgarmaydi."""
+    rng = np.random.default_rng(11)
     t0, dur = 0.52, 0.82
-    place(y, whoosh(0.95, 160, 2400, 0.16), t0 - 0.06)
-    n = int(1.0 * SR)
-    bed = band(RNG.standard_normal(n), 30, 150)
-    env = np.minimum(1, np.arange(n) / (0.08 * SR)) * np.exp(-np.arange(n) / (0.45 * SR))
-    place(y, bed * env * 0.8, t0)
-    for _ in range(95):
-        d = np.sqrt(RNG.random())                     # chetdagi g'ishtlar ko'proq
-        at = t0 + (d * 0.55 + RNG.uniform(0, 0.05)) * dur
-        loud = 1 - 0.55 * d
-        m = int(RNG.uniform(0.03, 0.08) * SR)
-        sc = RNG.standard_normal(m) * (0.4 + 0.6 * RNG.random(m) ** 6)
-        fc = RNG.uniform(650, 1500)
-        place(y, band(sc, fc * 0.6, fc * 2.2) * np.hanning(m) * 0.07 * loud, at)
-        f = RNG.uniform(78, 125)
-        place(y, modal([f, f * 1.9, f * 3.05, f * 4.7], [1.0, 0.5, 0.25, 0.1],
-                       [0.05, 0.035, 0.02, 0.012], 0.22, 0.04) * 0.13 * loud, at + 0.02)
-    # ravoq ochildi: iliq sehrli akkord
-    for i, nm in enumerate(["E5", "G#5", "B5", "E6"]):
-        place(y, celesta(note(nm), 1.4, 0.2), t0 + 0.42 + i * 0.05)
-    place(y, bell(note("E4"), 2.0, 0.09), t0 + 0.5)
-    return hall(y, rt=1.8, wet=0.3, bright=6000)
+    y = silence(2.0)
+    place(y, clay_hit(rng, 0.2, 0.55, 1.4) * 0.35, 0.0)
+    for at in (0.20, 0.29, 0.38):
+        place(y, wand_tap(rng) * 0.55, at)
+    for k, (st, ln) in enumerate(((0.52, 0.8), (0.60, 0.72), (0.72, 0.6))):
+        place(y, grind(rng, ln, 22, 55, bright=0.75, grit=0.35) * (0.5 - 0.1 * k), st)
+    d = np.sqrt(rng.random(20))                      # chetdagi g'ishtlar ko'proq
+    at = t0 + (d * 0.55 + rng.uniform(0, 0.05, 20)) * dur
+    for a, dd in zip(at, d):
+        place(y, clay_hit(rng, 0.14, rng.uniform(0.6, 0.85), 1.3) * 0.28 * (1 - 0.4 * dd), a)
+    place(y, clay_hit(rng, 0.2, 0.6, 1.6) * 0.45, 1.31)
+    return hall(y, rt=0.9, wet=0.2, bright=4500)
 
 
 # chess_ prefiksisiz saqlanadigan ovozlar
 PLAIN = {"gate"}
+# g'isht g'ijirlashi shovqinga boy - past sifatda "shivirlab" qoladi
+BITRATE = {"gate": 96000}
 
 SOUNDS = {
     "move": (s_move, 0.6),
@@ -327,7 +368,8 @@ def main():
         wav = os.path.join(tmp, name + ".wav")
         out = os.path.join(OUT, ("%s.m4a" if name in PLAIN else "chess_%s.m4a") % name)
         write_wav(wav, y)
-        subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", "80000", wav, out], check=True)
+        rate = str(BITRATE.get(name, 80000))
+        subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", rate, wav, out], check=True)
         print("%-8s %.2f s  %5d bayt" % (name, len(y) / SR, os.path.getsize(out)))
 
 

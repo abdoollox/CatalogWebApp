@@ -1395,7 +1395,7 @@ button.glass:active .tube{transform:scale(.97)}
         <h1 id="cat-title">Kutubxona</h1>
       </div>
       <div class="head-tools">
-        <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
+        <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span></button>
         <button class="coin" id="world-btn" aria-label="9¾"><svg class="coin-arch" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V9a7 7 0 0 1 14 0v9"/><path d="M1.5 18h17"/><path d="M3 9h14M3 13.5h14M7 9v4.5M13 9v4.5M10 13.5V18M10 2.5V9"/></svg><span class="coin-num">9<span class="coin-fr"><i>3</i><i>4</i></span></span><span class="coin-dot hidden" id="world-dot"></span></button>
       </div>
     </div>
@@ -6742,7 +6742,7 @@ button.glass:active .tube{transform:scale(.97)}
   function gatePreload() {
     if (gateSnd.buf || gateSnd.data || !window.fetch) { return; }
     gateSnd.data = true;   // yuklanmoqda
-    fetch("snd/gate.m4a?v=1").then(function (r) { return r.arrayBuffer(); })
+    fetch("snd/gate.m4a?v=2").then(function (r) { return r.arrayBuffer(); })
       .then(function (d) { gateSnd.data = d; })["catch"](function () { gateSnd.data = null; });
   }
 
