@@ -1137,15 +1137,22 @@ button.glass:active .tube{transform:scale(.97)}
 
 /* --- KUTUBXONA: 9¾ tangasi, katta karta, qatorlar --- */
 .cat-head-tx{display:flex;flex-direction:column;gap:4px}
+/* Platforma belgisi: til tugmasi bilan bir xil bo'yli, ichida g'isht ravoq va haqiqiy 3/4 */
 .coin{
-  position:relative;display:grid;place-items:center;width:46px;height:46px;
-  border-radius:50%;border:none;padding:0;cursor:pointer;flex:none;
-  background:radial-gradient(circle at 35% 30%,#2a2f38,#12151b 70%);
-  box-shadow:inset 0 0 0 1.5px var(--gold-2),0 0 0 3px rgba(var(--gold-rgb),.14),0 4px 16px rgba(var(--gold-rgb),.25);
-  font:600 19px/1 'Cormorant Garamond',serif;color:var(--gold);letter-spacing:-.02em;
-  transition:transform .12s,box-shadow .3s;
+  position:relative;display:flex;align-items:center;gap:6px;height:46px;padding:0 13px 0 11px;
+  border-radius:23px;cursor:pointer;flex:none;color:var(--gold);
+  border:1px solid rgba(var(--gold-rgb),.4);
+  background:linear-gradient(180deg,rgba(var(--gold-rgb),.14),rgba(var(--gold-rgb),.03));
+  font:800 16px/1 'Manrope',sans-serif;
+  transition:transform .12s,border-color .3s;
 }
-.coin:active{transform:scale(.94)}
+.coin:hover{border-color:rgba(var(--gold-rgb),.7)}
+.coin:active{transform:scale(.96)}
+.coin-arch{flex:none;width:19px;height:19px;opacity:.9}
+.coin-num{display:flex;align-items:center;color:var(--gold-hi)}
+.coin-fr{display:flex;flex-direction:column;align-items:center;margin-left:2px;font-size:9px;line-height:1}
+.coin-fr i{font-style:normal;padding:0 1px}
+.coin-fr i:first-child{border-bottom:1.3px solid currentColor;padding-bottom:1px;margin-bottom:1px}
 .coin-dot{
   position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;padding:0 5px;
   border-radius:9px;background:#d9524a;color:#fff;
@@ -1413,7 +1420,7 @@ button.glass:active .tube{transform:scale(.97)}
       </div>
       <div class="head-tools">
         <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span> <span style="font-size:13px">⇄</span></button>
-        <button class="coin" id="world-btn" aria-label="9¾">9¾<span class="coin-dot hidden" id="world-dot"></span></button>
+        <button class="coin" id="world-btn" aria-label="9¾"><svg class="coin-arch" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V9a7 7 0 0 1 14 0v9"/><path d="M1.5 18h17"/><path d="M3 9h14M3 13.5h14M7 9v4.5M13 9v4.5M10 13.5V18M10 2.5V9"/></svg><span class="coin-num">9<span class="coin-fr"><i>3</i><i>4</i></span></span><span class="coin-dot hidden" id="world-dot"></span></button>
       </div>
     </div>
 
