@@ -64,8 +64,8 @@ body{
 }
 .cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:32px;line-height:1.1}
 .back-btn{
-  display:flex;align-items:center;gap:7px;padding:10px 14px;background:transparent;
-  border:1px solid var(--line);border-radius:99px;color:var(--dim);
+  display:flex;align-items:center;gap:7px;height:46px;padding:0 16px;background:transparent;
+  border:1px solid var(--line);border-radius:23px;color:var(--dim);
   font:600 12px/1 'Manrope',sans-serif;letter-spacing:0.06em;cursor:pointer;transition:.2s;
 }
 .back-btn:hover{color:var(--text);border-color:var(--accent)}
@@ -475,7 +475,6 @@ body{
 .card-badge:active{transform:scale(.88)}
 .card.seen .card-badge{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px rgba(0,0,0,.45);cursor:default}
 .card.seen .card-badge:active{transform:none}
-.card.exam .card-meta{color:#e8b93c;font-weight:700}
 .card.exam{border-color:rgba(232,185,60,.38)}
 /* "Tez orada" — film shu tilda hali yuklanmagan (catalog.py da
    message_id = 0). Karta kulrang bo'ladi va bosilmaydi. */
@@ -484,7 +483,6 @@ body{
 .card.soon .veil{background:rgba(7,9,13,.72)}
 .card.soon .numeral{color:rgba(238,241,245,.22)}
 .card.soon .card-title{color:rgba(244,246,249,.48)}
-.card.soon .card-meta{color:var(--dim)}
 .card.soon:active{transform:none}
 .card.exam .veil{background:rgba(7,9,13,.5)}
 .card-foot{
@@ -507,11 +505,6 @@ body{
   font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;
   line-height:1.1;color:#f4f6f9;
 }
-.card-meta{
-  font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:0.14em;
-  text-transform:uppercase;color:var(--accent);
-}
-.card.seen .card-meta{color:var(--dim)}
 
 /* --- XOGVARTS KUBOGI (maket 2.0) --- */
 
@@ -1188,8 +1181,7 @@ button.glass:active .tube{transform:scale(.97)}
 .rowscroll .card{border-radius:16px}
 .rowscroll .numeral{padding:10px 13px;font-size:26px}
 .rowscroll .card-foot{padding:36px 13px 13px}
-.rowscroll .card-title{font-size:18px}
-.rowscroll .card-meta{font-size:11px}
+.rowscroll .card-title{font-size:23px;line-height:1.05}
 .rowscroll .card-play{width:28px;height:28px;font-size:11px}
 .soonrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .soontile{
@@ -5706,7 +5698,7 @@ button.glass:active .tube{transform:scale(.97)}
 
   // Bitta film kartasi. O'ng tepadagi belgi: yuklab olinmagan bo'lsa "yuklab olish",
   // olingan bo'lsa ✓. Belgi bir marta qo'yilgach qaytarib olinmaydi.
-  function filmCard(m, numeral, metaText, t, pending) {
+  function filmCard(m, numeral, t, pending) {
     var ready = isReady(m.id);
     var seen = ready && !!watched[key(m.id)];
 
@@ -5757,11 +5749,7 @@ button.glass:active .tube{transform:scale(.97)}
     var ttl = document.createElement("span");
     ttl.className = "card-title";
     ttl.textContent = m[lang];
-    var meta = document.createElement("span");
-    meta.className = "card-meta";
-    meta.textContent = metaText;
     textCol.appendChild(ttl);
-    textCol.appendChild(meta);
     foot.appendChild(textCol);
     card.appendChild(foot);
 
@@ -5770,7 +5758,6 @@ button.glass:active .tube{transform:scale(.97)}
 
   function renderCards(t) {
     var rows = $("rows");
-    var ni = nextIndex();
     rows.innerHTML = "";
 
     var hp = rowSection(SERIES_TITLE.hp[lang], MOVIES.length + " " + FILM_WORD[lang]);
@@ -5779,20 +5766,14 @@ button.glass:active .tube{transform:scale(.97)}
       var seen = ready && !!watched[key(m.id)];
       // Uchinchi holat: film ko'rilgan, lekin bu mavsumning imtihoni topshirilmagan.
       var pending = seen && examPending(i + 1);
-      var metaText = !ready ? t.soon
-                   : (pending ? t.examWaiting
-                   : (seen ? t.seen : (i === ni ? t.next : YEARS[i])));
-      hp.scroller.appendChild(filmCard(m, NUMERALS[i], metaText, t, pending));
+      hp.scroller.appendChild(filmCard(m, NUMERALS[i], t, pending));
     });
     rows.appendChild(hp);
 
     if (typeof MOVIES_FB !== "undefined" && MOVIES_FB && MOVIES_FB.length) {
       var fb = rowSection(SERIES_TITLE.fb[lang], MOVIES_FB.length + " " + FILM_WORD[lang]);
       MOVIES_FB.forEach(function (m) {
-        var ready = isReady(m.id);
-        var seen = ready && !!watched[key(m.id)];
-        var metaText = !ready ? t.soon : (seen ? t.seen : m.year);
-        fb.scroller.appendChild(filmCard(m, m.num, metaText, t, false));
+        fb.scroller.appendChild(filmCard(m, m.num, t, false));
       });
       rows.appendChild(fb);
     }
