@@ -1137,19 +1137,20 @@ button.glass:active .tube{transform:scale(.97)}
 
 /* --- KUTUBXONA: 9¾ tangasi, katta karta, qatorlar --- */
 .cat-head-tx{display:flex;flex-direction:column;gap:4px}
-/* Platforma belgisi: til tugmasi bilan bir xil bo'yli, ichida g'isht ravoq va haqiqiy 3/4 */
+/* Platforma belgisi: til tugmasi bilan bir xil bo'yli, ichida g'isht ravoq va haqiqiy 3/4.
+   Fakultet rangiga bo'yalmaydi - doim klassik tilla (King's Cross belgisi kabi). */
 .coin{
   position:relative;display:flex;align-items:center;gap:6px;height:46px;padding:0 13px 0 11px;
-  border-radius:23px;cursor:pointer;flex:none;color:var(--gold);
-  border:1px solid rgba(var(--gold-rgb),.4);
-  background:linear-gradient(180deg,rgba(var(--gold-rgb),.14),rgba(var(--gold-rgb),.03));
+  border-radius:23px;cursor:pointer;flex:none;color:#e7c170;
+  border:1px solid rgba(224,178,91,.4);
+  background:linear-gradient(180deg,rgba(224,178,91,.14),rgba(224,178,91,.03));
   font:800 16px/1 'Manrope',sans-serif;
   transition:transform .12s,border-color .3s;
 }
-.coin:hover{border-color:rgba(var(--gold-rgb),.7)}
+.coin:hover{border-color:rgba(224,178,91,.7)}
 .coin:active{transform:scale(.96)}
 .coin-arch{flex:none;width:19px;height:19px;opacity:.9}
-.coin-num{display:flex;align-items:center;color:var(--gold-hi)}
+.coin-num{display:flex;align-items:center;color:#f3d58f}
 .coin-fr{display:flex;flex-direction:column;align-items:center;margin-left:2px;font-size:9px;line-height:1}
 .coin-fr i{font-style:normal;padding:0 1px}
 .coin-fr i:first-child{border-bottom:1.3px solid currentColor;padding-bottom:1px;margin-bottom:1px}
@@ -1246,34 +1247,9 @@ button.glass:active .tube{transform:scale(.97)}
 @keyframes wPulse{0%,100%{box-shadow:0 0 0 3px rgba(40,26,12,.55),0 0 10px rgba(243,211,138,.7)}50%{box-shadow:0 0 0 3px rgba(40,26,12,.55),0 0 20px rgba(243,211,138,1)}}
 @media (prefers-reduced-motion:reduce){.w-dot{animation:none}}
 
-/* --- 9¾: g'isht devor ochiladi --- */
+/* --- 9¾: g'isht devor - chizish JS da (playGate), canvas ichida --- */
 .wgate{position:fixed;inset:0;z-index:90;pointer-events:none;overflow:hidden}
-.wgate-half{
-  position:absolute;top:-2%;bottom:-2%;width:51%;
-  background-color:#5a2c20;
-  background-image:
-    repeating-linear-gradient(0deg,rgba(0,0,0,.38) 0 2px,transparent 2px 40px),
-    repeating-linear-gradient(90deg,rgba(0,0,0,.32) 0 2px,transparent 2px 96px),
-    radial-gradient(120% 60% at 50% 0%,rgba(255,255,255,.07),transparent 70%);
-  box-shadow:inset 0 0 60px rgba(0,0,0,.55);
-}
-.wgate-l{left:0;transform:translateX(-101%)}
-.wgate-r{right:0;background-position:0 20px,48px 0,0 0;transform:translateX(101%)}
-.wgate-glow{
-  position:absolute;left:50%;top:50%;width:220px;height:220px;margin:-110px 0 0 -110px;
-  border-radius:50%;opacity:0;transition:opacity .3s ease;
-  background:radial-gradient(circle,rgba(255,244,214,.95) 0%,rgba(231,170,80,.55) 38%,rgba(231,170,80,0) 70%);
-}
-.wgate.shut .wgate-l{animation:wgateShutL .42s cubic-bezier(.36,.04,.28,1) forwards}
-.wgate.shut .wgate-r{animation:wgateShutR .42s cubic-bezier(.36,.04,.28,1) forwards}
-.wgate.shut .wgate-glow{opacity:1}
-.wgate.open .wgate-l{animation:wgateOpenL .52s cubic-bezier(.36,.04,.28,1) forwards}
-.wgate.open .wgate-r{animation:wgateOpenR .52s cubic-bezier(.36,.04,.28,1) forwards}
-.wgate.open .wgate-glow{opacity:0}
-@keyframes wgateShutL{from{transform:translateX(-101%)}to{transform:translateX(0)}}
-@keyframes wgateShutR{from{transform:translateX(101%)}to{transform:translateX(0)}}
-@keyframes wgateOpenL{from{transform:translateX(0)}to{transform:translateX(-101%)}}
-@keyframes wgateOpenR{from{transform:translateX(0)}to{transform:translateX(101%)}}
+.wgate canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 /* --- Olam sozlamasi --- */
 .w-sheet{position:absolute;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,10,14,.55)}
 .w-sheet-box{
@@ -1516,11 +1492,7 @@ button.glass:active .tube{transform:scale(.97)}
     </div>
   </div>
 
-  <div id="w-gate" class="wgate hidden" aria-hidden="true">
-    <span class="wgate-half wgate-l"></span>
-    <span class="wgate-half wgate-r"></span>
-    <span class="wgate-glow"></span>
-  </div>
+  <div id="w-gate" class="wgate hidden" aria-hidden="true"><canvas id="w-gate-cv"></canvas></div>
 
   <div id="scr-prof" class="screen hidden">
     <div class="cat-head">
@@ -6759,26 +6731,260 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
   // ---------------------------------------------------------------- 9¾ eshigi
-  // G'isht devor yopiladi, o'rtasi yorishadi va ochilib xaritani ko'rsatadi.
+  // Diagon Alley ravog'i ruhida: g'isht devor paydo bo'ladi, tayoqcha uch g'ishtga
+  // tegadi, keyin g'ishtlar o'rtadan chetga qarab bittalab ichkariga buklanib,
+  // ravoq ochiladi. Ovoz (snd/gate.m4a, tools/soundgen.py s_gate) shu vaqtlarga
+  // moslangan - GATE_* ni o'zgartirsangiz, ovozni ham qayta yarating.
+  var GATE_FADE = 160, GATE_TAPS = [200, 290, 380], GATE_SWAP = 520, GATE_OPEN = 820;
+  var gateSnd = { ctx: null, data: null, buf: null };
+  var gateBusy = false;
+
+  function gatePreload() {
+    if (gateSnd.buf || gateSnd.data || !window.fetch) { return; }
+    gateSnd.data = true;   // yuklanmoqda
+    fetch("snd/gate.m4a?v=1").then(function (r) { return r.arrayBuffer(); })
+      .then(function (d) { gateSnd.data = d; })["catch"](function () { gateSnd.data = null; });
+  }
+
+  function gateSound(t0) {
+    try {
+      // iPhone jim rejimda bo'lsa, eshik ham jim ochiladi
+      if (navigator.audioSession) { navigator.audioSession.type = "ambient"; }
+      if (!gateSnd.ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) { return; }
+        gateSnd.ctx = new AC();
+      }
+      var ctx = gateSnd.ctx;
+      if (ctx.state === "suspended") { ctx.resume(); }
+      var play = function (buf) {
+        var late = (Date.now() - t0) / 1000;
+        if (late > 0.35) { return; }   // juda kechiksa, ovoz animatsiyadan ajralib qoladi
+        var src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(ctx.destination);
+        src.start(0, late);
+      };
+      if (gateSnd.buf) { play(gateSnd.buf); return; }
+      if (gateSnd.data && gateSnd.data.byteLength) {
+        var d = gateSnd.data;
+        gateSnd.data = null;             // decodeAudioData buferni o'zlashtirib oladi
+        ctx.decodeAudioData(d, function (buf) { gateSnd.buf = buf; play(buf); }, function () {});
+      } else { gatePreload(); }
+    } catch (e) {}
+  }
+
+  function gateRound(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+    g.lineTo(x + w, y + h - r); g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    g.lineTo(x + r, y + h); g.quadraticCurveTo(x, y + h, x, y + h - r);
+    g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y);
+    g.closePath();
+  }
+
+  // Bir necha xil g'isht (rang, dog'lar, qirralar) - devor bir xil ko'rinmasin.
+  function gateSprites(bw, bh, sc) {
+    var bases = [[122, 58, 40], [106, 50, 36], [134, 68, 46], [96, 46, 34],
+                 [118, 64, 44], [140, 76, 52], [102, 56, 42], [128, 54, 38]];
+    return bases.map(function (b) {
+      var c = document.createElement("canvas");
+      c.width = Math.ceil(bw * sc); c.height = Math.ceil(bh * sc);
+      var g = c.getContext("2d");
+      g.scale(sc, sc);
+      var gr = g.createLinearGradient(0, 0, 0, bh);
+      gr.addColorStop(0, "rgb(" + (b[0] + 18) + "," + (b[1] + 10) + "," + (b[2] + 8) + ")");
+      gr.addColorStop(1, "rgb(" + (b[0] - 24) + "," + (b[1] - 15) + "," + (b[2] - 11) + ")");
+      g.fillStyle = gr;
+      gateRound(g, 0, 0, bw, bh, 2.5);
+      g.fill();
+      for (var i = 0; i < 30; i++) {
+        var r = Math.random() * 2.2 + 0.6;
+        g.fillStyle = Math.random() < 0.55 ? "rgba(0,0,0," + (Math.random() * 0.22).toFixed(3) + ")"
+                                           : "rgba(255,222,190," + (Math.random() * 0.1).toFixed(3) + ")";
+        g.fillRect(Math.random() * bw, Math.random() * bh, r, r);
+      }
+      g.fillStyle = "rgba(255,215,180,.14)"; g.fillRect(2, 0.5, bw - 4, 1.2);
+      g.fillStyle = "rgba(0,0,0,.3)"; g.fillRect(2, bh - 1.8, bw - 4, 1.8);
+      return c;
+    });
+  }
+
+  function gateLayout(W, H) {
+    var bh = Math.max(24, Math.round(H / 30)), bw = Math.round(bh * 2.3), gap = 3;
+    var cw = bw + gap, ch = bh + gap, cx = W / 2, cy = H * 0.55;
+    var bricks = [], dust = [], maxd = 0;
+    for (var r = 0; r * ch < H + ch; r++) {
+      var off = r % 2 ? -cw / 2 : -cw;
+      for (var c = 0; off + c * cw < W + cw; c++) {
+        var x = off + c * cw, y = r * ch - gap;
+        var dx = (x + bw / 2 - cx) / (W * 0.5), dy = (y + bh / 2 - cy) / (H * 0.62);
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d > maxd) { maxd = d; }
+        bricks.push({ x: x, y: y, d: d, sp: Math.floor(Math.random() * 8),
+                      rot: (Math.random() - 0.5) * 0.6, j: Math.random() * 0.05 });
+      }
+    }
+    bricks.forEach(function (b) { b.d /= maxd; });
+    // tayoqcha tegadigan uch g'isht - o'rtaga eng yaqinlari
+    var near = bricks.slice().sort(function (a, b) { return a.d - b.d; }).slice(0, 3);
+    // surilgan g'isht ortidan ko'tariladigan chang
+    bricks.forEach(function (b, k) {
+      if (k % 3) { return; }
+      var n = 2;
+      while (n--) {
+        var ang = Math.atan2(b.y + bh / 2 - cy, b.x + bw / 2 - cx) + (Math.random() - 0.5) * 1.2;
+        var sp = 20 + Math.random() * 60;
+        dust.push({ x: b.x + Math.random() * bw, y: b.y + Math.random() * bh,
+                    vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 15,
+                    t0: b.d * 0.55 + b.j + 0.12, life: 0.35 + Math.random() * 0.3, r: 1 + Math.random() * 2 });
+      }
+    });
+    return { W: W, H: H, bw: bw, bh: bh, gap: gap, cx: cx, cy: cy, bricks: bricks, near: near, dust: dust };
+  }
+
+  function gateFrame(st, now) {
+    var g = st.g, W = st.W, H = st.H, bw = st.bw, bh = st.bh, gap = st.gap, t = now - st.t0;
+    var cw = bw + gap, ch = bh + gap;
+    g.setTransform(st.sc, 0, 0, st.sc, 0, 0);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = "source-over";
+    g.clearRect(0, 0, W, H);
+    var i, b, big = Math.max(W, H);
+
+    if (t < GATE_SWAP) {
+      g.globalAlpha = Math.min(1, t / GATE_FADE);
+      g.fillStyle = "#1b120d";
+      g.fillRect(0, 0, W, H);
+      for (i = 0; i < st.bricks.length; i++) {
+        b = st.bricks[i];
+        var k = st.near.indexOf(b), push = 0;
+        if (k >= 0) {
+          var tt = t - GATE_TAPS[k];
+          if (tt >= 0 && tt < 140) { push = Math.sin(tt / 140 * Math.PI); }
+        }
+        if (push) {
+          var s1 = 1 - push * 0.08;
+          g.drawImage(st.sp[b.sp], b.x + bw * (1 - s1) / 2, b.y + bh * (1 - s1) / 2, bw * s1, bh * s1);
+        } else {
+          g.drawImage(st.sp[b.sp], b.x, b.y, bw, bh);
+        }
+      }
+      g.globalAlpha = Math.min(1, t / GATE_FADE);
+      g.fillStyle = st.vig;
+      g.fillRect(0, 0, W, H);
+      // tayoqcha uchqunlari
+      g.globalCompositeOperation = "lighter";
+      for (k = 0; k < 3; k++) {
+        var ta = (t - GATE_TAPS[k]) / 260;
+        if (ta < 0 || ta > 1) { continue; }
+        b = st.near[k];
+        var gx = b.x + bw / 2, gy = b.y + bh / 2, rad = 30 + ta * 50;
+        var sg = g.createRadialGradient(gx, gy, 0, gx, gy, rad);
+        sg.addColorStop(0, "rgba(255,236,190," + (0.9 * (1 - ta)).toFixed(3) + ")");
+        sg.addColorStop(0.35, "rgba(240,180,90," + (0.45 * (1 - ta)).toFixed(3) + ")");
+        sg.addColorStop(1, "rgba(240,180,90,0)");
+        g.fillStyle = sg;
+        g.fillRect(gx - rad, gy - rad, rad * 2, rad * 2);
+      }
+      return;
+    }
+
+    var p = (t - GATE_SWAP) / GATE_OPEN;
+    for (i = 0; i < st.bricks.length; i++) {
+      b = st.bricks[i];
+      var q = (p - b.d * 0.55 - b.j) / 0.42;
+      if (q >= 1) { continue; }
+      q = q < 0 ? 0 : q;
+      // qorishma (g'isht orasidagi chok) g'ishtdan tezroq yo'qoladi
+      var mq = Math.min(1, q * 1.8);
+      if (mq < 1) {
+        g.globalAlpha = 1 - mq;
+        g.fillStyle = "#1b120d";
+        g.fillRect(b.x - gap / 2, b.y - gap / 2, cw, ch);
+      }
+      var e = q * q, s2 = 1 - e * 0.88;
+      var ox = (b.x + bw / 2 - st.cx) / W * 26 * e, oy = (b.y + bh / 2 - st.cy) / H * 26 * e;
+      g.globalAlpha = 1 - e;
+      g.save();
+      g.translate(b.x + bw / 2 + ox, b.y + bh / 2 + oy);
+      if (e) { g.rotate(b.rot * e); g.scale(s2, s2); }
+      g.drawImage(st.sp[b.sp], -bw / 2, -bh / 2, bw, bh);
+      if (e > 0.02) {
+        g.globalAlpha = (1 - e) * e * 1.6;
+        g.fillStyle = "#000";
+        g.fillRect(-bw / 2, -bh / 2, bw, bh);
+      }
+      g.restore();
+    }
+    g.globalAlpha = Math.max(0, 1 - p * 1.6);
+    g.fillStyle = st.vig;
+    g.fillRect(0, 0, W, H);
+    // chang
+    g.globalAlpha = 1;
+    for (i = 0; i < st.dust.length; i++) {
+      var ds = st.dust[i], age = p - ds.t0;
+      if (age < 0 || age > ds.life) { continue; }
+      var sec = age * GATE_OPEN / 1000;
+      g.fillStyle = "rgba(214,176,136," + (0.55 * (1 - age / ds.life)).toFixed(3) + ")";
+      g.fillRect(ds.x + ds.vx * sec, ds.y + ds.vy * sec, ds.r, ds.r);
+    }
+    // ravoq ortidan iliq tilla nur
+    if (p < 0.6) {
+      var fl = Math.sin(p / 0.6 * Math.PI);
+      var fr = big * (0.25 + p * 0.7);
+      var fg = g.createRadialGradient(st.cx, st.cy, 0, st.cx, st.cy, fr);
+      fg.addColorStop(0, "rgba(255,226,160," + (0.42 * fl).toFixed(3) + ")");
+      fg.addColorStop(0.4, "rgba(231,170,80," + (0.2 * fl).toFixed(3) + ")");
+      fg.addColorStop(1, "rgba(231,170,80,0)");
+      g.globalCompositeOperation = "lighter";
+      g.fillStyle = fg;
+      g.fillRect(0, 0, W, H);
+    }
+  }
+
   function playGate(after) {
-    var gate = $("w-gate");
+    var gate = $("w-gate"), cv = $("w-gate-cv");
     var slow = false;
     try { slow = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
     catch (e) { slow = false; }
-    if (!gate || slow) { after(); return; }
+    if (!gate || !cv || !cv.getContext || slow) { after(); return; }
+    if (gateBusy) { return; }
+    gateBusy = true;
+
+    var t0 = Date.now();
+    gateSound(t0);
+    var W = window.innerWidth, H = window.innerHeight, sc = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * sc);
+    cv.height = Math.round(H * sc);
+    var st = gateLayout(W, H);
+    st.g = cv.getContext("2d");
+    st.sc = sc;
+    st.t0 = t0;
+    st.sp = gateSprites(st.bw, st.bh, sc);
+    st.vig = st.g.createRadialGradient(st.cx, st.cy, Math.min(W, H) * 0.2, st.cx, st.cy, Math.max(W, H) * 0.75);
+    st.vig.addColorStop(0, "rgba(0,0,0,0)");
+    st.vig.addColorStop(1, "rgba(0,0,0,.62)");
+    st.live = true;
 
     gate.className = "wgate";
-    // brauzer yangi animatsiyani sezishi uchun bir oz kutamiz (rAF ekran
-    // yashiringanda ishlamay qolishi mumkin - shuning uchun setTimeout)
+    gate.style.pointerEvents = "auto";   // animatsiya paytida ikkinchi bosish o'tmasin
+    var raf = window.requestAnimationFrame || function (f) { return setTimeout(f, 16); };
+    (function loop() {
+      if (!st.live) { return; }
+      gateFrame(st, Date.now());
+      raf(loop);
+    })();
+    // rAF ekran yashiringanda to'xtashi mumkin - asosiy qadamlar setTimeout da
+    setTimeout(after, GATE_SWAP);
     setTimeout(function () {
-      gate.classList.add("shut");
-      setTimeout(function () {
-        after();
-        gate.classList.remove("shut");
-        gate.classList.add("open");
-        setTimeout(function () { gate.className = "wgate hidden"; }, 540);
-      }, 460);
-    }, 20);
+      st.live = false;
+      gate.className = "wgate hidden";
+      gate.style.pointerEvents = "";
+      cv.width = cv.height = 1;
+      gateBusy = false;
+    }, GATE_SWAP + GATE_OPEN + 60);
   }
 
   // ---------------------------------------------------------------- sozlama
@@ -11762,6 +11968,7 @@ button.glass:active .tube{transform:scale(.97)}
     $("world-btn").addEventListener("click", function () {
       playGate(openHub);
     });
+    setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
     $("hub-cup").addEventListener("click", hubGo(openCup));

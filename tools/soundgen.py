@@ -12,7 +12,8 @@ aks-sadosida.
 
 ISHLATISH (CatalogWebApp papkasida; macOS - AAC uchun afconvert)
     pip install numpy
-    python3 tools/soundgen.py
+    python3 tools/soundgen.py          # hammasi
+    python3 tools/soundgen.py gate     # faqat 9¾ eshigi (snd/gate.m4a)
 """
 
 import os
@@ -250,6 +251,47 @@ def s_promote():
     return hall(y, rt=2.4, wet=0.4, bright=8000)
 
 
+def s_gate():
+    """9¾ eshigi (Diagon Alley ravog'i ruhida). Vaqtlar index.html dagi GATE_* bilan bir xil:
+    0.00 devor paydo bo'ladi, 0.20/0.29/0.38 tayoqcha g'ishtga tegadi,
+    0.52 dan 1.34 gacha g'ishtlar o'rtadan chetga qarab bittalab ichkariga suriladi."""
+    y = silence(2.2)
+    # devor paydo bo'lishi: past tosh gumburi
+    n = int(0.32 * SR)
+    place(y, band(RNG.standard_normal(n), 35, 170) * np.sin(np.linspace(0, np.pi, n)) ** 1.5 * 0.9, 0.0)
+    # tayoqcha uch marta "tiq" etib tegadi, har birida mayda uchqun
+    for i, at in enumerate((0.20, 0.29, 0.38)):
+        place(y, modal([640, 1260, 2180, 3350], [0.6, 0.4, 0.2, 0.1], [0.022, 0.014, 0.009, 0.006], 0.12, 0.04) * 0.5, at)
+        place(y, click(0.003, 6500, 1500) * 0.45, at)
+        place(y, celesta(note(["B5", "D#6", "F#6"][i]), 0.6, 0.16), at + 0.004)
+    # g'ishtlar suriladi
+    t0, dur = 0.52, 0.82
+    place(y, whoosh(0.95, 160, 2400, 0.16), t0 - 0.06)
+    n = int(1.0 * SR)
+    bed = band(RNG.standard_normal(n), 30, 150)
+    env = np.minimum(1, np.arange(n) / (0.08 * SR)) * np.exp(-np.arange(n) / (0.45 * SR))
+    place(y, bed * env * 0.8, t0)
+    for _ in range(95):
+        d = np.sqrt(RNG.random())                     # chetdagi g'ishtlar ko'proq
+        at = t0 + (d * 0.55 + RNG.uniform(0, 0.05)) * dur
+        loud = 1 - 0.55 * d
+        m = int(RNG.uniform(0.03, 0.08) * SR)
+        sc = RNG.standard_normal(m) * (0.4 + 0.6 * RNG.random(m) ** 6)
+        fc = RNG.uniform(650, 1500)
+        place(y, band(sc, fc * 0.6, fc * 2.2) * np.hanning(m) * 0.07 * loud, at)
+        f = RNG.uniform(78, 125)
+        place(y, modal([f, f * 1.9, f * 3.05, f * 4.7], [1.0, 0.5, 0.25, 0.1],
+                       [0.05, 0.035, 0.02, 0.012], 0.22, 0.04) * 0.13 * loud, at + 0.02)
+    # ravoq ochildi: iliq sehrli akkord
+    for i, nm in enumerate(["E5", "G#5", "B5", "E6"]):
+        place(y, celesta(note(nm), 1.4, 0.2), t0 + 0.42 + i * 0.05)
+    place(y, bell(note("E4"), 2.0, 0.09), t0 + 0.5)
+    return hall(y, rt=1.8, wet=0.3, bright=6000)
+
+
+# chess_ prefiksisiz saqlanadigan ovozlar
+PLAIN = {"gate"}
+
 SOUNDS = {
     "move": (s_move, 0.6),
     "capture": (s_capture, 0.95),
@@ -259,6 +301,7 @@ SOUNDS = {
     "loss": (s_loss, 0.55),
     "draw": (s_draw, 0.5),
     "promote": (s_promote, 0.6),
+    "gate": (s_gate, 0.62),
 }
 
 
@@ -275,11 +318,14 @@ def write_wav(path, y):
 def main():
     os.makedirs(OUT, exist_ok=True)
     tmp = tempfile.mkdtemp()
+    only = sys.argv[1:]            # masalan: python3 tools/soundgen.py gate
     for name, (fn, level) in SOUNDS.items():
+        if only and name not in only:
+            continue
         y = fn()
         y = y / np.max(np.abs(y)) * level
         wav = os.path.join(tmp, name + ".wav")
-        out = os.path.join(OUT, "chess_%s.m4a" % name)
+        out = os.path.join(OUT, ("%s.m4a" if name in PLAIN else "chess_%s.m4a") % name)
         write_wav(wav, y)
         subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", "80000", wav, out], check=True)
         print("%-8s %.2f s  %5d bayt" % (name, len(y) / SR, os.path.getsize(out)))
