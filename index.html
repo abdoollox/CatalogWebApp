@@ -463,6 +463,18 @@ body{
   line-height:1;color:rgba(238,241,245,.34);
 }
 .card.has-img .numeral{color:rgba(244,246,249,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.card-badge{
+  position:absolute;top:9px;right:9px;width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;padding:0;border:0;cursor:pointer;
+  background:rgba(8,10,14,.62);color:#f4f6f9;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.55),0 2px 8px rgba(0,0,0,.45);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  transition:transform .15s;
+}
+.card-badge svg{width:17px;height:17px}
+.card-badge:active{transform:scale(.88)}
+.card.seen .card-badge{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px rgba(0,0,0,.45);cursor:default}
+.card.seen .card-badge:active{transform:none}
 .card.exam .card-meta{color:#e8b93c;font-weight:700}
 .card.exam{border-color:rgba(232,185,60,.38)}
 /* "Tez orada" — film shu tilda hali yuklanmagan (catalog.py da
@@ -2834,7 +2846,7 @@ button.glass:active .tube{transform:scale(.97)}
 
   var T = {
     uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
-          next:"Keyingi film", seen:"Ko'rildi", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
+          next:"Keyingi film", seen:"Ko'rildi", download:"Yuklab olish", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
           sending:"⏳ Yuborilmoqda…", sentTo:function(t){return t+" — botga yuborildi";}, undoBtn:"BEKOR QILISH", undone:"Bekor qilindi", undoFail:"Bekor qilib bo'lmadi", undoExpired:"Vaqti o'tdi — filmni chatdan o'zingiz o'chiring", notSubscribed:"🔒 Avval kanalga obuna bo'ling", notReadyMsg:"⏳ Bu film tez orada qo'shiladi",
           unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
@@ -2878,7 +2890,7 @@ button.glass:active .tube{transform:scale(.97)}
           lockFinal:"Bu sizning fakultetingiz. Endi u o'zgarmaydi.",
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
-          next:"Следующий фильм", seen:"Просмотрено", examWaiting:"Экзамен ждёт", soon:"Скоро",
+          next:"Следующий фильм", seen:"Просмотрено", download:"Скачать", examWaiting:"Экзамен ждёт", soon:"Скоро",
           sending:"⏳ Отправляется…", sentTo:function(t){return t+" — отправлено в бот";}, undoBtn:"ОТМЕНИТЬ", undone:"Отменено", undoFail:"Не удалось отменить", undoExpired:"Время истекло — удалите фильм из чата сами", notSubscribed:"🔒 Сначала подпишитесь на канал", notReadyMsg:"⏳ Этот фильм скоро появится",
           unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
@@ -2922,7 +2934,7 @@ button.glass:active .tube{transform:scale(.97)}
           lockFinal:"Это ваш факультет. Теперь он не изменится.",
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
-          next:"Up next", seen:"Watched", examWaiting:"Exam pending", soon:"Coming soon",
+          next:"Up next", seen:"Watched", download:"Download", examWaiting:"Exam pending", soon:"Coming soon",
           sending:"⏳ Sending…", sentTo:function(t){return t+" — sent to the bot";}, undoBtn:"UNDO", undone:"Undone", undoFail:"Could not undo", undoExpired:"Too late — please delete the film from the chat yourself", notSubscribed:"🔒 Please subscribe to the channel first", notReadyMsg:"⏳ This film is coming soon",
           unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
           hintStart:"Start the journey", hintDone:"All films watched",
@@ -5365,14 +5377,6 @@ button.glass:active .tube{transform:scale(.97)}
 
   /* ---------- HARAKATLAR ---------- */
 
-  function toggle(id) {
-    var k = key(id);
-    if (watched[k]) { delete watched[k]; } else { watched[k] = true; }
-    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
-    persist();
-    renderCatalog();
-  }
-
   // Kartaga bosilganda tasdiq so'raladi — tasodifiy teginishdan himoya
   /* ---------- XABAR OYNALARI ---------- */
 
@@ -5475,9 +5479,7 @@ button.glass:active .tube{transform:scale(.97)}
     }).then(function (r) { return r.json(); }).then(function (d) {
       dismissNote(noteEl);
       if (d && d.ok) {
-        watched[key(id)] = false;
-        renderCatalog();
-        persist();
+        // Xabar chatdan o'chdi, lekin ✓ qoladi: yuklab olingan film qaytib "olinmagan" bo'lmaydi.
         showToast(t.undone);
         return;
       }
@@ -5496,7 +5498,8 @@ button.glass:active .tube{transform:scale(.97)}
   // Qolgan hollarda natijani bilmaymiz - ilova yopiladi va javob kelmaydi -
   // shuning uchun eski xatti-harakat saqlanadi.
   function openInBot(id, belgilash) {
-    var link = "https://t.me/" + BOT + "?start=" + id + "_" + lang;
+    // `web_` - bot jadvalga film WebApp'dan olinganini yozadi
+    var link = "https://t.me/" + BOT + "?start=web_" + id + "_" + lang;
     if (belgilash !== false) {
       watched[key(id)] = true;
       renderCatalog();
@@ -5557,7 +5560,7 @@ button.glass:active .tube{transform:scale(.97)}
   /* ---------- CHIZISH ---------- */
 
   function poster(id) {
-    return "img/" + id + "_" + lang + ".jpg";
+    return "img/" + id + "_" + lang + ".jpg?v=2";
   }
 
   // Film shu tilda yuklanganmi? NOT_READY ro'yxati catalog.py dan
@@ -5694,7 +5697,15 @@ button.glass:active .tube{transform:scale(.97)}
     return sec;
   }
 
-  // Bitta film kartasi. Holat (ko'rilgan / imtihon kutmoqda) pastki yozuvda ko'rinadi.
+  var BADGE_SVG = {
+    get: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" ' +
+         'stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M7 10.5l5 5 5-5 M5 20h14"></path></svg>',
+    got: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" ' +
+         'stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>'
+  };
+
+  // Bitta film kartasi. O'ng tepadagi belgi: yuklab olinmagan bo'lsa "yuklab olish",
+  // olingan bo'lsa ✓. Belgi bir marta qo'yilgach qaytarib olinmaydi.
   function filmCard(m, numeral, metaText, t, pending) {
     var ready = isReady(m.id);
     var seen = ready && !!watched[key(m.id)];
@@ -5711,7 +5722,7 @@ button.glass:active .tube{transform:scale(.97)}
     img.src = poster(m.id);
     img.alt = m[lang];
     img.onerror = function () {
-      if (!this.src.endsWith("uz.jpg")) { this.src = "img/" + m.id + "_uz.jpg"; }
+      if (this.src.indexOf("_uz.jpg") === -1) { this.src = "img/" + m.id + "_uz.jpg?v=2"; }
       else { this.remove(); }
     };
     img.onload = function () { card.classList.add("has-img"); };
@@ -5725,6 +5736,19 @@ button.glass:active .tube{transform:scale(.97)}
     num.className = "numeral";
     num.textContent = numeral;
     card.appendChild(num);
+
+    if (ready) {
+      var badge = document.createElement("button");
+      badge.type = "button";
+      badge.className = "card-badge";
+      badge.innerHTML = seen ? BADGE_SVG.got : BADGE_SVG.get;
+      badge.setAttribute("aria-label", (seen ? t.seen : t.download) + ": " + m[lang]);
+      badge.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (!seen) { play(m.id); }
+      });
+      card.appendChild(badge);
+    }
 
     var foot = document.createElement("span");
     foot.className = "card-foot";
