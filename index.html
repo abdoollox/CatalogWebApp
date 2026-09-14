@@ -463,16 +463,6 @@ body{
   line-height:1;color:rgba(238,241,245,.34);
 }
 .card.has-img .numeral{color:rgba(244,246,249,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
-.check{
-  position:absolute;top:9px;right:9px;width:28px;height:28px;border-radius:50%;
-  display:grid;place-items:center;background:transparent;
-  border:2px solid rgba(255,255,255,.42);color:var(--accent-ink);
-  font:800 13px/1 'Manrope',sans-serif;cursor:pointer;padding:0;
-  transition:transform .15s;
-}
-.card.has-img .check{border-color:rgba(255,255,255,.7)}
-.card.seen .check{background:var(--accent);border-color:var(--accent)}
-.card.exam .check{background:#e8b93c;border-color:#e8b93c;color:#1a1204}
 .card.exam .card-meta{color:#e8b93c;font-weight:700}
 .card.exam{border-color:rgba(232,185,60,.38)}
 /* "Tez orada" — film shu tilda hali yuklanmagan (catalog.py da
@@ -485,7 +475,6 @@ body{
 .card.soon .card-meta{color:var(--dim)}
 .card.soon:active{transform:none}
 .card.exam .veil{background:rgba(7,9,13,.5)}
-.check:active{transform:scale(.86)}
 .card-foot{
   position:absolute;left:0;right:0;bottom:0;
   display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px;
@@ -1182,16 +1171,12 @@ button.glass:active .tube{transform:scale(.97)}
 .rowsec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .rowsec-h b{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:20px}
 .rowsec-h span{font:600 12px/1 'Manrope',sans-serif;color:var(--dim);flex:none}
-.rowscroll{
-  display:flex;gap:10px;overflow-x:auto;padding:2px 18px 4px 0;margin-right:-18px;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;
-}
-.rowscroll::-webkit-scrollbar{display:none}
-.rowscroll .card{flex:none;width:118px;border-radius:14px}
-.rowscroll .numeral{padding:7px 10px;font-size:20px}
-.rowscroll .check{width:24px;height:24px;top:7px;right:7px;font-size:11px;border-width:1.6px}
-.rowscroll .card-foot{padding:10px}
-.rowscroll .card-title{font-size:12.5px}
+.rowscroll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:600px){.rowscroll{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.rowscroll .card{border-radius:16px}
+.rowscroll .numeral{padding:10px 13px;font-size:26px}
+.rowscroll .card-foot{padding:36px 13px 13px}
+.rowscroll .card-title{font-size:18px}
 .rowscroll .card-meta{font-size:11px}
 .rowscroll .card-play{width:28px;height:28px;font-size:11px}
 .soonrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -5709,8 +5694,7 @@ button.glass:active .tube{transform:scale(.97)}
     return sec;
   }
 
-  // Bitta film kartasi. Belgi bir vaqtda holat ko'rsatkichi ham, tugma ham:
-  // progressni O'CHIRADIGAN yo'nalishda tasdiq so'raymiz, belgilash so'roqsiz.
+  // Bitta film kartasi. Holat (ko'rilgan / imtihon kutmoqda) pastki yozuvda ko'rinadi.
   function filmCard(m, numeral, metaText, t, pending) {
     var ready = isReady(m.id);
     var seen = ready && !!watched[key(m.id)];
@@ -5741,19 +5725,6 @@ button.glass:active .tube{transform:scale(.97)}
     num.className = "numeral";
     num.textContent = numeral;
     card.appendChild(num);
-
-    var check = document.createElement("button");
-    check.className = "check";
-    check.textContent = pending ? "?" : (seen ? "✓" : "");
-    check.setAttribute("aria-label", m[lang]);
-    check.addEventListener("click", function (ev) {
-      ev.stopPropagation();
-      if (!seen) { toggle(m.id); return; }
-      var msg = T[lang].unmarkAsk.replace("%s", m[lang]);
-      if (tg && tg.showConfirm) { tg.showConfirm(msg, function (ok) { if (ok) { toggle(m.id); } }); }
-      else if (!window.confirm || window.confirm(msg)) { toggle(m.id); }
-    });
-    if (ready) { card.appendChild(check); }
 
     var foot = document.createElement("span");
     foot.className = "card-foot";
