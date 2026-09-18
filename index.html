@@ -6091,6 +6091,7 @@ button.glass:active .tube{transform:scale(.97)}
     renderCupStrip();
     maybeAutoSort();
     maybeChessLink();
+    maybeWorldLink();
   }
 
   // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda
@@ -12257,6 +12258,7 @@ button.glass:active .tube{transform:scale(.97)}
   // Taklif havolasi (t.me/<bot>/catalog?startapp=chess_<kod>) bilan kelgan
   // do'st katalog ochilishi bilan to'g'ridan-to'g'ri o'yinga tushadi.
   var pendingChess = null;
+  var pendingWorld = false;     // ?startapp=olam bilan kelinganmi
   try {
     var sp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
     if (!sp) {
@@ -12265,13 +12267,29 @@ button.glass:active .tube{transform:scale(.97)}
     }
     var cm = /^chess_([0-9a-f]{8})$/i.exec(sp);
     if (cm) { pendingChess = cm[1].toLowerCase(); }
-  } catch (e) { pendingChess = null; }
+    if (/^(olam|world)$/i.test(sp)) { pendingWorld = true; }
+  } catch (e) { pendingChess = null; pendingWorld = false; }
 
   function maybeChessLink() {
     if (!pendingChess) { return; }
     var code = pendingChess;
     pendingChess = null;
     joinPvPGame(code);
+  }
+
+  // 9¾ tugmasining o'zi: saralanmaganga avval maktub, keyin g'isht devor.
+  // Tugma ham, havola ham shu yerdan o'tadi - yo'l bir xil bo'lsin.
+  function goWorld() {
+    if (!hasHouse() && !jrGet(LETTER_KEY)) { openLetter(false); return; }
+    playGate(enterWorld);
+  }
+
+  // Kanaldagi post havolasi (t.me/<bot>/catalog?startapp=olam) bilan kelgan
+  // odam katalog ochilishi bilan to'g'ridan-to'g'ri sehrli olamga tushadi.
+  function maybeWorldLink() {
+    if (!pendingWorld) { return; }
+    pendingWorld = false;
+    goWorld();
   }
 
   function leaveChessGame() {
@@ -12613,10 +12631,7 @@ button.glass:active .tube{transform:scale(.97)}
     preloadCrests();
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
-    $("world-btn").addEventListener("click", function () {
-      if (!hasHouse() && !jrGet(LETTER_KEY)) { openLetter(false); return; }
-      playGate(enterWorld);
-    });
+    $("world-btn").addEventListener("click", goWorld);
     $("al-back").addEventListener("click", leaveAlley);
     $("al-letter-btn").addEventListener("click", function () { openLetter(true); });
     $("tr-back").addEventListener("click", openAlley);
