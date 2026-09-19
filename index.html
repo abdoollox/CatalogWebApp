@@ -994,6 +994,11 @@ button.glass:active .tube{transform:scale(.97)}
 .chat-tabs{display:flex;gap:8px;margin:12px 0 0;background:var(--bg2);padding:4px;border-radius:14px;border:1px solid var(--line)}
 .chat-tab{flex:1;padding:9px 6px;border-radius:10px;border:none;font:600 13px 'Manrope',sans-serif;cursor:pointer;transition:background .2s,color .2s;background:transparent;color:var(--dim)}
 .chat-tab.on{background:var(--card);color:var(--text)}
+/* Admin: to'rttala fakultet xonasi */
+.chat-adm{display:flex;gap:6px;margin:8px 0 0}
+.chat-adm button{flex:1;min-width:0;padding:7px 4px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--dim);font:600 12px 'Manrope',sans-serif;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .2s,color .2s,border-color .2s}
+.chat-adm button.on{background:rgba(var(--adm-rgb),.16);border-color:rgba(var(--adm-rgb),.55);color:var(--text)}
+.chat-adm button b{display:inline-block;min-width:16px;height:16px;margin-left:4px;padding:0 4px;border-radius:8px;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:10px;line-height:16px}
 .chat-wrap{position:relative;flex:1;min-height:0}
 .chat-list{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:6px 2px 12px}
 .chat-hint{text-align:center;color:var(--dim);font-size:13px;padding:14px 0}
@@ -1992,6 +1997,7 @@ button.glass:active .tube{transform:scale(.97)}
       <button type="button" id="tab-global" class="chat-tab">Katta zal</button>
       <button type="button" id="tab-dm" class="chat-tab">Shaxsiy</button>
     </div>
+    <div id="chat-adm" class="chat-adm hidden"></div>
     <div class="chat-wrap">
       <div id="chat-messages" class="chat-list"></div>
       <div id="chat-dms" class="chat-list hidden"></div>
@@ -8641,6 +8647,12 @@ button.glass:active .tube{transform:scale(.97)}
   // hidden  - o'shalardan nechtasi o'qilmagan.
   // Xonalar: "house", "global", "dm:<odam id>" (shaxsiy suhbat); "dms" - suhbatlar ro'yxati.
   function chatIsDm(room) { return String(room).indexOf("dm:") === 0; }
+  // Fakultet xonasi: "house" - o'zimniki, "h:<fakultet>" - boshqasi (faqat admin ochadi).
+  function chatIsHouseRoom(room) { return room === "house" || String(room).indexOf("h:") === 0; }
+  function chatRoomHouse(room) {
+    if (room === "house") return cupMe().house;
+    return String(room).indexOf("h:") === 0 ? String(room).slice(2) : null;
+  }
   function chatPeerOf(room) {
     var id = parseInt(String(room).slice(3), 10);
     return chatPeers[id] || { uid: id, name: "Sehrgar", house: null };
@@ -8824,7 +8836,7 @@ button.glass:active .tube{transform:scale(.97)}
         nm.style.color = chatColor(m.house);
         name.appendChild(nm);
         var hh = HOUSES[m.house];
-        if (chatRoom === "global" && hh && m.house !== "none") {
+        if (hh && m.house !== "none" && (chatRoom === "global" || m.house !== chatRoomHouse(chatRoom))) {
           var badge = document.createElement("span");
           badge.className = "cm-house";
           badge.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house);
@@ -9032,7 +9044,7 @@ button.glass:active .tube{transform:scale(.97)}
   function chatApplyLive(res) {
     if (res.online !== undefined) chatLive.online = res.online;
     if (res.typing) { chatLive.typing = res.typing; chatLive.until = Date.now() + 6500; }
-    if (res.admin !== undefined) chatAdmin = !!res.admin;
+    if (res.admin !== undefined && chatAdmin !== !!res.admin) { chatAdmin = !!res.admin; chatAdmUI(); }
     if (res.bans) {
       chatBans = {};
       res.bans.forEach(function(b) { chatBans[b.uid] = b.until; });
@@ -9826,7 +9838,7 @@ button.glass:active .tube{transform:scale(.97)}
     var me = cupMe();
     chatPeople = { room: room, list: null, filter: "all" };
     $("chat-people-q").value = "";
-    $("chat-people-title").textContent = room === "global" ? L("chatGlobalTitle") : cupHouseName(me.house);
+    $("chat-people-title").textContent = room === "global" ? L("chatGlobalTitle") : cupHouseName(chatRoomHouse(room));
     $("chat-people-sub").textContent = "";
     $("chat-people-f").innerHTML = "";
     $("chat-people-list").innerHTML = "";
@@ -9917,6 +9929,34 @@ button.glass:active .tube{transform:scale(.97)}
       b.textContent = chatBadge(n);
       b.classList.toggle("hidden", !n || (chatOpen && chatRoom === (room === "dm" ? "dms" : room)));
     });
+    chatAdmUI();
+  }
+
+  // Admin uchun: tablar ostida to'rttala fakultet xonasi (o'ziniki - "house").
+  function chatAdmUI() {
+    var bar = $("chat-adm");
+    if (!bar) return;
+    bar.classList.toggle("hidden", !chatAdmin);
+    if (!chatAdmin) return;
+    var mine = cupMe().house;
+    bar.innerHTML = "";
+    CHAT_HOUSES.forEach(function(h) {
+      var room = h === mine ? "house" : "h:" + h, hh = HOUSES[h] || {};
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = chatRoom === room ? "on" : "";
+      btn.style.setProperty("--adm-rgb", hh.rgb || "151,161,174");
+      if (chatRoom === room) btn.style.color = hh.accent || "";
+      btn.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(h);
+      var n = chatCounts[room === "house" ? "house" : room] || 0;
+      if (n && chatRoom !== room) {
+        var b = document.createElement("b");
+        b.textContent = chatBadge(n);
+        btn.appendChild(b);
+      }
+      btn.addEventListener("click", function() { setChatRoom(room); });
+      bar.appendChild(btn);
+    });
   }
 
   function updateChatRoomUI() {
@@ -9940,9 +9980,10 @@ button.glass:active .tube{transform:scale(.97)}
       title.textContent = p.name || "Sehrgar";
       title.style.color = ph.accent || "var(--text)";
       inp.placeholder = L("chatPh");
-    } else if (chatRoom === "house") {
-      title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(me.house));
-      title.style.color = hh.accent || "var(--accent)";
+    } else if (chatIsHouseRoom(chatRoom)) {
+      var rh = chatRoomHouse(chatRoom), rhh = HOUSES[rh] || {};
+      title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(rh));
+      title.style.color = rhh.accent || "var(--accent)";
       inp.placeholder = L("chatPhHouse");
     } else {
       title.textContent = L("chatGlobalTitle");
@@ -10036,7 +10077,7 @@ button.glass:active .tube{transform:scale(.97)}
     $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
     $("tab-dm").addEventListener("click", function() { setChatRoom("dms"); });
     $("chat-head").addEventListener("click", function() {
-      if (chatRoom === "house" || chatRoom === "global") chatOpenPeople(chatRoom);
+      if (chatIsHouseRoom(chatRoom) || chatRoom === "global") chatOpenPeople(chatRoom);
       else if (chatIsDm(chatRoom)) chatPeerSheet();
     });
     $("chat-people-back").addEventListener("click", chatClosePeople);
