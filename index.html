@@ -8010,7 +8010,7 @@ button.glass:active .tube{transform:scale(.97)}
       chatDeleteAsk: "Xabar hamma uchun o'chirilsinmi?", chatCopied: "Nusxa olindi", chatEdited: "tahrirlandi",
       chatEditing: "Xabarni tahrirlash", chatReplyTo: "Javob: %s", chatDeletedMsg: "O'chirilgan xabar",
       chatNotLoaded: "Bu xabar ancha tepada — yuqoriga suring", chatActFail: "Bajarilmadi, qayta urinib ko'ring",
-      chatSlowAct: "Juda tez — %s soniya kuting", chatTooOld: "Bu xabarni endi tahrirlab bo'lmaydi", chatUnreadBar: "Yangi xabarlar", chatJoinTitle: "Xush kelibsiz, %s!", chatJoinSub: "Saralash qalpog'i %s fakultetini tanladi. Yangi do'stingizga salom bering!", chatJoinMine: "Saralash qalpog'i sizni %s fakultetiga yubordi. O'zingizni tanishtiring!", chatJoinWave: "👋 Salom berish",
+      chatSlowAct: "Juda tez — %s soniya kuting", chatTooOld: "Bu xabarni endi tahrirlab bo'lmaydi", chatUnreadBar: "Yangi xabarlar", chatJoinTitle: "Xush kelibsiz, %s!", chatJoinSub: "Saralash qalpog'i %s fakultetini tanladi. Yangi do'stingizga salom bering!", chatJoinMine: "Saralash qalpog'i sizni %s fakultetiga yubordi. O'zingizni tanishtiring!", chatJoinWave: "👋 Salom berish", chatJoinQuote: "🎩 Fakultetga qo'shildi",
       chatOnline: "%s kishi onlayn", chatOnlyYou: "Hozircha faqat siz", chatTyping1: "%s yozmoqda",
       chatTyping2: "%s va %s yozmoqda", chatTypingN: "%s kishi yozmoqda", chatBan24: "24 soatga bloklash",
       chatBanForever: "Butunlay bloklash", chatUnban: "Blokdan chiqarish", chatBanAsk: "%s chatda bloklansinmi?",
@@ -8191,7 +8191,7 @@ button.glass:active .tube{transform:scale(.97)}
       chatDeleteAsk: "Удалить сообщение для всех?", chatCopied: "Скопировано", chatEdited: "изменено",
       chatEditing: "Редактирование", chatReplyTo: "Ответ: %s", chatDeletedMsg: "Удалённое сообщение",
       chatNotLoaded: "Это сообщение выше — прокрутите вверх", chatActFail: "Не получилось, попробуйте ещё раз",
-      chatSlowAct: "Слишком быстро — подождите %s с", chatTooOld: "Это сообщение уже нельзя изменить", chatUnreadBar: "Непрочитанные сообщения", chatJoinTitle: "Добро пожаловать, %s!", chatJoinSub: "Распределяющая шляпа выбрала факультет %s. Поприветствуйте нового друга!", chatJoinMine: "Распределяющая шляпа отправила вас на факультет %s. Расскажите о себе!", chatJoinWave: "👋 Поприветствовать",
+      chatSlowAct: "Слишком быстро — подождите %s с", chatTooOld: "Это сообщение уже нельзя изменить", chatUnreadBar: "Непрочитанные сообщения", chatJoinTitle: "Добро пожаловать, %s!", chatJoinSub: "Распределяющая шляпа выбрала факультет %s. Поприветствуйте нового друга!", chatJoinMine: "Распределяющая шляпа отправила вас на факультет %s. Расскажите о себе!", chatJoinWave: "👋 Поприветствовать", chatJoinQuote: "🎩 Присоединился к факультету",
       chatOnline: "%s в сети", chatOnlyYou: "Пока только вы", chatTyping1: "%s печатает",
       chatTyping2: "%s и %s печатают", chatTypingN: "%s человек печатают", chatBan24: "Заблокировать на 24 часа",
       chatBanForever: "Заблокировать навсегда", chatUnban: "Разблокировать", chatBanAsk: "Заблокировать %s в чате?",
@@ -8372,7 +8372,7 @@ button.glass:active .tube{transform:scale(.97)}
       chatDeleteAsk: "Delete this message for everyone?", chatCopied: "Copied", chatEdited: "edited",
       chatEditing: "Editing message", chatReplyTo: "Reply to %s", chatDeletedMsg: "Deleted message",
       chatNotLoaded: "That message is further up — scroll up", chatActFail: "Didn't work, try again",
-      chatSlowAct: "Too fast — wait %s s", chatTooOld: "This message can no longer be edited", chatUnreadBar: "Unread messages", chatJoinTitle: "Welcome, %s!", chatJoinSub: "The Sorting Hat chose %s. Say hello to your new housemate!", chatJoinMine: "The Sorting Hat sent you to %s. Introduce yourself!", chatJoinWave: "👋 Say hello",
+      chatSlowAct: "Too fast — wait %s s", chatTooOld: "This message can no longer be edited", chatUnreadBar: "Unread messages", chatJoinTitle: "Welcome, %s!", chatJoinSub: "The Sorting Hat chose %s. Say hello to your new housemate!", chatJoinMine: "The Sorting Hat sent you to %s. Introduce yourself!", chatJoinWave: "👋 Say hello", chatJoinQuote: "🎩 Joined the house",
       chatOnline: "%s online", chatOnlyYou: "Only you for now", chatTyping1: "%s is typing",
       chatTyping2: "%s and %s are typing", chatTypingN: "%s people are typing", chatBan24: "Block for 24 hours",
       chatBanForever: "Block permanently", chatUnban: "Unblock", chatBanAsk: "Block %s from the chat?",
@@ -8874,7 +8874,7 @@ button.glass:active .tube{transform:scale(.97)}
         q.appendChild(qb);
         if (!m.reply.deleted) {
           var qs = document.createElement("span");
-          qs.textContent = m.reply.text;
+          qs.textContent = m.reply.kind === "join" ? L("chatJoinQuote") : m.reply.text;
           q.appendChild(qs);
         }
         b.appendChild(q);
@@ -9434,7 +9434,7 @@ button.glass:active .tube{transform:scale(.97)}
     var reply = null;
     if (chatCompose && chatCompose.mode === "reply") {
       var rm = chatFind(R, chatCompose.id);
-      if (rm) reply = { id: rm.id, uid: rm.uid, name: rm.name, house: rm.house, text: String(rm.text).slice(0, 120) };
+      if (rm) reply = { id: rm.id, uid: rm.uid, name: rm.name, house: rm.house, text: String(rm.text).slice(0, 120), kind: rm.kind };
       chatCancelCompose();
     }
     if (R.moreNew) { chatJumpLatest(); R = chatRooms[chatRoom]; }
@@ -9633,7 +9633,7 @@ button.glass:active .tube{transform:scale(.97)}
     if (m.tmp) return;
     if (chatCompose && chatCompose.mode === "edit") $("chat-input").value = "";
     chatCompose = { mode: "reply", id: m.id };
-    chatShowBar(CHAT_SVG.reply, L("chatReplyTo").replace("%s", m.name || "Sehrgar"), m.text);
+    chatShowBar(CHAT_SVG.reply, L("chatReplyTo").replace("%s", m.name || "Sehrgar"), m.kind === "join" ? L("chatJoinQuote") : m.text);
     chatSendState();
     $("chat-input").focus();
   }
