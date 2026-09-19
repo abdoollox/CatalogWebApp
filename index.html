@@ -209,6 +209,21 @@ body{
   font-size:32px;line-height:1.2;
 }
 .sort-opts{display:flex;flex-direction:column;gap:11px}
+/* Savol rasmi: pastki cheti fonga eriydi, sekin yaqinlashadi */
+.sq-pic{
+  position:relative;margin:12px -4px 0;border-radius:18px;overflow:hidden;
+  aspect-ratio:16/9;background:var(--card);
+  box-shadow:0 12px 30px rgba(0,0,0,.35),0 0 0 1px rgba(var(--accent-rgb),.18);
+}
+.sq-pic img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .6s ease}
+.sq-pic img.on{opacity:1;animation:sqZoom 14s ease-out both}
+.sq-pic::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%);
+}
+@keyframes sqZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+.sq-has-pic .sort-q{font-size:27px;margin:8px 0 18px}
+.sq-has-pic .hat-say{margin-top:12px}
 .sort-opt{
   width:100%;text-align:left;padding:14px 18px;background:var(--card);
   border:1px solid var(--line);border-radius:14px;color:var(--text);
@@ -1781,6 +1796,7 @@ button.glass:active .tube{transform:scale(.97)}
       <span class="sort-step" id="sort-step"></span>
       <button class="sort-back" id="sort-back"><span style="font-size:12px">‹</span> <span id="sort-back-txt" data-xt="back">Ortga</span></button>
     </div>
+    <div class="sq-pic hidden" id="sort-pic"><img id="sort-pic-img" alt=""></div>
     <span class="hat-say" id="hat-say"></span>
     <h2 class="sort-q" id="sort-q"></h2>
     <div class="sort-opts" id="sort-opts"></div>
@@ -2517,7 +2533,7 @@ button.glass:active .tube{transform:scale(.97)}
   var G = "gryffindor", S = "slytherin", R = "ravenclaw", H = "hufflepuff";
 
   var SORTING = [
-    { w: [{"gryffindor":3, "ravenclaw":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "gryffindor":1}, {"slytherin":3, "ravenclaw":1}],
+    { img:"img/sort/q1.jpg", w: [{"gryffindor":3, "ravenclaw":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "gryffindor":1}, {"slytherin":3, "ravenclaw":1}],
       uz: { q:"Kechqurun Taqiqlangan o'rmondan g'alati ovoz keladi. Nima qilasiz?",
             a:["Darhol borib tekshiraman",
                "Avval nima bo'lishi mumkinligini aniqlayman",
@@ -2534,7 +2550,7 @@ button.glass:active .tube{transform:scale(.97)}
                "Warn my friends and go together",
                "Consider what opportunity this might bring"] } },
 
-    { w: [{"hufflepuff":3, "slytherin":1}, {"ravenclaw":3, "slytherin":1}, {"slytherin":3, "ravenclaw":1}, {"gryffindor":3, "hufflepuff":1}],
+    { img:"img/sort/q2.jpg", w: [{"hufflepuff":3, "slytherin":1}, {"ravenclaw":3, "slytherin":1}, {"slytherin":3, "ravenclaw":1}, {"gryffindor":3, "hufflepuff":1}],
       uz: { q:"Muhim imtihonga bir kun qoldi. Qanday tayyorlanasiz?",
             a:["Reja tuzib, bosqichma-bosqich takrorlayman",
                "Eng murakkab mavzularni chuqur o'rganaman",
@@ -2551,75 +2567,75 @@ button.glass:active .tube{transform:scale(.97)}
                "Find the fastest route to a good result",
                "Go in with what I know and manage somehow"] } },
 
-    { w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}],
+    { img:"img/sort/q3.jpg", w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}],
       uz: { q:"Sehrli oyna sizga eng katta orzuingizni ko'rsatadi. Unda nima bor?",
             a:["Men qo'rqmasdan turgan lahza",
                "Menga hurmat bilan qaraydigan odamlar",
-               "Barcha savollarimga topilgan javoblar",
+               "Hech kim ochmagan sirni birinchi bo'lib ochgan lahza",
                "Yaqinlarim yonimda, hammasi joyida"] },
       ru: { q:"Волшебное зеркало показывает вашу заветную мечту. Что в нём?",
             a:["Момент, когда я не отступил",
                "Люди, которые смотрят на меня с уважением",
-               "Ответы на все мои вопросы",
+               "Момент, когда я первым разгадал тайну, которую не разгадал никто",
                "Близкие рядом, и всё хорошо"] },
       en: { q:"A magic mirror shows your deepest wish. What appears?",
             a:["The moment I stood my ground",
                "People who look at me with respect",
-               "Answers to all my questions",
+               "The moment I solved a mystery no one else could",
                "My loved ones near me, all well"] } },
 
-    { w: [{"hufflepuff":3, "gryffindor":1}, {"gryffindor":3, "ravenclaw":1}, {"slytherin":3, "hufflepuff":1}, {"ravenclaw":3, "slytherin":1}],
+    { img:"img/sort/q4.jpg", w: [{"hufflepuff":3, "gryffindor":1}, {"gryffindor":3, "ravenclaw":1}, {"slytherin":3, "hufflepuff":1}, {"ravenclaw":3, "slytherin":1}],
       uz: { q:"Do'stingiz qoida buzdi va sizdan yashirishni so'radi.",
             a:["Yashiraman — do'stlik muhimroq",
                "Uni o'zi tan olishga ko'ndiraman",
                "Vaziyatga qarab qaror qilaman",
-               "Bu qoida nega borligini avval o'ylab ko'raman"] },
+               "Nima to'g'riligini sovuqqonlik bilan o'ylab, keyin qaror qilaman"] },
       ru: { q:"Друг нарушил правило и просит его прикрыть.",
             a:["Прикрою — дружба важнее",
                "Уговорю его признаться самому",
                "Решу по обстоятельствам",
-               "Сначала подумаю, зачем вообще это правило"] },
+               "Хладнокровно обдумаю, что правильно, и тогда решу"] },
       en: { q:"A friend broke a rule and asks you to cover for them.",
             a:["Cover for them — friendship comes first",
                "Persuade them to own up themselves",
                "Decide based on the situation",
-               "First consider why that rule exists at all"] } },
+               "Think calmly about what is right, then decide"] } },
 
-    { w: [{"gryffindor":3, "hufflepuff":1}, {"slytherin":3, "ravenclaw":1}, {"ravenclaw":3, "gryffindor":1}, {"hufflepuff":3, "slytherin":1}],
+    { img:"img/sort/q5.jpg", w: [{"gryffindor":3, "hufflepuff":1}, {"slytherin":3, "ravenclaw":1}, {"ravenclaw":3, "gryffindor":1}, {"hufflepuff":3, "slytherin":1}],
       uz: { q:"Qaysi dars sizni ko'proq o'ziga tortadi?",
             a:["Qora sehrga qarshi himoya",
                "Iksirlar tayyorlash",
-               "Qadimgi runalar",
-               "Sehrli maxluqlarni parvarishlash"] },
+               "Afsunlar",
+               "Giyohshunoslik"] },
       ru: { q:"Какой предмет вам интереснее всего?",
             a:["Защита от тёмных искусств",
                "Зельеварение",
-               "Древние руны",
-               "Уход за магическими существами"] },
+               "Заклинания",
+               "Травология"] },
       en: { q:"Which subject draws you in the most?",
             a:["Defence Against the Dark Arts",
                "Potions",
-               "Ancient Runes",
-               "Care of Magical Creatures"] } },
+               "Charms",
+               "Herbology"] } },
 
-    { w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "slytherin":1}, {"hufflepuff":3, "gryffindor":1}],
+    { img:"img/sort/q6.jpg", w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "slytherin":1}, {"hufflepuff":3, "gryffindor":1}],
       uz: { q:"Sizni nima ko'proq qo'rqitadi?",
             a:["Qo'rqoq deb bilishlari",
                "Oddiy bo'lib, izsiz o'tib ketish",
-               "Bilmaslik, adashib qolish",
-               "Yaqinlarimni yo'qotish"] },
+               "Hech narsani chuqur tushunmay, yuzaki yashab o'tish",
+               "Yordamim kerak bo'lganda yonida bo'lolmaslik"] },
       ru: { q:"Что пугает вас больше всего?",
             a:["Что меня сочтут трусом",
                "Остаться обычным и незамеченным",
-               "Не знать, ошибиться",
-               "Потерять близких"] },
+               "Прожить жизнь поверхностно, так ничего и не поняв",
+               "Не оказаться рядом, когда нужна моя помощь"] },
       en: { q:"What frightens you most?",
             a:["Being thought a coward",
                "Being ordinary and forgotten",
-               "Not knowing, being wrong",
-               "Losing the people I love"] } },
+               "Living a shallow life without truly understanding anything",
+               "Not being there when someone needs me"] } },
 
-    { w: [{"gryffindor":3, "slytherin":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}, {"slytherin":3, "gryffindor":1}],
+    { img:"img/sort/q7.jpg", w: [{"gryffindor":3, "slytherin":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}, {"slytherin":3, "gryffindor":1}],
       uz: { q:"Guruh ishida sizning o'rningiz qanday bo'ladi?",
             a:["Yetakchilik qilaman va qaror qabul qilaman",
                "Rejani tuzaman, xatolarni topaman",
@@ -2636,13 +2652,13 @@ button.glass:active .tube{transform:scale(.97)}
                "I bring people together and share out the work",
                "I find the shortest path to the goal"] } },
 
-    { w: [{"gryffindor":3}, {"slytherin":3}, {"ravenclaw":3}, {"hufflepuff":3}],
+    { img:"img/sort/q8.jpg", w: [{"gryffindor":3}, {"slytherin":3}, {"ravenclaw":3}, {"hufflepuff":3}],
       uz: { q:"Yuz yildan keyin sizni qanday eslashlarini istardingiz?",
-            a:["Jasur edi", "Buyuk edi", "Dono edi", "Yaxshi odam edi"] },
+            a:["Jasur edi", "Buyuk edi", "Dono edi", "Sodiq edi"] },
       ru: { q:"Каким вас должны запомнить через сто лет?",
-            a:["Он был храбрым", "Он был великим", "Он был мудрым", "Он был хорошим человеком"] },
+            a:["Он был храбрым", "Он был великим", "Он был мудрым", "Он был верным"] },
       en: { q:"How would you want to be remembered in a hundred years?",
-            a:["As brave", "As great", "As wise", "As good"] } }
+            a:["As brave", "As great", "As wise", "As loyal"] } }
   ];
 
   /* ---------- TAYOQCHA ---------- */
@@ -6481,6 +6497,7 @@ button.glass:active .tube{transform:scale(.97)}
     $("sort-back-txt").textContent = qIdx === 0 ? t.sortExit : t.back;
     $("hat-say").textContent = pickOne(v.before[qIdx]);
     $("sort-q").textContent = text.q;
+    paintSortPic();
 
     var box = $("sort-opts");
     box.innerHTML = "";
@@ -6491,6 +6508,24 @@ button.glass:active .tube{transform:scale(.97)}
       b.addEventListener("click", function () { answerSort(i); });
       box.appendChild(b);
     });
+  }
+
+  // Savolga mos rasm (faqat saralashda bor). Keyingisi oldindan yuklab qo'yiladi.
+  function paintSortPic() {
+    var wrap = $("sort-pic"), img = $("sort-pic-img");
+    var src = QUEST.q[qIdx].img;
+    var scr = $("scr-sort");
+    if (!src) { wrap.classList.add("hidden"); scr.classList.remove("sq-has-pic"); return; }
+    wrap.classList.remove("hidden");
+    scr.classList.add("sq-has-pic");
+    if (img.getAttribute("src") !== src) {
+      img.classList.remove("on");
+      img.onload = function () { img.classList.add("on"); };
+      img.src = src;
+      if (img.complete && img.naturalWidth) { img.classList.add("on"); }
+    }
+    var next = QUEST.q[qIdx + 1];
+    if (next && next.img) { try { (new Image()).src = next.img; } catch (e) {} }
   }
 
   function answerSort(i) {
