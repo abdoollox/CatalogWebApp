@@ -61,6 +61,19 @@ button{font-family:inherit; color:inherit}
 .btn:hover{border-color:var(--gold-2); background:var(--panel-2)}
 .btn.ghost{border-color:var(--line-2); color:var(--ink-2)}
 .spacer{flex:1 1 auto}
+.range-pick{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:9px;
+  padding:10px 12px; background:var(--panel); border:1px solid var(--line);
+  border-radius:12px;
+}
+.range-pick label{font-size:12px; color:var(--ink-3); font-weight:600; text-transform:uppercase; letter-spacing:.04em}
+.range-pick input[type=date]{
+  background:var(--bg); border:1px solid var(--line-2); border-radius:9px;
+  padding:7px 10px; color:var(--ink); font-family:inherit; font-size:13px;
+  color-scheme:dark; min-width:140px;
+}
+.range-pick .btn{padding:7px 12px}
+.range-pick .err{margin:0; flex-basis:100%}
 .tabs{
   display:flex; gap:2px; margin-top:12px; overflow-x:auto; scrollbar-width:none;
   border-bottom:1px solid var(--line-2);
@@ -119,6 +132,18 @@ button{font-family:inherit; color:inherit}
   border-radius:var(--r); padding:15px 16px 13px; min-width:0;
 }
 .card.half{grid-column:span 6}
+.card.katta{
+  position:fixed; inset:10px; z-index:70; margin:0; overflow:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.6); border-color:var(--line);
+  padding-top:max(14px, env(safe-area-inset-top, 0px));
+  padding-bottom:max(14px, env(safe-area-inset-bottom, 0px));
+}
+.karta-fon{position:fixed; inset:0; z-index:69; background:rgba(5,7,10,.72); backdrop-filter:blur(3px)}
+.c-head .zbtn{
+  border:0; background:transparent; color:var(--ink-3); font-size:15px; line-height:1;
+  cursor:pointer; padding:4px 7px; border-radius:6px; margin-left:4px;
+}
+.c-head .zbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
 .card.third{grid-column:span 4}
 .card.twothird{grid-column:span 8}
 @media (max-width:860px){ .card.half,.card.third,.card.twothird{grid-column:span 12} }
@@ -254,10 +279,20 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
         <button data-d="30">30 kun</button>
         <button data-d="90">90 kun</button>
         <button data-d="0">Hammasi</button>
+        <button id="oraliq-btn" title="O'z davringizni tanlang">Davr…</button>
       </div>
       <span class="spacer"></span>
       <button class="btn" id="open-src">Ma'lumot manbai</button>
       <button class="btn ghost" id="refresh" title="Havoladan qayta yuklash">Yangilash</button>
+    </div>
+    <div class="range-pick" id="range-pick" hidden>
+      <label for="d-from">dan</label>
+      <input type="date" id="d-from">
+      <label for="d-to">gacha</label>
+      <input type="date" id="d-to">
+      <button class="btn" id="d-ok">Ko'rsat</button>
+      <button class="btn ghost" id="d-clear">Bekor</button>
+      <span class="err" id="d-err" hidden></span>
     </div>
     <div class="src-line" id="srcline"></div>
     <nav class="tabs" id="tabs" role="tablist"></nav>
@@ -346,12 +381,12 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy"};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
 function saveCfg(){
-  try{ localStorage.setItem(LS, JSON.stringify({src:ST.src, days:ST.days, tz:ST.tz, tab:ST.tab})); }catch(e){}
+  try{ localStorage.setItem(LS, JSON.stringify({src:ST.src, days:ST.days, tz:ST.tz, tab:ST.tab, oraliq:ST.oraliq})); }catch(e){}
 }
 function loadCfg(){
   try{
@@ -360,6 +395,7 @@ function loadCfg(){
     if(c.days!=null) ST.days = c.days;
     if(c.tz!=null) ST.tz = c.tz;
     if(c.tab) ST.tab = c.tab;
+    if(c.oraliq && c.oraliq.from && c.oraliq.to) ST.oraliq = c.oraliq;
   }catch(e){}
 }
 
@@ -517,13 +553,34 @@ function fmtTime(d){
 }
 
 /* Davr chegaralari */
+function kunOqi(matn){
+  // "2026-09-21" -> Date (mahalliy yarim tun). new Date("...") UTC deb o'qiydi
+  // va mintaqa farqi sababli kun surilib ketadi.
+  var m = String(matn || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? new Date(+m[1], +m[2]-1, +m[3]) : null;
+}
+function kunYoz(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") +
+         "-" + String(d.getDate()).padStart(2,"0");
+}
+
 function windowOf(days){
   if(!ST.rows.length) return {from:new Date(0), to:new Date()};
+
+  if(ST.oraliq){
+    var a = kunOqi(ST.oraliq.from), b = kunOqi(ST.oraliq.to);
+    if(a && b){
+      if(a > b){ var v = a; a = b; b = v; }
+      return {from: a, to: new Date(b.getFullYear(), b.getMonth(), b.getDate(), 23, 59, 59),
+              kunlar: Math.round((b - a)/86400000) + 1};
+    }
+  }
+
   var last = ST.rows[ST.rows.length-1].t;
   var to = new Date(last.getFullYear(), last.getMonth(), last.getDate(), 23, 59, 59);
   if(!days) return {from: ST.rows[0].t, to: to, all:true};
   var from = new Date(to.getFullYear(), to.getMonth(), to.getDate() - (days-1));
-  return {from: from, to: to};
+  return {from: from, to: to, kunlar: days};
 }
 
 function slice(days){
@@ -664,16 +721,44 @@ function chartDaily(dayList, holat){
       lg.appendChild(el("stop", {offset:"0", "stop-color":x.c, "stop-opacity":".26"}));
       lg.appendChild(el("stop", {offset:"1", "stop-color":x.c, "stop-opacity":"0"}));
       defs.appendChild(lg); svg.appendChild(defs);
-      svg.appendChild(el("path", {
+      var maydon = el("path", {
         d: d + "L" + X(n-1).toFixed(1) + " " + Y(0) + " L" + X(0).toFixed(1) + " " + Y(0) + " Z",
-        fill:"url(#"+gid+")", stroke:"none"}));
+        fill:"url(#"+gid+")", stroke:"none"});
+      maydon.style.opacity = "0";
+      maydon.style.transition = "opacity .6s ease .2s";
+      keyinroq(function(){ maydon.style.opacity = "1"; });
+      svg.appendChild(maydon);
     }
     var line = el("path", {d:d, fill:"none", stroke:x.c, "stroke-width":2,
       "stroke-linejoin":"round", "stroke-linecap":"round"});
-    if(x.dash) line.setAttribute("stroke-dasharray", "5 4");
     svg.appendChild(line);
-    if(n) svg.appendChild(el("circle", {cx:X(n-1), cy:Y(dayList[n-1][x.k]), r:3.5, fill:x.c,
-      stroke:"var(--panel)", "stroke-width":2}));
+
+    // Chiziq chapdan o'ngga chiziladi. Punktir chiziqda bu hiyla ishlamaydi
+    // (dasharray band), ularni oddiygina ochamiz.
+    if(x.dash){
+      line.setAttribute("stroke-dasharray", "5 4");
+      line.style.opacity = "0";
+      line.style.transition = "opacity .5s ease " + (idx * 60) + "ms";
+      keyinroq(function(){ line.style.opacity = "1"; });
+    } else {
+      var uz = 0;
+      try{ uz = line.getTotalLength(); }catch(e){}
+      if(uz){
+        line.style.strokeDasharray = uz;
+        line.style.strokeDashoffset = uz;
+        line.style.transition = "stroke-dashoffset .75s " + TEZLIK + " " + (idx * 60) + "ms";
+        keyinroq(function(){ line.style.strokeDashoffset = "0"; });
+      }
+    }
+
+    if(n){
+      var nuqta = el("circle", {cx:X(n-1), cy:Y(dayList[n-1][x.k]), r:3.5, fill:x.c,
+        stroke:"var(--panel)", "stroke-width":2});
+      nuqta.style.opacity = "0";
+      nuqta.style.transition = "opacity .35s ease " + (idx * 60 + 500) + "ms";
+      keyinroq(function(){ nuqta.style.opacity = "1"; });
+      svg.appendChild(nuqta);
+    }
   });
 
   var step = Math.max(1, Math.ceil(n/6));
@@ -758,6 +843,11 @@ function chartFilms(s, tillar){
       var rect = el("rect", {x:x0, y:y, width:Math.max(0, w - 2), height:rowH,
         fill:cols[lg], rx: last ? 4 : 0, ry: last ? 4 : 0});
       rect.style.cursor = "default";
+      rect.style.transformBox = "fill-box";
+      rect.style.transformOrigin = "left center";
+      rect.style.transform = "scaleX(0)";
+      rect.style.transition = "transform .5s " + TEZLIK + " " + (i * 22) + "ms";
+      keyinroq(function(){ rect.style.transform = "scaleX(1)"; });
       rect.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY,
           '<div class="tt">' + filmName(k) + '</div>' +
@@ -768,7 +858,11 @@ function chartFilms(s, tillar){
       svg.appendChild(rect);
       off += v;
     });
-    svg.appendChild(el("text", {x:P.l + (total/maxV)*iw + 8, y:y+rowH/2+4, class:"vlab"}, fmtNum(total)));
+    var son = el("text", {x:P.l + (total/maxV)*iw + 8, y:y+rowH/2+4, class:"vlab"}, fmtNum(total));
+    son.style.opacity = "0";
+    son.style.transition = "opacity .4s ease " + (i * 22 + 240) + "ms";
+    keyinroq(function(){ son.style.opacity = "1"; });
+    svg.appendChild(son);
   });
   return svg;
 }
@@ -791,6 +885,11 @@ function chartHours(s){
     var x = P.l + h*bw;
     var r = el("rect", {x:x+1.5, y:P.t+ih-hh, width:Math.max(1, bw-3), height:Math.max(v ? 2 : 0, hh),
       rx:3, ry:3, fill: h === peak ? "var(--gold)" : S2, opacity: h === peak ? 1 : .8});
+    r.style.transformBox = "fill-box";
+    r.style.transformOrigin = "center bottom";
+    r.style.transform = "scaleY(0)";
+    r.style.transition = "transform .45s " + TEZLIK + " " + (h * 12) + "ms";
+    (function(el2){ keyinroq(function(){ el2.style.transform = "scaleY(1)"; }); })(r);
     (function(h, v){
       r.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY, '<div class="tt">' + String(h).padStart(2,"0") + ":00–" +
@@ -820,9 +919,11 @@ function barList(items, color, total){
     lab.innerHTML = "<b>" + esc(it.lab) + "</b>" + (it.note ? esc(it.note) : "");
     var tr = document.createElement("div"); tr.className = "fun-track";
     var fl = document.createElement("div"); fl.className = "fun-fill";
-    fl.style.width = (it.val/max*100).toFixed(1) + "%";
+    var kengligi = (it.val/max*100).toFixed(1) + "%";
+    fl.style.width = "0%";
     fl.style.background = it.color || color;
     fl.style.opacity = ".85";
+    keyinroq(function(){ fl.style.width = kengligi; });
     var nm = document.createElement("div"); nm.className = "fun-num";
     nm.innerHTML = "<span>" + fmtNum(it.val) + "</span>" +
       (total ? "<i>" + (it.val/total*100).toFixed(1).replace(/\.0$/,"") + "%</i>" : "");
@@ -832,6 +933,42 @@ function barList(items, color, total){
   });
   return box;
 }
+
+/* Element DOM'ga tushgandan keyin qiymatni o'zgartiramiz — shundagina CSS
+   o'tishi (transition) ishlaydi. Ikki kadr kerak: birinchisida brauzer
+   boshlang'ich holatni hisoblaydi. */
+/* Raqam 0 dan o'z qiymatigacha sanaladi. Harakat tinch bo'lishi uchun
+   oxiriga kelib sekinlashadi. Kichik raqamlarda ma'nosi yo'q - tegmaymiz. */
+var OLDINGI_KPI = {};
+function sanab(el2, qiymat, kalit){
+  if(!el2) return;
+  var eski = OLDINGI_KPI[kalit];
+  OLDINGI_KPI[kalit] = qiymat;
+  if(ST.jim || qiymat < 12 || eski === qiymat){ el2.textContent = fmtNum(qiymat); return; }
+  try{
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  }catch(e){}
+  var boshi = null, davom = 700;
+  var dan = (typeof eski === "number") ? eski : 0;   // o'zgarish bo'lsa eski raqamdan
+  el2.textContent = fmtNum(dan);
+  function qadam(vaqt){
+    if(boshi === null) boshi = vaqt;
+    var p = Math.min(1, (vaqt - boshi) / davom);
+    var yumshoq = 1 - Math.pow(1 - p, 3);
+    el2.textContent = fmtNum(dan + (qiymat - dan) * yumshoq);
+    if(p < 1) requestAnimationFrame(qadam);
+    else el2.textContent = fmtNum(qiymat);
+  }
+  requestAnimationFrame(qadam);
+}
+
+function keyinroq(f){
+  // Panel fonda o'zi yangilanganda (har besh daqiqada) chizmalar qaytadan
+  // "o'sib" chiqsa ko'z charchaydi — jim rejimda darhol joyiga qo'yamiz.
+  if(ST.jim){ f(); return; }
+  requestAnimationFrame(function(){ requestAnimationFrame(f); });
+}
+var TEZLIK = "cubic-bezier(.22,.9,.3,1)";
 
 function esc(s){
   return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
@@ -849,6 +986,31 @@ function card(title, hint, cls){
   if(hint){ var s = document.createElement("span"); s.className = "hint"; s.textContent = hint; h.appendChild(s); }
   c.appendChild(h);
   c._head = h;
+
+  // Kattalashtirish: chizma butun ekranni egallaydi.
+  var zb = document.createElement("button");
+  zb.className = "zbtn"; zb.type = "button";
+  zb.title = "Kattalashtirish"; zb.setAttribute("aria-label", "Kattalashtirish");
+  zb.textContent = "⤢";
+  var fon = null;
+  function yop(){
+    c.classList.remove("katta");
+    if(fon){ fon.remove(); fon = null; }
+    zb.textContent = "⤢"; zb.title = "Kattalashtirish";
+    document.removeEventListener("keydown", esc);
+  }
+  function esc(e){ if(e.key === "Escape") yop(); }
+  zb.addEventListener("click", function(){
+    if(c.classList.contains("katta")){ yop(); return; }
+    c.classList.add("katta");
+    fon = document.createElement("div");
+    fon.className = "karta-fon";
+    fon.addEventListener("click", yop);
+    document.body.appendChild(fon);
+    zb.textContent = "✕"; zb.title = "Yopish";
+    document.addEventListener("keydown", esc);
+  });
+  h.appendChild(zb);
   return c;
 }
 function addTable(cardEl, headers, rows){
@@ -1013,9 +1175,10 @@ function render(){
 
   // Oldingi davr (taqqoslash uchun)
   var prev = null;
-  if(ST.days){
+  var uzunlik = w.kunlar || ST.days;
+  if(uzunlik){
     var pTo = new Date(w.from.getTime() - 1);
-    var pFrom = new Date(w.from.getTime() - ST.days*86400000);
+    var pFrom = new Date(w.from.getTime() - uzunlik*86400000);
     var pRows = ST.rows.filter(function(r){ return r.t >= pFrom && r.t <= pTo; });
     prev = stats(pRows, first, {from:pFrom, to:pTo});
   }
@@ -1035,6 +1198,7 @@ function render(){
     d.innerHTML = '<span class="k-lab">' + esc(lab) + '</span>' +
       '<span class="k-val">' + fmtNum(val) + '</span>' +
       '<span class="k-sub">' + dl + '<span>' + esc(sub) + '</span></span>';
+    sanab(d.querySelector(".k-val"), val, lab);
     kp.appendChild(d);
   }
   kpi("Yangi sehrgar", s.newUsers, "ilgari hech qachon kirmagan", prev && prev.newUsers, true);
@@ -1065,8 +1229,10 @@ function render(){
   // nima bo'layotganini aytadi.
   var lede = document.createElement("p");
   lede.className = "lede";
-  var davr = ST.days === 1 ? "Bugun" : ST.days ? ("Oxirgi " + ST.days + " kunda")
-                                               : "Butun tarix davomida";
+  var davr = ST.oraliq
+    ? (fmtDay(dayKey(w.from)) + " – " + fmtDay(dayKey(w.to)) + " oralig'ida")
+    : (ST.days === 1 ? "Bugun" : ST.days ? ("Oxirgi " + ST.days + " kunda")
+                                         : "Butun tarix davomida");
   var yoq = s.left + s.blocked;
   lede.innerHTML = davr + " <b>" + fmtNum(s.newUsers) + "</b> ta yangi odam keldi va <b>" +
     fmtNum(s.films) + "</b> ta film yuborildi. " +
@@ -1594,8 +1760,9 @@ function openSheet(){
   function close(){ sh.remove(); }
 }
 
-function loadData(){
+function loadData(jim){
   if(!ST.src || ST.src.kind === "file" || ST.busy) return;
+  ST.jim = !!jim;
   var opt = {cache:"no-store"}, u = ST.src.url;
 
   if(ST.src.kind === "api"){
@@ -1650,6 +1817,7 @@ function loadData(){
 
   function done(){
     ST.busy = false;
+    setTimeout(function(){ ST.jim = false; }, 0);   // keyingi chizish yana jonli
     if(btn){ btn.disabled = false; btn.textContent = "Yangilash"; }
   }
 }
@@ -1728,8 +1896,53 @@ document.getElementById("range").addEventListener("click", function(e){
   [].forEach.call(this.querySelectorAll("button"), function(x){ x.setAttribute("aria-pressed", "false"); });
   b.setAttribute("aria-pressed", "true");
   ST.days = +b.dataset.d;
+  ST.oraliq = null;                       // tayyor davr o'z oralig'ini bekor qiladi
+  document.getElementById("range-pick").hidden = true;
   saveCfg(); render();
 });
+/* ───────── O'z davringiz ───────── */
+(function(){
+  var panel = document.getElementById("range-pick");
+  var f = document.getElementById("d-from"), t = document.getElementById("d-to");
+  var xato = document.getElementById("d-err");
+
+  function belgila(){
+    // "Davr…" tugmasi faqat o'z oralig'i tanlanganda yonib turadi
+    document.getElementById("oraliq-btn").setAttribute("aria-pressed", String(!!ST.oraliq));
+    [].forEach.call(document.querySelectorAll("#range button[data-d]"), function(b){
+      b.setAttribute("aria-pressed", String(!ST.oraliq && +b.dataset.d === ST.days));
+    });
+  }
+  window._davrBelgila = belgila;
+
+  document.getElementById("oraliq-btn").addEventListener("click", function(){
+    panel.hidden = !panel.hidden;
+    if(panel.hidden) return;
+    // Ochilganda hozirgi ko'rinayotgan davr bilan to'ldiramiz
+    var w = windowOf(ST.days);
+    if(ST.rows.length){
+      f.value = ST.oraliq ? ST.oraliq.from : kunYoz(w.from);
+      t.value = ST.oraliq ? ST.oraliq.to : kunYoz(w.to);
+      f.min = t.min = kunYoz(ST.rows[0].t);
+      f.max = t.max = kunYoz(ST.rows[ST.rows.length-1].t);
+    }
+    f.focus();
+  });
+
+  document.getElementById("d-ok").addEventListener("click", function(){
+    var a = kunOqi(f.value), b = kunOqi(t.value);
+    if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
+    xato.hidden = true;
+    ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
+    saveCfg(); belgila(); panel.hidden = true; render();
+  });
+
+  document.getElementById("d-clear").addEventListener("click", function(){
+    ST.oraliq = null; xato.hidden = true;
+    saveCfg(); belgila(); panel.hidden = true; render();
+  });
+})();
+
 document.getElementById("open-src").addEventListener("click", openSheet);
 document.getElementById("refresh").addEventListener("click", function(){
   if(ST.src && ST.src.kind !== "file") loadData();
@@ -1737,18 +1950,16 @@ document.getElementById("refresh").addEventListener("click", function(){
 });
 
 loadCfg();
-[].forEach.call(document.querySelectorAll("#range button"), function(b){
-  b.setAttribute("aria-pressed", String(+b.dataset.d === ST.days));
-});
+if(window._davrBelgila) window._davrBelgila();
 ST.rows = demoRows();
 ST.loadedAt = new Date();
 render();
 if(ST.src && ST.src.kind !== "file"){
   loadData();
   // Jonli ulanishda panel o'zi yangilanib turadi (serverda ham 2 daqiqalik kesh bor).
-  setInterval(loadData, 120000);
+  setInterval(function(){ loadData(true); }, 120000);
   document.addEventListener("visibilitychange", function(){
-    if(!document.hidden && ST.loadedAt && Date.now() - ST.loadedAt > 120000) loadData();
+    if(!document.hidden && ST.loadedAt && Date.now() - ST.loadedAt > 120000) loadData(true);
   });
 }
 </script>
