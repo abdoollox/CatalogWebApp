@@ -1460,7 +1460,25 @@ function loadData(){
   var btn = document.getElementById("refresh");
   if(btn){ btn.disabled = true; btn.textContent = "Yuklanmoqda…"; }
 
-  fetch(u, opt).then(function(r){
+  // Server tarmog'i beqaror: katta javob ba'zan yo'lda qotib qoladi. Uzoq
+  // kutib o'tirmaymiz — uzib, bir marta qaytadan so'raymiz.
+  function sora(urinish){
+    var ctrl = new AbortController();
+    var soat = setTimeout(function(){ ctrl.abort(); }, 25000);
+    var o = {cache:opt.cache, signal:ctrl.signal};
+    if(opt.headers) o.headers = opt.headers;
+    return fetch(u, o).then(function(r){ clearTimeout(soat); return r; })
+      .catch(function(e){
+        clearTimeout(soat);
+        if(urinish < 2){
+          if(btn) btn.textContent = "Qayta urinilmoqda…";
+          return sora(urinish + 1);
+        }
+        throw (e && e.name === "AbortError") ? new Error("server javob bermadi") : e;
+      });
+  }
+
+  sora(1).then(function(r){
     if(r.status === 403) throw new Error("kalit to'g'ri kelmadi");
     if(!r.ok) throw new Error("server javobi " + r.status);
     return r.text();
