@@ -252,8 +252,21 @@ var HOUSES = {
 };
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
+/* Chiqib ketish sabablari. Kodlar bot bazasidan keladi (hpleave.REASONS).
+   Rang sababning OG'IRLIGINI bildiradi, seriya rangi emas: qizil — tuzatish
+   kerak bo'lgan muammo, yashil — yo'qotish emas (odam kerakligini oldi). */
+var LEAVE = {
+  bot_broken:      {n:"Bot sekin / xato ishladi", ic:"🐌", c:"var(--crit)", bad:true},
+  many_posts:      {n:"Xabarlar juda ko'p edi",   ic:"🔕", c:"var(--warn)", bad:true},
+  not_interesting: {n:"Boshqa mavzular qiziqroq", ic:"🎭", c:"#c98500", bad:true},
+  got_film:        {n:"Kerakli filmni topib oldi",ic:"🎬", c:"var(--good)", bad:false},
+  accident:        {n:"Tasodifan chiqib ketdi",   ic:"🤷", c:"var(--ink-3)", bad:false},
+  other:           {n:"Boshqa sabab",             ic:"✍️", c:"#8b7fd4", bad:false}
+};
+
 /* ───────── Holat ───────── */
-var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false};
+var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
+          leave:null, leaveLabels:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -948,6 +961,97 @@ function render(){
   ], S1, 0));
   grid.appendChild(c9);
 
+  /* — Chiqib ketish sabablari — */
+  if(ST.leave && ST.leave.length){
+    var lv = ST.leave.filter(function(x){ return x.t >= w.from && x.t <= w.to; });
+    var lvFrom = ST.leave[0].t;
+    var partial = lvFrom > w.from;   // so'rov davrning boshidan ishlamagan
+
+    var c12 = card("Nega chiqib ketishdi", 
+      lv.length ? (fmtNum(lv.length) + " ta chiqish" + (partial ? " · so'rov " + fmtDay(dayKey(lvFrom)) + " dan beri" : "")) : "",
+      "twothird");
+
+    if(!lv.length){
+      c12.appendChild(emptyNote("Bu davrda so'rov yozuvi yo'q" +
+        (partial ? " — so'rov " + fmtDay(dayKey(lvFrom)) + " dan beri ishlaydi." : ".")));
+      grid.appendChild(c12);
+    } else {
+      var asked = 0, answered = 0, backs = 0, byR = {}, backR = {};
+      lv.forEach(function(x){
+        if(x.asked) asked++;
+        if(x.back) backs++;
+        if(x.reason){
+          answered++;
+          byR[x.reason] = (byR[x.reason]||0) + 1;
+          if(x.back) backR[x.reason] = (backR[x.reason]||0) + 1;
+        }
+      });
+
+      // Kichik ko'rsatkichlar qatori — kartaning ichida
+      var mini = document.createElement("div");
+      mini.style.cssText = "display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 4px;font-size:12.5px;color:var(--ink-2)";
+      [["Chiqqan", lv.length, ""],
+       ["So'ralgan", asked, lv.length ? Math.round(asked/lv.length*100) + "%" : ""],
+       ["Javob bergan", answered, asked ? Math.round(answered/asked*100) + "%" : ""],
+       ["Qaytgan", backs, lv.length ? Math.round(backs/lv.length*100) + "%" : ""]
+      ].forEach(function(m){
+        var d = document.createElement("span");
+        d.innerHTML = '<b style="color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums">' +
+          fmtNum(m[1]) + '</b> ' + esc(m[0]) +
+          (m[2] ? ' <i style="font-style:normal;color:var(--ink-3)">' + m[2] + '</i>' : '');
+        mini.appendChild(d);
+      });
+      c12.appendChild(mini);
+
+      if(!answered){
+        c12.appendChild(emptyNote("Hali hech kim tugmani bosmagan."));
+      } else {
+        var order = Object.keys(byR).sort(function(a,b){ return byR[b] - byR[a]; });
+        c12.appendChild(barList(order.map(function(r){
+          var L = LEAVE[r] || {n:r, ic:"•", c:"var(--ink-3)"};
+          var b = backR[r] || 0;
+          return {lab: L.ic + " " + L.n, val: byR[r], color: L.c,
+                  note: b ? b + " tasi qaytib keldi" : ""};
+        }), "var(--ink-3)", answered));
+
+        var hurt = order.filter(function(r){ return LEAVE[r] && LEAVE[r].bad; })
+                        .reduce(function(a,r){ return a + byR[r]; }, 0);
+        var msg = document.createElement("p");
+        msg.style.cssText = "font-size:12.5px;color:var(--ink-3);margin:13px 0 0;line-height:1.5";
+        msg.textContent = "Javob berganlarning " + Math.round(hurt/answered*100) +
+          " foizi ketishiga kanalning o'zi sabab bo'lgan (bot, xabar ko'pligi yoki mavzu). " +
+          "Qolganlari kerakligini olgan yoki tasodifan chiqqan — bular yo'qotish emas.";
+        c12.appendChild(msg);
+
+        addTable(c12, ["Sabab","Soni","Ulushi","Qaytgan"], order.map(function(r){
+          return [(LEAVE[r]||{n:r}).n, byR[r], Math.round(byR[r]/answered*100) + "%", backR[r] || 0];
+        }));
+      }
+      grid.appendChild(c12);
+
+      // Yozma izohlar
+      var words = lv.filter(function(x){ return x.comment; }).reverse();
+      var c13 = card("Ularning so'zlari", words.length ? words.length + " ta izoh" : "", "third");
+      if(!words.length){
+        c13.appendChild(emptyNote("Bu davrda yozma izoh qoldirilmagan."));
+      } else {
+        var wrap = document.createElement("div");
+        wrap.className = "feed";
+        words.slice(0, 40).forEach(function(x){
+          var L = LEAVE[x.reason] || {ic:"✍️", n:x.reason || "Sabab yo'q", c:"var(--ink-3)"};
+          var d = document.createElement("div"); d.className = "fe";
+          d.innerHTML = '<span class="ic">' + L.ic + '</span>' +
+            '<span class="txt"><span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' +
+            esc(L.n) + '</span><br>' + esc(x.comment) + '</span>' +
+            '<span class="when">' + fmtDay(dayKey(x.t)) + '</span>';
+          wrap.appendChild(d);
+        });
+        c13.appendChild(wrap);
+      }
+      grid.appendChild(c13);
+    }
+  }
+
   /* — TOP odamlar — */
   var top = Object.values(s.perUser).sort(function(a,b){ return b.ev - a.ev; }).slice(0, 15);
   var c10 = card("Eng faol sehrgarlar", "davr ichidagi hodisalar bo'yicha", "half");
@@ -1159,7 +1263,7 @@ function loadData(){
     var rows = buildRows(parseCSV(t));
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
-    done(); render();
+    done(); render(); loadReasons();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -1170,6 +1274,24 @@ function loadData(){
     ST.busy = false;
     if(btn){ btn.disabled = false; btn.textContent = "Yangilash"; }
   }
+}
+
+/* Sabablar bazadan alohida keladi (Sheets'da yo'q). Faqat jonli ulanishda. */
+function loadReasons(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.leave = null; return; }
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/sabablar");
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, "sabablar");
+  fetch(u, {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if(!j || !j.ok) return;
+      ST.leave = j.rows.map(function(r){
+        var t = new Date(r.t);
+        return isNaN(t) ? null : {t:t, asked:r.asked, reason:r.reason, comment:r.comment, back:r.back};
+      }).filter(Boolean).sort(function(a,b){ return a.t - b.t; });
+      render();
+    })
+    .catch(function(){ /* eski bot bo'lsa bo'lim ko'rsatilmaydi */ });
 }
 
 /* ───────── Namuna ma'lumot ───────── */
