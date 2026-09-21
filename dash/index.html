@@ -23,6 +23,8 @@
   --r:14px;
 }
 *{box-sizing:border-box}
+/* display:grid/flex qo'yilgan elementda hidden o'z-o'zidan ishlamaydi */
+[hidden]{display:none!important}
 html,body{height:100%}
 body{
   margin:0; background:var(--bg); color:var(--ink);
@@ -59,6 +61,28 @@ button{font-family:inherit; color:inherit}
 .btn:hover{border-color:var(--gold-2); background:var(--panel-2)}
 .btn.ghost{border-color:var(--line-2); color:var(--ink-2)}
 .spacer{flex:1 1 auto}
+.tabs{
+  display:flex; gap:2px; margin-top:12px; overflow-x:auto; scrollbar-width:none;
+  border-bottom:1px solid var(--line-2);
+}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{
+  border:0; background:transparent; color:var(--ink-3); font-family:'Cormorant Garamond',serif;
+  font-size:19px; font-weight:600; padding:7px 15px 9px; cursor:pointer; white-space:nowrap;
+  border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s; letter-spacing:.01em;
+}
+.tabs button:hover{color:var(--ink-2)}
+.tabs button[aria-selected="true"]{color:var(--gold-hi); border-bottom-color:var(--gold)}
+.tabs button .n{
+  font-family:'Manrope',sans-serif; font-size:11px; font-weight:700; color:var(--ink-3);
+  margin-left:6px; font-variant-numeric:tabular-nums;
+}
+.tabs button[aria-selected="true"] .n{color:var(--gold-2)}
+.lede{
+  margin:16px 0 0; font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.45;
+  color:var(--ink-2); max-width:62ch;
+}
+.lede b{color:var(--gold-hi); font-weight:600}
 .src-line{
   display:flex; align-items:center; gap:9px; margin-top:10px; font-size:12.5px; color:var(--ink-3);
   flex-wrap:wrap;
@@ -126,7 +150,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 .uname{color:var(--ink-3); font-size:11.5px}
 
 /* Lenta */
-.feed{display:flex; flex-direction:column; max-height:420px; overflow-y:auto; margin-top:6px}
+.feed{display:flex; flex-direction:column; max-height:min(64vh,620px); overflow-y:auto; margin-top:6px}
 .fe{display:flex; gap:11px; padding:8px 2px; border-bottom:1px solid var(--line-2); align-items:flex-start}
 .fe:last-child{border-bottom:0}
 .fe .ic{
@@ -227,6 +251,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <button class="btn ghost" id="refresh" title="Havoladan qayta yuklash">Yangilash</button>
     </div>
     <div class="src-line" id="srcline"></div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
   </header>
 
   <main id="app"></main>
@@ -260,6 +285,16 @@ var HOUSES = {
 };
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
+/* Panel bo'limlari. Hammasi bitta sahifada turganda ko'z qayerga qarashni
+   bilmaydi — har bo'lim bitta savolga javob beradi. */
+var BOLIMLAR = [
+  {id:"umumiy",  nom:"Umumiy"},
+  {id:"odamlar", nom:"Odamlar"},
+  {id:"kino",    nom:"Kino"},
+  {id:"kanal",   nom:"Kanal"},
+  {id:"lenta",   nom:"Lenta"}
+];
+
 /* Chiqib ketish sabablari. Kodlar bot bazasidan keladi (hpleave.REASONS).
    Rang sababning OG'IRLIGINI bildiradi, seriya rangi emas: qizil — tuzatish
    kerak bo'lgan muammo, yashil — yo'qotish emas (odam kerakligini oldi). */
@@ -274,12 +309,12 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy"};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
 function saveCfg(){
-  try{ localStorage.setItem(LS, JSON.stringify({src:ST.src, days:ST.days, tz:ST.tz})); }catch(e){}
+  try{ localStorage.setItem(LS, JSON.stringify({src:ST.src, days:ST.days, tz:ST.tz, tab:ST.tab})); }catch(e){}
 }
 function loadCfg(){
   try{
@@ -287,6 +322,7 @@ function loadCfg(){
     if(c.src) ST.src = c.src;
     if(c.days!=null) ST.days = c.days;
     if(c.tz!=null) ST.tz = c.tz;
+    if(c.tab) ST.tab = c.tab;
   }catch(e){}
 }
 
@@ -850,6 +886,7 @@ function render(){
     b.addEventListener("click", openSheet);
     e.appendChild(b);
     app.appendChild(e);
+    document.getElementById("tabs").innerHTML = "";
     return;
   }
 
@@ -887,16 +924,41 @@ function render(){
   kpi("Yangi sehrgar", s.newUsers, "birinchi marta", prev && prev.newUsers, true);
   kpi("Faol odam", s.uniq, "noyob user_id", prev && prev.uniq);
   kpi("Yuborilgan film", s.films, s.undo ? s.undo + " ta bekor qilindi" : "kino yetkazildi", prev && prev.films);
-  var net = s.sub - s.left;
-  kpi("Kanal o'sishi", net, s.sub + " qo'shildi · " + s.left + " chiqdi", prev && (prev.sub - prev.left));
+  kpi("Kanal o'sishi", s.sub - s.left, s.sub + " qo'shildi · " + s.left + " chiqdi", prev && (prev.sub - prev.left));
   kpi("Saralandi", Object.values(s.houses).reduce(function(a,b){return a+b;},0),
       s.sortStart ? "boshlagan " + s.sortStart + " ta" : "fakultet tanladi",
       prev && Object.values(prev.houses).reduce(function(a,b){return a+b;},0));
   kpi("Do'st taklifi", s.invited, s.refwin + " ta ball berildi", prev && prev.invited);
-  app.appendChild(kp);
+  var net = s.sub - s.left;
 
-  var grid = document.createElement("div"); grid.className = "grid";
-  app.appendChild(grid);
+  // Har bo'lim o'z gridiga yig'iladi; ko'rinmaydiganlari yashirin turadi,
+  // shuning uchun bo'lim almashtirish bir zumda bo'ladi (qayta chizilmaydi).
+  var SEC = {};
+  BOLIMLAR.forEach(function(b){
+    var g = document.createElement("div");
+    g.className = "grid";
+    g.id = "sec-" + b.id;
+    g.setAttribute("role", "tabpanel");
+    g.hidden = (b.id !== ST.tab);
+    SEC[b.id] = g;
+    app.appendChild(g);
+  });
+  function put(bolim, karta){ (SEC[bolim] || SEC.umumiy).appendChild(karta); }
+
+  // "Umumiy" bo'limi uchun bir qatorli xulosa — raqamlarni o'qishdan oldin
+  // nima bo'layotganini aytadi.
+  var lede = document.createElement("p");
+  lede.className = "lede";
+  var davr = ST.days === 1 ? "Bugun" : ST.days ? ("Oxirgi " + ST.days + " kunda")
+                                               : "Butun tarix davomida";
+  var yoq = s.left + s.blocked;
+  lede.innerHTML = davr + " <b>" + fmtNum(s.newUsers) + "</b> ta yangi odam keldi va <b>" +
+    fmtNum(s.films) + "</b> ta film yuborildi. " +
+    (net >= 0 ? "Kanal <b>" + fmtNum(net) + "</b> kishiga o'sdi"
+              : "Kanal <b>" + fmtNum(-net) + "</b> kishiga kamaydi") +
+    " — " + fmtNum(s.sub) + " qo'shildi, " + fmtNum(yoq) + " tasi chiqib ketdi yoki botni blokladi.";
+  SEC.umumiy.insertAdjacentElement("beforebegin", lede);
+  app.insertBefore(kp, lede.nextSibling);
 
   /* — Kunlik faollik — */
   var dayList = [];
@@ -916,7 +978,7 @@ function render(){
   addTable(c1, ["Kun","Hodisa","Odam","Film"], dayList.slice().reverse().map(function(d){
     return [fmtDay(d.k), d.ev, d.uq, d.film];
   }));
-  grid.appendChild(c1);
+  put("umumiy", c1);
 
   /* — Voronka — */
   var c2 = card("Yo'l", "har qadamda nechta ODAM bor", "third");
@@ -932,7 +994,7 @@ function render(){
   addTable(c2, ["Qadam","Odam","Ulushi"], steps.map(function(x){
     return [x.lab, x.val, (x.val/base*100).toFixed(1) + "%"];
   }));
-  grid.appendChild(c2);
+  put("umumiy", c2);
 
   /* — Filmlar — */
   var c3 = card("Qaysi kino ko'proq so'raladi", "tillar bo'yicha bo'lingan", "twothird");
@@ -947,7 +1009,7 @@ function render(){
   } else {
     c3.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   }
-  grid.appendChild(c3);
+  put("kino", c3);
 
   /* — Fakultetlar — */
   var c4 = card("Fakultetlar", "saralanish natijasi", "third");
@@ -961,15 +1023,15 @@ function render(){
       return [HOUSES[h].n, s.houses[h], (s.houses[h]/hTot*100).toFixed(1)+"%"];
     }));
   } else c4.appendChild(emptyNote("Bu davrda hech kim saralanmagan."));
-  grid.appendChild(c4);
+  put("odamlar", c4);
 
   /* — Soatlar — */
-  var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "twothird");
+  var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "");
   var f5 = document.createElement("figure"); f5.appendChild(chartHours(s)); c5.appendChild(f5);
   addTable(c5, ["Soat","Hodisa"], s.hours.map(function(v, h){
     return [String(h).padStart(2,"0") + ":00", v];
   }));
-  grid.appendChild(c5);
+  put("kino", c5);
 
   /* — Manbalar — */
   var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "third");
@@ -980,11 +1042,12 @@ function render(){
   var tagged = items.reduce(function(a,i){ return a + i.val; }, 0);
   var direct = Math.max(0, s.newUsers - tagged);
   if(direct) items.push({lab:"✨ To'g'ridan-to'g'ri", val:direct, color:"var(--ink-3)"});
+  items.sort(function(a, b){ return b.val - a.val; });
   if(items.length){
     c6.appendChild(barList(items, S2, items.reduce(function(a,i){ return a+i.val; }, 0)));
     addTable(c6, ["Manba","Soni"], items.map(function(i){ return [i.lab, i.val]; }));
   } else c6.appendChild(emptyNote("Bu davrda yangi odam belgilanmagan."));
-  grid.appendChild(c6);
+  put("odamlar", c6);
 
   /* — Bot va ilova — */
   var c7 = card("Film qayerdan olindi", "ilova yoki bot chati", "third");
@@ -996,7 +1059,7 @@ function render(){
     c7.appendChild(barList(oItems, S2, s.films));
     addTable(c7, ["Manba","Soni"], oItems.map(function(i){ return [i.lab, i.val]; }));
   } else c7.appendChild(emptyNote("Film yo'q."));
-  grid.appendChild(c7);
+  put("kino", c7);
 
   /* — Kanal harakati — */
   var c8 = card("Kanal va bot holati", "chiqib ketish, bloklash", "third");
@@ -1013,7 +1076,7 @@ function render(){
     ? "Sof o'sish: +" + fmtNum(net) + " odam. Yo'qotish " + fmtNum(lost) + " ta."
     : "Diqqat: bu davrda " + fmtNum(-net) + " ta odam ko'proq chiqib ketdi.";
   c8.appendChild(note);
-  grid.appendChild(c8);
+  put("kanal", c8);
 
   /* — Ulashish — */
   var c9 = card("Tarqalish", "inline ulashish va do'st ballari", "third");
@@ -1022,9 +1085,20 @@ function render(){
     {lab:"🤝 Taklif bilan keldi", val:s.invited, color:S3},
     {lab:"🎁 Ball berildi", val:s.refwin, color:"var(--gold)"}
   ], S1, 0));
-  grid.appendChild(c9);
+  put("odamlar", c9);
 
   /* — Chiqib ketish sabablari — */
+  if(!ST.leave && !ST.demo){
+    var cx = card("Nega chiqib ketishdi", "", "twothird");
+    cx.appendChild(emptyNote("Sabablar bot bazasidan keladi — buning uchun «Ma'lumot manbai» da " +
+      "bot serveriga ulanish kerak (CSV faylda bu ma'lumot yo'q)."));
+    put("kanal", cx);
+  } else if(ST.demo){
+    var cd = card("Nega chiqib ketishdi", "", "twothird");
+    cd.appendChild(emptyNote("Namuna ma'lumotda so'rov yozuvlari yo'q. Jonli ulanishda bu yerda " +
+      "sabablar, ularni tanlagan odamlar va yozma izohlar ko'rinadi."));
+    put("kanal", cd);
+  }
   if(ST.leave && ST.leave.length){
     var lv = ST.leave.filter(function(x){ return x.t >= w.from && x.t <= w.to; });
     var lvFrom = ST.leave[0].t;
@@ -1037,7 +1111,7 @@ function render(){
     if(!lv.length){
       c12.appendChild(emptyNote("Bu davrda so'rov yozuvi yo'q" +
         (partial ? " — so'rov " + fmtDay(dayKey(lvFrom)) + " dan beri ishlaydi." : ".")));
-      grid.appendChild(c12);
+      put("kanal", c12);
     } else {
       var asked = 0, answered = 0, backs = 0, byR = {}, backR = {};
       lv.forEach(function(x){
@@ -1093,7 +1167,7 @@ function render(){
         addPeople(c12, lv.filter(function(x){ return x.reason; }).slice().reverse()
           .sort(function(a, b){ return (b.comment ? 1 : 0) - (a.comment ? 1 : 0); }));
       }
-      grid.appendChild(c12);
+      put("kanal", c12);
 
       // Yozma izohlar
       var words = lv.filter(function(x){ return x.comment; }).reverse();
@@ -1127,13 +1201,13 @@ function render(){
         });
         c13.appendChild(wrap);
       }
-      grid.appendChild(c13);
+      put("kanal", c13);
     }
   }
 
   /* — TOP odamlar — */
   var top = Object.values(s.perUser).sort(function(a,b){ return b.ev - a.ev; }).slice(0, 15);
-  var c10 = card("Eng faol sehrgarlar", "davr ichidagi hodisalar bo'yicha", "half");
+  var c10 = card("Eng faol sehrgarlar", "davr ichidagi hodisalar bo'yicha", "");
   var tw = document.createElement("div"); tw.className = "tbl-wrap";
   var tb = document.createElement("table");
   tb.innerHTML = "<thead><tr><th>Sehrgar</th><th class='num'>Hodisa</th><th class='num'>Film</th><th class='num'>Oxirgi</th></tr></thead>";
@@ -1148,12 +1222,12 @@ function render(){
     tbody.appendChild(tr);
   });
   tb.appendChild(tbody); tw.appendChild(tb); c10.appendChild(tw);
-  grid.appendChild(c10);
+  put("odamlar", c10);
 
   /* — Lenta — */
-  var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida", "half");
+  var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida", "");
   var feed = document.createElement("div"); feed.className = "feed";
-  rows.slice(-60).reverse().forEach(function(r){
+  rows.slice(-120).reverse().forEach(function(r){
     var d = document.createElement("div"); d.className = "fe";
     var what = r.ev.lab;
     if(r.ev.t === "film") what = "<b>" + esc(filmName(r.ev.film)) + "</b> " + LANGS[r.ev.lang].f +
@@ -1167,7 +1241,16 @@ function render(){
     feed.appendChild(d);
   });
   c11.appendChild(feed);
-  grid.appendChild(c11);
+  put("lenta", c11);
+
+  // Bo'lim qatori: yonidagi son — o'sha bo'limdagi eng muhim raqam
+  drawTabs({
+    odamlar: s.uniq,
+    kino: s.films,
+    kanal: s.left + s.blocked,
+    lenta: rows.length
+  });
+  selectTab(BOLIMLAR.some(function(b){ return b.id === ST.tab; }) ? ST.tab : "umumiy");
 }
 
 function emptyNote(txt){
@@ -1175,6 +1258,50 @@ function emptyNote(txt){
   p.style.cssText = "color:var(--ink-3);font-size:12.5px;margin:14px 0 6px";
   p.textContent = txt;
   return p;
+}
+
+/* ───────── Bo'lim qatori ───────── */
+function drawTabs(sonlar){
+  var nav = document.getElementById("tabs");
+  nav.innerHTML = "";
+  BOLIMLAR.forEach(function(b){
+    var btn = document.createElement("button");
+    btn.setAttribute("role", "tab");
+    btn.setAttribute("aria-selected", String(b.id === ST.tab));
+    btn.setAttribute("aria-controls", "sec-" + b.id);
+    btn.tabIndex = (b.id === ST.tab) ? 0 : -1;
+    btn.innerHTML = esc(b.nom) +
+      (sonlar && sonlar[b.id] ? '<span class="n">' + fmtNum(sonlar[b.id]) + '</span>' : "");
+    btn.addEventListener("click", function(){ selectTab(b.id); });
+    btn.addEventListener("keydown", function(e){
+      var i = BOLIMLAR.indexOf(b), j = -1;
+      if(e.key === "ArrowRight") j = (i + 1) % BOLIMLAR.length;
+      if(e.key === "ArrowLeft")  j = (i - 1 + BOLIMLAR.length) % BOLIMLAR.length;
+      if(j < 0) return;
+      e.preventDefault();
+      selectTab(BOLIMLAR[j].id);
+      nav.children[j].focus();
+    });
+    nav.appendChild(btn);
+  });
+}
+
+function selectTab(id){
+  ST.tab = id;
+  saveCfg();
+  [].forEach.call(document.querySelectorAll("#tabs button"), function(b, i){
+    var faol = BOLIMLAR[i].id === id;
+    b.setAttribute("aria-selected", String(faol));
+    b.tabIndex = faol ? 0 : -1;
+  });
+  BOLIMLAR.forEach(function(b){
+    var g = document.getElementById("sec-" + b.id);
+    if(g) g.hidden = (b.id !== id);
+  });
+  var lede = document.querySelector(".lede"), kp = document.querySelector(".kpis");
+  if(lede) lede.hidden = (id !== "umumiy");
+  if(kp) kp.hidden = (id !== "umumiy");
+  window.scrollTo({top:0, behavior:"instant"});
 }
 
 /* ───────── Manba qatori ───────── */
