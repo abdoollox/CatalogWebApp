@@ -511,13 +511,16 @@ function stats(rows, first, w){
     hours:new Array(24).fill(0), days:{}, sub:0, left:0, blocked:0, starts:0,
     houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0},
     perUser:{}, byFilmLang:{},
-    set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}}
+    set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}, "new":{}}
   };
   for(var i=0; i<rows.length; i++){
     var r = rows[i], e = r.ev;
     s.users[r.uid] = 1;
-    if(first[r.uid] && first[r.uid] >= w.from && first[r.uid] <= w.to && first[r.uid].getTime() === r.t.getTime())
-      s.newUsers++;
+    // Odam bo'yicha sanaymiz, yozuv bo'yicha emas: kimdir botni ochgan zahoti
+    // kanalga qo'shilsa, ikkala yozuv ham AYNAN bir xil soniyada tushadi va
+    // u ikki marta "yangi" bo'lib ko'rinardi.
+    if(first[r.uid] && first[r.uid] >= w.from && first[r.uid] <= w.to)
+      s.set["new"][r.uid] = 1;
     s.hours[r.t.getHours()]++;
     var dk = dayKey(r.t);
     if(!s.days[dk]) s.days[dk] = {ev:0, u:{}, film:0, nw:0};
@@ -554,6 +557,7 @@ function stats(rows, first, w){
   s.uniq = Object.keys(s.users).length;
   s.who = {};
   for(var t in s.set) s.who[t] = Object.keys(s.set[t]).length;
+  s.newUsers = s.who["new"];
   return s;
 }
 
@@ -921,8 +925,8 @@ function render(){
       '<span class="k-sub">' + dl + '<span>' + esc(sub) + '</span></span>';
     kp.appendChild(d);
   }
-  kpi("Yangi sehrgar", s.newUsers, "birinchi marta", prev && prev.newUsers, true);
-  kpi("Faol odam", s.uniq, "noyob user_id", prev && prev.uniq);
+  kpi("Yangi sehrgar", s.newUsers, "ilgari hech qachon kirmagan", prev && prev.newUsers, true);
+  kpi("Faol odam", s.uniq, "shu davrda biror ish qilgan", prev && prev.uniq);
   kpi("Yuborilgan film", s.films, s.undo ? s.undo + " ta bekor qilindi" : "kino yetkazildi", prev && prev.films);
   kpi("Kanal o'sishi", s.sub - s.left, s.sub + " qo'shildi · " + s.left + " chiqdi", prev && (prev.sub - prev.left));
   kpi("Saralandi", Object.values(s.houses).reduce(function(a,b){return a+b;},0),
