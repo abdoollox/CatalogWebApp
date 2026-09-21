@@ -132,6 +132,15 @@ button{font-family:inherit; color:inherit}
 .c-head .tbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
 .legend{display:flex; gap:14px; flex-wrap:wrap; margin:7px 0 2px; font-size:12px; color:var(--ink-2)}
 .legend span{display:inline-flex; align-items:center; gap:6px}
+.legend.switchy{gap:6px 8px; margin:9px 0 4px}
+.legend .lg{
+  display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line-2);
+  background:var(--panel-2); color:var(--ink-2); font-size:12px; font-weight:600;
+  padding:5px 11px 5px 9px; border-radius:999px; cursor:pointer; transition:.15s;
+}
+.legend .lg:hover{border-color:var(--gold-2); color:var(--ink)}
+.legend .lg.off{opacity:.45; text-decoration:line-through; text-decoration-thickness:1px}
+.legend .lg.off .swatch{filter:grayscale(1)}
 .swatch{width:10px; height:10px; border-radius:3px; flex:none}
 figure{margin:0}
 svg{display:block; width:100%; height:auto; overflow:visible}
@@ -284,6 +293,34 @@ var HOUSES = {
   hufflepuff:{n:"Xaffelpaff",c:"var(--huff)",  crest:"🦡"}
 };
 var S1="#c98500", S2="#3987e5", S3="#199e70";
+
+/* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
+   ranglar rang ko'rmaslikda ham ajralib turishi tekshirilgan. */
+var KUNLIK = [
+  {k:"start",   n:"Botni ochdi",      c:"#3987e5", on:true},
+  {k:"sub",     n:"Kanalga qo'shildi",c:"#199e70", on:true},
+  {k:"film",    n:"Film olindi",      c:"#c98500", on:true},
+  {k:"left",    n:"Chiqib ketdi",     c:"#d03b3b", on:true},
+  {k:"blocked", n:"Botni blokladi",   c:"#9085e9", on:false},
+  {k:"uq",      n:"Noyob odamlar",    c:"#8b94a3", on:false, dash:true},
+  {k:"ev",      n:"Jami hodisa",      c:"#6f7987", on:false, dash:true}
+];
+var SERIES_LS = "hp_dash_series";
+
+function seriyaHolati(){
+  var h = {};
+  KUNLIK.forEach(function(x){ h[x.k] = x.on; });
+  try{
+    var saqlangan = JSON.parse(localStorage.getItem(SERIES_LS) || "null");
+    if(saqlangan) KUNLIK.forEach(function(x){
+      if(typeof saqlangan[x.k] === "boolean") h[x.k] = saqlangan[x.k];
+    });
+  }catch(e){}
+  return h;
+}
+function seriyaSaqla(h){
+  try{ localStorage.setItem(SERIES_LS, JSON.stringify(h)); }catch(e){}
+}
 
 /* Panel bo'limlari. Hammasi bitta sahifada turganda ko'z qayerga qarashni
    bilmaydi — har bo'lim bitta savolga javob beradi. */
@@ -523,8 +560,9 @@ function stats(rows, first, w){
       s.set["new"][r.uid] = 1;
     s.hours[r.t.getHours()]++;
     var dk = dayKey(r.t);
-    if(!s.days[dk]) s.days[dk] = {ev:0, u:{}, film:0, nw:0};
+    if(!s.days[dk]) s.days[dk] = {ev:0, u:{}, film:0, start:0, sub:0, left:0, blocked:0};
     s.days[dk].ev++; s.days[dk].u[r.uid] = 1;
+    if(s.days[dk][e.t] !== undefined && e.t !== "film") s.days[dk][e.t]++;
     if(!s.perUser[r.uid]) s.perUser[r.uid] = {name:r.name, user:r.user, uid:r.uid, ev:0, films:0, last:r.t, house:null};
     var pu = s.perUser[r.uid];
     pu.ev++; pu.last = r.t; pu.name = r.name || pu.name; pu.user = r.user || pu.user;
@@ -589,12 +627,15 @@ function tipShow(x, y, html){
 function tipHide(){ if(TIP) TIP.hidden = true; }
 
 /* ───────── 1. Kunlik faollik ───────── */
-function chartDaily(days, dayList){
-  var W = 720, H = 240, P = {t:14, r:16, b:26, l:40};
+function chartDaily(dayList, holat){
+  var W = 720, H = 260, P = {t:14, r:16, b:26, l:42};
+  var faol = KUNLIK.filter(function(x){ return holat[x.k]; });
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img",
-    "aria-label":"Kunlik faollik: hodisalar va noyob foydalanuvchilar"});
+    "aria-label":"Kunlik faollik: " + faol.map(function(x){ return x.n; }).join(", ")});
   var n = dayList.length;
-  var maxV = niceMax(Math.max(1, Math.max.apply(null, dayList.map(function(d){ return Math.max(d.ev, d.uq); }))));
+  var eng = 1;
+  dayList.forEach(function(d){ faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; }); });
+  var maxV = niceMax(eng);
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
   var X = function(i){ return n <= 1 ? P.l + iw/2 : P.l + i*iw/(n-1); };
   var Y = function(v){ return P.t + ih - (v/maxV)*ih; };
@@ -604,43 +645,48 @@ function chartDaily(days, dayList){
     svg.appendChild(el("line", {x1:P.l, x2:W-P.r, y1:y, y2:y, stroke:"var(--grid)", "stroke-width":1}));
     svg.appendChild(el("text", {x:P.l-7, y:y+3.5, "text-anchor":"end", class:"tick num"}, fmtNum(yv)));
   }
-  function path(key, color, fill){
-    var d = "", a = "";
-    for(var i=0; i<n; i++){
-      d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(dayList[i][key]).toFixed(1) + " ";
-    }
-    if(fill){
-      a = d + "L" + X(n-1).toFixed(1) + " " + Y(0) + " L" + X(0).toFixed(1) + " " + Y(0) + " Z";
-      var gid = "g_" + key;
+
+  if(!faol.length){
+    svg.appendChild(el("text", {x:W/2, y:H/2, "text-anchor":"middle", class:"slab",
+      fill:"var(--ink-3)"}, "Ko'rsatkichni tanlang"));
+    return svg;
+  }
+
+  // Bitta chiziq qolganda tagini bo'yaymiz - shunda shakl aniqroq o'qiladi.
+  var yolgiz = faol.length === 1;
+  faol.forEach(function(x, idx){
+    var d = "";
+    for(var i=0; i<n; i++) d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(dayList[i][x.k]).toFixed(1) + " ";
+    if(yolgiz){
+      var gid = "fill_" + x.k;
       var defs = el("defs", {});
       var lg = el("linearGradient", {id:gid, x1:"0", y1:"0", x2:"0", y2:"1"});
-      lg.appendChild(el("stop", {offset:"0", "stop-color":color, "stop-opacity":".22"}));
-      lg.appendChild(el("stop", {offset:"1", "stop-color":color, "stop-opacity":"0"}));
+      lg.appendChild(el("stop", {offset:"0", "stop-color":x.c, "stop-opacity":".26"}));
+      lg.appendChild(el("stop", {offset:"1", "stop-color":x.c, "stop-opacity":"0"}));
       defs.appendChild(lg); svg.appendChild(defs);
-      svg.appendChild(el("path", {d:a, fill:"url(#"+gid+")", stroke:"none"}));
+      svg.appendChild(el("path", {
+        d: d + "L" + X(n-1).toFixed(1) + " " + Y(0) + " L" + X(0).toFixed(1) + " " + Y(0) + " Z",
+        fill:"url(#"+gid+")", stroke:"none"}));
     }
-    svg.appendChild(el("path", {d:d, fill:"none", stroke:color, "stroke-width":2,
-      "stroke-linejoin":"round", "stroke-linecap":"round"}));
-  }
-  path("ev", S1, true);
-  path("uq", S2, false);
+    var line = el("path", {d:d, fill:"none", stroke:x.c, "stroke-width":2,
+      "stroke-linejoin":"round", "stroke-linecap":"round"});
+    if(x.dash) line.setAttribute("stroke-dasharray", "5 4");
+    svg.appendChild(line);
+    if(n) svg.appendChild(el("circle", {cx:X(n-1), cy:Y(dayList[n-1][x.k]), r:3.5, fill:x.c,
+      stroke:"var(--panel)", "stroke-width":2}));
+  });
 
-  // X yorliqlari — 6 tagacha
   var step = Math.max(1, Math.ceil(n/6));
-  for(var i=0; i<n; i += step){
+  for(var i=0; i<n; i += step)
     svg.appendChild(el("text", {x:X(i), y:H-8, "text-anchor":"middle", class:"tick"}, fmtDay(dayList[i].k)));
-  }
-  // Oxirgi nuqtani ta'kidlash
-  if(n){
-    svg.appendChild(el("circle", {cx:X(n-1), cy:Y(dayList[n-1].ev), r:4, fill:S1, stroke:"var(--panel)", "stroke-width":2}));
-    svg.appendChild(el("circle", {cx:X(n-1), cy:Y(dayList[n-1].uq), r:4, fill:S2, stroke:"var(--panel)", "stroke-width":2}));
-  }
+
   // Kursor
   var vline = el("line", {y1:P.t, y2:P.t+ih, class:"hovline"}); vline.style.opacity = 0;
   svg.appendChild(vline);
-  var d1 = el("circle", {r:5, fill:S1, stroke:"var(--panel)", "stroke-width":2}); d1.style.opacity=0;
-  var d2 = el("circle", {r:5, fill:S2, stroke:"var(--panel)", "stroke-width":2}); d2.style.opacity=0;
-  svg.appendChild(d1); svg.appendChild(d2);
+  var nuqtalar = faol.map(function(x){
+    var c = el("circle", {r:4.5, fill:x.c, stroke:"var(--panel)", "stroke-width":2});
+    c.style.opacity = 0; svg.appendChild(c); return c;
+  });
   var hit = el("rect", {x:0, y:0, width:W, height:H, fill:"transparent"});
   svg.appendChild(hit);
 
@@ -649,35 +695,48 @@ function chartDaily(days, dayList){
     var px = (ev.clientX - r.left) / r.width * W;
     var i = n <= 1 ? 0 : Math.round((px - P.l) / (iw/(n-1)));
     i = Math.max(0, Math.min(n-1, i));
-    var d = dayList[i];
+    var d = dayList[i], eng_y = H;
     vline.setAttribute("x1", X(i)); vline.setAttribute("x2", X(i)); vline.style.opacity = 1;
-    d1.setAttribute("cx", X(i)); d1.setAttribute("cy", Y(d.ev)); d1.style.opacity = 1;
-    d2.setAttribute("cx", X(i)); d2.setAttribute("cy", Y(d.uq)); d2.style.opacity = 1;
-    tipShow(ev.clientX, r.top + (Y(Math.max(d.ev,d.uq))/H)*r.height,
-      '<div class="tt">' + fmtDay(d.k) + '</div>' +
-      '<div class="tr"><span><span class="swatch" style="display:inline-block;background:'+S1+'"></span> Hodisa</span><b>'+fmtNum(d.ev)+'</b></div>' +
-      '<div class="tr"><span><span class="swatch" style="display:inline-block;background:'+S2+'"></span> Odam</span><b>'+fmtNum(d.uq)+'</b></div>' +
-      '<div class="tr"><span style="color:var(--ink-3)">Film</span><b>'+fmtNum(d.film)+'</b></div>');
+    var qator = "";
+    faol.forEach(function(x, j){
+      var y = Y(d[x.k]);
+      if(y < eng_y) eng_y = y;
+      nuqtalar[j].setAttribute("cx", X(i));
+      nuqtalar[j].setAttribute("cy", y);
+      nuqtalar[j].style.opacity = 1;
+      qator += '<div class="tr"><span><span class="swatch" style="display:inline-block;background:' +
+        x.c + '"></span> ' + esc(x.n) + '</span><b>' + fmtNum(d[x.k]) + '</b></div>';
+    });
+    tipShow(ev.clientX, r.top + (eng_y/H)*r.height, '<div class="tt">' + fmtDay(d.k) + '</div>' + qator);
   }
   hit.addEventListener("mousemove", move);
   hit.addEventListener("touchmove", function(e){ if(e.touches[0]) move(e.touches[0]); });
   hit.addEventListener("mouseleave", function(){
-    vline.style.opacity = 0; d1.style.opacity = 0; d2.style.opacity = 0; tipHide();
+    vline.style.opacity = 0;
+    nuqtalar.forEach(function(c){ c.style.opacity = 0; });
+    tipHide();
   });
   return svg;
 }
 
 /* ───────── 2. Filmlar reytingi (tillar bo'yicha yig'ma) ───────── */
-function chartFilms(s){
-  var keys = Object.keys(FILMS).filter(function(k){ return s.filmBy[k]; })
-    .sort(function(a,b){ return s.filmBy[b] - s.filmBy[a]; });
-  Object.keys(s.filmBy).forEach(function(k){ if(!FILMS[k] && keys.indexOf(k) < 0) keys.push(k); });
-  if(!keys.length) return null;
+function chartFilms(s, tillar){
+  var faolTil = ["uz","ru","en"].filter(function(l){ return tillar[l]; });
+  // Jami endi faqat TANLANGAN tillar bo'yicha: bittasini olib turganda
+  // uzunliklar ham, tartib ham shunga qarab qayta hisoblanadi.
+  var jami = {};
+  Object.keys(s.filmBy).forEach(function(k){
+    jami[k] = faolTil.reduce(function(a, l){ return a + (s.byFilmLang[k+"|"+l] || 0); }, 0);
+  });
+  var keys = Object.keys(FILMS).filter(function(k){ return jami[k]; })
+    .sort(function(a,b){ return jami[b] - jami[a]; });
+  Object.keys(jami).forEach(function(k){ if(!FILMS[k] && jami[k] && keys.indexOf(k) < 0) keys.push(k); });
+  if(!keys.length || !faolTil.length) return null;
 
   var rowH = 26, gap = 6, P = {t:6, r:46, b:20, l:132};
   var W = 720, H = P.t + keys.length*(rowH+gap) + P.b;
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Filmlar bo'yicha yuborishlar"});
-  var maxV = niceMax(Math.max.apply(null, keys.map(function(k){ return s.filmBy[k]; })));
+  var maxV = niceMax(Math.max.apply(null, keys.map(function(k){ return jami[k]; })));
   var iw = W - P.l - P.r;
   var cols = {uz:S1, ru:S2, en:S3};
 
@@ -688,10 +747,10 @@ function chartFilms(s){
   }
   keys.forEach(function(k, i){
     var y = P.t + i*(rowH+gap);
-    var total = s.filmBy[k], off = 0;
+    var total = jami[k], off = 0;
     svg.appendChild(el("text", {x:P.l-10, y:y+rowH/2+4, "text-anchor":"end", class:"slab"},
       (FILMS[k] ? FILMS[k].num + ". " : "") + filmName(k)));
-    ["uz","ru","en"].forEach(function(lg){
+    faolTil.forEach(function(lg){
       var v = s.byFilmLang[k+"|"+lg] || 0;
       if(!v) return;
       var w = (v/maxV)*iw, x0 = P.l + (off/maxV)*iw;
@@ -865,6 +924,59 @@ function addPeople(cardEl, rows){
   cardEl.appendChild(box);
 }
 
+/* Har qanday grafik uchun bosiladigan legenda. */
+function toggleLegend(items, holat, kalit, ozgardi){
+  var d = document.createElement("div");
+  d.className = "legend switchy";
+  function yangila(){
+    [].forEach.call(d.querySelectorAll(".lg"), function(b, i){
+      var yoq = holat[items[i][kalit]];
+      b.className = "lg" + (yoq ? "" : " off");
+      b.setAttribute("aria-pressed", String(!!yoq));
+    });
+  }
+  items.forEach(function(x){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "lg";   // yangila() shu klass bo'yicha topadi
+    b.innerHTML = '<span class="swatch" style="background:' + x.c + '"></span>' + esc(x.n);
+    b.addEventListener("click", function(){
+      var faol = items.filter(function(y){ return holat[y[kalit]]; });
+      // Oxirgisini o'chirsa grafik bo'm-bo'sh qoladi - buni to'sib qo'yamiz.
+      if(faol.length === 1 && holat[x[kalit]]) return;
+      holat[x[kalit]] = !holat[x[kalit]];
+      yangila();
+      ozgardi();
+    });
+    d.appendChild(b);
+  });
+  yangila();
+  return d;
+}
+
+/* Bosiladigan legenda: ko'rsatkichni vaqtincha olib turish uchun.
+   Tanlov brauzerda eslab qolinadi. */
+function legendToggle(holat, ozgardi){
+  var d = document.createElement("div");
+  d.className = "legend switchy";
+  KUNLIK.forEach(function(x){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "lg" + (holat[x.k] ? "" : " off");
+    b.setAttribute("aria-pressed", String(!!holat[x.k]));
+    b.innerHTML = '<span class="swatch" style="background:' + x.c +
+      (x.dash ? ';background-image:linear-gradient(90deg,' + x.c + ' 55%,transparent 55%);background-size:5px 100%' : '') +
+      '"></span>' + esc(x.n);
+    b.addEventListener("click", function(){
+      holat[x.k] = !holat[x.k];
+      seriyaSaqla(holat);
+      ozgardi();
+    });
+    d.appendChild(b);
+  });
+  return d;
+}
+
 function legend(items){
   var d = document.createElement("div"); d.className = "legend";
   items.forEach(function(i){
@@ -972,16 +1084,36 @@ function render(){
   while(cur <= end && guard++ < 800){
     var k = dayKey(cur);
     var d = s.days[k];
-    dayList.push({k:k, ev: d ? d.ev : 0, uq: d ? d.uq : 0, film: d ? d.film : 0});
+    dayList.push({
+      k: k,
+      ev: d ? d.ev : 0,  uq: d ? d.uq : 0,      film: d ? d.film : 0,
+      start: d ? d.start : 0, sub: d ? d.sub : 0,
+      left: d ? d.left : 0,   blocked: d ? d.blocked : 0
+    });
     cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate()+1);
   }
-  var c1 = card("Kundalik jonlanish", dayList.length + " kun · sichqonchani grafik ustida yuriting", "twothird");
-  c1.appendChild(legend([{c:S1, n:"Hodisalar"}, {c:S2, n:"Noyob odamlar"}]));
-  var f1 = document.createElement("figure"); f1.appendChild(chartDaily(ST.days, dayList));
-  c1.appendChild(f1);
-  addTable(c1, ["Kun","Hodisa","Odam","Film"], dayList.slice().reverse().map(function(d){
-    return [fmtDay(d.k), d.ev, d.uq, d.film];
+  var c1 = card("Kundalik jonlanish",
+    dayList.length + " kun · ko'rsatkich nomini bosib olib turing", "twothird");
+  var holat = seriyaHolati();
+  var f1 = document.createElement("figure");
+  function chizQayta(){
+    f1.innerHTML = "";
+    f1.appendChild(chartDaily(dayList, holat));
+  }
+  c1.appendChild(legendToggle(holat, function(){
+    chizQayta();
+    [].forEach.call(c1.querySelectorAll(".legend .lg"), function(b, i){
+      var yoq = holat[KUNLIK[i].k];
+      b.className = "lg" + (yoq ? "" : " off");
+      b.setAttribute("aria-pressed", String(!!yoq));
+    });
   }));
+  chizQayta();
+  c1.appendChild(f1);
+  addTable(c1, ["Kun","Ochdi","Qo'shildi","Film","Chiqdi","Blokladi","Odam"],
+    dayList.slice().reverse().map(function(d){
+      return [fmtDay(d.k), d.start, d.sub, d.film, d.left, d.blocked, d.uq];
+    }));
   put("umumiy", c1);
 
   /* — Voronka — */
@@ -1002,10 +1134,27 @@ function render(){
 
   /* — Filmlar — */
   var c3 = card("Qaysi kino ko'proq so'raladi", "tillar bo'yicha bo'lingan", "twothird");
-  c3.appendChild(legend([{c:S1, n:"🇺🇿 O'zbekcha"}, {c:S2, n:"🇷🇺 Ruscha"}, {c:S3, n:"🇬🇧 Inglizcha"}]));
-  var fc = chartFilms(s);
+  var tillar = {uz:true, ru:true, en:true};
+  try{
+    var tq = JSON.parse(localStorage.getItem("hp_dash_langs") || "null");
+    if(tq) ["uz","ru","en"].forEach(function(l){ if(typeof tq[l] === "boolean") tillar[l] = tq[l]; });
+  }catch(e){}
+  var tilItems = [{l:"uz", c:S1, n:"🇺🇿 O'zbekcha"}, {l:"ru", c:S2, n:"🇷🇺 Ruscha"},
+                  {l:"en", c:S3, n:"🇬🇧 Inglizcha"}];
+  var f3 = document.createElement("figure");
+  function filmChiz(){
+    f3.innerHTML = "";
+    var x = chartFilms(s, tillar);
+    if(x) f3.appendChild(x);
+  }
+  c3.appendChild(toggleLegend(tilItems, tillar, "l", function(){
+    try{ localStorage.setItem("hp_dash_langs", JSON.stringify(tillar)); }catch(e){}
+    filmChiz();
+  }));
+  filmChiz();
+  var fc = f3.firstChild;
   if(fc){
-    var f3 = document.createElement("figure"); f3.appendChild(fc); c3.appendChild(f3);
+    c3.appendChild(f3);
     addTable(c3, ["Film","UZ","RU","EN","Jami"],
       Object.keys(s.filmBy).sort(function(a,b){ return s.filmBy[b]-s.filmBy[a]; }).map(function(k){
         return [filmName(k), s.byFilmLang[k+"|uz"]||0, s.byFilmLang[k+"|ru"]||0, s.byFilmLang[k+"|en"]||0, s.filmBy[k]];
