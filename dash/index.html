@@ -784,6 +784,47 @@ function addTable(cardEl, headers, rows){
   cardEl._head.appendChild(btn);
   cardEl.appendChild(wrap);
 }
+/* Sabab tanlagan odamlar ro'yxati — kartaning ichida yig'ilib turadi.
+   addTable oddiy matn bilan ishlaydi, bu yerda esa Telegram havolasi kerak. */
+function addPeople(cardEl, rows){
+  if(!rows.length) return;
+  var btn = document.createElement("button");
+  btn.className = "tbtn"; btn.textContent = "Kimlar"; btn.setAttribute("aria-expanded", "false");
+  var box = document.createElement("div"); box.className = "feed"; box.hidden = true;
+  box.style.marginTop = "10px";
+
+  rows.forEach(function(x){
+    var L = LEAVE[x.reason] || {ic:"•", n:x.reason || "Javob bermagan", c:"var(--ink-3)"};
+    var p = personOf(x.uid);
+    var who;
+    if(p){
+      var uname = (p.user && p.user !== "Yo'q") ? p.user : "";
+      who = '<b>' + esc(p.name) + '</b>' + (uname ?
+        ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
+        '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "");
+    } else {
+      who = '<b>ID ' + esc(x.uid || "?") + '</b>';
+    }
+    var d = document.createElement("div"); d.className = "fe";
+    d.innerHTML = '<span class="ic">' + L.ic + '</span>' +
+      '<span class="txt"><span class="who-line">' + who +
+        (x.back ? ' <span class="back-tag">qaytib keldi</span>' : "") + '</span>' +
+        '<span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' + esc(L.n) + '</span>' +
+        (x.comment ? '<br><span style="color:var(--ink-2)">' + esc(x.comment) + '</span>' : "") +
+      '</span>' +
+      '<span class="when">' + fmtDay(dayKey(x.t)) + '</span>';
+    box.appendChild(d);
+  });
+
+  btn.addEventListener("click", function(){
+    box.hidden = !box.hidden;
+    btn.setAttribute("aria-expanded", String(!box.hidden));
+    btn.textContent = box.hidden ? "Kimlar" : "Yopish";
+  });
+  cardEl._head.appendChild(btn);
+  cardEl.appendChild(box);
+}
+
 function legend(items){
   var d = document.createElement("div"); d.className = "legend";
   items.forEach(function(i){
@@ -1048,6 +1089,9 @@ function render(){
         addTable(c12, ["Sabab","Soni","Ulushi","Qaytgan"], order.map(function(r){
           return [(LEAVE[r]||{n:r}).n, byR[r], Math.round(byR[r]/answered*100) + "%", backR[r] || 0];
         }));
+        // Javob berganlarning o'zi — eng yangisi yuqorida, izohlilar boshida
+        addPeople(c12, lv.filter(function(x){ return x.reason; }).slice().reverse()
+          .sort(function(a, b){ return (b.comment ? 1 : 0) - (a.comment ? 1 : 0); }));
       }
       grid.appendChild(c12);
 
