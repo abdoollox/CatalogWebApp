@@ -137,6 +137,14 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 .fe .txt b{font-weight:600}
 .fe .who{color:var(--ink-2)}
 .fe .when{color:var(--ink-3); font-size:11.5px; font-variant-numeric:tabular-nums; flex:none}
+.who-line{display:block; font-size:12.5px; margin-bottom:2px}
+.who-line b{color:var(--ink); font-weight:600}
+.tglink{color:var(--gold); text-decoration:none; font-size:11.5px}
+.tglink:hover{text-decoration:underline}
+.back-tag{
+  color:#3fbf6a; font-size:10.5px; font-weight:600; border:1px solid rgba(63,191,106,.35);
+  border-radius:999px; padding:1px 7px; margin-left:5px; white-space:nowrap;
+}
 
 /* Voronka */
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
@@ -266,7 +274,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null};
+          leave:null, leaveLabels:null, people:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -380,6 +388,20 @@ function classify(p){
 }
 
 function filmName(k){ return (FILMS[k] && FILMS[k].n) || k; }
+
+/* Izoh qoldirgan odamning ismi loglardan topiladi: sabablar bazasida faqat
+   raqami bor, ismi esa har bir log yozuvida turadi. */
+function personOf(uid){
+  if(!uid) return null;
+  if(!ST.people){
+    ST.people = {};
+    for(var i=0; i<ST.rows.length; i++){
+      var r = ST.rows[i];
+      if(r.uid) ST.people[r.uid] = {name:r.name, user:r.user};
+    }
+  }
+  return ST.people[uid] || null;
+}
 
 /* ───────── Ma'lumotni tayyorlash ───────── */
 function buildRows(raw){
@@ -1039,10 +1061,23 @@ function render(){
         wrap.className = "feed";
         words.slice(0, 40).forEach(function(x){
           var L = LEAVE[x.reason] || {ic:"✍️", n:x.reason || "Sabab yo'q", c:"var(--ink-3)"};
+          var p = personOf(x.uid);
+          var who = "";
+          if(p){
+            var uname = (p.user && p.user !== "Yo'q") ? p.user : "";
+            who = '<b>' + esc(p.name) + '</b>' + (uname ?
+              ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
+              '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "");
+          } else if(x.uid){
+            who = '<b>ID ' + esc(x.uid) + '</b>';
+          }
           var d = document.createElement("div"); d.className = "fe";
           d.innerHTML = '<span class="ic">' + L.ic + '</span>' +
-            '<span class="txt"><span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' +
-            esc(L.n) + '</span><br>' + esc(x.comment) + '</span>' +
+            '<span class="txt">' +
+              (who ? '<span class="who-line">' + who + (x.back ? ' <span class="back-tag">qaytib keldi</span>' : "") + '</span>' : "") +
+              '<span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' + esc(L.n) + '</span><br>' +
+              esc(x.comment) +
+            '</span>' +
             '<span class="when">' + fmtDay(dayKey(x.t)) + '</span>';
           wrap.appendChild(d);
         });
@@ -1263,6 +1298,7 @@ function loadData(){
     var rows = buildRows(parseCSV(t));
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
+    ST.people = null;
     done(); render(); loadReasons();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
@@ -1287,7 +1323,7 @@ function loadReasons(){
       if(!j || !j.ok) return;
       ST.leave = j.rows.map(function(r){
         var t = new Date(r.t);
-        return isNaN(t) ? null : {t:t, asked:r.asked, reason:r.reason, comment:r.comment, back:r.back};
+        return isNaN(t) ? null : {t:t, asked:r.asked, reason:r.reason, comment:r.comment, back:r.back, uid:r.uid};
       }).filter(Boolean).sort(function(a,b){ return a.t - b.t; });
       render();
     })
