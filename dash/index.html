@@ -276,6 +276,15 @@ figure{min-width:0}
 }
 .brush-yozuv b{color:var(--ink-2); font-weight:600}
 
+.heat-shkala{
+  display:flex; align-items:center; gap:8px; margin-top:9px;
+  font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums;
+}
+.heat-shkala i{
+  flex:0 1 140px; height:8px; border-radius:4px; display:block;
+  background:linear-gradient(90deg, rgba(231,193,112,.07), var(--gold));
+}
+
 .tbl-wrap{overflow-x:auto; margin-top:8px}
 table{border-collapse:collapse; width:100%; font-size:12.5px; min-width:340px}
 th,td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line-2); white-space:nowrap}
@@ -543,7 +552,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaSoat:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -765,6 +774,11 @@ function stats(rows, first, w){
   var s = {
     events: rows.length, users:{}, newUsers:0, films:0, filmBy:{}, langs:{uz:0,ru:0,en:0},
     hours:new Array(24).fill(0), days:{}, sub:0, left:0, blocked:0, starts:0,
+    heat:(function(){
+      var a = [];
+      for(var k=0; k<7; k++){ var q = []; for(var h=0; h<24; h++) q.push(0); a.push(q); }
+      return a;
+    })(),
     soat:(function(){
       var a = [];
       for(var i=0; i<24; i++) a.push({h:i, ev:0, u:{}, movie:0, start:0, sub:0, left:0, blocked:0});
@@ -783,6 +797,7 @@ function stats(rows, first, w){
     if(first[r.uid] && first[r.uid] >= w.from && first[r.uid] <= w.to)
       s.set["new"][r.uid] = 1;
     var sh = r.t.getHours();
+    s.heat[(r.t.getDay() + 6) % 7][sh]++;   // 0 = dushanba
     s.hours[sh]++;
     s.soat[sh].ev++;
     s.soat[sh].u[r.uid] = 1;
@@ -1283,6 +1298,61 @@ function filmYangila(svg, tillar, ilk){
     if(p < 1) requestAnimationFrame(qadam);
   }
   requestAnimationFrame(qadam);
+}
+
+/* ───────── 3a. Hafta kuni x soat (heatmap) ─────────
+   Bitta chizmada ikki o'lcham: qaysi KUN va qaysi SOAT jonli. Rang
+   to'qligi faollikni bildiradi — bitta tusning yorqinligi bo'yicha,
+   shunda "ko'proq" degani bir qarashda o'qiladi. */
+var HAFTA = ["Dush", "Sesh", "Chor", "Pay", "Jum", "Shan", "Yak"];
+
+function chartHeat(s, balandlik){
+  var W = 960, P = {t:18, r:14, b:22, l:44};
+  var cols = 24, rows = 7;
+  var iw = W - P.l - P.r;
+  var kw = iw / cols;
+  var kh = balandlik ? Math.max(14, (balandlik - P.t - P.b) / rows) : 26;
+  var H = P.t + rows*kh + P.b;
+  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img",
+    "aria-label":"Hafta kuni va soat bo'yicha faollik"});
+
+  var eng = 1;
+  for(var k=0; k<rows; k++) for(var h=0; h<cols; h++) if(s.heat[k][h] > eng) eng = s.heat[k][h];
+
+  for(var h2=0; h2<cols; h2 += 2)
+    svg.appendChild(el("text", {x:P.l + h2*kw + kw/2, y:P.t-6, "text-anchor":"middle", class:"tick num"},
+      String(h2).padStart(2,"0")));
+
+  for(var k2=0; k2<rows; k2++){
+    svg.appendChild(el("text", {x:P.l-9, y:P.t + k2*kh + kh/2 + 3.5, "text-anchor":"end", class:"tick"},
+      HAFTA[k2]));
+    for(var h3=0; h3<cols; h3++){
+      var v = s.heat[k2][h3];
+      // Kuchsiz kataklar ham sezilsin: darajani gamma bilan yumshatamiz
+      var ulush = v ? Math.pow(v/eng, 0.65) : 0;
+      var r = el("rect", {x:P.l + h3*kw + 1, y:P.t + k2*kh + 1,
+        width:Math.max(1, kw-2), height:Math.max(1, kh-2), rx:3, ry:3,
+        fill:"var(--gold)", opacity: v ? (0.07 + 0.93*ulush).toFixed(3) : 0.03});
+      (function(kun, soat, qiy, elem){
+        elem.addEventListener("mousemove", function(e){
+          tipShow(e.clientX, e.clientY,
+            '<div class="tt">' + HAFTA[kun] + " · " + String(soat).padStart(2,"0") + ':00</div>' +
+            '<div class="tr"><span>Hodisa</span><b>' + fmtNum(qiy) + '</b></div>');
+        });
+        elem.addEventListener("mouseleave", tipHide);
+      })(k2, h3, v, r);
+      r.style.transformBox = "fill-box";
+      r.style.transformOrigin = "center";
+      r.style.transform = "scale(.4)";
+      r.style.opacity = "0";
+      r.style.transition = "transform .4s " + TEZLIK + " " + ((h3 + k2*3) * 5) + "ms, opacity .4s ease " + ((h3 + k2*3) * 5) + "ms";
+      (function(elem, oxirgi){
+        keyinroq(function(){ elem.style.transform = "scale(1)"; elem.style.opacity = oxirgi; });
+      })(r, v ? (0.07 + 0.93*ulush).toFixed(3) : "0.03");
+      svg.appendChild(r);
+    }
+  }
+  return svg;
 }
 
 /* ───────── 3. Soatlar ───────── */
@@ -1910,38 +1980,33 @@ function render(){
   /* — Soatlar — */
   // Bir kunlik davrda yuqoridagi chizma allaqachon soatlar bo'yicha — takror kerak emas.
   if(!birKun){
-  var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "twothird");
-  var soatToliq = s.hours.map(function(v, h){ return {h:h, v:v}; });
-  var soatKor = oynaKesimi(soatToliq, ST.oynaSoat);
+  var c5 = card("Qachon jonli", "hafta kuni va soat bo'yicha", "twothird");
+
   var f5 = document.createElement("figure");
-  var soatBalandlik = null;
-  f5.appendChild(chartHours(s, null, soatKor));
+  var heatBalandlik = null;
+  f5.appendChild(chartHeat(s));
   c5.appendChild(f5);
   c5._qayta = function(balandlik){
-    if(balandlik) soatBalandlik = balandlik;
+    if(balandlik) heatBalandlik = balandlik;
     f5.innerHTML = "";
-    f5.appendChild(chartHours(s, balandlik || soatBalandlik, soatKor));
+    f5.appendChild(chartHeat(s, balandlik || heatBalandlik));
   };
   c5._kuzat(f5);
 
-  var soatYozuv = document.createElement("div");
-  soatYozuv.className = "brush-yozuv";
-  c5.appendChild(brushYasa(soatToliq, function(x){ return x.v; }, ST.oynaSoat, function(){
-    soatKor = oynaKesimi(soatToliq, ST.oynaSoat);
-    ST.jim = true; c5._qayta(); ST.jim = false;
-    soatYozuvYangila();
-  }));
-  c5.appendChild(soatYozuv);
-  function soatYozuvYangila(){
-    var a = soatKor[0], b = soatKor[soatKor.length-1];
-    soatYozuv.innerHTML = "<b>" + String(a.h).padStart(2,"0") + ":00</b>" +
-      "<span>" + soatKor.length + " soat</span>" +
-      "<b>" + String(b.h).padStart(2,"0") + ":59</b>";
-  }
-  soatYozuvYangila();
-  addTable(c5, ["Soat","Hodisa"], s.hours.map(function(v, h){
-    return [String(h).padStart(2,"0") + ":00", v];
-  }));
+  // Rang shkalasi: katakning to'qligi nimani bildiradi
+  var shkala = document.createElement("div");
+  shkala.className = "heat-shkala";
+  var engKatak = 1;
+  for(var kk=0; kk<7; kk++) for(var hh=0; hh<24; hh++) if(s.heat[kk][hh] > engKatak) engKatak = s.heat[kk][hh];
+  shkala.innerHTML = '<span>kam</span><i></i><span>' + fmtNum(engKatak) + ' ta</span>';
+  c5.appendChild(shkala);
+
+  var soatBosh = ["Kun"];
+  for(var sh2=0; sh2<24; sh2++) soatBosh.push(String(sh2).padStart(2,"0"));
+  addTable(c5, soatBosh,
+    HAFTA.map(function(nom, k){
+      return [nom].concat(s.heat[k].map(function(v){ return v || ""; }));
+    }));
   put("umumiy", c5);
   }
   put("umumiy", c2);
