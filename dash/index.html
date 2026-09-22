@@ -376,6 +376,21 @@ td.eng{color:#3fbf6a; font-weight:700}
 th.sort{cursor:pointer; user-select:none; transition:color .15s}
 th.sort:hover{color:var(--ink-2)}
 th.sort.on{color:var(--gold-hi)}
+.tarix-btn{
+  display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-2); background:transparent;
+  color:var(--ink-2); font-size:11.5px; font-weight:600; padding:4px 9px 4px 7px; border-radius:8px;
+  cursor:pointer; transition:.15s; font-family:inherit;
+}
+.tarix-btn svg{width:14px; height:14px}
+.tarix-btn:hover{border-color:var(--gold-2); color:var(--gold-hi); background:var(--panel-2)}
+td.tar-td{width:1%; padding-block:4px}
+.tarix-kim{font-size:12.5px; color:var(--ink-2); margin:2px 0 4px}
+.tarq-kpi .tk-val.kichik{font-size:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.kun-bosh{
+  position:sticky; top:0; z-index:1; background:var(--panel); font-size:11px; font-weight:700;
+  color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; padding:12px 2px 5px;
+  border-bottom:1px solid var(--line-2);
+}
 .tarq-bosh{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:18px 0 0}
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
@@ -2263,6 +2278,123 @@ function legend(items){
   return d;
 }
 
+/* ───────── Hodisa matni (Lenta va odam tarixi uchun) ───────── */
+function hodisaMatni(r){
+  var e = r.ev;
+  if(e.t === "film") return "<b>" + esc(filmName(e.film)) + "</b> " + LANGS[e.lang].f +
+    (e.origin === "web" ? " · ilovadan" : e.origin === "bot" ? " · botdan" : "");
+  if(e.t === "house") return "<b>" + esc((HOUSES[e.house]||{n:e.house}).n) + "</b> fakultetiga tushdi";
+  if(e.t === "src") return "reklamadan keldi · <b>" + esc(e.src) + "</b>";
+  if(e.t === "invited"){
+    var p = personOf(e.by);
+    return "do'st taklifi bilan keldi · <b>" + esc(p ? p.name : "ID " + e.by) + "</b>";
+  }
+  if(e.t === "undo") return "bekor qildi · <b>" + esc(filmName(e.film)) + "</b>";
+  if(e.t === "share"){
+    var m = String(r.payload).match(/^share_([a-z]{2}\d+)_(uz|ru|en)$/);
+    return m ? "ulashdi · <b>" + esc(filmName(m[1])) + "</b> " + LANGS[m[2]].f : "ulashdi";
+  }
+  return esc(e.lab);
+}
+
+/* ───────── Bitta odamning butun tarixi ─────────
+   Davrdan qat'i nazar, loglardagi HAMMA yozuvi — eng yangisi yuqorida,
+   kunlar bo'yicha guruhlangan. Uning taklifi bilan kelganlar ham tarixga
+   kiradi ("... ni olib keldi"), chunki bu ham shu odamning harakati. */
+function tarixTugma(uid, nom){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "tarix-btn";
+  b.title = (nom ? nom + " — " : "") + "hodisalar tarixi";
+  b.setAttribute("aria-label", b.title);
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"></path><path d="M3.5 4.5v4h4"></path>' +
+    '<path d="M12 7.5V12l3 2"></path></svg><span>Tarix</span>';
+  b.addEventListener("click", function(){ odamTarixi(uid); });
+  return b;
+}
+
+function odamTarixi(uid){
+  var oz = [], olib = [];
+  for(var i=0; i<ST.rows.length; i++){
+    var r = ST.rows[i];
+    if(r.uid === uid) oz.push(r);
+    else if(r.ev.t === "invited" && r.ev.by === uid) olib.push(r);
+  }
+  var p = personOf(uid) || {name:"ID " + uid, user:""};
+  var uname = p.user && p.user !== "Yo'q" ? p.user : "";
+
+  // Qisqa ma'lumot: kim, qachondan beri, nima qilgan
+  var film = 0, uy = null, manba = null, kanal = null, bot = null, ulash = 0;
+  oz.forEach(function(r){
+    var e = r.ev;
+    if(e.t === "film") film++;
+    else if(e.t === "house") uy = e.house;
+    else if(e.t === "share") ulash++;
+    else if(e.t === "sub" || e.t === "left") kanal = e.t;
+    else if(e.t === "blocked") bot = "blocked";
+    else if(e.t === "start") bot = "start";
+    if(!manba && e.t === "src") manba = "📣 " + e.src;
+    if(!manba && e.t === "invited"){ var q = personOf(e.by); manba = "🤝 " + (q ? q.name : "ID " + e.by); }
+  });
+
+  var sarlavha = p.name + (uy && HOUSES[uy] ? " " + HOUSES[uy].crest : "");
+  katakOyna(sarlavha, function(joy){
+    var bosh = document.createElement("div");
+    bosh.className = "tarix-kim";
+    bosh.innerHTML = (uname ? '<a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
+        '" target="_blank" rel="noopener">' + esc(uname) + '</a> · ' : "") +
+      '<span class="uname">ID ' + esc(uid) + '</span>';
+    joy.appendChild(bosh);
+
+    var ozet = document.createElement("div");
+    ozet.className = "tarq-kpi";
+    var birinchi = oz.length ? oz[0].t : null, oxirgi = oz.length ? oz[oz.length-1].t : null;
+    [["Birinchi kelgan", birinchi ? fmtDay(dayKey(birinchi)) : "—", birinchi ? birinchi.getFullYear() + " · " + fmtTime(birinchi) : ""],
+     ["Oxirgi faollik", oxirgi ? fmtDay(dayKey(oxirgi)) : "—", oxirgi ? fmtTime(oxirgi) : ""],
+     ["Hodisa", fmtNum(oz.length), fmtNum(film) + " ta film · " + fmtNum(ulash) + " ulashish"],
+     ["Fakultet", uy && HOUSES[uy] ? HOUSES[uy].n : "—", uy ? "" : "saralanmagan"],
+     ["Qayerdan", manba ? manba.slice(0, 2) : "✨", manba ? manba.slice(3) : "to'g'ridan-to'g'ri"],
+     ["Holati", kanal === "sub" ? "Kanalda" : kanal === "left" ? "Chiqqan" : "—",
+      (bot === "blocked" ? "botni bloklagan" : "bot faol") + (olib.length ? " · " + olib.length + " kishi olib kelgan" : "")]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val kichik">' + esc(m[1]) +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      ozet.appendChild(d);
+    });
+    joy.appendChild(ozet);
+
+    // Lenta: o'z yozuvlari + uning taklifi bilan kelganlar
+    var hammasi = oz.map(function(r){ return {r:r, ozi:true}; })
+      .concat(olib.map(function(r){ return {r:r, ozi:false}; }))
+      .sort(function(a, b){ return b.r.t - a.r.t; });
+    var lenta = document.createElement("div");
+    lenta.className = "feed";
+    lenta.style.maxHeight = "none";
+    var kun = null;
+    hammasi.forEach(function(x){
+      var dk = dayKey(x.r.t);
+      if(dk !== kun){
+        kun = dk;
+        var kb = document.createElement("div");
+        kb.className = "kun-bosh";
+        kb.textContent = fmtDay(dk) + " " + x.r.t.getFullYear();
+        lenta.appendChild(kb);
+      }
+      var d = document.createElement("div"); d.className = "fe";
+      d.innerHTML = '<span class="ic">' + (x.ozi ? x.r.ev.ic : "🤝") + '</span>' +
+        '<span class="txt">' + (x.ozi ? hodisaMatni(x.r)
+          : "<b>" + esc(x.r.name) + "</b> ni olib keldi") + '</span>' +
+        '<span class="when">' + fmtTime(x.r.t) + '</span>';
+      lenta.appendChild(d);
+    });
+    if(!hammasi.length) lenta.appendChild(emptyNote("Bu odamning yozuvi topilmadi."));
+    joy.appendChild(lenta);
+  });
+}
+
 /* ───────── Asosiy chizish ───────── */
 function render(){
   var app = document.getElementById("app");
@@ -2974,7 +3106,7 @@ function render(){
   var c10 = card("Eng faol sehrgarlar", "davr ichidagi hodisalar bo'yicha", "");
   var tw = document.createElement("div"); tw.className = "tbl-wrap";
   var tb = document.createElement("table");
-  tb.innerHTML = "<thead><tr><th>Sehrgar</th><th class='num'>Hodisa</th><th class='num'>Film</th><th class='num'>Oxirgi</th></tr></thead>";
+  tb.innerHTML = "<thead><tr><th>Sehrgar</th><th class='num'>Hodisa</th><th class='num'>Film</th><th class='num'>Oxirgi</th><th></th></tr></thead>";
   var tbody = document.createElement("tbody");
   top.forEach(function(u){
     var tr = document.createElement("tr");
@@ -2982,7 +3114,9 @@ function render(){
       (u.user && u.user !== "Yo'q" ? " <span class='uname'>" + esc(u.user) + "</span>" : "") +
       (u.house && HOUSES[u.house] ? " " + HOUSES[u.house].crest : "") + "</td>" +
       "<td class='num'>" + u.ev + "</td><td class='num'>" + u.films + "</td>" +
-      "<td class='num'>" + fmtDay(dayKey(u.last)) + " " + fmtTime(u.last) + "</td>";
+      "<td class='num'>" + fmtDay(dayKey(u.last)) + " " + fmtTime(u.last) + "</td>" +
+      "<td class='num tar-td'></td>";
+    tr.lastChild.appendChild(tarixTugma(u.uid, u.name));
     tbody.appendChild(tr);
   });
   tb.appendChild(tbody); tw.appendChild(tb); c10.appendChild(tw);
@@ -2993,12 +3127,7 @@ function render(){
   var feed = document.createElement("div"); feed.className = "feed";
   rows.slice(-120).reverse().forEach(function(r){
     var d = document.createElement("div"); d.className = "fe";
-    var what = r.ev.lab;
-    if(r.ev.t === "film") what = "<b>" + esc(filmName(r.ev.film)) + "</b> " + LANGS[r.ev.lang].f +
-      (r.ev.origin === "web" ? " · ilovadan" : r.ev.origin === "bot" ? " · botdan" : "");
-    else if(r.ev.t === "house") what = "<b>" + esc((HOUSES[r.ev.house]||{n:r.ev.house}).n) + "</b> fakultetiga tushdi";
-    else if(r.ev.t === "src") what = "reklamadan keldi · <b>" + esc(r.ev.src) + "</b>";
-    else what = esc(what);
+    var what = hodisaMatni(r);
     d.innerHTML = '<span class="ic">' + r.ev.ic + '</span>' +
       '<span class="txt"><span class="who">' + esc(r.name) + '</span> — ' + what + '</span>' +
       '<span class="when">' + fmtTime(r.t) + '</span>';
