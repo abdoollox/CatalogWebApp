@@ -354,6 +354,12 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 .donut-son{fill:var(--ink); font-family:'Cormorant Garamond',Georgia,serif; font-size:34px; font-weight:600}
 .donut-ro{display:flex; flex-direction:column; gap:9px; flex:1 1 140px; min-width:0}
 .donut-q{display:grid; grid-template-columns:10px minmax(0,1fr) auto 44px; gap:9px; align-items:center; font-size:13px}
+button.donut-q{border:0; background:transparent; color:inherit; font-family:inherit; text-align:left;
+  padding:4px 6px; margin:-4px -6px; border-radius:7px; cursor:pointer; transition:.15s}
+button.donut-q:hover{background:var(--panel-2)}
+button.donut-q.off{opacity:.42}
+button.donut-q.off .dn{text-decoration:line-through}
+button.donut-q.off .swatch{filter:grayscale(1)}
 .donut-q .dn{color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .donut-q b{font-variant-numeric:tabular-nums; text-align:right}
 .donut-q i{font-style:normal; color:var(--ink-3); font-size:11.5px; text-align:right; font-variant-numeric:tabular-nums}
@@ -600,7 +606,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaM:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -1221,41 +1227,53 @@ function chartUlush(list, ser, holat, balandlik){
   return svg;
 }
 
-/* ───────── Donut: fakultetlar tarkibi ─────────
-   To'rtta bo'lak — doira shu yerda o'rinli. O'rtada jami odam. */
-function donut(items){
+/* ───────── Donut: tarkib ─────────
+   To'rt-olti bo'lak — doira shu yerda o'rinli. O'rtada jami. Ro'yxatdagi
+   qatorni bosib bo'lakni olib turish mumkin: qolganlari 100% ga qayta
+   bo'linadi, foizlar ham shunga moslashadi. Tanlov `ls` kaliti bilan
+   brauzerda eslab qolinadi. */
+function donut(items, ls){
   var box = document.createElement("div");
   box.className = "donut";
-  var jami = items.reduce(function(a, x){ return a + x.val; }, 0);
-  var R = 70, C = 2*Math.PI*R, bosh = 0;
-  var svg = el("svg", {viewBox:"0 0 200 200", role:"img", "aria-label":"Fakultetlar tarkibi"});
+  var R = 70, C = 2*Math.PI*R;
+  var holat = {};
+  items.forEach(function(x){ holat[x.k] = true; });
+  try{
+    var sq = ls && JSON.parse(localStorage.getItem(ls) || "null");
+    if(sq) items.forEach(function(x){ if(typeof sq[x.k] === "boolean") holat[x.k] = sq[x.k]; });
+  }catch(e){}
+  if(!items.some(function(x){ return holat[x.k]; })) items.forEach(function(x){ holat[x.k] = true; });
+
+  function jamiOl(){
+    return items.reduce(function(a, x){ return a + (holat[x.k] ? x.val : 0); }, 0);
+  }
+
+  var svg = el("svg", {viewBox:"0 0 200 200", role:"img", "aria-label":"Tarkib"});
   svg.appendChild(el("circle", {cx:100, cy:100, r:R, fill:"none", stroke:"var(--panel-2)", "stroke-width":26}));
   var tur = el("g", {transform:"rotate(-90 100 100)"});
-  var yozuv = el("text", {x:100, y:104, "text-anchor":"middle", class:"donut-son"}, fmtNum(jami));
+  var yozuv = el("text", {x:100, y:104, "text-anchor":"middle", class:"donut-son"}, "0");
   var osti = el("text", {x:100, y:126, "text-anchor":"middle", class:"tick"}, "odam");
-  items.forEach(function(x, i){
-    var uz = jami ? x.val/jami*C : 0;
-    var bosh0 = bosh;
+  var bolak = items.map(function(x, i){
     var c = el("circle", {cx:100, cy:100, r:R, fill:"none", stroke:x.hex, "stroke-width":26,
-      "stroke-dasharray":"0 " + C, "stroke-dashoffset":-bosh0});
-    c.style.transition = "stroke-dasharray .7s " + TEZLIK + " " + (i*90) + "ms, stroke-width .15s";
-    var bor = Math.max(0, uz - (items.length > 1 ? 2 : 0));   // bo'laklar orasida ingichka tirqish
-    keyinroq(function(){ c.setAttribute("stroke-dasharray", bor + " " + (C - bor)); });
-    c.style.cursor = "default";
+      "stroke-dasharray":"0 " + C, "stroke-dashoffset":0});
+    c.style.transition = "stroke-dasharray .6s " + TEZLIK + " " + (i*70) + "ms, " +
+      "stroke-dashoffset .6s " + TEZLIK + " " + (i*70) + "ms, stroke-width .15s";
     c.addEventListener("mousemove", function(e){
+      if(!holat[x.k]) return;
+      var jami = jamiOl();
       c.setAttribute("stroke-width", 30);
       yozuv.textContent = fmtNum(x.val); osti.textContent = x.n;
       tipShow(e.clientX, e.clientY, '<div class="tt">' + esc(x.lab) + '</div>' +
         '<div class="tr"><span>Odam</span><b>' + fmtNum(x.val) + '</b></div>' +
-        '<div class="tr"><span>Ulushi</span><b>' + (x.val/jami*100).toFixed(1) + '%</b></div>');
+        '<div class="tr"><span>Ulushi</span><b>' + (jami ? x.val/jami*100 : 0).toFixed(1) + '%</b></div>');
     });
     c.addEventListener("mouseleave", function(){
       c.setAttribute("stroke-width", 26);
-      yozuv.textContent = fmtNum(jami); osti.textContent = "odam";
+      yozuv.textContent = fmtNum(jamiOl()); osti.textContent = "odam";
       tipHide();
     });
     tur.appendChild(c);
-    bosh += uz;
+    return c;
   });
   svg.appendChild(tur);
   svg.appendChild(yozuv);
@@ -1264,16 +1282,44 @@ function donut(items){
 
   var ro = document.createElement("div");
   ro.className = "donut-ro";
-  items.forEach(function(x){
-    var q = document.createElement("div");
+  var qatorlar = items.map(function(x){
+    var q = document.createElement("button");
+    q.type = "button";
     q.className = "donut-q";
+    q.title = "Bosib olib turing";
     q.innerHTML = '<span class="swatch" style="background:' + x.hex + '"></span>' +
       '<span class="dn">' + esc(x.lab) + '</span>' +
-      '<b>' + fmtNum(x.val) + '</b>' +
-      '<i>' + (jami ? (x.val/jami*100).toFixed(1).replace(/\.0$/, "") : 0) + '%</i>';
+      '<b>' + fmtNum(x.val) + '</b><i></i>';
+    q.addEventListener("click", function(){
+      var faol = items.filter(function(y){ return holat[y.k]; });
+      if(faol.length === 1 && holat[x.k]) return;      // oxirgisini o'chirmaymiz
+      holat[x.k] = !holat[x.k];
+      try{ if(ls) localStorage.setItem(ls, JSON.stringify(holat)); }catch(e){}
+      chiz();
+    });
     ro.appendChild(q);
+    return q;
   });
   box.appendChild(ro);
+
+  function chiz(){
+    var jami = jamiOl(), bosh = 0;
+    var faolSoni = items.filter(function(x){ return holat[x.k] && x.val; }).length;
+    items.forEach(function(x, i){
+      var uz = (holat[x.k] && jami) ? x.val/jami*C : 0;
+      var bor = Math.max(0, uz - (faolSoni > 1 && uz ? 2 : 0));   // bo'laklar orasida tirqish
+      bolak[i].setAttribute("stroke-dasharray", bor + " " + (C - bor));
+      bolak[i].setAttribute("stroke-dashoffset", -bosh);
+      bosh += uz;
+      var q = qatorlar[i];
+      q.classList.toggle("off", !holat[x.k]);
+      q.setAttribute("aria-pressed", String(!!holat[x.k]));
+      q.querySelector("i").textContent = holat[x.k] && jami
+        ? (x.val/jami*100).toFixed(1).replace(/\.0$/, "") + "%" : "—";
+    });
+    yozuv.textContent = fmtNum(jami);
+  }
+  keyinroq(chiz);
   return box;
 }
 
@@ -2449,8 +2495,8 @@ function render(){
   if(hk.length){
     var hTot = hk.reduce(function(a,h){ return a + s.houses[h]; }, 0);
     c4.appendChild(donut(hk.sort(function(a,b){ return s.houses[b]-s.houses[a]; }).map(function(h){
-      return {lab: HOUSES[h].crest + " " + HOUSES[h].n, n: HOUSES[h].n, val: s.houses[h], hex: HOUSE_HEX[h]};
-    })));
+      return {k:h, lab: HOUSES[h].crest + " " + HOUSES[h].n, n: HOUSES[h].n, val: s.houses[h], hex: HOUSE_HEX[h]};
+    }), "hp_dash_hdonut"));
     addTable(c4, ["Fakultet","Soni","Ulushi"], hk.map(function(h){
       return [HOUSES[h].n, s.houses[h], (s.houses[h]/hTot*100).toFixed(1)+"%"];
     }));
@@ -2575,13 +2621,11 @@ function render(){
     if(mr.ev.t === "src" && !mSrc[mr.uid]) mSrc[mr.uid] = mr.ev.src;
     else if(mr.ev.t === "invited") mInv[mr.uid] = 1;
   }
-  var mTuri = {}, mKirdi = {}, mSon = {};
+  var mTuri = {}, mSon = {};
   Object.keys(s.set["new"]).forEach(function(uid){
     var k = mSrc[uid] ? "src_" + mSrc[uid] : (mInv[uid] ? "dost" : "togri");
     mTuri[uid] = k;
     mSon[k] = (mSon[k] || 0) + 1;
-    var f0 = first[uid];
-    mKirdi[uid] = birKun ? String(f0.getHours()).padStart(2, "0") : dayKey(f0);
   });
   // Reklama kodlari ko'p bo'lsa, eng kattalari o'z rangida, qolgani "Boshqa kodlar"
   var MRANG = ["#3987e5", "#c98500", "#9085e9", "#d03b3b", "#2fa3a3"];
@@ -2604,18 +2648,14 @@ function render(){
   if(mSer.length){
     var mTart = mSer.slice().sort(function(a, b){ return mSon[b.k] - mSon[a.k]; });
     c6.appendChild(donut(mTart.map(function(x){
-      return {lab:x.n, n:x.t, val:mSon[x.k], hex:x.c};
-    })));
+      return {k:x.k, lab:x.n, n:x.t, val:mSon[x.k], hex:x.c};
+    }), "hp_dash_mdonut"));
     var mJami = s.newUsers || 1;
     addTable(c6, ["Manba","Odam","Ulushi"], mTart.map(function(x){
       return [x.t, mSon[x.k], (mSon[x.k]/mJami*100).toFixed(1) + "%"];
     }));
   } else c6.appendChild(emptyNote("Bu davrda yangi odam kelmagan."));
   put("odamlar", c6);
-  if(mSer.length) put("odamlar", poygaKarta({
-    nom:"Manbalar poygasi", dayList:dayList, birKun:birKun, oyna:"oynaM", ls:"hp_dash_srcs",
-    kirdi:mKirdi, turi:mTuri, ser:mSer
-  }));
 
   /* — Bot va ilova — */
   var c7 = card("Film qayerdan olindi", "ilova yoki bot chati", "third");
@@ -2673,7 +2713,7 @@ function render(){
   put("kanal", c8);
 
   /* — Ulashish — */
-  var c9 = card("Tarqalish", "inline ulashish va do'st ballari", "");
+  var c9 = card("Tarqalish", "inline ulashish va do'st ballari", "twothird");
   c9.appendChild(barList([
     {lab:"🔗 Ulashdi", val:s.shares, color:S1},
     {lab:"🤝 Taklif bilan keldi", val:s.invited, color:S3},
@@ -3230,7 +3270,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -3247,7 +3287,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -3287,11 +3327,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaM = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
