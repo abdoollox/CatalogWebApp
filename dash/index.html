@@ -852,7 +852,7 @@ function stats(rows, first, w){
       case "sub":     s.sub++; break;
       case "left":    s.left++; break;
       case "blocked": s.blocked++; break;
-      case "house":   s.houses[e.house] = (s.houses[e.house]||0)+1; pu.house = e.house; break;
+      case "house":   pu.house = e.house; break;
       case "src":     s.srcs[e.src] = (s.srcs[e.src]||0)+1; break;
       case "invited": s.invited++; break;
       case "refwin":  s.refwin++; break;
@@ -860,6 +860,13 @@ function stats(rows, first, w){
       case "undo":    s.undo++; break;
       case "sortst":  s.sortStart++; break;
     }
+  }
+  // Fakultet — ODAM bo'yicha, oxirgi tanlovi bilan. Ilgari har saralanish
+  // alohida sanalardi: fakultetini almashtirgan odam ikki-uch marta, ikki
+  // fakultetda birdaniga ko'rinardi (207 odam o'rniga ~370).
+  for(var hu in s.set.house){
+    var hh = s.perUser[hu] && s.perUser[hu].house;
+    if(hh) s.houses[hh] = (s.houses[hh]||0) + 1;
   }
   for(var k in s.days) s.days[k].uq = Object.keys(s.days[k].u).length;
   s.soat.forEach(function(x){ x.uq = Object.keys(x.u).length; });
