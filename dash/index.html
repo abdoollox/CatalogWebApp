@@ -45,10 +45,12 @@ button{font-family:inherit; color:inherit}
   padding-inline:clamp(16px, 2.2vw, 34px);
   backdrop-filter:blur(8px);
 }
-.brand{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
-.brand h1{font-size:27px; letter-spacing:.01em; color:var(--gold); line-height:1.1}
-.brand .sub{font-size:12.5px; color:var(--ink-3); letter-spacing:.04em; text-transform:uppercase}
-.bar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:11px}
+.bosh{display:flex; align-items:center; gap:10px 22px; flex-wrap:wrap}
+.bosh h1{
+  font-size:clamp(20px, 1.5vw, 24px); letter-spacing:.01em; color:var(--gold);
+  line-height:1.1; white-space:nowrap; flex:none;
+}
+.asboblar{display:flex; align-items:center; gap:8px; margin-left:auto; flex:none}
 .seg{display:flex; background:var(--panel); border:1px solid var(--line-2); border-radius:10px; padding:3px; gap:2px}
 .seg button{
   border:0; background:transparent; color:var(--ink-2); font-size:12.5px; font-weight:600;
@@ -104,7 +106,7 @@ button{font-family:inherit; color:inherit}
   font-weight:700; padding:7px 11px 4px;
 }
 .range-pick{
-  display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:9px;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px;
   padding:10px 12px; background:var(--panel); border:1px solid var(--line);
   border-radius:12px;
 }
@@ -124,24 +126,29 @@ button{font-family:inherit; color:inherit}
 }
 .range-pick .tayyor button:hover{border-color:var(--gold-2); color:var(--gold)}
 .tabs{
-  display:flex; gap:2px; margin-top:14px; overflow-x:auto; scrollbar-width:none;
-  border-bottom:1px solid var(--line-2);
+  display:flex; gap:3px; overflow-x:auto; scrollbar-width:none;
+  background:var(--panel); border:1px solid var(--line-2); border-radius:12px; padding:4px;
 }
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{
   border:0; background:transparent; color:var(--ink-3); font-family:'Cormorant Garamond',serif;
-  font-size:19px; font-weight:600; padding:7px 15px 9px; cursor:pointer; white-space:nowrap;
-  border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s; letter-spacing:.01em;
+  font-size:17.5px; font-weight:600; padding:6px 14px; cursor:pointer; white-space:nowrap;
+  border-radius:9px; transition:.15s; letter-spacing:.01em;
 }
-.tabs button:hover{color:var(--ink-2)}
-.tabs button[aria-selected="true"]{color:var(--gold-hi); border-bottom-color:var(--gold)}
+.tabs button:hover{color:var(--ink-2); background:var(--panel-2)}
+.tabs button[aria-selected="true"]{color:var(--gold-hi); background:rgba(231,193,112,.14)}
 .tabs button .n{
-  font-family:'Manrope',sans-serif; font-size:11px; font-weight:700; color:var(--ink-3);
-  margin-left:6px; font-variant-numeric:tabular-nums;
+  font-family:'Manrope',sans-serif; font-size:10.5px; font-weight:700; color:var(--ink-3);
+  margin-left:5px; font-variant-numeric:tabular-nums;
 }
 .tabs button[aria-selected="true"] .n{color:var(--gold-2)}
+@media (max-width:900px){
+  .bosh{gap:9px 14px}
+  .tabs{order:3; flex-basis:100%}
+  .asboblar{margin-left:auto}
+}
 .src-line{
-  display:flex; align-items:center; gap:9px; margin-top:10px; font-size:12.5px; color:var(--ink-3);
+  display:flex; align-items:center; gap:9px; margin-top:9px; font-size:12px; color:var(--ink-3);
   flex-wrap:wrap;
 }
 .dot{width:7px; height:7px; border-radius:50%; background:var(--good); flex:none}
@@ -318,39 +325,38 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 
 <div class="wrap">
   <header class="top">
-    <div class="brand">
+    <div class="bosh">
       <h1>Garri Potter Dashboard</h1>
-    </div>
-    <div class="bar">
-      <div class="davr-wrap">
-        <button class="btn davr-btn" id="davr-btn" aria-haspopup="true" aria-expanded="false">
-          <span id="davr-nom">30 kun</span><span class="strelka">▾</span>
+      <nav class="tabs" id="tabs" role="tablist"></nav>
+      <div class="asboblar">
+        <div class="davr-wrap">
+          <button class="btn davr-btn" id="davr-btn" aria-haspopup="true" aria-expanded="false">
+            <span id="davr-nom">30 kun</span><span class="strelka">▾</span>
+          </button>
+          <div class="davr-menu" id="davr-menu" hidden role="menu"></div>
+        </div>
+        <button class="ibtn" id="open-src" title="Ma'lumot manbai" aria-label="Ma'lumot manbai">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <ellipse cx="12" cy="5.5" rx="7.5" ry="3"></ellipse>
+            <path d="M4.5 5.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
+            <path d="M4.5 11.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
+          </svg>
         </button>
-        <div class="davr-menu" id="davr-menu" hidden role="menu"></div>
+        <button class="ibtn" id="refresh" title="Yangilash" aria-label="Yangilash">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 5v6h-6"></path>
+          </svg>
+        </button>
+        <button class="ibtn" id="fullscr" title="To'liq ekran (F)" aria-label="To'liq ekran">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 3H3v5"></path><path d="M16 3h5v5"></path>
+            <path d="M16 21h5v-5"></path><path d="M8 21H3v-5"></path>
+          </svg>
+        </button>
       </div>
-      <span class="spacer"></span>
-      <button class="ibtn" id="open-src" title="Ma'lumot manbai" aria-label="Ma'lumot manbai">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <ellipse cx="12" cy="5.5" rx="7.5" ry="3"></ellipse>
-          <path d="M4.5 5.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
-          <path d="M4.5 11.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
-        </svg>
-      </button>
-      <button class="ibtn" id="refresh" title="Yangilash" aria-label="Yangilash">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20 11a8 8 0 1 0-2.3 5.7"></path>
-          <path d="M20 5v6h-6"></path>
-        </svg>
-      </button>
-      <button class="ibtn" id="fullscr" title="To'liq ekran (F)" aria-label="To'liq ekran">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M8 3H3v5"></path><path d="M16 3h5v5"></path>
-          <path d="M16 21h5v-5"></path><path d="M8 21H3v-5"></path>
-        </svg>
-      </button>
     </div>
     <div class="range-pick" id="range-pick" hidden>
       <label for="d-from">dan</label>
@@ -362,7 +368,6 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <span class="err" id="d-err" hidden></span>
     </div>
     <div class="src-line" id="srcline"></div>
-    <nav class="tabs" id="tabs" role="tablist"></nav>
   </header>
 
   <main id="app"></main>
@@ -2235,6 +2240,39 @@ function demoRows(){
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
+
+/* ───────── To'liq ekran ─────────
+   Chrome'da sahifani to'liq ekranga o'tkazadigan menyu yo'q, shuning uchun
+   o'z tugmamiz va F qisqartmasi. */
+function toliqEkran(){
+  var d = document.documentElement;
+  var ichkarida = document.fullscreenElement || document.webkitFullscreenElement;
+  try{
+    if(ichkarida){
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    } else {
+      (d.requestFullscreen || d.webkitRequestFullscreen).call(d);
+    }
+  }catch(e){}
+}
+document.getElementById("fullscr").addEventListener("click", toliqEkran);
+["fullscreenchange", "webkitfullscreenchange"].forEach(function(n){
+  document.addEventListener(n, function(){
+    var b = document.getElementById("fullscr");
+    var ichkarida = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    b.title = (ichkarida ? "To'liq ekrandan chiqish" : "To'liq ekran") + " (F)";
+    b.classList.toggle("yoniq", ichkarida);
+  });
+});
+document.addEventListener("keydown", function(e){
+  if(e.key !== "f" && e.key !== "F") return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  // Sana yoki havola yozayotganda "f" harfini o'g'irlamaymiz
+  var t = e.target;
+  if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+  e.preventDefault();
+  toliqEkran();
+});
 
 document.getElementById("open-src").addEventListener("click", openSheet);
 document.getElementById("refresh").addEventListener("click", function(){
