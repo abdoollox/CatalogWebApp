@@ -373,6 +373,9 @@ td.eng{color:#3fbf6a; font-weight:700}
 .tarq-kpi .k-lab{font-size:11px; color:var(--ink-3); letter-spacing:.05em; text-transform:uppercase; font-weight:600}
 .tarq-kpi .tk-val{font-family:'Cormorant Garamond',Georgia,serif; font-size:30px; line-height:1.1; font-weight:600; font-variant-numeric:lining-nums tabular-nums}
 .tarq-kpi .tk-sub{font-size:11.5px; color:var(--ink-3)}
+th.sort{cursor:pointer; user-select:none; transition:color .15s}
+th.sort:hover{color:var(--ink-2)}
+th.sort.on{color:var(--gold-hi)}
 .tarq-bosh{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:18px 0 0}
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
@@ -2533,14 +2536,29 @@ function render(){
   /* — Fakultetlar faolligi — */
   // Kanal va bot holati davr OXIRIGACHA bo'lgan barcha yozuvlardan olinadi:
   // odam davrdan oldin qo'shilib, davr ichida chiqib ketgan bo'lishi mumkin.
-  var kanalH = {}, botH = {};
+  var kanalH = {}, botH = {}, filmBor = {}, balli = {}, uyi = {};
   for(var ri=0; ri<ST.rows.length; ri++){
     var rr = ST.rows[ri];
     if(rr.t > w.to) break;
     if(rr.ev.t === "sub" || rr.ev.t === "left") kanalH[rr.uid] = rr.ev.t;
     else if(rr.ev.t === "blocked") botH[rr.uid] = "blocked";
     else if(rr.ev.t === "start") botH[rr.uid] = "start";
+    else if(rr.ev.t === "film") filmBor[rr.uid] = 1;
+    else if(rr.ev.t === "refwin") balli[rr.uid] = 1;
+    else if(rr.ev.t === "house") uyi[rr.uid] = rr.ev.house;   // oxirgi tanlov
   }
+  // Kim kimni olib keldi: `invited_<taklifchi>` yozuvi taklif qilingan odamning
+  // o'zida turadi. Har odam bir marta, birinchi taklifchisi bo'yicha.
+  var kimdan = {};
+  rows.forEach(function(r){
+    if(r.ev.t === "invited" && !kimdan[r.uid] && r.ev.by !== r.uid) kimdan[r.uid] = r.ev.by;
+  });
+  // Fakultet olib kelgan odamlar — taklifchining fakulteti bo'yicha
+  var olibH = {};
+  Object.keys(kimdan).forEach(function(uid){
+    var hh = uyi[kimdan[uid]];
+    if(hh) olibH[hh] = (olibH[hh] || 0) + 1;
+  });
   var fQ = {};
   Object.keys(s.set.house).forEach(function(uid){
     var pu = s.perUser[uid], hh = pu && pu.house;
@@ -2557,7 +2575,7 @@ function render(){
   if(fK.length){
     var qiy = fK.map(function(h){
       var q = fQ[h];
-      return {h:h, a:q.a, film:q.film/q.a, chiqdi:q.chiqdi/q.a*100, blok:q.blok/q.a*100};
+      return {h:h, a:q.a, olib:olibH[h] || 0, film:q.film/q.a, chiqdi:q.chiqdi/q.a*100, blok:q.blok/q.a*100};
     });
     // Har ustunda eng yaxshi qiymat yashil: film ko'p bo'lsa, ketish kam bo'lsa yaxshi.
     // Tenglar hammasi belgilanadi; hamma teng bo'lsa — hech biri (ajratadigan narsa yo'q).
@@ -2570,10 +2588,10 @@ function render(){
       qiy.forEach(function(x, i){ if(v[i] === chegara) yax[x.h] = 1; });
       return yax;
     }
-    var engFilm = eng("film", true), engChiq = eng("chiqdi", false), engBlok = eng("blok", false);
+    var engOlib = eng("olib", true), engFilm = eng("film", true), engChiq = eng("chiqdi", false), engBlok = eng("blok", false);
     var tw2 = document.createElement("div"); tw2.className = "tbl-wrap";
     var tb2 = document.createElement("table");
-    tb2.innerHTML = "<thead><tr><th>Fakultet</th><th class='num'>A'zo</th><th class='num'>Film / odam</th>" +
+    tb2.innerHTML = "<thead><tr><th>Fakultet</th><th class='num'>A'zo</th><th class='num' title='Shu fakultet a&#39;zolari taklif havolasi bilan olib kelgan yangi odamlar'>Olib kelgan</th><th class='num'>Film / odam</th>" +
       "<th class='num'>Kanaldan chiqqan</th><th class='num'>Botni bloklagan</th></tr></thead>";
     var tbd = document.createElement("tbody");
     qiy.forEach(function(x){
@@ -2581,6 +2599,7 @@ function render(){
       tr.innerHTML = "<td><span class='swatch' style='display:inline-block;margin-right:8px;background:" +
           HOUSE_HEX[x.h] + "'></span>" + HOUSES[x.h].crest + " " + esc(HOUSES[x.h].n) + "</td>" +
         "<td class='num'>" + fmtNum(x.a) + "</td>" +
+        "<td class='num" + (engOlib[x.h] ? " eng" : "") + "'>" + fmtNum(x.olib) + "</td>" +
         "<td class='num" + (engFilm[x.h] ? " eng" : "") + "'>" + x.film.toFixed(1) + "</td>" +
         "<td class='num" + (engChiq[x.h] ? " eng" : "") + "'>" + x.chiqdi.toFixed(1) + "%</td>" +
         "<td class='num" + (engBlok[x.h] ? " eng" : "") + "'>" + x.blok.toFixed(1) + "%</td>";
@@ -2720,32 +2739,33 @@ function render(){
   put("kanal", c8);
 
   /* — Tarqalish — */
-  // Kim kimni olib keldi: `invited_<taklifchi>` yozuvi taklif qilingan odamning
-  // o'zida turadi. Har odam bir marta, birinchi taklifchisi bo'yicha.
-  var kimdan = {}, filmBor = {};
-  for(var ti=0; ti<ST.rows.length; ti++){
-    var tr0 = ST.rows[ti];
-    if(tr0.t > w.to) break;
-    if(tr0.ev.t === "film") filmBor[tr0.uid] = 1;
-  }
-  rows.forEach(function(r){
-    if(r.ev.t === "invited" && !kimdan[r.uid] && r.ev.by !== r.uid) kimdan[r.uid] = r.ev.by;
-  });
+  // Taklif ikki bosqichli (bot shunday ishlaydi): yangi odam havola bilan
+  // /start bossa — `invited_<taklifchi>`, kanalga qo'shilsa — `ref_awarded`
+  // (taklifchiga shunda ball beriladi). Jadvalda ikkalasi ham ko'rinadi.
+  var ulash = {};
+  rows.forEach(function(r){ if(r.ev.t === "share") ulash[r.uid] = (ulash[r.uid] || 0) + 1; });
   var taklifchi = {};
+  function taklifchiOl(id){
+    if(!taklifchi[id]) taklifchi[id] = {id:id, ulash:0, n:0, kanal:0, film:0, qoldi:0};
+    return taklifchi[id];
+  }
+  Object.keys(ulash).forEach(function(uid){ taklifchiOl(uid).ulash = ulash[uid]; });
   Object.keys(kimdan).forEach(function(uid){
-    var by = kimdan[uid];
-    if(!taklifchi[by]) taklifchi[by] = {id:by, n:0, film:0, qoldi:0};
-    taklifchi[by].n++;
-    if(filmBor[uid]) taklifchi[by].film++;
-    if(kanalH[uid] === "sub") taklifchi[by].qoldi++;
+    var q = taklifchiOl(kimdan[uid]);
+    q.n++;
+    if(balli[uid]) q.kanal++;
+    if(filmBor[uid]) q.film++;
+    if(kanalH[uid] === "sub") q.qoldi++;
   });
-  var tSoni = Object.keys(taklifchi).length, kSoni = Object.keys(kimdan).length;
+  var tSoni = Object.values(taklifchi).filter(function(x){ return x.n; }).length;
+  var kSoni = Object.keys(kimdan).length;
+  var bSoni = Object.keys(kimdan).filter(function(uid){ return balli[uid]; }).length;
 
   var c9 = card("Tarqalish", "do'st taklifi va ulashish", "twothird");
   var mini9 = document.createElement("div");
   mini9.className = "tarq-kpi";
   [["Taklifchi", fmtNum(tSoni), "kamida bitta odam olib kelgan"],
-   ["Olib kelindi", fmtNum(kSoni), "taklif havolasi bilan kelgan odam"],
+   ["Olib kelindi", fmtNum(kSoni), kSoni ? fmtNum(bSoni) + " tasi kanalga qo'shildi" : "taklif havolasi bilan kelgan"],
    ["Tarqalish kuchi", tSoni ? (kSoni/tSoni).toFixed(1) : "—", "bir taklifchiga o'rtacha odam"],
    ["Ulashish samarasi", s.shares ? Math.round(kSoni/s.shares*100) : "—",
     s.shares ? "100 ulashishga yangi odam · " + fmtNum(s.shares) + " ulashish" : "bu davrda ulashilmagan"]
@@ -2758,32 +2778,77 @@ function render(){
   });
   c9.appendChild(mini9);
 
-  var topT = Object.values(taklifchi).sort(function(a, b){ return b.n - a.n || b.film - a.film; }).slice(0, 10);
-  if(topT.length){
+  var hammasi = Object.values(taklifchi);
+  if(hammasi.length){
     var h9 = document.createElement("div");
     h9.className = "tarq-bosh";
-    h9.textContent = "Eng yaxshi taklifchilar";
+    h9.textContent = "TOP 10 · ustun nomini bosib saralang";
     c9.appendChild(h9);
+    var USTUN = [
+      {k:"ulash", n:"Ulashdi"},
+      {k:"n",     n:"Olib keldi"},
+      {k:"kanal", n:"Kanalga qo'shildi", ulush:true},
+      {k:"film",  n:"Film olgan", ulush:true},
+      {k:"qoldi", n:"Kanalda qolgan", ulush:true}
+    ];
+    var tart = {k:"n", pas:false};
+    try{
+      var ts = JSON.parse(localStorage.getItem("hp_dash_tsort") || "null");
+      if(ts && USTUN.some(function(u){ return u.k === ts.k; })) tart = ts;
+    }catch(e){}
     var tw9 = document.createElement("div"); tw9.className = "tbl-wrap";
     var tb9 = document.createElement("table");
-    tb9.innerHTML = "<thead><tr><th>#</th><th>Taklifchi</th><th class='num'>Olib keldi</th>" +
-      "<th class='num'>Film olgan</th><th class='num'>Kanalda qolgan</th></tr></thead>";
-    var tbd9 = document.createElement("tbody");
-    topT.forEach(function(x, i){
-      var p = personOf(x.id);
-      var uname = p && p.user && p.user !== "Yo'q" ? p.user : "";
-      var ism = p ? esc(p.name) : "ID " + esc(x.id);
-      var tr9 = document.createElement("tr");
-      tr9.innerHTML = "<td style='color:var(--ink-3)'>" + (i+1) + "</td><td>" + ism +
-        (uname ? ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
-          '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "") + "</td>" +
-        "<td class='num'><b>" + fmtNum(x.n) + "</b></td>" +
-        "<td class='num'>" + fmtNum(x.film) + " <span class='uname'>" + Math.round(x.film/x.n*100) + "%</span></td>" +
-        "<td class='num'>" + fmtNum(x.qoldi) + " <span class='uname'>" + Math.round(x.qoldi/x.n*100) + "%</span></td>";
-      tbd9.appendChild(tr9);
+    var thead9 = document.createElement("thead"), hr9 = document.createElement("tr");
+    hr9.innerHTML = "<th>#</th><th>Odam</th>";
+    var thlar = USTUN.map(function(u){
+      var th = document.createElement("th");
+      th.className = "num sort";
+      th.tabIndex = 0;
+      th.addEventListener("click", function(){ saralaT(u.k); });
+      th.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); saralaT(u.k); } });
+      hr9.appendChild(th);
+      return th;
     });
+    thead9.appendChild(hr9); tb9.appendChild(thead9);
+    var tbd9 = document.createElement("tbody");
     tb9.appendChild(tbd9); tw9.appendChild(tb9); c9.appendChild(tw9);
-  } else c9.appendChild(emptyNote("Bu davrda hech kim taklif havolasi orqali kelmagan."));
+
+    function saralaT(k){
+      // Bir xil ustun qayta bosilsa — tartib teskari; yangisi — kattadan kichikka
+      tart = (tart.k === k) ? {k:k, pas:!tart.pas} : {k:k, pas:false};
+      try{ localStorage.setItem("hp_dash_tsort", JSON.stringify(tart)); }catch(e){}
+      tchiz();
+    }
+    function tchiz(){
+      USTUN.forEach(function(u, i){
+        var on = tart.k === u.k;
+        thlar[i].classList.toggle("on", on);
+        thlar[i].setAttribute("aria-sort", on ? (tart.pas ? "ascending" : "descending") : "none");
+        thlar[i].textContent = u.n + (on ? (tart.pas ? " ↑" : " ↓") : "");
+      });
+      var top = hammasi.slice().sort(function(a, b){
+        var d = tart.pas ? a[tart.k] - b[tart.k] : b[tart.k] - a[tart.k];
+        return d || (b.n - a.n) || (b.ulash - a.ulash);
+      }).slice(0, 10);
+      tbd9.innerHTML = "";
+      top.forEach(function(x, i){
+        var p = personOf(x.id);
+        var uname = p && p.user && p.user !== "Yo'q" ? p.user : "";
+        var tr9 = document.createElement("tr");
+        var h = "<td style='color:var(--ink-3)'>" + (i+1) + "</td><td>" + (p ? esc(p.name) : "ID " + esc(x.id)) +
+          (uname ? ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
+            '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "") + "</td>";
+        USTUN.forEach(function(u){
+          var v = x[u.k];
+          h += "<td class='num'>" + (tart.k === u.k ? "<b>" + fmtNum(v) + "</b>" : fmtNum(v)) +
+            (u.ulush && x.n ? " <span class='uname'>" + Math.round(v/x.n*100) + "%</span>" : "") + "</td>";
+        });
+        tr9.innerHTML = h;
+        tbd9.appendChild(tr9);
+      });
+    }
+    tchiz();
+  } else c9.appendChild(emptyNote("Bu davrda hech kim ulashmagan va taklif havolasi orqali kelmagan."));
   put("odamlar", c9);
 
   /* — Chiqib ketish sabablari — */
