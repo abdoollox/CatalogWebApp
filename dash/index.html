@@ -720,6 +720,11 @@ function stats(rows, first, w){
   var s = {
     events: rows.length, users:{}, newUsers:0, films:0, filmBy:{}, langs:{uz:0,ru:0,en:0},
     hours:new Array(24).fill(0), days:{}, sub:0, left:0, blocked:0, starts:0,
+    soat:(function(){
+      var a = [];
+      for(var i=0; i<24; i++) a.push({h:i, ev:0, u:{}, movie:0, start:0, sub:0, left:0, blocked:0});
+      return a;
+    })(),
     houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0},
     perUser:{}, byFilmLang:{}, seriya:{hp:0, fb:0},
     set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}, "new":{}}
@@ -732,7 +737,12 @@ function stats(rows, first, w){
     // u ikki marta "yangi" bo'lib ko'rinardi.
     if(first[r.uid] && first[r.uid] >= w.from && first[r.uid] <= w.to)
       s.set["new"][r.uid] = 1;
-    s.hours[r.t.getHours()]++;
+    var sh = r.t.getHours();
+    s.hours[sh]++;
+    s.soat[sh].ev++;
+    s.soat[sh].u[r.uid] = 1;
+    if(e.t === "film") s.soat[sh].movie++;
+    else if(s.soat[sh][e.t] !== undefined) s.soat[sh][e.t]++;
     var dk = dayKey(r.t);
     if(!s.days[dk]) s.days[dk] = {ev:0, u:{}, movie:0, start:0, sub:0, left:0, blocked:0};
     s.days[dk].ev++; s.days[dk].u[r.uid] = 1;
@@ -768,6 +778,7 @@ function stats(rows, first, w){
     }
   }
   for(var k in s.days) s.days[k].uq = Object.keys(s.days[k].u).length;
+  s.soat.forEach(function(x){ x.uq = Object.keys(x.u).length; });
   s.uniq = Object.keys(s.users).length;
   s.who = {};
   for(var t in s.set) s.who[t] = Object.keys(s.set[t]).length;
@@ -848,9 +859,13 @@ function chartDaily(dayList, holat, balandlik){
     chiziq[x.k] = {g:grup, yol:yol, uchi:uchi, maydon:maydon, ser:x, idx:idx, bor:false};
   });
 
-  var step = Math.max(1, Math.ceil(n/6));
-  for(var i=0; i<n; i += step)
-    svg.appendChild(el("text", {x:X(i), y:H-8, "text-anchor":"middle", class:"tick"}, fmtDay(dayList[i].k)));
+  // Soatlik ko'rinishda yorliqlar allaqachon tanlab qo'yilgan (har uchinchisi),
+  // kunlik ko'rinishda oltitagacha yorliq qoldiramiz.
+  var step = (n === 24) ? 1 : Math.max(1, Math.ceil(n/6));
+  for(var i=0; i<n; i += step){
+    var matn = dayList[i].lab !== undefined ? dayList[i].lab : fmtDay(dayList[i].k);
+    if(matn) svg.appendChild(el("text", {x:X(i), y:H-8, "text-anchor":"middle", class:"tick"}, matn));
+  }
 
   var bosh = el("text", {x:W/2, y:H/2, "text-anchor":"middle", class:"slab", fill:"var(--ink-3)"},
     "Ko'rsatkichni tanlang");
@@ -891,7 +906,8 @@ function chartDaily(dayList, holat, balandlik){
       qator += '<div class="tr"><span><span class="swatch" style="display:inline-block;background:' +
         x.c + '"></span> ' + esc(x.n) + '</span><b>' + fmtNum(d[x.k]) + '</b></div>';
     });
-    tipShow(ev.clientX, r.top + (engY/H)*r.height, '<div class="tt">' + fmtDay(d.k) + '</div>' + qator);
+    tipShow(ev.clientX, r.top + (engY/H)*r.height,
+      '<div class="tt">' + esc(d.tip || fmtDay(d.k)) + '</div>' + qator);
   }
   hit.addEventListener("mousemove", move);
   hit.addEventListener("touchmove", function(e){ if(e.touches[0]) move(e.touches[0]); });
@@ -1522,7 +1538,7 @@ function render(){
     var k = dayKey(cur);
     var d = s.days[k];
     dayList.push({
-      k: k,
+      k: k, lab: fmtDay(k), tip: fmtDay(k),
       movie: d ? d.movie : 0,
       start: d ? d.start : 0, sub: d ? d.sub : 0,
       left: d ? d.left : 0,   blocked: d ? d.blocked : 0,
@@ -1530,8 +1546,24 @@ function render(){
     });
     cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate()+1);
   }
-  var c1 = card("Kundalik jonlanish",
-    dayList.length + " kun · ko'rsatkich nomini bosib olib turing", "twothird");
+  // Bir kunlik davrda kunlik nuqta ma'nosiz — o'sha kunning soatlari ko'rsatiladi.
+  var birKun = dayList.length === 1;
+  if(birKun){
+    dayList = s.soat.map(function(x){
+      var hh = String(x.h).padStart(2, "0");
+      return {
+        k: hh,
+        lab: (x.h % 3 === 0) ? (hh + ":00") : "",
+        tip: hh + ":00 – " + hh + ":59",
+        movie:x.movie, start:x.start, sub:x.sub, left:x.left, blocked:x.blocked,
+        uq:x.uq, ev:x.ev
+      };
+    });
+  }
+
+  var c1 = card(birKun ? "Sutka davomida" : "Kundalik jonlanish",
+    (birKun ? "soatlar bo'yicha" : dayList.length + " kun") +
+    " · ko'rsatkich nomini bosib olib turing", "twothird");
   var holat = seriyaHolati();
   var f1 = document.createElement("figure");
   var kunSvg = chartDaily(dayList, holat);
@@ -1550,9 +1582,9 @@ function render(){
   }));
   f1.appendChild(kunSvg);
   c1.appendChild(f1);
-  addTable(c1, ["Kun","start","subscribed","movie","left","blocked","odam"],
-    dayList.slice().reverse().map(function(d){
-      return [fmtDay(d.k), d.start, d.sub, d.movie, d.left, d.blocked, d.uq];
+  addTable(c1, [birKun ? "Soat" : "Kun", "start","subscribed","movie","left","blocked","odam"],
+    (birKun ? dayList.slice() : dayList.slice().reverse()).map(function(d){
+      return [birKun ? (d.k + ":00") : fmtDay(d.k), d.start, d.sub, d.movie, d.left, d.blocked, d.uq];
     }));
   put("umumiy", c1);
 
@@ -1615,6 +1647,8 @@ function render(){
   put("odamlar", c4);
 
   /* — Soatlar — */
+  // Bir kunlik davrda yuqoridagi chizma allaqachon soatlar bo'yicha — takror kerak emas.
+  if(!birKun){
   var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "");
   var f5 = document.createElement("figure"); f5.appendChild(chartHours(s)); c5.appendChild(f5);
   c5._qayta = function(balandlik){
@@ -1625,6 +1659,7 @@ function render(){
     return [String(h).padStart(2,"0") + ":00", v];
   }));
   put("umumiy", c5);
+  }
 
   /* — Manbalar — */
   var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "third");
