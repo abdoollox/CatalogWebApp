@@ -1356,12 +1356,12 @@ function issiqRang(t){
 }
 
 function chartHeat(s, balandlik){
-  var W = 960, P = {t:18, r:96, b:56, l:44};
+  var W = 960, P = {t:18, r:96, b:52, l:44};
   var cols = 24, rows = 7;
   var iw = W - P.l - P.r;
   var kw = iw / cols;
   var kh = balandlik ? Math.max(14, (balandlik - P.t - P.b) / rows) : 26;
-  var H = P.t + rows*kh + P.b;
+  var H = P.t + rows*kh + 9 + Math.min(kh, 30) + 14;
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img",
     "aria-label":"Hafta kuni va soat bo'yicha faollik"});
 
@@ -1423,10 +1423,11 @@ function chartHeat(s, balandlik){
       svg.appendChild(r);
     }
 
-    // O'ngda: shu kunning jami — bar va son
-    var bx = P.l + iw + 8, bw2 = 52;
-    var bar = el("rect", {x:bx, y:P.t + k2*kh + kh*0.22, width:Math.max(2, bw2*kunOrt[k2]/engKun),
-      height:Math.max(3, kh*0.56), rx:3, ry:3, fill:ortRang(kunOrt[k2]), opacity:.92});
+    // O'ngda: shu kunning o'rtachasi — xuddi katak shaklida
+    var bx = P.l + iw + 12;
+    var bar = el("rect", {x:bx, y:P.t + k2*kh + 1,
+      width:Math.max(1, kw-2), height:Math.max(1, kh-2), rx:3, ry:3,
+      fill:ortRang(kunOrt[k2]), opacity:.95});
     (function(kun, elem){
       elem.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY, '<div class="tt">' + HAFTA[kun] + '</div>' +
@@ -1438,17 +1439,16 @@ function chartHeat(s, balandlik){
       elem.addEventListener("mouseleave", tipHide);
     })(k2, bar);
     svg.appendChild(bar);
-    svg.appendChild(el("text", {x:bx + bw2 + 6, y:P.t + k2*kh + kh/2 + 3.5, class:"vlab"},
+    svg.appendChild(el("text", {x:bx + kw + 6, y:P.t + k2*kh + kh/2 + 3.5, class:"vlab"},
       ortMatn(kunOrt[k2])));
   }
 
-  // Pastda: har soatning jami — kichik ustunchalar
-  var sy = P.t + rows*kh + 10, sh2 = 26;
+  // Pastda: har soatning o'rtachasi — yana o'sha katak shaklida
+  var sy = P.t + rows*kh + 9, sh2 = Math.min(kh, 30);
   for(var h4=0; h4<cols; h4++){
-    var uh = Math.max(2, sh2 * soatOrt[h4] / engSoat);
-    var sb = el("rect", {x:P.l + h4*kw + 1.5, y:sy + (sh2 - uh),
-      width:Math.max(1, kw-3), height:uh, rx:2.5, ry:2.5,
-      fill:ortRang(soatOrt[h4]), opacity:.92});
+    var sb = el("rect", {x:P.l + h4*kw + 1, y:sy + 1,
+      width:Math.max(1, kw-2), height:Math.max(1, sh2-2), rx:3, ry:3,
+      fill:ortRang(soatOrt[h4]), opacity:.95});
     (function(soat, elem){
       elem.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY,
@@ -1462,7 +1462,12 @@ function chartHeat(s, balandlik){
     })(h4, sb);
     svg.appendChild(sb);
   }
-  svg.appendChild(el("text", {x:P.l-9, y:sy + sh2 - 1, "text-anchor":"end", class:"tick"}, "o'rtacha"));
+  svg.appendChild(el("text", {x:P.l-9, y:sy + sh2/2 + 3.5, "text-anchor":"end", class:"tick"}, "o'rtacha"));
+  // Chekka ko'rsatkichlar asosiy katakdan ingichka chiziq bilan ajratiladi
+  svg.appendChild(el("line", {x1:P.l, x2:P.l + iw, y1:sy - 4, y2:sy - 4,
+    stroke:"var(--line-2)", "stroke-width":1}));
+  svg.appendChild(el("line", {x1:P.l + iw + 6, x2:P.l + iw + 6, y1:P.t, y2:P.t + rows*kh,
+    stroke:"var(--line-2)", "stroke-width":1}));
 
   return svg;
 }
