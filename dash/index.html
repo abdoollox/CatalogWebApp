@@ -191,12 +191,7 @@ button{font-family:inherit; color:inherit}
   padding-bottom:max(14px, env(safe-area-inset-bottom, 0px));
 }
 .karta-fon{position:fixed; inset:0; z-index:69; background:rgba(5,7,10,.72); backdrop-filter:blur(3px)}
-.c-head .zbtn{
-  border:0; background:transparent; color:var(--ink-3); font-size:15px; line-height:1;
-  cursor:pointer; padding:4px 7px; border-radius:7px; display:grid; place-items:center;
-  width:26px; height:26px;
-}
-.c-head .zbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
+
 .card.third{grid-column:span 4}
 .card.twothird{grid-column:span 8}
 @media (max-width:860px){ .card.half,.card.third,.card.twothird{grid-column:span 12} }
@@ -206,13 +201,14 @@ button{font-family:inherit; color:inherit}
 .c-tools{display:flex; align-items:center; gap:2px; margin-left:auto; align-self:center}
 .c-head h2{font-size:20px; color:var(--ink)}
 .c-head .hint{font-size:12px; color:var(--ink-3); flex:1 1 120px}
-.c-head .tbtn{
-  border:0; background:transparent; color:var(--ink-3);
-  cursor:pointer; padding:4px 6px; border-radius:7px; display:grid; place-items:center;
+.c-head .tbtn, .c-head .zbtn{
+  border:0; background:transparent; color:var(--ink-3); cursor:pointer;
+  width:28px; height:28px; padding:0; border-radius:7px; display:grid; place-items:center;
+  flex:none;
 }
-.c-head .tbtn svg{width:16px; height:16px; display:block}
-.c-head .tbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
-.c-head .tbtn.yoniq{color:var(--gold-hi); background:rgba(231,193,112,.13)}
+.c-head .tbtn svg, .c-head .zbtn svg{width:16px; height:16px; display:block}
+.c-head .tbtn:hover, .c-head .zbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
+.c-head .tbtn.yoniq, .c-head .zbtn.yoniq{color:var(--gold-hi); background:rgba(231,193,112,.13)}
 
 .legend{display:flex; gap:14px; flex-wrap:wrap; margin:7px 0 2px; font-size:12px; color:var(--ink-2)}
 .legend span{display:inline-flex; align-items:center; gap:6px}
@@ -1416,15 +1412,23 @@ function card(title, hint, cls){
   c._head = asbob;
 
   // Kattalashtirish: chizma butun ekranni egallaydi.
+  var ZB_OCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M14.5 3.5H20.5V9.5"></path><path d="M9.5 20.5H3.5V14.5"></path>' +
+    '<path d="M20.5 3.5L13.8 10.2"></path><path d="M3.5 20.5L10.2 13.8"></path></svg>';
+  var ZB_YOP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>';
   var zb = document.createElement("button");
   zb.className = "zbtn"; zb.type = "button";
   zb.title = "Kattalashtirish"; zb.setAttribute("aria-label", "Kattalashtirish");
-  zb.textContent = "⤢";
+  zb.innerHTML = ZB_OCH;
   var fon = null;
   function yop(){
     c.classList.remove("katta");
     if(fon){ fon.remove(); fon = null; }
-    zb.textContent = "⤢"; zb.title = "Kattalashtirish";
+    zb.innerHTML = ZB_OCH; zb.title = "Kattalashtirish";
+    zb.classList.remove("yoniq");
     document.removeEventListener("keydown", esc);
     olcham();
   }
@@ -1455,7 +1459,8 @@ function card(title, hint, cls){
     fon.className = "karta-fon";
     fon.addEventListener("click", yop);
     document.body.appendChild(fon);
-    zb.textContent = "✕"; zb.title = "Yopish";
+    zb.innerHTML = ZB_YOP; zb.title = "Yopish";
+    zb.classList.add("yoniq");
     document.addEventListener("keydown", esc);
     olcham();
   });
