@@ -278,16 +278,6 @@ figure{min-width:0}
 }
 .brush-yozuv b{color:var(--ink-2); font-weight:600}
 
-.heat-shkala{
-  display:flex; align-items:center; gap:8px; margin-top:9px;
-  font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums;
-}
-.heat-shkala i{
-  flex:0 1 140px; height:8px; border-radius:4px; display:block;
-  background:linear-gradient(90deg, rgb(38,72,140), rgb(57,135,229), rgb(25,158,112),
-    rgb(232,185,60), rgb(208,59,59));
-}
-
 .tbl-wrap{overflow-x:auto; margin-top:8px}
 table{border-collapse:collapse; width:100%; font-size:12.5px; min-width:340px}
 th,td{text-align:left; padding:7px 10px; border-bottom:1px solid var(--line-2); white-space:nowrap}
@@ -318,6 +308,37 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 }
 
 /* Voronka */
+/* Voronka. Barlar bir xil trackda o'tiradi va raqam ustunlari qat'iy
+   kenglikda — aks holda uzun son barni qisqartirib, qatorlar turlicha
+   ko'rinardi. */
+.vor{display:flex; flex-direction:column; gap:8px; margin-top:12px}
+.vor-row{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.2fr) 74px 62px 72px;
+  gap:12px; align-items:center;
+}
+.vor-lab{font-size:13px; color:var(--ink-2); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.vor-track{height:var(--vh, 26px); background:var(--panel-2); border-radius:7px; overflow:hidden}
+.vor-fill{height:100%; border-radius:7px; transition:width .5s cubic-bezier(.22,.9,.3,1); opacity:.9}
+.vor-son{
+  text-align:right; font-size:14px; font-weight:700; color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.vor-foiz{
+  text-align:right; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums;
+}
+.vor-foiz.oldin{color:var(--ink-2); font-weight:600}
+.vor-bosh{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.2fr) 74px 62px 72px;
+  gap:12px; font-size:10.5px; color:var(--ink-3); text-transform:uppercase;
+  letter-spacing:.05em; font-weight:700; margin-top:8px;
+}
+.vor-bosh span:nth-child(n+3){text-align:right}
+.card.katta .vor{--vh:40px; gap:12px}
+@media (max-width:640px){
+  .vor-row, .vor-bosh{grid-template-columns:minmax(0,1fr) 62px 54px 58px}
+  .vor-track{display:none}
+}
+
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
 @media (max-width:520px){ .fun-row{grid-template-columns:minmax(0,1fr) auto; gap:4px 9px}
@@ -1544,6 +1565,60 @@ function keyinroq(f){
 }
 var TEZLIK = "cubic-bezier(.22,.9,.3,1)";
 
+/* Voronka: har qadamda ikki foiz — birinchi qadamga nisbatan (yo'lning
+   qancha qismi qolgani) va bir oldingi qadamga nisbatan (shu qadamda
+   qanchasi o'tgani). Ikkinchisi qayerda ko'p odam yo'qolayotganini
+   birinchisidan aniqroq ko'rsatadi. */
+function voronka(qadamlar){
+  var box = document.createElement("div");
+  box.className = "vor";
+  var bosh = document.createElement("div");
+  bosh.className = "vor-bosh";
+  bosh.innerHTML = "<span>Qadam</span><span></span><span>Odam</span>" +
+    "<span>Boshdan</span><span>Oldingidan</span>";
+  box.appendChild(bosh);
+
+  var birinchi = qadamlar.length ? qadamlar[0].val : 0;
+  qadamlar.forEach(function(q, i){
+    var oldingi = i ? qadamlar[i-1].val : null;
+    var row = document.createElement("div");
+    row.className = "vor-row";
+
+    var lab = document.createElement("div");
+    lab.className = "vor-lab"; lab.textContent = q.lab; lab.title = q.lab;
+
+    var tr = document.createElement("div"); tr.className = "vor-track";
+    var fl = document.createElement("div"); fl.className = "vor-fill";
+    fl.style.background = q.color;
+    fl.style.width = "0%";
+    var kengligi = (birinchi ? (q.val / birinchi * 100) : 0).toFixed(1) + "%";
+    keyinroq(function(){ fl.style.width = kengligi; });
+    tr.appendChild(fl);
+
+    var son = document.createElement("div");
+    son.className = "vor-son"; son.textContent = fmtNum(q.val);
+
+    var f1 = document.createElement("div");
+    f1.className = "vor-foiz";
+    f1.textContent = birinchi ? (q.val / birinchi * 100).toFixed(1) + "%" : "—";
+
+    var f2 = document.createElement("div");
+    f2.className = "vor-foiz oldin";
+    if(oldingi === null) f2.textContent = "—";
+    else if(!oldingi) f2.textContent = "—";
+    else {
+      var u = q.val / oldingi * 100;
+      f2.textContent = u.toFixed(1) + "%";
+      f2.style.color = u >= 60 ? "#3fbf6a" : (u >= 25 ? "var(--warn)" : "#e0796f");
+    }
+
+    row.appendChild(lab); row.appendChild(tr); row.appendChild(son);
+    row.appendChild(f1); row.appendChild(f2);
+    box.appendChild(row);
+  });
+  return box;
+}
+
 function esc(s){
   return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
     return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
@@ -2014,18 +2089,34 @@ function render(){
   put("umumiy", c1);
 
   /* — Voronka — */
-  var c2 = card("Yo'l", "har qadamda nechta ODAM bor", birKun ? "" : "third");
+  var c2 = card("Voronka", "har qadamda nechta ODAM qoladi", "");
   var base = Math.max(1, s.uniq);
+  // Haqiqiy voronka: har qadam oldingisidan O'TGANLARNING ichidan sanaladi.
+  // Aks holda "film oldi" kanalga qo'shilganlardan ko'p chiqib qolardi —
+  // kanalga ilgari qo'shilgan odamlar ham film oladi.
+  function kesish(a, b){
+    var r = {}, n = 0;
+    for(var k in a) if(b[k]){ r[k] = 1; n++; }
+    r.__n = n;
+    return r;
+  }
+  var q1 = s.users;
+  var q2 = kesish(q1, s.set.sub);
+  var q3 = kesish(q2, s.set.film);
+  var q4 = kesish(q3, s.set.sortst);
+  var q5 = kesish(q4, s.set.house);
   var steps = [
     {lab:"Ko'ringan odam", val:s.uniq, color:"var(--gold)"},
-    {lab:"Kanalga qo'shildi", val:s.who.sub, color:S2},
-    {lab:"Film oldi", val:s.who.film, color:S3},
-    {lab:"Saralanishni boshladi", val:s.who.sortst, color:"var(--huff)"},
-    {lab:"Fakultetga tushdi", val:s.who.house, color:"var(--griff)"}
+    {lab:"Kanalga qo'shildi", val:q2.__n, color:S2},
+    {lab:"Film oldi", val:q3.__n, color:S3},
+    {lab:"Saralanishni boshladi", val:q4.__n, color:"var(--huff)"},
+    {lab:"Fakultetga tushdi", val:q5.__n, color:"var(--griff)"}
   ];
-  c2.appendChild(barList(steps, S2, base));
-  addTable(c2, ["Qadam","Odam","Ulushi"], steps.map(function(x){
-    return [x.lab, x.val, (x.val/base*100).toFixed(1) + "%"];
+  c2.appendChild(voronka(steps));
+  addTable(c2, ["Qadam","Odam","Boshdan","Oldingidan"], steps.map(function(x, i){
+    var old2 = i ? steps[i-1].val : 0;
+    return [x.lab, x.val, (x.val/base*100).toFixed(1) + "%",
+            i ? (old2 ? (x.val/old2*100).toFixed(1) + "%" : "—") : "—"];
   }));
 
   /* — Filmlar — */
@@ -2073,7 +2164,7 @@ function render(){
   /* — Soatlar — */
   // Bir kunlik davrda yuqoridagi chizma allaqachon soatlar bo'yicha — takror kerak emas.
   if(!birKun){
-  var c5 = card("Qachon jonli", "hafta kuni va soat bo'yicha", "twothird");
+  var c5 = card("Qachon jonli", "hafta kuni va soat bo'yicha", "");
 
   var f5 = document.createElement("figure");
   var heatBalandlik = null;
@@ -2086,14 +2177,6 @@ function render(){
     f5.appendChild(chartHeat(s, heatBalandlik));
   };
   c5._kuzat(f5);
-
-  // Rang shkalasi: katakning to'qligi nimani bildiradi
-  var shkala = document.createElement("div");
-  shkala.className = "heat-shkala";
-  var engKatak = 1;
-  for(var kk=0; kk<7; kk++) for(var hh=0; hh<24; hh++) if(s.heat[kk][hh] > engKatak) engKatak = s.heat[kk][hh];
-  shkala.innerHTML = '<span>kam</span><i></i><span>' + fmtNum(engKatak) + ' ta</span>';
-  c5.appendChild(shkala);
 
   var soatBosh = ["Kun"];
   for(var sh2=0; sh2<24; sh2++) soatBosh.push(String(sh2).padStart(2,"0"));
