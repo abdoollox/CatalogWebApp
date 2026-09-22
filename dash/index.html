@@ -127,10 +127,13 @@ button{font-family:inherit; color:inherit}
 }
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{
+  display:inline-flex; align-items:center; gap:7px;
   border:0; background:transparent; color:var(--ink-3); font-family:'Cormorant Garamond',serif;
-  font-size:17.5px; font-weight:600; padding:6px 14px; cursor:pointer; white-space:nowrap;
+  font-size:17.5px; font-weight:600; padding:6px 13px; cursor:pointer; white-space:nowrap;
   border-radius:9px; transition:.15s; letter-spacing:.01em;
 }
+.tabs .tab-ic{width:15px; height:15px; flex:none; opacity:.75; transition:.15s}
+.tabs button[aria-selected="true"] .tab-ic{opacity:1}
 .tabs button:hover{color:var(--ink-2); background:var(--panel-2)}
 .tabs button[aria-selected="true"]{color:var(--gold-hi); background:rgba(231,193,112,.14)}
 .tabs button .n{
@@ -426,13 +429,60 @@ function seriyaSaqla(h){
 
 /* Panel bo'limlari. Hammasi bitta sahifada turganda ko'z qayerga qarashni
    bilmaydi — har bo'lim bitta savolga javob beradi. */
+/* Panel bo'limlari. Hammasi bitta sahifada turganda ko'z qayerga qarashni
+   bilmaydi — har bo'lim bitta savolga javob beradi. */
 var BOLIMLAR = [
-  {id:"umumiy",  nom:"Umumiy"},
-  {id:"odamlar", nom:"Odamlar"},
-  {id:"kino",    nom:"Kino"},
-  {id:"kanal",   nom:"Kanal"},
-  {id:"lenta",   nom:"Lenta"}
+  {id:"umumiy",  nom:"Umumiy",
+   ic:'<rect x="3" y="3" width="7" height="7" rx="1.5"></rect>' +
+      '<rect x="14" y="3" width="7" height="7" rx="1.5"></rect>' +
+      '<rect x="3" y="14" width="7" height="7" rx="1.5"></rect>' +
+      '<rect x="14" y="14" width="7" height="7" rx="1.5"></rect>'},
+  {id:"odamlar", nom:"Odamlar",
+   ic:'<path d="M16 20v-1.8a3.8 3.8 0 0 0-3.8-3.8H6.8A3.8 3.8 0 0 0 3 18.2V20"></path>' +
+      '<circle cx="9.5" cy="7.5" r="3.6"></circle>' +
+      '<path d="M21 20v-1.8a3.8 3.8 0 0 0-2.9-3.7"></path>' +
+      '<path d="M15.5 4.1a3.6 3.6 0 0 1 0 6.9"></path>'},
+  {id:"kino",    nom:"Kino",
+   ic:'<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"></rect>' +
+      '<path d="M10 9.2l5 2.8-5 2.8z"></path>'},
+  {id:"kanal",   nom:"Kanal",
+   ic:'<path d="M21.5 3.2L2.8 10.4a.6.6 0 0 0 .05 1.13l4.6 1.6 1.7 5.2a.6.6 0 0 0 1.05.2l2.5-3 4.6 3.4a.6.6 0 0 0 .95-.35z"></path>' +
+      '<path d="M21.5 3.2L9.15 13.13"></path>'},
+  {id:"lenta",   nom:"Lenta",
+   ic:'<path d="M8.5 6.5H21"></path><path d="M8.5 12H21"></path><path d="M8.5 17.5H21"></path>' +
+      '<circle cx="4" cy="6.5" r="1.1"></circle><circle cx="4" cy="12" r="1.1"></circle>' +
+      '<circle cx="4" cy="17.5" r="1.1"></circle>'}
 ];
+
+var S1="#c98500", S2="#3987e5", S3="#199e70";
+
+/* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
+   ranglar rang ko'rmaslikda ham ajralib turishi tekshirilgan. */
+var KUNLIK = [
+  {k:"start",   n:"start",      c:"#3987e5", on:true},
+  {k:"sub",     n:"subscribed", c:"#199e70", on:true},
+  {k:"movie",   n:"movie",      c:"#9085e9", on:true},
+  {k:"left",    n:"left",       c:"#d03b3b", on:true},
+  // "blocked" ataylab neytral: fonga teskari oq chiziq. Qolgan to'rttasi
+  // rangi bilan ajraladi, bu esa yorqinligi bilan.
+  {k:"blocked", n:"blocked",    c:"#dcd9d0", on:true}
+];
+var SERIES_LS = "hp_dash_series";
+
+function seriyaHolati(){
+  var h = {};
+  KUNLIK.forEach(function(x){ h[x.k] = x.on; });
+  try{
+    var saqlangan = JSON.parse(localStorage.getItem(SERIES_LS) || "null");
+    if(saqlangan) KUNLIK.forEach(function(x){
+      if(typeof saqlangan[x.k] === "boolean") h[x.k] = saqlangan[x.k];
+    });
+  }catch(e){}
+  return h;
+}
+function seriyaSaqla(h){
+  try{ localStorage.setItem(SERIES_LS, JSON.stringify(h)); }catch(e){}
+}
 
 /* Chiqib ketish sabablari. Kodlar bot bazasidan keladi (hpleave.REASONS).
    Rang sababning OG'IRLIGINI bildiradi, seriya rangi emas: qizil — tuzatish
@@ -1839,7 +1889,10 @@ function drawTabs(sonlar){
     btn.setAttribute("aria-selected", String(b.id === ST.tab));
     btn.setAttribute("aria-controls", "sec-" + b.id);
     btn.tabIndex = (b.id === ST.tab) ? 0 : -1;
-    btn.innerHTML = esc(b.nom) +
+    btn.innerHTML =
+      '<svg class="tab-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      b.ic + '</svg>' + esc(b.nom) +
       (sonlar && sonlar[b.id] ? '<span class="n">' + fmtNum(sonlar[b.id]) + '</span>' : "");
     btn.addEventListener("click", function(){ selectTab(b.id); });
     btn.addEventListener("keydown", function(e){
