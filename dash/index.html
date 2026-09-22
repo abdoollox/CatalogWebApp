@@ -1377,8 +1377,15 @@ function chartHeat(s, balandlik){
     }
     kunJami.push(q);
   }
-  var engKun = Math.max.apply(null, kunJami) || 1;
-  var engSoat = Math.max.apply(null, soatJami) || 1;
+  // Chekka ko'rsatkichlar — YIG'INDI emas, O'RTACHA katak qiymati.
+  // Shunda ular kataklar bilan bir shkalada gapiradi va rang ham xuddi
+  // shu issiqlik shkalasidan olinadi.
+  var kunOrt = kunJami.map(function(v){ return v / cols; });
+  var soatOrt = soatJami.map(function(v){ return v / rows; });
+  var engKun = Math.max.apply(null, kunOrt) || 1;
+  var engSoat = Math.max.apply(null, soatOrt) || 1;
+  function ortRang(v){ return issiqRang(Math.pow(Math.min(1, v / eng), 0.65)); }
+  function ortMatn(v){ return v >= 10 ? fmtNum(Math.round(v)) : v.toFixed(1); }
 
   for(var h2=0; h2<cols; h2 += 2)
     svg.appendChild(el("text", {x:P.l + h2*kw + kw/2, y:P.t-6, "text-anchor":"middle", class:"tick num"},
@@ -1418,12 +1425,13 @@ function chartHeat(s, balandlik){
 
     // O'ngda: shu kunning jami — bar va son
     var bx = P.l + iw + 8, bw2 = 52;
-    var bar = el("rect", {x:bx, y:P.t + k2*kh + kh*0.22, width:Math.max(1, bw2*kunJami[k2]/engKun),
-      height:Math.max(3, kh*0.56), rx:3, ry:3, fill:"var(--gold)", opacity:.5});
+    var bar = el("rect", {x:bx, y:P.t + k2*kh + kh*0.22, width:Math.max(2, bw2*kunOrt[k2]/engKun),
+      height:Math.max(3, kh*0.56), rx:3, ry:3, fill:ortRang(kunOrt[k2]), opacity:.92});
     (function(kun, elem){
       elem.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY, '<div class="tt">' + HAFTA[kun] + '</div>' +
-          '<div class="tr"><span>Kun bo\'yicha jami</span><b>' + fmtNum(kunJami[kun]) + '</b></div>' +
+          '<div class="tr"><span>O\'rtacha (soatiga)</span><b>' + ortMatn(kunOrt[kun]) + '</b></div>' +
+          '<div class="tr"><span style="color:var(--ink-3)">Jami</span><b>' + fmtNum(kunJami[kun]) + '</b></div>' +
           '<div class="tr"><span style="color:var(--ink-3)">Ulushi</span><b>' +
           (umumiy ? Math.round(kunJami[kun]/umumiy*100) : 0) + '%</b></div>');
       });
@@ -1431,21 +1439,22 @@ function chartHeat(s, balandlik){
     })(k2, bar);
     svg.appendChild(bar);
     svg.appendChild(el("text", {x:bx + bw2 + 6, y:P.t + k2*kh + kh/2 + 3.5, class:"vlab"},
-      fmtNum(kunJami[k2])));
+      ortMatn(kunOrt[k2])));
   }
 
   // Pastda: har soatning jami — kichik ustunchalar
   var sy = P.t + rows*kh + 10, sh2 = 26;
   for(var h4=0; h4<cols; h4++){
-    var uh = Math.max(2, sh2 * soatJami[h4] / engSoat);
+    var uh = Math.max(2, sh2 * soatOrt[h4] / engSoat);
     var sb = el("rect", {x:P.l + h4*kw + 1.5, y:sy + (sh2 - uh),
       width:Math.max(1, kw-3), height:uh, rx:2.5, ry:2.5,
-      fill:"var(--gold)", opacity:.45});
+      fill:ortRang(soatOrt[h4]), opacity:.92});
     (function(soat, elem){
       elem.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY,
           '<div class="tt">' + String(soat).padStart(2,"0") + ':00 — barcha kunlar</div>' +
-          '<div class="tr"><span>Jami</span><b>' + fmtNum(soatJami[soat]) + '</b></div>' +
+          '<div class="tr"><span>O\'rtacha (kuniga)</span><b>' + ortMatn(soatOrt[soat]) + '</b></div>' +
+          '<div class="tr"><span style="color:var(--ink-3)">Jami</span><b>' + fmtNum(soatJami[soat]) + '</b></div>' +
           '<div class="tr"><span style="color:var(--ink-3)">Ulushi</span><b>' +
           (umumiy ? Math.round(soatJami[soat]/umumiy*100) : 0) + '%</b></div>');
       });
@@ -1453,7 +1462,7 @@ function chartHeat(s, balandlik){
     })(h4, sb);
     svg.appendChild(sb);
   }
-  svg.appendChild(el("text", {x:P.l-9, y:sy + sh2 - 1, "text-anchor":"end", class:"tick"}, "jami"));
+  svg.appendChild(el("text", {x:P.l-9, y:sy + sh2 - 1, "text-anchor":"end", class:"tick"}, "o'rtacha"));
 
   return svg;
 }
