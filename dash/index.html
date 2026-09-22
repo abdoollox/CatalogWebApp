@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Xogvarts Kuzatuv Xonasi</title>
+<title>Garri Potter Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap">
@@ -65,6 +65,44 @@ button{font-family:inherit; color:inherit}
 .btn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(231,193,112,.1)}
 #fullscr{font-size:15px; line-height:1; padding:7px 11px}
 .spacer{flex:1 1 auto}
+.ibtn{
+  width:38px; height:38px; flex:none; display:grid; place-items:center;
+  border:1px solid var(--line-2); background:var(--panel); color:var(--ink-2);
+  border-radius:11px; cursor:pointer; transition:.15s; padding:0;
+}
+.ibtn svg{width:18px; height:18px; display:block}
+.ibtn:hover{border-color:var(--gold-2); color:var(--gold-hi); background:var(--panel-2)}
+.ibtn:disabled{opacity:.5; cursor:default}
+.ibtn.aylanmoqda svg{animation:aylan 1s linear infinite}
+@keyframes aylan{to{transform:rotate(360deg)}}
+.ibtn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(231,193,112,.1)}
+
+.davr-wrap{position:relative}
+.davr-btn{
+  display:inline-flex; align-items:center; gap:9px; padding:9px 13px; font-size:13px;
+  border-color:var(--line); min-width:132px; justify-content:space-between;
+}
+.davr-btn .strelka{color:var(--ink-3); font-size:10px; transition:.15s}
+.davr-btn[aria-expanded="true"]{border-color:var(--gold-2); color:var(--gold-hi)}
+.davr-btn[aria-expanded="true"] .strelka{transform:rotate(180deg)}
+.davr-menu{
+  position:absolute; top:calc(100% + 6px); left:0; z-index:40; min-width:210px;
+  background:var(--panel); border:1px solid var(--line); border-radius:13px;
+  padding:6px; box-shadow:0 18px 44px rgba(0,0,0,.55);
+}
+.davr-menu button{
+  display:flex; width:100%; align-items:center; justify-content:space-between; gap:12px;
+  border:0; background:transparent; color:var(--ink-2); font-size:13px; font-weight:500;
+  padding:8px 11px; border-radius:9px; cursor:pointer; text-align:left; font-family:inherit;
+}
+.davr-menu button:hover{background:var(--panel-2); color:var(--ink)}
+.davr-menu button[aria-checked="true"]{color:var(--gold-hi); font-weight:700}
+.davr-menu button[aria-checked="true"]::after{content:"✓"; font-size:12px}
+.davr-menu .ajrat{height:1px; background:var(--line-2); margin:5px 8px}
+.davr-menu .sarlavha{
+  font-size:10.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.06em;
+  font-weight:700; padding:7px 11px 4px;
+}
 .range-pick{
   display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:9px;
   padding:10px 12px; background:var(--panel); border:1px solid var(--line);
@@ -86,7 +124,7 @@ button{font-family:inherit; color:inherit}
 }
 .range-pick .tayyor button:hover{border-color:var(--gold-2); color:var(--gold)}
 .tabs{
-  display:flex; gap:2px; margin-top:12px; overflow-x:auto; scrollbar-width:none;
+  display:flex; gap:2px; margin-top:14px; overflow-x:auto; scrollbar-width:none;
   border-bottom:1px solid var(--line-2);
 }
 .tabs::-webkit-scrollbar{display:none}
@@ -102,11 +140,6 @@ button{font-family:inherit; color:inherit}
   margin-left:6px; font-variant-numeric:tabular-nums;
 }
 .tabs button[aria-selected="true"] .n{color:var(--gold-2)}
-.lede{
-  margin:16px 0 0; font-family:'Cormorant Garamond',serif; font-size:19px; line-height:1.45;
-  color:var(--ink-2); max-width:62ch;
-}
-.lede b{color:var(--gold-hi); font-weight:600}
 .src-line{
   display:flex; align-items:center; gap:9px; margin-top:10px; font-size:12.5px; color:var(--ink-3);
   flex-wrap:wrap;
@@ -286,22 +319,38 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>Xogvarts Kuzatuv Xonasi</h1>
-      <span class="sub">Garri Potter boti · loglar</span>
+      <h1>Garri Potter Dashboard</h1>
     </div>
     <div class="bar">
-      <div class="seg" id="range" role="group" aria-label="Davr">
-        <button data-d="1">Bugun</button>
-        <button data-d="7" aria-pressed="true">7 kun</button>
-        <button data-d="30">30 kun</button>
-        <button data-d="90">90 kun</button>
-        <button data-d="0">Hammasi</button>
-        <button id="oraliq-btn" title="O'z davringizni tanlang">Davr…</button>
+      <div class="davr-wrap">
+        <button class="btn davr-btn" id="davr-btn" aria-haspopup="true" aria-expanded="false">
+          <span id="davr-nom">30 kun</span><span class="strelka">▾</span>
+        </button>
+        <div class="davr-menu" id="davr-menu" hidden role="menu"></div>
       </div>
       <span class="spacer"></span>
-      <button class="btn" id="open-src">Ma'lumot manbai</button>
-      <button class="btn ghost" id="refresh" title="Havoladan qayta yuklash">Yangilash</button>
-      <button class="btn ghost" id="fullscr" title="To'liq ekran (F)" aria-label="To'liq ekran">⛶</button>
+      <button class="ibtn" id="open-src" title="Ma'lumot manbai" aria-label="Ma'lumot manbai">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <ellipse cx="12" cy="5.5" rx="7.5" ry="3"></ellipse>
+          <path d="M4.5 5.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
+          <path d="M4.5 11.5v6c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-6"></path>
+        </svg>
+      </button>
+      <button class="ibtn" id="refresh" title="Yangilash" aria-label="Yangilash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 11a8 8 0 1 0-2.3 5.7"></path>
+          <path d="M20 5v6h-6"></path>
+        </svg>
+      </button>
+      <button class="ibtn" id="fullscr" title="To'liq ekran (F)" aria-label="To'liq ekran">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 3H3v5"></path><path d="M16 3h5v5"></path>
+          <path d="M16 21h5v-5"></path><path d="M8 21H3v-5"></path>
+        </svg>
+      </button>
     </div>
     <div class="range-pick" id="range-pick" hidden>
       <label for="d-from">dan</label>
@@ -310,7 +359,6 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <input type="date" id="d-to">
       <button class="btn" id="d-ok">Ko'rsat</button>
       <button class="btn ghost" id="d-clear">Bekor</button>
-      <span class="tayyor" id="d-tayyor"></span>
       <span class="err" id="d-err" hidden></span>
     </div>
     <div class="src-line" id="srcline"></div>
@@ -1392,22 +1440,8 @@ function render(){
   });
   function put(bolim, karta){ (SEC[bolim] || SEC.umumiy).appendChild(karta); }
 
-  // "Umumiy" bo'limi uchun bir qatorli xulosa — raqamlarni o'qishdan oldin
-  // nima bo'layotganini aytadi.
-  var lede = document.createElement("p");
-  lede.className = "lede";
-  var davr = ST.oraliq
-    ? (fmtDay(dayKey(w.from)) + " – " + fmtDay(dayKey(w.to)) + " oralig'ida")
-    : (ST.days === 1 ? "Bugun" : ST.days ? ("Oxirgi " + ST.days + " kunda")
-                                         : "Butun tarix davomida");
-  var yoq = s.left + s.blocked;
-  lede.innerHTML = davr + " <b>" + fmtNum(s.newUsers) + "</b> ta yangi odam keldi va <b>" +
-    fmtNum(s.films) + "</b> ta film yuborildi. " +
-    (net >= 0 ? "Kanal <b>" + fmtNum(net) + "</b> kishiga o'sdi"
-              : "Kanal <b>" + fmtNum(-net) + "</b> kishiga kamaydi") +
-    " — " + fmtNum(s.sub) + " qo'shildi, " + fmtNum(yoq) + " tasi chiqib ketdi yoki botni blokladi.";
-  SEC.umumiy.insertAdjacentElement("beforebegin", lede);
-  app.insertBefore(kp, lede.nextSibling);
+  SEC.umumiy.insertAdjacentElement("beforebegin", kp);
+
 
   /* — Kunlik faollik — */
   var dayList = [];
@@ -1803,8 +1837,7 @@ function selectTab(id){
     var g = document.getElementById("sec-" + b.id);
     if(g) g.hidden = (b.id !== id);
   });
-  var lede = document.querySelector(".lede"), kp = document.querySelector(".kpis");
-  if(lede) lede.hidden = (id !== "umumiy");
+  var kp = document.querySelector(".kpis");
   if(kp) kp.hidden = (id !== "umumiy");
   window.scrollTo({top:0, behavior:"instant"});
 }
@@ -1829,10 +1862,7 @@ function srcLine(){
       (ST.loadedAt ? " · yangilandi " + fmtTime(ST.loadedAt) : "");
   }
   l.appendChild(txt);
-  if(!ST.demo && ST.cols && ST.cols.local){
-    var tp = document.createElement("span"); tp.className = "pill"; tp.textContent = "Toshkent vaqti";
-    l.appendChild(tp);
-  }
+
   if(ST.demo && !ST.err){
     var p = document.createElement("span"); p.className = "pill"; p.textContent = "DEMO";
     l.appendChild(p);
@@ -1964,7 +1994,7 @@ function loadData(jim){
 
   ST.busy = true;
   var btn = document.getElementById("refresh");
-  if(btn){ btn.disabled = true; btn.textContent = "Yuklanmoqda…"; }
+  if(btn){ btn.disabled = true; btn.classList.add("aylanmoqda"); }
 
   // Server tarmog'i beqaror: katta javob ba'zan yo'lda qotib qoladi. Uzoq
   // kutib o'tirmaymiz — uzib, bir marta qaytadan so'raymiz.
@@ -1976,10 +2006,7 @@ function loadData(jim){
     return fetch(u, o).then(function(r){ clearTimeout(soat); return r; })
       .catch(function(e){
         clearTimeout(soat);
-        if(urinish < 2){
-          if(btn) btn.textContent = "Qayta urinilmoqda…";
-          return sora(urinish + 1);
-        }
+        if(urinish < 2){ return sora(urinish + 1); }
         throw (e && e.name === "AbortError") ? new Error("server javob bermadi") : e;
       });
   }
@@ -2004,7 +2031,7 @@ function loadData(jim){
   function done(){
     ST.busy = false;
     setTimeout(function(){ ST.jim = false; }, 0);   // keyingi chizish yana jonli
-    if(btn){ btn.disabled = false; btn.textContent = "Yangilash"; }
+    if(btn){ btn.disabled = false; btn.classList.remove("aylanmoqda"); }
   }
 }
 
@@ -2076,130 +2103,138 @@ function demoRows(){
 }
 
 /* ───────── Boshlash ───────── */
-document.getElementById("range").addEventListener("click", function(e){
-  var b = e.target.closest("button[data-d]");
-  if(!b) return;
-  [].forEach.call(this.querySelectorAll("button"), function(x){ x.setAttribute("aria-pressed", "false"); });
-  b.setAttribute("aria-pressed", "true");
-  ST.days = +b.dataset.d;
-  ST.oraliq = null;                       // tayyor davr o'z oralig'ini bekor qiladi
-  document.getElementById("range-pick").hidden = true;
-  saveCfg(); render();
-});
-/* ───────── O'z davringiz ───────── */
+/* ───────── Davr menyusi ─────────
+   Ilgari davrlar ham, bo'limlar ham gorizontal qator edi — ikkita bir xil
+   ko'rinishdagi navigatsiya yonma-yon turib, ko'z qaysi biri nima ekanini
+   ajrata olmasdi. Endi bo'limlar yagona gorizontal qator, davr esa menyu. */
 (function(){
+  var btn = document.getElementById("davr-btn");
+  var menu = document.getElementById("davr-menu");
+  var nom = document.getElementById("davr-nom");
   var panel = document.getElementById("range-pick");
   var f = document.getElementById("d-from"), t = document.getElementById("d-to");
   var xato = document.getElementById("d-err");
 
-  function belgila(){
-    // "Davr…" tugmasi faqat o'z oralig'i tanlanganda yonib turadi
-    document.getElementById("oraliq-btn").setAttribute("aria-pressed", String(!!ST.oraliq));
-    [].forEach.call(document.querySelectorAll("#range button[data-d]"), function(b){
-      b.setAttribute("aria-pressed", String(!ST.oraliq && +b.dataset.d === ST.days));
-    });
-  }
-  window._davrBelgila = belgila;
+  var TAYYOR_KUN = [
+    {d:1,  n:"Bugun"}, {d:7, n:"7 kun"}, {d:30, n:"30 kun"},
+    {d:90, n:"90 kun"}, {d:0, n:"Butun tarix"}
+  ];
 
-  document.getElementById("oraliq-btn").addEventListener("click", function(){
-    panel.hidden = !panel.hidden;
-    if(panel.hidden) return;
-    // Ochilganda hozirgi ko'rinayotgan davr bilan to'ldiramiz
-    var w = windowOf(ST.days);
-    if(ST.rows.length){
-      f.value = ST.oraliq ? ST.oraliq.from : kunYoz(w.from);
-      t.value = ST.oraliq ? ST.oraliq.to : kunYoz(w.to);
-      f.min = t.min = kunYoz(ST.rows[0].t);
-      f.max = t.max = kunYoz(ST.rows[ST.rows.length-1].t);
-    }
-    f.focus();
-  });
-
-  /* Tayyor oraliqlar. Oxirgi yozuv kunidan hisoblanadi, bugungi sanadan emas:
-     loglar kecha to'xtagan bo'lsa "shu hafta" bo'm-bo'sh chiqmasin. */
   function oxirgiKun(){
     return ST.rows.length ? new Date(ST.rows[ST.rows.length-1].t) : new Date();
   }
   function dushanba(d){
     var k = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    var w = (k.getDay() + 6) % 7;             // dushanba = 0
-    k.setDate(k.getDate() - w);
+    k.setDate(k.getDate() - ((k.getDay() + 6) % 7));
     return k;
   }
-  var TAYYOR = [
-    {n:"Shu hafta", f:function(){
-      var b = oxirgiKun(); return [dushanba(b), b];
-    }},
-    {n:"O'tgan hafta", f:function(){
+  /* Tayyor oraliqlar oxirgi YOZUV kunidan hisoblanadi, bugungi sanadan emas:
+     loglar kecha to'xtagan bo'lsa "shu hafta" bo'm-bo'sh chiqmasin. */
+  var TAYYOR_ORALIQ = [
+    {n:"Shu hafta",   f:function(){ var b = oxirgiKun(); return [dushanba(b), b]; }},
+    {n:"O'tgan hafta",f:function(){
       var d = dushanba(oxirgiKun());
-      var boshi = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7);
-      return [boshi, new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1)];
+      return [new Date(d.getFullYear(), d.getMonth(), d.getDate()-7),
+              new Date(d.getFullYear(), d.getMonth(), d.getDate()-1)];
     }},
-    {n:"Shu oy", f:function(){
-      var b = oxirgiKun(); return [new Date(b.getFullYear(), b.getMonth(), 1), b];
-    }},
-    {n:"O'tgan oy", f:function(){
+    {n:"Shu oy",      f:function(){ var b = oxirgiKun(); return [new Date(b.getFullYear(), b.getMonth(), 1), b]; }},
+    {n:"O'tgan oy",   f:function(){
       var b = oxirgiKun();
-      return [new Date(b.getFullYear(), b.getMonth()-1, 1),
-              new Date(b.getFullYear(), b.getMonth(), 0)];
+      return [new Date(b.getFullYear(), b.getMonth()-1, 1), new Date(b.getFullYear(), b.getMonth(), 0)];
     }}
   ];
-  var tayyorBox = document.getElementById("d-tayyor");
-  TAYYOR.forEach(function(x){
-    var b = document.createElement("button");
-    b.type = "button"; b.textContent = x.n;
-    b.addEventListener("click", function(){
-      var p2 = x.f();
-      f.value = kunYoz(p2[0]); t.value = kunYoz(p2[1]);
-      xato.hidden = true;
-      ST.oraliq = {from: f.value, to: t.value};
-      saveCfg(); belgila(); panel.hidden = true; render();
+
+  function nomla(){
+    if(ST.oraliq){
+      var a = kunOqi(ST.oraliq.from), b = kunOqi(ST.oraliq.to);
+      nom.textContent = (a && b) ? (fmtDay(kunYoz(a)) + " – " + fmtDay(kunYoz(b))) : "O'z davrim";
+    } else {
+      var x = TAYYOR_KUN.filter(function(y){ return y.d === ST.days; })[0];
+      nom.textContent = x ? x.n : (ST.days + " kun");
+    }
+  }
+  window._davrBelgila = nomla;
+
+  function yop(){
+    menu.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    document.removeEventListener("click", tashqi, true);
+  }
+  function tashqi(e){
+    if(!menu.contains(e.target) && !btn.contains(e.target)) yop();
+  }
+
+  function quri(){
+    menu.innerHTML = "";
+    TAYYOR_KUN.forEach(function(x){
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("role", "menuitemradio");
+      b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
+      b.textContent = x.n;
+      b.addEventListener("click", function(){
+        ST.days = x.d; ST.oraliq = null;
+        saveCfg(); nomla(); yop(); render();
+      });
+      menu.appendChild(b);
     });
-    tayyorBox.appendChild(b);
+
+    var s1 = document.createElement("div"); s1.className = "ajrat"; menu.appendChild(s1);
+    var h = document.createElement("div"); h.className = "sarlavha"; h.textContent = "Taqvim bo'yicha";
+    menu.appendChild(h);
+
+    TAYYOR_ORALIQ.forEach(function(x){
+      var b = document.createElement("button");
+      b.type = "button"; b.setAttribute("role", "menuitem");
+      b.textContent = x.n;
+      b.addEventListener("click", function(){
+        var p2 = x.f();
+        ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
+        saveCfg(); nomla(); yop(); panel.hidden = true; render();
+      });
+      menu.appendChild(b);
+    });
+
+    var s2 = document.createElement("div"); s2.className = "ajrat"; menu.appendChild(s2);
+    var oz = document.createElement("button");
+    oz.type = "button"; oz.setAttribute("role", "menuitem");
+    oz.textContent = "O'z davrim…";
+    oz.setAttribute("aria-checked", String(!!ST.oraliq));
+    oz.addEventListener("click", function(){
+      yop();
+      panel.hidden = false;
+      if(ST.rows.length){
+        var w = windowOf(ST.days);
+        f.value = ST.oraliq ? ST.oraliq.from : kunYoz(w.from);
+        t.value = ST.oraliq ? ST.oraliq.to : kunYoz(w.to);
+        f.min = t.min = kunYoz(ST.rows[0].t);
+        f.max = t.max = kunYoz(ST.rows[ST.rows.length-1].t);
+      }
+      f.focus();
+    });
+    menu.appendChild(oz);
+  }
+
+  btn.addEventListener("click", function(){
+    if(!menu.hidden){ yop(); return; }
+    quri();
+    menu.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    setTimeout(function(){ document.addEventListener("click", tashqi, true); }, 0);
   });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") yop(); });
 
   document.getElementById("d-ok").addEventListener("click", function(){
     var a = kunOqi(f.value), b = kunOqi(t.value);
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    saveCfg(); belgila(); panel.hidden = true; render();
+    saveCfg(); nomla(); panel.hidden = true; render();
   });
-
   document.getElementById("d-clear").addEventListener("click", function(){
     ST.oraliq = null; xato.hidden = true;
-    saveCfg(); belgila(); panel.hidden = true; render();
+    saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
-
-/* ───────── To'liq ekran ─────────
-   Chrome'da sahifani to'liq ekranga o'tkazadigan menyu yo'q, shuning uchun
-   o'z tugmamiz va F qisqartmasi. */
-function toliqEkran(){
-  var d = document.documentElement;
-  if(document.fullscreenElement || document.webkitFullscreenElement){
-    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-  } else {
-    (d.requestFullscreen || d.webkitRequestFullscreen).call(d);
-  }
-}
-document.getElementById("fullscr").addEventListener("click", toliqEkran);
-document.addEventListener("fullscreenchange", function(){
-  var b = document.getElementById("fullscr");
-  var ichkarida = !!(document.fullscreenElement || document.webkitFullscreenElement);
-  b.textContent = ichkarida ? "⛶" : "⛶";
-  b.title = (ichkarida ? "To'liq ekrandan chiqish" : "To'liq ekran") + " (F)";
-  b.classList.toggle("yoniq", ichkarida);
-});
-document.addEventListener("keydown", function(e){
-  if(e.key !== "f" && e.key !== "F" && e.key !== "а" && e.key !== "А") return;
-  if(e.metaKey || e.ctrlKey || e.altKey) return;
-  // Sana yoki havola yozayotganda "f" harfini o'g'irlamaymiz
-  var t = e.target;
-  if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
-  e.preventDefault();
-  toliqEkran();
-});
 
 document.getElementById("open-src").addEventListener("click", openSheet);
 document.getElementById("refresh").addEventListener("click", function(){
