@@ -339,6 +339,22 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
   .vor-track{display:none}
 }
 
+/* Donut */
+.donut{display:flex; align-items:center; justify-content:center; gap:18px 26px; margin-top:10px; flex-wrap:wrap}
+/* Donut kartasi yonidagi poyga bilan bir bo'yda — bo'sh joy qolmasin */
+.card.cho-teng{align-self:stretch; display:flex; flex-direction:column}
+.card.cho-teng .donut{flex:1 1 auto}
+.donut svg{width:170px; flex:none}
+.donut-son{fill:var(--ink); font-family:'Cormorant Garamond',Georgia,serif; font-size:34px; font-weight:600}
+.donut-ro{display:flex; flex-direction:column; gap:9px; flex:1 1 140px; min-width:0}
+.donut-q{display:grid; grid-template-columns:10px minmax(0,1fr) auto 44px; gap:9px; align-items:center; font-size:13px}
+.donut-q .dn{color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.donut-q b{font-variant-numeric:tabular-nums; text-align:right}
+.donut-q i{font-style:normal; color:var(--ink-3); font-size:11.5px; text-align:right; font-variant-numeric:tabular-nums}
+.c-head .seg{align-self:center}
+.c-head .seg button{padding:4px 10px; font-size:11.5px}
+td.eng{color:#3fbf6a; font-weight:700}
+
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
 @media (max-width:520px){ .fun-row{grid-template-columns:minmax(0,1fr) auto; gap:4px 9px}
@@ -475,6 +491,8 @@ var HOUSES = {
   ravenclaw: {n:"Reyvenklo", c:"var(--raven)", crest:"🦅"},
   hufflepuff:{n:"Xaffelpaff",c:"var(--huff)",  crest:"🦡"}
 };
+// SVG gradient va chiziqlar uchun aniq rang kerak — CSS o'zgaruvchilar bilan bir xil.
+var HOUSE_HEX = {gryffindor:"#d9524a", slytherin:"#2fa36b", ravenclaw:"#5b8fd9", hufflepuff:"#e8b93c"};
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -576,7 +594,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -908,7 +926,8 @@ function tipHide(){ if(TIP) TIP.hidden = true; }
 /* Chizma BIR MARTA quriladi. Ko'rsatkich qo'shilganda yoki olib tashlanganda
    hammasi qaytadan chizilmaydi: o'zgargani ochiladi yoki so'nadi, qolganlari
    esa yangi masshtabga silliq ko'chadi. */
-function chartDaily(dayList, holat, balandlik){
+function chartDaily(dayList, holat, balandlik, seriyalar){
+  var SER = seriyalar || KUNLIK;
   var W = 960, H = balandlik || 200, P = {t:15, r:26, b:24, l:46};
   var n = dayList.length;
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
@@ -927,7 +946,7 @@ function chartDaily(dayList, holat, balandlik){
   svg.appendChild(defs);
 
   var chiziq = {};
-  KUNLIK.forEach(function(x, idx){
+  SER.forEach(function(x, idx){
     var gid = "fill_" + x.k;
     var lg = el("linearGradient", {id:gid, x1:"0", y1:"0", x2:"0", y2:"1"});
     lg.appendChild(el("stop", {offset:"0", "stop-color":x.c, "stop-opacity":".26"}));
@@ -967,7 +986,7 @@ function chartDaily(dayList, holat, balandlik){
   var vline = el("line", {y1:P.t, y2:P.t+ih, class:"hovline"}); vline.style.opacity = 0;
   svg.appendChild(vline);
   var nuqtalar = {};
-  KUNLIK.forEach(function(x){
+  SER.forEach(function(x){
     var c = el("circle", {r:4.5, fill:x.c, stroke:"var(--panel)", "stroke-width":2});
     c.style.opacity = 0; svg.appendChild(c); nuqtalar[x.k] = c;
   });
@@ -975,11 +994,11 @@ function chartDaily(dayList, holat, balandlik){
   svg.appendChild(hit);
 
   var I = {W:W, H:H, P:P, n:n, iw:iw, ih:ih, X:X, chiziq:chiziq, yYozuv:yYozuv,
-           dayList:dayList, maxV:0, holat:holat, bosh:bosh, vline:vline, nuqtalar:nuqtalar};
+           dayList:dayList, ser:SER, maxV:0, holat:holat, bosh:bosh, vline:vline, nuqtalar:nuqtalar};
   svg._i = I;
 
   function move(ev){
-    var faol = KUNLIK.filter(function(x){ return I.holat[x.k]; });
+    var faol = SER.filter(function(x){ return I.holat[x.k]; });
     if(!faol.length) return;
     var r = svg.getBoundingClientRect();
     var px = (ev.clientX - r.left) / r.width * W;
@@ -988,7 +1007,7 @@ function chartDaily(dayList, holat, balandlik){
     var d = dayList[i], engY = H;
     vline.setAttribute("x1", X(i)); vline.setAttribute("x2", X(i)); vline.style.opacity = 1;
     var qator = "";
-    KUNLIK.forEach(function(x){
+    SER.forEach(function(x){
       var c = nuqtalar[x.k];
       if(!I.holat[x.k]){ c.style.opacity = 0; return; }
       var y = P.t + ih - (d[x.k]/I.maxV)*ih;
@@ -1004,7 +1023,7 @@ function chartDaily(dayList, holat, balandlik){
   hit.addEventListener("touchmove", function(e){ if(e.touches[0]) move(e.touches[0]); });
   hit.addEventListener("mouseleave", function(){
     vline.style.opacity = 0;
-    KUNLIK.forEach(function(x){ nuqtalar[x.k].style.opacity = 0; });
+    SER.forEach(function(x){ nuqtalar[x.k].style.opacity = 0; });
     tipHide();
   });
 
@@ -1017,8 +1036,9 @@ function chartDaily(dayList, holat, balandlik){
    silliq ko'chadi va Y o'qidagi raqamlar ham ular bilan birga o'zgaradi. */
 function chartYangila(svg, holat, ilk){
   var I = svg._i;
+  var SER = I.ser;
   I.holat = holat;
-  var faol = KUNLIK.filter(function(x){ return holat[x.k]; });
+  var faol = SER.filter(function(x){ return holat[x.k]; });
   var eng = 1;
   I.dayList.forEach(function(d){
     faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; });
@@ -1034,7 +1054,7 @@ function chartYangila(svg, holat, ilk){
   // qo'yadi — chiziq uzunligi boshqacha bo'lib qoladi. Shuning uchun
   // birinchi o'zgarishdayoq tozalab tashlaymiz.
   if(!ilk){
-    KUNLIK.forEach(function(x){
+    SER.forEach(function(x){
       if(x.dash) return;
       var y = I.chiziq[x.k].yol;
       y.style.transition = "";
@@ -1044,7 +1064,7 @@ function chartYangila(svg, holat, ilk){
   }
 
   function chizMax(m){
-    KUNLIK.forEach(function(x){
+    SER.forEach(function(x){
       var c = I.chiziq[x.k];
       if(!holat[x.k] && !c.bor) return;        // ko'rinmaydi va ko'rinmagan ham
       var d = "";
@@ -1064,7 +1084,7 @@ function chartYangila(svg, holat, ilk){
   }
 
   // Ko'rinish: faqat O'ZGARGANI harakatlanadi
-  KUNLIK.forEach(function(x){
+  SER.forEach(function(x){
     var c = I.chiziq[x.k];
     var kerak = !!holat[x.k];
     if(kerak !== c.bor){
@@ -1113,6 +1133,142 @@ function ilkChizilish(I, faol){
       }, 800 + j*60);
     });
   });
+}
+
+/* ───────── Fakultetlar ulushi (100% ustma-ust) ─────────
+   Har nuqtada tanlangan fakultetlar yig'indisi 100% deb olinadi.
+   Hali hech kim saralanmagan boshlang'ich kunlar chizilmaydi —
+   aks holda maydon nolga tushib, yolg'on "cho'kish" ko'rinardi. */
+function chartUlush(list, ser, holat, balandlik){
+  var W = 960, H = balandlik || 200, P = {t:15, r:26, b:24, l:46};
+  var n = list.length, iw = W - P.l - P.r, ih = H - P.t - P.b;
+  var X = function(i){ return n <= 1 ? P.l + iw/2 : P.l + i*iw/(n-1); };
+  var Y = function(p){ return P.t + ih - p/100*ih; };
+  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Fakultetlar ulushi"});
+
+  for(var g=0; g<=4; g++){
+    var y = Y(g*25);
+    svg.appendChild(el("line", {x1:P.l, x2:W-P.r, y1:y, y2:y, stroke:"var(--grid)", "stroke-width":1}));
+    svg.appendChild(el("text", {x:P.l-7, y:y+3.5, "text-anchor":"end", class:"tick num"}, (g*25) + "%"));
+  }
+
+  var faol = ser.filter(function(x){ return holat[x.k]; });
+  var ul = list.map(function(d){
+    var jami = faol.reduce(function(a, x){ return a + d[x.k]; }, 0), o = {_t:jami};
+    faol.forEach(function(x){ o[x.k] = jami ? d[x.k]/jami*100 : 0; });
+    return o;
+  });
+  var s0 = 0;
+  while(s0 < n && !ul[s0]._t) s0++;
+
+  var grup = el("g", {});
+  if(s0 < n){
+    var past = ul.map(function(){ return 0; });
+    faol.forEach(function(x){
+      var yuq = past.map(function(b, i){ return b + ul[i][x.k]; });
+      var d = "";
+      for(var i=s0; i<n; i++) d += (i > s0 ? "L" : "M") + X(i).toFixed(1) + " " + Y(yuq[i]).toFixed(1) + " ";
+      for(var j=n-1; j>=s0; j--) d += "L" + X(j).toFixed(1) + " " + Y(past[j]).toFixed(1) + " ";
+      grup.appendChild(el("path", {d:d + "Z", fill:x.c, "fill-opacity":.82,
+        stroke:"var(--panel)", "stroke-width":1, "stroke-linejoin":"round"}));
+      past = yuq;
+    });
+  } else {
+    svg.appendChild(el("text", {x:W/2, y:H/2, "text-anchor":"middle", class:"slab", fill:"var(--ink-3)"},
+      "Bu davrda hech kim saralanmagan"));
+  }
+  grup.style.opacity = "0";
+  grup.style.transition = "opacity .5s ease";
+  svg.appendChild(grup);
+  keyinroq(function(){ grup.style.opacity = "1"; });
+
+  var step = (n === 24) ? 1 : Math.max(1, Math.ceil(n/6));
+  for(var k=0; k<n; k += step){
+    var matn = list[k].lab !== undefined ? list[k].lab : fmtDay(list[k].k);
+    if(matn) svg.appendChild(el("text", {x:X(k), y:H-8, "text-anchor":"middle", class:"tick"}, matn));
+  }
+
+  var vline = el("line", {y1:P.t, y2:P.t+ih, class:"hovline"}); vline.style.opacity = 0;
+  svg.appendChild(vline);
+  var hit = el("rect", {x:0, y:0, width:W, height:H, fill:"transparent"});
+  svg.appendChild(hit);
+  function move(ev){
+    var r = svg.getBoundingClientRect();
+    var px = (ev.clientX - r.left) / r.width * W;
+    var i = n <= 1 ? 0 : Math.round((px - P.l) / (iw/(n-1)));
+    i = Math.max(0, Math.min(n-1, i));
+    vline.setAttribute("x1", X(i)); vline.setAttribute("x2", X(i)); vline.style.opacity = 1;
+    var qator = "";
+    // Tooltipda yuqoridagi qatlam birinchi turadi — chizmadagi tartib bilan bir xil
+    faol.slice().reverse().forEach(function(x){
+      qator += '<div class="tr"><span><span class="swatch" style="display:inline-block;background:' +
+        x.c + '"></span> ' + esc(x.n) + '</span><b>' + Math.round(ul[i][x.k]) + '% · ' +
+        fmtNum(list[i][x.k]) + '</b></div>';
+    });
+    tipShow(ev.clientX, r.top + r.height*0.2,
+      '<div class="tt">' + esc(list[i].tip || fmtDay(list[i].k)) + '</div>' +
+      (ul[i]._t ? qator : '<div class="tr"><span>Hali hech kim</span></div>'));
+  }
+  hit.addEventListener("mousemove", move);
+  hit.addEventListener("touchmove", function(e){ if(e.touches[0]) move(e.touches[0]); });
+  hit.addEventListener("mouseleave", function(){ vline.style.opacity = 0; tipHide(); });
+  return svg;
+}
+
+/* ───────── Donut: fakultetlar tarkibi ─────────
+   To'rtta bo'lak — doira shu yerda o'rinli. O'rtada jami odam. */
+function donut(items){
+  var box = document.createElement("div");
+  box.className = "donut";
+  var jami = items.reduce(function(a, x){ return a + x.val; }, 0);
+  var R = 70, C = 2*Math.PI*R, bosh = 0;
+  var svg = el("svg", {viewBox:"0 0 200 200", role:"img", "aria-label":"Fakultetlar tarkibi"});
+  svg.appendChild(el("circle", {cx:100, cy:100, r:R, fill:"none", stroke:"var(--panel-2)", "stroke-width":26}));
+  var tur = el("g", {transform:"rotate(-90 100 100)"});
+  var yozuv = el("text", {x:100, y:104, "text-anchor":"middle", class:"donut-son"}, fmtNum(jami));
+  var osti = el("text", {x:100, y:126, "text-anchor":"middle", class:"tick"}, "odam");
+  items.forEach(function(x, i){
+    var uz = jami ? x.val/jami*C : 0;
+    var bosh0 = bosh;
+    var c = el("circle", {cx:100, cy:100, r:R, fill:"none", stroke:x.hex, "stroke-width":26,
+      "stroke-dasharray":"0 " + C, "stroke-dashoffset":-bosh0});
+    c.style.transition = "stroke-dasharray .7s " + TEZLIK + " " + (i*90) + "ms, stroke-width .15s";
+    var bor = Math.max(0, uz - (items.length > 1 ? 2 : 0));   // bo'laklar orasida ingichka tirqish
+    keyinroq(function(){ c.setAttribute("stroke-dasharray", bor + " " + (C - bor)); });
+    c.style.cursor = "default";
+    c.addEventListener("mousemove", function(e){
+      c.setAttribute("stroke-width", 30);
+      yozuv.textContent = fmtNum(x.val); osti.textContent = x.n;
+      tipShow(e.clientX, e.clientY, '<div class="tt">' + esc(x.lab) + '</div>' +
+        '<div class="tr"><span>Odam</span><b>' + fmtNum(x.val) + '</b></div>' +
+        '<div class="tr"><span>Ulushi</span><b>' + (x.val/jami*100).toFixed(1) + '%</b></div>');
+    });
+    c.addEventListener("mouseleave", function(){
+      c.setAttribute("stroke-width", 26);
+      yozuv.textContent = fmtNum(jami); osti.textContent = "odam";
+      tipHide();
+    });
+    tur.appendChild(c);
+    bosh += uz;
+  });
+  svg.appendChild(tur);
+  svg.appendChild(yozuv);
+  svg.appendChild(osti);
+  box.appendChild(svg);
+
+  var ro = document.createElement("div");
+  ro.className = "donut-ro";
+  items.forEach(function(x){
+    var q = document.createElement("div");
+    q.className = "donut-q";
+    q.innerHTML = '<span class="swatch" style="background:' + x.hex + '"></span>' +
+      '<span class="dn">' + esc(x.lab) + '</span>' +
+      '<b>' + fmtNum(x.val) + '</b>' +
+      '<i>' + (jami ? (x.val/jami*100).toFixed(1).replace(/\.0$/, "") : 0) + '%</i>';
+    ro.appendChild(q);
+  });
+  box.appendChild(ro);
+  return box;
 }
 
 /* ───────── Diapazon slayderi ───────── */
@@ -2169,18 +2325,195 @@ function render(){
   put("kino", c3);
 
   /* — Fakultetlar — */
-  var c4 = card("Fakultetlar", "saralanish natijasi", "third");
+  var c4 = card("Fakultetlar", "saralanish natijasi", "third cho-teng");
   var hk = Object.keys(HOUSES).filter(function(h){ return s.houses[h]; });
   if(hk.length){
     var hTot = hk.reduce(function(a,h){ return a + s.houses[h]; }, 0);
-    c4.appendChild(barList(hk.sort(function(a,b){ return s.houses[b]-s.houses[a]; }).map(function(h){
-      return {lab: HOUSES[h].crest + " " + HOUSES[h].n, val: s.houses[h], color: HOUSES[h].c};
-    }), "var(--gold)", hTot));
+    c4.appendChild(donut(hk.sort(function(a,b){ return s.houses[b]-s.houses[a]; }).map(function(h){
+      return {lab: HOUSES[h].crest + " " + HOUSES[h].n, n: HOUSES[h].n, val: s.houses[h], hex: HOUSE_HEX[h]};
+    })));
     addTable(c4, ["Fakultet","Soni","Ulushi"], hk.map(function(h){
       return [HOUSES[h].n, s.houses[h], (s.houses[h]/hTot*100).toFixed(1)+"%"];
     }));
   } else c4.appendChild(emptyNote("Bu davrda hech kim saralanmagan."));
   put("odamlar", c4);
+
+  /* — Fakultetlar poygasi — */
+  // Har odam bir marta: davr ichidagi BIRINCHI saralanishi kuni "qo'shildi",
+  // fakulteti esa OXIRGI tanlovi (yuqoridagi karta bilan bir xil qoida).
+  var HSER = Object.keys(HOUSES).map(function(h){
+    return {k:h, n:HOUSES[h].crest + " " + HOUSES[h].n, c:HOUSE_HEX[h]};
+  });
+  var hKirdi = {};
+  rows.forEach(function(r){
+    if(r.ev.t !== "house" || hKirdi[r.uid]) return;
+    hKirdi[r.uid] = birKun ? String(r.t.getHours()).padStart(2, "0") : dayKey(r.t);
+  });
+  var hNuqta = {};
+  Object.keys(hKirdi).forEach(function(uid){
+    var hh = s.perUser[uid] && s.perUser[uid].house;
+    if(!hh || !HOUSES[hh]) return;
+    var kk = hKirdi[uid];
+    if(!hNuqta[kk]) hNuqta[kk] = {};
+    hNuqta[kk][hh] = (hNuqta[kk][hh] || 0) + 1;
+  });
+  var yigindi = {};
+  HSER.forEach(function(x){ yigindi[x.k] = 0; });
+  var hList = dayList.map(function(d){
+    var o = {k:d.k, lab:d.lab, tip:d.tip};
+    HSER.forEach(function(x){
+      yigindi[x.k] += (hNuqta[d.k] && hNuqta[d.k][x.k]) || 0;
+      o[x.k] = yigindi[x.k];
+    });
+    return o;
+  });
+
+  var cP = card("Fakultetlar poygasi",
+    (birKun ? "soat" : "kun") + " sayin jami a'zolar · fakultetni bosib olib turing", "twothird");
+  var hHolat = {};
+  HSER.forEach(function(x){ hHolat[x.k] = true; });
+  var hRejim = "son";
+  try{
+    var hq = JSON.parse(localStorage.getItem("hp_dash_houses") || "null");
+    if(hq) HSER.forEach(function(x){ if(typeof hq[x.k] === "boolean") hHolat[x.k] = hq[x.k]; });
+    if(localStorage.getItem("hp_dash_hmode") === "ulush") hRejim = "ulush";
+  }catch(e){}
+
+  var hSlayder = hList.length > 14;
+  if(!hSlayder) ST.oynaF = {a:0, b:1};
+  var hKor = hSlayder ? oynaKesimi(hList, ST.oynaF) : hList;
+  var fP = document.createElement("figure");
+  var hBalandlik = null, hSvg = null;
+  function hChiz(){
+    fP.innerHTML = "";
+    hSvg = hRejim === "son" ? chartDaily(hKor, hHolat, hBalandlik, HSER)
+                            : chartUlush(hKor, HSER, hHolat, hBalandlik);
+    fP.appendChild(hSvg);
+  }
+  cP._qayta = function(balandlik){
+    if(balandlik === null) hBalandlik = null;
+    else if(balandlik) hBalandlik = balandlik;
+    hChiz();
+  };
+
+  // Soni / Ulushi almashtirgich — karta sarlavhasida
+  var seg = document.createElement("div");
+  seg.className = "seg";
+  [["son", "Soni"], ["ulush", "Ulushi"]].forEach(function(v){
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = v[1];
+    b.setAttribute("aria-pressed", String(hRejim === v[0]));
+    b.addEventListener("click", function(){
+      if(hRejim === v[0]) return;
+      hRejim = v[0];
+      try{ localStorage.setItem("hp_dash_hmode", hRejim); }catch(e){}
+      [].forEach.call(seg.children, function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+      hChiz();
+    });
+    seg.appendChild(b);
+  });
+  cP._head.insertBefore(seg, cP._head.firstChild);
+
+  var hBrush = null, hYozuv = null;
+  function hQiymat(d){
+    var v = 0;
+    HSER.forEach(function(x){ if(hHolat[x.k]) v += d[x.k]; });
+    return v;
+  }
+  cP.appendChild(toggleLegend(HSER, hHolat, "k", function(){
+    try{ localStorage.setItem("hp_dash_houses", JSON.stringify(hHolat)); }catch(e){}
+    if(hRejim === "son") chartYangila(hSvg, hHolat);   // faqat o'zgargani harakatlanadi
+    else hChiz();
+    if(hBrush) hBrush.replaceWith(hBrush = brushYasa(hList, hQiymat, ST.oynaF, hOynaOzgardi));
+  }));
+  hChiz();
+  cP.appendChild(fP);
+  cP._kuzat(fP);
+
+  function hOynaOzgardi(){
+    hKor = oynaKesimi(hList, ST.oynaF);
+    ST.jim = true; cP._qayta(); ST.jim = false;
+    if(hYozuv) hYozuvYangila();
+  }
+  function hYozuvYangila(){
+    var a = hKor[0], b = hKor[hKor.length-1];
+    hYozuv.innerHTML = "<b>" + esc(a.tip || fmtDay(a.k)) + "</b>" +
+      "<span>" + hKor.length + (birKun ? " soat" : " kun") + "</span>" +
+      "<b>" + esc(b.tip || fmtDay(b.k)) + "</b>";
+  }
+  if(hSlayder){
+    hBrush = brushYasa(hList, hQiymat, ST.oynaF, hOynaOzgardi);
+    cP.appendChild(hBrush);
+    hYozuv = document.createElement("div");
+    hYozuv.className = "brush-yozuv";
+    cP.appendChild(hYozuv);
+    hYozuvYangila();
+  }
+  addTable(cP, [birKun ? "Soat" : "Kun"].concat(HSER.map(function(x){ return HOUSES[x.k].n; })),
+    hList.slice().reverse().map(function(d){
+      return [birKun ? (d.k + ":00") : fmtDay(d.k)].concat(HSER.map(function(x){ return d[x.k]; }));
+    }));
+  put("odamlar", cP);
+
+  /* — Fakultetlar faolligi — */
+  // Kanal va bot holati davr OXIRIGACHA bo'lgan barcha yozuvlardan olinadi:
+  // odam davrdan oldin qo'shilib, davr ichida chiqib ketgan bo'lishi mumkin.
+  var kanalH = {}, botH = {};
+  for(var ri=0; ri<ST.rows.length; ri++){
+    var rr = ST.rows[ri];
+    if(rr.t > w.to) break;
+    if(rr.ev.t === "sub" || rr.ev.t === "left") kanalH[rr.uid] = rr.ev.t;
+    else if(rr.ev.t === "blocked") botH[rr.uid] = "blocked";
+    else if(rr.ev.t === "start") botH[rr.uid] = "start";
+  }
+  var fQ = {};
+  Object.keys(s.set.house).forEach(function(uid){
+    var pu = s.perUser[uid], hh = pu && pu.house;
+    if(!hh || !HOUSES[hh]) return;
+    if(!fQ[hh]) fQ[hh] = {a:0, film:0, chiqdi:0, blok:0};
+    fQ[hh].a++;
+    fQ[hh].film += pu.films;
+    if(kanalH[uid] === "left") fQ[hh].chiqdi++;
+    if(botH[uid] === "blocked") fQ[hh].blok++;
+  });
+  var fK = Object.keys(HOUSES).filter(function(h){ return fQ[h]; })
+    .sort(function(a, b){ return fQ[b].a - fQ[a].a; });
+  var cF = card("Qaysi fakultet faolroq", "shu davrda saralanganlar · film shu davr ichida", "");
+  if(fK.length){
+    var qiy = fK.map(function(h){
+      var q = fQ[h];
+      return {h:h, a:q.a, film:q.film/q.a, chiqdi:q.chiqdi/q.a*100, blok:q.blok/q.a*100};
+    });
+    // Har ustunda eng yaxshi qiymat yashil: film ko'p bo'lsa, ketish kam bo'lsa yaxshi.
+    // Tenglar hammasi belgilanadi; hamma teng bo'lsa — hech biri (ajratadigan narsa yo'q).
+    function eng(kalit, kopmi){
+      var yax = {};
+      if(qiy.length < 2) return yax;
+      var v = qiy.map(function(x){ return +x[kalit].toFixed(1); });
+      var chegara = kopmi ? Math.max.apply(null, v) : Math.min.apply(null, v);
+      if(v.every(function(y){ return y === chegara; })) return yax;
+      qiy.forEach(function(x, i){ if(v[i] === chegara) yax[x.h] = 1; });
+      return yax;
+    }
+    var engFilm = eng("film", true), engChiq = eng("chiqdi", false), engBlok = eng("blok", false);
+    var tw2 = document.createElement("div"); tw2.className = "tbl-wrap";
+    var tb2 = document.createElement("table");
+    tb2.innerHTML = "<thead><tr><th>Fakultet</th><th class='num'>A'zo</th><th class='num'>Film / odam</th>" +
+      "<th class='num'>Kanaldan chiqqan</th><th class='num'>Botni bloklagan</th></tr></thead>";
+    var tbd = document.createElement("tbody");
+    qiy.forEach(function(x){
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td><span class='swatch' style='display:inline-block;margin-right:8px;background:" +
+          HOUSE_HEX[x.h] + "'></span>" + HOUSES[x.h].crest + " " + esc(HOUSES[x.h].n) + "</td>" +
+        "<td class='num'>" + fmtNum(x.a) + "</td>" +
+        "<td class='num" + (engFilm[x.h] ? " eng" : "") + "'>" + x.film.toFixed(1) + "</td>" +
+        "<td class='num" + (engChiq[x.h] ? " eng" : "") + "'>" + x.chiqdi.toFixed(1) + "%</td>" +
+        "<td class='num" + (engBlok[x.h] ? " eng" : "") + "'>" + x.blok.toFixed(1) + "%</td>";
+      tbd.appendChild(tr);
+    });
+    tb2.appendChild(tbd); tw2.appendChild(tb2); cF.appendChild(tw2);
+  } else cF.appendChild(emptyNote("Bu davrda hech kim saralanmagan."));
+  put("odamlar", cF);
 
   /* — Soatlar — */
   // Bir kunlik davrda yuqoridagi chizma allaqachon soatlar bo'yicha — takror kerak emas.
@@ -2210,7 +2543,7 @@ function render(){
   put("umumiy", c2);
 
   /* — Manbalar — */
-  var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "third");
+  var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "half");
   var items = Object.keys(s.srcs).sort(function(a,b){ return s.srcs[b]-s.srcs[a]; }).map(function(k){
     return {lab:"📣 " + k, val:s.srcs[k], color:S2};
   });
@@ -2281,7 +2614,7 @@ function render(){
   put("kanal", c8);
 
   /* — Ulashish — */
-  var c9 = card("Tarqalish", "inline ulashish va do'st ballari", "third");
+  var c9 = card("Tarqalish", "inline ulashish va do'st ballari", "half");
   c9.appendChild(barList([
     {lab:"🔗 Ulashdi", val:s.shares, color:S1},
     {lab:"🤝 Taklif bilan keldi", val:s.invited, color:S3},
@@ -2838,7 +3171,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -2855,7 +3188,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -2895,11 +3228,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
