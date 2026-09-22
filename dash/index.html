@@ -31,7 +31,7 @@ body{
   font-family:'Manrope',system-ui,-apple-system,sans-serif; font-size:14px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1180px; margin:0 auto; padding-inline:16px; padding-block:0 56px}
+.wrap{max-width:1460px; margin:0 auto; padding-inline:clamp(16px, 2.2vw, 34px); padding-block:0 56px}
 h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; margin:0; text-wrap:balance}
 button{font-family:inherit; color:inherit}
 :focus-visible{outline:2px solid var(--gold); outline-offset:2px; border-radius:6px}
@@ -40,7 +40,9 @@ button{font-family:inherit; color:inherit}
 .top{
   position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
   background:linear-gradient(180deg,rgba(11,14,19,.97) 72%,rgba(11,14,19,0));
-  padding-block:14px 10px; margin-inline:-16px; padding-inline:16px;
+  padding-block:14px 10px;
+  margin-inline:calc(-1 * clamp(16px, 2.2vw, 34px));
+  padding-inline:clamp(16px, 2.2vw, 34px);
   backdrop-filter:blur(8px);
 }
 .brand{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
@@ -118,7 +120,7 @@ button{font-family:inherit; color:inherit}
 }
 
 /* ————— Kartalar ————— */
-.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:10px; margin-top:18px}
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(176px,1fr)); gap:clamp(10px,1vw,16px); margin-top:18px}
 .kpi{
   background:var(--panel); border:1px solid var(--line-2); border-radius:var(--r);
   padding:14px 15px 13px; display:flex; flex-direction:column; gap:3px; min-width:0;
@@ -128,17 +130,20 @@ button{font-family:inherit; color:inherit}
   font-family:'Cormorant Garamond',Georgia,serif; font-size:35px; line-height:1.05; color:var(--ink);
   font-variant-numeric:lining-nums tabular-nums; font-weight:600;
 }
-.kpi .k-sub{font-size:12px; color:var(--ink-2); display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.kpi .k-sub{
+  font-size:12px; color:var(--ink-2); display:flex; align-items:center; gap:6px;
+  flex-wrap:wrap; margin-top:auto; padding-top:5px;
+}
 .delta{font-weight:700; font-variant-numeric:tabular-nums; display:inline-flex; align-items:center; gap:3px}
 .delta.up{color:#3fbf6a} .delta.down{color:#e0796f} .delta.flat{color:var(--ink-3)}
 .kpi.lead{border-color:rgba(231,193,112,.3); background:linear-gradient(160deg,rgba(231,193,112,.07),var(--panel) 62%)}
 .kpi.lead .k-val{color:var(--gold-hi)}
 
 /* ————— Panellar ————— */
-.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:12px; margin-top:12px; align-items:start}
+.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:clamp(12px,1.1vw,18px); margin-top:14px; align-items:start}
 .card{
   grid-column:span 12; background:var(--panel); border:1px solid var(--line-2);
-  border-radius:var(--r); padding:15px 16px 13px; min-width:0;
+  border-radius:var(--r); padding:clamp(15px,1.1vw,19px) clamp(16px,1.2vw,21px) clamp(13px,1vw,17px); min-width:0;
 }
 .card.half{grid-column:span 6}
 .card.katta{
@@ -166,18 +171,21 @@ button{font-family:inherit; color:inherit}
 .c-head .tbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
 .legend{display:flex; gap:14px; flex-wrap:wrap; margin:7px 0 2px; font-size:12px; color:var(--ink-2)}
 .legend span{display:inline-flex; align-items:center; gap:6px}
-.legend.switchy{gap:6px 8px; margin:9px 0 4px}
+.legend.switchy{gap:5px 6px; margin:9px 0 2px}
 .legend .lg{
-  display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line-2);
-  background:var(--panel-2); color:var(--ink-2); font-size:12px; font-weight:600;
-  padding:5px 11px 5px 9px; border-radius:999px; cursor:pointer; transition:.15s;
+  display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-2);
+  background:var(--panel-2); color:var(--ink-2); font-size:11.5px; font-weight:600;
+  padding:4px 10px 4px 8px; border-radius:999px; cursor:pointer; transition:.15s;
+  white-space:nowrap;
 }
+.legend .lg .swatch{width:8px; height:8px; border-radius:2px}
 .legend .lg:hover{border-color:var(--gold-2); color:var(--ink)}
 .legend .lg.off{opacity:.45; text-decoration:line-through; text-decoration-thickness:1px}
 .legend .lg.off .swatch{filter:grayscale(1)}
 .swatch{width:10px; height:10px; border-radius:3px; flex:none}
 figure{margin:0}
 svg{display:block; width:100%; height:auto; overflow:visible}
+figure{min-width:0}
 .tick{fill:var(--ink-3); font-size:10.5px; font-family:'Manrope',sans-serif}
 .tick.num{font-variant-numeric:tabular-nums}
 .vlab{fill:var(--ink-2); font-size:11px; font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums; font-weight:600}
@@ -615,7 +623,7 @@ function stats(rows, first, w){
     events: rows.length, users:{}, newUsers:0, films:0, filmBy:{}, langs:{uz:0,ru:0,en:0},
     hours:new Array(24).fill(0), days:{}, sub:0, left:0, blocked:0, starts:0,
     houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0},
-    perUser:{}, byFilmLang:{},
+    perUser:{}, byFilmLang:{}, seriya:{hp:0, fb:0},
     set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}, "new":{}}
   };
   for(var i=0; i<rows.length; i++){
@@ -645,6 +653,8 @@ function stats(rows, first, w){
         s.origin[e.origin] = (s.origin[e.origin]||0) + 1;
         var kk = e.film + "|" + e.lang;
         s.byFilmLang[kk] = (s.byFilmLang[kk]||0) + 1;
+        var tur = FILMS[e.film] && FILMS[e.film].kind;
+        if(tur && s.seriya[tur] !== undefined) s.seriya[tur]++;
         break;
       case "start":   s.starts++; break;
       case "sub":     s.sub++; break;
@@ -699,7 +709,7 @@ function tipHide(){ if(TIP) TIP.hidden = true; }
    hammasi qaytadan chizilmaydi: o'zgargani ochiladi yoki so'nadi, qolganlari
    esa yangi masshtabga silliq ko'chadi. */
 function chartDaily(dayList, holat){
-  var W = 720, H = 260, P = {t:14, r:16, b:26, l:42};
+  var W = 960, H = 252, P = {t:16, r:26, b:26, l:46};
   var n = dayList.length;
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
   var X = function(i){ return n <= 1 ? P.l + iw/2 : P.l + i*iw/(n-1); };
@@ -912,8 +922,8 @@ function chartFilms(s, tillar){
   Object.keys(jami0).forEach(function(k){ if(!FILMS[k] && keys.indexOf(k) < 0) keys.push(k); });
   if(!keys.length) return null;
 
-  var rowH = 26, gap = 6, P = {t:6, r:46, b:20, l:132};
-  var W = 720, H = P.t + keys.length*(rowH+gap) + P.b;
+  var rowH = 27, gap = 7, P = {t:6, r:52, b:20, l:148};
+  var W = 960, H = P.t + keys.length*(rowH+gap) + P.b;
   var iw = W - P.l - P.r;
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Filmlar bo'yicha yuborishlar"});
   var cols = {uz:S1, ru:S2, en:S3};
@@ -1026,7 +1036,7 @@ function filmYangila(svg, tillar, ilk){
 
 /* ───────── 3. Soatlar ───────── */
 function chartHours(s){
-  var W = 720, H = 170, P = {t:12, r:10, b:24, l:34};
+  var W = 960, H = 175, P = {t:14, r:14, b:24, l:40};
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Sutka davomida faollik"});
   var maxV = niceMax(Math.max(1, Math.max.apply(null, s.hours)));
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
@@ -1358,8 +1368,8 @@ function render(){
     sanab(d.querySelector(".k-val"), val, lab);
     kp.appendChild(d);
   }
-  kpi("Yangi sehrgar", s.newUsers, "ilgari hech qachon kirmagan", prev && prev.newUsers, true);
-  kpi("Faol odam", s.uniq, "shu davrda biror ish qilgan", prev && prev.uniq);
+  kpi("Yangi sehrgar", s.newUsers, "birinchi marta kelgan", prev && prev.newUsers, true);
+  kpi("Faol odam", s.uniq, "shu davrda faol bo'lgan", prev && prev.uniq);
   kpi("Yuborilgan film", s.films, s.undo ? s.undo + " ta bekor qilindi" : "kino yetkazildi", prev && prev.films);
   kpi("Kanal o'sishi", s.sub - s.left, s.sub + " qo'shildi · " + s.left + " chiqdi", prev && (prev.sub - prev.left));
   kpi("Saralandi", Object.values(s.houses).reduce(function(a,b){return a+b;},0),
@@ -1500,7 +1510,7 @@ function render(){
   addTable(c5, ["Soat","Hodisa"], s.hours.map(function(v, h){
     return [String(h).padStart(2,"0") + ":00", v];
   }));
-  put("kino", c5);
+  put("umumiy", c5);
 
   /* — Manbalar — */
   var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "third");
@@ -1530,8 +1540,34 @@ function render(){
   } else c7.appendChild(emptyNote("Film yo'q."));
   put("kino", c7);
 
+  /* — Tillar — */
+  var cTil = card("Qaysi tilda ko'proq", "yuborilgan filmlar bo'yicha", "half");
+  var tilJami = s.langs.uz + s.langs.ru + s.langs.en;
+  if(tilJami){
+    cTil.appendChild(barList(
+      [{lab:"🇺🇿 O'zbekcha", val:s.langs.uz, color:S1},
+       {lab:"🇷🇺 Ruscha",    val:s.langs.ru, color:S2},
+       {lab:"🇬🇧 Inglizcha", val:s.langs.en, color:S3}]
+        .filter(function(x){ return x.val; })
+        .sort(function(a,b){ return b.val - a.val; }),
+      S1, tilJami));
+  } else cTil.appendChild(emptyNote("Bu davrda film yuborilmagan."));
+  put("kino", cTil);
+
+  /* — Seriyalar — */
+  var cSer = card("Qaysi seriya", "Garri Potter yoki Fantastik Maxluqlar", "half");
+  var serJami = s.seriya.hp + s.seriya.fb;
+  if(serJami){
+    cSer.appendChild(barList([
+      {lab:"⚡ Garri Potter", val:s.seriya.hp, color:"var(--gold-2)", note:"8 ta film"},
+      {lab:"🧳 Fantastik Maxluqlar", val:s.seriya.fb, color:S3, note:"3 ta film"}
+    ].filter(function(x){ return x.val; }), S1, serJami));
+  } else cSer.appendChild(emptyNote("Bu davrda film yuborilmagan."));
+  put("kino", cSer);
+
+
   /* — Kanal harakati — */
-  var c8 = card("Kanal va bot holati", "chiqib ketish, bloklash", "third");
+  var c8 = card("Kanal va bot holati", "qo'shilish, chiqish, bloklash", "third");
   var chItems = [
     {lab:"📜 Qo'shildi", val:s.sub, color:"#0ca30c"},
     {lab:"🚪 Chiqib ketdi", val:s.left, color:"#fab219"},
