@@ -60,6 +60,8 @@ button{font-family:inherit; color:inherit}
 }
 .btn:hover{border-color:var(--gold-2); background:var(--panel-2)}
 .btn.ghost{border-color:var(--line-2); color:var(--ink-2)}
+.btn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(231,193,112,.1)}
+#fullscr{font-size:15px; line-height:1; padding:7px 11px}
 .spacer{flex:1 1 auto}
 .range-pick{
   display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:9px;
@@ -74,6 +76,13 @@ button{font-family:inherit; color:inherit}
 }
 .range-pick .btn{padding:7px 12px}
 .range-pick .err{margin:0; flex-basis:100%}
+.range-pick .tayyor{display:flex; gap:6px; flex-wrap:wrap; margin-left:4px}
+.range-pick .tayyor button{
+  border:1px solid var(--line-2); background:transparent; color:var(--ink-3);
+  font-size:11.5px; font-weight:600; padding:5px 10px; border-radius:999px; cursor:pointer;
+  font-family:inherit; transition:.15s; white-space:nowrap;
+}
+.range-pick .tayyor button:hover{border-color:var(--gold-2); color:var(--gold)}
 .tabs{
   display:flex; gap:2px; margin-top:12px; overflow-x:auto; scrollbar-width:none;
   border-bottom:1px solid var(--line-2);
@@ -284,6 +293,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <span class="spacer"></span>
       <button class="btn" id="open-src">Ma'lumot manbai</button>
       <button class="btn ghost" id="refresh" title="Havoladan qayta yuklash">Yangilash</button>
+      <button class="btn ghost" id="fullscr" title="To'liq ekran (F)" aria-label="To'liq ekran">⛶</button>
     </div>
     <div class="range-pick" id="range-pick" hidden>
       <label for="d-from">dan</label>
@@ -292,6 +302,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
       <input type="date" id="d-to">
       <button class="btn" id="d-ok">Ko'rsat</button>
       <button class="btn ghost" id="d-clear">Bekor</button>
+      <span class="tayyor" id="d-tayyor"></span>
       <span class="err" id="d-err" hidden></span>
     </div>
     <div class="src-line" id="srcline"></div>
@@ -684,187 +695,333 @@ function tipShow(x, y, html){
 function tipHide(){ if(TIP) TIP.hidden = true; }
 
 /* ───────── 1. Kunlik faollik ───────── */
+/* Chizma BIR MARTA quriladi. Ko'rsatkich qo'shilganda yoki olib tashlanganda
+   hammasi qaytadan chizilmaydi: o'zgargani ochiladi yoki so'nadi, qolganlari
+   esa yangi masshtabga silliq ko'chadi. */
 function chartDaily(dayList, holat){
   var W = 720, H = 260, P = {t:14, r:16, b:26, l:42};
-  var faol = KUNLIK.filter(function(x){ return holat[x.k]; });
-  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img",
-    "aria-label":"Kunlik faollik: " + faol.map(function(x){ return x.n; }).join(", ")});
   var n = dayList.length;
-  var eng = 1;
-  dayList.forEach(function(d){ faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; }); });
-  var maxV = niceMax(eng);
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
   var X = function(i){ return n <= 1 ? P.l + iw/2 : P.l + i*iw/(n-1); };
-  var Y = function(v){ return P.t + ih - (v/maxV)*ih; };
+  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img"});
 
+  var gridLar = [], yYozuv = [];
   for(var g=0; g<=4; g++){
-    var yv = maxV*g/4, y = Y(yv);
+    var y = P.t + ih - (ih*g/4);
     svg.appendChild(el("line", {x1:P.l, x2:W-P.r, y1:y, y2:y, stroke:"var(--grid)", "stroke-width":1}));
-    svg.appendChild(el("text", {x:P.l-7, y:y+3.5, "text-anchor":"end", class:"tick num"}, fmtNum(yv)));
+    var yz = el("text", {x:P.l-7, y:y+3.5, "text-anchor":"end", class:"tick num"}, "0");
+    yYozuv.push(yz); svg.appendChild(yz);
   }
 
-  if(!faol.length){
-    svg.appendChild(el("text", {x:W/2, y:H/2, "text-anchor":"middle", class:"slab",
-      fill:"var(--ink-3)"}, "Ko'rsatkichni tanlang"));
-    return svg;
-  }
+  var defs = el("defs", {});
+  svg.appendChild(defs);
 
-  // Bitta chiziq qolganda tagini bo'yaymiz - shunda shakl aniqroq o'qiladi.
-  var yolgiz = faol.length === 1;
-  faol.forEach(function(x, idx){
-    var d = "";
-    for(var i=0; i<n; i++) d += (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(dayList[i][x.k]).toFixed(1) + " ";
-    if(yolgiz){
-      var gid = "fill_" + x.k;
-      var defs = el("defs", {});
-      var lg = el("linearGradient", {id:gid, x1:"0", y1:"0", x2:"0", y2:"1"});
-      lg.appendChild(el("stop", {offset:"0", "stop-color":x.c, "stop-opacity":".26"}));
-      lg.appendChild(el("stop", {offset:"1", "stop-color":x.c, "stop-opacity":"0"}));
-      defs.appendChild(lg); svg.appendChild(defs);
-      var maydon = el("path", {
-        d: d + "L" + X(n-1).toFixed(1) + " " + Y(0) + " L" + X(0).toFixed(1) + " " + Y(0) + " Z",
-        fill:"url(#"+gid+")", stroke:"none"});
-      maydon.style.opacity = "0";
-      maydon.style.transition = "opacity .6s ease .2s";
-      keyinroq(function(){ maydon.style.opacity = "1"; });
-      svg.appendChild(maydon);
-    }
-    var line = el("path", {d:d, fill:"none", stroke:x.c, "stroke-width":2,
+  var chiziq = {};
+  KUNLIK.forEach(function(x, idx){
+    var gid = "fill_" + x.k;
+    var lg = el("linearGradient", {id:gid, x1:"0", y1:"0", x2:"0", y2:"1"});
+    lg.appendChild(el("stop", {offset:"0", "stop-color":x.c, "stop-opacity":".26"}));
+    lg.appendChild(el("stop", {offset:"1", "stop-color":x.c, "stop-opacity":"0"}));
+    defs.appendChild(lg);
+
+    var grup = el("g", {});
+    var maydon = el("path", {fill:"url(#"+gid+")", stroke:"none"});
+    maydon.style.opacity = "0";
+    maydon.style.transition = "opacity .35s ease";
+    var yol = el("path", {fill:"none", stroke:x.c, "stroke-width":2,
       "stroke-linejoin":"round", "stroke-linecap":"round"});
-    svg.appendChild(line);
-
-    // Chiziq chapdan o'ngga chiziladi. Punktir chiziqda bu hiyla ishlamaydi
-    // (dasharray band), ularni oddiygina ochamiz.
-    if(x.dash){
-      line.setAttribute("stroke-dasharray", "5 4");
-      line.style.opacity = "0";
-      line.style.transition = "opacity .5s ease " + (idx * 60) + "ms";
-      keyinroq(function(){ line.style.opacity = "1"; });
-    } else {
-      var uz = 0;
-      try{ uz = line.getTotalLength(); }catch(e){}
-      if(uz){
-        line.style.strokeDasharray = uz;
-        line.style.strokeDashoffset = uz;
-        line.style.transition = "stroke-dashoffset .75s " + TEZLIK + " " + (idx * 60) + "ms";
-        keyinroq(function(){ line.style.strokeDashoffset = "0"; });
-      }
-    }
-
-    if(n){
-      var nuqta = el("circle", {cx:X(n-1), cy:Y(dayList[n-1][x.k]), r:3.5, fill:x.c,
-        stroke:"var(--panel)", "stroke-width":2});
-      nuqta.style.opacity = "0";
-      nuqta.style.transition = "opacity .35s ease " + (idx * 60 + 500) + "ms";
-      keyinroq(function(){ nuqta.style.opacity = "1"; });
-      svg.appendChild(nuqta);
-    }
+    if(x.dash) yol.setAttribute("stroke-dasharray", "5 4");
+    var uchi = el("circle", {r:3.5, fill:x.c, stroke:"var(--panel)", "stroke-width":2});
+    grup.appendChild(maydon); grup.appendChild(yol); grup.appendChild(uchi);
+    grup.style.opacity = "0";
+    grup.style.transition = "opacity .35s ease";
+    grup.style.pointerEvents = "none";
+    svg.appendChild(grup);
+    chiziq[x.k] = {g:grup, yol:yol, uchi:uchi, maydon:maydon, ser:x, idx:idx, bor:false};
   });
 
   var step = Math.max(1, Math.ceil(n/6));
   for(var i=0; i<n; i += step)
     svg.appendChild(el("text", {x:X(i), y:H-8, "text-anchor":"middle", class:"tick"}, fmtDay(dayList[i].k)));
 
-  // Kursor
+  var bosh = el("text", {x:W/2, y:H/2, "text-anchor":"middle", class:"slab", fill:"var(--ink-3)"},
+    "Ko'rsatkichni tanlang");
+  bosh.style.opacity = "0";
+  bosh.style.transition = "opacity .3s ease";
+  svg.appendChild(bosh);
+
   var vline = el("line", {y1:P.t, y2:P.t+ih, class:"hovline"}); vline.style.opacity = 0;
   svg.appendChild(vline);
-  var nuqtalar = faol.map(function(x){
+  var nuqtalar = {};
+  KUNLIK.forEach(function(x){
     var c = el("circle", {r:4.5, fill:x.c, stroke:"var(--panel)", "stroke-width":2});
-    c.style.opacity = 0; svg.appendChild(c); return c;
+    c.style.opacity = 0; svg.appendChild(c); nuqtalar[x.k] = c;
   });
   var hit = el("rect", {x:0, y:0, width:W, height:H, fill:"transparent"});
   svg.appendChild(hit);
 
+  var I = {W:W, H:H, P:P, n:n, iw:iw, ih:ih, X:X, chiziq:chiziq, yYozuv:yYozuv,
+           dayList:dayList, maxV:0, holat:holat, bosh:bosh, vline:vline, nuqtalar:nuqtalar};
+  svg._i = I;
+
   function move(ev){
+    var faol = KUNLIK.filter(function(x){ return I.holat[x.k]; });
+    if(!faol.length) return;
     var r = svg.getBoundingClientRect();
     var px = (ev.clientX - r.left) / r.width * W;
     var i = n <= 1 ? 0 : Math.round((px - P.l) / (iw/(n-1)));
     i = Math.max(0, Math.min(n-1, i));
-    var d = dayList[i], eng_y = H;
+    var d = dayList[i], engY = H;
     vline.setAttribute("x1", X(i)); vline.setAttribute("x2", X(i)); vline.style.opacity = 1;
     var qator = "";
-    faol.forEach(function(x, j){
-      var y = Y(d[x.k]);
-      if(y < eng_y) eng_y = y;
-      nuqtalar[j].setAttribute("cx", X(i));
-      nuqtalar[j].setAttribute("cy", y);
-      nuqtalar[j].style.opacity = 1;
+    KUNLIK.forEach(function(x){
+      var c = nuqtalar[x.k];
+      if(!I.holat[x.k]){ c.style.opacity = 0; return; }
+      var y = P.t + ih - (d[x.k]/I.maxV)*ih;
+      if(y < engY) engY = y;
+      c.setAttribute("cx", X(i)); c.setAttribute("cy", y); c.style.opacity = 1;
       qator += '<div class="tr"><span><span class="swatch" style="display:inline-block;background:' +
         x.c + '"></span> ' + esc(x.n) + '</span><b>' + fmtNum(d[x.k]) + '</b></div>';
     });
-    tipShow(ev.clientX, r.top + (eng_y/H)*r.height, '<div class="tt">' + fmtDay(d.k) + '</div>' + qator);
+    tipShow(ev.clientX, r.top + (engY/H)*r.height, '<div class="tt">' + fmtDay(d.k) + '</div>' + qator);
   }
   hit.addEventListener("mousemove", move);
   hit.addEventListener("touchmove", function(e){ if(e.touches[0]) move(e.touches[0]); });
   hit.addEventListener("mouseleave", function(){
     vline.style.opacity = 0;
-    nuqtalar.forEach(function(c){ c.style.opacity = 0; });
+    KUNLIK.forEach(function(x){ nuqtalar[x.k].style.opacity = 0; });
     tipHide();
   });
+
+  chartYangila(svg, holat, true);
   return svg;
 }
 
-/* ───────── 2. Filmlar reytingi (tillar bo'yicha yig'ma) ───────── */
-function chartFilms(s, tillar){
-  var faolTil = ["uz","ru","en"].filter(function(l){ return tillar[l]; });
-  // Jami endi faqat TANLANGAN tillar bo'yicha: bittasini olib turganda
-  // uzunliklar ham, tartib ham shunga qarab qayta hisoblanadi.
-  var jami = {};
-  Object.keys(s.filmBy).forEach(function(k){
-    jami[k] = faolTil.reduce(function(a, l){ return a + (s.byFilmLang[k+"|"+l] || 0); }, 0);
+/* Masshtab o'zgarishi bitta son - maxV. Har kadrda uni oraliq qiymatga
+   qo'yib chiziqlarni qayta hisoblaymiz: shunda qolgan chiziqlar sakramay,
+   silliq ko'chadi va Y o'qidagi raqamlar ham ular bilan birga o'zgaradi. */
+function chartYangila(svg, holat, ilk){
+  var I = svg._i;
+  I.holat = holat;
+  var faol = KUNLIK.filter(function(x){ return holat[x.k]; });
+  var eng = 1;
+  I.dayList.forEach(function(d){
+    faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; });
   });
-  var keys = Object.keys(FILMS).filter(function(k){ return jami[k]; })
-    .sort(function(a,b){ return jami[b] - jami[a]; });
-  Object.keys(jami).forEach(function(k){ if(!FILMS[k] && jami[k] && keys.indexOf(k) < 0) keys.push(k); });
-  if(!keys.length || !faolTil.length) return null;
+  var yangiMax = niceMax(eng);
+  var eskiMax = I.maxV || yangiMax;
+  I.maxV = yangiMax;
+  I.bosh.style.opacity = faol.length ? "0" : "1";
+
+  var yolgiz = faol.length === 1;
+
+  // Ilk chizilish izlari (dasharray) masshtab o'zgarganda chiziqni kesib
+  // qo'yadi — chiziq uzunligi boshqacha bo'lib qoladi. Shuning uchun
+  // birinchi o'zgarishdayoq tozalab tashlaymiz.
+  if(!ilk){
+    KUNLIK.forEach(function(x){
+      if(x.dash) return;
+      var y = I.chiziq[x.k].yol;
+      y.style.transition = "";
+      y.style.strokeDasharray = "";
+      y.style.strokeDashoffset = "";
+    });
+  }
+
+  function chizMax(m){
+    KUNLIK.forEach(function(x){
+      var c = I.chiziq[x.k];
+      if(!holat[x.k] && !c.bor) return;        // ko'rinmaydi va ko'rinmagan ham
+      var d = "";
+      for(var i=0; i<I.n; i++){
+        var y = I.P.t + I.ih - (I.dayList[i][x.k]/m)*I.ih;
+        d += (i ? "L" : "M") + I.X(i).toFixed(1) + " " + y.toFixed(1) + " ";
+      }
+      c.yol.setAttribute("d", d);
+      c.maydon.setAttribute("d", d + "L" + I.X(I.n-1).toFixed(1) + " " + (I.P.t+I.ih) +
+                                 " L" + I.X(0).toFixed(1) + " " + (I.P.t+I.ih) + " Z");
+      if(I.n){
+        c.uchi.setAttribute("cx", I.X(I.n-1));
+        c.uchi.setAttribute("cy", I.P.t + I.ih - (I.dayList[I.n-1][x.k]/m)*I.ih);
+      }
+    });
+    for(var g=0; g<=4; g++) I.yYozuv[g].textContent = fmtNum(m*g/4);
+  }
+
+  // Ko'rinish: faqat O'ZGARGANI harakatlanadi
+  KUNLIK.forEach(function(x){
+    var c = I.chiziq[x.k];
+    var kerak = !!holat[x.k];
+    if(kerak !== c.bor){
+      c.g.style.opacity = kerak ? "1" : "0";
+      c.bor = kerak;
+    }
+    c.maydon.style.opacity = (kerak && yolgiz) ? "1" : "0";
+  });
+
+  if(ilk || ST.jim || eskiMax === yangiMax){
+    chizMax(yangiMax);
+    if(ilk && !ST.jim) ilkChizilish(I, faol);
+    return;
+  }
+
+  var boshi = null, davom = 420;
+  function qadam(vaqt){
+    if(boshi === null) boshi = vaqt;
+    var p = Math.min(1, (vaqt - boshi)/davom);
+    var yumshoq = 1 - Math.pow(1 - p, 3);
+    chizMax(eskiMax + (yangiMax - eskiMax)*yumshoq);
+    if(p < 1) requestAnimationFrame(qadam);
+  }
+  requestAnimationFrame(qadam);
+}
+
+/* Sahifa ilk ochilganda chiziqlar chapdan o'ngga chiziladi. */
+function ilkChizilish(I, faol){
+  faol.forEach(function(x, j){
+    var c = I.chiziq[x.k];
+    if(x.dash) return;                 // punktirda dasharray band
+    var uz = 0;
+    try{ uz = c.yol.getTotalLength(); }catch(e){}
+    if(!uz) return;
+    c.yol.style.strokeDasharray = uz;
+    c.yol.style.strokeDashoffset = uz;
+    c.yol.style.transition = "stroke-dashoffset .75s " + TEZLIK + " " + (j*60) + "ms";
+    keyinroq(function(){
+      c.yol.style.strokeDashoffset = "0";
+      // Chizilib bo'lgach dasharray ni bo'shatamiz: masshtab o'zgarganda
+      // chiziq uzunligi ham o'zgaradi va eski dasharray uni kesib qo'yardi.
+      setTimeout(function(){
+        c.yol.style.transition = "";
+        c.yol.style.strokeDasharray = "";
+        c.yol.style.strokeDashoffset = "";
+      }, 800 + j*60);
+    });
+  });
+}
+
+/* ───────── 2. Filmlar reytingi (tillar bo'yicha yig'ma) ───────── */
+/* Bu chizma ham bir marta quriladi. Til olib tashlanganda filmlar o'rin
+   almashmaydi — faqat tegishli bo'lak siqiladi va bar qisqaradi. Tartib
+   sakrab tursa, ko'z qaysi qator qayerga ketganini yo'qotadi. */
+function chartFilms(s, tillar){
+  var jami0 = {};
+  Object.keys(s.filmBy).forEach(function(k){ jami0[k] = s.filmBy[k]; });
+  var keys = Object.keys(FILMS).filter(function(k){ return jami0[k]; })
+    .sort(function(a,b){ return jami0[b] - jami0[a]; });
+  Object.keys(jami0).forEach(function(k){ if(!FILMS[k] && keys.indexOf(k) < 0) keys.push(k); });
+  if(!keys.length) return null;
 
   var rowH = 26, gap = 6, P = {t:6, r:46, b:20, l:132};
   var W = 720, H = P.t + keys.length*(rowH+gap) + P.b;
-  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Filmlar bo'yicha yuborishlar"});
-  var maxV = niceMax(Math.max.apply(null, keys.map(function(k){ return jami[k]; })));
   var iw = W - P.l - P.r;
+  var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Filmlar bo'yicha yuborishlar"});
   var cols = {uz:S1, ru:S2, en:S3};
 
+  var gridChiz = [], xYozuv = [];
   for(var g=0; g<=4; g++){
     var x = P.l + iw*g/4;
     svg.appendChild(el("line", {x1:x, x2:x, y1:P.t, y2:H-P.b+2, stroke:"var(--grid)", "stroke-width":1}));
-    svg.appendChild(el("text", {x:x, y:H-6, "text-anchor":"middle", class:"tick num"}, fmtNum(maxV*g/4)));
+    var yz = el("text", {x:x, y:H-6, "text-anchor":"middle", class:"tick num"}, "0");
+    xYozuv.push(yz); svg.appendChild(yz);
   }
+
+  var qatorlar = {};
   keys.forEach(function(k, i){
     var y = P.t + i*(rowH+gap);
-    var total = jami[k], off = 0;
     svg.appendChild(el("text", {x:P.l-10, y:y+rowH/2+4, "text-anchor":"end", class:"slab"},
       (FILMS[k] ? FILMS[k].num + ". " : "") + filmName(k)));
-    faolTil.forEach(function(lg){
+    var seg = {};
+    ["uz","ru","en"].forEach(function(lg){
       var v = s.byFilmLang[k+"|"+lg] || 0;
-      if(!v) return;
-      var w = (v/maxV)*iw, x0 = P.l + (off/maxV)*iw;
-      var last = (off + v) >= total - 0.001;
-      var rect = el("rect", {x:x0, y:y, width:Math.max(0, w - 2), height:rowH,
-        fill:cols[lg], rx: last ? 4 : 0, ry: last ? 4 : 0});
-      rect.style.cursor = "default";
-      rect.style.transformBox = "fill-box";
-      rect.style.transformOrigin = "left center";
-      rect.style.transform = "scaleX(0)";
-      rect.style.transition = "transform .5s " + TEZLIK + " " + (i * 22) + "ms";
-      keyinroq(function(){ rect.style.transform = "scaleX(1)"; });
-      rect.addEventListener("mousemove", function(e){
+      var r = el("rect", {x:P.l, y:y, width:0, height:rowH, fill:cols[lg], rx:0, ry:0});
+      r.style.transformBox = "fill-box";
+      r.style.transformOrigin = "left center";
+      r.addEventListener("mousemove", function(e){
         tipShow(e.clientX, e.clientY,
           '<div class="tt">' + filmName(k) + '</div>' +
-          '<div class="tr"><span>' + LANGS[lg].f + " " + LANGS[lg].n + '</span><b>' + fmtNum(v) + '</b></div>' +
-          '<div class="tr"><span style="color:var(--ink-3)">Jami</span><b>' + fmtNum(total) + '</b></div>');
+          '<div class="tr"><span>' + LANGS[lg].f + " " + LANGS[lg].n + '</span><b>' + fmtNum(v) + '</b></div>');
       });
-      rect.addEventListener("mouseleave", tipHide);
-      svg.appendChild(rect);
-      off += v;
+      r.addEventListener("mouseleave", tipHide);
+      svg.appendChild(r);
+      seg[lg] = {rect:r, val:v};
     });
-    var son = el("text", {x:P.l + (total/maxV)*iw + 8, y:y+rowH/2+4, class:"vlab"}, fmtNum(total));
-    son.style.opacity = "0";
-    son.style.transition = "opacity .4s ease " + (i * 22 + 240) + "ms";
-    keyinroq(function(){ son.style.opacity = "1"; });
+    var son = el("text", {x:P.l, y:y+rowH/2+4, class:"vlab"}, "0");
     svg.appendChild(son);
+    qatorlar[k] = {seg:seg, son:son, y:y};
   });
+
+  svg._i = {keys:keys, qatorlar:qatorlar, P:P, iw:iw, xYozuv:xYozuv, maxV:0, tillar:tillar};
+  filmYangila(svg, tillar, true);
   return svg;
+}
+
+function filmYangila(svg, tillar, ilk){
+  var I = svg._i;
+  I.tillar = tillar;
+  var faol = ["uz","ru","en"].filter(function(l){ return tillar[l]; });
+  var jami = {}, eng = 1;
+  I.keys.forEach(function(k){
+    jami[k] = faol.reduce(function(a, l){ return a + I.qatorlar[k].seg[l].val; }, 0);
+    if(jami[k] > eng) eng = jami[k];
+  });
+  var yangiMax = niceMax(eng);
+  var eskiMax = I.maxV || yangiMax;
+  I.maxV = yangiMax;
+
+  function chiz(m, ulush){
+    I.keys.forEach(function(k){
+      var q = I.qatorlar[k], off = 0;
+      ["uz","ru","en"].forEach(function(lg){
+        var sg = q.seg[lg];
+        var korinadi = tillar[lg] && sg.val > 0;
+        var w = korinadi ? (sg.val/m)*I.iw : 0;
+        sg.rect.setAttribute("x", I.P.l + (off/m)*I.iw);
+        sg.rect.setAttribute("width", Math.max(0, w - (w > 3 ? 2 : 0)));
+        sg.rect.style.transform = "scaleX(" + (korinadi ? ulush : 0) + ")";
+        var oxirgi = korinadi && (off + sg.val) >= jami[k] - 0.001;
+        sg.rect.setAttribute("rx", oxirgi ? 4 : 0);
+        sg.rect.setAttribute("ry", oxirgi ? 4 : 0);
+        if(korinadi) off += sg.val;
+      });
+      q.son.setAttribute("x", I.P.l + (jami[k]/m)*I.iw*ulush + 8);
+      q.son.textContent = fmtNum(jami[k]);
+      q.son.style.opacity = jami[k] ? "1" : "0";
+    });
+    for(var g=0; g<=4; g++) I.xYozuv[g].textContent = fmtNum(m*g/4);
+  }
+
+  if(ilk){
+    chiz(yangiMax, 0);
+    if(ST.jim){ chiz(yangiMax, 1); return; }
+    I.keys.forEach(function(k, i){
+      var q = I.qatorlar[k];
+      ["uz","ru","en"].forEach(function(lg){
+        q.seg[lg].rect.style.transition = "transform .5s " + TEZLIK + " " + (i*22) + "ms";
+      });
+      q.son.style.opacity = "0";
+      q.son.style.transition = "opacity .4s ease " + (i*22 + 240) + "ms";
+    });
+    keyinroq(function(){ chiz(yangiMax, 1); });
+    return;
+  }
+
+  // Til qo'shildi yoki olib tashlandi: bo'laklar joyida o'zgaradi
+  I.keys.forEach(function(k){
+    var q = I.qatorlar[k];
+    ["uz","ru","en"].forEach(function(lg){ q.seg[lg].rect.style.transition = "transform .3s " + TEZLIK; });
+  });
+  if(ST.jim || eskiMax === yangiMax){ chiz(yangiMax, 1); return; }
+
+  var boshi = null, davom = 420;
+  function qadam(vaqt){
+    if(boshi === null) boshi = vaqt;
+    var p = Math.min(1, (vaqt - boshi)/davom);
+    var yumshoq = 1 - Math.pow(1 - p, 3);
+    chiz(eskiMax + (yangiMax - eskiMax)*yumshoq, 1);
+    if(p < 1) requestAnimationFrame(qadam);
+  }
+  requestAnimationFrame(qadam);
 }
 
 /* ───────── 3. Soatlar ───────── */
@@ -1262,19 +1419,16 @@ function render(){
     dayList.length + " kun · ko'rsatkich nomini bosib olib turing", "twothird");
   var holat = seriyaHolati();
   var f1 = document.createElement("figure");
-  function chizQayta(){
-    f1.innerHTML = "";
-    f1.appendChild(chartDaily(dayList, holat));
-  }
+  var kunSvg = chartDaily(dayList, holat);
   c1.appendChild(legendToggle(holat, function(){
-    chizQayta();
+    chartYangila(kunSvg, holat);      // butun chizma emas, faqat o'zgargani
     [].forEach.call(c1.querySelectorAll(".legend .lg"), function(b, i){
       var yoq = holat[KUNLIK[i].k];
       b.className = "lg" + (yoq ? "" : " off");
       b.setAttribute("aria-pressed", String(!!yoq));
     });
   }));
-  chizQayta();
+  f1.appendChild(kunSvg);
   c1.appendChild(f1);
   addTable(c1, ["Kun","Ochdi","Qo'shildi","Film","Chiqdi","Blokladi","Odam"],
     dayList.slice().reverse().map(function(d){
@@ -1308,18 +1462,14 @@ function render(){
   var tilItems = [{l:"uz", c:S1, n:"🇺🇿 O'zbekcha"}, {l:"ru", c:S2, n:"🇷🇺 Ruscha"},
                   {l:"en", c:S3, n:"🇬🇧 Inglizcha"}];
   var f3 = document.createElement("figure");
-  function filmChiz(){
-    f3.innerHTML = "";
-    var x = chartFilms(s, tillar);
-    if(x) f3.appendChild(x);
-  }
+  var filmSvg = chartFilms(s, tillar);
   c3.appendChild(toggleLegend(tilItems, tillar, "l", function(){
     try{ localStorage.setItem("hp_dash_langs", JSON.stringify(tillar)); }catch(e){}
-    filmChiz();
+    if(filmSvg) filmYangila(filmSvg, tillar);
   }));
-  filmChiz();
-  var fc = f3.firstChild;
+  var fc = filmSvg;
   if(fc){
+    f3.appendChild(filmSvg);
     c3.appendChild(f3);
     addTable(c3, ["Film","UZ","RU","EN","Jami"],
       Object.keys(s.filmBy).sort(function(a,b){ return s.filmBy[b]-s.filmBy[a]; }).map(function(k){
@@ -1929,6 +2079,49 @@ document.getElementById("range").addEventListener("click", function(e){
     f.focus();
   });
 
+  /* Tayyor oraliqlar. Oxirgi yozuv kunidan hisoblanadi, bugungi sanadan emas:
+     loglar kecha to'xtagan bo'lsa "shu hafta" bo'm-bo'sh chiqmasin. */
+  function oxirgiKun(){
+    return ST.rows.length ? new Date(ST.rows[ST.rows.length-1].t) : new Date();
+  }
+  function dushanba(d){
+    var k = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var w = (k.getDay() + 6) % 7;             // dushanba = 0
+    k.setDate(k.getDate() - w);
+    return k;
+  }
+  var TAYYOR = [
+    {n:"Shu hafta", f:function(){
+      var b = oxirgiKun(); return [dushanba(b), b];
+    }},
+    {n:"O'tgan hafta", f:function(){
+      var d = dushanba(oxirgiKun());
+      var boshi = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 7);
+      return [boshi, new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1)];
+    }},
+    {n:"Shu oy", f:function(){
+      var b = oxirgiKun(); return [new Date(b.getFullYear(), b.getMonth(), 1), b];
+    }},
+    {n:"O'tgan oy", f:function(){
+      var b = oxirgiKun();
+      return [new Date(b.getFullYear(), b.getMonth()-1, 1),
+              new Date(b.getFullYear(), b.getMonth(), 0)];
+    }}
+  ];
+  var tayyorBox = document.getElementById("d-tayyor");
+  TAYYOR.forEach(function(x){
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = x.n;
+    b.addEventListener("click", function(){
+      var p2 = x.f();
+      f.value = kunYoz(p2[0]); t.value = kunYoz(p2[1]);
+      xato.hidden = true;
+      ST.oraliq = {from: f.value, to: t.value};
+      saveCfg(); belgila(); panel.hidden = true; render();
+    });
+    tayyorBox.appendChild(b);
+  });
+
   document.getElementById("d-ok").addEventListener("click", function(){
     var a = kunOqi(f.value), b = kunOqi(t.value);
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
@@ -1942,6 +2135,35 @@ document.getElementById("range").addEventListener("click", function(e){
     saveCfg(); belgila(); panel.hidden = true; render();
   });
 })();
+
+/* ───────── To'liq ekran ─────────
+   Chrome'da sahifani to'liq ekranga o'tkazadigan menyu yo'q, shuning uchun
+   o'z tugmamiz va F qisqartmasi. */
+function toliqEkran(){
+  var d = document.documentElement;
+  if(document.fullscreenElement || document.webkitFullscreenElement){
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  } else {
+    (d.requestFullscreen || d.webkitRequestFullscreen).call(d);
+  }
+}
+document.getElementById("fullscr").addEventListener("click", toliqEkran);
+document.addEventListener("fullscreenchange", function(){
+  var b = document.getElementById("fullscr");
+  var ichkarida = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  b.textContent = ichkarida ? "⛶" : "⛶";
+  b.title = (ichkarida ? "To'liq ekrandan chiqish" : "To'liq ekran") + " (F)";
+  b.classList.toggle("yoniq", ichkarida);
+});
+document.addEventListener("keydown", function(e){
+  if(e.key !== "f" && e.key !== "F" && e.key !== "а" && e.key !== "А") return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  // Sana yoki havola yozayotganda "f" harfini o'g'irlamaymiz
+  var t = e.target;
+  if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+  e.preventDefault();
+  toliqEkran();
+});
 
 document.getElementById("open-src").addEventListener("click", openSheet);
 document.getElementById("refresh").addEventListener("click", function(){
