@@ -11,10 +11,12 @@
 <style>
 /* Qorong'i — ataylab yagona dunyo: ilovaning o'zi ham shunday (qasr kechasi). */
 :root{
-  --bg:#0b0e13; --panel:#141922; --panel-2:#1b212c; --line:rgba(231,193,112,.14);
+  --bg:#0b0e13; --panel:#141922; --panel-2:#1b212c; --line:rgba(255,255,255,.16);
   --line-2:rgba(255,255,255,.07);
   --ink:#eae7e0; --ink-2:#a3adba; --ink-3:#6f7987;
-  --gold:#e7c170; --gold-2:#c0913a; --gold-hi:#f3d58f;
+  /* Aksent — oq. Ma'lumot ranglari (chiziqlar, fakultetlar, holat belgilari)
+     bundan mustaqil: ular ma'noni bildiradi, aksent esa faqat "tanlangan"ni. */
+  --gold:#e9e7e1; --gold-2:#9aa0aa; --gold-hi:#ffffff;
   /* Grafik seriyalari — validatordan o'tgan (dark, surface #141922) */
   --s1:#c98500; --s2:#3987e5; --s3:#199e70;
   --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
@@ -53,14 +55,14 @@ button{font-family:inherit; color:inherit}
   padding:6px 11px; border-radius:7px; cursor:pointer; white-space:nowrap; transition:.15s;
 }
 .seg button:hover{color:var(--ink)}
-.seg button[aria-pressed="true"]{background:rgba(231,193,112,.15); color:var(--gold-hi)}
+.seg button[aria-pressed="true"]{background:rgba(233,231,225,.15); color:var(--gold-hi)}
 .btn{
   border:1px solid var(--line); background:var(--panel); color:var(--ink);
   font-size:12.5px; font-weight:600; padding:8px 13px; border-radius:10px; cursor:pointer; transition:.15s;
 }
 .btn:hover{border-color:var(--gold-2); background:var(--panel-2)}
 .btn.ghost{border-color:var(--line-2); color:var(--ink-2)}
-.btn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(231,193,112,.1)}
+.btn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(233,231,225,.1)}
 .spacer{flex:1 1 auto}
 .ibtn{
   width:38px; height:38px; flex:none; display:grid; place-items:center;
@@ -72,7 +74,7 @@ button{font-family:inherit; color:inherit}
 .ibtn:disabled{opacity:.5; cursor:default}
 .ibtn.aylanmoqda svg{animation:aylan 1s linear infinite}
 @keyframes aylan{to{transform:rotate(360deg)}}
-.ibtn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(231,193,112,.1)}
+.ibtn.yoniq{border-color:var(--gold-2); color:var(--gold-hi); background:rgba(233,231,225,.1)}
 
 .davr-wrap{position:relative}
 .davr-btn{
@@ -134,7 +136,7 @@ button{font-family:inherit; color:inherit}
 .tabs .tab-ic{width:15px; height:15px; flex:none; opacity:.75; transition:.15s}
 .tabs button[aria-selected="true"] .tab-ic{opacity:1}
 .tabs button:hover{color:var(--ink-2); background:var(--panel-2)}
-.tabs button[aria-selected="true"]{color:var(--gold-hi); background:rgba(231,193,112,.14)}
+.tabs button[aria-selected="true"]{color:var(--gold-hi); background:rgba(233,231,225,.14)}
 .tabs button .n{
   font-family:'Manrope',sans-serif; font-size:10.5px; font-weight:700; color:var(--ink-3);
   margin-left:5px; font-variant-numeric:tabular-nums;
@@ -154,7 +156,7 @@ button{font-family:inherit; color:inherit}
 .dot.err{background:var(--crit)}
 .pill{
   border:1px solid var(--line); border-radius:999px; padding:3px 10px; font-size:11.5px;
-  color:var(--gold); background:rgba(231,193,112,.07); font-weight:600;
+  color:var(--gold); background:rgba(233,231,225,.07); font-weight:600;
 }
 
 /* ————— Kartalar ————— */
@@ -174,7 +176,7 @@ button{font-family:inherit; color:inherit}
 }
 .delta{font-weight:700; font-variant-numeric:tabular-nums; display:inline-flex; align-items:center; gap:3px}
 .delta.up{color:#3fbf6a} .delta.down{color:#e0796f} .delta.flat{color:var(--ink-3)}
-.kpi.lead{border-color:rgba(231,193,112,.3); background:linear-gradient(160deg,rgba(231,193,112,.07),var(--panel) 62%)}
+.kpi.lead{border-color:rgba(233,231,225,.3); background:linear-gradient(160deg,rgba(233,231,225,.07),var(--panel) 62%)}
 .kpi.lead .k-val{color:var(--gold-hi)}
 
 /* ————— Panellar ————— */
@@ -207,8 +209,8 @@ button{font-family:inherit; color:inherit}
   flex:none;
 }
 .c-head .tbtn svg, .c-head .zbtn svg{width:16px; height:16px; display:block}
-.c-head .tbtn:hover, .c-head .zbtn:hover{color:var(--gold); background:rgba(231,193,112,.08)}
-.c-head .tbtn.yoniq, .c-head .zbtn.yoniq{color:var(--gold-hi); background:rgba(231,193,112,.13)}
+.c-head .tbtn:hover, .c-head .zbtn:hover{color:var(--gold); background:rgba(233,231,225,.08)}
+.c-head .tbtn.yoniq, .c-head .zbtn.yoniq{color:var(--gold-hi); background:rgba(233,231,225,.13)}
 
 .legend{display:flex; gap:14px; flex-wrap:wrap; margin:7px 0 2px; font-size:12px; color:var(--ink-2)}
 .legend span{display:inline-flex; align-items:center; gap:6px}
@@ -282,7 +284,8 @@ figure{min-width:0}
 }
 .heat-shkala i{
   flex:0 1 140px; height:8px; border-radius:4px; display:block;
-  background:linear-gradient(90deg, rgba(231,193,112,.07), var(--gold));
+  background:linear-gradient(90deg, rgb(38,72,140), rgb(57,135,229), rgb(25,158,112),
+    rgb(232,185,60), rgb(208,59,59));
 }
 
 .tbl-wrap{overflow-x:auto; margin-top:8px}
@@ -333,7 +336,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 /* Bo'sh holat / modal */
 .empty{
   border:1px dashed var(--line); border-radius:var(--r); padding:26px 20px; text-align:center;
-  color:var(--ink-2); background:rgba(231,193,112,.03);
+  color:var(--ink-2); background:rgba(233,231,225,.03);
 }
 .sheet{
   position:fixed; inset:0; z-index:60; background:rgba(5,7,10,.72); backdrop-filter:blur(3px);
@@ -356,7 +359,7 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
   border:1.5px dashed var(--line); border-radius:12px; padding:22px; text-align:center;
   color:var(--ink-2); font-size:13px; cursor:pointer; transition:.15s; background:rgba(255,255,255,.015);
 }
-.drop:hover,.drop.over{border-color:var(--gold); background:rgba(231,193,112,.07); color:var(--ink)}
+.drop:hover,.drop.over{border-color:var(--gold); background:rgba(233,231,225,.07); color:var(--ink)}
 .row{display:flex; gap:9px; margin-top:16px; flex-wrap:wrap}
 .err{color:#e0796f; font-size:12.5px; margin-top:9px}
 .note{font-size:11.5px; color:var(--ink-3); margin-top:12px; line-height:1.5}
@@ -1306,6 +1309,31 @@ function filmYangila(svg, tillar, ilk){
    shunda "ko'proq" degani bir qarashda o'qiladi. */
 var HAFTA = ["Dush", "Sesh", "Chor", "Pay", "Jum", "Shan", "Yak"];
 
+/* Issiqlik shkalasi: sovuqdan issiqqa. Bu chizmada rang bitta narsani —
+   faollik darajasini bildiradi, shuning uchun tus bo'ylab o'tish o'rinli:
+   ko'k (jim) -> yashil -> sariq -> qizil (eng gavjum). */
+var ISSIQ = [
+  [0.00, [38, 72, 140]],
+  [0.25, [57, 135, 229]],
+  [0.50, [25, 158, 112]],
+  [0.75, [232, 185, 60]],
+  [1.00, [208, 59, 59]]
+];
+function issiqRang(t){
+  t = Math.max(0, Math.min(1, t));
+  for(var i = 1; i < ISSIQ.length; i++){
+    if(t <= ISSIQ[i][0]){
+      var a = ISSIQ[i-1], b = ISSIQ[i];
+      var u = (t - a[0]) / (b[0] - a[0] || 1);
+      return "rgb(" +
+        Math.round(a[1][0] + (b[1][0] - a[1][0])*u) + "," +
+        Math.round(a[1][1] + (b[1][1] - a[1][1])*u) + "," +
+        Math.round(a[1][2] + (b[1][2] - a[1][2])*u) + ")";
+    }
+  }
+  return "rgb(208,59,59)";
+}
+
 function chartHeat(s, balandlik){
   var W = 960, P = {t:18, r:14, b:22, l:44};
   var cols = 24, rows = 7;
@@ -1332,7 +1360,8 @@ function chartHeat(s, balandlik){
       var ulush = v ? Math.pow(v/eng, 0.65) : 0;
       var r = el("rect", {x:P.l + h3*kw + 1, y:P.t + k2*kh + 1,
         width:Math.max(1, kw-2), height:Math.max(1, kh-2), rx:3, ry:3,
-        fill:"var(--gold)", opacity: v ? (0.07 + 0.93*ulush).toFixed(3) : 0.03});
+        fill: v ? issiqRang(ulush) : "rgba(255,255,255,.04)",
+        opacity: v ? (0.45 + 0.55*ulush).toFixed(3) : 1});
       (function(kun, soat, qiy, elem){
         elem.addEventListener("mousemove", function(e){
           tipShow(e.clientX, e.clientY,
@@ -1348,7 +1377,7 @@ function chartHeat(s, balandlik){
       r.style.transition = "transform .4s " + TEZLIK + " " + ((h3 + k2*3) * 5) + "ms, opacity .4s ease " + ((h3 + k2*3) * 5) + "ms";
       (function(elem, oxirgi){
         keyinroq(function(){ elem.style.transform = "scale(1)"; elem.style.opacity = oxirgi; });
-      })(r, v ? (0.07 + 0.93*ulush).toFixed(3) : "0.03");
+      })(r, v ? (0.45 + 0.55*ulush).toFixed(3) : "1");
       svg.appendChild(r);
     }
   }
@@ -1507,6 +1536,10 @@ function card(title, hint, cls){
      karta ichida qolgan bo'sh joyni o'lchab, chizmaga aytamiz. */
   function olcham(){
     if(typeof c._qayta !== "function") return;
+    var fig0 = c.querySelector("figure");
+    // Foydalanuvchi qo'lda cho'zgan balandlik kattalashtirishga xalaqit
+    // bermasin: oynada chizma butun joyni olishi kerak.
+    if(fig0) fig0.style.height = "";
     requestAnimationFrame(function(){
       var fig = c.querySelector("figure");
       if(!fig) return;
@@ -1550,7 +1583,7 @@ function card(title, hint, cls){
       ST.jim = true;
       c._qayta(Math.max(140, Math.round(960 * (h - 8) / kenglik)));
       ST.jim = false;
-      fig.style.height = h + "px";   // qayta chizishdan keyin ham saqlansin
+      if(!c.classList.contains("katta")) fig.style.height = h + "px";
     }
     if(window.ResizeObserver){
       new ResizeObserver(function(){
