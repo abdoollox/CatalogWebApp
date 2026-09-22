@@ -818,7 +818,7 @@ function tipHide(){ if(TIP) TIP.hidden = true; }
    hammasi qaytadan chizilmaydi: o'zgargani ochiladi yoki so'nadi, qolganlari
    esa yangi masshtabga silliq ko'chadi. */
 function chartDaily(dayList, holat, balandlik){
-  var W = 960, H = balandlik || 252, P = {t:16, r:26, b:26, l:46};
+  var W = 960, H = balandlik || 200, P = {t:15, r:26, b:24, l:46};
   var n = dayList.length;
   var iw = W - P.l - P.r, ih = H - P.t - P.b;
   var X = function(i){ return n <= 1 ? P.l + iw/2 : P.l + i*iw/(n-1); };
@@ -1563,7 +1563,7 @@ function render(){
 
   var c1 = card(birKun ? "Sutka davomida" : "Kundalik jonlanish",
     (birKun ? "soatlar bo'yicha" : dayList.length + " kun") +
-    " · ko'rsatkich nomini bosib olib turing", "twothird");
+    " · ko'rsatkich nomini bosib olib turing", "");
   var holat = seriyaHolati();
   var f1 = document.createElement("figure");
   var kunSvg = chartDaily(dayList, holat);
@@ -1589,7 +1589,7 @@ function render(){
   put("umumiy", c1);
 
   /* — Voronka — */
-  var c2 = card("Yo'l", "har qadamda nechta ODAM bor", "third");
+  var c2 = card("Yo'l", "har qadamda nechta ODAM bor", birKun ? "" : "third");
   var base = Math.max(1, s.uniq);
   var steps = [
     {lab:"Ko'ringan odam", val:s.uniq, color:"var(--gold)"},
@@ -1602,7 +1602,6 @@ function render(){
   addTable(c2, ["Qadam","Odam","Ulushi"], steps.map(function(x){
     return [x.lab, x.val, (x.val/base*100).toFixed(1) + "%"];
   }));
-  put("umumiy", c2);
 
   /* — Filmlar — */
   var c3 = card("Qaysi kino ko'proq so'raladi", "tillar bo'yicha bo'lingan", "twothird");
@@ -1649,7 +1648,7 @@ function render(){
   /* — Soatlar — */
   // Bir kunlik davrda yuqoridagi chizma allaqachon soatlar bo'yicha — takror kerak emas.
   if(!birKun){
-  var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "");
+  var c5 = card("Sutka bo'yicha", "post qo'yish uchun eng yaxshi payt", "twothird");
   var f5 = document.createElement("figure"); f5.appendChild(chartHours(s)); c5.appendChild(f5);
   c5._qayta = function(balandlik){
     f5.innerHTML = "";
@@ -1660,6 +1659,7 @@ function render(){
   }));
   put("umumiy", c5);
   }
+  put("umumiy", c2);
 
   /* — Manbalar — */
   var c6 = card("Qayerdan kelishdi", "reklama kodi va do'st taklifi", "third");
