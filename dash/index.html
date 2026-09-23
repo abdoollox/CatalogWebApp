@@ -1075,7 +1075,7 @@ function tipHide(){ if(TIP) TIP.hidden = true; }
 /* Chizma BIR MARTA quriladi. Ko'rsatkich qo'shilganda yoki olib tashlanganda
    hammasi qaytadan chizilmaydi: o'zgargani ochiladi yoki so'nadi, qolganlari
    esa yangi masshtabga silliq ko'chadi. */
-function chartDaily(dayList, holat, balandlik, seriyalar){
+function chartDaily(dayList, holat, balandlik, seriyalar, nolsiz){
   var SER = seriyalar || KUNLIK;
   var W = 960, H = balandlik || 200, P = {t:15, r:26, b:24, l:46};
   var n = dayList.length;
@@ -1143,7 +1143,7 @@ function chartDaily(dayList, holat, balandlik, seriyalar){
   svg.appendChild(hit);
 
   var I = {W:W, H:H, P:P, n:n, iw:iw, ih:ih, X:X, chiziq:chiziq, yYozuv:yYozuv,
-           dayList:dayList, ser:SER, maxV:0, holat:holat, bosh:bosh, vline:vline, nuqtalar:nuqtalar};
+           dayList:dayList, ser:SER, nolsiz:!!nolsiz, minV:0, maxV:0, holat:holat, bosh:bosh, vline:vline, nuqtalar:nuqtalar};
   svg._i = I;
 
   function move(ev){
@@ -1159,7 +1159,7 @@ function chartDaily(dayList, holat, balandlik, seriyalar){
     SER.forEach(function(x){
       var c = nuqtalar[x.k];
       if(!I.holat[x.k]){ c.style.opacity = 0; return; }
-      var y = P.t + ih - (d[x.k]/I.maxV)*ih;
+      var y = P.t + ih - ((d[x.k] - I.minV)/(I.maxV - I.minV))*ih;
       if(y < engY) engY = y;
       c.setAttribute("cx", X(i)); c.setAttribute("cy", y); c.style.opacity = 1;
       qator += '<div class="tr"><span><span class="swatch" style="display:inline-block;background:' +
@@ -1188,13 +1188,27 @@ function chartYangila(svg, holat, ilk){
   var SER = I.ser;
   I.holat = holat;
   var faol = SER.filter(function(x){ return holat[x.k]; });
-  var eng = 1;
+  var eng = 1, kam = Infinity;
   I.dayList.forEach(function(d){
-    faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; });
+    faol.forEach(function(x){ if(d[x.k] > eng) eng = d[x.k]; if(d[x.k] < kam) kam = d[x.k]; });
   });
-  var yangiMax = niceMax(eng);
-  var eskiMax = I.maxV || yangiMax;
-  I.maxV = yangiMax;
+  var yangiMax = niceMax(eng), yangiMin = 0;
+  // "Nolsiz" o'q (kanal hajmi kabi katta, sekin o'zgaradigan qiymatlar): o'q 0 dan
+  // emas, ma'lumot oralig'idan boshlanadi — aks holda kichik davrdagi o'zgarish
+  // tekis chiziqqa aylanib qoladi. Qadam yana to'rt teng butun bo'lak.
+  if(I.nolsiz && kam !== Infinity){
+    var oraliq = Math.max(eng - kam, 4);
+    var pastki = Math.max(0, kam - oraliq*0.15), yuqori = eng + oraliq*0.15;
+    var qadamY = niceMax(yuqori - pastki) / 4;
+    for(var u=0; u<4; u++){
+      yangiMin = Math.floor(pastki / qadamY) * qadamY;
+      if(yangiMin + 4*qadamY >= yuqori) break;
+      qadamY = niceMax((yuqori - yangiMin) * 1.001) / 4;
+    }
+    yangiMax = yangiMin + 4*qadamY;
+  }
+  var eskiMax = I.maxV || yangiMax, eskiMin = I.maxV ? I.minV : yangiMin;
+  I.maxV = yangiMax; I.minV = yangiMin;
   I.bosh.style.opacity = faol.length ? "0" : "1";
 
   var yolgiz = faol.length === 1;
@@ -1212,13 +1226,15 @@ function chartYangila(svg, holat, ilk){
     });
   }
 
-  function chizMax(m){
+  function chizMax(m, lo){
+    lo = lo || 0;
+    var Y = function(v){ return I.P.t + I.ih - ((v - lo)/(m - lo))*I.ih; };
     SER.forEach(function(x){
       var c = I.chiziq[x.k];
       if(!holat[x.k] && !c.bor) return;        // ko'rinmaydi va ko'rinmagan ham
       var d = "";
       for(var i=0; i<I.n; i++){
-        var y = I.P.t + I.ih - (I.dayList[i][x.k]/m)*I.ih;
+        var y = Y(I.dayList[i][x.k]);
         d += (i ? "L" : "M") + I.X(i).toFixed(1) + " " + y.toFixed(1) + " ";
       }
       c.yol.setAttribute("d", d);
@@ -1226,10 +1242,10 @@ function chartYangila(svg, holat, ilk){
                                  " L" + I.X(0).toFixed(1) + " " + (I.P.t+I.ih) + " Z");
       if(I.n){
         c.uchi.setAttribute("cx", I.X(I.n-1));
-        c.uchi.setAttribute("cy", I.P.t + I.ih - (I.dayList[I.n-1][x.k]/m)*I.ih);
+        c.uchi.setAttribute("cy", Y(I.dayList[I.n-1][x.k]));
       }
     });
-    for(var g=0; g<=4; g++) I.yYozuv[g].textContent = fmtNum(m*g/4);
+    for(var g=0; g<=4; g++) I.yYozuv[g].textContent = fmtNum(lo + (m - lo)*g/4);
   }
 
   // Ko'rinish: faqat O'ZGARGANI harakatlanadi
@@ -1243,8 +1259,8 @@ function chartYangila(svg, holat, ilk){
     c.maydon.style.opacity = (kerak && yolgiz) ? "1" : "0";
   });
 
-  if(ilk || ST.jim || eskiMax === yangiMax){
-    chizMax(yangiMax);
+  if(ilk || ST.jim || (eskiMax === yangiMax && eskiMin === yangiMin)){
+    chizMax(yangiMax, yangiMin);
     if(ilk && !ST.jim) ilkChizilish(I, faol);
     return;
   }
@@ -1254,7 +1270,7 @@ function chartYangila(svg, holat, ilk){
     if(boshi === null) boshi = vaqt;
     var p = Math.min(1, (vaqt - boshi)/davom);
     var yumshoq = 1 - Math.pow(1 - p, 3);
-    chizMax(eskiMax + (yangiMax - eskiMax)*yumshoq);
+    chizMax(eskiMax + (yangiMax - eskiMax)*yumshoq, eskiMin + (yangiMin - eskiMin)*yumshoq);
     if(p < 1) requestAnimationFrame(qadam);
   }
   requestAnimationFrame(qadam);
@@ -3386,7 +3402,7 @@ function render(){
     var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
     var kChiz = function(){
       fK2.innerHTML = "";
-      fK2.appendChild(chartDaily(kKor, {hajm:true}, kBal, KSER));
+      fK2.appendChild(chartDaily(kKor, {hajm:true}, kBal, KSER, true));
     };
     kChiz();
     cK._qayta = function(b){
