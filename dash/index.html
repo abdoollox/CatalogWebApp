@@ -662,7 +662,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -1425,6 +1425,7 @@ function poygaKarta(o){
     var sm = localStorage.getItem(o.ls + "_mode");
     if(sm === "son" || sm === "ulush") rejim = sm;
   }catch(e){}
+  if(o.faqatSon) rejim = "son";              // ulush ma'nosiz bo'lgan chizmalar uchun
   // Saqlangan tanlovda hammasi o'chiq bo'lib qolsa, chizma bo'sh chiqmasin
   if(!ser.some(function(x){ return holat[x.k]; })) ser.forEach(function(x){ holat[x.k] = true; });
 
@@ -1460,7 +1461,7 @@ function poygaKarta(o){
     });
     seg.appendChild(b);
   });
-  c._head.insertBefore(seg, c._head.firstChild);
+  if(!o.faqatSon) c._head.insertBefore(seg, c._head.firstChild);
 
   var brush = null, yozuv = null;
   function qiymat(d){
@@ -2542,15 +2543,21 @@ function odamQidiruv(){
 var KANAL_BOSHI = 226;
 
 function kanalHajmi(){
-  var holat = {}, son = KANAL_BOSHI, kun = {}, ozg = [];
+  var holat = {}, son = KANAL_BOSHI, kun = {}, ozg = [], kirgan = {};
   for(var i=0; i<ST.rows.length; i++){
     var r = ST.rows[i], e = r.ev.t;
     if(e !== "sub" && e !== "left") continue;
     if(holat[r.uid] === e) continue;                // takroriy yozuv
+    var prev = holat[r.uid];
     son += (e === "sub") ? 1 : -1;
     holat[r.uid] = e;
     kun[dayKey(r.t)] = son;
-    ozg.push({t:r.t, d:(e === "sub") ? 1 : -1});    // haqiqiy o'zgarishlar
+    // Haqiqiy o'zgarishlar. Qo'shilishda — ilgari chiqib ketgan odammi (qayta),
+    // chiqishda — oxirgi qo'shilganidan beri qancha vaqt o'tgani (noma'lum = null).
+    var oz = {t:r.t, d:(e === "sub") ? 1 : -1, uid:r.uid};
+    if(e === "sub"){ oz.qayta = (prev === "left"); kirgan[r.uid] = r.t; }
+    else oz.muddat = kirgan[r.uid] ? (r.t - kirgan[r.uid]) : null;
+    ozg.push(oz);
   }
   return {son:son, kun:kun, ozg:ozg};
 }
@@ -2633,7 +2640,6 @@ function render(){
       s.sortStart ? "boshlagan " + s.sortStart + " ta" : "fakultet tanladi",
       prev && Object.values(prev.houses).reduce(function(a,b){return a+b;},0));
   kpi("Do'st taklifi", s.invited, s.refwin + " ta ball berildi", prev && prev.invited);
-  var net = s.sub - s.left;
 
   // Har bo'lim o'z gridiga yig'iladi; ko'rinmaydiganlari yashirin turadi,
   // shuning uchun bo'lim almashtirish bir zumda bo'ladi (qayta chizilmaydi).
@@ -3258,21 +3264,100 @@ function render(){
   put("kanal", cK);
 
   /* — Kanal harakati — */
-  var c8 = card("Kanal va bot holati", "qo'shilish, chiqish, bloklash", "third");
-  var chItems = [
-    {lab:"📜 Qo'shildi", val:s.sub, color:"#0ca30c"},
-    {lab:"🚪 Chiqib ketdi", val:s.left, color:"#fab219"},
-    {lab:"⛔ Botni blokladi", val:s.blocked, color:"#d03b3b"}
-  ];
-  c8.appendChild(barList(chItems, S2, 0));
-  var lost = s.left + s.blocked;
-  var note = document.createElement("p");
-  note.style.cssText = "font-size:12px;color:var(--ink-3);margin:12px 0 0";
-  note.textContent = net >= 0
-    ? "Sof o'sish: +" + fmtNum(net) + " odam. Yo'qotish " + fmtNum(lost) + " ta."
-    : "Diqqat: bu davrda " + fmtNum(-net) + " ta odam ko'proq chiqib ketdi.";
-  c8.appendChild(note);
+  // Hammasi ODAM bo'yicha va takrorsiz (kanalHajmi dagi haqiqiy o'zgarishlar):
+  // bitta qo'shilish ikki marta yozilib qolsa ham bir marta sanaladi.
+  var khH = kanalHajmi();
+  var hQosh = 0, hChiq = 0, hQayt = 0, yangiA = {}, chiqqanlar = [];
+  var harKun = {};
+  khH.ozg.forEach(function(x){
+    if(x.t < w.from || x.t > w.to) return;
+    var kk3 = birKun ? String(x.t.getHours()).padStart(2, "0") : dayKey(x.t);
+    var q = harKun[kk3] = harKun[kk3] || {qosh:0, chiq:0, blok:0};
+    if(x.d > 0){ hQosh++; q.qosh++; if(x.qayta) hQayt++; else yangiA[x.uid] = 1; }
+    else { hChiq++; q.chiq++; chiqqanlar.push(x); }
+  });
+  var blokOdam = {};
+  rows.forEach(function(r){
+    if(r.ev.t !== "blocked" || blokOdam[r.uid]) return;
+    blokOdam[r.uid] = 1;
+    var kk4 = birKun ? String(r.t.getHours()).padStart(2, "0") : dayKey(r.t);
+    (harKun[kk4] = harKun[kk4] || {qosh:0, chiq:0, blok:0}).blok++;
+  });
+  var blokSoni = Object.keys(blokOdam).length;
+  var blokHozir = Object.keys(blokOdam).filter(function(uid){ return botH[uid] === "blocked"; }).length;
+
+  var hList = dayList.map(function(d){
+    var q = harKun[d.k] || {qosh:0, chiq:0, blok:0};
+    return {k:d.k, lab:d.lab, tip:d.tip, qosh:q.qosh, chiq:q.chiq, blok:q.blok};
+  });
+  var c8 = poygaKarta({
+    nom:"Kanal harakati", kls:"twothird", faqatSon:true,
+    hint:(birKun ? "soat" : "kun") + " sayin · odam bo'yicha, takrorsiz · nomini bosib olib turing",
+    list:hList, dayList:dayList, birKun:birKun, oyna:"oynaH", ls:"hp_dash_harakat",
+    ser:[{k:"qosh", n:"Qo'shildi", t:"Qo'shildi", c:"#199e70"},
+         {k:"chiq", n:"Chiqdi", t:"Chiqdi", c:"#d03b3b"},
+         {k:"blok", n:"Botni blokladi", t:"Blokladi", c:"#9085e9"}]
+  });
+  var sof = hQosh - hChiq;
+  var hk = document.createElement("div");
+  hk.className = "tarq-kpi";
+  [["Qo'shildi", fmtNum(hQosh), hQayt ? fmtNum(hQayt) + " tasi qaytib keldi" : "yangi a'zolar", ""],
+   ["Chiqdi", fmtNum(hChiq), hQosh ? "har 100 qo'shilganga " + Math.round(hChiq/hQosh*100) : "", ""],
+   ["Sof o'sish", (sof >= 0 ? "+" : "−") + fmtNum(Math.abs(sof)), sof >= 0 ? "kanal o'sdi" : "ko'proq odam chiqdi",
+    sof >= 0 ? "yaxshi" : "yomon"],
+   ["Botni blokladi", fmtNum(blokSoni), blokSoni ? fmtNum(blokHozir) + " tasi hozir ham bloklagan" : "hech kim", ""]
+  ].forEach(function(m){
+    var d = document.createElement("div");
+    d.className = "tk" + (m[3] ? " holat-" + m[3] : "");
+    d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+      '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+    hk.appendChild(d);
+  });
+  c8.insertBefore(hk, c8.children[1]);
   put("kanal", c8);
+
+  /* — Qancha vaqtda chiqib ketishdi — */
+  // Chiqqan har odam uchun: oxirgi qo'shilganidan chiqqunicha o'tgan vaqt.
+  // Qo'shilgani loglarda yo'q bo'lsa (7-martdan oldingi a'zo) — alohida guruh.
+  var cV = card("Qancha vaqtda chiqib ketishdi", "qo'shilgandan chiqqunicha", "third cho-teng");
+  var SOAT = 3600000, KUN = 24*SOAT;
+  var VGURUH = [
+    {k:"s1",  n:"1 soat ichida",  c:"#d03b3b", max:SOAT},
+    {k:"k1",  n:"1 kun ichida",   c:"#e0796f", max:KUN},
+    {k:"h1",  n:"1 hafta ichida", c:"#c98500", max:7*KUN},
+    {k:"o1",  n:"1 oy ichida",    c:"#3987e5", max:30*KUN},
+    {k:"kop", n:"1 oydan keyin",  c:"#199e70", max:Infinity},
+    {k:"nom", n:"Qo'shilgani noma'lum", c:"#6d7f99"}
+  ];
+  var vSon = {};
+  chiqqanlar.forEach(function(x){
+    var g = x.muddat == null ? "nom" : VGURUH.filter(function(v){ return v.max && x.muddat < v.max; })[0].k;
+    vSon[g] = (vSon[g] || 0) + 1;
+  });
+  if(chiqqanlar.length){
+    cV.appendChild(barList(VGURUH.filter(function(v){ return vSon[v.k]; }).map(function(v){
+      return {lab:v.n, val:vSon[v.k], color:v.c};
+    }), S2, chiqqanlar.length));
+    var tez = (vSon.s1 || 0) + (vSon.k1 || 0);
+    var yangiSoni = Object.keys(yangiA).length;
+    var qoldi = Object.keys(yangiA).filter(function(uid){ return kanalH[uid] === "sub"; }).length;
+    var vIzoh = document.createElement("p");
+    vIzoh.className = "note";
+    // Izoh raqamga qarab: "darhol ketishadi" faqat haqiqatan ko'p bo'lsa aytiladi
+    var tezUlush = Math.round(tez/chiqqanlar.length*100);
+    var nomUlush = Math.round((vSon.nom || 0)/chiqqanlar.length*100);
+    vIzoh.textContent = "Chiqqanlarning " + tezUlush + "% i bir kun ichida ketgan" +
+      (tezUlush >= 30 ? " — ko'pchilik kerakli filmni olib, darhol chiqib ketyapti." : ".") +
+      (nomUlush >= 30 ? " " + nomUlush + "% i 7-martdan oldingi a'zolar (qachon qo'shilgani loglarda yo'q)." : "") +
+      (yangiSoni ? " Shu davrda yangi qo'shilgan " + fmtNum(yangiSoni) + " kishidan " + fmtNum(qoldi) +
+        " tasi (" + Math.round(qoldi/yangiSoni*100) + "%) hozir ham kanalda." : "");
+    cV.appendChild(vIzoh);
+    addTable(cV, ["Qancha vaqtda", "Odam", "Ulushi"], VGURUH.filter(function(v){ return vSon[v.k]; }).map(function(v){
+      return [v.n, vSon[v.k], (vSon[v.k]/chiqqanlar.length*100).toFixed(1) + "%"];
+    }));
+  } else cV.appendChild(emptyNote("Bu davrda hech kim chiqib ketmagan."));
+  put("kanal", cV);
+
 
   /* — Tarqalish — */
   // Taklif ikki bosqichli (bot shunday ishlaydi): yangi odam havola bilan
@@ -4001,7 +4086,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -4018,7 +4103,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -4058,11 +4143,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
