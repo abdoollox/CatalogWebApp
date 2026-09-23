@@ -2527,7 +2527,7 @@ function odamQidiruv(){
 var KANAL_BOSHI = 226;
 
 function kanalHajmi(){
-  var holat = {}, son = KANAL_BOSHI, kun = {};
+  var holat = {}, son = KANAL_BOSHI, kun = {}, ozg = [];
   for(var i=0; i<ST.rows.length; i++){
     var r = ST.rows[i], e = r.ev.t;
     if(e !== "sub" && e !== "left") continue;
@@ -2535,8 +2535,9 @@ function kanalHajmi(){
     son += (e === "sub") ? 1 : -1;
     holat[r.uid] = e;
     kun[dayKey(r.t)] = son;
+    ozg.push({t:r.t, d:(e === "sub") ? 1 : -1});    // haqiqiy o'zgarishlar
   }
-  return {son:son, kun:kun};
+  return {son:son, kun:kun, ozg:ozg};
 }
 /* Berilgan kun oxiridagi son: o'sha kuni hodisa bo'lmasa — oldingi kunniki. */
 function kanalKunOxiri(kh, dk){
@@ -2577,6 +2578,7 @@ function render(){
     var pFrom = new Date(w.from.getTime() - uzunlik*86400000);
     var pRows = ST.rows.filter(function(r){ return r.t >= pFrom && r.t <= pTo; });
     prev = stats(pRows, first, {from:pFrom, to:pTo});
+    prev.w = {from:pFrom, to:pTo};
   }
 
   /* — KPI — */
@@ -2600,7 +2602,18 @@ function render(){
   kpi("Yangi odam", s.newUsers, "birinchi marta kelgan", prev && prev.newUsers, true);
   kpi("Faol odam", s.uniq, "shu davrda faol bo'lgan", prev && prev.uniq);
   kpi("Yuborilgan film", s.films, s.undo ? s.undo + " ta bekor qilindi" : "kino yetkazildi", prev && prev.films);
-  kpi("Kanal o'sishi", s.sub - s.left, s.sub + " qo'shildi · " + s.left + " chiqdi", prev && (prev.sub - prev.left));
+  // Kanal hajmi — davr OXIRIDAGI son, loglardan (Telegram bilan solishtiriladigan).
+  // Ostida shu davrdagi haqiqiy qo'shilish/chiqishlar, takror yozuvlarsiz.
+  var khK = kanalHajmi();
+  var kQosh = 0, kChiq = 0;
+  khK.ozg.forEach(function(x){
+    if(x.t < w.from || x.t > w.to) return;
+    if(x.d > 0) kQosh++; else kChiq++;
+  });
+  var kOsish = kQosh - kChiq;
+  kpi("Kanal hajmi", kanalKunOxiri(khK, dayKey(w.to)),
+      (kOsish >= 0 ? "+" : "−") + fmtNum(Math.abs(kOsish)) + " · " + fmtNum(kQosh) + " qo'shildi · " + fmtNum(kChiq) + " chiqdi",
+      prev ? kanalKunOxiri(khK, dayKey(prev.w.to)) : null);
   kpi("Saralandi", Object.values(s.houses).reduce(function(a,b){return a+b;},0),
       s.sortStart ? "boshlagan " + s.sortStart + " ta" : "fakultet tanladi",
       prev && Object.values(prev.houses).reduce(function(a,b){return a+b;},0));
