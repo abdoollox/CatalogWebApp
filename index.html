@@ -1174,6 +1174,16 @@ button.glass:active .tube{transform:scale(.97)}
 .coin-fr{display:flex;flex-direction:column;align-items:center;margin-left:2px;font-size:9px;line-height:1}
 .coin-fr i{font-style:normal;padding:0 1px}
 .coin-fr i:first-child{border-bottom:1.3px solid currentColor;padding-bottom:1px;margin-bottom:1px}
+.coin-934,.coin-lt{display:flex;align-items:center;gap:6px}
+/* Xat tugmasi: konvert + qizil mum muhr. Yo'lni boshlamaganlar shuni ko'radi. */
+.coin-lt svg{width:21px;height:21px;opacity:.95}
+.coin-wax{
+  width:9px;height:9px;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 35% 30%,#c8453a,#7b1914 75%);
+  box-shadow:0 0 0 1.5px rgba(246,236,210,.25);
+}
+.coin.yangi .coin-wax{animation:waxPulse 2.4s ease-in-out infinite}
+@keyframes waxPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.22);opacity:.75}}
 .coin-dot{
   position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;padding:0 5px;
   border-radius:9px;background:#d9524a;color:#fff;
@@ -1453,14 +1463,37 @@ button.glass:active .tube{transform:scale(.97)}
 }
 .lt-to{display:block;text-align:center;margin:4px 0 14px;font:italic 500 15px/1.35 'Cormorant Garamond',serif;color:#1d6a4a}
 .lt-school{display:block;text-align:center;margin:0 0 16px;padding:0 0 14px;border-bottom:1px solid rgba(59,42,26,.2);font:700 10px/1.6 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#6b4e2e}
+.lt-head{display:block;text-align:center;white-space:pre-line;margin:-10px 0 16px;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
 .lt-hi{margin:0 0 8px;font:600 22px/1.2 'Cormorant Garamond',serif}
-.lt-body{margin:0 0 12px;font:500 17.5px/1.45 'Cormorant Garamond',serif}
+.lt-body{margin:0 0 12px;white-space:pre-line;font:500 17.5px/1.45 'Cormorant Garamond',serif}
 .lt-list{margin:0 0 14px;padding:0;list-style:none;counter-reset:lt}
 .lt-list li{position:relative;padding:0 0 10px 32px;font:500 17px/1.35 'Cormorant Garamond',serif;counter-increment:lt}
 .lt-list li::before{
   content:counter(lt);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;box-sizing:border-box;
   border:1px solid rgba(59,42,26,.45);text-align:center;font:700 11px/19px 'Manrope',sans-serif;
 }
+.lt-more{
+  width:100%;margin:0 0 12px;padding:10px;border:1px dashed rgba(59,42,26,.4);border-radius:8px;
+  background:transparent;color:#6b4e2e;font:700 12px/1 'Manrope',sans-serif;cursor:pointer;
+}
+.lt-more:active{transform:scale(.99)}
+.lt-kit{margin:0 0 12px;animation:riseIn .35s ease both}
+.lt-kit h4{margin:10px 0 5px;font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
+.lt-kit ul{margin:0;padding:0;list-style:none}
+.lt-kit li{position:relative;padding:0 0 4px 14px;font:500 15px/1.35 'Cormorant Garamond',serif}
+.lt-kit li::before{content:"";position:absolute;left:3px;top:8px;width:4px;height:4px;border-radius:50%;background:rgba(59,42,26,.45)}
+.lt-kit li i{font-style:italic;color:#6b4e2e}
+.lt-note{
+  margin:0 0 14px;padding:9px 11px;border-left:2px solid rgba(139,42,34,.5);border-radius:0 6px 6px 0;
+  background:rgba(139,42,34,.07);font:700 11.5px/1.5 'Manrope',sans-serif;color:#8b2a22;
+}
+.lt-share{
+  width:100%;margin-top:6px;padding:13px;border:1px solid rgba(59,42,26,.35);border-radius:99px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  background:transparent;color:#3b2a1a;font:800 13px/1 'Manrope',sans-serif;cursor:pointer;
+}
+.lt-share svg{width:15px;height:15px}
+.lt-share:active{transform:scale(.98)}
 .lt-sign{display:block;text-align:right;margin:2px 0 18px;font:italic 500 16px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
 .lt-hint{margin:0 0 12px;text-align:center;font:500 12px/1.5 'Manrope',sans-serif;color:#6b4e2e}
 .lt-go{width:100%;padding:15px;border:none;border-radius:99px;background:#3b2a1a;color:#f6eed9;font:800 13.5px/1 'Manrope',sans-serif;cursor:pointer}
@@ -1533,7 +1566,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       </div>
       <div class="head-tools">
         <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span></button>
-        <button class="coin" id="world-btn" aria-label="9¾"><svg class="coin-arch" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V9a7 7 0 0 1 14 0v9"/><path d="M1.5 18h17"/><path d="M3 9h14M3 13.5h14M7 9v4.5M13 9v4.5M10 13.5V18M10 2.5V9"/></svg><span class="coin-num">9<span class="coin-fr"><i>3</i><i>4</i></span></span><span class="coin-dot hidden" id="world-dot"></span></button>
+        <button class="coin" id="world-btn" aria-label="9¾"><span class="coin-934" id="coin-934"><svg class="coin-arch" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V9a7 7 0 0 1 14 0v9"/><path d="M1.5 18h17"/><path d="M3 9h14M3 13.5h14M7 9v4.5M13 9v4.5M10 13.5V18M10 2.5V9"/></svg><span class="coin-num">9<span class="coin-fr"><i>3</i><i>4</i></span></span></span><span class="coin-lt hidden" id="coin-lt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span class="coin-wax"></span></span><span class="coin-dot hidden" id="world-dot"></span></button>
       </div>
     </div>
 
@@ -1676,12 +1709,17 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       <span class="lt-seal" id="lt-seal"></span>
       <span class="lt-to" id="lt-to"></span>
       <span class="lt-school" id="lt-school"></span>
+      <span class="lt-head" id="lt-head"></span>
       <p class="lt-hi" id="lt-hi"></p>
       <p class="lt-body" id="lt-body"></p>
       <ol class="lt-list" id="lt-list"></ol>
+      <button class="lt-more" id="lt-more" type="button"></button>
+      <div class="lt-kit hidden" id="lt-kit"></div>
+      <p class="lt-note" id="lt-note"></p>
       <span class="lt-sign" id="lt-sign"></span>
       <p class="lt-hint" id="lt-hint"></p>
       <button class="lt-go" id="lt-go" type="button"></button>
+      <button class="lt-share" id="lt-share" type="button"></button>
       <button class="lt-later" id="lt-later" type="button"></button>
     </div>
   </div>
@@ -6144,6 +6182,31 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
     renderHero(t);
     renderCards(t);
+    renderWorldBtn();
+  }
+
+  /* Kutubxona tepasidagi tugma. Yo'lni hali boshlamagan odam 9¾ ni emas,
+     MUHRLANGAN XATNI ko'radi (asarda ham hammasi xatdan boshlanadi):
+       - xatni umuman ochmagan  -> muhr sekin pulsda
+       - ochgan, lekin "Keyinroq" bosgan -> xat, pulssiz
+       - yo'lga chiqqan yoki saralangan  -> 9¾
+     Ko'rish/sinov rejimida ham shu qoida ishlaydi. */
+  function letterStage() {
+    if (hasHouse() || jrGet(LETTER_KEY)) { return "world"; }
+    var seen = false;
+    try { seen = window.localStorage.getItem(TK("hp_onb_letter")) === "1"; } catch (e) {}
+    return seen ? "letter" : "new";
+  }
+
+  function renderWorldBtn() {
+    var btn = $("world-btn");
+    if (!btn) { return; }
+    var stage = letterStage();
+    var isLetter = stage !== "world";
+    $("coin-934").classList.toggle("hidden", isLetter);
+    $("coin-lt").classList.toggle("hidden", !isLetter);
+    btn.classList.toggle("yangi", stage === "new");
+    btn.setAttribute("aria-label", isLetter ? al("letterAria") : "9¾");
   }
 
   function openCatalog(code, remember) {
@@ -7060,10 +7123,13 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
           en: "%s · Telegram, The Library, beside the 9¾ button" },
     school: { uz: "Xogvarts jodugarlik va sehrgarlik maktabi", ru: "Школа чародейства и волшебства «Хогвартс»",
               en: "Hogwarts School of Witchcraft and Wizardry" },
+    head: { uz: "Direktor: Albus Dambldor\n(Merlin ordeni birinchi darajali kavaleri, Oliy sehrgar, Xalqaro sehrgarlar federatsiyasi raisi)",
+            ru: "Директор: Альбус Дамблдор\n(кавалер ордена Мерлина I степени, Великий волшебник, Верховный чародей Международной конфедерации магов)",
+            en: "Headmaster: Albus Dumbledore\n(Order of Merlin, First Class, Grand Sorcerer, Supreme Mugwump of the International Confederation of Wizards)" },
     hi: { uz: "Hurmatli %s,", ru: "Дорогой(ая) %s!", en: "Dear %s," },
-    body: { uz: "Xogvartsda siz uchun joy tayyor. O'qish boshlanishidan oldin:",
-            ru: "В Хогвартсе для вас готово место. До начала учёбы:",
-            en: "A place at Hogwarts is waiting for you. Before term begins:" },
+    body: { uz: "Xogvarts jodugarlik va sehrgarlik maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. Darslar 1-sentabrda boshlanadi; javobingizni 31-iyuldan kechiktirmay boyo'g'li bilan kutamiz.\n\nO'qish boshlanishidan oldin uch ishni bajaring:",
+            ru: "С удовольствием сообщаем, что вам предоставлено место в Школе чародейства и волшебства «Хогвартс». Занятия начинаются 1 сентября; ответ совой ждём не позднее 31 июля.\n\nДо начала учёбы сделайте три дела:",
+            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts School of Witchcraft and Wizardry. Term begins on 1 September; we await your owl no later than 31 July.\n\nBefore term starts, three things await you:" },
     list: {
       uz: ["Diagon xiyobonidagi Olivander do'konidan tayoqcha oling",
            "Kings Kross vokzalida 9¾ platformadan Xogvarts ekspressiga chiqing",
@@ -7075,6 +7141,84 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
            "Board the Hogwarts Express at King's Cross, platform 9¾",
            "In the Great Hall, the Sorting Hat will name your house"]
     },
+    more: { uz: "Kerakli narsalar ro'yxati", ru: "Список необходимого", en: "List of equipment" },
+    less: { uz: "Ro'yxatni yopish", ru: "Свернуть список", en: "Hide the list" },
+    kit: {
+      uz: [["Kiyim-kechak",
+            ["Uchta oddiy ish libosi (qora)",
+             "Kunduzi kiyish uchun bitta uchli qalpoq (qora)",
+             "Bir juft himoya qo'lqop (ajdaho terisi yoki shunga o'xshash)",
+             "Bitta qishki plash (qora, kumush qadama)"]],
+           ["Darsliklar",
+            ["Afsunlarning standart kitobi, 1-daraja · <i>Miranda Goshauk</i>",
+             "Sehr tarixi · <i>Batilda Begshot</i>",
+             "Sehr nazariyasi · <i>Adalbert Uoffling</i>",
+             "Transfiguratsiyaga boshlang'ich qo'llanma · <i>Emerik Svitch</i>",
+             "Ming xil sehrli o't va qo'ziqorin · <i>Fillida Spora</i>",
+             "Sehrli damlama va zelyelar · <i>Arseniy Jigger</i>",
+             "Fantastik maxluqlar va ularning makoni · <i>Nyut Skamander</i>",
+             "Qorong'u kuchlar: o'zini himoya qilish qo'llanmasi · <i>Kventin Trimbl</i>"]],
+           ["Boshqa jihozlar",
+            ["Bitta sehrli tayoqcha",
+             "Bitta qozon (qalay, 2-o'lcham)",
+             "Bir to'plam shisha yoki billur flakon",
+             "Bitta teleskop",
+             "Bir to'plam mis tarozi",
+             "Boyo'g'li, mushuk yoki qurbaqa olib kelsa bo'ladi"]]],
+      ru: [["Форма",
+            ["Три простых рабочих мантии (чёрные)",
+             "Одна остроконечная шляпа на каждый день (чёрная)",
+             "Одна пара защитных перчаток (из кожи дракона или похожей)",
+             "Один зимний плащ (чёрный, серебряные застёжки)"]],
+           ["Учебники",
+            ["Стандартная книга заклинаний, 1 курс · <i>Миранда Гуссокл</i>",
+             "История магии · <i>Батильда Бэгшот</i>",
+             "Теория магии · <i>Адальберт Уоффлинг</i>",
+             "Пособие по трансфигурации для начинающих · <i>Эмерик Свитч</i>",
+             "Тысяча магических растений и грибов · <i>Филлида Спора</i>",
+             "Магические отвары и зелья · <i>Жиг Мышьякофф</i>",
+             "Фантастические звери и места их обитания · <i>Ньют Саламандер</i>",
+             "Тёмные силы: пособие по самозащите · <i>Квентин Тримбл</i>"]],
+           ["Прочее снаряжение",
+            ["Одна волшебная палочка",
+             "Один котёл (оловянный, размер 2)",
+             "Набор стеклянных или хрустальных флаконов",
+             "Один телескоп",
+             "Набор медных весов",
+             "Можно взять с собой сову, кошку или жабу"]]],
+      en: [["Uniform",
+            ["Three sets of plain work robes (black)",
+             "One plain pointed hat for day wear (black)",
+             "One pair of protective gloves (dragon hide or similar)",
+             "One winter cloak (black, silver fastenings)"]],
+           ["Set books",
+            ["The Standard Book of Spells, Grade 1 · <i>Miranda Goshawk</i>",
+             "A History of Magic · <i>Bathilda Bagshot</i>",
+             "Magical Theory · <i>Adalbert Waffling</i>",
+             "A Beginner's Guide to Transfiguration · <i>Emeric Switch</i>",
+             "One Thousand Magical Herbs and Fungi · <i>Phyllida Spore</i>",
+             "Magical Drafts and Potions · <i>Arsenius Jigger</i>",
+             "Fantastic Beasts and Where to Find Them · <i>Newt Scamander</i>",
+             "The Dark Forces: A Guide to Self-Protection · <i>Quentin Trimble</i>"]],
+           ["Other equipment",
+            ["One wand",
+             "One cauldron (pewter, standard size 2)",
+             "One set of glass or crystal phials",
+             "One telescope",
+             "One set of brass scales",
+             "Students may bring an owl, a cat or a toad"]]]
+    },
+    note: { uz: "Eslatma: birinchi kurs talabalariga shaxsiy supurgi olib kelish taqiqlanadi.",
+            ru: "Напоминаем: первокурсникам не разрешается иметь собственную метлу.",
+            en: "Please note: first-year students are not permitted their own broomsticks." },
+    share: { uz: "Xatni ulashish", ru: "Поделиться письмом", en: "Share the letter" },
+    shareWait: { uz: "Xat tayyorlanmoqda…", ru: "Письмо готовится…", en: "Preparing the letter…" },
+    shareErr: { uz: "Xat tayyorlanmadi, birozdan keyin urinib ko'ring",
+                ru: "Письмо не подготовилось, попробуйте позже",
+                en: "The letter could not be prepared, try again later" },
+    shareStory: { uz: "Menga Xogvartsdan maktub keldi", ru: "Мне пришло письмо из Хогвартса",
+                  en: "My Hogwarts letter has arrived" },
+    shareBtn: { uz: "Xogvartsga kirish", ru: "В Хогвартс", en: "Enter Hogwarts" },
     sign: { uz: "Minerva Makgonagall, direktor o'rinbosari", ru: "Минерва Макгонагалл, заместитель директора",
             en: "Minerva McGonagall, Deputy Headmistress" },
     hint: { uz: "Xagrid sizni qovoqxona hovlisidagi g'isht devor oldida kutmoqda.",
@@ -7141,7 +7285,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     castle: "M4 20.5h16 M5 20.5V8h3v2h2V8h4v2h2V8h3v12.5 M10 20.5v-4.5a2 2 0 0 1 4 0v4.5",
     bank: "M3.5 9.5L12 4.5l8.5 5 M5 10v7 M9.7 10v7 M14.3 10v7 M19 10v7 M3.5 20h17",
     check: "M5 12.5l4.5 4.5L19 7.5",
-    arrow: "M9 6l6 6-6 6"
+    arrow: "M9 6l6 6-6 6",
+    share: "M12 15.5V3.5 M8 7l4-3.5L16 7 M4.5 13v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V13"
   };
 
   function al(k) { return (AL_TX[k] && (AL_TX[k][lang] || AL_TX[k].uz)) || ""; }
@@ -7166,6 +7311,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       window.localStorage.setItem(k, "1");
     } catch (e) {}
     report("onb", name);
+    try { renderWorldBtn(); } catch (e) {}
   }
 
   // Yo'l ichidagi tayoqcha: ko'rish rejimida haqiqiysi emas
@@ -7498,11 +7644,15 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("lt-seal").textContent = al("seal");
     $("lt-to").textContent = al("to").replace("%s", name);
     $("lt-school").textContent = al("school");
+    $("lt-head").textContent = al("head");
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
     var ol = $("lt-list");
     ol.innerHTML = "";
     al("list").forEach(function (line) { ol.appendChild(jrEl("li", "", line)); });
+    ltKit(false);
+    $("lt-note").textContent = al("note");
+    $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     $("lt-sign").textContent = al("sign");
     $("lt-hint").textContent = al("hint");
     $("lt-hint").classList.toggle("hidden", !!readOnly);
@@ -7519,6 +7669,88 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   }
 
   function closeLetter() { $("lt").classList.add("hidden"); }
+
+  /* Xatni ulashish. Server ismga qarab 9:16 rasm yasaydi (bir marta), keyin:
+       1) Telegram Stories (7.8+) - eng yaxshisi;
+       2) chatga tayyor xabar (8.0+);
+       3) oddiy havola (eski Telegram).
+     Rasm manzili tokenli - unda ism ham, odam raqami ham yo'q. */
+  var API_XAT = "https://bot.tizimshunos.uz/api/xat";
+  var xatBor = null;            // {url, share_id} - bir marta so'raladi
+  var xatBand = false;
+
+  function xatOl(done) {
+    if (xatBor) { done(xatBor); return; }
+    var d = chatInitData();
+    if (!d || !window.fetch) { done(null); return; }
+    fetch(API_XAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ lang: lang })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        xatBor = (res && res.ok && res.url) ? res : null;
+        done(xatBor);
+      })["catch"](function () { done(null); });
+  }
+
+  function xatStory(url) {
+    var params = { text: al("shareStory") };
+    try {
+      // Havolali tasma faqat Premium hisoblarda ishlaydi - bo'lmasa havolasiz
+      tg.shareToStory(url, {
+        text: params.text,
+        widget_link: { url: "https://t.me/" + BOT + "/catalog?startapp=olam",
+                       name: al("shareBtn") }
+      });
+      return true;
+    } catch (e) {}
+    try { tg.shareToStory(url, params); return true; } catch (e) {}
+    return false;
+  }
+
+  function ltShare() {
+    if (xatBand) { return; }
+    xatBand = true;
+    var kut = showToast(al("shareWait"));
+    xatOl(function (res) {
+      xatBand = false;
+      dismissNote(kut);
+      if (!res) { showToast(al("shareErr"), "err"); return; }
+
+      var story = false, chat = false;
+      try { story = !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast("7.8")); } catch (e) {}
+      try { chat = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+
+      if (story && xatStory(res.url)) { return; }
+      if (chat && res.share_id) {
+        try { tg.shareMessage(res.share_id, function () {}); return; } catch (e) {}
+      }
+      // Eng eski holat: rasmni shunchaki ochamiz - odam o'zi saqlaydi
+      try { tg.openLink ? tg.openLink(res.url) : window.open(res.url, "_blank"); }
+      catch (e) { showToast(al("shareErr"), "err"); }
+    });
+  }
+
+  // Xatdagi jihozlar ro'yxati: uzun, shuning uchun bosib ochiladi
+  function ltKit(open) {
+    var box = $("lt-kit");
+    box.classList.toggle("hidden", !open);
+    $("lt-more").textContent = open ? al("less") : al("more");
+    if (!open || box.dataset.lang === lang) { return; }
+    box.dataset.lang = lang;
+    box.innerHTML = "";
+    al("kit").forEach(function (group) {
+      box.appendChild(jrEl("h4", "", group[0]));
+      var ul = jrEl("ul");
+      group[1].forEach(function (line) {
+        var li = document.createElement("li");
+        li.innerHTML = line;         // faqat <i> - matn lug'atdan, foydalanuvchidan emas
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    });
+  }
 
   // ---------------------------------------------------------------- 9¾ platforma
   function trStop() {
@@ -12974,6 +13206,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       if ($("lt-later").classList.contains("hidden")) { closeLetter(); } else { jrLetterCancel(); }
     });
     $("hub-set-pv").addEventListener("click", testStart);
+    $("lt-more").addEventListener("click", function () {
+      ltKit($("lt-kit").classList.contains("hidden"));
+    });
+    $("lt-share").addEventListener("click", ltShare);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
