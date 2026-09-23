@@ -560,7 +560,7 @@ var HOUSES = {
 // SVG gradient va chiziqlar uchun aniq rang kerak — CSS o'zgaruvchilar bilan bir xil.
 var HOUSE_HEX = {gryffindor:"#d9524a", slytherin:"#2fa36b", ravenclaw:"#5b8fd9", hufflepuff:"#e8b93c"};
 // Til ranglari — hamma chizmada bir xil (foydalanuvchi tanlovi, 2026-09-23)
-var TIL_RANG = {uz:"#199e70", ru:"#3987e5", en:"#d03b3b"};
+var TIL_RANG = {uz:"#199e70", ru:"#d03b3b", en:"#3987e5"};
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -2761,9 +2761,16 @@ function render(){
     r.__n = n;
     return r;
   }
+  // "Kanalga a'zo": loglarda qo'shilgani yozilganlar + film olganlar. Bot film
+  // berishdan oldin a'zolikni Telegramdan tekshiradi, demak film olgan odam
+  // kanalda bo'lgan — hatto 7-martdan (loglar boshlanishidan) oldin qo'shilgan
+  // bo'lsa ham. Shunda "Film oldi" Kino bo'limidagi son bilan teng chiqadi.
+  var azo = {};
+  for(var az in s.set.sub) azo[az] = 1;
+  for(var af in s.set.film) azo[af] = 1;
   var QADAM = [
     {k:"users",  n:"Ko'ringan odam",        c:"var(--gold)",  to:s.users},
-    {k:"sub",    n:"Kanalga qo'shildi",     c:S2,             to:s.set.sub},
+    {k:"sub",    n:"Kanalga a'zo",          c:S2,             to:azo},
     {k:"film",   n:"Film oldi",             c:S3,             to:s.set.film},
     {k:"sortst", n:"Saralanishni boshladi", c:"var(--huff)",  to:s.set.sortst},
     {k:"house",  n:"Fakultetga tushdi",     c:"var(--griff)", to:s.set.house}
