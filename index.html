@@ -7154,6 +7154,20 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     try { window.localStorage.setItem(k, "1"); } catch (e) {}
   }
 
+  /* Onboarding qadamlari (asardagi yo'l): xat -> xiyobon -> Gringotts ->
+     hayvon -> tayoqcha -> bilet -> poyezd -> saralanish. Har qadam serverga
+     BIR MARTA yoziladi, panel voronkasi shulardan yig'iladi. Tayoqcha,
+     saralash boshlanishi va fakultet alohida yoziladi (report("wand"...)). */
+  function onbStep(name) {
+    if (jrPreview) { return; }              // eski ko'rish rejimi - yozilmaydi
+    var k = TK("hp_onb_" + name);
+    try {
+      if (window.localStorage.getItem(k) === "1") { return; }
+      window.localStorage.setItem(k, "1");
+    } catch (e) {}
+    report("onb", name);
+  }
+
   // Yo'l ichidagi tayoqcha: ko'rish rejimida haqiqiysi emas
   function jrWandNow() { return jrPreview ? pv.wand : wand; }
 
@@ -7206,6 +7220,13 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   // Qurilmadagi sinov xotirasi (localStorage + Telegram buluti)
   function testWipeLocal(done) {
     var keys = TEST_LS.map(function (n) { return "t_" + n; });
+    // Onboarding belgilari ("t_hp_onb_*") ro'yxatda yo'q - o'zi topiladi
+    try {
+      for (var i = 0; i < window.localStorage.length; i++) {
+        var k = window.localStorage.key(i);
+        if (k && k.indexOf("t_") === 0 && keys.indexOf(k) === -1) { keys.push(k); }
+      }
+    } catch (e) {}
     keys.forEach(function (k) {
       try { window.localStorage.removeItem(k); } catch (e) {}
     });
@@ -7362,6 +7383,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     jrHideAll();
     $("scr-alley").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
+    onbStep("alley");
     renderAlley();
     jrBack(leaveAlley);
   }
@@ -7468,6 +7490,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
   // ---------------------------------------------------------------- maktub
   function openLetter(readOnly) {
+    // Qayta o'qish (readOnly) emas, haqiqiy yo'l boshlanishi - voronkaning
+    // birinchi qadami. Davom etganlar "alley" bilan ajraladi.
+    if (!readOnly) { onbStep("letter"); }
     var u = tgUser();
     var name = u ? (u.first_name || fullName(u)) : T[lang].guest;
     $("lt-seal").textContent = al("seal");
@@ -7546,7 +7571,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     trStop();
     if ($("scr-train").classList.contains("hidden")) { return; }
     var lines = TR_LINES[lang] || TR_LINES.uz;
-    if (i >= lines.length) { jrSet(TRAIN_KEY); trEnd(); return; }
+    if (i >= lines.length) { jrSet(TRAIN_KEY); onbStep("train"); trEnd(); return; }
     var stage = $("tr-stage");
     stage.innerHTML = "";
     var ride = jrEl("div", "tr-ride");
