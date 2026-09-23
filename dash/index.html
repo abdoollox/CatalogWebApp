@@ -823,14 +823,16 @@ function mapCols(header){
 function classify(p){
   p = String(p||"").trim();
   var m;
-  if(p === "start")        return {t:"start", lab:"Botni ochdi", ic:"✨"};
-  if(p === "subscribed")   return {t:"sub",   lab:"Kanalga qo'shildi", ic:"📜"};
-  if(p === "left")         return {t:"left",  lab:"Kanalni tark etdi", ic:"🚪"};
-  if(p === "blocked")      return {t:"blocked",lab:"Botni blokladi", ic:"⛔"};
+  // Ilk to'rttasining rangi "Kundalik jonlanish" chizig'i bilan bir xil
+  // (start ko'k, subscribed yashil, left qizil, blocked oq) — foydalanuvchi tanlovi.
+  if(p === "start")        return {t:"start", lab:"Botni ochdi", ic:"🔵"};
+  if(p === "subscribed")   return {t:"sub",   lab:"Kanalga qo'shildi", ic:"🟢"};
+  if(p === "left")         return {t:"left",  lab:"Kanalni tark etdi", ic:"🔴"};
+  if(p === "blocked")      return {t:"blocked",lab:"Botni blokladi", ic:"⚪️"};
   // Yozuv TAKLIF QILINGAN odamda turadi: u kanalga qo'shildi, taklifchiga ball berildi
   if(p === "ref_awarded")  return {t:"refwin",lab:"Kanalga qo'shildi — taklifchiga ball", ic:"🎁"};
   if(p === "sort_start")   return {t:"sortst",lab:"Saralanishni boshladi", ic:"🎩"};
-  if((m = p.match(/^house_([a-z]+)$/)))   return {t:"house", house:m[1], lab:"Fakultetga tushdi", ic:"🎩"};
+  if((m = p.match(/^house_([a-z]+)$/)))   return {t:"house", house:m[1], lab:"Fakultetga tushdi", ic:"🏰"};
   if((m = p.match(/^wand_/)))             return {t:"wand",  lab:"Asosini tanladi", ic:"🪄"};
   if((m = p.match(/^src_(.+)$/)))         return {t:"src",   src:m[1], lab:"Reklamadan keldi", ic:"📣"};
   if((m = p.match(/^invited_(\d+)$/)))    return {t:"invited", by:m[1], lab:"Do'st taklifi bilan keldi", ic:"🤝"};
@@ -3828,9 +3830,9 @@ function render(){
   var LTUR = [
     {k:"all",    n:"Hammasi"},
     {k:"film",   n:"🎬 Filmlar",  t:{film:1, undo:1}},
-    {k:"kanal",  n:"📜 Kanal",    t:{sub:1, left:1}},
-    {k:"bot",    n:"✨ Bot",      t:{start:1, blocked:1}},
-    {k:"fak",    n:"🎩 Fakultet", t:{sortst:1, house:1, wand:1}},
+    {k:"kanal",  n:"🟢 Kanal",    t:{sub:1, left:1}},
+    {k:"bot",    n:"🔵 Bot",      t:{start:1, blocked:1}},
+    {k:"fak",    n:"🏰 Fakultet", t:{sortst:1, house:1, wand:1}},
     {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}}
   ];
   var lHolat = {tur:"all", q:""}, lSoni = 150;
