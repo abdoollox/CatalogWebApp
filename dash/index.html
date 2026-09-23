@@ -898,6 +898,11 @@ function fmtNum(n){
 function fmtTime(d){
   return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
 }
+/* Soniyasi bilan — Lenta va odam tarixi uchun. Loglarda soniya 2026-08-15 dan
+   beri yoziladi; undan oldingi yozuvlarda ":00" chiqadi. */
+function fmtVaqt(d){
+  return fmtTime(d) + ":" + String(d.getSeconds()).padStart(2,"0");
+}
 
 /* Davr chegaralari */
 function kunOqi(matn){
@@ -2498,7 +2503,7 @@ function odamTarixi(uid){
           : x.r.ev.t === "refwin"
             ? "<b>" + odamHavola(x.r.uid, x.r.name) + "</b> kanalga qo'shildi — olib keldi, ball berildi"
             : "<b>" + odamHavola(x.r.uid, x.r.name) + "</b> uning havolasi bilan botga kirdi") + '</span>' +
-        '<span class="when">' + fmtTime(x.r.t) + '</span>';
+        '<span class="when">' + fmtVaqt(x.r.t) + '</span>';
       lenta.appendChild(d);
     });
     if(!hammasi.length) lenta.appendChild(emptyNote("Bu odamning yozuvi topilmadi."));
@@ -3904,7 +3909,7 @@ function render(){
       var d = document.createElement("div"); d.className = "fe";
       d.innerHTML = '<span class="ic">' + r.ev.ic + '</span>' +
         '<span class="txt"><span class="who">' + odamHavola(r.uid, r.name) + '</span> — ' + hodisaMatni(r) + '</span>' +
-        '<span class="when">' + fmtTime(r.t) + '</span>';
+        '<span class="when">' + fmtVaqt(r.t) + '</span>';
       feed.appendChild(d);
     });
     if(mos.length > lSoni){
