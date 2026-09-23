@@ -414,6 +414,12 @@ td.tar-td{width:1%; padding-block:4px}
 .qidir-ro b{font-weight:600}
 .qidir-ro .qid{margin-left:auto; font-variant-numeric:tabular-nums}
 .qidir-bosh{font-size:11.5px; color:var(--ink-3); padding:6px 9px}
+.tarq-kpi .tk.holat-yaxshi{box-shadow:inset 0 0 0 1px rgba(63,191,106,.45)}
+.tarq-kpi .tk.holat-yaxshi .tk-sub{color:#3fbf6a}
+.tarq-kpi .tk.holat-ogoh{box-shadow:inset 0 0 0 1px rgba(250,178,25,.45)}
+.tarq-kpi .tk.holat-ogoh .tk-sub{color:var(--warn)}
+.tarq-kpi .tk.holat-yomon{box-shadow:inset 0 0 0 1px rgba(224,121,111,.5)}
+.tarq-kpi .tk.holat-yomon .tk-sub{color:#e0796f}
 .tarq-bosh{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:18px 0 0}
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
@@ -2509,6 +2515,36 @@ function odamQidiruv(){
   return box;
 }
 
+/* ───────── Kanal hajmi: loglardan ─────────
+   Kanaldagi odamlar = BOSHLANG'ICH son + loglardagi qo'shilish/chiqishlar.
+   Har odam oxirgi holati bo'yicha: bir hodisa ikki marta yozilib qolsa ham
+   son buzilmaydi. Telegramdagi son bu yerga KO'CHIRILMAYDI — u yonida faqat
+   nazorat uchun turadi; ikkalasi teng bo'lsa, loglar to'g'ri tushyapti.
+
+   Boshlang'ich son: loglar 2026-03-07 da boshlangan. 2026-09-23 da Telegram
+   1490, loglar (odam bo'yicha) +1264 ko'rsatdi => o'sha kuni kanalda 226 kishi
+   bo'lgan. Bu son bir marta aniqlangan va o'zgarmaydi. */
+var KANAL_BOSHI = 226;
+
+function kanalHajmi(){
+  var holat = {}, son = KANAL_BOSHI, kun = {};
+  for(var i=0; i<ST.rows.length; i++){
+    var r = ST.rows[i], e = r.ev.t;
+    if(e !== "sub" && e !== "left") continue;
+    if(holat[r.uid] === e) continue;                // takroriy yozuv
+    son += (e === "sub") ? 1 : -1;
+    holat[r.uid] = e;
+    kun[dayKey(r.t)] = son;
+  }
+  return {son:son, kun:kun};
+}
+/* Berilgan kun oxiridagi son: o'sha kuni hodisa bo'lmasa — oldingi kunniki. */
+function kanalKunOxiri(kh, dk){
+  var eng = null, qiy = KANAL_BOSHI;
+  for(var k in kh.kun) if(k <= dk && (eng === null || k > eng)){ eng = k; qiy = kh.kun[k]; }
+  return qiy;
+}
+
 /* ───────── Asosiy chizish ───────── */
 function render(){
   var app = document.getElementById("app");
@@ -2687,8 +2723,7 @@ function render(){
   put("umumiy", c1);
 
   /* — Voronka — */
-  var c2 = card("Voronka", "har qadamda nechta ODAM qoladi", "");
-  var base = Math.max(1, s.uniq);
+  var c2 = card("Voronka", "har qadamda nechta ODAM qoladi · qadamni bosib olib turing", "");
   // Haqiqiy voronka: har qadam oldingisidan O'TGANLARNING ichidan sanaladi.
   // Aks holda "film oldi" kanalga qo'shilganlardan ko'p chiqib qolardi —
   // kanalga ilgari qo'shilgan odamlar ham film oladi.
@@ -2698,24 +2733,49 @@ function render(){
     r.__n = n;
     return r;
   }
-  var q1 = s.users;
-  var q2 = kesish(q1, s.set.sub);
-  var q3 = kesish(q2, s.set.film);
-  var q4 = kesish(q3, s.set.sortst);
-  var q5 = kesish(q4, s.set.house);
-  var steps = [
-    {lab:"Ko'ringan odam", val:s.uniq, color:"var(--gold)"},
-    {lab:"Kanalga qo'shildi", val:q2.__n, color:S2},
-    {lab:"Film oldi", val:q3.__n, color:S3},
-    {lab:"Saralanishni boshladi", val:q4.__n, color:"var(--huff)"},
-    {lab:"Fakultetga tushdi", val:q5.__n, color:"var(--griff)"}
+  var QADAM = [
+    {k:"users",  n:"Ko'ringan odam",        c:"var(--gold)",  to:s.users},
+    {k:"sub",    n:"Kanalga qo'shildi",     c:S2,             to:s.set.sub},
+    {k:"film",   n:"Film oldi",             c:S3,             to:s.set.film},
+    {k:"sortst", n:"Saralanishni boshladi", c:"var(--huff)",  to:s.set.sortst},
+    {k:"house",  n:"Fakultetga tushdi",     c:"var(--griff)", to:s.set.house}
   ];
-  c2.appendChild(voronka(steps));
-  addTable(c2, ["Qadam","Odam","Boshdan","Oldingidan"], steps.map(function(x, i){
-    var old2 = i ? steps[i-1].val : 0;
-    return [x.lab, x.val, (x.val/base*100).toFixed(1) + "%",
-            i ? (old2 ? (x.val/old2*100).toFixed(1) + "%" : "—") : "—"];
+  var vHolat = {};
+  QADAM.forEach(function(x){ vHolat[x.k] = true; });
+  try{
+    var vq = JSON.parse(localStorage.getItem("hp_dash_vor") || "null");
+    if(vq) QADAM.forEach(function(x){ if(typeof vq[x.k] === "boolean") vHolat[x.k] = vq[x.k]; });
+  }catch(e){}
+  if(!QADAM.some(function(x){ return vHolat[x.k]; })) QADAM.forEach(function(x){ vHolat[x.k] = true; });
+  var vJadval = [];                     // addTable bosilganda shu massivni o'qiydi
+  var vBox = null;
+  // Olib turilgan qadam zanjirdan chiqadi: keyingisi undan oldingi YONIQ qadamdan
+  // o'tganlar ichidan sanaladi.
+  function vChiz(){
+    var steps = [], oldin = null;
+    QADAM.forEach(function(x){
+      if(!vHolat[x.k]) return;
+      var q = oldin ? kesish(oldin, x.to) : kesish(x.to, x.to);
+      steps.push({lab:x.n, val:q.__n, color:x.c});
+      oldin = q;
+    });
+    var yangi = voronka(steps);
+    if(vBox) vBox.replaceWith(yangi); else c2.appendChild(yangi);
+    vBox = yangi;
+    var base = Math.max(1, steps.length ? steps[0].val : 1);
+    vJadval.length = 0;
+    steps.forEach(function(x, i){
+      var old2 = i ? steps[i-1].val : 0;
+      vJadval.push([x.lab, x.val, (x.val/base*100).toFixed(1) + "%",
+                    i ? (old2 ? (x.val/old2*100).toFixed(1) + "%" : "—") : "—"]);
+    });
+  }
+  c2.appendChild(toggleLegend(QADAM, vHolat, "k", function(){
+    try{ localStorage.setItem("hp_dash_vor", JSON.stringify(vHolat)); }catch(e){}
+    vChiz();
   }));
+  vChiz();
+  addTable(c2, ["Qadam","Odam","Boshdan","Oldingidan"], vJadval);
 
   /* — Filmlar — */
   var c3 = card("Qaysi kino ko'proq so'raladi", "tillar bo'yicha bo'lingan", "twothird");
@@ -2968,6 +3028,71 @@ function render(){
   } else cSer.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   put("kino", cSer);
 
+
+  /* — Kanal hajmi (loglar va Telegram) — */
+  var kh = kanalHajmi();
+  var cK = card("Kanal hajmi", "loglardan hisoblangan · Telegram faqat nazorat uchun", "");
+  var tg = ST.kanal && typeof ST.kanal.hozir === "number" ? ST.kanal.hozir : null;
+  var farq = tg === null ? null : kh.son - tg;
+  var kk = document.createElement("div");
+  kk.className = "tarq-kpi";
+  [["Loglar bo'yicha", fmtNum(kh.son), "boshlang'ich " + KANAL_BOSHI + " + qo'shilgan − chiqqan", ""],
+   ["Telegram", tg === null ? "—" : fmtNum(tg),
+    tg === null ? (ST.demo || !ST.src || ST.src.kind !== "api" ? "faqat jonli ulanishda" : "yuklanmoqda…") : "kanalning o'zidagi son", ""],
+   ["Farq", farq === null ? "—" : (farq > 0 ? "+" : "") + fmtNum(farq),
+    farq === null ? "" : farq === 0 ? "✓ loglar to'g'ri tushyapti"
+      : farq < 0 ? Math.abs(farq) + " ta qo'shilish yozilmay qolgan bo'lishi mumkin"
+                 : farq + " ta chiqish yozilmay qolgan bo'lishi mumkin",
+    farq === null ? "" : farq === 0 ? "yaxshi" : Math.abs(farq) <= 3 ? "ogoh" : "yomon"]
+  ].forEach(function(m){
+    var d = document.createElement("div");
+    d.className = "tk" + (m[3] ? " holat-" + m[3] : "");
+    d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+      '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+    kk.appendChild(d);
+  });
+  cK.appendChild(kk);
+
+  // Davr bo'yicha kanal hajmi chizig'i (loglardan)
+  var kList = [];
+  var kc = new Date(w.from.getFullYear(), w.from.getMonth(), w.from.getDate());
+  var ke = new Date(w.to.getFullYear(), w.to.getMonth(), w.to.getDate()), kg = 0;
+  while(kc <= ke && kg++ < 800){
+    var kdk = dayKey(kc);
+    kList.push({k:kdk, lab:fmtDay(kdk), tip:fmtDay(kdk), hajm:kanalKunOxiri(kh, kdk)});
+    kc = new Date(kc.getFullYear(), kc.getMonth(), kc.getDate()+1);
+  }
+  if(kList.length > 1){
+    var KSER = [{k:"hajm", n:"Kanal hajmi (loglar)", c:"#3987e5"}];
+    var fK2 = document.createElement("figure");
+    var kBal = null;
+    fK2.appendChild(chartDaily(kList, {hajm:true}, kBal, KSER));
+    cK._qayta = function(b){
+      if(b === null) kBal = null; else if(b) kBal = b;
+      fK2.innerHTML = "";
+      fK2.appendChild(chartDaily(kList, {hajm:true}, kBal, KSER));
+    };
+    cK.appendChild(fK2);
+    cK._kuzat(fK2);
+  }
+
+  // Kunlik solishtirish: bot har kuni Telegramdagi sonni yozib boradi
+  var sur = (ST.kanal && ST.kanal.tarix) || [];
+  if(sur.length){
+    var kt = [];
+    sur.slice().reverse().forEach(function(x){
+      var lg = kanalKunOxiri(kh, x.sana);
+      kt.push([fmtDay(x.sana), fmtNum(lg), fmtNum(x.son), (lg - x.son > 0 ? "+" : "") + (lg - x.son)]);
+    });
+    addTable(cK, ["Kun", "Loglar", "Telegram", "Farq"], kt);
+  }
+  var kIzoh = document.createElement("p");
+  kIzoh.className = "note";
+  kIzoh.textContent = "Boshlang'ich son " + KANAL_BOSHI + " — loglar boshlangan 7-mart kuni kanalda bo'lgan odamlar " +
+    "(23-sentabrda Telegram bilan solishtirib bir marta aniqlangan). Bundan keyin paydo bo'lgan har qanday farq — " +
+    "bot yozmay qolgan hodisa. Bot kanal sonini har soatda tekshirib, kunlik suratini saqlaydi.";
+  cK.appendChild(kIzoh);
+  put("kanal", cK);
 
   /* — Kanal harakati — */
   var c8 = card("Kanal va bot holati", "qo'shilish, chiqish, bloklash", "third");
@@ -3547,7 +3672,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons();
+    done(); render(); loadReasons(); loadKanal();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -3562,6 +3687,21 @@ function loadData(jim){
 }
 
 /* Sabablar bazadan alohida keladi (Sheets'da yo'q). Faqat jonli ulanishda. */
+/* Kanalning Telegramdagi soni — faqat nazorat uchun (bot har soatda oladi). */
+function loadKanal(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.kanal = null; return; }
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/kanal");
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, "kanal");
+  fetch(u, {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if(!j || !j.ok) return;
+      ST.kanal = {hozir:j.hozir, tarix:j.tarix || []};
+      ST.jim = true; render(); ST.jim = false;
+    })
+    .catch(function(){ /* eski bot bo'lsa karta Telegram sonisiz chiqadi */ });
+}
+
 function loadReasons(){
   if(!ST.src || ST.src.kind !== "api"){ ST.leave = null; return; }
   var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/sabablar");
