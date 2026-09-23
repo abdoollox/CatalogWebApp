@@ -559,6 +559,8 @@ var HOUSES = {
 };
 // SVG gradient va chiziqlar uchun aniq rang kerak — CSS o'zgaruvchilar bilan bir xil.
 var HOUSE_HEX = {gryffindor:"#d9524a", slytherin:"#2fa36b", ravenclaw:"#5b8fd9", hufflepuff:"#e8b93c"};
+// Til ranglari — hamma chizmada bir xil (foydalanuvchi tanlovi, 2026-09-23)
+var TIL_RANG = {uz:"#199e70", ru:"#3987e5", en:"#d03b3b"};
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -1610,7 +1612,7 @@ function chartFilms(s, tillar){
   var W = 960, H = P.t + keys.length*(rowH+gap) + P.b;
   var iw = W - P.l - P.r;
   var svg = el("svg", {viewBox:"0 0 "+W+" "+H, role:"img", "aria-label":"Filmlar bo'yicha yuborishlar"});
-  var cols = {uz:S1, ru:S2, en:S3};
+  var cols = TIL_RANG;
 
   var gridChiz = [], xYozuv = [];
   for(var g=0; g<=4; g++){
@@ -1673,9 +1675,12 @@ function filmYangila(svg, tillar, ilk){
         sg.rect.setAttribute("x", I.P.l + (off/m)*I.iw);
         sg.rect.setAttribute("width", Math.max(0, w - (w > 3 ? 2 : 0)));
         sg.rect.style.transform = "scaleX(" + (korinadi ? ulush : 0) + ")";
-        var oxirgi = korinadi && (off + sg.val) >= jami[k] - 0.001;
-        sg.rect.setAttribute("rx", oxirgi ? 4 : 0);
-        sg.rect.setAttribute("ry", oxirgi ? 4 : 0);
+        // Har bo'lak bir xil yumaloq — ilgari faqat oxirgisi yumaloq edi va
+        // bar bir uchi qirrali, bir uchi yumaloq ko'rinardi. Ingichka bo'lakda
+        // radius kenglikning yarmidan oshmaydi.
+        var rad = Math.min(4, Math.max(0, w - 2) / 2);
+        sg.rect.setAttribute("rx", rad);
+        sg.rect.setAttribute("ry", rad);
         if(korinadi) off += sg.val;
       });
       q.son.setAttribute("x", I.P.l + (jami[k]/m)*I.iw*ulush + 8);
@@ -2825,7 +2830,8 @@ function render(){
   var kx = document.createElement("div");
   kx.className = "tarq-kpi";
   [["Yuborilgan film", fmtNum(s.films), s.origin.web || s.origin.bot ?
-      fmtNum(s.origin.web) + " ilovadan · " + fmtNum(s.origin.bot) + " botdan" : "shu davrda"],
+      fmtNum(s.origin.web) + " WebApp · " + fmtNum(s.origin.bot) + " bot" +
+      (s.origin["?"] ? " · " + fmtNum(s.origin["?"]) + " eski" : "") : "shu davrda"],
    ["Film olgan odam", fmtNum(kOdamSoni), s.uniq ? Math.round(kOdamSoni/s.uniq*100) + "% faol odamlardan" : ""],
    ["Odam boshiga", kOdamSoni ? (Object.keys(kKorgan).length/kOdamSoni).toFixed(1) : "—", "xil film (qayta olishsiz)"],
    ["Bekor qilindi", fmtNum(s.undo), s.films ? (s.undo/s.films*100).toFixed(1) + "% yuborishlardan" : ""]
@@ -2845,8 +2851,8 @@ function render(){
     if(tq) ["uz","ru","en"].forEach(function(l){ if(typeof tq[l] === "boolean") tillar[l] = tq[l]; });
     if(localStorage.getItem("hp_dash_filmmode") === "odam") fRejim = "odam";
   }catch(e){}
-  var tilItems = [{l:"uz", c:S1, n:"🇺🇿 O'zbekcha"}, {l:"ru", c:S2, n:"🇷🇺 Ruscha"},
-                  {l:"en", c:S3, n:"🇬🇧 Inglizcha"}];
+  var tilItems = [{l:"uz", c:TIL_RANG.uz, n:"🇺🇿 O'zbekcha"}, {l:"ru", c:TIL_RANG.ru, n:"🇷🇺 Ruscha"},
+                  {l:"en", c:TIL_RANG.en, n:"🇬🇧 Inglizcha"}];
   var f3 = document.createElement("figure");
   var filmSvg = null;
   function filmChiz(){
@@ -2913,9 +2919,9 @@ function render(){
   var tilJami = s.langs.uz + s.langs.ru + s.langs.en;
   if(tilJami){
     cTil.appendChild(donut([
-      {k:"uz", lab:"🇺🇿 O'zbekcha", n:"O'zbekcha", val:s.langs.uz, hex:S1},
-      {k:"ru", lab:"🇷🇺 Ruscha",    n:"Ruscha",    val:s.langs.ru, hex:S2},
-      {k:"en", lab:"🇬🇧 Inglizcha", n:"Inglizcha", val:s.langs.en, hex:S3}
+      {k:"uz", lab:"🇺🇿 O'zbekcha", n:"O'zbekcha", val:s.langs.uz, hex:TIL_RANG.uz},
+      {k:"ru", lab:"🇷🇺 Ruscha",    n:"Ruscha",    val:s.langs.ru, hex:TIL_RANG.ru},
+      {k:"en", lab:"🇬🇧 Inglizcha", n:"Inglizcha", val:s.langs.en, hex:TIL_RANG.en}
     ].filter(function(x){ return x.val; }).sort(function(a,b){ return b.val - a.val; }), "hp_dash_tildonut", "film"));
   } else cTil.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   put("kino", cTil);
@@ -2929,12 +2935,15 @@ function render(){
   } else cSer.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   put("kino", cSer);
 
-  var c7 = card("Qayerdan olindi", "ilova yoki bot chati", "third");
-  var oItems = [];
-  if(s.origin.web) oItems.push({k:"web", lab:"🪄 Ilova (WebApp)", n:"Ilova", val:s.origin.web, hex:"#9085e9"});
-  if(s.origin.bot) oItems.push({k:"bot", lab:"💬 Bot chati", n:"Bot", val:s.origin.bot, hex:"#3987e5"});
-  if(s.origin["?"]) oItems.push({k:"eski", lab:"· Eski yozuvlar", n:"Belgisiz", val:s.origin["?"], hex:"#6d7f99"});
-  if(oItems.length) c7.appendChild(donut(oItems.sort(function(a,b){ return b.val - a.val; }), "hp_dash_origdonut", "film"));
+  var c7 = card("Qayerdan olindi", "WebApp yoki bot chati", "third");
+  // Tartib va nomlar qat'iy (foydalanuvchi so'radi): Eski ma'lumot, WebApp, Bot.
+  // "Eski ma'lumot" — manbasi yozilmagan davrdagi yuborishlar.
+  var oItems = [
+    {k:"eski", lab:"Eski ma'lumot", n:"Eski ma'lumot", val:s.origin["?"] || 0, hex:"#6d7f99"},
+    {k:"web",  lab:"WebApp",        n:"WebApp",        val:s.origin.web || 0,  hex:"#9085e9"},
+    {k:"bot",  lab:"Bot",           n:"Bot",           val:s.origin.bot || 0,  hex:"#c98500"}
+  ];
+  if(s.films) c7.appendChild(donut(oItems, "hp_dash_origdonut", "film"));
   else c7.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   put("kino", c7);
 
@@ -2952,8 +2961,8 @@ function render(){
   var kdKarta = poygaKarta({
     nom:"Kundalik yuborish", kls:"", hint:(birKun ? "soat" : "kun") + " sayin yuborilgan filmlar · tilni bosib olib turing",
     list:kList2, dayList:dayList, birKun:birKun, oyna:"oynaK", ls:"hp_dash_kunfilm", rejim:"son",
-    ser:[{k:"uz", n:"🇺🇿 O'zbekcha", t:"UZ", c:S1}, {k:"ru", n:"🇷🇺 Ruscha", t:"RU", c:S2},
-         {k:"en", n:"🇬🇧 Inglizcha", t:"EN", c:S3}]
+    ser:[{k:"uz", n:"🇺🇿 O'zbekcha", t:"UZ", c:TIL_RANG.uz}, {k:"ru", n:"🇷🇺 Ruscha", t:"RU", c:TIL_RANG.ru},
+         {k:"en", n:"🇬🇧 Inglizcha", t:"EN", c:TIL_RANG.en}]
   });
 
   /* — Nechta film olgan — */
