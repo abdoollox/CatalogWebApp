@@ -2782,7 +2782,8 @@ function render(){
       (kOsish >= 0 ? "+" : "−") + fmtNum(Math.abs(kOsish)) + " · " + fmtNum(kQosh) + " qo'shildi · " + fmtNum(kChiq) + " chiqdi",
       prev ? kanalKunOxiri(khK, dayKey(prev.w.to)) : null);
   kpi("Saralandi", Object.values(s.houses).reduce(function(a,b){return a+b;},0),
-      s.sortStart ? "boshlagan " + s.sortStart + " ta" : "fakultet tanladi",
+      // Ikkalasi ham ODAM bo'yicha (ilgari "boshlagan" yozuvlarni sanardi)
+      s.who.sortst ? "boshlagan " + s.who.sortst + " kishi" : "fakultet tanladi",
       prev && Object.values(prev.houses).reduce(function(a,b){return a+b;},0));
   kpi("Do'st taklifi", s.invited, s.refwin + " ta ball berildi", prev && prev.invited);
 
