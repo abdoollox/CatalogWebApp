@@ -1461,7 +1461,6 @@ button.glass:active .tube{transform:scale(.97)}
   background:radial-gradient(circle at 35% 30%,#b8352c,#7b1914 72%);color:#f1c8a6;font:600 25px/1 'Cormorant Garamond',serif;
   box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 0 0 4px rgba(0,0,0,.16),inset 0 0 0 5px rgba(255,210,170,.18);
 }
-.lt-to{display:block;text-align:center;margin:2px 0 10px;font:italic 500 14px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
 .lt-school{display:block;text-align:center;margin:0 0 12px;padding:0 0 11px;border-bottom:1px solid rgba(59,42,26,.2);font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
 .lt-head{display:block;text-align:center;white-space:pre-line;margin:-10px 0 16px;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
 .lt-hi{margin:0 0 6px;font:600 21px/1.2 'Cormorant Garamond',serif}
@@ -1470,28 +1469,30 @@ button.glass:active .tube{transform:scale(.97)}
 .lt-row{display:flex;gap:8px;margin-top:6px}
 .lt-row .lt-share,.lt-row .lt-later{flex:1;margin:0}
 .lt-body{margin:0 0 9px;white-space:pre-line;font:500 17px/1.4 'Cormorant Garamond',serif}
-.lt-list{margin:0 0 11px;padding:0;list-style:none;counter-reset:lt}
-.lt-list li{position:relative;padding:0 0 8px 30px;font:500 16px/1.32 'Cormorant Garamond',serif;counter-increment:lt}
-.lt-list li::before{
-  content:counter(lt);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;box-sizing:border-box;
-  border:1px solid rgba(59,42,26,.45);text-align:center;font:700 11px/19px 'Manrope',sans-serif;
+/* Yo'l kundaligi: xatning o'zida qaysi ish bajarilgani ko'rinadi */
+.lt-steps{display:flex;flex-direction:column;gap:3px;margin:0 0 10px}
+.lt-step{
+  display:flex;gap:10px;align-items:flex-start;width:100%;padding:7px 9px;border:none;border-radius:9px;
+  background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit;
 }
-.lt-more{
-  width:100%;margin:0 0 12px;padding:10px;border:1px dashed rgba(59,42,26,.4);border-radius:8px;
-  background:transparent;color:#6b4e2e;font:700 12px/1 'Manrope',sans-serif;cursor:pointer;
+.lt-step.on{background:rgba(59,42,26,.07);box-shadow:inset 0 0 0 1px rgba(59,42,26,.2)}
+.lt-step.lock{opacity:.48;cursor:default}
+.lt-step.done{cursor:default}
+.lt-mk{
+  width:22px;height:22px;flex:none;border-radius:50%;box-sizing:border-box;display:grid;place-items:center;
+  border:1px solid rgba(59,42,26,.45);font:700 11px/1 'Manrope',sans-serif;color:#6b4e2e;
 }
-.lt-more:active{transform:scale(.99)}
-.lt-kit{margin:0 0 12px;animation:riseIn .35s ease both}
-.lt-kit-head{margin:0 0 6px;padding:0 0 8px;border-bottom:1px solid rgba(59,42,26,.18);white-space:pre-line;text-align:center;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
-.lt-kit h4{margin:10px 0 5px;font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
-.lt-kit ul{margin:0;padding:0;list-style:none}
-.lt-kit li{position:relative;padding:0 0 4px 14px;font:500 15px/1.35 'Cormorant Garamond',serif}
-.lt-kit li::before{content:"";position:absolute;left:3px;top:8px;width:4px;height:4px;border-radius:50%;background:rgba(59,42,26,.45)}
-.lt-kit li i{font-style:italic;color:#6b4e2e}
-.lt-note{
-  margin:0 0 14px;padding:9px 11px;border-left:2px solid rgba(139,42,34,.5);border-radius:0 6px 6px 0;
-  background:rgba(139,42,34,.07);font:700 11.5px/1.5 'Manrope',sans-serif;color:#8b2a22;
-}
+.lt-mk svg{width:13px;height:13px}
+.lt-step.done .lt-mk{background:#1d6a4a;border-color:#1d6a4a;color:#f6eed9}
+.lt-st{display:flex;flex-direction:column;gap:1px;min-width:0}
+.lt-st-t{font:500 16px/1.3 'Cormorant Garamond',serif}
+.lt-step.done .lt-st-t{opacity:.6;text-decoration:line-through}
+.lt-st-s{font:600 10.5px/1.45 'Manrope',sans-serif;color:#6b4e2e}
+.lt-step.on .lt-st-s{color:#8b2a22}
+.lt-prog{height:3px;margin:0 2px 12px;border-radius:2px;background:rgba(59,42,26,.16);overflow:hidden}
+.lt-prog-b{display:block;height:100%;border-radius:2px;background:#1d6a4a;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes ltShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.lt-step.shake{animation:ltShake .32s}
 .lt-share{
   width:100%;margin-top:6px;padding:12px;border:1px solid rgba(59,42,26,.35);border-radius:99px;
   display:flex;align-items:center;justify-content:center;gap:7px;
@@ -1508,23 +1509,22 @@ button.glass:active .tube{transform:scale(.97)}
 .lt-card.lt-sm{padding:26px 18px 14px}
 .lt-card.lt-sm .lt-hi{font-size:19px}
 .lt-card.lt-sm .lt-body{font-size:15.5px;margin-bottom:7px}
-.lt-card.lt-sm .lt-list li{font-size:14.5px;padding-bottom:6px}
-.lt-card.lt-sm .lt-to{margin-bottom:7px;font-size:13px}
+.lt-card.lt-sm .lt-st-t{font-size:14.5px}
+.lt-card.lt-sm .lt-step{padding:6px 8px}
 .lt-card.lt-sm .lt-school{margin-bottom:9px;padding-bottom:8px}
 .lt-card.lt-sm .lt-sign{margin-bottom:9px;font-size:14px}
-.lt-card.lt-sm .lt-more{padding:8px;margin-bottom:9px}
 .lt-card.lt-sm .lt-go{padding:12px}
 /* Eng past ekranlar: manzil qatori va imzo qurbon bo'ladi, asosiysi qoladi */
 .lt-card.lt-xs{padding:22px 16px 12px}
-.lt-card.lt-xs .lt-to{display:none}
 .lt-card.lt-xs .lt-hi{font-size:17.5px;margin-bottom:4px}
 .lt-card.lt-xs .lt-body{font-size:14.5px;margin-bottom:6px}
-.lt-card.lt-xs .lt-list li{font-size:13.5px;padding-bottom:5px;line-height:1.28}
-.lt-card.lt-xs .lt-list{margin-bottom:8px}
+.lt-card.lt-xs .lt-st-t{font-size:13.5px;line-height:1.28}
+.lt-card.lt-xs .lt-st-s{font-size:10px}
+.lt-card.lt-xs .lt-steps{margin-bottom:8px;gap:2px}
+.lt-card.lt-xs .lt-step{padding:5px 8px}
 .lt-card.lt-xs .lt-when{margin-bottom:8px;font-size:9.5px}
 .lt-card.lt-xs .lt-school{margin-bottom:8px;padding-bottom:7px;font-size:9px}
 .lt-card.lt-xs .lt-sign{margin-bottom:8px;font-size:13px}
-.lt-card.lt-xs .lt-more{padding:7px;margin-bottom:8px;font-size:11.5px}
 .lt-card.lt-xs .lt-go{padding:11px}
 .lt-card.lt-xs .lt-share{padding:10px}
 .lt-card.lt-xs .lt-later{padding:10px}
@@ -1738,14 +1738,12 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   <div id="lt" class="lt hidden" role="dialog" aria-modal="true">
     <div class="lt-card">
       <span class="lt-seal" id="lt-seal"></span>
-      <span class="lt-to" id="lt-to"></span>
       <span class="lt-school" id="lt-school"></span>
       <p class="lt-hi" id="lt-hi"></p>
       <p class="lt-body" id="lt-body"></p>
       <p class="lt-when" id="lt-when"></p>
-      <ol class="lt-list" id="lt-list"></ol>
-      <button class="lt-more" id="lt-more" type="button"></button>
-      <div class="lt-kit hidden" id="lt-kit"></div>
+      <div class="lt-steps" id="lt-list"></div>
+      <div class="lt-prog"><span class="lt-prog-b" id="lt-prog-b"></span></div>
       <span class="lt-sign" id="lt-sign"></span>
       <button class="lt-go" id="lt-go" type="button"></button>
       <div class="lt-row">
@@ -6875,6 +6873,15 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       var was = journey;
       journey = null;
       if (was === "house" && endPreview()) { return; }
+      // Tayoqcha olingach xat ochiladi: kundalikda belgi qo'yilgani ko'rinadi
+      // va keyingi ish ajralib turadi. Saralangach - Xogvartsga.
+      if (was === "wand" && !hasHouse()) {
+        jrHideAll();
+        $("scr-cat").classList.remove("hidden");
+        renderCatalog();
+        openLetter(false);
+        return;
+      }
       enterWorld();
       return;
     }
@@ -7154,14 +7161,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     bankS: { uz: "Sehrgarlar banki · tez orada", ru: "Банк волшебников · скоро", en: "The wizarding bank · coming soon" },
 
     seal: { uz: "X", ru: "Х", en: "H" },
-    to: { uz: "%s · Telegram, Kutubxona javoni yonida",
-          ru: "%s · Telegram, у книжной полки Библиотеки",
-          en: "%s · Telegram, beside the Library shelf" },
     school: { uz: "Xogvarts jodugarlik va sehrgarlik maktabi", ru: "Школа чародейства и волшебства «Хогвартс»",
               en: "Hogwarts School of Witchcraft and Wizardry" },
-    head: { uz: "Direktor: Albus Dambldor\n(Merlin ordeni birinchi darajali kavaleri, Oliy sehrgar, Xalqaro sehrgarlar federatsiyasi raisi)",
-            ru: "Директор: Альбус Дамблдор\n(кавалер ордена Мерлина I степени, Великий волшебник, Верховный чародей Международной конфедерации магов)",
-            en: "Headmaster: Albus Dumbledore\n(Order of Merlin, First Class, Grand Sorcerer, Supreme Mugwump of the International Confederation of Wizards)" },
     hi: { uz: "Hurmatli %s,", ru: "Дорогой(ая) %s!", en: "Dear %s," },
     body: { uz: "Xogvarts maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. O'qish boshlanishidan oldin uch ishni bajaring:",
             ru: "С удовольствием сообщаем, что вам предоставлено место в школе «Хогвартс». До начала учёбы сделайте три дела:",
@@ -7180,76 +7181,6 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
            "Board the Hogwarts Express at King's Cross, platform 9¾",
            "In the Great Hall, the Sorting Hat will name your house"]
     },
-    more: { uz: "Kerakli narsalar ro'yxati", ru: "Список необходимого", en: "List of equipment" },
-    less: { uz: "Ro'yxatni yopish", ru: "Свернуть список", en: "Hide the list" },
-    kit: {
-      uz: [["Kiyim-kechak",
-            ["Uchta oddiy ish libosi (qora)",
-             "Kunduzi kiyish uchun bitta uchli qalpoq (qora)",
-             "Bir juft himoya qo'lqop (ajdaho terisi yoki shunga o'xshash)",
-             "Bitta qishki plash (qora, kumush qadama)"]],
-           ["Darsliklar",
-            ["Afsunlarning standart kitobi, 1-daraja · <i>Miranda Goshauk</i>",
-             "Sehr tarixi · <i>Batilda Begshot</i>",
-             "Sehr nazariyasi · <i>Adalbert Uoffling</i>",
-             "Transfiguratsiyaga boshlang'ich qo'llanma · <i>Emerik Svitch</i>",
-             "Ming xil sehrli o't va qo'ziqorin · <i>Fillida Spora</i>",
-             "Sehrli damlama va zelyelar · <i>Arseniy Jigger</i>",
-             "Fantastik maxluqlar va ularning makoni · <i>Nyut Skamander</i>",
-             "Qorong'u kuchlar: o'zini himoya qilish qo'llanmasi · <i>Kventin Trimbl</i>"]],
-           ["Boshqa jihozlar",
-            ["Bitta sehrli tayoqcha",
-             "Bitta qozon (qalay, 2-o'lcham)",
-             "Bir to'plam shisha yoki billur flakon",
-             "Bitta teleskop",
-             "Bir to'plam mis tarozi",
-             "Boyo'g'li, mushuk yoki qurbaqa olib kelsa bo'ladi"]]],
-      ru: [["Форма",
-            ["Три простых рабочих мантии (чёрные)",
-             "Одна остроконечная шляпа на каждый день (чёрная)",
-             "Одна пара защитных перчаток (из кожи дракона или похожей)",
-             "Один зимний плащ (чёрный, серебряные застёжки)"]],
-           ["Учебники",
-            ["Стандартная книга заклинаний, 1 курс · <i>Миранда Гуссокл</i>",
-             "История магии · <i>Батильда Бэгшот</i>",
-             "Теория магии · <i>Адальберт Уоффлинг</i>",
-             "Пособие по трансфигурации для начинающих · <i>Эмерик Свитч</i>",
-             "Тысяча магических растений и грибов · <i>Филлида Спора</i>",
-             "Магические отвары и зелья · <i>Жиг Мышьякофф</i>",
-             "Фантастические звери и места их обитания · <i>Ньют Саламандер</i>",
-             "Тёмные силы: пособие по самозащите · <i>Квентин Тримбл</i>"]],
-           ["Прочее снаряжение",
-            ["Одна волшебная палочка",
-             "Один котёл (оловянный, размер 2)",
-             "Набор стеклянных или хрустальных флаконов",
-             "Один телескоп",
-             "Набор медных весов",
-             "Можно взять с собой сову, кошку или жабу"]]],
-      en: [["Uniform",
-            ["Three sets of plain work robes (black)",
-             "One plain pointed hat for day wear (black)",
-             "One pair of protective gloves (dragon hide or similar)",
-             "One winter cloak (black, silver fastenings)"]],
-           ["Set books",
-            ["The Standard Book of Spells, Grade 1 · <i>Miranda Goshawk</i>",
-             "A History of Magic · <i>Bathilda Bagshot</i>",
-             "Magical Theory · <i>Adalbert Waffling</i>",
-             "A Beginner's Guide to Transfiguration · <i>Emeric Switch</i>",
-             "One Thousand Magical Herbs and Fungi · <i>Phyllida Spore</i>",
-             "Magical Drafts and Potions · <i>Arsenius Jigger</i>",
-             "Fantastic Beasts and Where to Find Them · <i>Newt Scamander</i>",
-             "The Dark Forces: A Guide to Self-Protection · <i>Quentin Trimble</i>"]],
-           ["Other equipment",
-            ["One wand",
-             "One cauldron (pewter, standard size 2)",
-             "One set of glass or crystal phials",
-             "One telescope",
-             "One set of brass scales",
-             "Students may bring an owl, a cat or a toad"]]]
-    },
-    note: { uz: "Eslatma: birinchi kurs talabalariga shaxsiy supurgi olib kelish taqiqlanadi.",
-            ru: "Напоминаем: первокурсникам не разрешается иметь собственную метлу.",
-            en: "Please note: first-year students are not permitted their own broomsticks." },
     share: { uz: "Ulashish", ru: "Поделиться", en: "Share" },
     shareWait: { uz: "Xat tayyorlanmoqda…", ru: "Письмо готовится…", en: "Preparing the letter…" },
     shareErr: { uz: "Xat tayyorlanmadi, birozdan keyin urinib ko'ring",
@@ -7594,14 +7525,11 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("al-title").textContent = al("title");
     $("al-intro").textContent = al("intro");
 
-    var steps = [
-      { icon: "wand", done: !!wand, on: !wand, place: al("s1p"), title: al("s1t"),
-        sub: (wand && wandLabel(wand, lang)) || al("s1s"), cta: al("s1c"), go: jrWand },
-      { icon: "train", done: !!wand && rode, on: !!wand && !rode, place: al("s2p"), title: al("s2t"),
-        sub: !wand ? al("s2l") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"), go: openTrain },
-      { icon: "castle", done: false, on: !!wand && rode, place: al("s3p"), title: al("s3t"),
-        sub: wand && rode ? al("s3s") : al("s3l"), cta: al("s3c"), go: jrSort }
-    ];
+    // Faqat XIYOBONDAGI joylar. Vokzal va Katta zal boshqa shaharda -
+    // butun yo'l xatning o'zida kuzatiladi (ltPath).
+    var steps = jrSteps().filter(function (st) { return st.alley; });
+    var next = jrNext(steps);
+    steps.forEach(function (st) { st.on = (st === next); });
 
     var path = $("al-path");
     path.innerHTML = "";
@@ -7634,6 +7562,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       path.appendChild(el);
     });
 
+    // Kundalik xatda; bu yerda bitta do'kon qolsa yo'lakcha ortiqcha
+    var prog = document.querySelector(".al-prog");
+    if (prog) { prog.classList.toggle("hidden", steps.length < 2); }
     $("al-prog-t").textContent = al("prog");
     $("al-prog-n").textContent = done + " / " + steps.length;
     $("al-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
@@ -7655,6 +7586,34 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     stopSortTimer();
     hideSortScreens();
     openAlley();
+  }
+
+  /* Yo'lning barcha qadamlari - YAGONA MANBA. Xat kundalik sifatida hammasini
+     ko'rsatadi, xiyobon esa faqat o'zidagilarini (`alley: true`). */
+  function jrSteps() {
+    var w = jrWandNow(), rode = jrGet(TRAIN_KEY), sorted = hasHouse();
+    return [
+      { icon: "wand", alley: true, done: !!w, place: al("s1p"), title: al("s1t"),
+        sub: (w && wandLabel(w, lang)) || al("s1s"), cta: al("s1c"),
+        go: function () { if (alleyVisible()) { closeLetter(); jrWand(); } else { jrToAlley(); } } },
+      { icon: "train", done: !!w && rode, place: al("s2p"), title: al("s2t"),
+        sub: !w ? al("s2l") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
+        go: function () { closeLetter(); openTrain(); } },
+      { icon: "castle", done: sorted, place: al("s3p"), title: al("s3t"),
+        sub: (w && rode) || sorted ? al("s3s") : al("s3l"), cta: al("s3c"),
+        go: function () { closeLetter(); jrSort(); } }
+    ];
+  }
+
+  // Birinchi bajarilmagan qadam - hozir qilinishi kerak bo'lgani
+  function jrNext(steps) {
+    for (var i = 0; i < steps.length; i++) { if (!steps[i].done) { return steps[i]; } }
+    return null;
+  }
+
+  // Xatdan xiyobonga: g'isht devor ochilib, ko'cha ko'rinadi
+  function jrToAlley() {
+    playGate(function () { closeLetter(); openAlley(); });
   }
 
   function jrWand() {
@@ -7681,25 +7640,15 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     var u = tgUser();
     var name = u ? (u.first_name || fullName(u)) : T[lang].guest;
     $("lt-seal").textContent = al("seal");
-    $("lt-to").textContent = al("to").replace("%s", name);
     $("lt-school").textContent = al("school");
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
     $("lt-when").textContent = al("when");
-    var ol = $("lt-list");
-    ol.innerHTML = "";
-    al("list").forEach(function (line) { ol.appendChild(jrEl("li", "", line)); });
-    ltKit(false);
+    ltPath(readOnly);
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     $("lt-sign").textContent = al("sign");
-    $("lt-later").textContent = al("later");
-    $("lt-later").classList.toggle("hidden", !!readOnly);
-    $("lt-go").textContent = readOnly ? al("close") : al("go");
-    $("lt-go").onclick = readOnly ? closeLetter : function () {
-      jrSet(LETTER_KEY);
-      // Devor maktubni yopib turgan paytda xiyobon ochiladi
-      playGate(function () { closeLetter(); openAlley(); });
-    };
+    // Qayta o'qiyotganda pastdagi tugma "Yopish" bo'ladi
+    $("lt-later").textContent = readOnly ? al("close") : al("later");
     $("lt").scrollTop = 0;
     $("lt").classList.remove("hidden");
     ltFit();
@@ -7712,7 +7661,6 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     var box = $("lt"), card = document.querySelector(".lt-card");
     if (!box || !card) { return; }
     card.classList.remove("lt-sm", "lt-xs");
-    if (!$("lt-kit").classList.contains("hidden")) { return; }   // ro'yxat ochiq - baribir uzun
     var joy = box.clientHeight - 48;        // tepa/past bo'shlig'i
     if (card.offsetHeight <= joy) { return; }
     card.classList.add("lt-sm");
@@ -7783,26 +7731,52 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     });
   }
 
-  // Xatdagi jihozlar ro'yxati: uzun, shuning uchun bosib ochiladi
-  function ltKit(open) {
-    var box = $("lt-kit");
-    box.classList.toggle("hidden", !open);
-    $("lt-more").textContent = open ? al("less") : al("more");
-    if (!open || box.dataset.lang === lang) { return; }
-    box.dataset.lang = lang;
+  /* Xatdagi yo'l kundaligi: bajarilgani ✓ bo'lib chiziladi, navbatdagisi
+     ajralib turadi va bosilsa o'sha ishga olib boradi, qolganlari qulflangan. */
+  function ltPath(readOnly) {
+    var box = $("lt-list");
     box.innerHTML = "";
-    box.appendChild(jrEl("p", "lt-kit-head", al("head")));
-    al("kit").forEach(function (group) {
-      box.appendChild(jrEl("h4", "", group[0]));
-      var ul = jrEl("ul");
-      group[1].forEach(function (line) {
-        var li = document.createElement("li");
-        li.innerHTML = line;         // faqat <i> - matn lug'atdan, foydalanuvchidan emas
-        ul.appendChild(li);
-      });
-      box.appendChild(ul);
+    var steps = jrSteps(), next = jrNext(steps), done = 0;
+
+    steps.forEach(function (st) {
+      if (st.done) { done++; }
+      var on = (st === next);
+      var el = jrEl("button", "lt-step " + (st.done ? "done" : on ? "on" : "lock"));
+      el.type = "button";
+      var mk = jrEl("span", "lt-mk");
+      mk.innerHTML = hubSvg(st.done ? AL_ICONS.check : AL_ICONS[st.icon]);
+      el.appendChild(mk);
+      var tx = jrEl("span", "lt-st");
+      tx.appendChild(jrEl("span", "lt-st-t", st.title));
+      tx.appendChild(jrEl("span", "lt-st-s", st.sub));
+      el.appendChild(tx);
+      el.onclick = function () {
+        if (on) { jrSet(LETTER_KEY); st.go(); return; }
+        if (st.done) { return; }
+        el.classList.remove("shake");
+        try { void el.offsetWidth; } catch (e) {}
+        el.classList.add("shake");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("warning"); } } catch (e) {}
+      };
+      box.appendChild(el);
     });
-    box.appendChild(jrEl("p", "lt-note", al("note")));
+
+    $("lt-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
+
+    // Asosiy tugma har doim navbatdagi ishni bajaradi
+    var go = $("lt-go");
+    if (!next) {
+      go.textContent = al("close");
+      go.onclick = closeLetter;
+    } else {
+      // Xiyobondan tashqarida turganda birinchi qadam avval ko'chaga olib boradi
+      var toAlley = next.icon === "wand" && !alleyVisible();
+      go.textContent = toAlley ? al("go") : (next.cta || al("go"));
+      go.onclick = function () {
+        jrSet(LETTER_KEY);
+        next.go();
+      };
+    }
   }
 
   // ---------------------------------------------------------------- 9¾ platforma
@@ -13259,12 +13233,6 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       if ($("lt-later").classList.contains("hidden")) { closeLetter(); } else { jrLetterCancel(); }
     });
     $("hub-set-pv").addEventListener("click", testStart);
-    $("lt-more").addEventListener("click", function () {
-      var open = $("lt-kit").classList.contains("hidden");
-      ltKit(open);
-      ltFit();
-      if (open) { $("lt-kit").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
-    });
     $("lt-share").addEventListener("click", ltShare);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
