@@ -420,9 +420,59 @@ td.tar-td{width:1%; padding-block:4px}
 .tarq-kpi .tk.holat-ogoh .tk-sub{color:var(--warn)}
 .tarq-kpi .tk.holat-yomon{box-shadow:inset 0 0 0 1px rgba(224,121,111,.5)}
 .tarq-kpi .tk.holat-yomon .tk-sub{color:#e0796f}
+/* ⓘ ma'lumot oynasi */
+.info-pop{
+  position:fixed; z-index:95; width:min(340px, calc(100vw - 16px)); background:#0e1219;
+  border:1px solid var(--line); border-radius:12px; padding:12px 14px; box-shadow:0 16px 40px rgba(0,0,0,.6);
+  font-size:12.5px; line-height:1.55; color:var(--ink-2);
+}
+.info-pop b{display:block; color:var(--ink); font-size:13px; margin-bottom:5px}
+.info-pop p{margin:0}
+/* Chiqib ketish sabablari */
+.sabab-xulosa{margin:14px 0 6px}
+.sabab-xulosa .sx-matn{font-size:12.5px; color:var(--ink-2); margin-bottom:7px}
+.sabab-xulosa .sx-matn b{font-size:15px}
+.sabab-xulosa .sx-matn span{color:var(--ink-3)}
+.sabab-xulosa .sx-chiziq{display:flex; gap:3px; height:8px}
+.sabab-xulosa .sx-chiziq i{display:block; border-radius:4px; min-width:3px}
+.sabablar{display:flex; flex-direction:column; gap:4px; margin-top:12px}
+.sabab-q{
+  display:grid; grid-template-columns:24px minmax(120px, 1.1fr) minmax(0, 2fr) 38px 50px 50px;
+  gap:10px; align-items:center; padding:6px 4px; border-radius:8px;
+}
+.sabab-q:hover{background:rgba(255,255,255,.025)}
+.sq-ic{font-size:15px; text-align:center}
+.sq-nom{font-size:13px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sq-iz{height:10px; background:var(--panel-2); border-radius:5px; overflow:hidden}
+.sq-iz i{display:block; height:100%; border-radius:5px; transition:width .5s cubic-bezier(.22,.9,.3,1)}
+.sq-son{text-align:right; font-variant-numeric:tabular-nums; font-size:13.5px}
+.sq-foiz{text-align:right; font-size:11.5px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.sq-qayt{text-align:right}
+.sq-qayt .back-tag{margin-left:0}
+@media (max-width:640px){
+  .sabab-q{grid-template-columns:22px minmax(0,1fr) 34px 44px 44px}
+  .sq-iz{display:none}
+}
+/* Izohlar */
+.izohlar{display:flex; flex-direction:column; gap:10px; margin-top:10px; overflow-y:auto; max-height:min(64vh, 620px); padding-right:4px}
+.card.cho-teng .izohlar{flex:1 1 0; min-height:180px; max-height:none}
+.izoh{
+  background:var(--panel-2); border-radius:11px; padding:10px 12px 11px;
+  border-left:3px solid var(--iz, var(--line)); min-width:0;
+}
+.izoh-bosh{display:flex; align-items:baseline; gap:6px; min-width:0; font-size:12.5px}
+.izoh-ism{
+  font-weight:600; color:var(--ink); min-width:0; max-width:55%; overflow:hidden; white-space:nowrap;
+  text-overflow:ellipsis; display:inline-block; height:1.5em; line-height:1.5em; vertical-align:bottom;
+}
+.izoh-un{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0}
+.izoh-bosh .back-tag{flex:none}
+.izoh-vaqt{margin-left:auto; flex:none; font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
+.izoh-sabab{display:inline-block; margin-top:5px; font-size:11px; font-weight:600; color:var(--iz, var(--ink-3))}
+.izoh-matn{margin-top:6px; font-size:13px; line-height:1.5; color:var(--ink); overflow-wrap:anywhere}
 .tarq-bosh{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:18px 0 0}
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
-.fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr auto; gap:11px; align-items:center}
+.fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr 92px; gap:11px; align-items:center}
 @media (max-width:520px){ .fun-row{grid-template-columns:minmax(0,1fr) auto; gap:4px 9px}
   .fun-lab{grid-column:1/-1} }
 .fun-lab{font-size:12.5px; color:var(--ink-2)}
@@ -662,7 +712,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -2051,6 +2101,16 @@ function card(title, hint, cls){
   h.appendChild(asbob);
   c.appendChild(h);
   c._head = asbob;
+  if(KARTA_INFO[title]){
+    var ib = document.createElement("button");
+    ib.type = "button"; ib.className = "zbtn ibtn-info";
+    ib.title = "Bu karta haqida"; ib.setAttribute("aria-label", "Bu karta haqida");
+    ib.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="8.5"></circle><path d="M12 11v5"></path><path d="M12 7.8v.2"></path></svg>';
+    ib.addEventListener("click", function(){ infoOch(ib, title); });
+    asbob.appendChild(ib);
+  }
 
   // Kattalashtirish: chizma butun ekranni egallaydi.
   var ZB_OCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
@@ -2236,30 +2296,9 @@ function addPeople(cardEl, rows){
   btn.addEventListener("click", function(){
     katakOyna("Kimlar javob berdi", function(joy){
       var box = document.createElement("div");
-      box.className = "feed";
+      box.className = "izohlar";
       box.style.maxHeight = "none";
-      rows.forEach(function(x){
-        var L = LEAVE[x.reason] || {ic:"\u2022", n:x.reason || "Javob bermagan", c:"var(--ink-3)"};
-        var p = personOf(x.uid);
-        var who;
-        if(p){
-          var uname = (p.user && p.user !== "Yo'q") ? p.user : "";
-          who = '<b>' + odamHavola(x.uid, p.name) + '</b>' + (uname ?
-            ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
-            '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "");
-        } else {
-          who = '<b>' + (x.uid ? odamHavola(x.uid, "ID " + x.uid) : "ID ?") + '</b>';
-        }
-        var d = document.createElement("div"); d.className = "fe";
-        d.innerHTML = '<span class="ic">' + L.ic + '</span>' +
-          '<span class="txt"><span class="who-line">' + who +
-            (x.back ? ' <span class="back-tag">qaytib keldi</span>' : "") + '</span>' +
-            '<span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' + esc(L.n) + '</span>' +
-            (x.comment ? '<br><span style="color:var(--ink-2)">' + esc(x.comment) + '</span>' : "") +
-          '</span>' +
-          '<span class="when">' + fmtDay(dayKey(x.t)) + '</span>';
-        box.appendChild(d);
-      });
+      rows.forEach(function(x){ box.appendChild(izohQator(x)); });
       joy.appendChild(box);
     });
   });
@@ -2566,6 +2605,85 @@ function kanalKunOxiri(kh, dk){
   var eng = null, qiy = KANAL_BOSHI;
   for(var k in kh.kun) if(k <= dk && (eng === null || k > eng)){ eng = k; qiy = kh.kun[k]; }
   return qiy;
+}
+
+/* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
+   Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
+var KARTA_INFO = {
+  "Kundalik jonlanish": "Har kuni botda nechta hodisa bo'lgani: start — botni ochish, subscribed — kanalga qo'shilish, movie — film yuborish, left — kanaldan chiqish, blocked — botni bloklash. Bu yerda odamlar emas, YOZUVLAR sanaladi. Nomini bosib chiziqni olib turasiz, pastdagi slayder bilan davrning bir qismini yaqindan ko'rasiz.",
+  "Sutka davomida": "Tanlangan kun soatlar bo'yicha: start, subscribed, movie, left, blocked hodisalari. Odamlar emas, yozuvlar sanaladi. Nomini bosib chiziqni olib turasiz.",
+  "Voronka": "Odamlar botdan fakultetgacha qaysi qadamda to'xtab qolishi. Har qadam oldingi qadamdan o'tganlar ichidan sanaladi. «Kanalga a'zo» — loglarda qo'shilgani yozilganlar va film olganlar (bot film berishdan oldin a'zolikni tekshiradi). «Boshdan» — birinchi qadamga, «Oldingidan» — oldingi qadamga nisbatan. Qadamni bosib olib tursangiz, zanjir qayta hisoblanadi.",
+  "Qachon jonli": "Hafta kuni va soat bo'yicha barcha hodisalar (Toshkent vaqti). Katak qanchalik issiq rangda bo'lsa, o'sha payt shunchalik gavjum. O'ngda — har kunning, pastda — har soatning o'rtacha qiymati.",
+  "Fakultetlar": "Shu davrda saralangan odamlar fakultetlar bo'yicha. Har odam bir marta, OXIRGI tanlagan fakulteti bo'yicha sanaladi (ilgari fakultetni almashtirish mumkin edi). Qatorni bosib bo'lakni olib turasiz.",
+  "Fakultetlar poygasi": "Har fakultetga kun sayin jami nechta a'zo yig'ilgani. «Soni» — a'zolar soni, «Ulushi» — fakultetlar nisbati (100% ga to'ldirilgan). Odam birinchi saralangan kuni qo'shilgan hisoblanadi, fakulteti — oxirgi tanlovi.",
+  "Qaysi fakultet faolroq": "Shu davrda saralanganlar fakultetlar bo'yicha. Olib kelgan — fakultet a'zolari taklif qilgan va kanalga qo'shilgan yangi odamlar (bot ball bergan). Film / odam — bir a'zoga o'rtacha film. Kanaldan chiqqan va botni bloklagan — a'zolarning necha foizi. Eng yaxshi qiymat yashil.",
+  "Qayerdan kelishdi": "Shu davrda birinchi marta kelgan odamlar qayerdan kelgani. Reklama kodi bo'lsa — o'sha kod, bo'lmasa do'st taklifi, u ham bo'lmasa — to'g'ridan-to'g'ri. Har odam bir marta sanaladi. Qatorni bosib bo'lakni olib turasiz.",
+  "Tarqalish": "Do'st taklifi va ulashish. Bot qoidasi bilan: odam do'stining havolasi bilan kelib, kanalga qo'shilgandagina «olib keldi» hisoblanadi (taklifchiga shunda ball beriladi). «Start bosdi» — havola bilan botga kirganlar. Tarqalish kuchi — bir taklifchiga o'rtacha odam; ulashish samarasi — 100 ulashishga nechta yangi odam (taxminiy). Ustun nomini bosib saralaysiz.",
+  "Eng faol sehrgarlar": "Davr ichidagi eng faol 20 odam. Hodisa — barcha harakatlari, Faol kun — necha xil kunda botga kirgani (sodiqlik o'lchovi), Film — olgan filmlari. Ustun nomini bosib saralaysiz, qidiruv bilan istalgan odamni topasiz, «Tarix» — uning barcha hodisalari.",
+  "Qaysi kino ko'proq so'raladi": "Har film necha marta yuborilgani, tillar bo'yicha. «Yuborish» — har bir yuborish sanaladi, «Odam» — har odam har filmda bir marta (birinchi olgan tili bo'yicha). Tilni bosib olib turasiz.",
+  "Nechta film olgan": "Film olgan odamlar nechta XIL film olgani bo'yicha. Bir filmni qayta olish sanalmaydi. ⚡ — Garri Potterning 8 qismi, 🏆 — barcha 11 film.",
+  "Qaysi tilda": "Yuborilgan filmlar tillar bo'yicha (yuborishlar soni). Qatorni bosib bo'lakni olib turasiz.",
+  "Qaysi seriya": "Yuborilgan filmlar seriyalar bo'yicha: Garri Potter (8 film) va Fantastik Maxluqlar (3 film).",
+  "Qayerdan olindi": "Film qayerdan so'ralgani: WebApp (ilova) yoki bot chati. «Eski ma'lumot» — manba hali yozilmagan davrdagi yuborishlar.",
+  "Seriya bo'ylab": "Har qismni nechta odam olgani, seriya tartibida — tomoshabin qaysi qismda to'xtab qolishini ko'rsatadi. «Oldingidan» — oldingi qismga nisbatan; kimdir oldingi qismni o'tkazib yuborsa, 100% dan oshishi mumkin.",
+  "Kundalik yuborish": "Har kuni nechta film yuborilgani, tillar bo'yicha. «Ulushi» rejimida tillar nisbati ko'rinadi. Tilni bosib olib turasiz, slayder bilan davrning bir qismini yaqindan ko'rasiz.",
+  "Kanal hajmi": "Kanaldagi odamlar soni LOGLARDAN hisoblanadi: 7-martdagi boshlang'ich 226 + qo'shilganlar − chiqqanlar (har odam oxirgi holati bo'yicha, takrorsiz). Telegramdagi son bot tomonidan har soatda olinadi va faqat nazorat uchun ko'rsatiladi: farq 0 bo'lsa, loglar to'liq yozilyapti.",
+  "Kanal harakati": "Kun sayin kanalga qo'shilgan, chiqqan va botni bloklagan odamlar. Hammasi odam bo'yicha va takrorsiz. «Qaytib keldi» — ilgari chiqib, yana qo'shilganlar.",
+  "Qancha vaqtda chiqib ketishdi": "Shu davrda chiqqanlar: oxirgi qo'shilganidan chiqqunicha qancha vaqt o'tgani. «Qo'shilgani noma'lum» — 7-martdan (loglar boshlanishidan) oldin qo'shilgan a'zolar.",
+  "Nega chiqib ketishdi": "Kanaldan chiqqanlarga bot xabar yuborib, sababini so'raydi. So'ralgan — xabar yetib borganlar, Javob bergan — tugmani bosganlar, Qaytgan — keyin yana kanalga qo'shilganlar. Qizil va sariq sabablar — kanal tuzatishi mumkin bo'lgan muammolar, yashil va kulrang — yo'qotish emas.",
+  "Ularning so'zlari": "Chiqib ketganlarning yozma izohlari, eng yangisi yuqorida. Ismni bosib, o'sha odamning butun tarixini ochasiz.",
+  "Oxirgi hodisalar": "Davrdagi oxirgi 120 hodisa, eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz."
+};
+
+var INFO_POP = null;
+function infoYop(){
+  if(INFO_POP){ INFO_POP.remove(); INFO_POP = null; }
+  document.removeEventListener("mousedown", infoTashqi, true);
+}
+function infoTashqi(e){
+  if(INFO_POP && !INFO_POP.contains(e.target) && !(e.target.closest && e.target.closest(".ibtn-info"))) infoYop();
+}
+function infoOch(btn, nom){
+  var edi = INFO_POP && INFO_POP._btn === btn;
+  infoYop();
+  if(edi) return;                              // ikkinchi bosish — yopadi
+  var p = document.createElement("div");
+  p.className = "info-pop";
+  p.setAttribute("role", "dialog");
+  p.innerHTML = "<b>" + esc(nom) + "</b><p>" + esc(KARTA_INFO[nom]) + "</p>";
+  p._btn = btn;
+  document.body.appendChild(p);
+  var r = btn.getBoundingClientRect();
+  var w = p.offsetWidth;
+  p.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, r.right - w)) + "px";
+  var top = r.bottom + 8;
+  if(top + p.offsetHeight > window.innerHeight - 8) top = Math.max(8, r.top - p.offsetHeight - 8);
+  p.style.top = top + "px";
+  INFO_POP = p;
+  setTimeout(function(){ document.addEventListener("mousedown", infoTashqi, true); }, 0);
+}
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && INFO_POP){ e.stopImmediatePropagation(); infoYop(); } }, true);
+window.addEventListener("scroll", infoYop, true);
+
+/* Chiqib ketgan odamning izohi — "Ularning so'zlari" va "Kimlar javob berdi" uchun */
+function izohQator(x){
+  var L = LEAVE[x.reason] || {ic:"✍️", n:x.reason || "Sabab ko'rsatilmagan", c:"var(--ink-3)"};
+  var p = personOf(x.uid);
+  var uname = p && p.user && p.user !== "Yo'q" ? p.user : "";
+  var d = document.createElement("div");
+  d.className = "izoh";
+  d.style.setProperty("--iz", L.c);
+  d.innerHTML =
+    '<div class="izoh-bosh">' +
+      '<span class="izoh-ism">' + odamHavola(x.uid || "?", p ? p.name : "ID " + (x.uid || "?")) + '</span>' +
+      (uname ? '<a class="tglink izoh-un" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
+        '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "") +
+      (x.back ? '<span class="back-tag">↩ qaytdi</span>' : "") +
+      '<span class="izoh-vaqt">' + fmtDay(dayKey(x.t)) + '</span>' +
+    '</div>' +
+    '<span class="izoh-sabab">' + L.ic + " " + esc(L.n) + '</span>' +
+    (x.comment ? '<div class="izoh-matn">' + esc(x.comment) + '</div>' : "");
+  return d;
 }
 
 /* ───────── Asosiy chizish ───────── */
@@ -3235,14 +3353,35 @@ function render(){
     var KSER = [{k:"hajm", n:"Kanal hajmi (loglar)", c:"#3987e5"}];
     var fK2 = document.createElement("figure");
     var kBal = null;
-    fK2.appendChild(chartDaily(kList, {hajm:true}, kBal, KSER));
+    var kSl = kList.length > 14;
+    if(!kSl) ST.oynaKh = {a:0, b:1};
+    var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
+    var kChiz = function(){
+      fK2.innerHTML = "";
+      fK2.appendChild(chartDaily(kKor, {hajm:true}, kBal, KSER));
+    };
+    kChiz();
     cK._qayta = function(b){
       if(b === null) kBal = null; else if(b) kBal = b;
-      fK2.innerHTML = "";
-      fK2.appendChild(chartDaily(kList, {hajm:true}, kBal, KSER));
+      kChiz();
     };
     cK.appendChild(fK2);
     cK._kuzat(fK2);
+    if(kSl){
+      var kYoz = document.createElement("div");
+      kYoz.className = "brush-yozuv";
+      var kYozYangila = function(){
+        var a = kKor[0], b = kKor[kKor.length-1];
+        kYoz.innerHTML = "<b>" + esc(a.tip) + "</b><span>" + kKor.length + " kun</span><b>" + esc(b.tip) + "</b>";
+      };
+      cK.appendChild(brushYasa(kList, function(d){ return d.hajm; }, ST.oynaKh, function(){
+        kKor = oynaKesimi(kList, ST.oynaKh);
+        ST.jim = true; kChiz(); ST.jim = false;
+        kYozYangila();
+      }));
+      cK.appendChild(kYoz);
+      kYozYangila();
+    }
   }
 
   // Kunlik solishtirish: bot har kuni Telegramdagi sonni yozib boradi
@@ -3513,18 +3652,18 @@ function render(){
         }
       });
 
-      // Kichik ko'rsatkichlar qatori — kartaning ichida
+      // Ko'rsatkichlar — boshqa kartalardagi kabi kichik kartochkalar
       var mini = document.createElement("div");
-      mini.style.cssText = "display:flex;gap:18px;flex-wrap:wrap;margin:8px 0 4px;font-size:12.5px;color:var(--ink-2)";
-      [["Chiqqan", lv.length, ""],
-       ["So'ralgan", asked, lv.length ? Math.round(asked/lv.length*100) + "%" : ""],
-       ["Javob bergan", answered, asked ? Math.round(answered/asked*100) + "%" : ""],
-       ["Qaytgan", backs, lv.length ? Math.round(backs/lv.length*100) + "%" : ""]
+      mini.className = "tarq-kpi";
+      [["Chiqqan", fmtNum(lv.length), "shu davrda"],
+       ["So'ralgan", fmtNum(asked), lv.length ? Math.round(asked/lv.length*100) + "% chiqqanlardan" : ""],
+       ["Javob bergan", fmtNum(answered), asked ? Math.round(answered/asked*100) + "% so'ralganlardan" : ""],
+       ["Qaytgan", fmtNum(backs), lv.length ? Math.round(backs/lv.length*100) + "% yana qo'shildi" : ""]
       ].forEach(function(m){
-        var d = document.createElement("span");
-        d.innerHTML = '<b style="color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums">' +
-          fmtNum(m[1]) + '</b> ' + esc(m[0]) +
-          (m[2] ? ' <i style="font-style:normal;color:var(--ink-3)">' + m[2] + '</i>' : '');
+        var d = document.createElement("div");
+        d.className = "tk";
+        d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+          '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
         mini.appendChild(d);
       });
       c12.appendChild(mini);
@@ -3533,21 +3672,42 @@ function render(){
         c12.appendChild(emptyNote("Hali hech kim tugmani bosmagan."));
       } else {
         var order = Object.keys(byR).sort(function(a,b){ return byR[b] - byR[a]; });
-        c12.appendChild(barList(order.map(function(r){
-          var L = LEAVE[r] || {n:r, ic:"•", c:"var(--ink-3)"};
-          var b = backR[r] || 0;
-          return {lab: L.ic + " " + L.n, val: byR[r], color: L.c,
-                  note: b ? b + " tasi qaytib keldi" : ""};
-        }), "var(--ink-3)", answered));
-
         var hurt = order.filter(function(r){ return LEAVE[r] && LEAVE[r].bad; })
                         .reduce(function(a,r){ return a + byR[r]; }, 0);
-        var msg = document.createElement("p");
-        msg.style.cssText = "font-size:12.5px;color:var(--ink-3);margin:13px 0 0;line-height:1.5";
-        msg.textContent = "Javob berganlarning " + Math.round(hurt/answered*100) +
-          " foizi ketishiga kanalning o'zi sabab bo'lgan (bot, xabar ko'pligi yoki mavzu). " +
-          "Qolganlari kerakligini olgan yoki tasodifan chiqqan — bular yo'qotish emas.";
-        c12.appendChild(msg);
+        var hurtU = Math.round(hurt/answered*100);
+
+        // Xulosa: kanal sababli va yo'qotish emas — bitta bo'lingan chiziqda
+        var xul = document.createElement("div");
+        xul.className = "sabab-xulosa";
+        xul.innerHTML =
+          '<div class="sx-matn"><b style="color:#e0796f">' + hurtU + '%</b> ketishiga kanalning o\'zi sabab ' +
+          '<span>(bot, xabar ko\'pligi, mavzu)</span> · <b style="color:#3fbf6a">' + (100 - hurtU) + '%</b> yo\'qotish emas ' +
+          '<span>(filmni olgan, tasodifan, boshqa)</span></div>' +
+          '<div class="sx-chiziq"><i style="width:' + hurtU + '%;background:#d03b3b"></i>' +
+          '<i style="width:' + (100 - hurtU) + '%;background:#199e70"></i></div>';
+        c12.appendChild(xul);
+
+        // Sabablar: bitta qatorda nom, chiziq, son, ulush va qaytganlar
+        var ro = document.createElement("div");
+        ro.className = "sabablar";
+        var eng = byR[order[0]] || 1;
+        order.forEach(function(r){
+          var L = LEAVE[r] || {n:r, ic:"•", c:"var(--ink-3)"};
+          var b = backR[r] || 0;
+          var q = document.createElement("div");
+          q.className = "sabab-q";
+          q.innerHTML = '<span class="sq-ic">' + L.ic + '</span>' +
+            '<span class="sq-nom" title="' + esc(L.n) + '">' + esc(L.n) + '</span>' +
+            '<span class="sq-iz"><i style="background:' + L.c + '"></i></span>' +
+            '<b class="sq-son">' + fmtNum(byR[r]) + '</b>' +
+            '<span class="sq-foiz">' + (byR[r]/answered*100).toFixed(1).replace(/\.0$/, "") + '%</span>' +
+            '<span class="sq-qayt">' + (b ? '<span class="back-tag" title="' + b + ' tasi keyin qaytib keldi">↩ ' + b + '</span>' : "") + '</span>';
+          var chiz = q.querySelector(".sq-iz i");
+          chiz.style.width = "0%";
+          keyinroq(function(){ chiz.style.width = (byR[r]/eng*100).toFixed(1) + "%"; });
+          ro.appendChild(q);
+        });
+        c12.appendChild(ro);
 
         addTable(c12, ["Sabab","Soni","Ulushi","Qaytgan"], order.map(function(r){
           return [(LEAVE[r]||{n:r}).n, byR[r], Math.round(byR[r]/answered*100) + "%", backR[r] || 0];
@@ -3558,36 +3718,15 @@ function render(){
       }
       put("kanal", c12);
 
-      // Yozma izohlar
+      // Yozma izohlar — chap karta bo'yida, ichi aylantiriladi
       var words = lv.filter(function(x){ return x.comment; }).reverse();
-      var c13 = card("Ularning so'zlari", words.length ? words.length + " ta izoh" : "", "third");
+      var c13 = card("Ularning so'zlari", words.length ? words.length + " ta izoh" : "", "third cho-teng");
       if(!words.length){
         c13.appendChild(emptyNote("Bu davrda yozma izoh qoldirilmagan."));
       } else {
         var wrap = document.createElement("div");
-        wrap.className = "feed";
-        words.slice(0, 40).forEach(function(x){
-          var L = LEAVE[x.reason] || {ic:"✍️", n:x.reason || "Sabab yo'q", c:"var(--ink-3)"};
-          var p = personOf(x.uid);
-          var who = "";
-          if(p){
-            var uname = (p.user && p.user !== "Yo'q") ? p.user : "";
-            who = '<b>' + odamHavola(x.uid, p.name) + '</b>' + (uname ?
-              ' <a class="tglink" href="https://t.me/' + encodeURIComponent(uname.replace(/^@/, "")) +
-              '" target="_blank" rel="noopener">' + esc(uname) + '</a>' : "");
-          } else if(x.uid){
-            who = '<b>' + odamHavola(x.uid, "ID " + x.uid) + '</b>';
-          }
-          var d = document.createElement("div"); d.className = "fe";
-          d.innerHTML = '<span class="ic">' + L.ic + '</span>' +
-            '<span class="txt">' +
-              (who ? '<span class="who-line">' + who + (x.back ? ' <span class="back-tag">qaytib keldi</span>' : "") + '</span>' : "") +
-              '<span style="color:' + L.c + ';font-size:11.5px;font-weight:600">' + esc(L.n) + '</span><br>' +
-              esc(x.comment) +
-            '</span>' +
-            '<span class="when">' + fmtDay(dayKey(x.t)) + '</span>';
-          wrap.appendChild(d);
-        });
+        wrap.className = "izohlar";
+        words.slice(0, 60).forEach(function(x){ wrap.appendChild(izohQator(x)); });
         c13.appendChild(wrap);
       }
       put("kanal", c13);
@@ -4086,7 +4225,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -4103,7 +4242,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -4143,11 +4282,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
