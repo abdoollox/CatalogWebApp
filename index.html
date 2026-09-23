@@ -1466,8 +1466,7 @@ button.glass:active .tube{transform:scale(.97)}
 .lt-hi{margin:0 0 6px;font:600 21px/1.2 'Cormorant Garamond',serif}
 /* Sana qatori: asosiy matndan ajratilgan, kichik - joy tejaydi */
 .lt-when{margin:0 0 11px;font:700 10.5px/1.5 'Manrope',sans-serif;letter-spacing:.06em;color:#6b4e2e}
-.lt-row{display:flex;gap:8px;margin-top:6px}
-.lt-row .lt-share,.lt-row .lt-later{flex:1;margin:0}
+.lt-act{display:flex;gap:9px;align-items:stretch;margin-top:2px}
 .lt-body{margin:0 0 9px;white-space:pre-line;font:500 17px/1.4 'Cormorant Garamond',serif}
 /* Yo'l kundaligi: xatning o'zida qaysi ish bajarilgani ko'rinadi */
 .lt-steps{display:flex;flex-direction:column;gap:3px;margin:0 0 10px}
@@ -1494,16 +1493,28 @@ button.glass:active .tube{transform:scale(.97)}
 @keyframes ltShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .lt-step.shake{animation:ltShake .32s}
 .lt-share{
-  width:100%;margin-top:6px;padding:12px;border:1px solid rgba(59,42,26,.35);border-radius:99px;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  background:transparent;color:#3b2a1a;font:800 13px/1 'Manrope',sans-serif;cursor:pointer;
+  width:52px;flex:none;padding:0;border:1px solid rgba(59,42,26,.28);border-radius:99px;
+  display:grid;place-items:center;background:rgba(59,42,26,.05);color:#4a3520;cursor:pointer;
+  transition:transform .12s,background .2s,border-color .2s;
 }
-.lt-share svg{width:15px;height:15px}
-.lt-share:active{transform:scale(.98)}
+.lt-share svg{width:17px;height:17px}
+.lt-share:hover{background:rgba(59,42,26,.1);border-color:rgba(59,42,26,.45)}
+.lt-share:active{transform:scale(.95)}
 .lt-sign{display:block;text-align:right;margin:0 0 13px;font:italic 500 15px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
 .lt-hint{margin:0 0 12px;text-align:center;font:500 12px/1.5 'Manrope',sans-serif;color:#6b4e2e}
-.lt-go{width:100%;padding:14px;border:none;border-radius:99px;background:#3b2a1a;color:#f6eed9;font:800 13.5px/1 'Manrope',sans-serif;cursor:pointer}
-.lt-later{width:100%;padding:11px;border:none;background:transparent;color:#6b4e2e;font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer}
+.lt-go{
+  flex:1;min-height:50px;padding:14px 16px;border:none;border-radius:99px;cursor:pointer;
+  background:linear-gradient(180deg,#4a3623,#32241611);background-color:#3b2a1a;color:#f6eed9;
+  font:800 13.5px/1 'Manrope',sans-serif;letter-spacing:.01em;
+  box-shadow:0 6px 16px rgba(59,42,26,.28),inset 0 1px 0 rgba(255,255,255,.1);
+  transition:transform .12s,box-shadow .2s;
+}
+.lt-go:active{transform:scale(.985);box-shadow:0 3px 10px rgba(59,42,26,.26)}
+.lt-later{
+  width:100%;margin-top:8px;padding:11px;border:none;background:transparent;color:#7a5c38;
+  font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer;opacity:.9;
+}
+.lt-later:active{opacity:.6}
 
 /* Past ekranlarda hammasi bitta ekranga sig'sin (JS o'lchab qo'yadi) */
 .lt-card.lt-sm{padding:26px 18px 14px}
@@ -1526,8 +1537,9 @@ button.glass:active .tube{transform:scale(.97)}
 .lt-card.lt-xs .lt-school{margin-bottom:8px;padding-bottom:7px;font-size:9px}
 .lt-card.lt-xs .lt-sign{margin-bottom:8px;font-size:13px}
 .lt-card.lt-xs .lt-go{padding:11px}
-.lt-card.lt-xs .lt-share{padding:10px}
-.lt-card.lt-xs .lt-later{padding:10px}
+.lt-card.lt-xs .lt-go{min-height:44px;padding:11px 14px}
+.lt-card.lt-xs .lt-share{width:46px}
+.lt-card.lt-xs .lt-later{padding:9px;margin-top:6px}
 .lt-card.lt-xs .lt-seal{width:42px;height:42px;top:-21px;margin-left:-21px;font-size:20px}
 .lt-go:active,.lt-later:active{transform:scale(.98)}
 
@@ -1870,11 +1882,11 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       <div class="lt-steps" id="lt-list"></div>
       <div class="lt-prog"><span class="lt-prog-b" id="lt-prog-b"></span></div>
       <span class="lt-sign" id="lt-sign"></span>
-      <button class="lt-go" id="lt-go" type="button"></button>
-      <div class="lt-row">
+      <div class="lt-act">
+        <button class="lt-go" id="lt-go" type="button"></button>
         <button class="lt-share" id="lt-share" type="button"></button>
-        <button class="lt-later" id="lt-later" type="button"></button>
       </div>
+      <button class="lt-later" id="lt-later" type="button"></button>
     </div>
   </div>
 
@@ -7870,7 +7882,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
     ltPath(readOnly);
-    $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
+    $("lt-share").innerHTML = hubSvg(AL_ICONS.share);
+    $("lt-share").setAttribute("aria-label", al("share"));
+    $("lt-share").setAttribute("title", al("share"));
     $("lt-sign").textContent = al("sign");
     // Qayta o'qiyotganda pastdagi tugma "Yopish" bo'ladi
     $("lt-later").textContent = readOnly ? al("close") : al("later");
