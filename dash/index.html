@@ -2206,7 +2206,12 @@ function card(title, hint, cls){
     fig.classList.add("cho");
     var oxirgi = 0, kutmoqda = false;
     function tekshir(){
+      // Bo'lim yashirilganda (boshqa tabga o'tilganda) chizma balandligi 0 bo'ladi.
+      // Buni "foydalanuvchi qisqartirdi" deb o'qib, chizma eng kichik bo'yga
+      // qotib qolardi — yashirin holatdagi o'zgarishni e'tiborsiz qoldiramiz.
+      if(!fig.isConnected || fig.offsetParent === null || fig.clientWidth === 0) return;
       var h = Math.round(fig.getBoundingClientRect().height);
+      if(h < 20) return;
       if(Math.abs(h - oxirgi) < 6) return;
       oxirgi = h;
       var kenglik = fig.clientWidth || 960;
