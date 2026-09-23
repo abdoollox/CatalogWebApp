@@ -1500,6 +1500,15 @@ button.glass:active .tube{transform:scale(.97)}
 @media (prefers-reduced-motion:reduce){.al-step.on .al-mk,.tr-puff,.tr-hat img,.lt-card{animation:none}}
 /* Adminlar: yangi o'quvchi yo'lini ko'rish */
 .hub-pv{margin-top:12px}
+/* Sinov o'quvchisi tasmasi (faqat adminlar ko'radi) */
+.hptest-bar{position:fixed;top:0;left:0;right:0;height:28px;z-index:3000;display:flex;
+  align-items:center;justify-content:center;gap:8px;padding:0 10px;
+  background:linear-gradient(90deg,#5d1f1f,#8a2b2b,#5d1f1f);color:#ffe9c9;
+  font:800 11px/1 'Manrope',sans-serif;letter-spacing:.4px}
+.hptest-bar button{background:rgba(0,0,0,.3);color:#ffe9c9;border:1px solid rgba(255,233,201,.35);
+  border-radius:8px;padding:4px 9px;font:800 11px 'Manrope',sans-serif;cursor:pointer}
+body.hptest{padding-top:28px}
+body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .hub-pv .hub-row-tx span{white-space:normal}
 .al-pv{display:table;margin:-6px auto 16px;padding:6px 12px;border-radius:99px;border:1px dashed rgba(var(--gold-rgb),.5);
   font:700 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.06em;color:var(--gold)}
@@ -2487,10 +2496,43 @@ button.glass:active .tube{transform:scale(.97)}
   if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
 
   var BOT = "garripotterkinobot";
-  var KEY = "watched_movies";
+
+  /* ---------- SINOV O'QUVCHISI (faqat adminlar) ----------
+     Yoqilganda ilova butunlay boshqa odamdek ishlaydi: serverga har so'rov
+     bilan "X-HP-Test: 1" ketadi va u yerda so'rov MANFIY raqamli alohida
+     hisobga tushadi (fakultet, tayoqcha, ball, chat - hammasi noldan).
+     Qurilmadagi xotira ham alohida: kalitlar oldiga "t_" qo'yiladi, shuning
+     uchun asl profil o'z joyida qoladi. Chiqilganda hamma narsa tiklanadi. */
+  var TEST_KEY = "hp_test";
+  var HP_TEST = false;
+  try { HP_TEST = window.localStorage.getItem(TEST_KEY) === "1"; } catch (e) {}
+  function TK(name) { return HP_TEST ? "t_" + name : name; }
+
+  // Serverga ketadigan har so'rovga sinov sarlavhasini qo'shamiz
+  if (HP_TEST && window.fetch) {
+    var _origFetch = window.fetch;
+    window.fetch = function (url, opts) {
+      try {
+        if (String(url).indexOf("bot.tizimshunos.uz") >= 0) {
+          opts = opts || {};
+          var h = opts.headers;
+          if (h && typeof h.set === "function") { h.set("X-HP-Test", "1"); }
+          else {
+            var copy = {};
+            for (var k in (h || {})) { copy[k] = h[k]; }
+            copy["X-HP-Test"] = "1";
+            opts.headers = copy;
+          }
+        }
+      } catch (e) {}
+      return _origFetch.call(window, url, opts);
+    };
+  }
+
+  var KEY = TK("watched_movies");
   var LANG_KEY = "pref_lang";
-  var HOUSE_KEY = "house";
-  var WAND_KEY = "wand";
+  var HOUSE_KEY = TK("house");
+  var WAND_KEY = TK("wand");
 
   /* ===== KATALOG BOSHI — AVTOMATIK YOZILADI, QO'LDA TAHRIRLAMANG =====
      Manba:     CatalogBot/catalog.py
@@ -3337,7 +3379,8 @@ button.glass:active .tube{transform:scale(.97)}
           {house: "ravenclaw", total_points: 900, active_members: 8, qualified: true},
           {house: "hufflepuff", total_points: 500, active_members: 4, qualified: true}
         ],
-        me: {house: "gryffindor", can_resort: true},
+        // Sinov rejimida mahalliy sinov ham saralanmagan odamdan boshlanadi
+        me: {house: HP_TEST ? null : "gryffindor", can_resort: true},
         hall: {
           total: 15, active: 12,
           members: [
@@ -6971,7 +7014,7 @@ button.glass:active .tube{transform:scale(.97)}
   // Saralanmagan o'quvchi 9¾ dan to'g'ri Xogvartsga tushmaydi - asardagi yo'lni
   // bosib o'tadi: maktub -> g'isht devor -> Diagon xiyoboni (Olivander) ->
   // Kings Kross, 9¾ -> Xogvarts ekspressi -> Katta zal (saralanish) -> Xogvarts.
-  var LETTER_KEY = "hp_letter", TRAIN_KEY = "hp_train";
+  var LETTER_KEY = TK("hp_letter"), TRAIN_KEY = TK("hp_train");
   var journey = null;        // "wand" | "house": savollar yo'l ichidan boshlangan
   var jrBackFn = null;
   var trTimer = null;
@@ -7060,10 +7103,10 @@ button.glass:active .tube{transform:scale(.97)}
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
     rvWand: { uz: "Diagon xiyoboniga qaytish", ru: "Вернуться в Косой переулок", en: "Back to Diagon Alley" },
 
-    pvBtn: { uz: "Yangi o'quvchi yo'lini ko'rish", ru: "Путь нового ученика", en: "New student's journey" },
-    pvNote: { uz: "Faqat adminlar uchun: maktub, Diagon xiyoboni, poyezd va Shlyapa. Hech narsa saqlanmaydi.",
-              ru: "Только для админов: письмо, Косой переулок, поезд и Шляпа. Ничего не сохраняется.",
-              en: "Admins only: letter, Diagon Alley, train and the Hat. Nothing is saved." },
+    pvBtn: { uz: "Sinov o'quvchisi bo'lib kirish", ru: "Войти как тестовый ученик", en: "Enter as a test student" },
+    pvNote: { uz: "Faqat adminlar uchun: ilova noldan boshlanadi - fakultet, tayoqcha, ball, chat. Asl profilingizga tegilmaydi.",
+              ru: "Только для админов: приложение начнётся с нуля — факультет, палочка, баллы, чат. Ваш профиль не тронут.",
+              en: "Admins only: the app starts from zero — house, wand, points, chat. Your real profile is untouched." },
     pvTag: { uz: "Ko'rish rejimi · hech narsa saqlanmaydi", ru: "Режим просмотра · ничего не сохраняется",
              en: "Preview · nothing is saved" }
   };
@@ -7128,6 +7171,116 @@ button.glass:active .tube{transform:scale(.97)}
     if (chatAdmin) { return true; }
     var local = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
     return local && !chatInitData();
+  }
+
+  // ---------------------------------------------------------------- SINOV O'QUVCHISI
+  var API_TEST_RESET = "https://bot.tizimshunos.uz/api/test/reset";
+  var FRESH_KEY = "hp_test_fresh";
+  var TEST_LS = ["watched_movies", "house", "wand", "hp_letter", "hp_train", "hp_start"];
+
+  var TEST_TX = {
+    bar: { uz: "SINOV O'QUVCHISI", ru: "ТЕСТОВЫЙ УЧЕНИК", en: "TEST STUDENT" },
+    zero: { uz: "Noldan", ru: "С нуля", en: "Reset" },
+    exit: { uz: "Chiqish", ru: "Выйти", en: "Exit" },
+    askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Ilova noldan boshlanadi, asl profilingiz saqlanib qoladi.",
+             ru: "Войти как тестовый ученик? Приложение начнётся с нуля, ваш профиль сохранится.",
+             en: "Enter as a test student? The app starts from zero; your real profile stays." },
+    askZero: { uz: "Sinov o'quvchisini butunlay tozalaymizmi? U yana yangi odamdek boshlaydi.",
+               ru: "Полностью очистить тестового ученика? Он снова начнёт как новичок.",
+               en: "Wipe the test student completely? It starts again as a newcomer." }
+  };
+
+  function testAsk(msg, done) {
+    // Eski Telegram'da showConfirm xato tashlaydi - o'shanda oddiy confirm
+    if (tg && tg.showConfirm) {
+      try {
+        tg.showConfirm(msg, function (ok) { if (ok) { done(); } });
+        return;
+      } catch (e) {}
+    }
+    if (!window.confirm || window.confirm(msg)) { done(); }
+  }
+
+  function testTx(k) { return (TEST_TX[k] && (TEST_TX[k][lang] || TEST_TX[k].uz)) || ""; }
+
+  // Qurilmadagi sinov xotirasi (localStorage + Telegram buluti)
+  function testWipeLocal(done) {
+    var keys = TEST_LS.map(function (n) { return "t_" + n; });
+    keys.forEach(function (k) {
+      try { window.localStorage.removeItem(k); } catch (e) {}
+    });
+    var cloud = false;
+    try { cloud = !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9")); } catch (e) {}
+    if (!cloud) { done(); return; }
+    try { tg.CloudStorage.removeItems(keys, function () { done(); }); }
+    catch (e) { done(); }
+  }
+
+  function testStart() {
+    testAsk(testTx("askIn"), function () {
+      try {
+        window.localStorage.setItem(TEST_KEY, "1");
+        // Kirishda har doim toza boshlansin: qayta yuklangach server tozalanadi
+        window.localStorage.setItem(FRESH_KEY, "1");
+      } catch (e) {}
+      window.location.reload();
+    });
+  }
+
+  function testExit() {
+    try { window.localStorage.removeItem(TEST_KEY); } catch (e) {}
+    window.location.reload();
+  }
+
+  // Serverdagi sinov hisobini o'chiradi (manfiy raqamli hisob), keyin qurilmani
+  function testServerWipe(done) {
+    var d = chatInitData();
+    if (!d || !window.fetch) { done(); return; }
+    fetch(API_TEST_RESET, { method: "POST", headers: { "X-Telegram-Init-Data": d } })
+      .then(function (r) { return r.json(); })
+      ["catch"](function () { return null; })
+      .then(function () { done(); });
+  }
+
+  function testReset() {
+    testAsk(testTx("askZero"), function () {
+      testServerWipe(function () {
+        testWipeLocal(function () { window.location.reload(); });
+      });
+    });
+  }
+
+  // Kirgandan keyingi birinchi ochilish: hisobni tozalab, chinakam noldan boshlaymiz
+  function testFreshCheck() {
+    if (!HP_TEST) { return; }
+    var fresh = false;
+    try { fresh = window.localStorage.getItem(FRESH_KEY) === "1"; } catch (e) {}
+    if (!fresh) { return; }
+    try { window.localStorage.removeItem(FRESH_KEY); } catch (e) {}
+    testServerWipe(function () {
+      testWipeLocal(function () { window.location.reload(); });
+    });
+  }
+
+  function testBar() {
+    if (!HP_TEST || document.querySelector(".hptest-bar")) { return; }
+    document.body.classList.add("hptest");
+    var bar = document.createElement("div");
+    bar.className = "hptest-bar";
+    var tag = document.createElement("span");
+    tag.textContent = testTx("bar");
+    var zero = document.createElement("button");
+    zero.type = "button";
+    zero.textContent = testTx("zero");
+    zero.addEventListener("click", testReset);
+    var out = document.createElement("button");
+    out.type = "button";
+    out.textContent = testTx("exit");
+    out.addEventListener("click", testExit);
+    bar.appendChild(tag);
+    bar.appendChild(zero);
+    bar.appendChild(out);
+    document.body.appendChild(bar);
   }
 
   function jrAdminCheck() {
@@ -7690,7 +7843,7 @@ button.glass:active .tube{transform:scale(.97)}
   }
 
   // ---------------------------------------------------------------- sozlama
-  var START_KEY = "hp_start";        // "lib" (kutubxona) yoki "world" (xarita)
+  var START_KEY = TK("hp_start");        // "lib" (kutubxona) yoki "world" (xarita)
 
   function readStart() {
     try { return window.localStorage.getItem(START_KEY) === "world" ? "world" : "lib"; }
@@ -12795,7 +12948,7 @@ button.glass:active .tube{transform:scale(.97)}
       if (ev.target !== $("lt")) { return; }
       if ($("lt-later").classList.contains("hidden")) { closeLetter(); } else { jrLetterCancel(); }
     });
-    $("hub-set-pv").addEventListener("click", startPreview);
+    $("hub-set-pv").addEventListener("click", testStart);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
@@ -12966,10 +13119,13 @@ button.glass:active .tube{transform:scale(.97)}
     });
   }
 
+  function initTest() { testBar(); testFreshCheck(); }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", function () { init(); initTest(); });
   } else {
     init();
+    initTest();
   }
 })();
 </script>
