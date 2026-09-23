@@ -470,6 +470,21 @@ td.tar-td{width:1%; padding-block:4px}
 .izoh-vaqt{margin-left:auto; flex:none; font-size:11px; color:var(--ink-3); font-variant-numeric:tabular-nums}
 .izoh-sabab{display:inline-block; margin-top:5px; font-size:11px; font-weight:600; color:var(--iz, var(--ink-3))}
 .izoh-matn{margin-top:6px; font-size:13px; line-height:1.5; color:var(--ink); overflow-wrap:anywhere}
+/* Lenta */
+.lenta-asbob{display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap; margin-top:10px}
+.lenta-chip{display:flex; gap:6px; flex-wrap:wrap}
+.lenta-chip button{
+  border:1px solid var(--line-2); background:var(--panel-2); color:var(--ink-2); font-family:inherit;
+  font-size:12px; font-weight:600; padding:5px 11px; border-radius:999px; cursor:pointer; transition:.15s;
+}
+.lenta-chip button span{color:var(--ink-3); font-weight:600; font-variant-numeric:tabular-nums; margin-left:2px}
+.lenta-chip button:hover{border-color:var(--gold-2); color:var(--ink)}
+.lenta-chip button[aria-pressed="true"]{background:rgba(233,231,225,.14); border-color:var(--gold-2); color:var(--gold-hi)}
+.lenta-chip button[aria-pressed="true"] span{color:var(--gold-2)}
+.lenta-asbob .qidir{margin-left:auto; margin-right:0}
+#sec-lenta .feed{max-height:calc(100vh - 250px); min-height:320px}
+.lenta-son{font-size:11.5px; color:var(--ink-3); margin-top:8px}
+.lenta-yana{align-self:center; margin:12px 0 4px}
 .tarq-bosh{font-size:11.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin:18px 0 0}
 .fun{display:flex; flex-direction:column; gap:9px; margin-top:10px}
 .fun-row{display:grid; grid-template-columns:minmax(0,140px) 1fr 92px; gap:11px; align-items:center}
@@ -2372,7 +2387,7 @@ function legend(items){
 function hodisaMatni(r){
   var e = r.ev;
   if(e.t === "film") return "<b>" + esc(filmName(e.film)) + "</b> " + LANGS[e.lang].f +
-    (e.origin === "web" ? " · ilovadan" : e.origin === "bot" ? " · botdan" : "");
+    (e.origin === "web" ? " · WebApp" : e.origin === "bot" ? " · bot" : "");
   if(e.t === "house") return "<b>" + esc((HOUSES[e.house]||{n:e.house}).n) + "</b> fakultetiga tushdi";
   if(e.t === "src") return "reklamadan keldi · <b>" + esc(e.src) + "</b>";
   if(e.t === "invited"){
@@ -2632,7 +2647,7 @@ var KARTA_INFO = {
   "Qancha vaqtda chiqib ketishdi": "Shu davrda chiqqanlar: oxirgi qo'shilganidan chiqqunicha qancha vaqt o'tgani. «Qo'shilgani noma'lum» — 7-martdan (loglar boshlanishidan) oldin qo'shilgan a'zolar.",
   "Nega chiqib ketishdi": "Kanaldan chiqqanlarga bot xabar yuborib, sababini so'raydi. So'ralgan — xabar yetib borganlar, Javob bergan — tugmani bosganlar, Qaytgan — keyin yana kanalga qo'shilganlar. Qizil va sariq sabablar — kanal tuzatishi mumkin bo'lgan muammolar, yashil va kulrang — yo'qotish emas.",
   "Ularning so'zlari": "Chiqib ketganlarning yozma izohlari, eng yangisi yuqorida. Ismni bosib, o'sha odamning butun tarixini ochasiz.",
-  "Oxirgi hodisalar": "Davrdagi oxirgi 120 hodisa, eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz."
+  "Oxirgi hodisalar": "Tanlangan davrdagi barcha hodisalar, eng yangisi yuqorida, kunlar bo'yicha. Yuqoridagi tugmalar bilan turini tanlaysiz (filmlar, kanal, bot, fakultet, taklif), qidiruv ism, @username, ID yoki film nomi bo'yicha ishlaydi. Avval 150 tasi ko'rinadi — «Yana ko'rsatish» bilan davom etasiz. Ismni bosib, odamning butun tarixini ochasiz."
 };
 
 var INFO_POP = null;
@@ -3804,17 +3819,114 @@ function render(){
   put("odamlar", c10);
 
   /* — Lenta — */
-  var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida", "");
-  var feed = document.createElement("div"); feed.className = "feed";
-  rows.slice(-120).reverse().forEach(function(r){
-    var d = document.createElement("div"); d.className = "fe";
-    var what = hodisaMatni(r);
-    d.innerHTML = '<span class="ic">' + r.ev.ic + '</span>' +
-      '<span class="txt"><span class="who">' + odamHavola(r.uid, r.name) + '</span> — ' + what + '</span>' +
-      '<span class="when">' + fmtTime(r.t) + '</span>';
-    feed.appendChild(d);
+  var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
+  var LTUR = [
+    {k:"all",    n:"Hammasi"},
+    {k:"film",   n:"🎬 Filmlar",  t:{film:1, undo:1}},
+    {k:"kanal",  n:"📜 Kanal",    t:{sub:1, left:1}},
+    {k:"bot",    n:"✨ Bot",      t:{start:1, blocked:1}},
+    {k:"fak",    n:"🎩 Fakultet", t:{sortst:1, house:1, wand:1}},
+    {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}}
+  ];
+  var lHolat = {tur:"all", q:""}, lSoni = 150;
+  try{
+    var lq = JSON.parse(localStorage.getItem("hp_dash_lenta") || "null");
+    if(lq && LTUR.some(function(x){ return x.k === lq.tur; })) lHolat.tur = lq.tur;
+  }catch(e){}
+  var lTeskari = rows.slice().reverse();
+  var lSanoq = {all:lTeskari.length};
+  lTeskari.forEach(function(r){
+    LTUR.forEach(function(x){ if(x.t && x.t[r.ev.t]) lSanoq[x.k] = (lSanoq[x.k] || 0) + 1; });
   });
+
+  var lAsbob = document.createElement("div");
+  lAsbob.className = "lenta-asbob";
+  var lChip = document.createElement("div");
+  lChip.className = "lenta-chip";
+  LTUR.forEach(function(x){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.innerHTML = esc(x.n) + ' <span>' + fmtNum(lSanoq[x.k] || 0) + '</span>';
+    b.setAttribute("aria-pressed", String(lHolat.tur === x.k));
+    b.addEventListener("click", function(){
+      lHolat.tur = x.k; lSoni = 150;
+      try{ localStorage.setItem("hp_dash_lenta", JSON.stringify({tur:x.k})); }catch(e){}
+      [].forEach.call(lChip.children, function(y){ y.setAttribute("aria-pressed", String(y === b)); });
+      lChiz();
+    });
+    lChip.appendChild(b);
+  });
+  lAsbob.appendChild(lChip);
+  var lQ = document.createElement("div");
+  lQ.className = "qidir";
+  lQ.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+    'stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4.2-4.2"></path></svg>';
+  var lInp = document.createElement("input");
+  lInp.type = "search"; lInp.placeholder = "Ism, @username, ID yoki film";
+  lInp.setAttribute("aria-label", "Lentadan qidirish"); lInp.spellcheck = false;
+  lQ.appendChild(lInp);
+  lAsbob.appendChild(lQ);
+  c11.appendChild(lAsbob);
+  var lSon = document.createElement("div");
+  lSon.className = "lenta-son";
+  c11.appendChild(lSon);
+
+  var feed = document.createElement("div"); feed.className = "feed";
   c11.appendChild(feed);
+
+  function lMos(r){
+    var tur = LTUR.filter(function(x){ return x.k === lHolat.tur; })[0];
+    if(tur && tur.t && !tur.t[r.ev.t]) return false;
+    var q = lHolat.q;
+    if(!q) return true;
+    if(String(r.name).toLowerCase().indexOf(q) > -1) return true;
+    if(String(r.user).toLowerCase().replace(/^@/, "").indexOf(q) > -1) return true;
+    if(String(r.uid).indexOf(q) > -1) return true;
+    if(r.ev.film && filmName(r.ev.film).toLowerCase().indexOf(q) > -1) return true;
+    return String(r.payload).toLowerCase().indexOf(q) > -1;
+  }
+  function lChiz(){
+    var mos = lTeskari.filter(lMos);
+    lSon.textContent = (lHolat.q || lHolat.tur !== "all")
+      ? fmtNum(mos.length) + " ta hodisa topildi" : fmtNum(mos.length) + " ta hodisa";
+    feed.innerHTML = "";
+    if(!mos.length){ feed.appendChild(emptyNote("Mos hodisa topilmadi.")); return; }
+    var kun = null;
+    mos.slice(0, lSoni).forEach(function(r){
+      var dk = dayKey(r.t);
+      if(dk !== kun){
+        kun = dk;
+        var kb = document.createElement("div");
+        kb.className = "kun-bosh";
+        kb.textContent = fmtDay(dk) + " " + r.t.getFullYear();
+        feed.appendChild(kb);
+      }
+      var d = document.createElement("div"); d.className = "fe";
+      d.innerHTML = '<span class="ic">' + r.ev.ic + '</span>' +
+        '<span class="txt"><span class="who">' + odamHavola(r.uid, r.name) + '</span> — ' + hodisaMatni(r) + '</span>' +
+        '<span class="when">' + fmtTime(r.t) + '</span>';
+      feed.appendChild(d);
+    });
+    if(mos.length > lSoni){
+      var yana = document.createElement("button");
+      yana.type = "button"; yana.className = "btn ghost lenta-yana";
+      yana.textContent = "Yana ko'rsatish (" + fmtNum(Math.min(150, mos.length - lSoni)) + " ta, jami " + fmtNum(mos.length) + ")";
+      yana.addEventListener("click", function(){
+        var joy = feed.scrollTop;
+        lSoni += 150; lChiz(); feed.scrollTop = joy;
+      });
+      feed.appendChild(yana);
+    }
+  }
+  var lKut = null;
+  lInp.addEventListener("input", function(){
+    clearTimeout(lKut);
+    lKut = setTimeout(function(){
+      lHolat.q = lInp.value.trim().toLowerCase().replace(/^@/, "");
+      lSoni = 150; feed.scrollTop = 0; lChiz();
+    }, 150);
+  });
+  lChiz();
   put("lenta", c11);
 
   // Bo'lim qatori: yonidagi son — o'sha bo'limdagi eng muhim raqam
