@@ -1531,6 +1531,89 @@ button.glass:active .tube{transform:scale(.97)}
 .lt-card.lt-xs .lt-seal{width:42px;height:42px;top:-21px;margin-left:-21px;font-size:20px}
 .lt-go:active,.lt-later:active{transform:scale(.98)}
 
+/* --- Hamyon (sarlavhadagi tanga) --- */
+.wal{
+  display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:99px;flex:none;
+  border:1px solid rgba(var(--gold-rgb),.4);background:rgba(var(--gold-rgb),.1);
+  color:var(--gold);font:800 12.5px/1 'Manrope',sans-serif;
+}
+.head-wal{grid-template-columns:42px 1fr auto}
+.head-right{display:flex;align-items:center;gap:8px;justify-self:end}
+.wal::before{
+  content:"";width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#f6d98a,#c3922f 72%);
+  box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;
+}
+
+/* --- Gringotts: aravachada tushish --- */
+.gr-ride{position:relative;display:grid;place-items:center;min-height:62vh;padding:0 16px 40px;text-align:center;overflow:hidden}
+.gr-tunnel{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
+.gr-tunnel.on{opacity:1}
+.gr-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.85;
+  animation:grFly linear infinite}
+@keyframes grFly{from{transform:translate3d(0,-20vh,0) scale(.6);opacity:0}
+  12%{opacity:.9}to{transform:translate3d(0,110vh,0) scale(1.6);opacity:0}}
+.gr-line{max-width:330px;margin:0;font:italic 500 24px/1.4 'Cormorant Garamond',serif;color:var(--text);animation:riseIn .6s ease both}
+.gr-center{text-align:center;padding-top:4px}
+.gr-door{
+  width:190px;height:190px;margin:10px auto 22px;border-radius:14px;position:relative;
+  background:linear-gradient(160deg,#2a2d36,#15171d);border:2px solid rgba(var(--gold-rgb),.6);
+  box-shadow:0 20px 44px rgba(0,0,0,.55),inset 0 0 40px rgba(0,0,0,.6);
+  display:grid;place-items:center;overflow:hidden;
+}
+.gr-door svg{width:88px;height:88px;color:var(--gold);opacity:.92}
+.gr-door.open svg{animation:grOpen .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grOpen{to{transform:scale(1.35);opacity:0}}
+.gr-coins{position:absolute;inset:0;display:none;place-items:center}
+.gr-door.open .gr-coins{display:grid;animation:riseIn .7s .35s ease both}
+.gr-coin{
+  position:absolute;width:20px;height:20px;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%,#f8dd92,#b9862a 74%);
+  box-shadow:0 2px 5px rgba(0,0,0,.5);
+}
+.gr-sum{font:700 46px/1 'Cormorant Garamond',serif;color:var(--gold);text-shadow:0 2px 14px rgba(var(--gold-rgb),.45)}
+.gr-sum small{display:block;margin-top:6px;font:700 11px/1 'Manrope',sans-serif;letter-spacing:.2em;color:var(--dim)}
+
+/* --- Sehrli hayvonlar do'koni --- */
+.pet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 30px}
+.pet-card{
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 10px 13px;
+  border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);
+  cursor:pointer;transition:transform .12s,border-color .25s;text-align:center;
+}
+.pet-card:active{transform:scale(.97)}
+.pet-card.on{border-color:rgba(var(--gold-rgb),.75);box-shadow:0 0 0 1px rgba(var(--gold-rgb),.35)}
+.pet-card.off{opacity:.45;cursor:default}
+.pet-ic{width:54px;height:54px;display:grid;place-items:center;color:var(--gold)}
+.pet-ic svg{width:44px;height:44px}
+.pet-nm{font:600 17px/1.2 'Cormorant Garamond',serif}
+.pet-sub{font:500 10.5px/1.4 'Manrope',sans-serif;color:var(--dim);min-height:15px}
+.pet-price{margin-top:2px;font:800 12px/1 'Manrope',sans-serif;color:var(--gold)}
+.pet-card.mine .pet-price{color:#3fae7f}
+.pet-note{padding:0 16px;margin:2px 0 16px;font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim);text-align:center}
+
+/* --- Bilet --- */
+.tk-wrap{display:grid;place-items:center;padding:6px 16px 40px;text-align:center}
+.tk-card{
+  width:100%;max-width:330px;padding:18px 18px 16px;border-radius:12px;position:relative;
+  background:linear-gradient(165deg,#f4e7c8,#e2cfa4 72%,#d2ba86);color:#3b2a1a;
+  box-shadow:0 22px 48px rgba(0,0,0,.5);animation:riseIn .6s ease both;
+}
+.tk-card::before,.tk-card::after{
+  content:"";position:absolute;top:50%;width:18px;height:18px;border-radius:50%;
+  background:var(--bg);transform:translateY(-50%);
+}
+.tk-card::before{left:-9px}
+.tk-card::after{right:-9px}
+.tk-top{font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#6b4e2e}
+.tk-big{margin:6px 0 2px;font:600 40px/1 'Cormorant Garamond',serif}
+.tk-sub{font:italic 500 15px/1.35 'Cormorant Garamond',serif;color:#6b4e2e}
+.tk-row{display:flex;justify-content:space-between;gap:10px;margin-top:14px;padding-top:11px;border-top:1px dashed rgba(59,42,26,.35)}
+.tk-cell{text-align:left}
+.tk-cell small{display:block;font:700 8.5px/1.5 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7a5c38}
+.tk-cell b{font:600 15px/1.2 'Cormorant Garamond',serif}
+.tk-say{max-width:330px;margin:18px auto 20px;font:italic 500 18px/1.45 'Cormorant Garamond',serif;color:var(--text)}
+
 /* Kings Kross va Xogvarts ekspressi */
 .tr-center{text-align:center;padding-top:6px}
 .tr-sign{
@@ -1672,13 +1755,16 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
        asardagi tartibda Xogvartsga boradi (tayoqcha -> 9¾ platforma -> Katta zal). -->
   <div id="scr-alley" class="screen hidden">
     <div class="al-glow">
-      <div class="hub-head">
+      <div class="hub-head head-wal">
         <button class="hub-ic" id="al-back" type="button"></button>
         <div class="hub-ttl">
           <span class="kicker" id="al-kick"></span>
           <h1 id="al-title"></h1>
         </div>
-        <button class="hub-ic" id="al-letter-btn" type="button"></button>
+        <span class="head-right">
+          <span class="wal hidden" id="al-wal"></span>
+          <button class="hub-ic" id="al-letter-btn" type="button"></button>
+        </span>
       </div>
       <p class="al-intro" id="al-intro"></p>
       <span class="al-pv hidden" id="al-pv"></span>
@@ -1687,6 +1773,46 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     <div class="al-path" id="al-path"></div>
     <div class="al-more" id="al-more"></div>
     <div class="al-shop" id="al-shop"></div>
+  </div>
+
+  <!-- Gringotts: aravachada yer ostiga tushish va xonani ochish -->
+  <div id="scr-vault" class="screen hidden">
+    <div class="hub-head">
+      <button class="hub-ic" id="gr-back" type="button"></button>
+      <div class="hub-ttl">
+        <span class="kicker" id="gr-kick"></span>
+        <h1 id="gr-title"></h1>
+      </div>
+      <span></span>
+    </div>
+    <div id="gr-stage"></div>
+  </div>
+
+  <!-- Sehrli hayvonlar do'koni -->
+  <div id="scr-pet" class="screen hidden">
+    <div class="hub-head head-wal">
+      <button class="hub-ic" id="pt-back" type="button"></button>
+      <div class="hub-ttl">
+        <span class="kicker" id="pt-kick"></span>
+        <h1 id="pt-title"></h1>
+      </div>
+      <span class="wal" id="pt-wal"></span>
+    </div>
+    <p class="al-intro" id="pt-intro"></p>
+    <div class="pet-grid" id="pt-grid"></div>
+  </div>
+
+  <!-- Hagrid biletni beradi -->
+  <div id="scr-ticket" class="screen hidden">
+    <div class="hub-head">
+      <button class="hub-ic" id="tk-back" type="button"></button>
+      <div class="hub-ttl">
+        <span class="kicker" id="tk-kick"></span>
+        <h1 id="tk-title"></h1>
+      </div>
+      <span></span>
+    </div>
+    <div id="tk-stage"></div>
   </div>
 
   <!-- Kings Kross, 9¾ platforma va Xogvarts ekspressi -->
@@ -1741,7 +1867,6 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       <span class="lt-school" id="lt-school"></span>
       <p class="lt-hi" id="lt-hi"></p>
       <p class="lt-body" id="lt-body"></p>
-      <p class="lt-when" id="lt-when"></p>
       <div class="lt-steps" id="lt-list"></div>
       <div class="lt-prog"><span class="lt-prog-b" id="lt-prog-b"></span></div>
       <span class="lt-sign" id="lt-sign"></span>
@@ -6226,7 +6351,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
        - yo'lga chiqqan yoki saralangan  -> 9¾
      Ko'rish/sinov rejimida ham shu qoida ishlaydi. */
   function letterStage() {
-    if (hasHouse() || jrGet(LETTER_KEY)) { return "world"; }
+    // Bilet olinmaguncha (yoki saralanmaguncha) kutubxonada 9¾ EMAS, xat turadi:
+    // odam hali yo'lda, platformaga chiqishga haqqi yo'q.
+    if (hasHouse() || walHas("ticket")) { return "world"; }
     var seen = false;
     try { seen = window.localStorage.getItem(TK("hp_onb_letter")) === "1"; } catch (e) {}
     return seen ? "letter" : "new";
@@ -6839,6 +6966,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     if (jrPreview) { pv.wand = w; } else {
       setWand(w);
       reportWand(w);
+      // Olivanderda tayoqcha 7 galleon turadi (asardagi narx)
+      if (walHas("vault") && !walHas("wand")) { walApi("buy", "wand", null); }
     }
 
     var t = T[lang];
@@ -7137,10 +7266,31 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
              en: "Follow the list in your letter — the road to Hogwarts starts here." },
     prog: { uz: "Yo'l", ru: "Путь", en: "Journey" },
     letterAria: { uz: "Maktub", ru: "Письмо", en: "Letter" },
+    s0p: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    s0t: { uz: "Gringotts banki", ru: "Банк Гринготтс", en: "Gringotts Bank" },
+    s0s: { uz: "Ota-onangiz qoldirgan pul shu yerda", ru: "Здесь лежат деньги, оставленные вашими родителями",
+           en: "The money your family left is kept here" },
+    s0d: { uz: "Hamyoningizda %s galleon", ru: "В кошельке %s галлеонов", en: "%s Galleons in your purse" },
+    s0c: { uz: "Bankka kirish", ru: "Войти в банк", en: "Enter the bank" },
+    sPp: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    sPt: { uz: "Sehrli hayvonlar do'koni", ru: "Лавка волшебных животных", en: "Magical Menagerie" },
+    sPs: { uz: "Boyo'g'li, mushuk yoki qurbaqa", ru: "Сова, кошка или жаба", en: "An owl, a cat or a toad" },
+    sPl: { uz: "Avval Gringottsdan pul oling", ru: "Сначала возьмите деньги в Гринготтсе",
+           en: "Get money from Gringotts first" },
+    sPc: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
+    sTp: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
+    sTt: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
+    sTs: { uz: "Xogvarts ekspressiga chipta", ru: "Билет на Хогвартс-экспресс",
+           en: "A ticket for the Hogwarts Express" },
+    sTl: { uz: "Avval xaridlarni tugating", ru: "Сначала закончите покупки", en: "Finish your shopping first" },
+    sTd: { uz: "Bilet cho'ntagingizda", ru: "Билет у вас в кармане", en: "The ticket is in your pocket" },
+    s2n: { uz: "Avval biletni oling", ru: "Сначала получите билет", en: "Get your ticket first" },
+    sTc: { uz: "Biletni olish", ru: "Получить билет", en: "Take the ticket" },
     s1p: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
     s1t: { uz: "Olivander do'koni", ru: "Лавка Олливандера", en: "Ollivanders" },
     s1s: { uz: "Tayoqcha sizni tanlaydi · 5 savol", ru: "Палочка выбирает волшебника · 5 вопросов",
            en: "The wand chooses the wizard · 5 questions" },
+    s1l: { uz: "Avval hayvon tanlang", ru: "Сначала выберите питомца", en: "Choose a pet first" },
     s1c: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     s2p: { uz: "Kings Kross vokzali", ru: "Вокзал Кингс-Кросс", en: "King's Cross Station" },
     s2t: { uz: "9¾ platforma", ru: "Платформа 9¾", en: "Platform 9¾" },
@@ -7164,12 +7314,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     school: { uz: "Xogvarts jodugarlik va sehrgarlik maktabi", ru: "Школа чародейства и волшебства «Хогвартс»",
               en: "Hogwarts School of Witchcraft and Wizardry" },
     hi: { uz: "Hurmatli %s,", ru: "Дорогой(ая) %s!", en: "Dear %s," },
-    body: { uz: "Xogvarts maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. O'qish boshlanishidan oldin uch ishni bajaring:",
-            ru: "С удовольствием сообщаем, что вам предоставлено место в школе «Хогвартс». До начала учёбы сделайте три дела:",
-            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts. Before term starts, three things await you:" },
-    when: { uz: "DARSLAR 1-SENTABRDA · JAVOB 31-IYULGACHA",
-            ru: "ЗАНЯТИЯ С 1 СЕНТЯБРЯ · ОТВЕТ ДО 31 ИЮЛЯ",
-            en: "TERM BEGINS 1 SEPTEMBER · REPLY BY 31 JULY" },
+    body: { uz: "Xogvarts maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. O'qish boshlanishidan oldin quyidagilarni bajaring:",
+            ru: "С удовольствием сообщаем, что вам предоставлено место в школе «Хогвартс». До начала учёбы сделайте следующее:",
+            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts. Before term starts, do the following:" },
     list: {
       uz: ["Diagon xiyobonidagi Olivander do'konidan tayoqcha oling",
            "Kings Kross vokzalida 9¾ platformadan Xogvarts ekspressiga chiqing",
@@ -7197,6 +7344,67 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     go: { uz: "Diagon xiyoboniga yo'l olish", ru: "Отправиться в Косой переулок", en: "Head to Diagon Alley" },
     later: { uz: "Keyinroq", ru: "Позже", en: "Later" },
     close: { uz: "Yopish", ru: "Закрыть", en: "Close" },
+
+    grKick: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    grTitle: { uz: "Gringotts", ru: "Гринготтс", en: "Gringotts" },
+    grP1: { uz: "Goblin kalitingizni ko'zdan kechirdi va boshini qimirlatdi: «Aravacha tayyor».",
+            ru: "Гоблин осмотрел ваш ключ и кивнул: «Тележка подана».",
+            en: "The goblin examined your key and nodded: \u201cThe cart is ready.\u201d" },
+    grGo: { uz: "Aravachaga o'tirish", ru: "Сесть в тележку", en: "Get into the cart" },
+    grRide: { uz: ["Aravacha zulmatga sho'ng'idi.",
+                   "Tosh yo'laklar, stalaktitlar va yer ostidagi ko'l yonidan o'tdingiz.",
+                   "Qayerdadir olovli nafas eshitildi — pastda ajdaho qo'riqlaydi.",
+                   "Aravacha keskin to'xtadi: 687-xona."],
+              ru: ["Тележка нырнула во тьму.",
+                   "Каменные тоннели, сталактиты и подземное озеро промелькнули мимо.",
+                   "Где-то внизу послышалось огненное дыхание — там сторожит дракон.",
+                   "Тележка резко остановилась: сейф 687."],
+              en: ["The cart plunged into the dark.",
+                   "Stone tunnels, stalactites and an underground lake rushed past.",
+                   "Somewhere below came a fiery breath \u2014 a dragon stands guard.",
+                   "The cart stopped sharply: vault 687."] },
+    grOpen: { uz: "Xonani ochish", ru: "Открыть сейф", en: "Open the vault" },
+    grGot: { uz: "galleon", ru: "галлеонов", en: "Galleons" },
+    grDone: { uz: "Ota-onangiz qoldirgan pul. Xaridlarga yetadi.",
+              ru: "Деньги, оставленные вашими родителями. На покупки хватит.",
+              en: "The money your family left you. Enough for your shopping." },
+    grNext: { uz: "Xiyobonga qaytish", ru: "Вернуться в переулок", en: "Back to the alley" },
+
+    ptKick: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    ptTitle: { uz: "Sehrli hayvonlar", ru: "Волшебные животные", en: "Magical Menagerie" },
+    ptIntro: { uz: "Xatdagi ro'yxatda: boyo'g'li, mushuk yoki qurbaqa. Bittasini tanlang — u siz bilan Xogvartsga boradi.",
+               ru: "В списке из письма: сова, кошка или жаба. Выберите одного — он поедет с вами в Хогвартс.",
+               en: "The letter allows an owl, a cat or a toad. Choose one \u2014 it travels with you to Hogwarts." },
+    ptOwl: { uz: "Boyo'g'li", ru: "Сова", en: "Owl" },
+    ptOwlS: { uz: "Xat tashiydi", ru: "Носит письма", en: "Carries your post" },
+    ptCat: { uz: "Mushuk", ru: "Кошка", en: "Cat" },
+    ptCatS: { uz: "Aqlli hamroh", ru: "Умный спутник", en: "A clever companion" },
+    ptToad: { uz: "Qurbaqa", ru: "Жаба", en: "Toad" },
+    ptToadS: { uz: "Nevill kabi", ru: "Как у Невилла", en: "Like Neville's" },
+    ptRat: { uz: "Kalamush", ru: "Крыса", en: "Rat" },
+    ptRatS: { uz: "Ro'yxatda yo'q, lekin Ron olib kelgan",
+              ru: "Нет в списке, но Рон привёз свою",
+              en: "Not on the list, yet Ron brought one" },
+    ptPrice: { uz: "%s galleon", ru: "%s галлеонов", en: "%s Galleons" },
+    ptMine: { uz: "Siznikisi", ru: "Ваш выбор", en: "Yours" },
+    ptPoor: { uz: "Pul yetmaydi", ru: "Не хватает денег", en: "Not enough money" },
+    ptNote: { uz: "Bittasini tanlaysiz — keyin o'zgartirib bo'lmaydi.",
+              ru: "Выбор один и навсегда.", en: "You choose once \u2014 it cannot be changed." },
+
+    tkKick: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
+    tkTitle: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
+    tkSay: { uz: "«Mana, biletingni yo'qotib qo'yma. Bir sentabr, soat o'n bir. Kings Krossda ko'rishamiz.»",
+             ru: "«Вот твой билет, не потеряй. Первого сентября, одиннадцать часов. Увидимся на Кингс-Кроссе.»",
+             en: "\u201cHere\u2019s your ticket, don\u2019t lose it. First of September, eleven o\u2019clock. See you at King\u2019s Cross.\u201d" },
+    tkTop: { uz: "XOGVARTS EKSPRESSI", ru: "ХОГВАРТС-ЭКСПРЕСС", en: "HOGWARTS EXPRESS" },
+    tkSub: { uz: "Kings Kross vokzali · London", ru: "Вокзал Кингс-Кросс · Лондон",
+             en: "King's Cross Station · London" },
+    tkWhen: { uz: "Jo'nash", ru: "Отправление", en: "Departure" },
+    tkWhenV: { uz: "1-sentabr, 11:00", ru: "1 сентября, 11:00", en: "1 September, 11:00" },
+    tkSeat: { uz: "Yo'nalish", ru: "Направление", en: "To" },
+    tkSeatV: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
+    tkGo: { uz: "Biletni olish", ru: "Взять билет", en: "Take the ticket" },
+    tkNext: { uz: "Vokzalga yo'l olish", ru: "На вокзал", en: "To the station" },
 
     trSign: { uz: "PLATFORMA", ru: "ПЛАТФОРМА", en: "PLATFORM" },
     trSignSub: { uz: "Xogvarts ekspressi", ru: "Хогвартс-экспресс", en: "Hogwarts Express" },
@@ -7256,7 +7464,18 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     bank: "M3.5 9.5L12 4.5l8.5 5 M5 10v7 M9.7 10v7 M14.3 10v7 M19 10v7 M3.5 20h17",
     check: "M5 12.5l4.5 4.5L19 7.5",
     arrow: "M9 6l6 6-6 6",
-    share: "M12 15.5V3.5 M8 7l4-3.5L16 7 M4.5 13v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V13"
+    share: "M12 15.5V3.5 M8 7l4-3.5L16 7 M4.5 13v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V13",
+    ticket: "M4 8.5A2.5 2.5 0 0 0 6.5 6h11A2.5 2.5 0 0 0 20 8.5v2a1.5 1.5 0 0 0 0 3v2a2.5 2.5 0 0 0-2.5 2.5h-11A2.5 2.5 0 0 0 4 15.5v-2a1.5 1.5 0 0 0 0-3z M9.5 6v12",
+    coin: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z M9.5 9.5h5 M9.5 14.5h5 M12 7v10",
+    pet: "M5.5 10L4.5 5l3.4 2.2a8 8 0 0 1 8.2 0L19.5 5l-1 5v4.5a6.5 6.5 0 0 1-13 0z M9.5 12h.01 M14.5 12h.01 M12 14.5l-1 1h2z"
+  };
+
+  // Hayvonlar: oddiy chiziqli belgilar (tugma belgilari SVG bo'lsin degan qoida)
+  var PET_SVG = {
+    owl: "M12 3.5c-3.6 0-6.5 2.9-6.5 6.5v5a6.5 6.5 0 0 0 13 0v-5c0-3.6-2.9-6.5-6.5-6.5z M9 9.5h.01 M15 9.5h.01 M12 12l-1.2 1.4h2.4z M6.5 5.5L5 3 M17.5 5.5L19 3",
+    cat: "M5 9.5L4 4l4 2.6a8.6 8.6 0 0 1 8 0L20 4l-1 5.5v5a7 7 0 0 1-14 0z M9 12h.01 M15 12h.01 M12 14.5l-1 1h2z",
+    toad: "M4.5 14a7.5 7.5 0 0 1 15 0 4 4 0 0 1-4 4h-7a4 4 0 0 1-4-4z M8 9.5a2 2 0 1 1 0-.01 M16 9.5a2 2 0 1 1 0-.01 M9.5 15h5",
+    rat: "M3.5 16.5a6 6 0 0 1 6-6h2.5a4.5 4.5 0 1 0-4.5-4.5 M6.5 6.5h.01 M12 16.5h7.5a1.5 1.5 0 0 0 0-3"
   };
 
   function al(k) { return (AL_TX[k] && (AL_TX[k][lang] || AL_TX[k].uz)) || ""; }
@@ -7484,6 +7703,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
   function jrHideAll() {
     ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-alley", "scr-train",
+     "scr-vault", "scr-pet", "scr-ticket",
      "scr-hat", "scr-think", "scr-sort", "scr-reveal"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
@@ -7519,6 +7739,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("al-pv").classList.toggle("hidden", !jrPreview);
     $("al-back").innerHTML = hubSvg(AL_ICONS.book);
     $("al-back").setAttribute("aria-label", LIB_TITLE[lang] || "");
+    walShow($("al-wal"));
     $("al-letter-btn").innerHTML = hubSvg(AL_ICONS.letter);
     $("al-letter-btn").setAttribute("aria-label", al("letterAria"));
     $("al-kick").textContent = al("kick");
@@ -7569,16 +7790,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("al-prog-n").textContent = done + " / " + steps.length;
     $("al-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
 
-    $("al-more").textContent = al("more");
-    var shop = $("al-shop");
-    shop.innerHTML = "";
-    var smk = jrEl("span", "al-mk");
-    smk.innerHTML = hubSvg(AL_ICONS.bank);
-    shop.appendChild(smk);
-    var stx = jrEl("span");
-    stx.appendChild(jrEl("b", "", al("bankT")));
-    stx.appendChild(jrEl("span", "", al("bankS")));
-    shop.appendChild(stx);
+    // "Xiyobonda yana" bloki: Gringotts endi haqiqiy qadam, bu yer hozircha bo'sh
+    $("al-more").classList.add("hidden");
+    $("al-shop").classList.add("hidden");
   }
 
   // Savollardan chiqish (Telegram "Orqaga" yoki 1-savoldagi "Chiqish") - xiyobonga
@@ -7592,12 +7806,24 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
      ko'rsatadi, xiyobon esa faqat o'zidagilarini (`alley: true`). */
   function jrSteps() {
     var w = jrWandNow(), rode = jrGet(TRAIN_KEY), sorted = hasHouse();
+    var vault = walHas("vault"), pet = wal && wal.pet;
     return [
+      { icon: "bank", alley: true, done: vault, place: al("s0p"), title: al("s0t"),
+        sub: vault ? al("s0d").replace("%s", walSum()) : al("s0s"), cta: al("s0c"),
+        go: function () { closeLetter(); openVault(); } },
+      { icon: "pet", alley: true, done: !!pet, place: al("sPp"), title: al("sPt"),
+        sub: !vault ? al("sPl") : (pet ? al("pt" + pet.charAt(0).toUpperCase() + pet.slice(1)) : al("sPs")),
+        cta: al("sPc"), lock: !vault,
+        go: function () { closeLetter(); openPetShop(); } },
       { icon: "wand", alley: true, done: !!w, place: al("s1p"), title: al("s1t"),
-        sub: (w && wandLabel(w, lang)) || al("s1s"), cta: al("s1c"),
+        sub: !pet ? al("s1l") : ((w && wandLabel(w, lang)) || al("s1s")), cta: al("s1c"), lock: !pet,
         go: function () { if (alleyVisible()) { closeLetter(); jrWand(); } else { jrToAlley(); } } },
+      { icon: "ticket", done: walHas("ticket"), place: al("sTp"), title: al("sTt"),
+        sub: !w ? al("sTl") : (walHas("ticket") ? al("sTd") : al("sTs")), cta: al("sTc"), lock: !w,
+        go: function () { closeLetter(); openTicket(); } },
       { icon: "train", done: !!w && rode, place: al("s2p"), title: al("s2t"),
-        sub: !w ? al("s2l") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
+        sub: !walHas("ticket") ? al("s2n") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
+        lock: !walHas("ticket"),
         go: function () { closeLetter(); openTrain(); } },
       { icon: "castle", done: sorted, place: al("s3p"), title: al("s3t"),
         sub: (w && rode) || sorted ? al("s3s") : al("s3l"), cta: al("s3c"),
@@ -7643,7 +7869,6 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("lt-school").textContent = al("school");
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
-    $("lt-when").textContent = al("when");
     ltPath(readOnly);
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     $("lt-sign").textContent = al("sign");
@@ -7748,7 +7973,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       el.appendChild(mk);
       var tx = jrEl("span", "lt-st");
       tx.appendChild(jrEl("span", "lt-st-t", st.title));
-      tx.appendChild(jrEl("span", "lt-st-s", st.sub));
+      // Qulflangan qadamlarda izoh yozilmaydi: kundalik bitta ekranga sig'sin
+      if (on || st.done) { tx.appendChild(jrEl("span", "lt-st-s", st.sub)); }
       el.appendChild(tx);
       el.onclick = function () {
         if (on) { jrSet(LETTER_KEY); st.go(); return; }
@@ -7779,13 +8005,312 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     }
   }
 
+  /* ---------------------------------------------------------------- GRINGOTTS HAMYONI
+     Onboarding iqtisodi: xona ochilganda 25 galleon beriladi, hayvon va
+     tayoqcha shundan sotib olinadi, bilet bepul (Xagrid beradi).
+     Haqiqiy holat SERVERDA (hpcup), bu yerda faqat nusxasi turadi. */
+  var API_WALLET = "https://bot.tizimshunos.uz/api/wallet";
+  var wal = null;              // {galleons, vault, pet, wand, ticket, prices}
+  var walBusy = false;
+  var PET_ORDER = ["owl", "cat", "toad", "rat"];
+  var PRICE_FALLBACK = { wand: 7, pets: { owl: 10, cat: 8, toad: 2, rat: 1 } };
+
+  function walPrice(kind) {
+    var pr = (wal && wal.prices) || PRICE_FALLBACK;
+    return kind === "wand" ? pr.wand : (pr.pets || {})[kind];
+  }
+
+  function walHas(k) { return !!(wal && wal[k]); }
+  function walSum() { return wal ? (wal.galleons || 0) : 0; }
+
+  // Mahalliy sinov (localhost, imzo yo'q): hamyon shu qurilmada yuradi.
+  // Jonli Telegram'da bu yo'l ISHLAMAYDI - haqiqiy holat serverdan keladi.
+  function walLocal(action, item) {
+    var key = TK("hp_wal_demo"), w;
+    try { w = JSON.parse(window.localStorage.getItem(key) || "null"); } catch (e) { w = null; }
+    if (!w) { w = { galleons: 0, vault: false, pet: null, wand: false, ticket: false, prices: PRICE_FALLBACK }; }
+    var res = { ok: true, wallet: w };
+    if (action === "vault" && !w.vault) { w.vault = true; w.galleons += 25; res["new"] = true; }
+    else if (action === "buy") {
+      var narx = item === "wand" ? w.prices.wand : w.prices.pets[item];
+      if (!narx || (item === "wand" ? w.wand : w.pet) || w.galleons < narx) { res.ok = false; }
+      else { w.galleons -= narx; if (item === "wand") { w.wand = true; } else { w.pet = item; } }
+    } else if (action === "ticket") {
+      if (!w.wand) { res.ok = false; } else { w.ticket = true; }
+    }
+    try { window.localStorage.setItem(key, JSON.stringify(w)); } catch (e) {}
+    wal = w;
+    return res;
+  }
+
+  function walIsLocal() {
+    return !chatInitData() && (window.location.hostname === "localhost"
+      || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:");
+  }
+
+  // Serverga murojaat. Javob kelmasa (masalan tarmoq uzilsa) - jim o'tadi.
+  function walApi(action, item, done) {
+    if (walIsLocal()) {
+      var res = walLocal(action, item);
+      setTimeout(function () { done && done(res); }, 40);
+      return;
+    }
+    var d = chatInitData();
+    if (!d || !window.fetch) { done && done(null); return; }
+    fetch(API_WALLET, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ action: action, item: item || "" })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.wallet) { wal = res.wallet; }
+        done && done(res);
+      })["catch"](function () { done && done(null); });
+  }
+
+  function walLoad(done) { walApi("get", null, function () { done && done(); }); }
+
+  function walShow(el) {
+    if (!el) { return; }
+    el.textContent = walSum();
+    el.classList.toggle("hidden", !walHas("vault"));
+  }
+
+  /* ---------- Gringotts: aravachada yer ostiga ---------- */
+  var grTimer = null;
+
+  function grStop() { if (grTimer) { clearTimeout(grTimer); grTimer = null; } }
+
+  function openVault() {
+    grStop();
+    jrHideAll();
+    $("scr-vault").classList.remove("hidden");
+    $("gr-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("gr-kick").textContent = al("grKick");
+    $("gr-title").textContent = al("grTitle");
+    jrBack(openAlley);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    if (walHas("vault")) { grVault(false); return; }
+    grIntro();
+  }
+
+  function grIntro() {
+    var st = $("gr-stage");
+    st.className = "gr-center";
+    st.innerHTML = "";
+    st.appendChild(jrEl("p", "tr-p", al("grP1")));
+    var b = jrEl("button", "tr-go", al("grGo"));
+    b.type = "button";
+    b.onclick = grRide;
+    st.appendChild(b);
+  }
+
+  // Tunnel: yorug'liklar yuqoridan pastga uchadi (rAF emas - CSS animatsiya)
+  function grSparks(box) {
+    var t = jrEl("div", "gr-tunnel");
+    for (var i = 0; i < 26; i++) {
+      var sp = jrEl("span", "gr-spark");
+      sp.style.left = Math.round(Math.random() * 100) + "%";
+      sp.style.animationDuration = (0.5 + Math.random() * 0.7).toFixed(2) + "s";
+      sp.style.animationDelay = (Math.random() * 0.9).toFixed(2) + "s";
+      t.appendChild(sp);
+    }
+    box.appendChild(t);
+    setTimeout(function () { t.classList.add("on"); }, 20);
+    return t;
+  }
+
+  function grRide() {
+    var st = $("gr-stage");
+    st.className = "gr-ride";
+    st.innerHTML = "";
+    grSparks(st);
+    var lines = al("grRide") || [];
+    var line = jrEl("p", "gr-line", lines[0] || "");
+    st.appendChild(line);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("medium"); } } catch (e) {}
+
+    var i = 0;
+    function next() {
+      i++;
+      if (i >= lines.length) { grDoor(); return; }
+      line.textContent = lines[i];
+      line.style.animation = "none";
+      try { void line.offsetWidth; } catch (e) {}
+      line.style.animation = "";
+      grTimer = setTimeout(next, 1700);
+    }
+    grTimer = setTimeout(next, 1700);
+    st.onclick = function () { grStop(); next(); };
+  }
+
+  function grDoor() {
+    grStop();
+    var st = $("gr-stage");
+    st.onclick = null;
+    st.className = "gr-center";
+    st.innerHTML = "";
+    var door = jrEl("div", "gr-door");
+    door.innerHTML = hubSvg(AL_ICONS.bank);
+    var coins = jrEl("div", "gr-coins");
+    for (var i = 0; i < 14; i++) {
+      var c = jrEl("span", "gr-coin");
+      c.style.left = (12 + Math.random() * 70) + "%";
+      c.style.top = (18 + Math.random() * 62) + "%";
+      coins.appendChild(c);
+    }
+    door.appendChild(coins);
+    st.appendChild(door);
+    var b = jrEl("button", "tr-go", al("grOpen"));
+    b.type = "button";
+    b.onclick = function () {
+      b.disabled = true;
+      door.classList.add("open");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+      walApi("vault", null, function () {
+        onbStep("gringotts");
+        setTimeout(function () { grVault(true); }, 700);
+      });
+    };
+    st.appendChild(b);
+  }
+
+  // Xona ochilgandan keyingi ko'rinish (qayta kirganda ham shu)
+  function grVault(yangi) {
+    var st = $("gr-stage");
+    st.className = "gr-center";
+    st.innerHTML = "";
+    var sum = jrEl("div", "gr-sum", String(walSum()));
+    sum.appendChild(jrEl("small", "", al("grGot")));
+    st.appendChild(sum);
+    st.appendChild(jrEl("p", "tr-note", al("grDone")));
+    var b = jrEl("button", "tr-go", al("grNext"));
+    b.type = "button";
+    b.onclick = openAlley;
+    st.appendChild(b);
+    if (yangi) { renderWorldBtn(); }
+  }
+
+  /* ---------- Sehrli hayvonlar do'koni ---------- */
+  function openPetShop() {
+    jrHideAll();
+    $("scr-pet").classList.remove("hidden");
+    $("pt-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("pt-kick").textContent = al("ptKick");
+    $("pt-title").textContent = al("ptTitle");
+    $("pt-intro").textContent = al("ptIntro");
+    jrBack(openAlley);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    renderPets();
+  }
+
+  function renderPets() {
+    walShow($("pt-wal"));
+    var grid = $("pt-grid");
+    grid.innerHTML = "";
+    var mine = wal && wal.pet;
+    PET_ORDER.forEach(function (key) {
+      var narx = walPrice(key);
+      var meniki = (mine === key);
+      var yetadi = walSum() >= narx;
+      var el = jrEl("button", "pet-card" + (meniki ? " mine on" : (mine || !yetadi) ? " off" : ""));
+      el.type = "button";
+      var ic = jrEl("span", "pet-ic");
+      ic.innerHTML = hubSvg(PET_SVG[key]);
+      el.appendChild(ic);
+      el.appendChild(jrEl("span", "pet-nm", al("pt" + key.charAt(0).toUpperCase() + key.slice(1))));
+      el.appendChild(jrEl("span", "pet-sub", al("pt" + key.charAt(0).toUpperCase() + key.slice(1) + "S")));
+      el.appendChild(jrEl("span", "pet-price",
+        meniki ? al("ptMine") : (!yetadi && !mine ? al("ptPoor") : al("ptPrice").replace("%s", narx))));
+      el.onclick = function () {
+        if (mine || !yetadi || walBusy) { return; }
+        walBusy = true;
+        el.classList.add("on");
+        walApi("buy", key, function (res) {
+          walBusy = false;
+          if (res && res.ok) {
+            try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+            renderPets();
+            renderWorldBtn();
+            setTimeout(openAlley, 700);
+          } else {
+            el.classList.remove("on");
+            showToast(al("ptPoor"), "err");
+          }
+        });
+      };
+      grid.appendChild(el);
+    });
+    var note = $("pt-grid").parentNode.querySelector(".pet-note");
+    if (!note) {
+      note = jrEl("p", "pet-note", al("ptNote"));
+      $("pt-grid").parentNode.insertBefore(note, $("pt-grid"));
+    } else {
+      note.textContent = al("ptNote");
+    }
+  }
+
+  /* ---------- Xagrid biletni beradi ---------- */
+  function openTicket() {
+    jrHideAll();
+    $("scr-ticket").classList.remove("hidden");
+    $("tk-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("tk-kick").textContent = al("tkKick");
+    $("tk-title").textContent = al("tkTitle");
+    jrBack(openAlley);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    renderTicket();
+  }
+
+  function renderTicket() {
+    var st = $("tk-stage");
+    st.className = "tk-wrap";
+    st.innerHTML = "";
+    st.appendChild(jrEl("p", "tk-say", al("tkSay")));
+
+    var card = jrEl("div", "tk-card");
+    card.appendChild(jrEl("div", "tk-top", al("tkTop")));
+    card.appendChild(jrEl("div", "tk-big", "9¾"));
+    card.appendChild(jrEl("div", "tk-sub", al("tkSub")));
+    var row = jrEl("div", "tk-row");
+    [[al("tkWhen"), al("tkWhenV")], [al("tkSeat"), al("tkSeatV")]].forEach(function (pair) {
+      var cell = jrEl("span", "tk-cell");
+      cell.appendChild(jrEl("small", "", pair[0]));
+      cell.appendChild(jrEl("b", "", pair[1]));
+      row.appendChild(cell);
+    });
+    card.appendChild(row);
+    st.appendChild(card);
+
+    var b = jrEl("button", "tr-go", walHas("ticket") ? al("tkNext") : al("tkGo"));
+    b.type = "button";
+    b.style.marginTop = "22px";
+    b.onclick = function () {
+      if (walHas("ticket")) { openTrain(); return; }
+      b.disabled = true;
+      walApi("ticket", null, function (res) {
+        b.disabled = false;
+        if (res && res.ok) {
+          onbStep("ticket");
+          renderWorldBtn();
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+          renderTicket();
+        }
+      });
+    };
+    st.appendChild(b);
+  }
+
   // ---------------------------------------------------------------- 9¾ platforma
   function trStop() {
     if (trTimer) { clearTimeout(trTimer); trTimer = null; }
   }
 
   function openTrain() {
+    // Biletsiz platformaga chiqib bo'lmaydi (eski foydalanuvchilarda bilet
+    // belgisi yo'q, lekin ular allaqachon saralangan - bu yerga tushmaydi).
     if (!jrWandNow()) { openAlley(); return; }
+    if (!walHas("ticket")) { openTicket(); return; }
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");
@@ -13234,6 +13759,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     });
     $("hub-set-pv").addEventListener("click", testStart);
     $("lt-share").addEventListener("click", ltShare);
+    $("gr-back").addEventListener("click", function () { grStop(); openAlley(); });
+    $("pt-back").addEventListener("click", openAlley);
+    $("tk-back").addEventListener("click", openAlley);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
@@ -13406,11 +13934,22 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
   function initTest() { testBar(); testFreshCheck(); }
 
+  // Hamyon holati ishga tushishda o'qiladi: xatdagi kundalik va kutubxona
+  // tugmasi (xat/9¾) shunga qarab chiziladi.
+  function initWallet() {
+    walLoad(function () {
+      try { renderWorldBtn(); } catch (e) {}
+      if (!$("lt").classList.contains("hidden")) { ltPath(false); ltFit(); }
+      if (alleyVisible()) { renderAlley(); }
+    });
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { init(); initTest(); });
+    document.addEventListener("DOMContentLoaded", function () { init(); initTest(); initWallet(); });
   } else {
     init();
     initTest();
+    initWallet();
   }
 })();
 </script>
