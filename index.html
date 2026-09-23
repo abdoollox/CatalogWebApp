@@ -1448,9 +1448,9 @@ button.glass:active .tube{transform:scale(.97)}
 .al-shop span span{display:block;margin-top:3px;font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
 
 /* Xogvartsdan maktub: pergament, zumrad siyoh, qizil muhr */
-.lt{position:fixed;inset:0;z-index:80;display:flex;padding:40px 18px 18px;background:rgba(6,8,11,.82);overflow-y:auto}
+.lt{position:fixed;inset:0;z-index:80;display:flex;padding:34px 16px 14px;background:rgba(6,8,11,.82);overflow-y:auto}
 .lt-card{
-  position:relative;width:100%;max-width:400px;margin:auto;padding:34px 22px 20px;border-radius:6px;color:#3b2a1a;
+  position:relative;width:100%;max-width:400px;margin:auto;padding:30px 20px 16px;border-radius:6px;color:#3b2a1a;
   background:linear-gradient(170deg,#f6eed9,#e9dab7 70%,#ddc99e);
   box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(120,80,30,.18);
   animation:ltOpen .6s cubic-bezier(.2,.8,.2,1) both;transform-origin:50% 0;
@@ -1461,13 +1461,17 @@ button.glass:active .tube{transform:scale(.97)}
   background:radial-gradient(circle at 35% 30%,#b8352c,#7b1914 72%);color:#f1c8a6;font:600 25px/1 'Cormorant Garamond',serif;
   box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 0 0 4px rgba(0,0,0,.16),inset 0 0 0 5px rgba(255,210,170,.18);
 }
-.lt-to{display:block;text-align:center;margin:4px 0 14px;font:italic 500 15px/1.35 'Cormorant Garamond',serif;color:#1d6a4a}
-.lt-school{display:block;text-align:center;margin:0 0 16px;padding:0 0 14px;border-bottom:1px solid rgba(59,42,26,.2);font:700 10px/1.6 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#6b4e2e}
+.lt-to{display:block;text-align:center;margin:2px 0 10px;font:italic 500 14px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
+.lt-school{display:block;text-align:center;margin:0 0 12px;padding:0 0 11px;border-bottom:1px solid rgba(59,42,26,.2);font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
 .lt-head{display:block;text-align:center;white-space:pre-line;margin:-10px 0 16px;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
-.lt-hi{margin:0 0 8px;font:600 22px/1.2 'Cormorant Garamond',serif}
-.lt-body{margin:0 0 12px;white-space:pre-line;font:500 17.5px/1.45 'Cormorant Garamond',serif}
-.lt-list{margin:0 0 14px;padding:0;list-style:none;counter-reset:lt}
-.lt-list li{position:relative;padding:0 0 10px 32px;font:500 17px/1.35 'Cormorant Garamond',serif;counter-increment:lt}
+.lt-hi{margin:0 0 6px;font:600 21px/1.2 'Cormorant Garamond',serif}
+/* Sana qatori: asosiy matndan ajratilgan, kichik - joy tejaydi */
+.lt-when{margin:0 0 11px;font:700 10.5px/1.5 'Manrope',sans-serif;letter-spacing:.06em;color:#6b4e2e}
+.lt-row{display:flex;gap:8px;margin-top:6px}
+.lt-row .lt-share,.lt-row .lt-later{flex:1;margin:0}
+.lt-body{margin:0 0 9px;white-space:pre-line;font:500 17px/1.4 'Cormorant Garamond',serif}
+.lt-list{margin:0 0 11px;padding:0;list-style:none;counter-reset:lt}
+.lt-list li{position:relative;padding:0 0 8px 30px;font:500 16px/1.32 'Cormorant Garamond',serif;counter-increment:lt}
 .lt-list li::before{
   content:counter(lt);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;box-sizing:border-box;
   border:1px solid rgba(59,42,26,.45);text-align:center;font:700 11px/19px 'Manrope',sans-serif;
@@ -1478,6 +1482,7 @@ button.glass:active .tube{transform:scale(.97)}
 }
 .lt-more:active{transform:scale(.99)}
 .lt-kit{margin:0 0 12px;animation:riseIn .35s ease both}
+.lt-kit-head{margin:0 0 6px;padding:0 0 8px;border-bottom:1px solid rgba(59,42,26,.18);white-space:pre-line;text-align:center;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
 .lt-kit h4{margin:10px 0 5px;font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
 .lt-kit ul{margin:0;padding:0;list-style:none}
 .lt-kit li{position:relative;padding:0 0 4px 14px;font:500 15px/1.35 'Cormorant Garamond',serif}
@@ -1488,16 +1493,42 @@ button.glass:active .tube{transform:scale(.97)}
   background:rgba(139,42,34,.07);font:700 11.5px/1.5 'Manrope',sans-serif;color:#8b2a22;
 }
 .lt-share{
-  width:100%;margin-top:6px;padding:13px;border:1px solid rgba(59,42,26,.35);border-radius:99px;
+  width:100%;margin-top:6px;padding:12px;border:1px solid rgba(59,42,26,.35);border-radius:99px;
   display:flex;align-items:center;justify-content:center;gap:7px;
   background:transparent;color:#3b2a1a;font:800 13px/1 'Manrope',sans-serif;cursor:pointer;
 }
 .lt-share svg{width:15px;height:15px}
 .lt-share:active{transform:scale(.98)}
-.lt-sign{display:block;text-align:right;margin:2px 0 18px;font:italic 500 16px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
+.lt-sign{display:block;text-align:right;margin:0 0 13px;font:italic 500 15px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
 .lt-hint{margin:0 0 12px;text-align:center;font:500 12px/1.5 'Manrope',sans-serif;color:#6b4e2e}
-.lt-go{width:100%;padding:15px;border:none;border-radius:99px;background:#3b2a1a;color:#f6eed9;font:800 13.5px/1 'Manrope',sans-serif;cursor:pointer}
-.lt-later{width:100%;margin-top:6px;padding:12px;border:none;background:transparent;color:#6b4e2e;font:700 13px/1 'Manrope',sans-serif;cursor:pointer}
+.lt-go{width:100%;padding:14px;border:none;border-radius:99px;background:#3b2a1a;color:#f6eed9;font:800 13.5px/1 'Manrope',sans-serif;cursor:pointer}
+.lt-later{width:100%;padding:11px;border:none;background:transparent;color:#6b4e2e;font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer}
+
+/* Past ekranlarda hammasi bitta ekranga sig'sin (JS o'lchab qo'yadi) */
+.lt-card.lt-sm{padding:26px 18px 14px}
+.lt-card.lt-sm .lt-hi{font-size:19px}
+.lt-card.lt-sm .lt-body{font-size:15.5px;margin-bottom:7px}
+.lt-card.lt-sm .lt-list li{font-size:14.5px;padding-bottom:6px}
+.lt-card.lt-sm .lt-to{margin-bottom:7px;font-size:13px}
+.lt-card.lt-sm .lt-school{margin-bottom:9px;padding-bottom:8px}
+.lt-card.lt-sm .lt-sign{margin-bottom:9px;font-size:14px}
+.lt-card.lt-sm .lt-more{padding:8px;margin-bottom:9px}
+.lt-card.lt-sm .lt-go{padding:12px}
+/* Eng past ekranlar: manzil qatori va imzo qurbon bo'ladi, asosiysi qoladi */
+.lt-card.lt-xs{padding:22px 16px 12px}
+.lt-card.lt-xs .lt-to{display:none}
+.lt-card.lt-xs .lt-hi{font-size:17.5px;margin-bottom:4px}
+.lt-card.lt-xs .lt-body{font-size:14.5px;margin-bottom:6px}
+.lt-card.lt-xs .lt-list li{font-size:13.5px;padding-bottom:5px;line-height:1.28}
+.lt-card.lt-xs .lt-list{margin-bottom:8px}
+.lt-card.lt-xs .lt-when{margin-bottom:8px;font-size:9.5px}
+.lt-card.lt-xs .lt-school{margin-bottom:8px;padding-bottom:7px;font-size:9px}
+.lt-card.lt-xs .lt-sign{margin-bottom:8px;font-size:13px}
+.lt-card.lt-xs .lt-more{padding:7px;margin-bottom:8px;font-size:11.5px}
+.lt-card.lt-xs .lt-go{padding:11px}
+.lt-card.lt-xs .lt-share{padding:10px}
+.lt-card.lt-xs .lt-later{padding:10px}
+.lt-card.lt-xs .lt-seal{width:42px;height:42px;top:-21px;margin-left:-21px;font-size:20px}
 .lt-go:active,.lt-later:active{transform:scale(.98)}
 
 /* Kings Kross va Xogvarts ekspressi */
@@ -1709,18 +1740,18 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       <span class="lt-seal" id="lt-seal"></span>
       <span class="lt-to" id="lt-to"></span>
       <span class="lt-school" id="lt-school"></span>
-      <span class="lt-head" id="lt-head"></span>
       <p class="lt-hi" id="lt-hi"></p>
       <p class="lt-body" id="lt-body"></p>
+      <p class="lt-when" id="lt-when"></p>
       <ol class="lt-list" id="lt-list"></ol>
       <button class="lt-more" id="lt-more" type="button"></button>
       <div class="lt-kit hidden" id="lt-kit"></div>
-      <p class="lt-note" id="lt-note"></p>
       <span class="lt-sign" id="lt-sign"></span>
-      <p class="lt-hint" id="lt-hint"></p>
       <button class="lt-go" id="lt-go" type="button"></button>
-      <button class="lt-share" id="lt-share" type="button"></button>
-      <button class="lt-later" id="lt-later" type="button"></button>
+      <div class="lt-row">
+        <button class="lt-share" id="lt-share" type="button"></button>
+        <button class="lt-later" id="lt-later" type="button"></button>
+      </div>
     </div>
   </div>
 
@@ -2531,7 +2562,12 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   "use strict";
 
   var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-  if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+  if (tg) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    // Pastga surish ilovani YOPIB yuborardi: uzun sahifani (xat, chat, ro'yxatlar)
+    // o'qiyman deganda Telegram ilovani yopardi. 7.7 dan boshlab buni o'chirish mumkin.
+    try { if (tg.disableVerticalSwipes) { tg.disableVerticalSwipes(); } } catch (e) {}
+  }
 
   var BOT = "garripotterkinobot";
 
@@ -7118,18 +7154,21 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     bankS: { uz: "Sehrgarlar banki · tez orada", ru: "Банк волшебников · скоро", en: "The wizarding bank · coming soon" },
 
     seal: { uz: "X", ru: "Х", en: "H" },
-    to: { uz: "%s · Telegram, Kutubxona, 9¾ tugmasi yonida",
-          ru: "%s · Telegram, Библиотека, у кнопки 9¾",
-          en: "%s · Telegram, The Library, beside the 9¾ button" },
+    to: { uz: "%s · Telegram, Kutubxona javoni yonida",
+          ru: "%s · Telegram, у книжной полки Библиотеки",
+          en: "%s · Telegram, beside the Library shelf" },
     school: { uz: "Xogvarts jodugarlik va sehrgarlik maktabi", ru: "Школа чародейства и волшебства «Хогвартс»",
               en: "Hogwarts School of Witchcraft and Wizardry" },
     head: { uz: "Direktor: Albus Dambldor\n(Merlin ordeni birinchi darajali kavaleri, Oliy sehrgar, Xalqaro sehrgarlar federatsiyasi raisi)",
             ru: "Директор: Альбус Дамблдор\n(кавалер ордена Мерлина I степени, Великий волшебник, Верховный чародей Международной конфедерации магов)",
             en: "Headmaster: Albus Dumbledore\n(Order of Merlin, First Class, Grand Sorcerer, Supreme Mugwump of the International Confederation of Wizards)" },
     hi: { uz: "Hurmatli %s,", ru: "Дорогой(ая) %s!", en: "Dear %s," },
-    body: { uz: "Xogvarts jodugarlik va sehrgarlik maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. Darslar 1-sentabrda boshlanadi; javobingizni 31-iyuldan kechiktirmay boyo'g'li bilan kutamiz.\n\nO'qish boshlanishidan oldin uch ishni bajaring:",
-            ru: "С удовольствием сообщаем, что вам предоставлено место в Школе чародейства и волшебства «Хогвартс». Занятия начинаются 1 сентября; ответ совой ждём не позднее 31 июля.\n\nДо начала учёбы сделайте три дела:",
-            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts School of Witchcraft and Wizardry. Term begins on 1 September; we await your owl no later than 31 July.\n\nBefore term starts, three things await you:" },
+    body: { uz: "Xogvarts maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. O'qish boshlanishidan oldin uch ishni bajaring:",
+            ru: "С удовольствием сообщаем, что вам предоставлено место в школе «Хогвартс». До начала учёбы сделайте три дела:",
+            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts. Before term starts, three things await you:" },
+    when: { uz: "DARSLAR 1-SENTABRDA · JAVOB 31-IYULGACHA",
+            ru: "ЗАНЯТИЯ С 1 СЕНТЯБРЯ · ОТВЕТ ДО 31 ИЮЛЯ",
+            en: "TERM BEGINS 1 SEPTEMBER · REPLY BY 31 JULY" },
     list: {
       uz: ["Diagon xiyobonidagi Olivander do'konidan tayoqcha oling",
            "Kings Kross vokzalida 9¾ platformadan Xogvarts ekspressiga chiqing",
@@ -7211,7 +7250,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     note: { uz: "Eslatma: birinchi kurs talabalariga shaxsiy supurgi olib kelish taqiqlanadi.",
             ru: "Напоминаем: первокурсникам не разрешается иметь собственную метлу.",
             en: "Please note: first-year students are not permitted their own broomsticks." },
-    share: { uz: "Xatni ulashish", ru: "Поделиться письмом", en: "Share the letter" },
+    share: { uz: "Ulashish", ru: "Поделиться", en: "Share" },
     shareWait: { uz: "Xat tayyorlanmoqda…", ru: "Письмо готовится…", en: "Preparing the letter…" },
     shareErr: { uz: "Xat tayyorlanmadi, birozdan keyin urinib ko'ring",
                 ru: "Письмо не подготовилось, попробуйте позже",
@@ -7644,18 +7683,15 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("lt-seal").textContent = al("seal");
     $("lt-to").textContent = al("to").replace("%s", name);
     $("lt-school").textContent = al("school");
-    $("lt-head").textContent = al("head");
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
+    $("lt-when").textContent = al("when");
     var ol = $("lt-list");
     ol.innerHTML = "";
     al("list").forEach(function (line) { ol.appendChild(jrEl("li", "", line)); });
     ltKit(false);
-    $("lt-note").textContent = al("note");
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     $("lt-sign").textContent = al("sign");
-    $("lt-hint").textContent = al("hint");
-    $("lt-hint").classList.toggle("hidden", !!readOnly);
     $("lt-later").textContent = al("later");
     $("lt-later").classList.toggle("hidden", !!readOnly);
     $("lt-go").textContent = readOnly ? al("close") : al("go");
@@ -7666,6 +7702,21 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     };
     $("lt").scrollTop = 0;
     $("lt").classList.remove("hidden");
+    ltFit();
+  }
+
+  /* Xat BITTA EKRANGA sig'ishi kerak: Telegram'da pastga surish ilovani
+     yopib yuborardi va odam xatni o'qiy olmasdi. Sig'masa yozuvlar ikki
+     bosqichda kichrayadi (.lt-sm -> .lt-xs). */
+  function ltFit() {
+    var box = $("lt"), card = document.querySelector(".lt-card");
+    if (!box || !card) { return; }
+    card.classList.remove("lt-sm", "lt-xs");
+    if (!$("lt-kit").classList.contains("hidden")) { return; }   // ro'yxat ochiq - baribir uzun
+    var joy = box.clientHeight - 48;        // tepa/past bo'shlig'i
+    if (card.offsetHeight <= joy) { return; }
+    card.classList.add("lt-sm");
+    if (card.offsetHeight > joy) { card.classList.add("lt-xs"); }
   }
 
   function closeLetter() { $("lt").classList.add("hidden"); }
@@ -7740,6 +7791,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     if (!open || box.dataset.lang === lang) { return; }
     box.dataset.lang = lang;
     box.innerHTML = "";
+    box.appendChild(jrEl("p", "lt-kit-head", al("head")));
     al("kit").forEach(function (group) {
       box.appendChild(jrEl("h4", "", group[0]));
       var ul = jrEl("ul");
@@ -7750,6 +7802,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       });
       box.appendChild(ul);
     });
+    box.appendChild(jrEl("p", "lt-note", al("note")));
   }
 
   // ---------------------------------------------------------------- 9¾ platforma
@@ -13207,7 +13260,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     });
     $("hub-set-pv").addEventListener("click", testStart);
     $("lt-more").addEventListener("click", function () {
-      ltKit($("lt-kit").classList.contains("hidden"));
+      var open = $("lt-kit").classList.contains("hidden");
+      ltKit(open);
+      ltFit();
+      if (open) { $("lt-kit").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
     });
     $("lt-share").addEventListener("click", ltShare);
     setTimeout(gatePreload, 1500);
