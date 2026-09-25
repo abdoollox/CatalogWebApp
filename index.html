@@ -6400,7 +6400,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
         '<button class="ms-tr-tg" type="button">' + MS_ICON.tg + '</button>';
       row.querySelector(".ms-tr-n").textContent = i + 1;
       row.querySelector(".ms-tr-t").textContent = tr.t;
-      row.querySelector(".ms-tr-d").textContent = msDur(tr.d);
+      // Ba'zi fayllarda davomiylik yozilmagan (0) — bo'sh qoldiramiz, "0:00" chalg'itadi
+      row.querySelector(".ms-tr-d").textContent = tr.d ? msDur(tr.d) : "";
       row.querySelector(".ms-tr-tg").setAttribute("aria-label", x.tgAria);
       row.querySelector(".ms-tr-main").addEventListener("click", function () {
         if (tr.big) { showToast(x.big); msSend(id, i + 1); return; }
