@@ -1234,6 +1234,131 @@ button.glass:active .tube{transform:scale(.97)}
 .soontile span{font:500 11px/1.3 'Manrope',sans-serif;color:var(--dim)}
 .soontile svg{width:24px;height:24px;color:var(--dim)}
 
+/* ==MS== */
+/* --- SOUNDTRACK: kutubxona javoni, albom sahifasi, mini pleyer --- */
+/* Plastinka: qora ariqchalar + markazda muqova yorlig'i. Chalayotganda aylanadi. */
+.ms-row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:18px;margin:0 -18px;padding:2px 18px 6px;scrollbar-width:none}
+.ms-row::-webkit-scrollbar{display:none}
+.ms-card{
+  flex:0 0 41%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;
+  padding:0;border:0;background:none;color:var(--text);text-align:left;cursor:pointer;font-family:'Manrope',sans-serif;
+}
+@media (min-width:600px){.ms-card{flex-basis:28%}}
+.ms-art{position:relative;display:block;width:100%;aspect-ratio:1.26/1}
+.ms-cover{
+  position:absolute;left:0;top:0;bottom:0;aspect-ratio:1/1;border-radius:12px;overflow:hidden;z-index:1;
+  background:#1a1f28;box-shadow:0 6px 16px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.08);
+  transition:transform .14s;
+}
+.ms-card:active .ms-cover{transform:scale(.97)}
+.ms-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ms-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,12,.55),transparent 38%)}
+.ms-num{
+  position:absolute;left:9px;top:7px;z-index:1;font:600 20px/1 'Cormorant Garamond',serif;
+  color:rgba(244,246,249,.9);text-shadow:0 1px 6px rgba(0,0,0,.6);font-style:normal;
+}
+.ms-disc,.ms-vinyl{
+  position:absolute;border-radius:50%;
+  background:
+    radial-gradient(circle,#0b0c0e 0 2.2%,transparent 2.6%),
+    radial-gradient(circle,transparent 0 31%,rgba(var(--gold-rgb),.9) 31.5% 33%,transparent 33.5%),
+    repeating-radial-gradient(circle,#101216 0 1.4px,#1b1e24 1.8px 2.8px);
+  box-shadow:0 6px 16px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.16),inset 0 0 0 3px rgba(0,0,0,.5);
+}
+/* yorug' aks — aylanmaydi, shuning uchun plastinka "yaltiraydi" */
+.ms-shine{position:absolute;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 20deg,transparent 0 8%,rgba(255,255,255,.16) 13%,transparent 19% 50%,rgba(255,255,255,.1) 60%,transparent 67%)}
+.ms-disc,.ms-art .ms-shine{right:0;top:5%;height:90%;aspect-ratio:1/1}
+.ms-disc{transition:transform .4s ease}
+.ms-disc::before,.ms-vinyl::before{
+  content:"";position:absolute;inset:34%;border-radius:50%;
+  background:var(--lbl) center/cover,#2a2f38;opacity:.95;
+}
+.ms-disc::after,.ms-vinyl::after{
+  content:"";position:absolute;inset:48.4%;border-radius:50%;background:#0b0c0e;
+}
+.ms-card.on .ms-disc{animation:msSpin 3.2s linear infinite}
+@keyframes msSpin{from{rotate:0deg}to{rotate:360deg}}
+.ms-eq{position:absolute;right:8px;bottom:8px;z-index:1;display:none;align-items:flex-end;gap:2px;height:14px;padding:4px 5px;
+  border-radius:6px;background:rgba(8,10,14,.72);box-sizing:content-box}
+.ms-card.on .ms-eq{display:flex}
+.ms-eq i,.ms-tr-eq i{width:3px;background:var(--gold);border-radius:1px;animation:msEq .9s ease-in-out infinite}
+.ms-eq i:nth-child(2),.ms-tr-eq i:nth-child(2){animation-delay:-.3s}
+.ms-eq i:nth-child(3),.ms-tr-eq i:nth-child(3){animation-delay:-.6s}
+.paused .ms-eq i,.paused .ms-tr-eq i{animation-play-state:paused}
+@keyframes msEq{0%,100%{height:30%}50%{height:100%}}
+.ms-name{font:600 17px/1.1 'Cormorant Garamond',serif;padding-right:14%}
+.ms-sub{font:500 11px/1.3 'Manrope',sans-serif;color:var(--dim);margin-top:-4px}
+
+/* albom sahifasi */
+.ms-hdr-tag{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+.ms-hero{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ms-stage{position:relative;width:min(84vw,300px);height:min(56vw,200px);margin:4px 0 22px}
+.ms-sleeve{
+  position:absolute;left:0;top:0;height:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;z-index:1;
+  box-shadow:0 14px 34px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.1);background:#1a1f28;
+}
+.ms-sleeve img{width:100%;height:100%;object-fit:cover;display:block}
+.ms-sleeve::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.1),transparent 40%)}
+.ms-vinyl,.ms-stage .ms-shine{left:18%;top:4%;height:92%;aspect-ratio:1/1;transition:left .7s cubic-bezier(.2,.8,.2,1)}
+.ms-stage.out .ms-vinyl,.ms-stage.out .ms-shine{left:34%}
+.ms-stage.spin .ms-vinyl{animation:msSpin 3.2s linear infinite}
+.ms-kick{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.ms-title{margin:9px 0 0;font:400 31px/1.08 'Cormorant Garamond',serif}
+.ms-meta{margin-top:9px;font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.ms-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin:20px 0 18px}
+.ms-play,.ms-tg{
+  display:flex;align-items:center;justify-content:center;gap:9px;height:48px;border-radius:14px;cursor:pointer;
+  font:800 12px/1 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;transition:transform .12s;
+}
+.ms-play{border:0;background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink)}
+.ms-tg{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.38);color:var(--gold)}
+.ms-play:active,.ms-tg:active{transform:scale(.97)}
+.ms-play svg,.ms-tg svg{width:17px;height:17px;flex:none}
+.ms-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.ms-tr{display:grid;grid-template-columns:1fr auto;align-items:center;border-bottom:1px solid var(--line)}
+.ms-tr-main{
+  display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;min-width:0;
+  padding:13px 4px 13px 2px;border:0;background:none;color:var(--text);text-align:left;cursor:pointer;font-family:'Manrope',sans-serif;
+}
+.ms-tr-main:active{opacity:.6}
+.ms-tr-n{font:600 15px/1 'Cormorant Garamond',serif;color:var(--dim);text-align:center}
+.ms-tr-t{font:600 14px/1.3 'Manrope',sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms-tr-d{font:500 12px/1 'Manrope',sans-serif;color:var(--dim);font-variant-numeric:tabular-nums}
+.ms-tr.on .ms-tr-t{color:var(--gold)}
+.ms-tr-eq{display:none;align-items:flex-end;justify-content:center;gap:2px;height:14px}
+.ms-tr.on .ms-tr-eq{display:flex}
+.ms-tr.on .ms-tr-n{display:none}
+.ms-tr.big .ms-tr-t{color:var(--dim)}
+.ms-tr-tg{
+  width:40px;height:40px;display:grid;place-items:center;border:0;background:none;color:var(--dim);cursor:pointer;padding:0;
+}
+.ms-tr-tg svg{width:18px;height:18px}
+.ms-tr-tg:active{color:var(--gold);transform:scale(.9)}
+.ms-hint{margin:18px 0 0;padding:0 8px;text-align:center;font:italic 400 13px/1.55 'Cormorant Garamond',serif;color:var(--dim)}
+
+/* mini pleyer — kutubxona va albom sahifasida pastda turadi */
+.mp{
+  position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:900;
+  width:calc(100% - 20px);max-width:420px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:2px;
+  padding:8px 6px 8px 8px;border-radius:16px;overflow:hidden;
+  background:rgba(22,27,35,.92);box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(var(--gold-rgb),.28);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.mp-bar{position:absolute;left:0;right:0;top:0;height:2px;background:rgba(255,255,255,.08)}
+.mp-bar i{display:block;height:100%;width:0;background:var(--gold)}
+.mp-main{display:flex;align-items:center;gap:10px;min-width:0;padding:0;border:0;background:none;color:var(--text);text-align:left;cursor:pointer}
+.mp-main img{width:40px;height:40px;border-radius:8px;object-fit:cover;flex:none;background:#1a1f28}
+.mp-tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.mp-tx b{font:700 13px/1.2 'Manrope',sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-tx span{font:500 11px/1.2 'Manrope',sans-serif;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-btn{width:42px;height:42px;display:grid;place-items:center;border:0;border-radius:50%;background:none;color:var(--text);cursor:pointer;padding:0}
+.mp-btn svg{width:22px;height:22px}
+.mp-btn.pp{color:var(--gold)}
+.mp-btn:active{transform:scale(.88)}
+body.mp-on .shell{padding-bottom:96px}
+body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
+/* ==/MS== */
 /* --- SEHRLI OLAM: to'liq ekranli xarita --- */
 #scr-world{position:fixed;inset:0;z-index:40;overflow:hidden;background:#0b0e13}
 .w-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s}
@@ -1693,6 +1818,38 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     <div id="rows"></div>
   </div>
 
+  <!-- ==MS== -->
+  <!-- Soundtrack albomi: muqova + plastinka, treklar, Telegramga yuborish -->
+  <div id="scr-album" class="screen hidden">
+    <div class="cup-hdr">
+      <button class="back-btn" id="ms-back"><span style="font-size:13px">‹</span> <span data-xt="back">Ortga</span></button>
+      <span class="ms-hdr-tag">OST</span>
+    </div>
+    <div class="ms-hero">
+      <div class="ms-stage" id="ms-stage">
+        <div class="ms-vinyl" id="ms-vinyl"></div><div class="ms-shine"></div>
+        <div class="ms-sleeve"><img id="ms-sleeve" alt=""></div>
+      </div>
+      <span class="ms-kick" id="ms-kick"></span>
+      <h2 class="ms-title" id="ms-title"></h2>
+      <span class="ms-meta" id="ms-meta"></span>
+      <div class="ms-acts">
+        <button class="ms-play" id="ms-play" type="button"></button>
+        <button class="ms-tg" id="ms-tg" type="button"></button>
+      </div>
+    </div>
+    <div class="ms-list" id="ms-list"></div>
+    <p class="ms-hint" id="ms-hint"></p>
+  </div>
+
+  <!-- Mini pleyer (position:fixed — .screen ichida EMAS, aks holda animatsiya uni siljitadi) -->
+  <div class="mp hidden" id="mp">
+    <i class="mp-bar"><i id="mp-prog"></i></i>
+    <button class="mp-main" id="mp-main" type="button"><img id="mp-img" alt=""><span class="mp-tx"><b id="mp-t"></b><span id="mp-a"></span></span></button>
+    <button class="mp-btn pp" id="mp-pp" type="button"></button>
+    <button class="mp-btn" id="mp-next" type="button"></button>
+  </div>
+  <!-- ==/MS== -->
   <!-- Sehrli olam (web ko'rinish): 9¾ ortidagi bosh sahifa -->
   <div id="scr-hub" class="screen hidden">
     <div class="hub-head">
@@ -6027,6 +6184,480 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       name: { uz: "Kitoblar", ru: "Книги", en: "Books" }, sub: null }
   ];
 
+  // ==MS==
+  /* ---------- SOUNDTRACK ----------
+     Albomlar ro'yxati serverdan (/api/music) keladi. Fayllar filmlar kabi yopiq
+     Telegram kanalida turadi, server ularni oqim bilan uzatadi (ilovada ham,
+     GitHub'da ham musiqa fayli YO'Q). Ikki yo'l: ilova ichida tinglash va butun
+     albomni / bitta trekni Telegram chatga yuborish (u yerda ekran o'chsa ham chaladi).
+     HOZIRCHA BEPUL. Keyin butun albom galleonga bir marta ochiladi (server: album_open). */
+  var API_MUSIC = "https://bot.tizimshunos.uz/api/music";
+  var MS_LOCAL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  if (MS_LOCAL) { API_MUSIC = "http://" + window.location.hostname + ":8799/api/music"; }
+  var MS_CHANNEL = "https://t.me/garripotter_kolleksiya";
+
+  function msPlural(n, one, few, many) {
+    var a = n % 10, b = n % 100;
+    if (a === 1 && b !== 11) { return one; }
+    if (a >= 2 && a <= 4 && (b < 12 || b > 14)) { return few; }
+    return many;
+  }
+
+  var MS_TX = {
+    uz: { shelf: "Soundtrack", kick: "Filmning asl musiqasi", play: "Tinglash", pause: "Pauza",
+          tg: "Telegramga", sentAll: "Albom bot chatiga yuborildi",
+          sentOne: function (t) { return "«" + t + "» bot chatiga yuborildi"; },
+          slow: "Biroz kuting…", fail: "Yuborib bo'lmadi, birozdan keyin urinib ko'ring",
+          loadFail: "Musiqani yuklab bo'lmadi", big: "Bu trek faqat Telegramda chalinadi",
+          hint: "Ilova yopilsa musiqa to'xtaydi. Yo'lda tinglash uchun albomni Telegramga yuboring — u yerda ekran o'chsa ham chalinaveradi.",
+          albums: function (n) { return n + " albom"; }, tracks: function (n) { return n + " trek"; },
+          min: function (n) { return n + " daq"; }, tgAria: "Telegramga yuborish" },
+    ru: { shelf: "Саундтреки", kick: "Оригинальный саундтрек", play: "Слушать", pause: "Пауза",
+          tg: "В Telegram", sentAll: "Альбом отправлен в чат с ботом",
+          sentOne: function (t) { return "«" + t + "» отправлен в чат с ботом"; },
+          slow: "Подождите немного…", fail: "Не удалось отправить, попробуйте чуть позже",
+          loadFail: "Не удалось загрузить музыку", big: "Этот трек играет только в Telegram",
+          hint: "Если закрыть приложение, музыка остановится. Чтобы слушать в дороге, отправьте альбом в Telegram — там он играет даже с выключенным экраном.",
+          albums: function (n) { return n + " " + msPlural(n, "альбом", "альбома", "альбомов"); },
+          tracks: function (n) { return n + " " + msPlural(n, "трек", "трека", "треков"); },
+          min: function (n) { return n + " мин"; }, tgAria: "Отправить в Telegram" },
+    en: { shelf: "Soundtracks", kick: "Original motion picture soundtrack", play: "Play", pause: "Pause",
+          tg: "To Telegram", sentAll: "Album sent to your bot chat",
+          sentOne: function (t) { return "“" + t + "” sent to your bot chat"; },
+          slow: "One moment…", fail: "Couldn't send it, please try again shortly",
+          loadFail: "Couldn't load the music", big: "This track plays only in Telegram",
+          hint: "Music stops when the app is closed. To listen on the go, send the album to Telegram — it keeps playing there even with the screen off.",
+          albums: function (n) { return n + (n === 1 ? " album" : " albums"); },
+          tracks: function (n) { return n + (n === 1 ? " track" : " tracks"); },
+          min: function (n) { return n + " min"; }, tgAria: "Send to Telegram" }
+  };
+
+  var MS_COMPOSER = {
+    "John Williams": { uz: "Jon Uilyams", ru: "Джон Уильямс" },
+    "Patrick Doyle": { uz: "Patrik Doyl", ru: "Патрик Дойл" },
+    "Nicholas Hooper": { uz: "Nikolas Xuper", ru: "Николас Хупер" },
+    "Alexandre Desplat": { uz: "Aleksandr Despla", ru: "Александр Деспла" }
+  };
+
+  var MS_ICON = {
+    play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.3-6.8a1 1 0 0 0 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 6.2v11.6c0 .8.9 1.2 1.5.8l8.6-5.8a1 1 0 0 0 0-1.6L6.5 5.4C5.9 5 5 5.4 5 6.2z"/><rect x="16.6" y="5" width="2.6" height="14" rx="1.1"/></svg>',
+    tg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4.5 3.5 11.3l5.7 2.1M21 4.5l-3 15-8.8-6.1M21 4.5 9.2 13.4v5.1l3.2-3.3"/></svg>',
+    eq: '<i></i><i></i><i></i>'
+  };
+
+  var msData = null;        // { hp1: {year, composer, tracks:[{t, d, big}]} }
+  var msKey = "";           // tinglash kaliti (server imzolaydi, 12 soat)
+  var msCur = null;         // hozir chalinayotgan: {album, i}
+  var msOpen = null;        // ochiq albom sahifasi
+  var msAudio = null;
+  var msSending = false;
+  var msRetried = false;
+  var msLogged = {};
+  var msScroll = 0;
+
+  function msInitData() {
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    return init;
+  }
+
+  function msCover(id) { return "img/sq/" + id + "_" + lang + ".jpg"; }
+  function msTracks(id) { return (msData && msData[id] && msData[id].tracks) || []; }
+  function msName(id) {
+    for (var i = 0; i < MOVIES.length; i++) { if (MOVIES[i].id === id) { return MOVIES[i][lang]; } }
+    return id;
+  }
+  function msNumeral(id) {
+    for (var i = 0; i < MOVIES.length; i++) { if (MOVIES[i].id === id) { return NUMERALS[i]; } }
+    return "";
+  }
+  function msComposer(id) {
+    var c = (msData && msData[id] && msData[id].composer) || "";
+    return (MS_COMPOSER[c] && MS_COMPOSER[c][lang]) || c;
+  }
+  function msAlbums() {
+    var out = [];
+    MOVIES.forEach(function (m) { if (msTracks(m.id).length) { out.push(m.id); } });
+    return out;
+  }
+  function msDur(sec) {
+    sec = Math.max(0, Math.round(sec || 0));
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+  function msPlaying() { return !!(msAudio && msCur && !msAudio.paused && !msAudio.ended); }
+
+  /* --- ro'yxatni olish --- */
+  function msFetch(cb) {
+    if (!window.fetch) { return; }
+    window.fetch(API_MUSIC, { headers: { "X-Telegram-Init-Data": msInitData() } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) { if (cb) { cb(); } return; }
+        var before = JSON.stringify(msData || {});
+        msData = res.albums || {};
+        msKey = res.key || "";
+        try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
+        if (JSON.stringify(msData) !== before) {
+          var cat = $("scr-cat");
+          if (cat && !cat.classList.contains("hidden")) { renderCatalog(); }
+          if (msOpen) { msRenderAlbum(); }
+        }
+        if (cb) { cb(); }
+      })["catch"](function () { if (cb) { cb(); } });
+  }
+
+  /* --- kutubxona javoni --- */
+  function msShelf() {
+    var list = msAlbums();
+    if (!list.length) { return null; }
+    var x = MS_TX[lang];
+    var sec = document.createElement("div");
+    sec.className = "rowsec";
+    var head = document.createElement("div");
+    head.className = "rowsec-h";
+    var b = document.createElement("b");
+    b.textContent = x.shelf;
+    var c = document.createElement("span");
+    c.textContent = x.albums(list.length);
+    head.appendChild(b);
+    head.appendChild(c);
+    sec.appendChild(head);
+
+    var row = document.createElement("div");
+    row.className = "ms-row";
+    list.forEach(function (id) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "ms-card" + (msCur && msCur.album === id && msPlaying() ? " on" : "");
+      card.setAttribute("data-album", id);
+      card.innerHTML =
+        '<span class="ms-art"><span class="ms-disc"></span><span class="ms-shine"></span>' +
+        '<span class="ms-cover"><img alt="" loading="lazy" decoding="async"><b class="ms-num"></b>' +
+        '<span class="ms-eq">' + MS_ICON.eq + '</span></span></span>' +
+        '<span class="ms-name"></span><span class="ms-sub"></span>';
+      card.querySelector("img").src = msCover(id);
+      card.querySelector(".ms-disc").style.setProperty("--lbl", "url('" + msCover(id) + "')");
+      card.querySelector(".ms-num").textContent = msNumeral(id);
+      card.querySelector(".ms-name").textContent = msName(id);
+      card.querySelector(".ms-sub").textContent = msComposer(id) + " · " + msData[id].year;
+      card.addEventListener("click", function () { msOpenAlbum(id); });
+      row.appendChild(card);
+    });
+    sec.appendChild(row);
+    return sec;
+  }
+
+  /* --- albom sahifasi --- */
+  function msOpenAlbum(id) {
+    msOpen = id;
+    msScroll = window.scrollY || 0;
+    msRenderAlbum();
+    $("scr-cat").classList.add("hidden");
+    $("scr-album").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    jrBack(msCloseAlbum);
+  }
+
+  function msCloseAlbum() {
+    msOpen = null;
+    jrBack(null);
+    $("scr-album").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    try { window.scrollTo(0, msScroll); } catch (e) {}
+  }
+
+  function msRenderAlbum() {
+    var id = msOpen;
+    if (!id) { return; }
+    var x = MS_TX[lang];
+    var list = msTracks(id);
+    var total = 0;
+    list.forEach(function (tr) { total += tr.d || 0; });
+
+    $("ms-sleeve").src = msCover(id);
+    $("ms-vinyl").style.setProperty("--lbl", "url('" + msCover(id) + "')");
+    $("ms-kick").textContent = x.kick;
+    $("ms-title").textContent = msName(id);
+    $("ms-meta").textContent = [msComposer(id), (msData && msData[id] ? msData[id].year : ""),
+                                x.tracks(list.length), x.min(Math.round(total / 60))].join(" · ");
+    $("ms-tg").innerHTML = MS_ICON.tg + "<span></span>";
+    $("ms-tg").querySelector("span").textContent = x.tg;
+    $("ms-hint").textContent = x.hint;
+
+    var box = $("ms-list");
+    box.innerHTML = "";
+    list.forEach(function (tr, i) {
+      var row = document.createElement("div");
+      row.className = "ms-tr" + (tr.big ? " big" : "");
+      row.innerHTML =
+        '<button class="ms-tr-main" type="button"><span class="ms-tr-n"></span>' +
+        '<span class="ms-tr-eq">' + MS_ICON.eq + '</span><span class="ms-tr-t"></span>' +
+        '<span class="ms-tr-d"></span></button>' +
+        '<button class="ms-tr-tg" type="button">' + MS_ICON.tg + '</button>';
+      row.querySelector(".ms-tr-n").textContent = i + 1;
+      row.querySelector(".ms-tr-t").textContent = tr.t;
+      row.querySelector(".ms-tr-d").textContent = msDur(tr.d);
+      row.querySelector(".ms-tr-tg").setAttribute("aria-label", x.tgAria);
+      row.querySelector(".ms-tr-main").addEventListener("click", function () {
+        if (tr.big) { showToast(x.big); msSend(id, i + 1); return; }
+        if (msCur && msCur.album === id && msCur.i === i) { msToggle(); } else { msPlay(id, i); }
+      });
+      row.querySelector(".ms-tr-tg").addEventListener("click", function () { msSend(id, i + 1); });
+      box.appendChild(row);
+    });
+    msSync();
+  }
+
+  /* --- pleyer --- */
+  function msEnsureAudio() {
+    if (msAudio) { return msAudio; }
+    msAudio = new Audio();
+    msAudio.preload = "auto";
+    ["play", "pause", "playing", "waiting"].forEach(function (ev) { msAudio.addEventListener(ev, msSync); });
+    msAudio.addEventListener("timeupdate", msProgress);
+    msAudio.addEventListener("ended", function () { msNext(true); });
+    msAudio.addEventListener("error", msError);
+    try {
+      if (navigator.mediaSession) {
+        var ms = navigator.mediaSession;
+        ms.setActionHandler("play", function () { msToggle(); });
+        ms.setActionHandler("pause", function () { msToggle(); });
+        ms.setActionHandler("nexttrack", function () { msNext(false); });
+        ms.setActionHandler("previoustrack", msPrev);
+      }
+    } catch (e) {}
+    return msAudio;
+  }
+
+  function msUrl(id, i) {
+    return API_MUSIC + "/a/" + id + "/" + (i + 1) + "?k=" + encodeURIComponent(msKey);
+  }
+
+  function msPlay(id, i) {
+    var list = msTracks(id);
+    while (i < list.length && list[i].big) { i++; }
+    if (i >= list.length) { return; }
+    if (!msKey) {
+      // Kalit hali kelmagan (yoki eskirgan) — olib, keyin chalamiz
+      msFetch(function () {
+        if (msKey) { msPlay(id, i); } else { showToast(MS_TX[lang].loadFail, "err"); }
+      });
+      return;
+    }
+    var a = msEnsureAudio();
+    msCur = { album: id, i: i };
+    msRetried = false;
+    a.src = msUrl(id, i);
+    var p = a.play();
+    if (p && p["catch"]) { p["catch"](function () { msSync(); }); }
+    msMeta();
+    msSync();
+    if (!msLogged[id]) { msLogged[id] = true; msLogPlay(id); }
+  }
+
+  function msToggle() {
+    if (!msAudio || !msCur) { return; }
+    if (msAudio.ended) { msPlay(msCur.album, 0); return; }
+    if (msAudio.paused) {
+      var p = msAudio.play();
+      if (p && p["catch"]) { p["catch"](function () {}); }
+    } else {
+      msAudio.pause();
+    }
+  }
+
+  function msNext(auto) {
+    if (!msCur) { return; }
+    var list = msTracks(msCur.album);
+    var j = msCur.i + 1;
+    while (j < list.length && list[j].big) { j++; }
+    if (j < list.length) { msPlay(msCur.album, j); return; }
+    // Albom tugadi: to'xtaymiz, "Tinglash" boshidan boshlaydi
+    if (!auto && msAudio) { msAudio.pause(); }
+    msSync();
+  }
+
+  function msPrev() {
+    if (!msCur || !msAudio) { return; }
+    if (msAudio.currentTime > 3 || msCur.i === 0) { msAudio.currentTime = 0; return; }
+    var j = msCur.i - 1;
+    var list = msTracks(msCur.album);
+    while (j > 0 && list[j].big) { j--; }
+    msPlay(msCur.album, j);
+  }
+
+  function msError() {
+    if (!msCur || !msAudio || !msAudio.getAttribute("src")) { return; }
+    // Kalit eskirgan bo'lishi mumkin (12 soat) — bir marta yangisini olib qayta urinamiz
+    if (!msRetried) {
+      msRetried = true;
+      var cur = msCur;
+      msFetch(function () {
+        if (!msCur || msCur !== cur || !msKey) { return; }
+        msAudio.src = msUrl(cur.album, cur.i);
+        var p = msAudio.play();
+        if (p && p["catch"]) { p["catch"](function () { msSync(); }); }
+      });
+      return;
+    }
+    showToast(MS_TX[lang].loadFail, "err");
+    msSync();
+  }
+
+  function msMeta() {
+    try {
+      if (!navigator.mediaSession || !window.MediaMetadata || !msCur) { return; }
+      var tr = msTracks(msCur.album)[msCur.i];
+      var art = new URL(msCover(msCur.album), window.location.href).href;
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: tr ? tr.t : "", artist: msComposer(msCur.album), album: msName(msCur.album),
+        artwork: [{ src: art, sizes: "320x320", type: "image/jpeg" }]
+      });
+    } catch (e) {}
+  }
+
+  function msProgress() {
+    var bar = $("mp-prog");
+    if (!bar || !msAudio) { return; }
+    var d = msAudio.duration;
+    if (!d || !isFinite(d)) {
+      var tr = msCur && msTracks(msCur.album)[msCur.i];
+      d = tr ? tr.d : 0;
+    }
+    bar.style.width = d ? Math.min(100, msAudio.currentTime / d * 100) + "%" : "0";
+  }
+
+  // Hamma joydagi holatni bir yerdan yangilaydi: mini pleyer, albom sahifasi, javon
+  function msSync() {
+    var playing = msPlaying();
+    var x = MS_TX[lang];
+
+    var mp = $("mp");
+    if (mp && msCur) {
+      var tr = msTracks(msCur.album)[msCur.i];
+      $("mp-img").src = msCover(msCur.album);
+      $("mp-t").textContent = tr ? tr.t : "";
+      $("mp-a").textContent = msName(msCur.album) + " · " + msComposer(msCur.album);
+      $("mp-pp").innerHTML = playing ? MS_ICON.pause : MS_ICON.play;
+      $("mp-pp").setAttribute("aria-label", playing ? x.pause : x.play);
+      $("mp-next").innerHTML = MS_ICON.next;
+    }
+    msBarVisible();
+
+    if (msOpen) {
+      var mine = !!(msCur && msCur.album === msOpen);
+      var on = mine && playing;
+      $("ms-play").innerHTML = (on ? MS_ICON.pause : MS_ICON.play) + "<span></span>";
+      $("ms-play").querySelector("span").textContent = on ? x.pause : x.play;
+      $("ms-stage").classList.toggle("out", mine);
+      $("ms-stage").classList.toggle("spin", on);
+      var rows = $("ms-list").children;
+      for (var i = 0; i < rows.length; i++) {
+        var cur = mine && msCur.i === i;
+        rows[i].classList.toggle("on", cur);
+        rows[i].classList.toggle("paused", cur && !playing);
+      }
+    }
+
+    var cards = document.querySelectorAll(".ms-card");
+    for (var k = 0; k < cards.length; k++) {
+      var own = !!(msCur && cards[k].getAttribute("data-album") === msCur.album);
+      cards[k].classList.toggle("on", own && playing);
+    }
+  }
+
+  // Mini pleyer faqat kutubxona va albom sahifasida. Boshqa ekranlarda (chat,
+  // shaxmat...) pastki joy band — musiqa baribir chalinaveradi.
+  function msBarVisible() {
+    var mp = $("mp");
+    if (!mp) { return; }
+    var cat = $("scr-cat"), alb = $("scr-album");
+    var here = (cat && !cat.classList.contains("hidden")) || (alb && !alb.classList.contains("hidden"));
+    var show = !!(msCur && here);
+    mp.classList.toggle("hidden", !show);
+    document.body.classList.toggle("mp-on", show);
+  }
+
+  /* --- Telegramga yuborish --- */
+  function msSend(id, n) {
+    if (msSending) { return; }
+    var x = MS_TX[lang], t = T[lang];
+    var init = msInitData();
+    if (!init && !MS_LOCAL) { showToast(x.fail, "err"); return; }
+    msSending = true;
+    var pending = showToast(t.sending);
+    var body = { album: id };
+    if (n) { body.track = n; }
+    window.fetch(API_MUSIC + "/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      msSending = false;
+      dismissNote(pending);
+      if (res && res.ok) {
+        var tr = n ? msTracks(id)[n - 1] : null;
+        showToast(tr ? x.sentOne(tr.t) : x.sentAll, "ok");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+        return;
+      }
+      var err = res && res.error;
+      if (err === "not_subscribed") {
+        showToast(t.notSubscribed, "err");
+        try { if (tg && tg.openTelegramLink) { tg.openTelegramLink(MS_CHANNEL); } } catch (e) {}
+        return;
+      }
+      showToast(err === "slow" ? x.slow : x.fail, err === "slow" ? "" : "err");
+    })["catch"](function () {
+      msSending = false;
+      dismissNote(pending);
+      showToast(x.fail, "err");
+    });
+  }
+
+  // Statistikaga: albom shu sessiyada birinchi marta ilovada chalindi
+  function msLogPlay(id) {
+    var init = msInitData();
+    if (!init || !window.fetch) { return; }
+    window.fetch(API_MUSIC + "/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ album: id, action: "play" })
+    })["catch"](function () {});
+  }
+
+  function msInit() {
+    try { msData = JSON.parse(window.localStorage.getItem("hp_music") || "null"); } catch (e) { msData = null; }
+    $("ms-back").addEventListener("click", msCloseAlbum);
+    $("ms-play").addEventListener("click", function () {
+      if (!msOpen) { return; }
+      if (msCur && msCur.album === msOpen) { msToggle(); } else { msPlay(msOpen, 0); }
+    });
+    $("ms-tg").addEventListener("click", function () { if (msOpen) { msSend(msOpen, null); } });
+    $("mp-pp").addEventListener("click", msToggle);
+    $("mp-next").addEventListener("click", function () { msNext(false); });
+    $("mp-main").addEventListener("click", function () {
+      if (msCur && msOpen !== msCur.album) {
+        if (msOpen) { msOpen = msCur.album; msRenderAlbum(); try { window.scrollTo(0, 0); } catch (e) {} }
+        else { msOpenAlbum(msCur.album); }
+      }
+    });
+    // Ekranlar ko'p joyda to'g'ridan-to'g'ri yashiriladi — mini pleyer o'zi kuzatadi
+    try {
+      if (window.MutationObserver) {
+        var mo = new MutationObserver(msBarVisible);
+        mo.observe($("scr-cat"), { attributes: true, attributeFilter: ["class"] });
+        mo.observe($("scr-album"), { attributes: true, attributeFilter: ["class"] });
+      }
+    } catch (e) {}
+    msFetch();
+  }
+  msInit();
+  // ==/MS==
   // Katta karta uchun 16:9 rasm; bo'lmasa o'zbekchasi, u ham bo'lmasa plakat.
   function heroArt(id) {
     return "img/wide/" + id + "_" + lang + ".jpg";
@@ -6236,6 +6867,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       rows.appendChild(fb);
     }
 
+    // Soundtrack javoni (albomlar serverdan kelgan bo'lsa)
+    var msSec = msShelf();
+    if (msSec) { rows.appendChild(msSec); }
+
     // Kutubxonaning bo'sh javonlari: seriallar, musiqa, kitoblar.
     var soon = document.createElement("div");
     soon.className = "rowsec";
@@ -6248,7 +6883,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
     var tiles = document.createElement("div");
     tiles.className = "soonrow";
-    SOON_TILES.forEach(function (item) {
+    var soonItems = SOON_TILES.filter(function (item) { return !(item.key === "music" && msSec); });
+    tiles.style.gridTemplateColumns = "repeat(" + soonItems.length + ",minmax(0,1fr))";
+    soonItems.forEach(function (item) {
       var tile = document.createElement("div");
       tile.className = "soontile";
       tile.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
