@@ -1253,6 +1253,8 @@ button.glass:active .tube{transform:scale(.97)}
 .ms-card:active .ms-cover{transform:scale(.97)}
 .ms-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ms-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,12,.55),transparent 38%)}
+/* haqiqiy albom muqovasi — o'zgarishsiz: raqam va qoraytirish yo'q (nom muqovaning o'zida) */
+.ms-card.art .ms-num,.ms-card.art .ms-cover::after{display:none}
 .ms-num{
   position:absolute;left:9px;top:7px;z-index:1;font:600 20px/1 'Cormorant Garamond',serif;
   color:rgba(244,246,249,.9);text-shadow:0 1px 6px rgba(0,0,0,.6);font-style:normal;
@@ -6293,7 +6295,11 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     return init;
   }
 
-  function msCover(id) { return "img/sq/" + id + "_" + lang + ".jpg"; }
+  // Albom muqovasi guruhdagi albom sarlavhasi rasmidan (server saqlaydi); bo'lmasa film plakati
+  function msCover(id) {
+    var cv = msData && msData[id] && msData[id].cv;
+    return cv ? API_MUSIC + "/cover/" + id + ".jpg?v=" + cv : "img/sq/" + id + "_" + lang + ".jpg";
+  }
   function msTracks(id) { return (msData && msData[id] && msData[id].tracks) || []; }
   function msName(id) {
     for (var i = 0; i < MOVIES.length; i++) { if (MOVIES[i].id === id) { return MOVIES[i][lang]; } }
@@ -6361,7 +6367,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     list.forEach(function (id) {
       var card = document.createElement("button");
       card.type = "button";
-      card.className = "ms-card" + (msCur && msCur.album === id && msPlaying() ? " on" : "");
+      card.className = "ms-card" + (msCur && msCur.album === id && msPlaying() ? " on" : "") +
+                       (msData[id].cv ? " art" : "");
       card.setAttribute("data-album", id);
       card.innerHTML =
         '<span class="ms-art"><span class="ms-disc"></span><span class="ms-shine"></span>' +
@@ -6553,7 +6560,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       var art = new URL(msCover(msCur.album), window.location.href).href;
       navigator.mediaSession.metadata = new MediaMetadata({
         title: tr ? tr.t : "", artist: msComposer(msCur.album), album: msName(msCur.album),
-        artwork: [{ src: art, sizes: "320x320", type: "image/jpeg" }]
+        artwork: [{ src: art, type: "image/jpeg" }]
       });
     } catch (e) {}
   }
