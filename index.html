@@ -6341,6 +6341,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
           if (cat && !cat.classList.contains("hidden")) { renderCatalog(); }
           if (msOpen) { msRenderAlbum(); }
         }
+        msMaybeOst();
         if (cb) { cb(); }
       })["catch"](function () { if (cb) { cb(); } });
   }
@@ -6730,7 +6731,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     if (!init && !MS_LOCAL) { showToast(x.fail, "err"); return; }
     msSending = true;
     var pending = showToast(t.sending);
-    var body = { album: id };
+    var body = { album: id, lang: lang };
     if (n) { body.track = n; }
     window.fetch(API_MUSIC + "/send", {
       method: "POST",
@@ -6768,6 +6769,28 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
       body: JSON.stringify({ album: id, action: "play" })
     })["catch"](function () {});
+  }
+
+  // Trek ostidagi "GARRI POTTER KOLLEKSIYA" havolasi: t.me/<bot>/catalog?startapp=ost_hp1
+  // — ilova ochilishi bilan o'sha albom sahifasi ochiladi.
+  var msPendingOst = null;
+  try {
+    var msSp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
+    if (!msSp) {
+      var msSpm = /[?&#]tgWebAppStartParam=([^&#]+)/.exec((window.location.search || "") + (window.location.hash || ""));
+      if (msSpm) { msSp = decodeURIComponent(msSpm[1]); }
+    }
+    var msOm = /^ost_(hp[1-8])$/i.exec(msSp);
+    if (msOm) { msPendingOst = msOm[1].toLowerCase(); }
+  } catch (e) { msPendingOst = null; }
+
+  function msMaybeOst() {
+    if (!msPendingOst || !msTracks(msPendingOst).length) { return; }
+    var cat = $("scr-cat");
+    if (!cat || cat.classList.contains("hidden")) { return; }
+    var id = msPendingOst;
+    msPendingOst = null;
+    msOpenAlbum(id);
   }
 
   function msInit() {
@@ -7151,6 +7174,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     maybeAutoSort();
     maybeChessLink();
     maybeWorldLink();
+    msMaybeOst();
   }
 
   // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda
