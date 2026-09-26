@@ -1307,16 +1307,16 @@ button.glass:active .tube{transform:scale(.97)}
 .ms-title{margin:9px 0 0;font:400 31px/1.08 'Cormorant Garamond',serif}
 .ms-meta{margin-top:9px;font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
 .ms-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin:20px 0 18px}
-.ms-play,.ms-tg{
+.ms-play,.ms-dl{
   display:flex;align-items:center;justify-content:center;gap:9px;height:48px;border-radius:14px;cursor:pointer;
   font:800 12px/1 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;transition:transform .12s;
 }
 .ms-play{border:0;background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink)}
-.ms-tg{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.38);color:var(--gold)}
-.ms-play:active,.ms-tg:active{transform:scale(.97)}
-.ms-play svg,.ms-tg svg{width:17px;height:17px;flex:none}
+.ms-dl{background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.38);color:var(--gold)}
+.ms-play:active,.ms-dl:active{transform:scale(.97)}
+.ms-play svg,.ms-dl svg{width:17px;height:17px;flex:none}
 .ms-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.ms-tr{display:grid;grid-template-columns:1fr auto;align-items:center;border-bottom:1px solid var(--line)}
+.ms-tr{display:grid;grid-template-columns:1fr auto auto;align-items:center;border-bottom:1px solid var(--line)}
 .ms-tr-main{
   display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;min-width:0;
   padding:13px 4px 13px 2px;border:0;background:none;color:var(--text);text-align:left;cursor:pointer;font-family:'Manrope',sans-serif;
@@ -1330,17 +1330,41 @@ button.glass:active .tube{transform:scale(.97)}
 .ms-tr.on .ms-tr-eq{display:flex}
 .ms-tr.on .ms-tr-n{display:none}
 .ms-tr.big .ms-tr-t{color:var(--dim)}
-.ms-tr-tg{
-  width:40px;height:40px;display:grid;place-items:center;border:0;background:none;color:var(--dim);cursor:pointer;padding:0;
+.ms-tr-dl{
+  width:38px;height:40px;display:grid;place-items:center;border:0;background:none;color:var(--dim);cursor:pointer;padding:0;
 }
-.ms-tr-tg svg{width:18px;height:18px}
-.ms-tr-tg:active{color:var(--gold);transform:scale(.9)}
+.ms-tr-dl svg{width:18px;height:18px}
+.ms-tr-dl:active{color:var(--gold);transform:scale(.9)}
+/* like: yurakcha + son. Bosilgan — to'la oltin */
+.ms-tr-lk{
+  display:flex;align-items:center;gap:4px;min-width:40px;height:40px;padding:0 4px;border:0;background:none;
+  color:var(--dim);cursor:pointer;font:700 11px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;
+}
+.ms-tr-lk svg,.mp-btn.lk svg{width:18px;height:18px;fill:none;flex:none}
+.ms-tr-lk b{font-weight:700;min-width:8px;text-align:left}
+.ms-tr-lk.on,.mp-btn.lk.on{color:var(--gold)}
+.ms-tr-lk.on svg,.mp-btn.lk.on svg{fill:currentColor}
+.pop svg{animation:msPop .38s cubic-bezier(.3,1.6,.5,1)}
+@keyframes msPop{0%{transform:scale(1)}40%{transform:scale(1.38)}100%{transform:scale(1)}}
+.ms-lk-sum{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;border-radius:99px;
+  background:rgba(var(--gold-rgb),.1);box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.35);
+  color:var(--gold);font:800 12px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;
+}
+.ms-lk-sum svg{width:14px;height:14px;fill:currentColor}
+.ms-lk-sum.zero{background:transparent;box-shadow:inset 0 0 0 1px var(--line);color:var(--dim)}
+.ms-lk-sum.zero svg{fill:none}
+.ms-lk{
+  position:absolute;left:7px;bottom:7px;z-index:1;display:flex;align-items:center;gap:4px;padding:4px 7px;border-radius:99px;
+  background:rgba(8,10,14,.72);color:var(--gold);font:800 10.5px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;
+}
+.ms-lk svg{width:11px;height:11px;fill:currentColor}
 .ms-hint{margin:18px 0 0;padding:0 8px;text-align:center;font:italic 400 13px/1.55 'Cormorant Garamond',serif;color:var(--dim)}
 
 /* mini pleyer — kutubxona va albom sahifasida pastda turadi */
 .mp{
   position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:900;
-  width:calc(100% - 20px);max-width:420px;display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:2px;
+  width:calc(100% - 20px);max-width:420px;display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:2px;
   padding:8px 6px 8px 8px;border-radius:16px;overflow:hidden;
   background:rgba(22,27,35,.92);box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(var(--gold-rgb),.28);
   -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
@@ -1819,7 +1843,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   </div>
 
   <!-- ==MS== -->
-  <!-- Soundtrack albomi: muqova + plastinka, treklar, Telegramga yuborish -->
+  <!-- Soundtrack albomi: muqova + plastinka, treklar, like, yuklab olish (bot chatiga) -->
   <div id="scr-album" class="screen hidden">
     <div class="cup-hdr">
       <button class="back-btn" id="ms-back"><span style="font-size:13px">‹</span> <span data-xt="back">Ortga</span></button>
@@ -1833,9 +1857,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       <span class="ms-kick" id="ms-kick"></span>
       <h2 class="ms-title" id="ms-title"></h2>
       <span class="ms-meta" id="ms-meta"></span>
+      <span class="ms-lk-sum" id="ms-lk"></span>
       <div class="ms-acts">
         <button class="ms-play" id="ms-play" type="button"></button>
-        <button class="ms-tg" id="ms-tg" type="button"></button>
+        <button class="ms-dl" id="ms-dl" type="button"></button>
       </div>
     </div>
     <div class="ms-list" id="ms-list"></div>
@@ -1846,6 +1871,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   <div class="mp hidden" id="mp">
     <i class="mp-bar"><i id="mp-prog"></i></i>
     <button class="mp-main" id="mp-main" type="button"><img id="mp-img" alt=""><span class="mp-tx"><b id="mp-t"></b><span id="mp-a"></span></span></button>
+    <button class="mp-btn lk" id="mp-lk" type="button"></button>
     <button class="mp-btn pp" id="mp-pp" type="button"></button>
     <button class="mp-btn" id="mp-next" type="button"></button>
   </div>
@@ -6205,31 +6231,34 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
   var MS_TX = {
     uz: { shelf: "Soundtrack", kick: "Filmning asl musiqasi", play: "Tinglash", pause: "Pauza",
-          tg: "Telegramga", sentAll: "Albom bot chatiga yuborildi",
+          dl: "Yuklab olish", sentAll: "Albom bot chatiga yuborildi",
           sentOne: function (t) { return "«" + t + "» bot chatiga yuborildi"; },
           slow: "Biroz kuting…", fail: "Yuborib bo'lmadi, birozdan keyin urinib ko'ring",
           loadFail: "Musiqani yuklab bo'lmadi", big: "Bu trek faqat Telegramda chalinadi",
           hint: "Ilova yopilsa musiqa to'xtaydi. Yo'lda tinglash uchun albomni Telegramga yuboring — u yerda ekran o'chsa ham chalinaveradi.",
           albums: function (n) { return n + " albom"; }, tracks: function (n) { return n + " trek"; },
-          min: function (n) { return n + " daq"; }, tgAria: "Telegramga yuborish" },
+          min: function (n) { return n + " daq"; }, dlAria: "Yuklab olish (bot chatiga)", likeAria: "Yoqdi",
+          likeFail: "Like saqlanmadi, qayta urinib ko'ring" },
     ru: { shelf: "Саундтреки", kick: "Оригинальный саундтрек", play: "Слушать", pause: "Пауза",
-          tg: "В Telegram", sentAll: "Альбом отправлен в чат с ботом",
+          dl: "Скачать", sentAll: "Альбом отправлен в чат с ботом",
           sentOne: function (t) { return "«" + t + "» отправлен в чат с ботом"; },
           slow: "Подождите немного…", fail: "Не удалось отправить, попробуйте чуть позже",
           loadFail: "Не удалось загрузить музыку", big: "Этот трек играет только в Telegram",
           hint: "Если закрыть приложение, музыка остановится. Чтобы слушать в дороге, отправьте альбом в Telegram — там он играет даже с выключенным экраном.",
           albums: function (n) { return n + " " + msPlural(n, "альбом", "альбома", "альбомов"); },
           tracks: function (n) { return n + " " + msPlural(n, "трек", "трека", "треков"); },
-          min: function (n) { return n + " мин"; }, tgAria: "Отправить в Telegram" },
+          min: function (n) { return n + " мин"; }, dlAria: "Скачать (в чат с ботом)", likeAria: "Нравится",
+          likeFail: "Лайк не сохранился, попробуйте ещё раз" },
     en: { shelf: "Soundtracks", kick: "Original motion picture soundtrack", play: "Play", pause: "Pause",
-          tg: "To Telegram", sentAll: "Album sent to your bot chat",
+          dl: "Download", sentAll: "Album sent to your bot chat",
           sentOne: function (t) { return "“" + t + "” sent to your bot chat"; },
           slow: "One moment…", fail: "Couldn't send it, please try again shortly",
           loadFail: "Couldn't load the music", big: "This track plays only in Telegram",
           hint: "Music stops when the app is closed. To listen on the go, send the album to Telegram — it keeps playing there even with the screen off.",
           albums: function (n) { return n + (n === 1 ? " album" : " albums"); },
           tracks: function (n) { return n + (n === 1 ? " track" : " tracks"); },
-          min: function (n) { return n + " min"; }, tgAria: "Send to Telegram" }
+          min: function (n) { return n + " min"; }, dlAria: "Download (to your bot chat)", likeAria: "Like",
+          likeFail: "Couldn't save the like, please try again" }
   };
 
   var MS_COMPOSER = {
@@ -6243,7 +6272,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.3-6.8a1 1 0 0 0 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 6.2v11.6c0 .8.9 1.2 1.5.8l8.6-5.8a1 1 0 0 0 0-1.6L6.5 5.4C5.9 5 5 5.4 5 6.2z"/><rect x="16.6" y="5" width="2.6" height="14" rx="1.1"/></svg>',
-    tg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4.5 3.5 11.3l5.7 2.1M21 4.5l-3 15-8.8-6.1M21 4.5 9.2 13.4v5.1l3.2-3.3"/></svg>',
+    dl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M7 10.5l5 5 5-5 M5 20h14"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.35-9.2-8.7C1.3 8.3 3.1 5 6.4 5c2.1 0 3.5 1.2 5.6 3.3C14.1 6.2 15.5 5 17.6 5c3.3 0 5.1 3.3 3.6 6.3C19 15.65 12 20 12 20z"/></svg>',
     eq: '<i></i><i></i><i></i>'
   };
 
@@ -6336,13 +6366,16 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       card.innerHTML =
         '<span class="ms-art"><span class="ms-disc"></span><span class="ms-shine"></span>' +
         '<span class="ms-cover"><img alt="" loading="lazy" decoding="async"><b class="ms-num"></b>' +
-        '<span class="ms-eq">' + MS_ICON.eq + '</span></span></span>' +
+        '<span class="ms-eq">' + MS_ICON.eq + '</span><span class="ms-lk"></span></span></span>' +
         '<span class="ms-name"></span><span class="ms-sub"></span>';
       card.querySelector("img").src = msCover(id);
       card.querySelector(".ms-disc").style.setProperty("--lbl", "url('" + msCover(id) + "')");
       card.querySelector(".ms-num").textContent = msNumeral(id);
       card.querySelector(".ms-name").textContent = msName(id);
       card.querySelector(".ms-sub").textContent = msComposer(id) + " · " + msData[id].year;
+      var sum = msSum(id), pill = card.querySelector(".ms-lk");
+      pill.innerHTML = sum ? MS_ICON.heart + "<span>" + msLikeNum(sum) + "</span>" : "";
+      pill.classList.toggle("hidden", !sum);
       card.addEventListener("click", function () { msOpenAlbum(id); });
       row.appendChild(card);
     });
@@ -6384,8 +6417,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("ms-title").textContent = msName(id);
     $("ms-meta").textContent = [msComposer(id), (msData && msData[id] ? msData[id].year : ""),
                                 x.tracks(list.length), x.min(Math.round(total / 60))].join(" · ");
-    $("ms-tg").innerHTML = MS_ICON.tg + "<span></span>";
-    $("ms-tg").querySelector("span").textContent = x.tg;
+    $("ms-dl").innerHTML = MS_ICON.dl + "<span></span>";
+    $("ms-dl").querySelector("span").textContent = x.dl;
+    $("ms-dl").setAttribute("aria-label", x.dlAria);
     $("ms-hint").textContent = x.hint;
 
     var box = $("ms-list");
@@ -6397,17 +6431,20 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
         '<button class="ms-tr-main" type="button"><span class="ms-tr-n"></span>' +
         '<span class="ms-tr-eq">' + MS_ICON.eq + '</span><span class="ms-tr-t"></span>' +
         '<span class="ms-tr-d"></span></button>' +
-        '<button class="ms-tr-tg" type="button">' + MS_ICON.tg + '</button>';
+        '<button class="ms-tr-lk" type="button">' + MS_ICON.heart + '<b></b></button>' +
+        '<button class="ms-tr-dl" type="button">' + MS_ICON.dl + '</button>';
       row.querySelector(".ms-tr-n").textContent = i + 1;
       row.querySelector(".ms-tr-t").textContent = tr.t;
       // Ba'zi fayllarda davomiylik yozilmagan (0) — bo'sh qoldiramiz, "0:00" chalg'itadi
       row.querySelector(".ms-tr-d").textContent = tr.d ? msDur(tr.d) : "";
-      row.querySelector(".ms-tr-tg").setAttribute("aria-label", x.tgAria);
+      row.querySelector(".ms-tr-dl").setAttribute("aria-label", x.dlAria);
+      row.querySelector(".ms-tr-lk").setAttribute("aria-label", x.likeAria);
       row.querySelector(".ms-tr-main").addEventListener("click", function () {
         if (tr.big) { showToast(x.big); msSend(id, i + 1); return; }
         if (msCur && msCur.album === id && msCur.i === i) { msToggle(); } else { msPlay(id, i); }
       });
-      row.querySelector(".ms-tr-tg").addEventListener("click", function () { msSend(id, i + 1); });
+      row.querySelector(".ms-tr-dl").addEventListener("click", function () { msSend(id, i + 1); });
+      row.querySelector(".ms-tr-lk").addEventListener("click", function () { msLike(id, i); });
       box.appendChild(row);
     });
     msSync();
@@ -6569,6 +6606,101 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       var own = !!(msCur && cards[k].getAttribute("data-album") === msCur.album);
       cards[k].classList.toggle("on", own && playing);
     }
+    msLikeUI();
+  }
+
+  /* --- like'lar --- */
+  function msSum(id) {
+    var n = 0;
+    msTracks(id).forEach(function (tr) { n += tr.l || 0; });
+    return n;
+  }
+
+  function msLikeNum(n) { return n > 999 ? (Math.floor(n / 100) / 10) + "k" : String(n); }
+
+  // Yurakchalar va sonlarni hamma joyda yangilaydi: treklar, albom, javon, mini pleyer
+  function msLikeUI() {
+    if (msOpen) {
+      var list = msTracks(msOpen);
+      var rows = $("ms-list").children;
+      for (var i = 0; i < rows.length && i < list.length; i++) {
+        var b = rows[i].querySelector(".ms-tr-lk");
+        if (!b) { continue; }
+        b.classList.toggle("on", !!list[i].me);
+        b.setAttribute("aria-pressed", list[i].me ? "true" : "false");
+        b.querySelector("b").textContent = list[i].l ? msLikeNum(list[i].l) : "";
+      }
+      var sum = msSum(msOpen);
+      var chip = $("ms-lk");
+      chip.innerHTML = MS_ICON.heart + "<span></span>";
+      chip.querySelector("span").textContent = msLikeNum(sum);
+      chip.classList.toggle("zero", !sum);
+    }
+    var cards = document.querySelectorAll(".ms-card");
+    for (var k = 0; k < cards.length; k++) {
+      var s = msSum(cards[k].getAttribute("data-album"));
+      var pill = cards[k].querySelector(".ms-lk");
+      if (!pill) { continue; }
+      pill.innerHTML = s ? MS_ICON.heart + "<span>" + msLikeNum(s) + "</span>" : "";
+      pill.classList.toggle("hidden", !s);
+    }
+    var mb = $("mp-lk");
+    if (mb && msCur) {
+      var tr = msTracks(msCur.album)[msCur.i];
+      mb.innerHTML = MS_ICON.heart;
+      mb.classList.toggle("on", !!(tr && tr.me));
+      mb.setAttribute("aria-label", MS_TX[lang].likeAria);
+    }
+  }
+
+  var msLiking = {};
+  function msLike(id, i) {
+    var tr = msTracks(id)[i];
+    if (!tr) { return; }
+    var key = id + ":" + i;
+    if (msLiking[key]) { return; }
+    var init = msInitData();
+    if (!init && !MS_LOCAL) { showToast(MS_TX[lang].likeFail, "err"); return; }
+    // Darhol ko'rsatamiz, server javobi kelgach aniq son bilan almashtiramiz
+    var was = { me: !!tr.me, l: tr.l || 0 };
+    tr.me = !was.me;
+    tr.l = Math.max(0, was.l + (tr.me ? 1 : -1));
+    msLiking[key] = true;
+    msLikeUI();
+    msPop(id, i);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred(tr.me ? "medium" : "light"); } } catch (e) {}
+    window.fetch(API_MUSIC + "/like", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ album: id, track: i + 1, on: tr.me })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      msLiking[key] = false;
+      if (res && res.ok) { tr.me = !!res.me; tr.l = res.l || 0; }
+      else { tr.me = was.me; tr.l = was.l; showToast(MS_TX[lang].likeFail, "err"); }
+      msLikeUI();
+      try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
+    })["catch"](function () {
+      msLiking[key] = false;
+      tr.me = was.me; tr.l = was.l;
+      msLikeUI();
+      showToast(MS_TX[lang].likeFail, "err");
+    });
+  }
+
+  // Like bosilganda yurakcha "sakraydi"
+  function msPop(id, i) {
+    var els = [];
+    if (msOpen === id) {
+      var row = $("ms-list").children[i];
+      if (row) { els.push(row.querySelector(".ms-tr-lk")); }
+    }
+    if (msCur && msCur.album === id && msCur.i === i) { els.push($("mp-lk")); }
+    els.forEach(function (el) {
+      if (!el) { return; }
+      el.classList.remove("pop");
+      void el.offsetWidth;
+      el.classList.add("pop");
+    });
   }
 
   // Mini pleyer faqat kutubxona va albom sahifasida. Boshqa ekranlarda (chat,
@@ -6638,7 +6770,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       if (!msOpen) { return; }
       if (msCur && msCur.album === msOpen) { msToggle(); } else { msPlay(msOpen, 0); }
     });
-    $("ms-tg").addEventListener("click", function () { if (msOpen) { msSend(msOpen, null); } });
+    $("ms-dl").addEventListener("click", function () { if (msOpen) { msSend(msOpen, null); } });
+    $("mp-lk").addEventListener("click", function () { if (msCur) { msLike(msCur.album, msCur.i); } });
     $("mp-pp").addEventListener("click", msToggle);
     $("mp-next").addEventListener("click", function () { msNext(false); });
     $("mp-main").addEventListener("click", function () {
