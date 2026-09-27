@@ -6175,7 +6175,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   }
 
   function poster(id) {
-    return "img/" + id + "_" + lang + ".jpg?v=2";
+    return "img/" + id + "_" + lang + ".jpg?v=3";
   }
 
   // Film shu tilda yuklanganmi? NOT_READY ro'yxati catalog.py dan
@@ -6854,8 +6854,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   msInit();
   // ==/MS==
   // Katta karta uchun 16:9 rasm; bo'lmasa o'zbekchasi, u ham bo'lmasa plakat.
+  // img/hero — img/wide ning 800px li yengil nusxasi (wide ni bot Telegram kartalari uchun ishlatadi)
   function heroArt(id) {
-    return "img/wide/" + id + "_" + lang + ".jpg";
+    return "img/hero/" + id + "_" + lang + ".jpg";
   }
 
   function renderHero(t) {
@@ -6877,8 +6878,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     img.alt = "";
     img.decoding = "async";
     // 16:9 rasm (shu til -> o'zbekcha), bo'lmasa plakat
-    imgTry(img, [heroArt(m.id), "img/wide/" + m.id + "_uz.jpg", poster(m.id)], function (step, url) {
-      img.style.objectPosition = url.indexOf("/wide/") === -1 ? "center 20%" : "";
+    imgTry(img, [heroArt(m.id), "img/hero/" + m.id + "_uz.jpg", poster(m.id)], function (step, url) {
+      img.style.objectPosition = url.indexOf("/hero/") === -1 ? "center 20%" : "";
     });
     art.insertBefore(img, art.firstChild);
 
@@ -6954,7 +6955,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     img.decoding = "async";
     img.alt = m[lang];
     img.onload = function () { card.classList.add("has-img"); };
-    imgTry(img, [poster(m.id), "img/" + m.id + "_uz.jpg?v=2"]);
+    imgTry(img, [poster(m.id), "img/" + m.id + "_uz.jpg?v=3"]);
     card.appendChild(img);
 
     var veil = document.createElement("span");
