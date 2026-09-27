@@ -1253,6 +1253,22 @@ button.glass:active .tube{transform:scale(.97)}
 .srl-note{display:flex;align-items:flex-start;gap:9px;padding-top:12px;border-top:1px solid var(--line);
   font:500 12.5px/1.45 'Manrope',sans-serif;color:var(--text)}
 .srl-note svg{width:16px;height:16px;flex:none;margin-top:1px;color:var(--gold)}
+/* Ixcham holat: birinchi kirishdan keyin karta bitta qatorga aylanadi, bosilsa ochiladi */
+.srl{cursor:pointer;-webkit-user-select:none;user-select:none}
+.srl-mini{display:none}
+.srl.mini .srl-art{aspect-ratio:auto;height:64px}
+.srl.mini .srl-body,.srl.mini .srl-chip{display:none}
+.srl.mini .srl-bg{object-position:center 22%;animation:none;transform:none}
+.srl.mini .srl-art::after{background:linear-gradient(90deg,rgba(13,10,12,.88) 0%,rgba(13,10,12,.55) 45%,rgba(13,10,12,.9) 100%)}
+.srl.mini .srl-logo{left:12px;top:50%;bottom:auto;transform:translateY(-50%);width:auto;height:34px;max-width:40%}
+.srl.mini .srl-logo-tx{left:14px;top:50%;bottom:auto;transform:translateY(-50%);font-size:22px}
+.srl.mini .srl-mini{position:absolute;z-index:2;right:10px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:8px;text-align:right}
+.srl-mini-tx{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.srl-mini-tx b{font:800 14px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums;white-space:nowrap}
+.srl-mini-tx span{font:700 9px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+.srl-mini svg{width:16px;height:16px;flex:none;color:var(--gold)}
+.srl.mini:active{transform:scale(.99)}
 @media (prefers-reduced-motion:reduce){.srl-bg,.srl-snow i{animation:none}.srl-snow{display:none}}
 
 .rowsec{display:flex;flex-direction:column;gap:12px;margin-bottom:22px}
@@ -1876,6 +1892,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
         <div class="srl-snow" id="srl-snow"></div>
         <span class="srl-chip l" id="srl-chip"></span>
         <span class="srl-chip r" id="srl-date"></span>
+        <span class="srl-mini"><span class="srl-mini-tx"><b id="srl-mt"></b><span id="srl-mk"></span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
       </div>
       <div class="srl-body">
         <span class="srl-sub" id="srl-sub"></span>
@@ -7210,19 +7227,28 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
           d: "kun", h: "soat", m: "daqiqa", s: "soniya",
           t1: "Yuqori sifatli video", t2: "Sifatli dublyaj",
           note: "Serial chiqishi bilan shu botda bo'ladi — sizga xabar beramiz.",
-          done: "Premyera bo'ldi! Serial tez orada shu yerda." },
+          done: "Premyera bo'ldi! Serial tez orada shu yerda.",
+          left: function (d, h) { return d + " kun " + h + " soat qoldi"; }, doneShort: "Premyera bo'ldi!" },
     ru: { chip: "Новый сериал", date: "25 декабря", sub: "1 сезон · Философский камень · 8 серий",
           d: "дней", h: "часов", m: "минут", s: "секунд",
           t1: "Высокое качество видео", t2: "Качественная озвучка",
           note: "Как только сериал выйдет, он появится в этом боте — мы вам сообщим.",
-          done: "Премьера состоялась! Сериал скоро будет здесь." },
+          done: "Премьера состоялась! Сериал скоро будет здесь.",
+          left: function (d, h) { return "Осталось " + d + " дн. " + h + " ч."; }, doneShort: "Премьера состоялась!" },
     en: { chip: "New series", date: "December 25", sub: "Season 1 · Philosopher's Stone · 8 episodes",
           d: "days", h: "hours", m: "min", s: "sec",
           t1: "High-quality video", t2: "Quality dubbing",
           note: "As soon as it's out, it'll be right here in the bot — we'll let you know.",
-          done: "It has premiered! The series is coming here soon." }
+          done: "It has premiered! The series is coming here soon.",
+          left: function (d, h) { return d + " days " + h + " h left"; }, doneShort: "It has premiered!" }
   };
   var srlTimer = null;
+  var srlMini = null;   // null — hali aniqlanmagan; katta karta faqat BIRINCHI kirishda
+
+  function srlSetMini(on) {
+    srlMini = on;
+    $("srl").classList.toggle("mini", on);
+  }
 
   function srlTick() {
     var box = $("srl");
@@ -7231,7 +7257,13 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     var over = left <= 0;
     $("srl-cd").classList.toggle("hidden", over);
     $("srl-done").classList.toggle("hidden", !over);
-    if (over) { if (srlTimer) { clearInterval(srlTimer); srlTimer = null; } return; }
+    var x = SRL_TX[lang] || SRL_TX.uz;
+    if (over) {
+      $("srl-mt").textContent = x.doneShort;
+      if (srlTimer) { clearInterval(srlTimer); srlTimer = null; }
+      return;
+    }
+    $("srl-mt").textContent = x.left(Math.floor(left / 86400), Math.floor(left % 86400 / 3600));
     $("srl-d").textContent = Math.floor(left / 86400);
     $("srl-h").textContent = Math.floor(left % 86400 / 3600);
     $("srl-m").textContent = Math.floor(left % 3600 / 60);
@@ -7287,6 +7319,16 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     $("srl-t2").textContent = x.t2;
     $("srl-note").textContent = x.note;
     $("srl-done").textContent = x.done;
+    $("srl-mk").textContent = x.date;
+    if (srlMini === null) {
+      // Birinchi kirish: katta karta. Belgi darhol qo'yiladi — shu seansda karta
+      // katta qoladi, keyingi kirishda esa ixcham qator bo'lib chiqadi.
+      var seen = false;
+      try { seen = window.localStorage.getItem(TK("hp_srl_seen")) === "1"; } catch (e) {}
+      try { window.localStorage.setItem(TK("hp_srl_seen"), "1"); } catch (e) {}
+      srlSetMini(seen);
+      box.addEventListener("click", function () { srlSetMini(!srlMini); });
+    }
     box.classList.remove("hidden");
     srlTick();
     if (!srlTimer && SRL_AT > Date.now()) { srlTimer = setInterval(srlTick, 1000); }
