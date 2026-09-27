@@ -6143,6 +6143,37 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
   /* ---------- CHIZISH ---------- */
 
+  /* Rasm yuklanmasa darhol taslim bo'lmaymiz. Ilgari karta rasmni birinchi xatodayoq
+     olib tashlardi — internet bir lahza uzilsa yoki GitHub sekin javob bersa, plakatlar
+     ilova qayta ochilguncha yo'qolib qolardi (2026-09-27, Mac Telegram). Endi: zaxira
+     manzillar ketma-ket (masalan ruscha -> o'zbekcha), OXIRGISI esa 1.5 / 4 / 8 soniyadan
+     keyin qayta so'raladi; shundan keyingina rasm olib tashlanadi.
+     onStep(i, url) — har yangi manzilga o'tilganda (masalan uslubni moslash uchun). */
+  var IMG_RETRY = [1500, 4000, 8000];
+  function imgTry(img, urls, onStep) {
+    var list = [];
+    urls.forEach(function (u) { if (list.indexOf(u) === -1) { list.push(u); } });
+    var at = 0, tries = 0;
+    function go(url) {
+      if (onStep) { try { onStep(at, url); } catch (e) {} }
+      img.src = url;
+    }
+    img.onerror = function () {
+      if (at < list.length - 1) { at++; go(list[at]); return; }
+      if (tries < IMG_RETRY.length) {
+        var wait = IMG_RETRY[tries++];
+        setTimeout(function () {
+          if (!img.parentNode) { return; }           // karta allaqachon qayta chizilgan
+          img.src = list[at] + (list[at].indexOf("?") === -1 ? "?" : "&") + "r=" + tries;
+        }, wait);
+        return;
+      }
+      img.onerror = null;
+      if (img.parentNode) { img.parentNode.removeChild(img); }
+    };
+    go(list[0]);
+  }
+
   function poster(id) {
     return "img/" + id + "_" + lang + ".jpg?v=2";
   }
@@ -6845,17 +6876,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     var img = document.createElement("img");
     img.alt = "";
     img.decoding = "async";
-    img.src = heroArt(m.id);
-    img.onerror = function () {
-      if (this.src.indexOf("/wide/") !== -1 && this.src.indexOf("_uz.jpg") === -1) {
-        this.src = "img/wide/" + m.id + "_uz.jpg";
-      } else if (this.src.indexOf("/wide/") !== -1) {
-        this.src = poster(m.id);
-        this.style.objectPosition = "center 20%";
-      } else {
-        this.remove();
-      }
-    };
+    // 16:9 rasm (shu til -> o'zbekcha), bo'lmasa plakat
+    imgTry(img, [heroArt(m.id), "img/wide/" + m.id + "_uz.jpg", poster(m.id)], function (step, url) {
+      img.style.objectPosition = url.indexOf("/wide/") === -1 ? "center 20%" : "";
+    });
     art.insertBefore(img, art.firstChild);
 
     $("hero-kick").textContent = t.next;
@@ -6928,13 +6952,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     img.className = "card-img";
     img.loading = "lazy";
     img.decoding = "async";
-    img.src = poster(m.id);
     img.alt = m[lang];
-    img.onerror = function () {
-      if (this.src.indexOf("_uz.jpg") === -1) { this.src = "img/" + m.id + "_uz.jpg?v=2"; }
-      else { this.remove(); }
-    };
     img.onload = function () { card.classList.add("has-img"); };
+    imgTry(img, [poster(m.id), "img/" + m.id + "_uz.jpg?v=2"]);
     card.appendChild(img);
 
     var veil = document.createElement("span");
