@@ -677,6 +677,9 @@ var BOLIMLAR = [
   {id:"kanal",   nom:"Kanal",
    ic:'<path d="M21.5 3.2L2.8 10.4a.6.6 0 0 0 .05 1.13l4.6 1.6 1.7 5.2a.6.6 0 0 0 1.05.2l2.5-3 4.6 3.4a.6.6 0 0 0 .95-.35z"></path>' +
       '<path d="M21.5 3.2L9.15 13.13"></path>'},
+  {id:"musiqa",  nom:"Musiqa",
+   ic:'<path d="M9 18V5.5l11-2V16"></path><circle cx="6.5" cy="18" r="2.5"></circle>' +
+      '<circle cx="17.5" cy="16" r="2.5"></circle>'},
   {id:"lenta",   nom:"Lenta",
    ic:'<path d="M8.5 6.5H21"></path><path d="M8.5 12H21"></path><path d="M8.5 17.5H21"></path>' +
       '<circle cx="4" cy="6.5" r="1.1"></circle><circle cx="4" cy="12" r="1.1"></circle>' +
@@ -838,6 +841,10 @@ function classify(p){
   if((m = p.match(/^invited_(\d+)$/)))    return {t:"invited", by:m[1], lab:"Do'st taklifi bilan keldi", ic:"🤝"};
   if((m = p.match(/^share_(.+)$/)))       return {t:"share", lab:"Ulashdi", ic:"🔗"};
   if((m = p.match(/^bekor_(\w+)$/)))      return {t:"undo",  film:m[1], lab:"Bekor qildi", ic:"↩️"};
+  // Soundtrack: albom/trek yuklab olish (bot chatiga) va ilovada albomni tinglash
+  if((m = p.match(/^music_play_([a-z]{2}\d+)$/)))  return {t:"mplay", album:m[1], lab:"Albomni ilovada tingladi", ic:"🎧"};
+  if((m = p.match(/^music_([a-z]{2}\d+)_(\d+)$/))) return {t:"mdl", album:m[1], n:+m[2], lab:"Trekni yuklab oldi", ic:"🎵"};
+  if((m = p.match(/^music_([a-z]{2}\d+)$/)))       return {t:"mdl", album:m[1], n:0, lab:"Albomni yuklab oldi", ic:"💿"};
   if((m = p.match(/^(web|bot)_([a-z]{2}\d+)_(uz|ru|en)$/)))
     return {t:"film", origin:m[1], film:m[2], lang:m[3], lab:"Filmni oldi", ic:"🎬"};
   if((m = p.match(/^([a-z]{2}\d+)_(uz|ru|en)$/)))
@@ -846,6 +853,13 @@ function classify(p){
 }
 
 function filmName(k){ return (FILMS[k] && FILMS[k].n) || k; }
+
+/* Soundtrack: trek nomi bot bazasidan (/api/musiqa) keladi; hali kelmagan bo'lsa null. */
+function musiqaTrek(album, n){
+  var a = ST.musiqa && ST.musiqa.byId[album];
+  var t = a && a.tracks[n - 1];
+  return t ? t.t : null;
+}
 
 /* Izoh qoldirgan odamning ismi loglardan topiladi: sabablar bazasida faqat
    raqami bor, ismi esa har bir log yozuvida turadi. */
@@ -2423,6 +2437,12 @@ function hodisaMatni(r){
     return "do'st taklifi bilan keldi · <b>" + esc(p ? p.name : "ID " + e.by) + "</b>";
   }
   if(e.t === "undo") return "bekor qildi · <b>" + esc(filmName(e.film)) + "</b>";
+  if(e.t === "mplay") return "<b>" + esc(filmName(e.album)) + "</b> albomini ilovada tingladi";
+  if(e.t === "mdl"){
+    if(!e.n) return "<b>" + esc(filmName(e.album)) + "</b> albomini yuklab oldi";
+    var mt = musiqaTrek(e.album, e.n);
+    return "trekni yuklab oldi · <b>" + esc(mt || ("#" + e.n)) + "</b> · " + esc(filmName(e.album));
+  }
   if(e.t === "share"){
     var m = String(r.payload).match(/^share_([a-z]{2}\d+)_(uz|ru|en)$/);
     return m ? "ulashdi · <b>" + esc(filmName(m[1])) + "</b> " + LANGS[m[2]].f : "ulashdi";
@@ -2653,6 +2673,10 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
+  "Musiqa faolligi": "Soundtrack bo'limi kun sayin. Tingladi — ilovada trek boshidan boshlangan (bir odam bitta trekni yarim soat ichida qayta boshlasa ham bitta sanaladi; o'rtasiga o'tkazish sanalmaydi). Yukladi — albom yoki trek bot chatiga yuborildi (albom bitta hodisa). Like — shu kuni qo'yilgan like'lar (keyin olib tashlanganlari bu yerda yo'q). Tinglashlar 27-sentabrdan, yuklab olishlar 26-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
+  "Albomlar": "Har albom shu davrda: Tinglash — ilovada boshlangan treklar, Tinglovchi — nechta turli odam tingladi, Yuklab olish — albom butunligicha + alohida treklar, Like — shu davrda qo'yilgan like'lar. Ustun nomini bosib saralang.",
+  "Eng mashhur treklar": "Shu davrda eng ko'p tinglangan (yoki tanlangan ustun bo'yicha) 20 ta trek. Yuklab olish — faqat alohida yuklangan trek (butun albom bu yerda sanalmaydi). Ustun nomini bosib saralang, qayta bosish — teskari tartib.",
+  "Eng faol tinglovchilar": "Shu davrda musiqa bilan eng ko'p shug'ullangan 10 kishi: ilovada tinglagan treklari, yuklab olganlari va like'lari. Ismni bosib odamning butun tarixini ochasiz.",
   "Kundalik jonlanish": "Har kuni botda nechta hodisa bo'lgani: start — botni ochish, subscribed — kanalga qo'shilish, movie — film yuborish, left — kanaldan chiqish, blocked — botni bloklash. Bu yerda odamlar emas, YOZUVLAR sanaladi. Nomini bosib chiziqni olib turasiz, pastdagi slayder bilan davrning bir qismini yaqindan ko'rasiz.",
   "Sutka davomida": "Tanlangan kun soatlar bo'yicha: start, subscribed, movie, left, blocked hodisalari. Odamlar emas, yozuvlar sanaladi. Nomini bosib chiziqni olib turasiz.",
   "Voronka": "Odamlar botdan fakultetgacha qaysi qadamda to'xtab qolishi. Har qadam oldingi qadamdan o'tganlar ichidan sanaladi. «Kanalga a'zo» — loglarda qo'shilgani yozilganlar va film olganlar (bot film berishdan oldin a'zolikni tekshiradi). «Boshdan» — birinchi qadamga, «Oldingidan» — oldingi qadamga nisbatan. Qadamni bosib olib tursangiz, zanjir qayta hisoblanadi.",
@@ -3847,6 +3871,180 @@ function render(){
   topChiz();
   put("odamlar", c10);
 
+  /* — Musiqa (Soundtrack) — */
+  // Yuklab olishlar loglardan (music_*), tinglash va like'lar bot bazasidan (ST.musiqa).
+  var mzM = ST.musiqa;
+  var mzIch = function(t){ return t >= w.from && t <= w.to; };
+  var mzKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };
+  var mzPlays = mzM ? mzM.plays.filter(function(x){ return mzIch(x.t); }) : [];
+  var mzLikes = mzM ? mzM.likes.filter(function(x){ return mzIch(x.t); }) : [];
+  var mzDl = rows.filter(function(r){ return r.ev.t === "mdl"; });
+  var mzOchdi = rows.filter(function(r){ return r.ev.t === "mplay"; });
+  var mzSon = mzPlays.length;
+  if(!mzM && !mzDl.length && !mzOchdi.length){
+    var mz0 = card("Musiqa faolligi", "", "");
+    mz0.appendChild(emptyNote(ST.demo || !ST.src || ST.src.kind !== "api"
+      ? "Tinglash va like'lar bot bazasidan keladi — buning uchun «Ma'lumot manbai» da bot serveriga ulanish kerak."
+      : "Bu davrda musiqa bo'yicha hech narsa yo'q."));
+    put("musiqa", mz0);
+  } else {
+    var mzKun = {};
+    var mzQ = function(k){ return mzKun[k] = mzKun[k] || {tin:0, yuk:0, lik:0}; };
+    mzPlays.forEach(function(x){ mzQ(mzKey(x.t)).tin++; });
+    mzDl.forEach(function(r){ mzQ(mzKey(r.t)).yuk++; });
+    mzLikes.forEach(function(x){ mzQ(mzKey(x.t)).lik++; });
+    var mzList = dayList.map(function(d){
+      var q = mzKun[d.k] || {tin:0, yuk:0, lik:0};
+      return {k:d.k, lab:d.lab, tip:d.tip, tin:q.tin, yuk:q.yuk, lik:q.lik};
+    });
+    var mzC1 = poygaKarta({
+      nom:"Musiqa faolligi", kls:"", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin · nomini bosib olib turing",
+      list:mzList, dayList:dayList, birKun:birKun, oyna:"oynaM", ls:"hp_dash_musiqa",
+      ser:[{k:"tin", n:"Tingladi", t:"Tingladi", c:"#9085e9"},
+           {k:"yuk", n:"Yukladi", t:"Yukladi", c:"#3987e5"},
+           {k:"lik", n:"Like", t:"Like", c:"#d03b3b"}]
+    });
+    var mzTinglovchi = {};
+    mzPlays.forEach(function(x){ mzTinglovchi[x.uid] = 1; });
+    mzOchdi.forEach(function(r){ mzTinglovchi[r.uid] = 1; });
+    var mzAlbomDl = mzDl.filter(function(r){ return !r.ev.n; }).length;
+    var mzJamiLike = mzM ? mzM.likes.length : 0;
+    var mzK = document.createElement("div");
+    mzK.className = "tarq-kpi";
+    [["Tinglovchilar", fmtNum(Object.keys(mzTinglovchi).length), "ilovada tinglagan odam"],
+     ["Tinglashlar", mzM ? fmtNum(mzPlays.length) : "—", mzM ? "boshlangan treklar" : "bot bazasi ulanmagan"],
+     ["Yuklab olishlar", fmtNum(mzDl.length), fmtNum(mzAlbomDl) + " albom · " + fmtNum(mzDl.length - mzAlbomDl) + " trek"],
+     ["Like'lar", mzM ? fmtNum(mzLikes.length) : "—", mzM ? "jami " + fmtNum(mzJamiLike) + " ta" : "bot bazasi ulanmagan"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      mzK.appendChild(d);
+    });
+    mzC1.insertBefore(mzK, mzC1.children[1]);
+    put("musiqa", mzC1);
+
+    // Albom va trek bo'yicha yig'indilar
+    var mzA = {}, mzT = {}, mzOdam = {};
+    var mzAl = function(a){ return mzA[a] = mzA[a] || {a:a, tin:0, odam:{}, yuk:0, lik:0}; };
+    var mzTr = function(a, n){ var k = a + ":" + n; return mzT[k] = mzT[k] || {a:a, n:n, tin:0, odam:{}, yuk:0, lik:0}; };
+    var mzOd = function(u){ return mzOdam[u] = mzOdam[u] || {id:u, tin:0, yuk:0, lik:0}; };
+    mzPlays.forEach(function(x){
+      var al = mzAl(x.a); al.tin++; al.odam[x.uid] = 1;
+      var tr = mzTr(x.a, x.n); tr.tin++; tr.odam[x.uid] = 1;
+      mzOd(x.uid).tin++;
+    });
+    mzDl.forEach(function(r){
+      mzAl(r.ev.album).yuk++;
+      if(r.ev.n) mzTr(r.ev.album, r.ev.n).yuk++;
+      mzOd(r.uid).yuk++;
+    });
+    mzLikes.forEach(function(x){ mzAl(x.a).lik++; mzTr(x.a, x.n).lik++; mzOd(x.uid).lik++; });
+    Object.keys(mzA).forEach(function(k){ mzA[k].odamS = Object.keys(mzA[k].odam).length; });
+    Object.keys(mzT).forEach(function(k){ mzT[k].odamS = Object.keys(mzT[k].odam).length; });
+
+    // Saralanadigan jadval (Tarqalish TOP jadvali uslubida)
+    var mzJadval = function(o){
+      var c = card(o.nom, o.hint, o.kls);
+      if(!o.qatorlar.length){ c.appendChild(emptyNote(o.bosh)); return c; }
+      var tart = {k:o.USTUN[0].k, pas:false};
+      try{
+        var ts = JSON.parse(localStorage.getItem(o.ls) || "null");
+        if(ts && o.USTUN.some(function(u){ return u.k === ts.k; })) tart = ts;
+      }catch(e){}
+      var tw = document.createElement("div"); tw.className = "tbl-wrap";
+      var tb = document.createElement("table");
+      var th0 = document.createElement("thead"), hr = document.createElement("tr");
+      hr.innerHTML = o.bosUstun;
+      var thlar = o.USTUN.map(function(u){
+        var th = document.createElement("th");
+        th.className = "num sort"; th.tabIndex = 0;
+        if(u.title) th.title = u.title;
+        th.addEventListener("click", function(){ sarala(u.k); });
+        th.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); sarala(u.k); } });
+        hr.appendChild(th);
+        return th;
+      });
+      th0.appendChild(hr); tb.appendChild(th0);
+      var tbd = document.createElement("tbody");
+      tb.appendChild(tbd); tw.appendChild(tb); c.appendChild(tw);
+      function sarala(k){
+        tart = (tart.k === k) ? {k:k, pas:!tart.pas} : {k:k, pas:false};
+        try{ localStorage.setItem(o.ls, JSON.stringify(tart)); }catch(e){}
+        chiz();
+      }
+      function chiz(){
+        o.USTUN.forEach(function(u, i){
+          var on = tart.k === u.k;
+          thlar[i].classList.toggle("on", on);
+          thlar[i].setAttribute("aria-sort", on ? (tart.pas ? "ascending" : "descending") : "none");
+          thlar[i].textContent = u.n + (on ? (tart.pas ? " ↑" : " ↓") : "");
+        });
+        var ro = o.qatorlar.slice().sort(function(a, b){
+          var d = tart.pas ? a[tart.k] - b[tart.k] : b[tart.k] - a[tart.k];
+          return d || o.teng(a, b);
+        });
+        if(o.top) ro = ro.slice(0, o.top);
+        tbd.innerHTML = "";
+        ro.forEach(function(x, i){
+          var tr = document.createElement("tr");
+          var h = "<td style='color:var(--ink-3)'>" + (i + 1) + "</td>" + o.boshKatak(x);
+          o.USTUN.forEach(function(u){
+            h += "<td class='num'>" + (tart.k === u.k ? "<b>" + fmtNum(x[u.k]) + "</b>" : fmtNum(x[u.k])) + "</td>";
+          });
+          tr.innerHTML = h;
+          if(o.oxiri) o.oxiri(tr, x);
+          tbd.appendChild(tr);
+        });
+      }
+      chiz();
+      return c;
+    };
+
+    var mzAlbomlar = (mzM ? mzM.albums.map(function(a){ return a.id; }) : Object.keys(mzA))
+      .map(function(id){ var q = mzAl(id); q.odamS = q.odamS || 0; return q; });
+    put("musiqa", mzJadval({
+      nom:"Albomlar", hint:"shu davrda · ustunni bosib saralang", kls:"half", ls:"hp_dash_malbom",
+      qatorlar:mzAlbomlar, bosh:"Albomlar hali yo'q.",
+      bosUstun:"<th>#</th><th>Albom</th>",
+      boshKatak:function(x){
+        var a = mzM && mzM.byId[x.a];
+        return "<td><b>" + esc(filmName(x.a)) + "</b>" +
+          (a ? " <span class='uname'>" + esc(a.composer) + " · " + a.tracks.length + " trek</span>" : "") + "</td>";
+      },
+      USTUN:[{k:"tin", n:"Tinglash"}, {k:"odamS", n:"Tinglovchi"}, {k:"yuk", n:"Yuklab olish"}, {k:"lik", n:"Like"}],
+      teng:function(a, b){ return a.a < b.a ? -1 : 1; }
+    }));
+
+    var mzOdamlar = Object.values(mzOdam);
+    put("musiqa", mzJadval({
+      nom:"Eng faol tinglovchilar", hint:"TOP 10 · ustunni bosib saralang", kls:"half", ls:"hp_dash_modam", top:10,
+      qatorlar:mzOdamlar, bosh:"Bu davrda hech kim musiqa tinglamagan.",
+      bosUstun:"<th>#</th><th>Odam</th>",
+      boshKatak:function(x){
+        var p = personOf(x.id);
+        return "<td>" + odamHavola(x.id, p ? p.name : "ID " + x.id) + "</td>";
+      },
+      USTUN:[{k:"tin", n:"Tingladi"}, {k:"yuk", n:"Yukladi"}, {k:"lik", n:"Like"}],
+      teng:function(a, b){ return (b.tin + b.yuk + b.lik) - (a.tin + a.yuk + a.lik); }
+    }));
+
+    put("musiqa", mzJadval({
+      nom:"Eng mashhur treklar", hint:"TOP 20 · ustunni bosib saralang", kls:"", ls:"hp_dash_mtrek", top:20,
+      qatorlar:Object.values(mzT), bosh:"Bu davrda treklar tinglanmagan va yuklanmagan.",
+      bosUstun:"<th>#</th><th>Trek</th><th>Albom</th>",
+      boshKatak:function(x){
+        return "<td><b>" + esc(musiqaTrek(x.a, x.n) || ("#" + x.n)) + "</b></td><td>" + esc(filmName(x.a)) +
+          " <span class='uname'>" + x.n + "-trek</span></td>";
+      },
+      USTUN:[{k:"tin", n:"Tinglash"}, {k:"odamS", n:"Tinglovchi"}, {k:"yuk", n:"Yuklab olish",
+              title:"Faqat alohida yuklangan trek (butun albom sanalmaydi)"}, {k:"lik", n:"Like"}],
+      teng:function(a, b){ return (b.lik - a.lik) || (a.a < b.a ? -1 : a.a > b.a ? 1 : a.n - b.n); }
+    }));
+  }
+
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
   var LTUR = [
@@ -3855,7 +4053,8 @@ function render(){
     {k:"kanal",  n:"🟢 Kanal",    t:{sub:1, left:1}},
     {k:"bot",    n:"🔵 Bot",      t:{start:1, blocked:1}},
     {k:"fak",    n:"🏰 Fakultet", t:{sortst:1, house:1, wand:1}},
-    {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}}
+    {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}},
+    {k:"musiqa", n:"🎵 Musiqa",   t:{mdl:1, mplay:1}}
   ];
   var lHolat = {tur:"all", q:""}, lSoni = 150;
   try{
@@ -3963,6 +4162,7 @@ function render(){
     odamlar: s.uniq,
     kino: s.films,
     kanal: s.left + s.blocked,
+    musiqa: mzSon,
     lenta: rows.length
   });
   selectTab(BOLIMLAR.some(function(b){ return b.id === ST.tab; }) ? ST.tab : "umumiy");
@@ -4200,7 +4400,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons(); loadKanal();
+    done(); render(); loadReasons(); loadKanal(); loadMusiqa();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -4228,6 +4428,25 @@ function loadKanal(){
       ST.jim = true; render(); ST.jim = false;
     })
     .catch(function(){ /* eski bot bo'lsa karta Telegram sonisiz chiqadi */ });
+}
+
+/* Soundtrack: tinglashlar va like'lar bot bazasidan (loglarda faqat yuklab olish bor). */
+function loadMusiqa(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.musiqa = null; return; }
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/musiqa");
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, "musiqa");
+  fetch(u, {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if(!j || !j.ok) return;
+      var byId = {};
+      (j.albums || []).forEach(function(a){ byId[a.id] = a; });
+      function ev(x){ return {t:new Date(x[0]*1000), uid:String(x[1]), a:x[2], n:x[3]}; }
+      ST.musiqa = {albums:j.albums || [], byId:byId,
+                   plays:(j.plays || []).map(ev), likes:(j.likes || []).map(ev)};
+      ST.jim = true; render(); ST.jim = false;
+    })
+    .catch(function(){ /* eski bot bo'lsa bo'lim ma'lumotsiz chiqadi */ });
 }
 
 function loadReasons(){
