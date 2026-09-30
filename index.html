@@ -11892,8 +11892,14 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     var list = all.filter(function(m) {
       return (f === "all" || m.house === f) && (!q || String(m.name).toLowerCase().indexOf(q) >= 0);
     });
-    // Onlaynlar tepada, qolgani kubok ballari bo'yicha (server tartibi).
-    list = list.filter(function(m) { return m.online; }).concat(list.filter(function(m) { return !m.online; }));
+    // Onlaynlar tepada, keyin oxirgi marta onlayn bo'lgani bo'yicha (yangisi tepada);
+    // hech qachon ko'rinmaganlar oxirida, kubok ballari bo'yicha (server tartibi).
+    function seenMs(m) { var t = m.seen ? new Date(m.seen).getTime() : 0; return isNaN(t) ? 0 : t; }
+    list = list.map(function(m, i) { return { m: m, i: i }; }).sort(function(a, b) {
+      if (!!a.m.online !== !!b.m.online) return a.m.online ? -1 : 1;
+      var d = seenMs(b.m) - seenMs(a.m);
+      return d || a.i - b.i;
+    }).map(function(x) { return x.m; });
     var online = list.filter(function(m) { return m.online; }).length;
     $("chat-people-sub").textContent = L("chatMembersSub").replace("%s", list.length).replace("%s", online);
     var box = $("chat-people-list");
