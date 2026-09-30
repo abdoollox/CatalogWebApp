@@ -297,6 +297,8 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
 .fe .txt{flex:1 1 auto; min-width:0; font-size:12.5px; line-height:1.35}
 .fe .txt b{font-weight:600}
 .fe .who{color:var(--ink-2)}
+.fe .ch-jav{display:block; color:var(--ink-3); font-size:11.5px; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.xdot{display:inline-block; width:9px; height:9px; border-radius:50%; vertical-align:middle}
 .fe .when{color:var(--ink-3); font-size:11.5px; font-variant-numeric:tabular-nums; flex:none}
 .who-line{display:block; font-size:12.5px; margin-bottom:2px}
 .who-line b{color:var(--ink); font-weight:600}
@@ -625,6 +627,15 @@ var HOUSES = {
 // SVG gradient va chiziqlar uchun aniq rang kerak — CSS o'zgaruvchilar bilan bir xil.
 var HOUSE_HEX = {gryffindor:"#d9524a", slytherin:"#2fa36b", ravenclaw:"#5b8fd9", hufflepuff:"#e8b93c"};
 // Til ranglari — hamma chizmada bir xil (foydalanuvchi tanlovi, 2026-09-23)
+// Chat xonalari - panelda shu tartib va ranglarda
+var CHAT_XONA = [
+  {k:"global",     n:"Katta zal",  c:"#9085e9", ic:"🏛"},
+  {k:"gryffindor", n:"Grifindor",  c:"#d9524a", ic:"🦁"},
+  {k:"slytherin",  n:"Sliterin",   c:"#2fa36b", ic:"🐍"},
+  {k:"ravenclaw",  n:"Reyvenklo",  c:"#5b8fd9", ic:"🦅"},
+  {k:"hufflepuff", n:"Xaffelpaff", c:"#e8b93c", ic:"🦡"},
+  {k:"dm",         n:"Shaxsiy",    c:"#6d7f99", ic:"✉"}
+];
 var TIL_RANG = {uz:"#199e70", ru:"#d03b3b", en:"#3987e5"};
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
@@ -680,6 +691,8 @@ var BOLIMLAR = [
   {id:"musiqa",  nom:"Musiqa",
    ic:'<path d="M9 18V5.5l11-2V16"></path><circle cx="6.5" cy="18" r="2.5"></circle>' +
       '<circle cx="17.5" cy="16" r="2.5"></circle>'},
+  {id:"chat",    nom:"Chat",
+   ic:'<path d="M4 5.5h16v10.5H10l-6 4z"></path><path d="M8 9.5h8"></path><path d="M8 12.5h5"></path>'},
   {id:"lenta",   nom:"Lenta",
    ic:'<path d="M8.5 6.5H21"></path><path d="M8.5 12H21"></path><path d="M8.5 17.5H21"></path>' +
       '<circle cx="4" cy="6.5" r="1.1"></circle><circle cx="4" cy="12" r="1.1"></circle>' +
@@ -730,7 +743,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, chat:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -2673,6 +2686,13 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
+  "Chat faolligi": "Chatdagi xabarlar kun sayin (bir kunlik davrda — soat sayin), xonalar bo'yicha. \"Fakultetga qo'shildi\" kartalari sanalmaydi. Qaytib yozganlar — davr ichida kamida ikki xil kunda yozgan odamlar. Faqat o'qiydi — chatni ochgan, lekin hech qachon yozmagan odamlar (butun tarix).",
+  "Xonalar": "Har xona: shu davrdagi xabarlar va yozgan odamlar, xonani kamida bir marta ochganlar (butun tarix) va a'zolarning necha foizi yozgani. Katta zal a'zolari — barcha saralanganlar.",
+  "Muloqot sifati": "Odamlar gaplashyaptimi: javob sifatida yozilgan xabarlar ulushi, reaksiyalar, yangi saralanganlarning xush kelibsiz kartasiga javob yozilgani, chat orqali shaxmatga chaqirishlar, tahrirlangan va o'chirilgan xabarlar.",
+  "Chatda qachon yozishadi": "Hafta kuni va soat bo'yicha chat xabarlari (Toshkent vaqti). Katak qanchalik issiq rangda bo'lsa, o'sha payt shunchalik ko'p yozishgan.",
+  "Eng faol suhbatdoshlar": "Shu davrda eng ko'p yozgan 20 kishi: xabarlari, shulardan javoblar, ularning xabarlariga qo'yilgan reaksiyalar, qaysi xonalarda yozgani va oxirgi xabari. Ismni bosing — odam tarixi ochiladi.",
+  "Onlayn": "Bot har 5 daqiqada o'lchaydi: so'nggi 5 daqiqada ilovani ochganlar va shulardan chatni ochib turganlar. Chizmada har kunning (soatning) eng gavjum 5 daqiqasi. O'lchov 30-sentabrdan boshlangan.",
+  "Chat lentasi": "Katta zal va fakultet xonalaridagi xabarlar matni bilan, javob qaysi xabarga ekani va reaksiyalar soni. Shaxsiy yozishmalarning faqat vaqti va kimligi ko'rinadi, matni ko'rsatilmaydi. O'chirilgan xabar matni ham ko'rsatilmaydi.",
   "Musiqa faolligi": "Soundtrack bo'limi kun sayin. Tingladi — ilovada trek boshidan boshlangan (bir odam bitta trekni yarim soat ichida qayta boshlasa ham bitta sanaladi; o'rtasiga o'tkazish sanalmaydi). Yukladi — albom yoki trek bot chatiga yuborildi (albom bitta hodisa). Like — shu kuni qo'yilgan like'lar (keyin olib tashlanganlari bu yerda yo'q). Tinglashlar 27-sentabrdan, yuklab olishlar 26-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
   "Albomlar": "Har albom shu davrda: Tinglash — ilovada boshlangan treklar, Tinglovchi — nechta turli odam tingladi, Yuklab olish — albom butunligicha + alohida treklar, Like — shu davrda qo'yilgan like'lar. Ustun nomini bosib saralang.",
   "Eng mashhur treklar": "Shu davrda eng ko'p tinglangan (yoki tanlangan ustun bo'yicha) 20 ta trek. Yuklab olish — faqat alohida yuklangan trek (butun albom bu yerda sanalmaydi). Ustun nomini bosib saralang, qayta bosish — teskari tartib.",
@@ -3422,7 +3442,7 @@ function render(){
     var fK2 = document.createElement("figure");
     var kBal = null;
     var kSl = kList.length > 14;
-    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
     var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
     var kChiz = function(){
       fK2.innerHTML = "";
@@ -4045,6 +4065,332 @@ function render(){
     }));
   }
 
+  /* — Chat — */
+  // Hammasi bot bazasidan (/api/chatpanel, ST.chat). Umumiy xonalar matni bilan;
+  // shaxsiy yozishmalarning faqat soni (matni serverdan kelmaydi).
+  var chM = ST.chat;
+  var chIch = function(t){ return t >= w.from && t <= w.to; };
+  var chKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };
+  var chSon = 0;
+  var chIsm = function(uid){
+    var p = personOf(uid);
+    if(p && p.name) return p.name;
+    var u = chM && chM.users[uid];
+    return (u && u[0]) || "ID " + uid;
+  };
+  if(!chM){
+    var ch0 = card("Chat faolligi", "", "");
+    ch0.appendChild(emptyNote(ST.demo || !ST.src || ST.src.kind !== "api"
+      ? "Chat ma'lumoti bot bazasidan keladi — buning uchun «Ma'lumot manbai» da bot serveriga ulanish kerak."
+      : "Chat ma'lumoti yuklanmoqda…"));
+    put("chat", ch0);
+  } else {
+    var chDavr = chM.msgs.filter(function(m){ return chIch(m.t); });
+    var chOddiy = chDavr.filter(function(m){ return !m.join; });   // "fakultetga qo'shildi" kartasi - yozuv emas
+    chSon = chOddiy.length;
+    var chOld = null;
+    if(prev) chOld = chM.msgs.filter(function(m){ return !m.join && m.t >= prev.w.from && m.t <= prev.w.to; });
+
+    // 1) Faollik: kun (yoki soat) sayin, xona bo'yicha
+    var chKun = {};
+    chOddiy.forEach(function(m){
+      var q = chKun[chKey(m.t)] = chKun[chKey(m.t)] || {};
+      q[m.x] = (q[m.x] || 0) + 1;
+    });
+    var chList = dayList.map(function(d){
+      var q = chKun[d.k] || {}, o = {k:d.k, lab:d.lab, tip:d.tip};
+      CHAT_XONA.forEach(function(x){ o[x.k] = q[x.k] || 0; });
+      return o;
+    });
+    var chC1 = poygaKarta({
+      nom:"Chat faolligi", kls:"", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin xabarlar · xonani bosib olib turing",
+      list:chList, dayList:dayList, birKun:birKun, oyna:"oynaC", ls:"hp_dash_chatx",
+      ser:CHAT_XONA.map(function(x){ return {k:x.k, n:x.n, t:x.n, c:x.c}; })
+    });
+    var chYozgan = {}, chYozganKun = {};
+    chOddiy.forEach(function(m){
+      chYozgan[m.uid] = 1;
+      (chYozganKun[m.uid] = chYozganKun[m.uid] || {})[dayKey(m.t)] = 1;
+    });
+    var chQaytgan = Object.keys(chYozganKun).filter(function(u){ return Object.keys(chYozganKun[u]).length > 1; }).length;
+    // O'qiydi, lekin yozmaydi — chatni ochgan (butun tarix), hech qachon yozmagan
+    var chHechYozgan = {};
+    chM.msgs.forEach(function(m){ if(!m.join) chHechYozgan[m.uid] = 1; });
+    var chOchgan = {};
+    chM.reads.forEach(function(r){ chOchgan[r[0]] = 1; });
+    var chJim = Object.keys(chOchgan).filter(function(u){ return !chHechYozgan[u]; }).length;
+    var chK = document.createElement("div");
+    chK.className = "tarq-kpi";
+    var chFarq = function(a, b){
+      if(b == null) return "";
+      var d = a - b;
+      return (d > 0 ? "▲ " : d < 0 ? "▼ " : "• ") + (b ? Math.round(Math.abs(d) / b * 100) + "%" : (d ? "yangi" : "—")) +
+        " · oldin " + fmtNum(b);
+    };
+    var chOldYoz = null;
+    if(chOld){ chOldYoz = {}; chOld.forEach(function(m){ chOldYoz[m.uid] = 1; }); }
+    [["Xabarlar", fmtNum(chSon), chFarq(chSon, chOld && chOld.length) || "shu davrda"],
+     ["Yozganlar", fmtNum(Object.keys(chYozgan).length), chFarq(Object.keys(chYozgan).length, chOldYoz && Object.keys(chOldYoz).length) || "kamida bitta xabar"],
+     ["Qaytib yozganlar", fmtNum(chQaytgan), "davrda bir kundan ko'p yozgan"],
+     ["Faqat o'qiydi", fmtNum(chJim), "chatni ochgan, hech yozmagan (butun tarix)"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      chK.appendChild(d);
+    });
+    chC1.insertBefore(chK, chC1.children[1]);
+    put("chat", chC1);
+
+    // 2) Xonalar solishtirmasi
+    var chX = {};
+    CHAT_XONA.forEach(function(x){ chX[x.k] = {xabar:0, yozgan:{}, ochgan:0}; });
+    chOddiy.forEach(function(m){ var q = chX[m.x]; if(q){ q.xabar++; q.yozgan[m.uid] = 1; } });
+    chM.reads.forEach(function(r){ if(chX[r[1]]) chX[r[1]].ochgan++; });
+    var chJamiAzo = 0;
+    Object.keys(chM.houses).forEach(function(h){ chJamiAzo += chM.houses[h]; });
+    var chC2 = card("Xonalar", "shu davrda · a'zo = saralangan odamlar", "half");
+    var chTw = document.createElement("div"); chTw.className = "tbl-wrap";
+    var chH = "<table><thead><tr><th>Xona</th><th class='num'>Xabar</th><th class='num'>Yozgan</th>" +
+      "<th class='num' title='Xonani kamida bir marta ochgan odamlar (butun tarix)'>Ochgan</th>" +
+      "<th class='num' title='Xona a&#39;zolarining necha foizi shu davrda yozgan'>Yozgan / a'zo</th></tr></thead><tbody>";
+    CHAT_XONA.forEach(function(x){
+      var q = chX[x.k], yoz = Object.keys(q.yozgan).length;
+      var azo = x.k === "global" ? chJamiAzo : (chM.houses[x.k] || 0);
+      chH += "<tr><td><span class='xdot' style='background:" + x.c + "'></span> <b>" + esc(x.n) + "</b></td>" +
+        "<td class='num'>" + fmtNum(q.xabar) + "</td><td class='num'>" + fmtNum(yoz) + "</td>" +
+        "<td class='num'>" + fmtNum(q.ochgan) + "</td>" +
+        "<td class='num'>" + (x.k === "dm" ? "—" : (azo ? Math.round(yoz / azo * 1000) / 10 + "% <span class='uname'>/ " + fmtNum(azo) + "</span>" : "—")) + "</td></tr>";
+    });
+    chTw.innerHTML = chH + "</tbody></table>";
+    chC2.appendChild(chTw);
+    put("chat", chC2);
+
+    // 3) Muloqot sifati
+    var chReact = 0, chJavob = 0, chShaxmat = 0, chTahrir = 0, chOchir = 0;
+    var chById = {};
+    chM.msgs.forEach(function(m){ chById[m.id] = m; });
+    var chSalom = {}, chJoinlar = chDavr.filter(function(m){ return m.join; });
+    chOddiy.forEach(function(m){
+      chReact += m.r;
+      if(m.reply){ chJavob++; if(chById[m.reply] && chById[m.reply].join) chSalom[m.reply] = 1; }
+      if(m.chess) chShaxmat++;
+      if(m.edited) chTahrir++;
+      if(m.del) chOchir++;
+    });
+    var chC3 = card("Muloqot sifati", "shu davrda", "half");
+    var chK3 = document.createElement("div"); chK3.className = "tarq-kpi";
+    [["Javoblar", chSon ? Math.round(chJavob / chSon * 100) + "%" : "—", fmtNum(chJavob) + " ta xabar kimgadir javob"],
+     ["Reaksiyalar", fmtNum(chReact), chSon ? (Math.round(chReact / chSon * 10) / 10) + " ta har xabarga" : "—"],
+     ["Salom berildi", chJoinlar.length ? fmtNum(Object.keys(chSalom).length) + " / " + fmtNum(chJoinlar.length) : "—",
+      "yangi saralanganga javob yozildi"],
+     ["Shaxmat takliflari", fmtNum(chShaxmat), "chat orqali jangga chaqirish"],
+     ["Tahrirlangan", fmtNum(chTahrir), "xabar keyin o'zgartirilgan"],
+     ["O'chirilgan", fmtNum(chOchir), "egasi yoki admin o'chirgan"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      chK3.appendChild(d);
+    });
+    chC3.appendChild(chK3);
+    put("chat", chC3);
+
+    // 4) Qachon yozishadi
+    if(!birKun){
+      var chHeat = {heat:[]};
+      for(var chd = 0; chd < 7; chd++){ chHeat.heat.push(new Array(24).fill(0)); }
+      chOddiy.forEach(function(m){ chHeat.heat[(m.t.getDay() + 6) % 7][m.t.getHours()]++; });
+      var chC4 = card("Chatda qachon yozishadi", "hafta kuni va soat bo'yicha xabarlar", "");
+      var chF4 = document.createElement("figure"), chHB = null;
+      chF4.appendChild(chartHeat(chHeat));
+      chC4.appendChild(chF4);
+      chC4._qayta = function(balandlik){
+        if(balandlik === null) chHB = null; else if(balandlik) chHB = balandlik;
+        chF4.innerHTML = ""; chF4.appendChild(chartHeat(chHeat, chHB));
+      };
+      chC4._kuzat(chF4);
+      put("chat", chC4);
+    }
+
+    // 5) Eng faol suhbatdoshlar
+    var chOdam = {};
+    chOddiy.forEach(function(m){
+      var q = chOdam[m.uid] = chOdam[m.uid] || {uid:m.uid, xabar:0, javob:0, olgan:0, xona:{}, oxiri:m.t};
+      q.xabar++; if(m.reply) q.javob++; q.olgan += m.r; q.xona[m.x] = 1;
+      if(m.t > q.oxiri) q.oxiri = m.t;
+    });
+    var chTop = Object.values(chOdam).sort(function(a, b){ return b.xabar - a.xabar || b.oxiri - a.oxiri; }).slice(0, 20);
+    var chC5 = card("Eng faol suhbatdoshlar", "TOP 20 · shu davrda", "");
+    if(!chTop.length){ chC5.appendChild(emptyNote("Bu davrda chatda hech kim yozmagan.")); }
+    else {
+      var chT5 = "<table><thead><tr><th>#</th><th>Odam</th><th class='num'>Xabar</th><th class='num'>Javob</th>" +
+        "<th class='num' title='Uning xabarlariga qo&#39;yilgan reaksiyalar'>Reaksiya olgan</th><th>Xonalar</th><th class='num'>Oxirgi</th></tr></thead><tbody>";
+      chTop.forEach(function(q, i){
+        var u = chM.users[q.uid], h = u && HOUSES[u[2]];
+        chT5 += "<tr><td style='color:var(--ink-3)'>" + (i + 1) + "</td><td>" + (h ? h.crest + " " : "") +
+          odamHavola(q.uid, chIsm(q.uid)) + (u && u[1] ? " <span class='uname'>@" + esc(u[1]) + "</span>" : "") + "</td>" +
+          "<td class='num'><b>" + fmtNum(q.xabar) + "</b></td><td class='num'>" + fmtNum(q.javob) + "</td>" +
+          "<td class='num'>" + fmtNum(q.olgan) + "</td><td>" +
+          CHAT_XONA.filter(function(x){ return q.xona[x.k]; }).map(function(x){
+            return "<span class='xdot' style='background:" + x.c + "' title='" + esc(x.n) + "'></span>";
+          }).join(" ") + "</td><td class='num'>" + fmtDay(dayKey(q.oxiri)) + " " + fmtVaqt(q.oxiri).slice(0, 5) + "</td></tr>";
+      });
+      var chTw5 = document.createElement("div"); chTw5.className = "tbl-wrap";
+      chTw5.innerHTML = chT5 + "</tbody></table>";
+      chC5.appendChild(chTw5);
+    }
+    put("chat", chC5);
+
+    // 6) Onlayn: har 5 daqiqalik o'lchovlar -> kun (yoki soat) bo'yicha eng yuqori qiymat
+    var chOn = chM.online.filter(function(o){ return chIch(o.t); });
+    var chOK = {};
+    chOn.forEach(function(o){
+      var q = chOK[chKey(o.t)] = chOK[chKey(o.t)] || {ilova:0, chat:0};
+      if(o.ilova > q.ilova) q.ilova = o.ilova;
+      if(o.chat > q.chat) q.chat = o.chat;
+    });
+    var chOList = dayList.map(function(d){
+      var q = chOK[d.k] || {ilova:0, chat:0};
+      return {k:d.k, lab:d.lab, tip:d.tip, ilova:q.ilova, chat:q.chat};
+    });
+    var chC6 = poygaKarta({
+      nom:"Onlayn", kls:"", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin eng gavjum 5 daqiqa · nomini bosib olib turing",
+      list:chOList, dayList:dayList, birKun:birKun, oyna:"oynaO", ls:"hp_dash_onlayn",
+      ser:[{k:"ilova", n:"Ilovada", t:"Ilovada", c:"#3987e5"},
+           {k:"chat", n:"Chatda", t:"Chatda", c:"#199e70"}]
+    });
+    var chK6 = document.createElement("div"); chK6.className = "tarq-kpi";
+    var chSo = chM.online.length ? chM.online[chM.online.length - 1] : null;
+    var chHozir = chSo && (Date.now() - chSo.t.getTime() < 15 * 60000);
+    var chEng = null;
+    chOn.forEach(function(o){ if(!chEng || o.ilova > chEng.ilova) chEng = o; });
+    var chKunlar = Object.keys(chOK), chOrt = 0;
+    chKunlar.forEach(function(k){ chOrt += chOK[k].ilova; });
+    [["Hozir", chHozir ? fmtNum(chSo.ilova) : "—", chHozir ? fmtNum(chSo.chat) + " tasi chatda · " + fmtVaqt(chSo.t).slice(0, 5) : "so'nggi o'lchov yo'q"],
+     ["Eng gavjum payt", chEng ? fmtNum(chEng.ilova) : "—", chEng ? fmtDay(dayKey(chEng.t)) + " " + fmtVaqt(chEng.t).slice(0, 5) + " · chatda " + fmtNum(chEng.chat) : "bu davrda o'lchov yo'q"],
+     ["O'rtacha cho'qqi", chKunlar.length ? fmtNum(Math.round(chOrt / chKunlar.length * 10) / 10) : "—", (birKun ? "soat" : "kun") + " sayin eng yuqori qiymat o'rtachasi"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      chK6.appendChild(d);
+    });
+    chC6.insertBefore(chK6, chC6.children[1]);
+    if(!chM.online.length) chC6.appendChild(emptyNote("Onlayn o'lchovi 30-sentabrdan boshlandi — grafik kunlar o'tgan sari to'ladi."));
+    put("chat", chC6);
+
+    // 7) Chat lentasi
+    var chC7 = card("Chat lentasi", "eng yangisi yuqorida · shaxsiy yozishmalar matnisiz", "");
+    var CH_TUR = [{k:"all", n:"Hammasi"}].concat(CHAT_XONA);
+    var chH7 = {tur:"all", q:""}, chSoni = 150;
+    try{
+      var chLq = JSON.parse(localStorage.getItem("hp_dash_chatlenta") || "null");
+      if(chLq && CH_TUR.some(function(x){ return x.k === chLq.tur; })) chH7.tur = chLq.tur;
+    }catch(e){}
+    var chTeskari = chDavr.slice().reverse();
+    var chSanoq = {all:chTeskari.length};
+    chTeskari.forEach(function(m){ chSanoq[m.x] = (chSanoq[m.x] || 0) + 1; });
+    var chAsbob = document.createElement("div"); chAsbob.className = "lenta-asbob";
+    var chChip = document.createElement("div"); chChip.className = "lenta-chip";
+    CH_TUR.forEach(function(x){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = esc(x.n) + ' <span>' + fmtNum(chSanoq[x.k] || 0) + '</span>';
+      b.setAttribute("aria-pressed", String(chH7.tur === x.k));
+      b.addEventListener("click", function(){
+        chH7.tur = x.k; chSoni = 150;
+        try{ localStorage.setItem("hp_dash_chatlenta", JSON.stringify({tur:x.k})); }catch(e){}
+        [].forEach.call(chChip.children, function(y){ y.setAttribute("aria-pressed", String(y === b)); });
+        chChiz();
+      });
+      chChip.appendChild(b);
+    });
+    chAsbob.appendChild(chChip);
+    var chQ = document.createElement("div"); chQ.className = "qidir";
+    chQ.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+      'stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4.2-4.2"></path></svg>';
+    var chInp = document.createElement("input");
+    chInp.type = "search"; chInp.placeholder = "Ism, @username, ID yoki matn";
+    chInp.setAttribute("aria-label", "Chat lentasidan qidirish"); chInp.spellcheck = false;
+    chQ.appendChild(chInp);
+    chAsbob.appendChild(chQ);
+    chC7.appendChild(chAsbob);
+    var chSonEl = document.createElement("div"); chSonEl.className = "lenta-son";
+    chC7.appendChild(chSonEl);
+    var chFeed = document.createElement("div"); chFeed.className = "feed";
+    chC7.appendChild(chFeed);
+    var chXona = {};
+    CHAT_XONA.forEach(function(x){ chXona[x.k] = x; });
+    var chMatn = function(m){
+      if(m.join) return "<i>fakultetga qo'shildi — xush kelibsiz kartasi</i>";
+      if(m.del) return "<i>xabar o'chirilgan</i>";
+      if(m.x === "dm") return "<i>shaxsiy xabar</i>";
+      if(m.chess) return "♟ " + esc(m.text || "");
+      return esc(m.text || "").replace(/\n/g, "<br>");
+    };
+    function chMos(m){
+      if(chH7.tur !== "all" && m.x !== chH7.tur) return false;
+      var q = chH7.q;
+      if(!q) return true;
+      var u = chM.users[m.uid] || ["", "", ""];
+      return chIsm(m.uid).toLowerCase().indexOf(q) > -1 || u[1].toLowerCase().indexOf(q) > -1 ||
+        m.uid.indexOf(q) > -1 || (m.text || "").toLowerCase().indexOf(q) > -1;
+    }
+    function chChiz(){
+      var mos = chTeskari.filter(chMos);
+      chSonEl.textContent = fmtNum(mos.length) + " ta xabar" + ((chH7.q || chH7.tur !== "all") ? " topildi" : "");
+      chFeed.innerHTML = "";
+      if(!mos.length){ chFeed.appendChild(emptyNote("Mos xabar topilmadi.")); return; }
+      var kun = null;
+      mos.slice(0, chSoni).forEach(function(m){
+        var dk = dayKey(m.t);
+        if(dk !== kun){
+          kun = dk;
+          var kb = document.createElement("div"); kb.className = "kun-bosh";
+          kb.textContent = fmtDay(dk) + " " + m.t.getFullYear();
+          chFeed.appendChild(kb);
+        }
+        var x = chXona[m.x] || {n:m.x, c:"#6d7f99", ic:"•"};
+        var jav = "";
+        if(m.reply && chById[m.reply]){
+          var r = chById[m.reply];
+          var rMatn = r.join ? "fakultetga qo'shildi" : r.del ? "o'chirilgan xabar" : r.x === "dm" ? "shaxsiy xabar" : (r.text || "");
+          jav = "<span class='ch-jav'>↩ " + esc(chIsm(r.uid)) + ": " + esc(rMatn.slice(0, 70)) + (rMatn.length > 70 ? "…" : "") + "</span>";
+        }
+        var d = document.createElement("div"); d.className = "fe";
+        d.innerHTML = '<span class="ic" style="box-shadow:inset 3px 0 0 ' + x.c + '" title="' + esc(x.n) + '">' + x.ic + '</span>' +
+          '<span class="txt">' + jav + '<span class="who">' + odamHavola(m.uid, chIsm(m.uid)) + '</span> — ' + chMatn(m) +
+          (m.r ? " <span class='uname'>· " + m.r + " reaksiya</span>" : "") +
+          (m.edited && !m.del ? " <span class='uname'>· tahrirlangan</span>" : "") + '</span>' +
+          '<span class="when">' + fmtVaqt(m.t) + '</span>';
+        chFeed.appendChild(d);
+      });
+      if(mos.length > chSoni){
+        var yana = document.createElement("button");
+        yana.type = "button"; yana.className = "btn ghost lenta-yana";
+        yana.textContent = "Yana ko'rsatish (" + fmtNum(Math.min(150, mos.length - chSoni)) + " ta, jami " + fmtNum(mos.length) + ")";
+        yana.addEventListener("click", function(){ var joy = chFeed.scrollTop; chSoni += 150; chChiz(); chFeed.scrollTop = joy; });
+        chFeed.appendChild(yana);
+      }
+    }
+    var chKut = null;
+    chInp.addEventListener("input", function(){
+      clearTimeout(chKut);
+      chKut = setTimeout(function(){
+        chH7.q = chInp.value.trim().toLowerCase().replace(/^@/, "");
+        chSoni = 150; chFeed.scrollTop = 0; chChiz();
+      }, 150);
+    });
+    chChiz();
+    put("chat", chC7);
+  }
+
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
   var LTUR = [
@@ -4163,6 +4509,7 @@ function render(){
     kino: s.films,
     kanal: s.left + s.blocked,
     musiqa: mzSon,
+    chat: chSon,
     lenta: rows.length
   });
   selectTab(BOLIMLAR.some(function(b){ return b.id === ST.tab; }) ? ST.tab : "umumiy");
@@ -4400,7 +4747,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons(); loadKanal(); loadMusiqa();
+    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -4444,6 +4791,30 @@ function loadMusiqa(){
       function ev(x){ return {t:new Date(x[0]*1000), uid:String(x[1]), a:x[2], n:x[3]}; }
       ST.musiqa = {albums:j.albums || [], byId:byId,
                    plays:(j.plays || []).map(ev), likes:(j.likes || []).map(ev)};
+      ST.jim = true; render(); ST.jim = false;
+    })
+    .catch(function(){ /* eski bot bo'lsa bo'lim ma'lumotsiz chiqadi */ });
+}
+
+/* Chat: xabarlar, reaksiyalar, kim qaysi xonani ochgan, onlayn tarixi — bot bazasidan. */
+function loadChat(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.chat = null; return; }
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/chatpanel");
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, "chatpanel");
+  fetch(u, {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if(!j || !j.ok) return;
+      var rc = {};
+      (j.reacts || []).forEach(function(x){ rc[x[0]] = x[1]; });
+      ST.chat = {
+        msgs:(j.msgs || []).map(function(a){
+          return {id:a[0], t:new Date(a[1]), x:a[2], uid:String(a[3]), reply:a[4], del:!!(a[5] & 1),
+                  edited:!!(a[5] & 2), join:!!(a[5] & 4), chess:!!a[6], text:a[7], r:rc[a[0]] || 0};
+        }),
+        reads:j.reads || [], users:j.users || {}, houses:j.houses || {},
+        online:(j.online || []).map(function(o){ return {t:new Date(o[0]), ilova:o[1], chat:o[2]}; })
+      };
       ST.jim = true; render(); ST.jim = false;
     })
     .catch(function(){ /* eski bot bo'lsa bo'lim ma'lumotsiz chiqadi */ });
@@ -4585,7 +4956,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -4602,7 +4973,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -4642,11 +5013,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
