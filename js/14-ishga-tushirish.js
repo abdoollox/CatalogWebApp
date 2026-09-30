@@ -7,6 +7,7 @@
 
   function init() {
     preloadCrests();
+    initBack();
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
     $("world-btn").addEventListener("click", goWorld);

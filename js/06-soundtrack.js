@@ -189,12 +189,10 @@
     $("scr-cat").classList.add("hidden");
     $("scr-album").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
-    jrBack(msCloseAlbum);
   }
 
   function msCloseAlbum() {
     msOpen = null;
-    jrBack(null);
     $("scr-album").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();

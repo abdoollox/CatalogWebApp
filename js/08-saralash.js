@@ -65,15 +65,18 @@
     }
   }
 
+  // Sayohatdan chiqish (qalpoqcha ekrani yoki 1-savoldagi "Chiqish")
+  function questExit() {
+    if (qBusy) { return; }
+    hideSortScreens();
+    if (journey) { jrQuit(); return; }
+    if (leaveSort()) { return; }
+    openProfile();
+  }
+
   function sortBack() {
     if (qBusy || !QUEST) { return; }
-    if (qIdx === 0) {
-      hideSortScreens();
-      if (journey) { jrQuit(); return; }
-      if (leaveSort()) { return; }
-      openProfile();
-      return;
-    }
+    if (qIdx === 0) { questExit(); return; }
     qIdx--;
     scoreFor(qIdx, qPicks.pop(), -1);
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}

@@ -44,7 +44,6 @@
     return function () {
       worldFrom = "hub";
       $("scr-hub").classList.add("hidden");
-      hubBackButton(false);
       fn();
     };
   }
@@ -166,17 +165,8 @@
     $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
   }
 
-  function hubBackButton(on) {
-    try {
-      if (!tg || !tg.BackButton) { return; }
-      if (on) { tg.BackButton.show(); tg.BackButton.onClick(leaveHub); }
-      else { tg.BackButton.offClick(leaveHub); tg.BackButton.hide(); }
-    } catch (e) {}
-  }
-
   function openHub() {
     if (!hasHouse()) { openAlley(); return; }
-    jrBack(null);
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-alley", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
@@ -188,7 +178,6 @@
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     renderHub();
-    hubBackButton(true);
 
     // Sonlar va reyting fonda yangilanadi
     fetchRefs(function () { if (hubVisible()) { renderHub(); } });
@@ -204,7 +193,6 @@
 
   function leaveHub() {
     $("scr-hub").classList.add("hidden");
-    hubBackButton(false);
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
   }
@@ -235,7 +223,6 @@
   // Kings Kross, 9¾ -> Xogvarts ekspressi -> Katta zal (saralanish) -> Xogvarts.
   var LETTER_KEY = TK("hp_letter"), TRAIN_KEY = TK("hp_train");
   var journey = null;        // "wand" | "house": savollar yo'l ichidan boshlangan
-  var jrBackFn = null;
   var trTimer = null;
   // Ko'rish rejimi (adminlar): o'quvchi saralanmagandek ko'rinadi, hech narsa saqlanmaydi
   var jrPreview = false;
@@ -626,17 +613,6 @@
   // Fakultet serverdan kechroq kelsa - xiyobonda qolib ketmasin
   function jrRecheck() { if (alleyVisible() && hasHouse()) { openHub(); } }
 
-  // Telegram "Orqaga" tugmasi: yo'l ekranlarining har biri o'z qaytishini beradi
-  function jrBack(fn) {
-    try {
-      if (!tg || !tg.BackButton) { return; }
-      if (jrBackFn) { tg.BackButton.offClick(jrBackFn); }
-      jrBackFn = fn || null;
-      if (fn) { tg.BackButton.onClick(fn); tg.BackButton.show(); }
-      else { tg.BackButton.hide(); }
-    } catch (e) {}
-  }
-
   function jrHideAll() {
     ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-alley", "scr-train",
      "scr-vault", "scr-ticket",
@@ -651,18 +627,15 @@
     stopSortTimer();
     trStop();
     journey = null;
-    hubBackButton(false);
     jrHideAll();
     $("scr-alley").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     onbStep("alley");
     renderAlley();
-    jrBack(leaveAlley);
   }
 
   function leaveAlley() {
     if (endPreview()) { return; }
-    jrBack(null);
     $("scr-alley").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
@@ -787,7 +760,6 @@
     $("scr-alley").classList.add("hidden");
     startWand();
     journey = "wand";
-    jrBack(jrQuit);
   }
 
   function jrSort() {
@@ -796,7 +768,6 @@
     $("scr-alley").classList.add("hidden");
     startSorting();
     journey = "house";
-    jrBack(jrQuit);
   }
 
   // ---------------------------------------------------------------- maktub
@@ -1024,7 +995,6 @@
     $("gr-back").innerHTML = hubSvg(AL_ICONS.back);
     $("gr-kick").textContent = al("grKick");
     $("gr-title").textContent = al("grTitle");
-    jrBack(openAlley);
     try { window.scrollTo(0, 0); } catch (e) {}
     if (walHas("vault")) { grVault(false); return; }
     grIntro();
@@ -1134,7 +1104,6 @@
     $("tk-back").innerHTML = hubSvg(AL_ICONS.back);
     $("tk-kick").textContent = al("tkKick");
     $("tk-title").textContent = al("tkTitle");
-    jrBack(openAlley);
     try { window.scrollTo(0, 0); } catch (e) {}
     renderTicket();
   }
@@ -1211,7 +1180,6 @@
     go.onclick = trRun;
     wrap.appendChild(go);
     stage.appendChild(wrap);
-    jrBack(openAlley);
   }
 
   // Devorga yurish: ekranni bug' qoplaydi, ortidan poyezd yo'li
@@ -1816,12 +1784,6 @@
     $("w-set").classList.add("hidden");
     $("scr-world").classList.remove("hidden");
     renderWorld();
-    try {
-      if (tg && tg.BackButton) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(worldBack);
-      }
-    } catch (e) {}
   }
 
   function worldBack() {
@@ -1832,12 +1794,6 @@
   // keepHidden = true bo'lsa katalog ochilmaydi (boshqa ekran ochilmoqchi).
   function leaveWorld(keepHidden) {
     $("scr-world").classList.add("hidden");
-    try {
-      if (tg && tg.BackButton) {
-        tg.BackButton.offClick(worldBack);
-        tg.BackButton.hide();
-      }
-    } catch (e) {}
     if (!keepHidden) {
       $("scr-cat").classList.remove("hidden");
       renderCatalog();

@@ -6,3 +6,4 @@ __pycache__/
 # autentifikatsiya chetlab o'tiladi. Hech qachon git ga tushmasin.
 sinov.html
 tools/node_modules/
+tgmock.js
