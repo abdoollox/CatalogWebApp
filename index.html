@@ -9934,7 +9934,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       chatBanDone: "%s bloklandi", chatUnbanDone: "%s blokdan chiqarildi",
       chatDmTab: "💬 Shaxsiy", chatDmTitle: "Shaxsiy suhbatlar", chatDmYou: "Siz: ",
       chatDmEmpty: "Hali shaxsiy suhbat yo'q. Istalgan fakultet talabasiga yozishingiz mumkin.", chatDmFind: "Talabani tanlash",
-      chatTypingDm: "yozmoqda", chatPeerOnline: "onlayn", chatWrite: "Shaxsiy xabar", chatSearch: "Ism bo'yicha qidirish",
+      chatTypingDm: "yozmoqda", chatPeerOnline: "onlayn", chatSeenAgo: "%s daqiqa oldin onlayn edi", chatSeenNow: "hozirgina onlayn edi", chatSeenAt: "oxirgi marta: %s", chatSeenLong: "uzoq vaqt oldin", chatWrite: "Shaxsiy xabar", chatSearch: "Ism bo'yicha qidirish",
       chatAll: "Hammasi", chatMembersSub: "%s a'zo, %s onlayn", chatPoints: "%s ball", chatYou: "siz", chatNobody: "Hech kim topilmadi",
       chatDmWho: "Kim menga shaxsiy xabar yoza oladi", chatDmWhoShort: "Kim menga yoza oladi", chatDmAll: "Hamma",
       chatDmHouse: "Faqat fakultetdoshlarim", chatDmNone: "Hech kim", chatDmWhoNote: "Siz o'zingiz yozgan odam baribir javob bera oladi.",
@@ -10115,7 +10115,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       chatBanDone: "%s заблокирован(а)", chatUnbanDone: "%s разблокирован(а)",
       chatDmTab: "💬 Личные", chatDmTitle: "Личные сообщения", chatDmYou: "Вы: ",
       chatDmEmpty: "Личных переписок пока нет. Можно написать ученику любого факультета.", chatDmFind: "Выбрать ученика",
-      chatTypingDm: "печатает", chatPeerOnline: "в сети", chatWrite: "Написать лично", chatSearch: "Поиск по имени",
+      chatTypingDm: "печатает", chatPeerOnline: "в сети", chatSeenAgo: "был(а) %s мин. назад", chatSeenNow: "был(а) только что", chatSeenAt: "был(а): %s", chatSeenLong: "давно", chatWrite: "Написать лично", chatSearch: "Поиск по имени",
       chatAll: "Все", chatMembersSub: "%s участников, %s в сети", chatPoints: "%s очков", chatYou: "вы", chatNobody: "Никого не найдено",
       chatDmWho: "Кто может писать мне лично", chatDmWhoShort: "Кто может мне писать", chatDmAll: "Все",
       chatDmHouse: "Только мой факультет", chatDmNone: "Никто", chatDmWhoNote: "Тот, кому вы написали сами, всё равно сможет ответить.",
@@ -10296,7 +10296,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
       chatBanDone: "%s blocked", chatUnbanDone: "%s unblocked",
       chatDmTab: "💬 Private", chatDmTitle: "Private chats", chatDmYou: "You: ",
       chatDmEmpty: "No private chats yet. You can write to a student of any house.", chatDmFind: "Choose a student",
-      chatTypingDm: "typing", chatPeerOnline: "online", chatWrite: "Message privately", chatSearch: "Search by name",
+      chatTypingDm: "typing", chatPeerOnline: "online", chatSeenAgo: "last seen %s min ago", chatSeenNow: "last seen just now", chatSeenAt: "last seen: %s", chatSeenLong: "a long time ago", chatWrite: "Message privately", chatSearch: "Search by name",
       chatAll: "All", chatMembersSub: "%s members, %s online", chatPoints: "%s pts", chatYou: "you", chatNobody: "Nobody found",
       chatDmWho: "Who can message me privately", chatDmWhoShort: "Who can message me", chatDmAll: "Everyone",
       chatDmHouse: "Only my house", chatDmNone: "Nobody", chatDmWhoNote: "People you have written to can still reply.",
@@ -10682,6 +10682,18 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     return s;
   }
 
+  // "Oxirgi marta onlayn" matni (iso - serverdagi UTC vaqt). Bo'sh: hech qachon ko'rilmagan.
+  function chatSeenText(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    var mins = Math.floor((Date.now() - d.getTime()) / 60000);
+    if (mins < 1) return L("chatSeenNow");
+    if (mins < 60) return L("chatSeenAgo").replace("%s", mins);
+    if (mins > 60 * 24 * 60) return L("chatSeenAt").replace("%s", L("chatSeenLong"));
+    return L("chatSeenAt").replace("%s", chatDayLabel(d).toLowerCase() + " " + chatHM(d));
+  }
+
   function chatHint(text) {
     var el = document.createElement("div");
     el.className = "chat-hint";
@@ -11048,9 +11060,11 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     if (res.peer) {
       chatPeers[res.peer.uid] = res.peer;
       chatLive.peerOnline = res.peer.online;
+      chatLive.peerSeen = res.peer.seen || null;
       updateChatRoomUI();
     }
     if (res.peer_online !== undefined) chatLive.peerOnline = res.peer_online;
+    if (res.peer_seen) chatLive.peerSeen = res.peer_seen;
     if (res.dm_state !== undefined) { chatDmState = res.dm_state; chatFootUI(); }
     chatSubUI();
     clearTimeout(chatLiveTimer);
@@ -11075,6 +11089,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
         el.appendChild(d2);
       } else if (chatLive.peerOnline) {
         el.textContent = L("chatPeerOnline");
+      } else if (chatSeenText(chatLive.peerSeen || p.seen)) {
+        el.textContent = chatSeenText(chatLive.peerSeen || p.seen);
       } else if (ph) {
         el.textContent = (ph.crest ? ph.crest + " " : "") + cupHouseName(p.house);
       }
@@ -11887,6 +11903,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
     list.forEach(function(m) {
       var hh = HOUSES[m.house] || {};
       var sub = m.online ? L("chatPeerOnline") :
+        (chatSeenText(m.seen) ? chatSeenText(m.seen) + " · " : "") +
         (chatPeople.room === "global" ? (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house) + " · " : "") +
         L("chatPoints").replace("%s", m.points);
       var mine = m.uid == me;
