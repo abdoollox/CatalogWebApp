@@ -5,7 +5,7 @@
 Karta do'stga yuboriladigan taklif xabarining ustida turadi (bot:
 chess_card). Uslubi reklama kartasidagidek (promogen.py): qorong'i fon,
 oq serif sarlavha, oltin bosh harflar. O'ngda - oltin ramkali "Sehrli tosh"
-taxta, donalar ilovadagi bilan bir xil (js/app.js dagi CHESS_SVGS, marmar).
+taxta, donalar ilovadagi bilan bir xil (js/12-shaxmat.js dagi CHESS_SVGS, marmar).
 
 Rasm HTML qilib yig'iladi va Safari dvigatelida (WebKit) chiziladi -
 shunda donalar ilovadagi SVG lardan aynan olinadi.
@@ -53,7 +53,7 @@ POSITION = [
 
 
 def piece_svgs():
-    src = open(os.path.join(ROOT, "js", "app.js"), encoding="utf-8").read()
+    src = open(os.path.join(ROOT, "js", "12-shaxmat.js"), encoding="utf-8").read()
     block = re.search(r"var CHESS_SVGS = \{(.*?)\n  \};", src, re.S).group(1)
     svgs = dict(re.findall(r"(\w): '(<svg.*?</svg>)'", block))
 

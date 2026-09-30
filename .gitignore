@@ -5,3 +5,4 @@ __pycache__/
 # Sinov nusxasi: Telegram SDK o'rniga soxta obyekt qo'yiladi, ya'ni
 # autentifikatsiya chetlab o'tiladi. Hech qachon git ga tushmasin.
 sinov.html
+tools/node_modules/

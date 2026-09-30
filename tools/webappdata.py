@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""js/app.js dagi katalog ro'yxatini CatalogBot/catalog.py dan yasaydi.
+"""js/01-asos.js dagi katalog ro'yxatini CatalogBot/catalog.py dan yasaydi.
 
 NEGA KERAK
     Ilgari filmlar ro'yxati ikki joyda qo'lda yozilardi: botning ichida va
-    shu js/app.js da. Bittasini tuzatib ikkinchisini unutish oson edi -
+    shu js/01-asos.js da. Bittasini tuzatib ikkinchisini unutish oson edi -
     natijada bot bir filmni, ilova boshqasini ko'rsatishi mumkin edi.
 
     Endi yagona manba - catalog.py. Bu dastur o'sha fayldan o'qib,
-    js/app.js ichidagi belgilangan blokni qayta yozadi.
+    js/01-asos.js ichidagi belgilangan blokni qayta yozadi.
 
 ISHLATISH
-    python3 tools/webappdata.py            # js/app.js ni yangilaydi
+    python3 tools/webappdata.py            # js/01-asos.js ni yangilaydi
     python3 tools/webappdata.py --korish   # faqat ko'rsatadi, tegmaydi
 
     Film qo'shsangiz yoki message_id ni o'zgartirsangiz: avval catalog.py ni
@@ -30,7 +30,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-INDEX = os.path.join(ROOT, "js", "app.js")
+INDEX = os.path.join(ROOT, "js", "01-asos.js")
 
 BOSHI = "  /* ===== KATALOG BOSHI"
 OXIRI = "  /* ===== KATALOG OXIRI ===== */"
@@ -108,7 +108,7 @@ def blok(cat):
 
 
 def main():
-    p = argparse.ArgumentParser(description="js/app.js katalogini catalog.py dan yangilaydi")
+    p = argparse.ArgumentParser(description="js/01-asos.js katalogini catalog.py dan yangilaydi")
     p.add_argument("--korish", action="store_true", help="faqat ko'rsatadi, faylga tegmaydi")
     args = p.parse_args()
 
@@ -132,19 +132,19 @@ def main():
         o = src.index(OXIRI) + len(OXIRI)
     except ValueError:
         sys.exit(
-            "XATO: js/app.js ichida katalog belgilari topilmadi.\n"
+            "XATO: js/01-asos.js ichida katalog belgilari topilmadi.\n"
             "  Kutilgan belgilar:\n    %s ...\n    %s\n"
             "  Ular tasodifan o'chirilgan bo'lishi mumkin - git tarixidan tiklang."
             % (BOSHI, OXIRI)
         )
 
     if src[b:o] == yangi:
-        print("O'zgarish yo'q — js/app.js allaqachon catalog.py ga mos.")
+        print("O'zgarish yo'q — js/01-asos.js allaqachon catalog.py ga mos.")
         return
 
     with open(INDEX, "w", encoding="utf-8", newline="") as f:
         f.write(src[:b] + yangi + src[o:])
-    print("js/app.js yangilandi (%d ta film)." % len(cat.FILMS))
+    print("js/01-asos.js yangilandi (%d ta film)." % len(cat.FILMS))
     import versiya
     versiya.main()
     for lang in cat.LANGS:
