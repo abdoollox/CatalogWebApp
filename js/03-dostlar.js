@@ -13,7 +13,6 @@
   var REF_T = {
     uz: {
       kick: "Do'stlar reytingi", head: "Taklif qilganlar",
-      stripTitle: "Do'st taklif qiling — darajangizni oshiring ›",
       rankLbl: "Sizning darajangiz",
       friends: "Do'stlar", place: "O'rin", cup: "Kubok bali",
       next: "Keyingi daraja — %s: yana %f", top: "Eng yuqori darajadasiz!",
@@ -44,7 +43,6 @@
     },
     ru: {
       kick: "Рейтинг друзей", head: "Пригласившие",
-      stripTitle: "Приглашайте друзей — повышайте уровень ›",
       rankLbl: "Ваш уровень",
       friends: "Друзья", place: "Место", cup: "Очки кубка",
       next: "Следующий уровень — %s: ещё %f", top: "У вас высший уровень!",
@@ -79,7 +77,6 @@
     },
     en: {
       kick: "Friends leaderboard", head: "Top inviters",
-      stripTitle: "Invite friends — raise your rank ›",
       rankLbl: "Your rank",
       friends: "Friends", place: "Place", cup: "Cup points",
       next: "Next rank — %s: %f more", top: "You have the highest rank!",
@@ -566,35 +563,3 @@
     return false;
   }
   var SCALE_FLOOR = 100;   // mavsumdagi maksimum 350
-
-  // Farq bugun yopilsa - nuqtalar yaqin, yopilmasa - uzoq.
-  // closable yuborilmagan bo'lsa (eski server) - neytral masofa.
-  function gapRatio(diff, closable) {
-    var d = (typeof diff === "number" && diff > 0) ? diff : 0;
-    // closable 0 - bu muvaffaqiyatsizlik emas, "bugun hammasi qilingan".
-    // Bunday holatda uzun masofa ko'rsatish matnga zid bo'lardi.
-    if (typeof closable !== "number" || closable <= 0) { return 0.6; }
-    var r = d / (d + closable);
-    if (r < 0.12) { return 0.12; }
-    if (r > 0.9) { return 0.9; }   // hech qachon umidsiz ko'rinmasin
-    return r;
-  }
-
-  // Chegaradan o'tganlar orasidagi o'rin (1 dan boshlab), yoki null
-  function cupPlaceOf(house) {
-    var place = 0, list = cupSorted(), i;
-    for (i = 0; i < list.length; i++) {
-      if (!list[i].qualified) { continue; }
-      place++;
-      if (list[i].house === house) { return place; }
-    }
-    return null;
-  }
-
-  function cupRowOf(list, house) {
-    var i;
-    for (i = 0; i < list.length; i++) {
-      if (list[i].house === house) { return list[i]; }
-    }
-    return null;
-  }

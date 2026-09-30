@@ -175,7 +175,6 @@
     $("scr-cup").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
-    renderCupStrip();
     maybeAutoSort();
     maybeChessLink();
     maybeWorldLink();

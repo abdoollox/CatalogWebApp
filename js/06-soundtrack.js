@@ -848,38 +848,6 @@
     fitTitles();
   }
 
-  function renderSortCard(t) {
-    var card = $("sort-card");
-    var dot = $("avatar-dot");
-    if (!card) { return; }
-
-    if (house !== "none") {
-      card.classList.add("hidden");
-      dot.classList.add("hidden");
-      return;
-    }
-
-    paintHatSmall($("sort-card-mark"));
-    $("sort-card-title").textContent = t.cardTitle;
-    // Birinchi ogohlantirish nuqtasi: taklif kartasining o'zida
-    $("sort-card-sub").textContent = t.cardSub + " " + t.lockOnce;
-    $("sort-card-btn").textContent = t.sortCta;
-    card.classList.remove("hidden");
-    dot.classList.remove("hidden");
-  }
-
-  function renderWandCard(t) {
-    var card = $("wand-card");
-    if (!card) { return; }
-    // Faqat fakultet bor, tayoqcha yo'q bo'lganda
-    if (house === "none" || wand) { card.classList.add("hidden"); return; }
-    $("wand-card-title").textContent = t.wandCardTitle;
-    $("wand-card-sub").textContent = t.wandCardSub;
-    $("wand-card-btn").textContent = t.wandCta;
-    card.classList.remove("hidden");
-    if ($("avatar-dot")) { $("avatar-dot").classList.remove("hidden"); }
-  }
-
   function paintHatSmall(el) {
     if (!el || el.getAttribute("data-done") === "1") { return; }
     el.innerHTML = "";

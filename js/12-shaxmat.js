@@ -145,7 +145,6 @@
   }
 
   function isWhitePiece(p) { return p && p === p.toUpperCase(); }
-  function isBlackPiece(p) { return p && p === p.toLowerCase(); }
   function getPieceColor(p) { if (!p) return null; return isWhitePiece(p) ? "w" : "b"; }
 
   function isSquareAttacked(board, r, c, byColor) {
@@ -1322,17 +1321,6 @@
       executeMove(move);
     }
     return true;
-  }
-
-  // Oddiy bosish (sinovlar ham shuni chaqiradi).
-  function handleSquareClick(r, c) {
-    if (chessHist.view !== null) { chessBrowse(null); return; }
-    if (!chessCanAct()) return;
-    if (chessState.selectedSq && tryChessMove(r, c, false)) return;
-    var p = chessState.board[r][c];
-    if (p && getPieceColor(p) === chessState.myColor) { selectSquare(r, c); }
-    else { chessState.selectedSq = null; chessState.legalMoves = []; }
-    renderChessBoard();
   }
 
   function onBoardDown(e) {

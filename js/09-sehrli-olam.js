@@ -349,7 +349,6 @@
               en: "The money your family left you. Enough for your shopping." },
     grNext: { uz: "Xiyobonga qaytish", ru: "Вернуться в переулок", en: "Back to the alley" },
 
-
     tkKick: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
     tkTitle: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
     tkSay: { uz: "«Mana, biletingni yo'qotib qo'yma. Bir sentabr, soat o'n bir. Kings Krossda ko'rishamiz.»",
@@ -427,7 +426,6 @@
     ticket: "M4 8.5A2.5 2.5 0 0 0 6.5 6h11A2.5 2.5 0 0 0 20 8.5v2a1.5 1.5 0 0 0 0 3v2a2.5 2.5 0 0 0-2.5 2.5h-11A2.5 2.5 0 0 0 4 15.5v-2a1.5 1.5 0 0 0 0-3z M9.5 6v12",
     coin: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z M9.5 9.5h5 M9.5 14.5h5 M12 7v10"
   };
-
 
   function al(k) { return (AL_TX[k] && (AL_TX[k][lang] || AL_TX[k].uz)) || ""; }
   function jrGet(k) {
@@ -599,19 +597,6 @@
       .then(function (r) { return r.json(); })
       .then(function (res) { if (res && res.admin !== undefined) { chatAdmin = !!res.admin; } })
       ["catch"](function () { jrAdminAsked = false; });
-  }
-
-  function startPreview() {
-    jrPreview = true;
-    pv = { wand: null, letter: false, train: false };
-    applyHouse("none");
-    $("hub-set").classList.add("hidden");
-    hubBackButton(false);
-    jrBack(null);
-    jrHideAll();
-    $("scr-cat").classList.remove("hidden");
-    renderCatalog();
-    openLetter(false);
   }
 
   // Ko'rishdan chiqish: asl fakultet ranglari bilan Xogvartsga
@@ -969,14 +954,7 @@
      Haqiqiy holat SERVERDA (hpcup), bu yerda faqat nusxasi turadi. */
   var API_WALLET = "https://bot.tizimshunos.uz/api/wallet";
   var wal = null;              // {galleons, vault, pet, wand, ticket, prices}
-  var walBusy = false;
-  var PET_ORDER = ["owl", "cat", "toad", "rat"];
   var PRICE_FALLBACK = { wand: 7, pets: { owl: 10, cat: 8, toad: 2, rat: 1 } };
-
-  function walPrice(kind) {
-    var pr = (wal && wal.prices) || PRICE_FALLBACK;
-    return kind === "wand" ? pr.wand : (pr.pets || {})[kind];
-  }
 
   function walHas(k) { return !!(wal && wal[k]); }
   function walSum() { return wal ? (wal.galleons || 0) : 0; }
@@ -1883,5 +1861,4 @@
     $("scr-prof").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
-    renderCupStrip();
   }

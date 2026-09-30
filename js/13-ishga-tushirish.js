@@ -41,11 +41,9 @@
     });
     $("prof-back").addEventListener("click", worldGuard(closeProfile));
     $("sort-cta").addEventListener("click", startSorting);
-    if ($("sort-card-btn")) { $("sort-card-btn").addEventListener("click", startSorting); }
     $("wand-cta").addEventListener("click", startWand);
     $("wand-more").addEventListener("click", openWandDetail);
     $("det-back").addEventListener("click", closeWandDetail);
-    if ($("wand-card-btn")) { $("wand-card-btn").addEventListener("click", startWand); }
     $("wand-again").addEventListener("click", function () {
       var msg = T[lang].wandAskAgain;
       if (tg && tg.showConfirm) {
@@ -77,7 +75,6 @@
     $("refs-promo").addEventListener("click", function () { shareRefs("taklif"); });
     initChessUI();
     
-    if ($("cup-strip")) { $("cup-strip").addEventListener("click", openCup); }
     $("cup-back").addEventListener("click", worldGuard(closeCup));
     $("house-back").addEventListener("click", closeHouse);
     $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
@@ -125,9 +122,6 @@
     // Ogohlantirish shlyapa ekranidagi confirmSorting() da beriladi.
     // Bu yerda ikkinchi oyna ko'rsatilmaydi - u lockAsk ga zid edi.
     $("resort-btn").addEventListener("click", startSorting);
-
-    var u = tgUser();
-    if ($("avatar-btn")) { fillAvatar($("avatar-btn"), u, u ? fullName(u) : "?", false); }
 
     // Ikkala ekran ham yashirin turadi — saqlangan til aniqlangunicha
     $("scr-lang").classList.add("hidden");
@@ -184,7 +178,6 @@
       $("cup-back-txt").textContent = T[lang].cupBack;
       $("hall-back-txt").textContent = T[lang].cupBack;
       $("feed-back-txt").textContent = T[lang].cupBack;
-      if (!$("scr-cat").classList.contains("hidden")) { renderCupStrip(); }
       jrRecheck();
       fetchTasks(function() {
         renderTasksStrip();

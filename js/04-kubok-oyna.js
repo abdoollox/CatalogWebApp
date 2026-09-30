@@ -1,78 +1,8 @@
-/* Kubok oynasi: tasma, fakultetlar, ballar, zal, tarix, fakultet sahifasi
+/* Kubok oynasi: fakultetlar, ballar, zal, tarix, fakultet sahifasi
    Ilova kodi bir necha faylga bo'lingan; hammasi BIR umumiy maydonda ishlaydi
    va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
    narsani chaqirmang - tekshiruv: tools/tartib.js */
 "use strict";
-  /* ---------- katalogdagi tasma ---------- */
-
-  function renderCupStrip() {
-    var strip = $("cup-strip");
-    if (!strip) { return; }
-    if (!strip) { return; }
-    var t = T[lang];
-
-    if (!cupData) { strip.classList.add("hidden"); return; }
-
-    var me = cupMe();
-    var house = me.house;
-    var list = cupSorted();
-
-    $("cup-strip-kicker").textContent = t.cupTitle;
-
-    var time = $("cup-strip-time");
-    time.innerHTML = "";
-    var left = cupTimer(t);
-    if (left) {
-      time.appendChild(document.createElement("i"));
-      time.appendChild(document.createTextNode(left));
-      time.style.display = "";
-    } else {
-      time.style.display = "none";
-    }
-
-    // Yotiq naychalar: balandlik o'rniga kenglik to'ladi. Shkala kubok
-    // ekranidagidek - yetakchi SCALE_FLOOR dan past bo'lsa, hisob o'sha
-    // chegaraga nisbatan olinadi, aks holda mavsum boshida naychalar
-    // to'lib ketgandek ko'rinadi.
-    var top = 0;
-    for (var i = 0; i < list.length; i++) {
-      if ((list[i].total_points || 0) > top) { top = list[i].total_points || 0; }
-    }
-    var scale = Math.max(top, SCALE_FLOOR);
-
-    var tubes = $("cup-strip-tubes");
-    var names = $("cup-strip-names");
-    tubes.innerHTML = "";
-    names.innerHTML = "";
-
-    list.forEach(function (row) {
-      var hh = HOUSES[row.house] || {};
-      var mine = !!house && row.house === house;
-
-      var tube = document.createElement("span");
-      tube.className = "cup-strip-tube" + (row.qualified ? "" : " out");
-      if (mine) { tube.style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.6)"; }
-
-      var fill = document.createElement("i");
-      fill.style.width = Math.max(4, Math.round((row.total_points || 0) / scale * 100)) + "%";
-      fill.style.background = "rgba(" + (hh.rgb || "151,161,174") + "," + (mine ? ".62" : ".5") + ")";
-      tube.appendChild(fill);
-      tubes.appendChild(tube);
-
-      var nm = document.createElement("span");
-      nm.className = "cup-strip-name" + (mine ? " mine" : "");
-      nm.appendChild(document.createTextNode(cupHouseName(row.house)));
-      var val = document.createElement("b");
-      val.textContent = Math.round(row.total_points || 0);
-      val.style.color = hh.accent || "var(--accent)";
-      nm.appendChild(val);
-      names.appendChild(nm);
-    });
-
-
-
-    strip.classList.remove("hidden");
-  }
   /* ---------- FAKULTETLAR HAQIDA (kitoblar asosida) ----------
      Ismlar ilovadagi boshqa matnlar bilan bir xil yozilgan: uz - savollardagi
      (Sneyp, Uizli, Slaggorn, Tom Ridl), ru - "Росмэн" tarjimasi (fakultet
@@ -262,8 +192,8 @@
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
       histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
-      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Hech bir fakultet hisobga kirmadi (hech kim 30 ballga yetmagan).",
-      noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.", best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
+      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Hech bir fakultet hisobga kirmadi (hech kim 30 ballga yetmagan).", noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.",
+      best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
       months: ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"],
       srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
       tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
@@ -272,7 +202,7 @@
       chatT: "Umumiy xona", chatS: "Fakultetdoshlar bilan suhbat",
       chessT: "Sehrgar shaxmati", chessS: "Botlar va do'stlar bilan jang",
       refsS: "Taklif qiling — darajangiz oshadi",
-      youHow: "Qayerdan qancha", about: "Fakultet haqida",
+      about: "Fakultet haqida",
       hKick: "Xogvarts fakulteti", hSymbol: "Ramzi", hElement: "Unsuri", hColors: "Ranglari",
       hCup: "Bu haftaki kubokda", hActive: "%d faol a'zo", hPeople: "Fakultet ahli",
       founder: "Asoschisi", head: "Mudiri", ghost: "Arvohi", captain: "Kvidich sardori", prefects: "Prefektlar",
@@ -293,8 +223,8 @@
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
       histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
-      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "Ни один факультет не прошёл в зачёт (никто не набрал 30 очков).",
-      noWinnerSet: "Победитель этой недели не объявлялся.", best: "Волшебник недели", bestLive: "Пока больше всех",
+      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "Ни один факультет не прошёл в зачёт (никто не набрал 30 очков).", noWinnerSet: "Победитель этой недели не объявлялся.",
+      best: "Волшебник недели", bestLive: "Пока больше всех",
       months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
       srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
       tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
@@ -303,7 +233,7 @@
       chatT: "Гостиная", chatS: "Беседа с однокурсниками",
       chessT: "Волшебные шахматы", chessS: "Бои с ботами и друзьями",
       refsS: "Приглашайте — растёт уровень",
-      youHow: "Откуда сколько", about: "О факультете",
+      about: "О факультете",
       hKick: "Факультет Хогвартса", hSymbol: "Символ", hElement: "Стихия", hColors: "Цвета",
       hCup: "В кубке этой недели", hActive: "%d активных", hPeople: "Люди факультета",
       founder: "Основатель", head: "Декан", ghost: "Привидение", captain: "Капитан по квиддичу", prefects: "Старосты",
@@ -324,8 +254,8 @@
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
       histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
-      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house qualified (nobody reached 30 points).",
-      noWinnerSet: "No winner was announced this week.", best: "Wizard of the week", bestLive: "Top scorer so far",
+      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house qualified (nobody reached 30 points).", noWinnerSet: "No winner was announced this week.",
+      best: "Wizard of the week", bestLive: "Top scorer so far",
       months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
       tapHint: "Tap a house — its founder, head, ghost and members",
@@ -334,7 +264,7 @@
       chatT: "Common room", chatS: "Chat with your housemates",
       chessT: "Wizard chess", chessS: "Duel bots and friends",
       refsS: "Invite friends and rank up",
-      youHow: "Where from", about: "About the house",
+      about: "About the house",
       hKick: "Hogwarts house", hSymbol: "Emblem", hElement: "Element", hColors: "Colours",
       hCup: "In this week's cup", hActive: "%d active", hPeople: "House figures",
       founder: "Founder", head: "Head of House", ghost: "House ghost", captain: "Quidditch captain", prefects: "Prefects",

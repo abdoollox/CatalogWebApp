@@ -62,49 +62,7 @@ body{
 .back-btn:hover{color:var(--text);border-color:var(--accent)}
 .back-btn:active{transform:scale(.96)}
 .head-tools{display:flex;align-items:center;gap:8px}
-.avatar-btn{
-  width:38px;height:38px;border-radius:50%;padding:0;flex:none;overflow:hidden;
-  display:grid;place-items:center;cursor:pointer;
-  background:linear-gradient(150deg,var(--accent),var(--accent-2));
-  border:1px solid var(--line);
-  font:800 13px/1 'Manrope',sans-serif;color:var(--accent-ink);
-  transition:border-color .2s,transform .12s;
-}
-.avatar-btn:hover{border-color:var(--accent)}
-.avatar-btn:active{transform:scale(.93)}
-.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
-.avatar-wrap{position:relative;display:block;flex:none}
-.avatar-dot{
-  position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;
-  background:var(--accent);border:2px solid var(--bg);
-  animation:blip 2.4s ease-in-out infinite;
-}
 @keyframes blip{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.18);opacity:.75}}
-@media (prefers-reduced-motion:reduce){.avatar-dot{animation:none}}
-
-/* --- KATALOGDAGI SARALANISH TAKLIFI --- */
-.sort-card{
-  display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:center;
-  margin-top:12px;padding:14px;border-radius:18px;
-  background:rgba(255,255,255,.03);
-  border:1px dashed rgba(var(--accent-rgb),.42);
-}
-.sort-card-mark{
-  display:grid;place-items:center;width:56px;height:56px;border-radius:14px;
-  background:rgba(var(--accent-rgb),.10);
-  font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1;color:var(--accent);
-}
-.sort-card-mark img{width:44px;height:44px;object-fit:contain;display:block}
-.sort-card-body{display:flex;flex-direction:column;gap:8px;min-width:0}
-.sort-card-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.2}
-.sort-card-sub{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
-.sort-card-btn{
-  align-self:start;margin-top:2px;padding:10px 18px;
-  background:var(--accent);color:var(--accent-ink);
-  border:none;border-radius:99px;font:800 12px/1 'Manrope',sans-serif;
-  cursor:pointer;transition:transform .12s;
-}
-.sort-card-btn:active{transform:scale(.95)}
 
 /* --- PROFIL --- */
 .prof-top{display:flex;align-items:center;gap:15px;padding:4px 0 22px}
@@ -376,7 +334,7 @@ body{
   margin:0 auto 24px!important;padding:0;
 }
 .art-shelf svg{height:auto}
-.house-crest .art svg,.sort-card-mark .art svg{width:100%;height:100%}
+.house-crest .art svg{width:100%;height:100%}
 
 .reveal{text-align:center;padding:28px 0 10px;animation:riseIn .6s ease both}
 .reveal-crest{
@@ -410,16 +368,6 @@ body{
 
 /* --- PROGRESS --- */
 .prog{padding:14px 18px;background:var(--card);border:1px solid var(--line);border-radius:18px}
-.prog-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.prog-label{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--dim);
-}
-.prog-count{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--accent)}
-.prog-ticks{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:5px;margin:14px 0 10px}
-.prog-ticks span{height:5px;border-radius:99px;background:rgba(255,255,255,.1);transition:background .4s ease}
-.prog-ticks span.on{background:var(--accent)}
-.prog-hint{margin:0;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
 
 /* --- KEYINGI FILM --- */
 .next{
@@ -428,37 +376,15 @@ body{
   background:linear-gradient(115deg,rgba(var(--accent-rgb),.15),rgba(var(--accent-rgb),.04));
   border:1px solid rgba(var(--accent-rgb),.32);
 }
-.next-art{
-  position:relative;display:grid;place-items:center;height:92px;border-radius:14px;
-  overflow:hidden;font-family:'Cormorant Garamond',serif;font-size:26px;
-  color:rgba(238,241,245,.4);
-}
-.next-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.next-body{display:flex;flex-direction:column;gap:9px;min-width:0}
-.next-kicker{
-  font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--accent);
-}
-.next-title{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.15}
-.next-play{
-  align-self:start;padding:10px 18px;background:var(--accent);color:var(--accent-ink);
-  border:none;border-radius:99px;font:800 13px/1 'Manrope',sans-serif;
-  cursor:pointer;transition:transform .12s;
-}
-.next-play:active{transform:scale(.95)}
 
 /* --- KARTALAR --- */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
-.section-divider{grid-column:1 / -1;display:flex;align-items:center;gap:12px;margin:22px 0 6px}
-.section-divider::before,.section-divider::after{content:"";flex:1;height:1px;background:var(--line)}
-.section-divider span{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--accent);letter-spacing:0.05em}
 .card{
   position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;
   border:1px solid var(--line);cursor:pointer;
   transition:transform .14s,border-color .3s;
 }
 .card:active{transform:scale(.98)}
-.card.next-up{border-color:var(--accent)}
 .card.seen{border-color:rgba(255,255,255,.12)}
 .card-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .veil{position:absolute;inset:0;background:transparent;transition:background .3s}
@@ -499,15 +425,6 @@ body{
   background:linear-gradient(to top,rgba(6,8,12,.94) 12%,rgba(6,8,12,.65) 55%,transparent);
 }
 .card-text{display:flex;flex-direction:column;gap:3px;min-width:0}
-.card-play{
-  flex:none;width:36px;height:36px;border-radius:50%;
-  display:grid;place-items:center;
-  background:var(--accent);color:var(--accent-ink);border:none;padding:0;
-  font-size:14px;line-height:1;cursor:pointer;
-  transition:transform .12s,background .2s;
-}
-.card-play:active{transform:scale(.88)}
-.card.seen .card-play{background:rgba(255,255,255,.16);color:#dfe5ee}
 .card-title{
   font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;
   line-height:1.1;color:#f4f6f9;
@@ -515,45 +432,7 @@ body{
 
 /* --- XOGVARTS KUBOGI (maket 2.0) --- */
 
-/* katalogdagi tasma - kirish nuqtasi */
-.cup-strip{
-  display:block;width:100%;text-align:left;background:var(--card);
-  border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:18px;
-  padding:14px;margin-top:14px;margin-bottom:14px;cursor:pointer;
-  font-family:'Manrope',sans-serif;transition:.2s;
-}
-.cup-strip:active{transform:scale(.99)}
 .chat-strip-n{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:var(--accent);color:var(--accent-ink);font:800 12px/22px 'Manrope',sans-serif;text-align:center}
-.cup-strip-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-.cup-strip-kicker{
-  font:800 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--dim);
-}
-.cup-strip-time{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;flex:none;
-  background:var(--wash-1);border:1px solid var(--line);
-  font:600 10px/1 'Manrope',sans-serif;color:var(--dim);
-}
-.cup-strip-time i{width:4px;height:4px;border-radius:50%;background:var(--accent);flex:none}
-/* Yotiq qum soatlari. To'rt ustun butun kenglikni bo'lib oladi, shuning
-   uchun matn uzunligidan qat'i nazar o'ngda bo'sh joy qolmaydi. */
-.cup-strip-tubes,.cup-strip-names{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.cup-strip-tube{
-  position:relative;height:26px;border-radius:10px;overflow:hidden;
-  background:var(--wash-1);border:1px solid var(--line);
-}
-.cup-strip-tube i{
-  position:absolute;left:0;top:0;bottom:0;display:block;
-  background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.18) 1px,transparent 1.5px);
-  background-size:8px 8px;
-}
-.cup-strip-tube.out{opacity:.45}
-.cup-strip-names{margin-top:10px}
-.cup-strip-name{text-align:center;font:600 10px/1.3 'Manrope',sans-serif;color:var(--dim)}
-.cup-strip-name.mine{color:var(--text)}
-.cup-strip-name b{display:block;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;margin-top:2px}
-
-
 /* ekran sarlavhasi */
 .cup-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
 .cup-timer{
@@ -598,28 +477,6 @@ body{
 .g-val{display:block;font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--hc);margin-top:2px}
 .g-need{display:block;font:500 10px/1.35 'Manrope',sans-serif;color:var(--dim);margin-top:3px}
 
-/* taranglik - ramka RAQIB rangida, o'z rangida emas */
-.cup-gap{
-  border:1px solid rgba(var(--rc-rgb),.34);background:var(--card);
-  border-radius:18px;padding:14px 18px;margin-top:20px;
-}
-.gap-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-.gap-txt{font:600 13px/1.45 'Manrope',sans-serif;color:var(--text)}
-.gap-txt em{font-style:normal;color:var(--rc);font-weight:800}
-.gap-crest{
-  width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;
-  background:rgba(var(--rc-rgb),.13);border:1px solid rgba(var(--rc-rgb),.42);
-}
-.gap-crest img{width:30px;height:30px;object-fit:contain;display:block}
-.gap-track{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.08)}
-.gap-span{position:absolute;top:0;height:100%;border-radius:3px;opacity:.55}
-.gap-dot{
-  position:absolute;top:50%;width:11px;height:11px;border-radius:50%;
-  transform:translate(-50%,-50%);border:2px solid var(--card);
-}
-.gap-hint{font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim);margin-top:13px}
-.gap-hint b{color:var(--text);font-weight:600}
-
 /* shaxsiy blok - ball HECH QACHON fakultet o'rtachasi bilan yonma-yon emas */
 .cup-you{
   background:var(--card);border:1px solid var(--line);
@@ -632,8 +489,6 @@ body{
 }
 .you-val{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--accent)}
 .you-val s{text-decoration:none;font-size:15px;color:var(--dim)}
-.you-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:12px;overflow:hidden}
-.you-bar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .5s ease}
 .you-foot{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
@@ -644,7 +499,6 @@ body{
 /* 30 ballga yetmaganlar uchun - ayblov emas, qancha qolgani */
 .cup-you.gate{border-color:rgba(var(--gold-rgb),.38)}
 .cup-you.gate .you-val{color:var(--gold)}
-.cup-you.gate .you-bar i{background:var(--gold)}
 .gate-msg{
   font:500 13px/1.55 'Manrope',sans-serif;color:var(--dim);
   margin-top:13px;padding-top:13px;border-top:1px solid var(--line);
@@ -661,14 +515,6 @@ body{
 .hall-crest img{width:34px;height:34px;object-fit:contain;display:block}
 .hall-name{font-family:'Cormorant Garamond',serif;font-size:25px;line-height:1.1}
 .hall-sub{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim);margin-top:4px}
-.faces{display:flex;align-items:center;margin-bottom:14px;flex-wrap:wrap;row-gap:6px}
-.face{
-  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;
-  font:800 12px/1 'Manrope',sans-serif;color:#0b0f14;
-  border:2px solid var(--card);margin-left:-8px;
-}
-.face:first-child{margin-left:0}
-.face.more{background:var(--wash-1);color:var(--dim);font-size:10px}
 .hall-row{display:grid;grid-template-columns:19px 30px 1fr auto;gap:10px;align-items:center;padding:10px 0}
 .hall-row + .hall-row{border-top:1px solid var(--line)}
 .hall-pos{font:800 12px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
@@ -725,10 +571,6 @@ body{
   text-transform:uppercase;cursor:pointer;transition:.2s;
 }
 .cup-cta:active{transform:scale(.98)}
-.cup-foot{
-  font:italic 400 12px/1.6 'Cormorant Garamond',serif;
-  color:var(--dim);text-align:center;margin:18px 0 0;padding:0 6px;
-}
 /* ---------- kubok 3.0: sarlavha, soatlar, manbalar, tugmalar ---------- */
 .cup-head{position:relative}
 .cup-emblem{display:block;width:46px;height:46px;margin:0 auto 10px;filter:drop-shadow(0 6px 16px rgba(224,178,91,.35))}
@@ -1271,7 +1113,6 @@ button.glass:active .tube{transform:scale(.97)}
 .rowscroll .card-foot{padding:36px 13px 13px}
 .rowscroll .card-title{font-size:var(--title-fs,23px);line-height:1.05;min-height:2.1em}
 .card-title-line{display:block;white-space:nowrap}
-.rowscroll .card-play{width:28px;height:28px;font-size:11px}
 .soonrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .soontile{
   display:flex;flex-direction:column;gap:10px;padding:14px 12px;border-radius:16px;
@@ -1660,10 +1501,7 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 0 0 4px rgba(0,0,0,.16),inset 0 0 0 5px rgba(255,210,170,.18);
 }
 .lt-school{display:block;text-align:center;margin:0 0 12px;padding:0 0 11px;border-bottom:1px solid rgba(59,42,26,.2);font:700 9.5px/1.6 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#6b4e2e}
-.lt-head{display:block;text-align:center;white-space:pre-line;margin:-10px 0 16px;font:500 11.5px/1.5 'Cormorant Garamond',serif;color:#7a5c38}
 .lt-hi{margin:0 0 6px;font:600 21px/1.2 'Cormorant Garamond',serif}
-/* Sana qatori: asosiy matndan ajratilgan, kichik - joy tejaydi */
-.lt-when{margin:0 0 11px;font:700 10.5px/1.5 'Manrope',sans-serif;letter-spacing:.06em;color:#6b4e2e}
 .lt-act{display:flex;gap:9px;align-items:stretch;margin-top:2px}
 .lt-body{margin:0 0 9px;white-space:pre-line;font:500 17px/1.4 'Cormorant Garamond',serif}
 /* Yo'l kundaligi: xatning o'zida qaysi ish bajarilgani ko'rinadi */
@@ -1699,7 +1537,6 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .lt-share:hover{background:rgba(59,42,26,.1);border-color:rgba(59,42,26,.45)}
 .lt-share:active{transform:scale(.95)}
 .lt-sign{display:block;text-align:right;margin:0 0 13px;font:italic 500 15px/1.3 'Cormorant Garamond',serif;color:#1d6a4a}
-.lt-hint{margin:0 0 12px;text-align:center;font:500 12px/1.5 'Manrope',sans-serif;color:#6b4e2e}
 .lt-go{
   flex:1;min-height:50px;padding:14px 16px;border:none;border-radius:99px;cursor:pointer;
   background:linear-gradient(180deg,#4a3623,#32241611);background-color:#3b2a1a;color:#f6eed9;
@@ -1731,7 +1568,6 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .lt-card.lt-xs .lt-st-s{font-size:10px}
 .lt-card.lt-xs .lt-steps{margin-bottom:8px;gap:2px}
 .lt-card.lt-xs .lt-step{padding:5px 8px}
-.lt-card.lt-xs .lt-when{margin-bottom:8px;font-size:9.5px}
 .lt-card.lt-xs .lt-school{margin-bottom:8px;padding-bottom:7px;font-size:9px}
 .lt-card.lt-xs .lt-sign{margin-bottom:8px;font-size:13px}
 .lt-card.lt-xs .lt-go{padding:11px}
