@@ -77,6 +77,7 @@
   var cupBusy = false;
   var tasksData = null;
   var tasksBusy = false;
+  var tasksLang = null;     // savollar qaysi tilda olingan (til almashsa qayta olinadi)
 
   // Reytingni serverdan oladi. report() kabi jim ishlaydi: xato bo'lsa
   // foydalanuvchi sezmaydi, tasma shunchaki ko'rinmaydi.
@@ -163,13 +164,15 @@
     if (!initData || !window.fetch || tasksBusy) { if (cb) { cb(tasksData); } return; }
 
     tasksBusy = true;
+    var asked = lang;
     function done(d) {
       tasksBusy = false;
-      if (d && d.tasks) { tasksData = d; }
+      if (d && d.tasks) { tasksData = d; tasksLang = asked; }
       if (cb) { cb(tasksData); }
     }
     try {
-      window.fetch(API_TASKS, {
+      // Savollar ilova tilida (server tarjimasi bo'lmasa o'zbekcha qaytaradi)
+      window.fetch(API_TASKS + "?lang=" + encodeURIComponent(asked), {
         method: "GET",
         headers: { "X-Telegram-Init-Data": initData }
       }).then(function (r) { return r.ok ? r.json() : null; })

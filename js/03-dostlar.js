@@ -361,6 +361,14 @@
     $("tasks-empty").textContent = lang === "uz" ? "Hozircha barcha vazifalarni bajargansiz." : lang === "ru" ? "Пока все задачи выполнены." : "You have completed all tasks for now.";
     $("tasks-back-txt").textContent = T[lang].cupBack;
     $("quiz-back-txt").textContent = lang === "uz" ? "Vazifalar" : lang === "ru" ? "Задачи" : "Tasks";
+
+    // Til almashgan bo'lsa - savollarni yangi tilda qayta olamiz
+    if (tasksData && tasksLang && tasksLang !== lang && !tasksBusy) {
+      var want = lang;
+      fetchTasks(function () {
+        if (tasksLang === want && !$("scr-tasks").classList.contains("hidden")) { openTasks(); }
+      });
+    }
     
     var list = $("tasks-list");
     list.innerHTML = "";
