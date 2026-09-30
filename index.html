@@ -3505,7 +3505,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
   var T = {
     uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
           next:"Keyingi film", seen:"Ko'rildi", download:"Yuklab olish", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
-          sending:"⏳ Yuborilmoqda…", sentTo:function(t){return t+" — botga yuborildi";}, undoBtn:"BEKOR QILISH", undone:"Bekor qilindi", undoFail:"Bekor qilib bo'lmadi", undoExpired:"Vaqti o'tdi — filmni chatdan o'zingiz o'chiring", notSubscribed:"🔒 Avval kanalga obuna bo'ling", notReadyMsg:"⏳ Bu film tez orada qo'shiladi",
+          sending:"⏳ Yuborilmoqda…", sentTo:function(t){return t+" — botga yuborildi";}, undoBtn:"BEKOR QILISH", undone:"Bekor qilindi", undoFail:"Bekor qilib bo'lmadi", undoExpired:"Vaqti o'tdi — filmni chatdan o'zingiz o'chiring", notSubscribed:"🔒 Avval kanalga obuna bo'ling", notReadyMsg:"⏳ Bu film tez orada qo'shiladi", filmMissing:"😔 Bu filmni hozir yuborib bo'lmadi. Adminlar xabardor — tez orada tuzatamiz",
           unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
           hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
           hintMid:function(n){return "Yana "+n+" ta film qoldi";},
@@ -3549,7 +3549,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
           guest:"Mehmon", noTag:"Telegram orqali kiring" },
     ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
           next:"Следующий фильм", seen:"Просмотрено", download:"Скачать", examWaiting:"Экзамен ждёт", soon:"Скоро",
-          sending:"⏳ Отправляется…", sentTo:function(t){return t+" — отправлено в бот";}, undoBtn:"ОТМЕНИТЬ", undone:"Отменено", undoFail:"Не удалось отменить", undoExpired:"Время истекло — удалите фильм из чата сами", notSubscribed:"🔒 Сначала подпишитесь на канал", notReadyMsg:"⏳ Этот фильм скоро появится",
+          sending:"⏳ Отправляется…", sentTo:function(t){return t+" — отправлено в бот";}, undoBtn:"ОТМЕНИТЬ", undone:"Отменено", undoFail:"Не удалось отменить", undoExpired:"Время истекло — удалите фильм из чата сами", notSubscribed:"🔒 Сначала подпишитесь на канал", notReadyMsg:"⏳ Этот фильм скоро появится", filmMissing:"😔 Сейчас не получилось отправить этот фильм. Админы уже знают — скоро исправим",
           unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
           hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
           hintMid:function(n){return "Осталось фильмов: "+n;},
@@ -3593,7 +3593,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
           guest:"Гость", noTag:"Войдите через Telegram" },
     en: { title:"Harry Potter", watch:"Watch", label:"Progress",
           next:"Up next", seen:"Watched", download:"Download", examWaiting:"Exam pending", soon:"Coming soon",
-          sending:"⏳ Sending…", sentTo:function(t){return t+" — sent to the bot";}, undoBtn:"UNDO", undone:"Undone", undoFail:"Could not undo", undoExpired:"Too late — please delete the film from the chat yourself", notSubscribed:"🔒 Please subscribe to the channel first", notReadyMsg:"⏳ This film is coming soon",
+          sending:"⏳ Sending…", sentTo:function(t){return t+" — sent to the bot";}, undoBtn:"UNDO", undone:"Undone", undoFail:"Could not undo", undoExpired:"Too late — please delete the film from the chat yourself", notSubscribed:"🔒 Please subscribe to the channel first", notReadyMsg:"⏳ This film is coming soon", filmMissing:"😔 We couldn't send this film right now. The admins know — we'll fix it soon",
           unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
           hintStart:"Start the journey", hintDone:"All films watched",
           hintMid:function(n){return n+" films left";},
@@ -6208,6 +6208,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
       var err = res && res.error;
       if (err === "not_ready") { showToast(t.notReadyMsg, "err"); return; }
+      // Film manbada topilmadi: botga o'tish ham yordam bermaydi, adminlar xabardor
+      if (err === "film_missing") { showToast(t.filmMissing, "err"); return; }
       // Obuna yo'q: bot filmni emas, obuna taklifini ko'rsatadi -
       // shuning uchun "ko'rilgan" deb belgilamaymiz.
       if (err === "not_subscribed") {
