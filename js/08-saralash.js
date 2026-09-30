@@ -71,6 +71,8 @@
     hideSortScreens();
     if (journey) { jrQuit(); return; }
     if (leaveSort()) { return; }
+    // 9¾ yoki xaritadan kelgan bo'lsa - o'sha yerga qaytadi
+    if (worldReturnTo()) { return; }
     openProfile();
   }
 
