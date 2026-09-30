@@ -1,0 +1,2 @@
+Eski keshlangan index.html (2026-09-30, 75054d8) uchun vaqtincha qoldirilgan js/app.js.
+2026-10-07 dan keyin o'chirish mumkin: git rm js/app.js js/ESKI.txt

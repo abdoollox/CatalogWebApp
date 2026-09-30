@@ -1,0 +1,11967 @@
+(function () {
+  "use strict";
+
+  var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+  if (tg) {
+    try { tg.ready(); tg.expand(); } catch (e) {}
+    // Pastga surish ilovani YOPIB yuborardi: uzun sahifani (xat, chat, ro'yxatlar)
+    // o'qiyman deganda Telegram ilovani yopardi. 7.7 dan boshlab buni o'chirish mumkin.
+    try { if (tg.disableVerticalSwipes) { tg.disableVerticalSwipes(); } } catch (e) {}
+  }
+
+  var BOT = "garripotterkinobot";
+
+  /* ---------- SINOV O'QUVCHISI (faqat adminlar) ----------
+     Yoqilganda ilova butunlay boshqa odamdek ishlaydi: serverga har so'rov
+     bilan "X-HP-Test: 1" ketadi va u yerda so'rov MANFIY raqamli alohida
+     hisobga tushadi (fakultet, tayoqcha, ball, chat - hammasi noldan).
+     Qurilmadagi xotira ham alohida: kalitlar oldiga "t_" qo'yiladi, shuning
+     uchun asl profil o'z joyida qoladi. Chiqilganda hamma narsa tiklanadi. */
+  var TEST_KEY = "hp_test";
+  var HP_TEST = false;
+  try { HP_TEST = window.localStorage.getItem(TEST_KEY) === "1"; } catch (e) {}
+  function TK(name) { return HP_TEST ? "t_" + name : name; }
+
+  // Serverga ketadigan har so'rovga sinov sarlavhasini qo'shamiz
+  if (HP_TEST && window.fetch) {
+    var _origFetch = window.fetch;
+    window.fetch = function (url, opts) {
+      try {
+        if (String(url).indexOf("bot.tizimshunos.uz") >= 0) {
+          opts = opts || {};
+          var h = opts.headers;
+          if (h && typeof h.set === "function") { h.set("X-HP-Test", "1"); }
+          else {
+            var copy = {};
+            for (var k in (h || {})) { copy[k] = h[k]; }
+            copy["X-HP-Test"] = "1";
+            opts.headers = copy;
+          }
+        }
+      } catch (e) {}
+      return _origFetch.call(window, url, opts);
+    };
+  }
+
+  var KEY = TK("watched_movies");
+  var LANG_KEY = "pref_lang";
+  var HOUSE_KEY = TK("house");
+  var WAND_KEY = TK("wand");
+
+  /* ===== KATALOG BOSHI — AVTOMATIK YOZILADI, QO'LDA TAHRIRLAMANG =====
+     Manba:     CatalogBot/catalog.py
+     Yangilash: python3 tools/webappdata.py                          */
+
+  var MOVIES = [
+    { id: "hp1", uz: "Hikmatlar Toshi", ru: "Философский Камень", en: "Philosopher's Stone" },
+    { id: "hp2", uz: "Maxfiy Hujra", ru: "Тайная Комната", en: "Chamber of Secrets" },
+    { id: "hp3", uz: "Azkaban Mahbusi", ru: "Узник Азкабана", en: "Prisoner of Azkaban" },
+    { id: "hp4", uz: "Alanga Kubogi", ru: "Кубок Огня", en: "Goblet of Fire" },
+    { id: "hp5", uz: "Feniks Jamiyati", ru: "Орден Феникса", en: "Order of the Phoenix" },
+    { id: "hp6", uz: "Tilsim Shaxzodasi", ru: "Принц Полукровка", en: "Half-Blood Prince" },
+    { id: "hp7", uz: "Ajal Tuhfasi 1", ru: "Дары Смерти 1", en: "Deathly Hallows 1" },
+    { id: "hp8", uz: "Ajal Tuhfasi 2", ru: "Дары Смерти 2", en: "Deathly Hallows 2" }
+  ];
+
+  var MOVIES_FB = [
+    { id: "fb1",  num: "I",   year: "2016", uz: "Fantastik Maxluqlar", ru: "Фантастические твари 1", en: "Fantastic Beasts 1" },
+    { id: "fb2",  num: "II",  year: "2018", uz: "Fantastik Maxluqlar 2", ru: "Фантастические твари 2", en: "Fantastic Beasts 2" },
+    { id: "fb3",  num: "III", year: "2022", uz: "Fantastik Maxluqlar 3", ru: "Фантастические твари 3", en: "Fantastic Beasts 3" }
+  ];
+
+  var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
+  var YEARS = ["2001","2002","2004","2005","2007","2009","2010","2011"];
+
+  // Qaysi film qaysi tilda hali yuklanmagan (catalog.py da message_id = 0).
+  // Bunday kartalar kulrang bo'lib ko'rinadi va bosilmaydi.
+  var NOT_READY = {
+    uz: [],
+    ru: ["fb1","fb2","fb3"],
+    en: []
+  };
+
+  /* ===== KATALOG OXIRI ===== */
+  // Posterlar yuklanmaganda ko'rinadigan yagona neytral fon
+  var CARD_BG = "linear-gradient(155deg,#39414e,#171c24)";
+
+  // Saralash testi. Har javob fakultetlarga ball beradi:
+  // asosiy xususiyat 3 ball, yaqin xususiyat 1 ball.
+  var G = "gryffindor", S = "slytherin", R = "ravenclaw", H = "hufflepuff";
+
+  var SORTING = [
+    { img:"img/sort/q1.jpg", w: [{"gryffindor":3, "ravenclaw":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "gryffindor":1}, {"slytherin":3, "ravenclaw":1}],
+      uz: { q:"Kechqurun Taqiqlangan o'rmondan g'alati ovoz keladi. Nima qilasiz?",
+            a:["Darhol borib tekshiraman",
+               "Avval nima bo'lishi mumkinligini aniqlayman",
+               "Do'stlarimni ogohlantiraman va birga boramiz",
+               "Bu menga qanday imkoniyat berishini o'ylayman"] },
+      ru: { q:"Вечером из Запретного леса доносится странный звук. Что вы сделаете?",
+            a:["Сразу пойду проверить",
+               "Сначала выясню, что это может быть",
+               "Предупрежу друзей и пойдём вместе",
+               "Подумаю, какую выгоду это может дать"] },
+      en: { q:"A strange sound comes from the Forbidden Forest at night. What do you do?",
+            a:["Go and investigate at once",
+               "First work out what it could be",
+               "Warn my friends and go together",
+               "Consider what opportunity this might bring"] } },
+
+    { img:"img/sort/q2.jpg", w: [{"hufflepuff":3, "slytherin":1}, {"ravenclaw":3, "slytherin":1}, {"slytherin":3, "ravenclaw":1}, {"gryffindor":3, "hufflepuff":1}],
+      uz: { q:"Muhim imtihonga bir kun qoldi. Qanday tayyorlanasiz?",
+            a:["Reja tuzib, bosqichma-bosqich takrorlayman",
+               "Eng murakkab mavzularni chuqur o'rganaman",
+               "Eng tez natija beradigan yo'lni topaman",
+               "Bilganim bilan kiraman — qandaydir yo'lini topaman"] },
+      ru: { q:"До важного экзамена остался день. Как будете готовиться?",
+            a:["Составлю план и пройду всё по порядку",
+               "Углублюсь в самые сложные темы",
+               "Найду самый быстрый путь к результату",
+               "Пойду с тем, что знаю — как-нибудь справлюсь"] },
+      en: { q:"One day left before a major exam. How do you prepare?",
+            a:["Make a plan and work through it step by step",
+               "Go deep on the hardest topics",
+               "Find the fastest route to a good result",
+               "Go in with what I know and manage somehow"] } },
+
+    { img:"img/sort/q3.jpg", w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}],
+      uz: { q:"Sehrli oyna sizga eng katta orzuingizni ko'rsatadi. Unda nima bor?",
+            a:["Men qo'rqmasdan turgan lahza",
+               "Menga hurmat bilan qaraydigan odamlar",
+               "Hech kim ochmagan sirni birinchi bo'lib ochgan lahza",
+               "Yaqinlarim yonimda, hammasi joyida"] },
+      ru: { q:"Волшебное зеркало показывает вашу заветную мечту. Что в нём?",
+            a:["Момент, когда я не отступил",
+               "Люди, которые смотрят на меня с уважением",
+               "Момент, когда я первым разгадал тайну, которую не разгадал никто",
+               "Близкие рядом, и всё хорошо"] },
+      en: { q:"A magic mirror shows your deepest wish. What appears?",
+            a:["The moment I stood my ground",
+               "People who look at me with respect",
+               "The moment I solved a mystery no one else could",
+               "My loved ones near me, all well"] } },
+
+    { img:"img/sort/q4.jpg", w: [{"hufflepuff":3, "gryffindor":1}, {"gryffindor":3, "ravenclaw":1}, {"slytherin":3, "hufflepuff":1}, {"ravenclaw":3, "slytherin":1}],
+      uz: { q:"Do'stingiz qoida buzdi va sizdan yashirishni so'radi.",
+            a:["Yashiraman — do'stlik muhimroq",
+               "Uni o'zi tan olishga ko'ndiraman",
+               "Vaziyatga qarab qaror qilaman",
+               "Nima to'g'riligini sovuqqonlik bilan o'ylab, keyin qaror qilaman"] },
+      ru: { q:"Друг нарушил правило и просит его прикрыть.",
+            a:["Прикрою — дружба важнее",
+               "Уговорю его признаться самому",
+               "Решу по обстоятельствам",
+               "Хладнокровно обдумаю, что правильно, и тогда решу"] },
+      en: { q:"A friend broke a rule and asks you to cover for them.",
+            a:["Cover for them — friendship comes first",
+               "Persuade them to own up themselves",
+               "Decide based on the situation",
+               "Think calmly about what is right, then decide"] } },
+
+    { img:"img/sort/q5.jpg", w: [{"gryffindor":3, "hufflepuff":1}, {"slytherin":3, "ravenclaw":1}, {"ravenclaw":3, "gryffindor":1}, {"hufflepuff":3, "slytherin":1}],
+      uz: { q:"Qaysi dars sizni ko'proq o'ziga tortadi?",
+            a:["Qora sehrga qarshi himoya",
+               "Iksirlar tayyorlash",
+               "Afsunlar",
+               "Giyohshunoslik"] },
+      ru: { q:"Какой предмет вам интереснее всего?",
+            a:["Защита от тёмных искусств",
+               "Зельеварение",
+               "Заклинания",
+               "Травология"] },
+      en: { q:"Which subject draws you in the most?",
+            a:["Defence Against the Dark Arts",
+               "Potions",
+               "Charms",
+               "Herbology"] } },
+
+    { img:"img/sort/q6.jpg", w: [{"gryffindor":3, "slytherin":1}, {"slytherin":3, "gryffindor":1}, {"ravenclaw":3, "slytherin":1}, {"hufflepuff":3, "gryffindor":1}],
+      uz: { q:"Sizni nima ko'proq qo'rqitadi?",
+            a:["Qo'rqoq deb bilishlari",
+               "Oddiy bo'lib, izsiz o'tib ketish",
+               "Hech narsani chuqur tushunmay, yuzaki yashab o'tish",
+               "Yordamim kerak bo'lganda yonida bo'lolmaslik"] },
+      ru: { q:"Что пугает вас больше всего?",
+            a:["Что меня сочтут трусом",
+               "Остаться обычным и незамеченным",
+               "Прожить жизнь поверхностно, так ничего и не поняв",
+               "Не оказаться рядом, когда нужна моя помощь"] },
+      en: { q:"What frightens you most?",
+            a:["Being thought a coward",
+               "Being ordinary and forgotten",
+               "Living a shallow life without truly understanding anything",
+               "Not being there when someone needs me"] } },
+
+    { img:"img/sort/q7.jpg", w: [{"gryffindor":3, "slytherin":1}, {"ravenclaw":3, "hufflepuff":1}, {"hufflepuff":3, "ravenclaw":1}, {"slytherin":3, "gryffindor":1}],
+      uz: { q:"Guruh ishida sizning o'rningiz qanday bo'ladi?",
+            a:["Yetakchilik qilaman va qaror qabul qilaman",
+               "Rejani tuzaman, xatolarni topaman",
+               "Hammani birlashtiraman, ish taqsimlayman",
+               "Maqsadga eng qisqa yo'lni topaman"] },
+      ru: { q:"Какая у вас роль в командной работе?",
+            a:["Беру руководство и принимаю решения",
+               "Составляю план, нахожу ошибки",
+               "Объединяю всех и распределяю задачи",
+               "Нахожу кратчайший путь к цели"] },
+      en: { q:"What is your role in a group?",
+            a:["I take the lead and make the calls",
+               "I build the plan and spot the flaws",
+               "I bring people together and share out the work",
+               "I find the shortest path to the goal"] } },
+
+    { img:"img/sort/q8.jpg", w: [{"gryffindor":3}, {"slytherin":3}, {"ravenclaw":3}, {"hufflepuff":3}],
+      uz: { q:"Yuz yildan keyin sizni qanday eslashlarini istardingiz?",
+            a:["Jasur edi", "Buyuk edi", "Dono edi", "Sodiq edi"] },
+      ru: { q:"Каким вас должны запомнить через сто лет?",
+            a:["Он был храбрым", "Он был великим", "Он был мудрым", "Он был верным"] },
+      en: { q:"How would you want to be remembered in a hundred years?",
+            a:["As brave", "As great", "As wise", "As loyal"] } }
+  ];
+
+  /* ---------- TAYOQCHA ---------- */
+
+  var CORES = {
+    phoenix: { uz:"feniks pati", ru:"перо феникса", en:"phoenix feather",
+      note_uz:"Eng tanlovchan o'zak. U kamdan-kam sehrgarga bo'ysunadi, lekin bo'ysunsa — imkoniyatlari cheksiz.",
+      note_ru:"Самая разборчивая сердцевина. Подчиняется немногим, но если подчинилась — предела нет.",
+      note_en:"The most selective core. It yields to few, but where it does, there is no limit." },
+    dragon: { uz:"ajdaho yuragi tolasi", ru:"жила дракона", en:"dragon heartstring",
+      note_uz:"Eng kuchli o'zak. Tez o'rganadi va tez bog'lanadi, lekin jangovar tabiati bor.",
+      note_ru:"Самая мощная сердцевина. Быстро учится и привязывается, но нрав у неё боевой.",
+      note_en:"The most powerful core. It learns fast and bonds fast, but its temper is fierce." },
+    unicorn: { uz:"yakkashox yeli", ru:"волос единорога", en:"unicorn hair",
+      note_uz:"Eng sodiq o'zak. Boshqa egaga o'tishni istamaydi va hech qachon tashlab ketmaydi.",
+      note_ru:"Самая верная сердцевина. Не желает менять хозяина и не предаёт.",
+      note_en:"The most loyal core. It will not change hands, and it never betrays." }
+  };
+
+  var WOODS = {
+    oak:     { uz:"Eman",    ru:"Дуб",        en:"Oak",
+               t_uz:"jasorat va sadoqat yog'ochi", t_ru:"дерево храбрости и верности", t_en:"a wood of courage and loyalty" },
+    yew:     { uz:"Tis",     ru:"Тис",        en:"Yew",
+               t_uz:"kuch va hokimiyat yog'ochi", t_ru:"дерево силы и власти", t_en:"a wood of power and dominion" },
+    cherry:  { uz:"Olcha",   ru:"Вишня",      en:"Cherry",
+               t_uz:"g'ayrioddiy kuch yog'ochi", t_ru:"дерево необычайной силы", t_en:"a wood of uncommon strength" },
+    holly:   { uz:"Padub",   ru:"Остролист",  en:"Holly",
+               t_uz:"himoya yog'ochi", t_ru:"дерево защиты", t_en:"a wood of protection" },
+    aspen:   { uz:"Terak",   ru:"Осина",      en:"Aspen",
+               t_uz:"jangchi ruhi yog'ochi", t_ru:"дерево воинского духа", t_en:"a wood of the warrior spirit" },
+    walnut:  { uz:"Yong'oq", ru:"Орех",       en:"Walnut",
+               t_uz:"zukkolik yog'ochi", t_ru:"дерево изобретательности", t_en:"a wood of ingenuity" }
+  };
+
+  var FLEX = {
+    rigid:    { uz:"qattiq",          ru:"жёсткая",     en:"unyielding",   len:"13" },
+    springy:  { uz:"egiluvchan",      ru:"гибкая",      en:"springy",      len:"9¾" },
+    supple:   { uz:"moslashuvchan",   ru:"податливая",  en:"supple",       len:"11¾" },
+    yielding: { uz:"yumshoq",         ru:"мягкая",      en:"yielding",     len:"12½" }
+  };
+
+  // Testning o'zidan hisoblangan kamyoblik (1536 kombinatsiya)
+  var RARITY_CORE = { unicorn: 45, dragon: 31, phoenix: 23 };
+  var RARITY_PAIR = { unicorn: 7.6, dragon: 5.2, phoenix: 3.9 };
+
+  // Kanondagi mashhur tayoqchalar bilan mos kelishi
+  var FAMOUS = {
+    "holly_phoenix":  { uz:"Garri Potter", ru:"Гарри Поттер", en:"Harry Potter" },
+    "yew_phoenix":    { uz:"Voldemort", ru:"Волан-де-Морт", en:"Voldemort" },
+    "walnut_dragon":  { uz:"Bellatrisa Lestrej", ru:"Беллатриса Лестрейндж", en:"Bellatrix Lestrange" },
+    "cherry_unicorn": { uz:"Nevill Longbottom", ru:"Невилл Долгопупс", en:"Neville Longbottom" }
+  };
+
+  // Yog'ochlarning kengaytirilgan tavsifi — "batafsil" ekrani uchun
+  var WOOD_LORE = {
+    oak: {
+      uz:"Eman egasi kuchli va sodiq bo'ladi. Bunday tayoqcha o'z odamini uzoq sinaydi, lekin bir marta tanlagach, hech qachon voz kechmaydi. Qiyin paytda u eng ishonchli hamroh.",
+      ru:"Владелец дуба силён и верен. Такая палочка долго испытывает своего человека, но однажды выбрав — не отступает. В трудный час она самый надёжный спутник.",
+      en:"An oak owner is strong and steadfast. This wand tests its wizard for a long time, but once it has chosen, it never turns away. In hard hours it is the surest companion." },
+    yew: {
+      uz:"Tis kamdan-kam qo'lga tushadi. U hayot va o'lim chegarasida turadigan tayoqcha — egasiga katta kuch beradi, lekin o'sha kuch bilan nima qilishini so'ramaydi. Javobgarlik egada qoladi.",
+      ru:"Тис достаётся немногим. Это палочка на грани жизни и смерти — она даёт большую силу, но не спрашивает, как ею распорядятся. Ответственность остаётся на владельце.",
+      en:"Yew comes to few. It is a wand that stands at the edge of life and death — it grants great power, but never asks what will be done with it. The responsibility stays with the owner." },
+    cherry: {
+      uz:"Olcha tashqaridan yumshoq ko'rinadi, ichida esa g'ayrioddiy kuch yashiradi. Bunday tayoqcha o'zini tuta biladigan odamni tanlaydi — kuchni ko'z-ko'z qilmaydiganini.",
+      ru:"Вишня кажется мягкой снаружи, но прячет внутри необычайную силу. Такая палочка выбирает того, кто умеет сдерживаться — кто не выставляет силу напоказ.",
+      en:"Cherry looks gentle from the outside and hides uncommon power within. This wand chooses one who can hold back — who does not display strength." },
+    holly: {
+      uz:"Padub himoya yog'ochi. U ko'pincha g'azabini yengishi kerak bo'lgan yoki xavfli yo'ldan boradigan sehrgarga keladi. Bunday tayoqcha egasini o'zidan asraydi.",
+      ru:"Остролист — дерево защиты. Он часто приходит к тому, кому предстоит одолеть свой гнев или пройти опасный путь. Такая палочка бережёт хозяина от него самого.",
+      en:"Holly is a wood of protection. It often comes to one who must master their own anger or walk a dangerous road. This wand guards its owner from himself." },
+    aspen: {
+      uz:"Terak jangchilar yog'ochi. Uning egasi o'z e'tiqodidan qaytmaydi va kerak bo'lsa yolg'iz turadi. Bunday tayoqcha ikkilanishni yoqtirmaydi.",
+      ru:"Осина — дерево воинов. Её владелец не отступает от своих убеждений и, если нужно, стоит один. Такая палочка не любит колебаний.",
+      en:"Aspen is a wood of warriors. Its owner does not abandon a conviction and will stand alone if need be. This wand has no patience for wavering." },
+    walnut: {
+      uz:"Yong'oq zukko va ixtirochi qo'lda ochiladi. U egasining aqliga moslashadi va kutilmagan yechimlarni yaxshi ko'radi. Lekin vijdonsiz qo'lda xavfli bo'lishi mumkin.",
+      ru:"Орех раскрывается в руке изобретательного. Он подстраивается под ум хозяина и любит неожиданные решения. Но в бессовестной руке может стать опасным.",
+      en:"Walnut opens up in an inventive hand. It adapts to its owner's mind and favours unexpected solutions. In an unscrupulous hand, though, it can turn dangerous." }
+  };
+
+  var CORE_LORE = {
+    phoenix: {
+      uz:"Feniks pati — eng kamyob o'zak. Feniks o'z patini kamdan-kam beradi, va bergani ham osonlikcha bo'ysunmaydi. Bunday tayoqcha o'z fikriga ega bo'ladi, ba'zan egasidan mustaqil ish tutadi. Lekin u eng keng sehr doirasiga ega.",
+      ru:"Перо феникса — самая редкая сердцевина. Феникс отдаёт перо неохотно, и отданное подчиняется не сразу. Такая палочка имеет собственное мнение и порой действует независимо. Зато её магический диапазон шире всех.",
+      en:"Phoenix feather is the rarest core. A phoenix gives up a feather reluctantly, and what it gives does not submit easily. Such a wand keeps its own mind and sometimes acts apart from its owner. But its range of magic is the widest of all." },
+    dragon: {
+      uz:"Ajdaho yuragi tolasi eng kuchli o'zak. U tez o'rganadi va yangi egaga tez bog'lanadi — hatto avvalgisini unutib. Jangovar sehrga eng mos, lekin g'azabga moyil: ehtiyotsiz qo'lda tez qiziydi.",
+      ru:"Жила дракона — самая мощная сердцевина. Она быстро учится и быстро привязывается к новому хозяину, забывая прежнего. Лучше всего подходит для боевой магии, но склонна к вспышкам: в неосторожной руке легко перегревается.",
+      en:"Dragon heartstring is the most powerful core. It learns quickly and bonds quickly to a new owner, forgetting the last. Best suited to combative magic, but prone to temper: in a careless hand it overheats." },
+    unicorn: {
+      uz:"Yakkashox yeli eng sodiq o'zak. U bir egaga bog'lanadi va boshqasiga o'tishni istamaydi. Qora sehrga deyarli yaramaydi — shuning uchun uni buzish qiyin. Kuchi boshqalarnikidan pastroq, lekin u hech qachon xiyonat qilmaydi.",
+      ru:"Волос единорога — самая верная сердцевина. Он привязывается к одному хозяину и не желает менять его. Почти не годится для тёмной магии — потому его трудно испортить. Силы в нём меньше, но он никогда не предаёт.",
+      en:"Unicorn hair is the most loyal core. It binds to one owner and will not willingly change hands. It is nearly useless for dark magic — which is why it is hard to corrupt. It carries less raw power, but it never betrays." }
+  };
+
+  var OLLI = {
+    uz: {
+      introTop: "Ollivander do'koni. 382-yildan beri.",
+      introMid: "Qiziq\u2026 qiziq.",
+      introBot: "Tayoqchani siz tanlamaysiz, bola. Tayoqcha sizni tanlaydi. Keling, qaysi biri sizni kutayotganini ko'ramiz.",
+      ready: "Qo'limni uzataman",
+      before: [
+        ["Qaysi qo'lingiz bilan sehr qilasiz? Har birining o'z og'irligi bor."],
+        ["Sehringiz birinchi marta qachon ko'ringan? Bunday lahzalar tasodifiy emas."],
+        ["O'rmonda yurib borasiz. Qaysi daraxt oldida to'xtaysiz?"],
+        ["Sehr sizga nima uchun kerak? To'g'risini ayting — tayoqcha yolg'onni sezadi."],
+        ["Oxirgi savol. Tayoqcha qo'lingizda uchqun chiqarmasa — nima qilasiz?"]
+      ],
+      after: ["Hmm.", "Shunday deng\u2026", "Ko'rdim.", "Qiziq.", "Yaxshi.", "Davom etamiz."],
+      think: ["Kutib turing\u2026 shu qutida bir narsa bor edi.",
+              "Yo'q, bu emas. Mana bu\u2026 ha.",
+              "Uni oling. Qo'lingizda tuting."],
+      place: "Sizning tayoqchangiz —"
+    },
+    ru: {
+      introTop: "Лавка Олливандера. С 382 года.",
+      introMid: "Любопытно\u2026 весьма любопытно.",
+      introBot: "Не вы выбираете палочку, дитя. Палочка выбирает вас. Что ж, посмотрим, какая из них вас дожидается.",
+      ready: "Протяну руку",
+      before: [
+        ["Какой рукой вы колдуете? У каждой свой вес."],
+        ["Когда впервые проявилась ваша магия? Такие мгновения не случайны."],
+        ["Вы идёте по лесу. У какого дерева остановитесь?"],
+        ["Зачем вам магия? Отвечайте честно — палочка чувствует ложь."],
+        ["Последний вопрос. Палочка не даёт искры в вашей руке. Что сделаете?"]
+      ],
+      after: ["Хм.", "Вот как\u2026", "Вижу.", "Любопытно.", "Хорошо.", "Дальше."],
+      think: ["Погодите\u2026 в той коробке кое-что было.",
+              "Нет, не эта. А вот эта\u2026 да.",
+              "Возьмите её. Подержите в руке."],
+      place: "Ваша палочка —"
+    },
+    en: {
+      introTop: "Ollivanders. Since 382 BC.",
+      introMid: "Curious\u2026 very curious.",
+      introBot: "You do not choose the wand, child. The wand chooses you. Let us see which one has been waiting for you.",
+      ready: "I hold out my hand",
+      before: [
+        ["Which hand do you cast with? Each carries its own weight."],
+        ["When did your magic first show itself? Such moments are never accidents."],
+        ["You are walking through a wood. At which tree do you stop?"],
+        ["What do you want magic for? Answer truly — a wand senses a lie."],
+        ["One last question. The wand gives no spark in your hand. What do you do?"]
+      ],
+      after: ["Hmm.", "Is that so\u2026", "I see.", "Curious.", "Good.", "Onward."],
+      think: ["Wait\u2026 there was something in that box.",
+              "No, not this one. But this\u2026 yes.",
+              "Take it. Hold it in your hand."],
+      place: "Your wand is —"
+    }
+  };
+
+  var WANDQ = [
+    { w: [{"unicorn":1, "oak":1}, {"dragon":1, "aspen":1}, {"dragon":1, "walnut":1}, {"unicorn":1, "cherry":1}],
+      uz: { q:"Qaysi qo'lingiz bilan sehr qilasiz?",
+            a:["O'ng qo'l — odatdagidek",
+               "Chap qo'l — men boshqacha ushlayman",
+               "Ikkalasi ham — farqi yo'q",
+               "Bilmayman, hali ushlamaganman"] },
+      ru: { q:"Какой рукой вы колдуете?",
+            a:["Правой — как обычно",
+               "Левой — я держу иначе",
+               "Обеими — без разницы",
+               "Не знаю, ещё не держал"] },
+      en: { q:"Which hand do you cast with?",
+            a:["Right — as most do",
+               "Left — I hold it differently",
+               "Either — it makes no difference",
+               "I do not know, I have never held one"] } },
+
+    { w: [{"dragon":3, "aspen":1}, {"phoenix":3, "holly":1}, {"unicorn":3, "oak":1}, {"unicorn":2, "cherry":1}],
+      uz: { q:"Sehringiz birinchi marta qachon ko'ringan?",
+            a:["G'azablanganimda — nimadir sindi",
+               "Qo'rqqanimda — o'zimni himoya qildim",
+               "Kimnidir himoya qilmoqchi bo'lganimda",
+               "Shunchaki — hech qanday sabab yo'q edi"] },
+      ru: { q:"Когда впервые проявилась ваша магия?",
+            a:["В гневе — что-то разбилось",
+               "В страхе — я защитил себя",
+               "Когда хотел защитить другого",
+               "Просто так — без всякой причины"] },
+      en: { q:"When did your magic first show itself?",
+            a:["In anger — something broke",
+               "In fear — I shielded myself",
+               "When I tried to protect someone",
+               "For no reason at all"] } },
+
+    { w: [{"oak":4}, {"yew":4}, {"cherry":4}, {"holly":4}, {"aspen":4}, {"walnut":4}],
+      uz: { q:"O'rmonda yurib borasiz. Qaysi daraxt oldida to'xtaysiz?",
+            a:["Eng qadimgisi, ildizlari yerdan chiqib turgan",
+               "Eng balandi, uchi ko'rinmaydi",
+               "Gullab turgani, oq gullari bilan",
+               "Kuzda ham yashil turgani",
+               "Yaproqlari shitirlagani, shamolsiz ham",
+               "Mevali, shoxlari egilgan"] },
+      ru: { q:"Вы идёте по лесу. У какого дерева остановитесь?",
+            a:["У самого древнего, корни наружу",
+               "У самого высокого, вершины не видно",
+               "У цветущего, в белых цветах",
+               "У того, что зелено и осенью",
+               "У того, чьи листья шелестят без ветра",
+               "У плодового, ветви клонятся"] },
+      en: { q:"You are walking through a wood. At which tree do you stop?",
+            a:["The oldest, roots breaking the earth",
+               "The tallest, its crown out of sight",
+               "The one in bloom, white with flowers",
+               "The one still green in autumn",
+               "The one whose leaves stir without wind",
+               "The fruit tree, branches bowed"] } },
+
+    { w: [{"dragon":3, "yew":1}, {"phoenix":3, "walnut":1}, {"unicorn":3, "holly":1}, {"unicorn":2, "aspen":1}],
+      uz: { q:"Sehr sizga nima uchun kerak?",
+            a:["Kuchli bo'lish uchun",
+               "Bilish va tushunish uchun",
+               "Yaqinlarimni asrash uchun",
+               "Hali bilmayman — shuni topmoqchiman"] },
+      ru: { q:"Зачем вам магия?",
+            a:["Чтобы быть сильным",
+               "Чтобы знать и понимать",
+               "Чтобы беречь близких",
+               "Пока не знаю — это и хочу найти"] },
+      en: { q:"What do you want magic for?",
+            a:["To be strong",
+               "To know and understand",
+               "To keep my people safe",
+               "I do not know yet — that is what I seek"] } },
+
+    { w: [{"rigid":4, "dragon":1}, {"springy":4, "unicorn":1}, {"supple":4}, {"yielding":4, "unicorn":1}],
+      uz: { q:"Tayoqcha qo'lingizda uchqun chiqarmasa — nima qilasiz?",
+            a:["Yana urinib ko'raman, qayta-qayta",
+               "Boshqasini so'rayman",
+               "Nega bo'lmaganini o'ylab ko'raman",
+               "Kutaman — o'zi vaqti kelganda ishlaydi"] },
+      ru: { q:"Палочка не даёт искры в вашей руке. Что сделаете?",
+            a:["Попробую снова, и ещё раз",
+               "Попрошу другую",
+               "Задумаюсь, почему не вышло",
+               "Подожду — придёт время, заработает"] },
+      en: { q:"The wand gives no spark in your hand. What do you do?",
+            a:["Try again, and again",
+               "Ask for another",
+               "Wonder why it failed",
+               "Wait — it will work when it is time"] } }
+  ];
+
+  // Saralovchi shlyapa nutqi. Har joyda bir nechta variant — tasodifiy tanlanadi.
+  var HAT = {
+    uz: {
+      introTop: "Meni boshingizga qo'ying.",
+      introMid: "Hmm... qiziq. Juda qiziq.",
+      introBot: "Men mingdan ortiq boshni ko'rganman. Sizniki esa\u2026 hali ochilmagan kitobga o'xshaydi. Keling, birga varaqlaymiz.",
+      ready: "Tayyorman",
+      before: [
+        ["Boshlaylik. Tun, o'rmon va noma'lum ovoz. Qiziqishingiz qo'rquvingizdan kuchlimi?",
+         "Birinchi savol eng sodda ko'rinadi. Odatda shunday emas."],
+        ["Endi tartibingizni ko'ray. Odam qanday ishlashi — kim ekanini aytib beradi.",
+         "Vaqt kam qolganda haqiqiy odat ko'rinadi."],
+        ["Ehtiyot bo'ling. Bu savolga yolg'on aytolmaysiz — men baribir ko'raman.",
+         "Orzu\u2026 eng ochiq narsa. Odam o'zi bilmagan holda aytib qo'yadi."],
+        ["Endi qiyinroq. Do'stlik va to'g'rilik har doim ham bir yo'ldan bormaydi.",
+         "Bu yerda to'g'ri javob yo'q. Faqat sizniki bor."],
+        ["Odam nimani o'rganishni tanlasa, nimaga aylanishni ham tanlaydi.",
+         "Menga darsingizni ayting — men sizga o'zingizni aytaman."],
+        ["Qo'rquv\u2026 hammada bor. Sizniki qaysi biri?",
+         "Bu savolni ko'plar chetlab o'tishni istaydi. Siz ham shundaymi?"],
+        ["Odamlar orasida turganingizda kim bo'lasiz? Yolg'iz qolganda emas — odamlar orasida.",
+         "Deyarli tugadi. Yana ikkitasi."],
+        ["Oxirgisi. Va eng og'iri — chunki bu javob qolganlarini yengib chiqishi mumkin.",
+         "Bitta so'z tanlang. Ehtiyot bo'ling — men aynan shunga quloq solaman."]
+      ],
+      after: ["Hmm.", "Shunday deysizmi\u2026", "Ko'rdim.", "Qiziq. Buni yodda tutaman.",
+              "Ha\u2026 bu ko'p narsani aytadi.", "Kutgan edim. Yoki kutmagandirman.",
+              "Yaxshi. Davom etamiz.", "Ichingizda bundan ko'proq narsa bor."],
+      think: ["Hmm\u2026 qiyin. Juda qiyin.",
+              "Sizda jasorat ham, aql ham bor. Va yana nimadir\u2026",
+              "Ha. Endi bildim."],
+      place: "Sizning joyingiz —"
+    },
+    ru: {
+      introTop: "Наденьте меня.",
+      introMid: "Хм... любопытно. Весьма любопытно.",
+      introBot: "Я повидала тысячи голов. А ваша\u2026 как ещё не открытая книга. Что ж, полистаем вместе.",
+      ready: "Я готов",
+      before: [
+        ["Начнём. Ночь, лес и неизвестный звук. Что сильнее — любопытство или страх?",
+         "Первый вопрос кажется простым. Обычно это не так."],
+        ["Теперь взгляну на ваш порядок. Как человек работает — то и говорит, кто он.",
+         "Когда времени мало, проступают настоящие привычки."],
+        ["Осторожнее. Здесь солгать не выйдет — я всё равно увижу.",
+         "Мечта\u2026 самое откровенное. Человек выдаёт себя, сам того не зная."],
+        ["Теперь сложнее. Дружба и правота не всегда идут одной дорогой.",
+         "Здесь нет верного ответа. Есть только ваш."],
+        ["Что человек выбирает изучать — тем он и становится.",
+         "Назовите свой предмет — и я назову вас."],
+        ["Страх\u2026 есть у каждого. Каков ваш?",
+         "Этот вопрос многие хотят обойти. Вы тоже?"],
+        ["Кем вы становитесь среди людей? Не наедине с собой — среди людей.",
+         "Почти закончили. Осталось два."],
+        ["Последний. И самый весомый — этот ответ может перевесить всё остальное.",
+         "Выберите одно слово. Осторожно — именно к нему я прислушаюсь."]
+      ],
+      after: ["Хм.", "Вот как\u2026", "Вижу.", "Любопытно. Запомню.",
+              "Да\u2026 это многое говорит.", "Я ожидала. Или нет.",
+              "Хорошо. Дальше.", "В вас есть больше, чем это."],
+      think: ["Хм\u2026 непросто. Совсем непросто.",
+              "В вас есть и смелость, и ум. И ещё что-то\u2026",
+              "Да. Теперь я знаю."],
+      place: "Ваше место —"
+    },
+    en: {
+      introTop: "Put me on.",
+      introMid: "Hmm... curious. Very curious indeed.",
+      introBot: "I have seen a thousand minds. Yours, though\u2026 is a book yet unopened. Let us turn the pages together.",
+      ready: "I'm ready",
+      before: [
+        ["Let us begin. Night, a forest, an unknown sound. Which is stronger — curiosity or fear?",
+         "The first question seems simple. It rarely is."],
+        ["Now, your method. How a person works tells me who they are.",
+         "When time runs short, true habits surface."],
+        ["Careful now. You cannot lie here — I will see it anyway.",
+         "A wish is the most revealing thing. People give themselves away without meaning to."],
+        ["Harder now. Friendship and rightness do not always walk the same road.",
+         "There is no correct answer here. Only yours."],
+        ["What a person chooses to study, they choose to become.",
+         "Name your subject, and I will name you."],
+        ["Fear\u2026 everyone carries one. Which is yours?",
+         "Many would rather skip this one. Would you?"],
+        ["Who do you become among others? Not alone — among others.",
+         "Almost done. Two remain."],
+        ["The last. And the heaviest — this answer may outweigh the rest.",
+         "Choose one word. Careful — this is the one I listen to."]
+      ],
+      after: ["Hmm.", "Is that so\u2026", "I see.", "Curious. I shall remember that.",
+              "Yes\u2026 that says a great deal.", "I expected as much. Or perhaps not.",
+              "Good. Onward.", "There is more in you than that."],
+      think: ["Hmm\u2026 difficult. Very difficult.",
+              "There is courage here. And a fine mind. And something else\u2026",
+              "Yes. Now I know."],
+      place: "Your place is —"
+    }
+  };
+
+  // O'qish vaqti matn uzunligiga qarab hisoblanadi.
+  // Sekinroq kerak bo'lsa MS_PER_CHAR ni oshiring.
+  var MS_BASE = 950;      // har qanday matn uchun eng kam qo'shimcha
+  var MS_PER_CHAR = 52;   // har belgi uchun
+  var MS_MIN = 1400;      // eng qisqa ko'rinish
+  var MS_MAX = 3400;      // eng uzun ko'rinish
+
+  function readMs(text) {
+    var ms = MS_BASE + (text ? text.length : 0) * MS_PER_CHAR;
+    if (ms < MS_MIN) { ms = MS_MIN; }
+    if (ms > MS_MAX) { ms = MS_MAX; }
+    return ms;
+  }
+
+  var T = {
+    uz: { title:"Garri Potter", watch:"Ko'rish", label:"Progress",
+          next:"Keyingi film", seen:"Ko'rildi", download:"Yuklab olish", examWaiting:"Imtihon kutmoqda", soon:"Tez orada",
+          sending:"⏳ Yuborilmoqda…", sentTo:function(t){return t+" — botga yuborildi";}, undoBtn:"BEKOR QILISH", undone:"Bekor qilindi", undoFail:"Bekor qilib bo'lmadi", undoExpired:"Vaqti o'tdi — filmni chatdan o'zingiz o'chiring", notSubscribed:"🔒 Avval kanalga obuna bo'ling", notReadyMsg:"⏳ Bu film tez orada qo'shiladi", filmMissing:"😔 Bu filmni hozir yuborib bo'lmadi. Adminlar xabardor — tez orada tuzatamiz",
+          unmarkAsk:"\u00ab%s\u00bb ko'rilmagan deb belgilansinmi?",
+          hintStart:"Sayohatni boshlang", hintDone:"Barcha filmlar ko'rildi",
+          hintMid:function(n){return "Yana "+n+" ta film qoldi";},
+          profKicker:"Profil", profTitle:"Sehrgar", back:"Ortga",
+          stats:"Tillar bo'yicha", total:"Jami ko'rilgan",
+          houseLbl:"Fakultet", houseName:"Hali aniqlanmagan",
+          houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
+          cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
+          sortCta:"Saralanish", resort:"Qayta saralanish", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
+          wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym", wandCardTitle:"Ollivander do'koni ochiq", wandCardSub:"5 ta savol — va tayoqchangizni bilib olasiz",
+          ckHouse:"Fakultet", ckWand:"Tayoqcha", ckPatronus:"Patronus", ckPet:"Uy hayvoni", wandMore:"Batafsil", detKicker:"Sizning tayoqchangiz", hWood:"Yog'och nima deydi", hCore:"O'zak nima deydi", hRare:"Kamyoblik", rareCore:"Shunday o'zak", rarePair:"Shunday tayoqcha", ofWizards:"sehrgarlarda", famousLbl:"Xuddi shunday tayoqcha",
+          cupKicker:"Haftalik musobaqa", cupTitle:"Xogvarts kubogi", cupBack:"Ortga",
+          cupDays:"%d kun", cupDay1:"%d kun", cupHours:"%d soat", cupHour1:"%d soat",
+          cupLeftFmt:"%s qoldi", cupEnding:"tugamoqda",
+          cupMembers:"%a / %b a'zo", cupPlace:"%d-o'rin", cupPts:"ball",
+          cupJoin:"Fakultetingizni aniqlang va musobaqada qatnashing",
+          cupStripGate:"hissangiz uchun yana %d ball", cupStripMine:"Hissangiz %s",
+          cupStripBehind:"%s %n ball oldinda", cupStripAhead:"%s %n ball orqangizda",
+          cupGapBehind:"%s sizdan %n oldinda", cupGapAhead:"%s %n orqangizda",
+          cupGapHint:"Bugungi savol va imtihon — %n",
+          cupGapDrop:"farq %n ballga tushadi.", cupGapDone:"Bugun uchun hammasini qildingiz.",
+          cupYourPts:"Sizning hissangiz", cupInHouse:"%s ichida",
+          cupGate:"Yana %n — va hissangiz %s hisobiga qo'shiladi.",
+          cupGatePts:"%d ball", cupSortCta:"Saralanish",
+          cupInvite:"Do'stlaringizni taklif qiling",
+          hallName:"%s zali", hallSub:"%a sehrgar \u00b7 %b tasi bu hafta faol",
+          hallYou:"siz", hallWaiting:"Yana %d sehrgar saralangan, lekin bu hafta hali boshlamagan.",
+          feedKick:"Xogvartsda", feedSorted:" %h ga saralandi",
+          agoMin:"%d daqiqa", agoHour:"%d soat", agoDay:"%d kun",
+          cupNoHouse:"Fakultetingiz hali aniqlanmagan", cupNoHouseHint:"Saralanmasdan turib musobaqada qatnasha olmaysiz.",
+          cupNeedMembers:"%s musobaqaga qo'shilishi uchun %n kerak", cupNeedCount:"yana %d a'zo",
+          cupNeedHint:"A'zo — mavsumda kamida 30 ball to'plagan odam.",
+          cupEarly:"Mavsum endi boshlandi", cupEarlyHint:"Raqib aniqlanishi bilan farq shu yerda ko'rinadi.",
+          cupFoot:"Reyting o'rtacha ball bo'yicha — katta fakultet avtomatik yutmasligi uchun.",
+          cupGateTail:"Bu %d ta kunlik savol.",
+          cupHoldPre:"Farq ozgina. ", cupHoldBold:"Bugun to'xtasangiz, kubok qo'ldan ketadi.",
+          lockOnce:"Shlyapa bir marta qaror qiladi. Uning qarori o'zgarmaydi.",
+          lockTitle:"Saralanish", lockYes:"Ha, boshlaymiz", lockNo:"Hozir emas",
+          lockAsk:"Fakultetingiz umrbod qoladi — uni keyin o'zgartira olmaysiz. Xogvarts kubogida shu fakultet uchun kurashasiz. Tayyormisiz?",
+          lockFinal:"Bu sizning fakultetingiz. Endi u o'zgarmaydi.",
+          guest:"Mehmon", noTag:"Telegram orqali kiring" },
+    ru: { title:"Гарри Поттер", watch:"Смотреть", label:"Прогресс",
+          next:"Следующий фильм", seen:"Просмотрено", download:"Скачать", examWaiting:"Экзамен ждёт", soon:"Скоро",
+          sending:"⏳ Отправляется…", sentTo:function(t){return t+" — отправлено в бот";}, undoBtn:"ОТМЕНИТЬ", undone:"Отменено", undoFail:"Не удалось отменить", undoExpired:"Время истекло — удалите фильм из чата сами", notSubscribed:"🔒 Сначала подпишитесь на канал", notReadyMsg:"⏳ Этот фильм скоро появится", filmMissing:"😔 Сейчас не получилось отправить этот фильм. Админы уже знают — скоро исправим",
+          unmarkAsk:"Отметить \u00ab%s\u00bb как непросмотренный?",
+          hintStart:"Начните путешествие", hintDone:"Все фильмы просмотрены",
+          hintMid:function(n){return "Осталось фильмов: "+n;},
+          profKicker:"Профиль", profTitle:"Волшебник", back:"Назад",
+          stats:"По языкам", total:"Всего просмотрено",
+          houseLbl:"Факультет", houseName:"Пока не определён",
+          houseNote:"Пройдите распределение и узнайте свой факультет",
+          cardTitle:"Распределяющая шляпа ждёт вас", cardSub:"8 вопросов — и вы узнаете свой факультет", houseSet:"По решению Распределяющей шляпы",
+          sortCta:"Пройти распределение", resort:"Пройти заново", step:function(a,b){return a+" / "+b;}, rvKicker:"Распределяющая шляпа решила", rvDone:"К профилю", sortExit:"Выйти",
+          wandLbl:"Палочка", wandNone:"Пока не выбрана", wandNote:"Лавка Олливандера ждёт вас", wandCta:"Выбрать палочку", wandAgain:"Выбрать заново", wandAskAgain:"Ваша палочка может измениться. Продолжить?", wandKicker:"Олливандер выбрал", inch:"дюйма", wandCardTitle:"Лавка Олливандера открыта", wandCardSub:"5 вопросов — и вы узнаете свою палочку",
+          ckHouse:"Факультет", ckWand:"Палочка", ckPatronus:"Патронус", ckPet:"Питомец", wandMore:"Подробнее", detKicker:"Ваша палочка", hWood:"Что говорит дерево", hCore:"Что говорит сердцевина", hRare:"Редкость", rareCore:"Такая сердцевина", rarePair:"Такая палочка", ofWizards:"волшебников", famousLbl:"Точно такая же палочка у",
+          cupKicker:"Еженедельное соревнование", cupTitle:"Кубок Хогвартса", cupBack:"Назад",
+          cupDays:"%d дн.", cupDay1:"%d день", cupHours:"%d ч.", cupHour1:"%d час",
+          cupLeftFmt:"осталось %s", cupEnding:"завершается",
+          cupMembers:"%a / %b участников", cupPlace:"%d место", cupPts:"очков",
+          cupJoin:"Определите факультет и участвуйте",
+          cupStripGate:"ещё %d очков до вашего вклада", cupStripMine:"Ваш вклад %s",
+          cupStripBehind:"%s впереди на %n", cupStripAhead:"%s позади на %n",
+          cupGapBehind:"%s впереди вас на %n", cupGapAhead:"%s позади вас на %n",
+          cupGapHint:"Сегодняшний вопрос и экзамен — %n",
+          cupGapDrop:"разрыв сократится до %n.", cupGapDone:"На сегодня вы сделали всё.",
+          cupYourPts:"Ваш вклад", cupInHouse:"На факультете %s",
+          cupGate:"Ещё %n — и ваш вклад пойдёт в зачёт %s.",
+          cupGatePts:"%d очков", cupSortCta:"Пройти распределение",
+          cupInvite:"Пригласите друзей",
+          hallName:"Зал \u00ab%s\u00bb", hallSub:"%a волшебников \u00b7 %b активны на этой неделе",
+          hallYou:"вы", hallWaiting:"Ещё %d волшебников распределены, но пока не начали на этой неделе.",
+          feedKick:"В Хогвартсе", feedSorted:" \u2014 %h",
+          agoMin:"%d мин", agoHour:"%d ч", agoDay:"%d дн",
+          cupNoHouse:"Ваш факультет ещё не определён", cupNoHouseHint:"Без распределения участвовать в соревновании нельзя.",
+          cupNeedMembers:"%s присоединится к соревнованию, если будет %n", cupNeedCount:"ещё %d участников",
+          cupNeedHint:"Участник — тот, кто набрал минимум 30 очков за сезон.",
+          cupEarly:"Сезон только начался", cupEarlyHint:"Как только появится соперник, разрыв покажется здесь.",
+          cupFoot:"Рейтинг по среднему баллу — чтобы большой факультет не побеждал автоматически.",
+          cupGateTail:"Это %d ежедневных вопроса.",
+          cupHoldPre:"Разрыв невелик. ", cupHoldBold:"Если сегодня остановитесь, кубок уйдёт.",
+          lockOnce:"Шляпа решает один раз. Её решение не меняется.",
+          lockTitle:"Распределение", lockYes:"Да, начнём", lockNo:"Не сейчас",
+          lockAsk:"Ваш факультет останется навсегда — изменить его будет нельзя. В Кубке Хогвартса вы будете бороться за него. Готовы?",
+          lockFinal:"Это ваш факультет. Теперь он не изменится.",
+          guest:"Гость", noTag:"Войдите через Telegram" },
+    en: { title:"Harry Potter", watch:"Watch", label:"Progress",
+          next:"Up next", seen:"Watched", download:"Download", examWaiting:"Exam pending", soon:"Coming soon",
+          sending:"⏳ Sending…", sentTo:function(t){return t+" — sent to the bot";}, undoBtn:"UNDO", undone:"Undone", undoFail:"Could not undo", undoExpired:"Too late — please delete the film from the chat yourself", notSubscribed:"🔒 Please subscribe to the channel first", notReadyMsg:"⏳ This film is coming soon", filmMissing:"😔 We couldn't send this film right now. The admins know — we'll fix it soon",
+          unmarkAsk:"Mark \u00ab%s\u00bb as not watched?",
+          hintStart:"Start the journey", hintDone:"All films watched",
+          hintMid:function(n){return n+" films left";},
+          profKicker:"Profile", profTitle:"Wizard", back:"Back",
+          stats:"By language", total:"Total watched",
+          houseLbl:"House", houseName:"Not sorted yet",
+          houseNote:"Take the test and discover your house",
+          cardTitle:"The Sorting Hat awaits you", cardSub:"8 questions — and you will know your house", houseSet:"As decided by the Sorting Hat",
+          sortCta:"Get sorted", resort:"Retake the test", step:function(a,b){return a+" / "+b;}, rvKicker:"The Sorting Hat has decided", rvDone:"Go to profile", sortExit:"Exit",
+          wandLbl:"Wand", wandNone:"Not chosen yet", wandNote:"Ollivanders is waiting for you", wandCta:"Choose a wand", wandAgain:"Choose again", wandAskAgain:"Your wand may change. Continue?", wandKicker:"Ollivander has chosen", inch:"inches", wandCardTitle:"Ollivanders is open", wandCardSub:"5 questions — and you will know your wand",
+          ckHouse:"House", ckWand:"Wand", ckPatronus:"Patronus", ckPet:"Pet", wandMore:"Read more", detKicker:"Your wand", hWood:"What the wood says", hCore:"What the core says", hRare:"Rarity", rareCore:"This core", rarePair:"This wand", ofWizards:"of wizards", famousLbl:"The very same wand as",
+          cupKicker:"Weekly contest", cupTitle:"The Hogwarts Cup", cupBack:"Back",
+          cupDays:"%d days", cupDay1:"%d day", cupHours:"%d hours", cupHour1:"%d hour",
+          cupLeftFmt:"%s left", cupEnding:"ending",
+          cupMembers:"%a / %b members", cupPlace:"place %d", cupPts:"points",
+          cupJoin:"Get sorted and join the contest",
+          cupStripGate:"%d more points to count", cupStripMine:"Your points %s",
+          cupStripBehind:"%s ahead by %n", cupStripAhead:"%s behind by %n",
+          cupGapBehind:"%s is ahead of you by %n", cupGapAhead:"%s is behind you by %n",
+          cupGapHint:"Today's question and one exam — %n",
+          cupGapDrop:"the gap drops to %n.", cupGapDone:"You have done everything for today.",
+          cupYourPts:"Your contribution", cupInHouse:"Within %s",
+          cupGate:"%n more — and your score counts for %s.",
+          cupGatePts:"%d points", cupSortCta:"Get sorted",
+          cupInvite:"Invite your friends",
+          hallName:"%s hall", hallSub:"%a wizards \u00b7 %b active this week",
+          hallYou:"you", hallWaiting:"%d more wizards are sorted but have not started this week.",
+          feedKick:"At Hogwarts", feedSorted:" was sorted into %h",
+          agoMin:"%d min", agoHour:"%d h", agoDay:"%d d",
+          cupNoHouse:"You have not been sorted yet", cupNoHouseHint:"You cannot take part in the cup without a house.",
+          cupNeedMembers:"%s joins the cup once there are %n", cupNeedCount:"%d more members",
+          cupNeedHint:"A member is someone with at least 30 points this season.",
+          cupEarly:"The season has just begun", cupEarlyHint:"The gap will appear here as soon as a rival emerges.",
+          cupFoot:"Ranked by average points — so the biggest house cannot win by size alone.",
+          cupGateTail:"That is %d daily questions.",
+          cupHoldPre:"The gap is small. ", cupHoldBold:"Stop today and the cup slips away.",
+          lockOnce:"The Hat decides once. Its decision does not change.",
+          lockTitle:"Sorting", lockYes:"Yes, let's begin", lockNo:"Not now",
+          lockAsk:"Your house stays for life — you will not be able to change it. You will compete for it in the Hogwarts Cup. Ready?",
+          lockFinal:"This is your house. It will not change now.",
+          guest:"Guest", noTag:"Open via Telegram" }
+  };
+
+  var LANG_GRADS = {
+    uz: "linear-gradient(150deg,#8ec79b,#2f7346)",
+    ru: "linear-gradient(150deg,#8fb0e0,#2f4f8f)",
+    en: "linear-gradient(150deg,#e09090,#8f2f2f)"
+  };
+
+  // Fakultet aniqlanmaguncha — neytral kulrang.
+  // Aniqlangach butun interfeys fakultet rangiga o'tadi.
+  var HOUSES = {
+    none:       { accent:"#97a1ae", accent2:"#5a6472", rgb:"151,161,174", ink:"#0e1117",
+                  crest:"?", uz:"Hali aniqlanmagan", ru:"Пока не определён", en:"Not sorted yet" },
+    gryffindor: { accent:"#d9524a", accent2:"#7d2420", rgb:"217,82,74",   ink:"#fff5f4", hi:"#f08c83",
+                  crest:"🦁", img:"Gryffindor_crest.png",
+                  uz:"Grifindor", ru:"Гриффиндор", en:"Gryffindor",
+                  note_uz:"Jasorat, matonat va yurak amri bilan yashash — sizning yo'lingiz.",
+                  note_ru:"Храбрость, стойкость и верность зову сердца — ваш путь.",
+                  note_en:"Courage, nerve and following your heart — that is your way." },
+    slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e", hi:"#74d3a3",
+                  crest:"🐍", img:"Slytherin_crest.png",
+                  uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
+                  note_uz:"Maqsad, zukkolik va o'z yo'lini topa bilish — sizning kuchingiz.",
+                  note_ru:"Амбиции, хитрость и умение найти свой путь — ваша сила.",
+                  note_en:"Ambition, cunning and finding your own path — that is your strength." },
+    ravenclaw:  { accent:"#5b8fd9", accent2:"#274a80", rgb:"91,143,217",  ink:"#06132b", hi:"#9dc0f2",
+                  crest:"🦅", img:"Ravenclaw_crest.png",
+                  uz:"Reyvenklo", ru:"Когтевран", en:"Ravenclaw",
+                  note_uz:"Aql, izlanish va bilimga chanqoqlik — sizni yetaklaydi.",
+                  note_ru:"Ум, любознательность и жажда знаний — вот что вас ведёт.",
+                  note_en:"Wit, curiosity and a thirst for learning — these lead you." },
+    hufflepuff: { accent:"#e8b93c", accent2:"#8a6a13", rgb:"232,185,60",  ink:"#1a1204", hi:"#f3d58f",
+                  crest:"🦡", img:"Hufflepuff_crest.png",
+                  uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
+                  note_uz:"Sadoqat, mehnatsevarlik va adolat — sizning tayanchingiz.",
+                  note_ru:"Верность, трудолюбие и справедливость — ваша опора.",
+                  note_en:"Loyalty, hard work and fairness — these hold you up." }
+  };
+
+  function applyHouse(id) {
+    var h = HOUSES[id] || HOUSES.none;
+    var root = document.documentElement;
+    if (!root || !root.style || !root.style.setProperty) { return; }
+    root.style.setProperty("--accent", h.accent);
+    root.style.setProperty("--accent-2", h.accent2);
+    root.style.setProperty("--accent-rgb", h.rgb);
+    root.style.setProperty("--accent-ink", h.ink);
+    // Tilla bezaklar Xaffelpaff sarig'iga o'xshab adashtirmasin: fakultet bor bo'lsa
+    // ular ham fakultet rangida. Saralanmaganlarda asl tilla qoladi.
+    var gold = { "--gold": h.accent, "--gold-2": h.accent2, "--gold-hi": h.hi, "--gold-rgb": h.rgb, "--gold-ink": h.ink };
+    for (var g in gold) {
+      if (HOUSES[id] && id !== "none" && gold[g]) { root.style.setProperty(g, gold[g]); }
+      else { root.style.removeProperty(g); }
+    }
+  }
+
+  var LANGS = [
+    { code:"uz", flag:"🇺🇿", name:"O'zbekcha", note:"UZ · Uzbek",   grad:LANG_GRADS.uz },
+    { code:"ru", flag:"🇷🇺", name:"Русский",   note:"RU · Russian", grad:LANG_GRADS.ru },
+    { code:"en", flag:"🇬🇧", name:"English",   note:"EN · English", grad:LANG_GRADS.en }
+  ];
+
+  function flagOf(code) {
+    for (var i = 0; i < LANGS.length; i++) {
+      if (LANGS[i].code === code) { return LANGS[i].flag; }
+    }
+    return "";
+  }
+
+  var lang = "uz";
+  var house = "none";
+  var wand = null;
+  var watched = {};
+  var cloudOk = false;
+
+  function $(id) { return document.getElementById(id); }
+
+  function list() {
+    var out = [];
+    for (var k in watched) { if (watched[k]) { out.push(k); } }
+    return out;
+  }
+
+  // Progress har til uchun alohida: kalit "uz:hp1" ko'rinishida
+  function key(id) { return lang + ":" + id; }
+
+  // Eski format ("hp1,hp2") -> "uz:hp1,uz:hp2"
+  function migrate(defLang) {
+    var moved = 0;
+    for (var k in watched) {
+      if (k.indexOf(":") === -1) {
+        delete watched[k];
+        watched[defLang + ":" + k] = true;
+        moved++;
+      }
+    }
+    if (moved) { writeLocal(); }
+    return moved;
+  }
+
+  /* ---------- SAQLASH ---------- */
+
+  function hasCloud() {
+    try { return !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9")); }
+    catch (e) { return false; }
+  }
+
+  function absorb(arr) {
+    for (var i = 0; i < arr.length; i++) { if (arr[i]) { watched[arr[i]] = true; } }
+  }
+
+  function readLocal() {
+    try { var raw = window.localStorage.getItem(KEY); return raw ? raw.split(",") : []; }
+    catch (e) { return []; }
+  }
+
+  function writeLocal() {
+    try { window.localStorage.setItem(KEY, list().join(",")); } catch (e) {}
+  }
+
+  function validLang(v) { return v === "uz" || v === "ru" || v === "en" ? v : null; }
+
+  function readLocalLang() {
+    try { return validLang(window.localStorage.getItem(LANG_KEY)); }
+    catch (e) { return null; }
+  }
+
+  // Bot tilni allaqachon so'ragan va havolaga ?lang=uz qo'shib yuboradi.
+  // Busiz ilova o'z til ekranini qaytadan ko'rsatardi va foydalanuvchi
+  // tilni ikki marta tanlashiga to'g'ri kelardi.
+  function urlLang() {
+    try {
+      var m = /(^|[?&])lang=(uz|ru|en)(&|$)/.exec(window.location.search || "");
+      return m ? m[2] : null;
+    } catch (e) { return null; }
+  }
+
+  function saveLang(code) {
+    try { window.localStorage.setItem(LANG_KEY, code); } catch (e) {}
+    if (!cloudOk) { return; }
+    try { tg.CloudStorage.setItem(LANG_KEY, code, function () {}); } catch (e) {}
+  }
+
+  var API_PROFILE = "https://bot.tizimshunos.uz/api/profile";
+
+  // Profil tanlovlarini serverga yuboradi (statistika uchun).
+  // Xato bo'lsa jim o'tadi — foydalanuvchiga bilinmaydi.
+  function report(kind, value) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { return; }
+
+    try {
+      window.fetch(API_PROFILE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: kind, value: value, initData: initData })
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
+  /* ---------- XOGVARTS KUBOGI (2.0) ---------- */
+
+  var API_LEADERBOARD = "https://bot.tizimshunos.uz/api/leaderboard";
+  var API_TASKS = "https://bot.tizimshunos.uz/api/tasks";
+  var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
+  var API_CHAT = "https://bot.tizimshunos.uz/api/chat";
+  var API_SEND = "https://bot.tizimshunos.uz/api/send";
+  var API_UNDO = "https://bot.tizimshunos.uz/api/undo";
+  var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
+  var cupData = null;
+  var cupBusy = false;
+  var tasksData = null;
+  var tasksBusy = false;
+
+  // Reytingni serverdan oladi. report() kabi jim ishlaydi: xato bo'lsa
+  // foydalanuvchi sezmaydi, tasma shunchaki ko'rinmaydi.
+  function fetchCup(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      cupData = {
+        houses: [
+          {house: "gryffindor", total_points: 1500, active_members: 12, qualified: true},
+          {house: "slytherin", total_points: 1200, active_members: 10, qualified: true},
+          {house: "ravenclaw", total_points: 900, active_members: 8, qualified: true},
+          {house: "hufflepuff", total_points: 500, active_members: 4, qualified: true}
+        ],
+        // Sinov rejimida mahalliy sinov ham saralanmagan odamdan boshlanadi
+        me: {house: HP_TEST ? null : "gryffindor", can_resort: true},
+        hall: {
+          total: 15, active: 12,
+          members: [
+            {name: "Harry", points: 300, me: true},
+            {name: "Hermione", points: 250},
+            {name: "Ron", points: 200},
+            {name: "Neville", points: 150},
+            {name: "Seamus", points: 100},
+            {name: "Dean", points: 100},
+            {name: "Parvati", points: 100},
+            {name: "Lavender", points: 100},
+            {name: "Colin", points: 100},
+            {name: "Dennis", points: 50},
+            {name: "Katie", points: 25},
+            {name: "Cormac", points: 25}
+          ]
+        },
+        feed: [
+          {name: "Harry", house: "gryffindor", ago_minutes: 5},
+          {name: "Draco", house: "slytherin", ago_minutes: 10},
+          {name: "Luna", house: "ravenclaw", ago_minutes: 15},
+          {name: "Cedric", house: "hufflepuff", ago_minutes: 20},
+          {name: "Cho", house: "ravenclaw", ago_minutes: 25},
+          {name: "Ginny", house: "gryffindor", ago_minutes: 30}
+        ]
+      };
+      if (cb) { cb(cupData); }
+      return;
+    }
+    if (!initData || !window.fetch || cupBusy) { if (cb) { cb(cupData); } return; }
+
+    cupBusy = true;
+    function done(d) {
+      cupBusy = false;
+      if (d && d.houses) { cupData = d; }
+      if (cb) { cb(cupData); }
+    }
+    try {
+      window.fetch(API_LEADERBOARD, {
+        method: "GET",
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(done)["catch"](function () { done(null); });
+    } catch (e) { done(null); }
+  }
+
+  function fetchTasks(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      tasksData = {
+        tasks: [
+          {
+            id: "daily", type: "daily", title: "Kunlik savol",
+            questions: [{id: 1, body: "Garri Potterning boyqushining ismi nima?", options: ["Hedwig", "Errol", "Pigwidgeon", "Crookshanks"]}]
+          },
+          {
+            id: "quiz_hp1", type: "film_quiz", film_id: "hp1", title: "Garri Potter 1-qism imtihoni",
+            questions: [
+              {id: 2, body: "Hikmatlar toshini kim himoya qiladi?", options: ["Fluffy", "Norbert", "Fang", "Aragog"]}
+            ]
+          }
+        ]
+      };
+      if (cb) { cb(tasksData); }
+      return;
+    }
+    if (!initData || !window.fetch || tasksBusy) { if (cb) { cb(tasksData); } return; }
+
+    tasksBusy = true;
+    function done(d) {
+      tasksBusy = false;
+      if (d && d.tasks) { tasksData = d; }
+      if (cb) { cb(tasksData); }
+    }
+    try {
+      window.fetch(API_TASKS, {
+        method: "GET",
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(done)["catch"](function () { done(null); });
+    } catch (e) { done(null); }
+  }
+
+  /* ---------- DO'STLAR REYTINGI ---------- */
+  // Ma'lumot /api/referrals dan keladi. Daraja NOMLARI ham serverdan (bot
+  // xabari bilan bir xil bo'lsin) - bu yerda faqat oyna matnlari.
+  var API_REFERRALS = "https://bot.tizimshunos.uz/api/referrals";
+  var refsData = null;
+  var refsBusy = false;
+
+  var REF_T = {
+    uz: {
+      kick: "Do'stlar reytingi", head: "Taklif qilganlar",
+      stripTitle: "Do'st taklif qiling — darajangizni oshiring ›",
+      rankLbl: "Sizning darajangiz",
+      friends: "Do'stlar", place: "O'rin", cup: "Kubok bali",
+      next: "Keyingi daraja — %s: yana %f", top: "Eng yuqori darajadasiz!",
+      share: "Filmni do'stga ulashish", promo: "Kolleksiyani taklif qilish", topKick: "Eng ko'p do'st taklif qilganlar",
+      empty: "Hali hech kim do'st taklif qilmagan. Birinchi bo'ling!", you: "siz",
+      howTitle: "Qanday ishlaydi?",
+      steps: [
+        "Istalgan filmni do'stingizga ulashing — film ostidagi «Ulashish» tugmasi yoki yuqoridagi tugma orqali. Kartadagi havola sizniki, boshqa hech narsa qilish shart emas.",
+        "Do'stingiz havolani bosib botga kiradi va kanalga obuna bo'ladi. O'sha filmni u darhol oladi.",
+        "Shu zahoti sizga +1 do'st yoziladi, Xogvarts kubogida esa +%d ball. Bot sizga xabar yuboradi."
+      ],
+      rulesTitle: "Qoidalar",
+      rules: [
+        "Faqat botga birinchi marta kelgan odam hisoblanadi.",
+        "Do'stingiz kanalga obuna bo'lmaguncha ball berilmaydi.",
+        "Har bir do'st uchun ball faqat bir marta beriladi.",
+        "Do'stingiz bir nechta havolani bossa, birinchi bosgani hisoblanadi.",
+        "O'zingizni o'zingiz taklif qila olmaysiz."
+      ],
+      ratingTitle: "Reyting",
+      rating: [
+        "O'rin taklif qilingan do'stlar soniga qarab belgilanadi. Teng bo'lsa — shu songa birinchi yetgan yuqorida turadi.",
+        "Do'stlar soni doimiy saqlanadi, haftalik mavsum bilan nolga tushmaydi. Kubok ballari esa o'sha haftaning musobaqasiga qo'shiladi.",
+        "Fakultetga hali saralanmagan bo'lsangiz ham ball yoziladi — shu hafta ichida saralansangiz, u fakultetingiz hisobiga o'tadi."
+      ],
+      ranksTitle: "Darajalar",
+      fr: function (n) { return n + " ta do'st"; }
+    },
+    ru: {
+      kick: "Рейтинг друзей", head: "Пригласившие",
+      stripTitle: "Приглашайте друзей — повышайте уровень ›",
+      rankLbl: "Ваш уровень",
+      friends: "Друзья", place: "Место", cup: "Очки кубка",
+      next: "Следующий уровень — %s: ещё %f", top: "У вас высший уровень!",
+      share: "Поделиться фильмом с другом", promo: "Пригласить в коллекцию", topKick: "Больше всех пригласили",
+      empty: "Пока никто не пригласил друзей. Будьте первым!", you: "вы",
+      howTitle: "Как это работает?",
+      steps: [
+        "Поделитесь любым фильмом с другом — кнопкой «Поделиться» под фильмом или кнопкой выше. Ссылка в карточке ваша, больше ничего делать не нужно.",
+        "Друг переходит по ссылке в бот и подписывается на канал. Этот фильм он получает сразу.",
+        "В тот же момент вам засчитывается +1 друг, а в Кубке Хогвартса +%d очков. Бот пришлёт вам сообщение."
+      ],
+      rulesTitle: "Правила",
+      rules: [
+        "Считается только тот, кто пришёл в бот впервые.",
+        "Пока друг не подписался на канал, очки не начисляются.",
+        "За каждого друга очки начисляются только один раз.",
+        "Если друг перешёл по нескольким ссылкам, засчитывается первая.",
+        "Пригласить самого себя нельзя."
+      ],
+      ratingTitle: "Рейтинг",
+      rating: [
+        "Место зависит от числа приглашённых друзей. При равенстве выше тот, кто набрал это число раньше.",
+        "Число друзей сохраняется навсегда и не обнуляется с недельным сезоном. Очки кубка идут в соревнование той недели.",
+        "Даже если вы ещё не распределены на факультет, очки записываются — распределитесь на этой неделе, и они перейдут вашему факультету."
+      ],
+      ranksTitle: "Уровни",
+      fr: function (n) {
+        var a = n % 10, b = n % 100;
+        var w = (a === 1 && b !== 11) ? "друг" : (a >= 2 && a <= 4 && (b < 12 || b > 14)) ? "друга" : "друзей";
+        return n + " " + w;
+      }
+    },
+    en: {
+      kick: "Friends leaderboard", head: "Top inviters",
+      stripTitle: "Invite friends — raise your rank ›",
+      rankLbl: "Your rank",
+      friends: "Friends", place: "Place", cup: "Cup points",
+      next: "Next rank — %s: %f more", top: "You have the highest rank!",
+      share: "Share a film with a friend", promo: "Invite to the collection", topKick: "Most friends invited",
+      empty: "Nobody has invited a friend yet. Be the first!", you: "you",
+      howTitle: "How does it work?",
+      steps: [
+        "Share any film with a friend — with the “Share” button under the film or the button above. The link in the card is yours, nothing else to do.",
+        "Your friend opens the bot through the link and subscribes to the channel. They get that film right away.",
+        "At that moment you get +1 friend and +%d points in the Hogwarts Cup. The bot sends you a message."
+      ],
+      rulesTitle: "Rules",
+      rules: [
+        "Only people who open the bot for the first time count.",
+        "No points until your friend subscribes to the channel.",
+        "Each friend counts only once.",
+        "If a friend opens several links, the first one counts.",
+        "You can't invite yourself."
+      ],
+      ratingTitle: "Leaderboard",
+      rating: [
+        "Places depend on the number of friends invited. On a tie, whoever reached that number first ranks higher.",
+        "Your friend count is kept forever and doesn't reset with the weekly season. Cup points go to that week's contest.",
+        "Even if you haven't been sorted yet, points are recorded — get sorted this week and they go to your house."
+      ],
+      ranksTitle: "Ranks",
+      fr: function (n) { return n + (n === 1 ? " friend" : " friends"); }
+    }
+  };
+
+  function refT() { return REF_T[lang] || REF_T.uz; }
+
+  function fetchRefs(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      refsData = {
+        ok: true, total: 14, pts_per_friend: 20,
+        top: [
+          {pos: 1, name: "Hermione", house: "gryffindor", refs: 23},
+          {pos: 2, name: "Luna", house: "ravenclaw", refs: 11},
+          {pos: 3, name: "Cedric", house: "hufflepuff", refs: 7},
+          {pos: 4, name: "Draco", house: "slytherin", refs: 5},
+          {pos: 5, name: "Neville", house: "gryffindor", refs: 4},
+          {pos: 6, name: "Cho", house: "ravenclaw", refs: 3},
+          {pos: 7, name: "Ginny", house: "gryffindor", refs: 3},
+          {pos: 8, name: "Blaise", house: "slytherin", refs: 2},
+          {pos: 9, name: "Hannah", house: "hufflepuff", refs: 2},
+          {pos: 10, name: "Dean", house: "gryffindor", refs: 1}
+        ],
+        me: {refs: 1, place: 12, rank: "first_year", rank_name: "Birinchi kurs talabasi",
+             next_need: 5, next_name: "Prefekt", cup_points: 20},
+        ranks: [
+          {need: 0, code: "muggle", name: "Maggl"}, {need: 1, code: "first_year", name: "Birinchi kurs talabasi"},
+          {need: 5, code: "prefect", name: "Prefekt"}, {need: 10, code: "quidditch_captain", name: "Kvidich sardori"},
+          {need: 20, code: "auror", name: "Auror"}, {need: 50, code: "great_wizard", name: "Buyuk sehrgar"}
+        ]
+      };
+      if (cb) { cb(refsData); }
+      return;
+    }
+    if (!initData || !window.fetch || refsBusy) { if (cb) { cb(refsData); } return; }
+    refsBusy = true;
+    function done(d) {
+      refsBusy = false;
+      if (d && d.ok) { refsData = d; }
+      if (cb) { cb(refsData); }
+    }
+    try {
+      window.fetch(API_REFERRALS + "?lang=" + encodeURIComponent(lang), {
+        method: "GET",
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(done)["catch"](function () { done(null); });
+    } catch (e) { done(null); }
+  }
+
+  function renderRefsStrip() {
+    var r = refT();
+    $("refs-kicker").textContent = r.kick;
+    $("refs-title").textContent = cupT().refsS;
+    var me = refsData && refsData.me;
+    if (me && me.refs > 0) {
+      $("refs-count").textContent = r.fr(me.refs);
+      $("refs-pill").classList.remove("hidden");
+    } else {
+      $("refs-pill").classList.add("hidden");
+    }
+  }
+
+  function refsEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text !== undefined) { el.textContent = text; }
+    return el;
+  }
+
+  function refsRow(m, t) {
+    var row = refsEl("div", "hall-row");
+    row.appendChild(refsEl("div", "hall-pos", String(m.pos)));
+    row.appendChild(faceEl("hall-face", m.name, m.house));
+    var who = refsEl("div", "hall-nm");
+    who.appendChild(document.createTextNode(m.name || ""));
+    if (m.me) {
+      var tag = refsEl("i", "", t.you);
+      tag.style.color = "var(--accent)";
+      who.appendChild(tag);
+    }
+    row.appendChild(who);
+    row.appendChild(refsEl("div", "hall-pts", String(m.refs || 0)));
+    return row;
+  }
+
+  function renderRefs() {
+    var t = refT();
+    var d = refsData || {};
+    var me = d.me || {refs: 0};
+    var pts = d.pts_per_friend || 20;
+
+    $("refs-back-txt").textContent = T[lang].cupBack;
+    $("refs-kick").textContent = t.kick;
+    $("refs-head").textContent = t.head;
+    $("refs-share").textContent = t.share;
+    $("refs-promo").textContent = t.promo;
+
+    // --- sizning holatingiz
+    var box = $("refs-me");
+    box.innerHTML = "";
+    box.appendChild(refsEl("div", "refs-lbl", t.rankLbl));
+    box.appendChild(refsEl("div", "refs-rank", me.rank_name || ""));
+    var nums = refsEl("div", "refs-nums");
+    [[me.refs || 0, t.friends], [me.place ? me.place + (d.total ? " / " + d.total : "") : "—", t.place],
+     [me.cup_points || 0, t.cup]].forEach(function (n) {
+      var c = refsEl("div", "refs-num");
+      c.appendChild(refsEl("b", "", String(n[0])));
+      c.appendChild(refsEl("span", "", n[1]));
+      nums.appendChild(c);
+    });
+    box.appendChild(nums);
+
+    // Keyingi darajagacha qancha qolgani
+    var ranks = d.ranks || [];
+    var prev = 0;
+    ranks.forEach(function (x) { if (x.need <= (me.refs || 0)) { prev = x.need; } });
+    var bar = refsEl("div", "refs-bar");
+    var fill = refsEl("i");
+    if (me.next_need) {
+      var pct = Math.round(((me.refs || 0) - prev) / Math.max(1, me.next_need - prev) * 100);
+      fill.style.width = Math.max(4, Math.min(100, pct)) + "%";
+    } else {
+      fill.style.width = "100%";
+    }
+    bar.appendChild(fill);
+    box.appendChild(bar);
+    box.appendChild(refsEl("div", "refs-next", me.next_need
+      ? t.next.replace("%s", me.next_name || "").replace("%f", t.fr(me.next_need - (me.refs || 0)))
+      : t.top));
+
+    // --- TOP 10 (+ o'z qatori, agar tashqarida bo'lsa)
+    $("refs-top-kick").textContent = t.topKick;
+    var list = $("refs-list");
+    list.innerHTML = "";
+    var top = d.top || [];
+    if (!top.length) {
+      list.appendChild(refsEl("div", "refs-empty", t.empty));
+    }
+    top.forEach(function (m) { list.appendChild(refsRow(m, t)); });
+    if (me.place && me.place > top.length) {
+      list.appendChild(refsEl("div", "refs-gap", "···"));
+      var u = tgUser();
+      list.appendChild(refsRow({pos: me.place, name: (u && u.first_name) || "—",
+        house: cupMe().house, refs: me.refs, me: true}, t));
+    }
+
+    // --- qanday ishlaydi
+    var info = $("refs-info");
+    info.innerHTML = "";
+    info.appendChild(refsEl("h3", "", t.howTitle));
+    t.steps.forEach(function (txt, i) {
+      var st = refsEl("div", "refs-step");
+      st.appendChild(refsEl("b", "", String(i + 1)));
+      st.appendChild(refsEl("p", "", txt.replace("%d", pts)));
+      info.appendChild(st);
+    });
+    info.appendChild(refsEl("h4", "", t.rulesTitle));
+    t.rules.forEach(function (txt) { info.appendChild(refsEl("p", "refs-rule", txt)); });
+    info.appendChild(refsEl("h4", "", t.ratingTitle));
+    t.rating.forEach(function (txt) { info.appendChild(refsEl("p", "refs-rule", txt)); });
+    if (ranks.length) {
+      info.appendChild(refsEl("h4", "", t.ranksTitle));
+      ranks.forEach(function (x) {
+        var lv = refsEl("div", "refs-lvl" + (x.code === me.rank ? " on" : ""));
+        lv.appendChild(document.createTextNode(x.name));
+        lv.appendChild(refsEl("span", "", t.fr(x.need)));
+        info.appendChild(lv);
+      });
+    }
+  }
+
+  function openRefs() {
+    renderRefs();
+    $("scr-cup").classList.add("hidden");
+    $("scr-refs").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    // Eng yangi holat - ochilganda qayta so'raymiz
+    fetchRefs(function () { renderRefs(); renderRefsStrip(); });
+  }
+
+  function closeRefs() {
+    $("scr-refs").classList.add("hidden");
+    openCup();
+  }
+
+  // Ulashish: bot kartasini tanlangan chatga qo'yadi (inline qidiruv).
+  // Karta ichidagi havola ulashgan odamning id sini olib yuradi.
+  // query: "" - film qidiruvi, "taklif" - kolleksiyaning reklama kartasi.
+  function shareRefs(query) {
+    try {
+      if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+        tg.switchInlineQuery(typeof query === "string" ? query : "", ["users", "groups", "channels"]);
+        return;
+      }
+    } catch (e) {}
+    // Eski mijozlar: oddiy havola, lekin baribir taklif qilgan odam bilan.
+    var u = tgUser();
+    var url = "https://t.me/" + BOT + (u ? "?start=ref" + u.id : "");
+    try {
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url));
+        return;
+      }
+    } catch (e) {}
+    try { window.open(url, "_blank"); } catch (e) {}
+  }
+
+  function submitTaskAnswer(taskType, questionId, selectedIndex, cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
+      setTimeout(function() {
+        cb({ok: true, correct: selectedIndex === 0, points: 10, correct_index: 0});
+      }, 500);
+      return;
+    }
+    if (!initData || !window.fetch) { cb({ok: false}); return; }
+    
+    window.fetch(API_SUBMIT_TASK, {
+      method: "POST",
+      headers: { "X-Telegram-Init-Data": initData, "Content-Type": "application/json" },
+      body: JSON.stringify({ task_type: taskType, question_id: questionId, selected_index: selectedIndex })
+    }).then(function(r) { return r.ok ? r.json() : {ok: false}; })
+      .then(cb)["catch"](function() { cb({ok: false}); });
+  }
+
+  var currentTask = null;
+  var currentQuestionIndex = 0;
+
+  function renderTasksStrip() {
+    setTimeout(worldRefresh, 0);
+    var strip = $("tasks-strip");
+    if (!strip) return;
+    strip.classList.remove("hidden");
+    
+    var count = (tasksData && tasksData.tasks) ? tasksData.tasks.length : 0;
+    var c = cupT();
+    $("tasks-kicker").textContent = c.tasksT;
+    $("tasks-title").textContent = c.tasksS;
+    if (count > 0) {
+      $("tasks-count").textContent = c.tasksNew.replace("%d", count);
+      $("tasks-count").parentNode.querySelector("i").style.display = "";
+    } else {
+      $("tasks-count").textContent = c.tasksDone;
+      $("tasks-count").parentNode.querySelector("i").style.display = "none";
+    }
+  }
+
+  function openTasks() {
+    $("scr-cup").classList.add("hidden");
+    $("scr-tasks").classList.remove("hidden");
+    
+    $("tasks-header").textContent = lang === "uz" ? "Kutilayotgan vazifalar" : lang === "ru" ? "Ожидающие задачи" : "Pending tasks";
+    $("tasks-empty").textContent = lang === "uz" ? "Hozircha barcha vazifalarni bajargansiz." : lang === "ru" ? "Пока все задачи выполнены." : "You have completed all tasks for now.";
+    $("tasks-back-txt").textContent = T[lang].cupBack;
+    $("quiz-back-txt").textContent = lang === "uz" ? "Vazifalar" : lang === "ru" ? "Задачи" : "Tasks";
+    
+    var list = $("tasks-list");
+    list.innerHTML = "";
+    
+    if (!tasksData || !tasksData.tasks || tasksData.tasks.length === 0) {
+      $("tasks-empty").classList.remove("hidden");
+      return;
+    }
+    $("tasks-empty").classList.add("hidden");
+    
+    tasksData.tasks.forEach(function(task) {
+      var btn = document.createElement("button");
+      btn.className = "btn w-100";
+      btn.style.textAlign = "left";
+      btn.style.padding = "16px";
+      btn.style.background = "var(--card)";
+      btn.style.color = "var(--text)";
+      btn.style.border = "1px solid var(--line)";
+      btn.style.borderRadius = "12px";
+      btn.style.display = "flex";
+      btn.style.alignItems = "center";
+      btn.style.justifyContent = "space-between";
+      
+      var txt = document.createElement("span");
+      txt.style.fontWeight = "600";
+      txt.textContent = task.title;
+      btn.appendChild(txt);
+      
+      var ar = document.createElement("span");
+      ar.textContent = "›";
+      ar.style.color = "var(--accent)";
+      ar.style.fontSize = "20px";
+      btn.appendChild(ar);
+      
+      btn.onclick = function() {
+        startTask(task);
+      };
+      
+      list.appendChild(btn);
+    });
+  }
+  
+  function startTask(task) {
+    currentTask = task;
+    currentQuestionIndex = 0;
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.remove("hidden");
+    renderQuizQuestion();
+  }
+  
+  function renderQuizQuestion() {
+    if (!currentTask) return;
+    if (currentQuestionIndex >= currentTask.questions.length) {
+      var idx = tasksData.tasks.indexOf(currentTask);
+      if (idx > -1) { tasksData.tasks.splice(idx, 1); }
+      currentTask = null;
+      openTasks();
+      $("scr-quiz").classList.add("hidden");
+      renderTasksStrip();
+      if (window.tg && window.tg.HapticFeedback) {
+        window.tg.HapticFeedback.notificationOccurred("success");
+      }
+      return;
+    }
+    
+    var q = currentTask.questions[currentQuestionIndex];
+    $("quiz-progress").textContent = (currentQuestionIndex + 1) + " / " + currentTask.questions.length;
+    $("quiz-title").textContent = q.body;
+    
+    var opts = $("quiz-options");
+    opts.innerHTML = "";
+    
+    q.options.forEach(function(optText, idx) {
+      var btn = document.createElement("button");
+      btn.className = "btn w-100";
+      btn.style.padding = "14px";
+      btn.style.borderRadius = "12px";
+      btn.style.background = "var(--bg-mid)";
+      btn.style.color = "var(--text)";
+      btn.style.border = "1px solid var(--line)";
+      btn.style.textAlign = "left";
+      btn.style.fontSize = "16px";
+      btn.textContent = optText;
+      
+      btn.onclick = function() {
+        var allBtns = opts.querySelectorAll("button");
+        for (var i=0; i<allBtns.length; i++) {
+          allBtns[i].disabled = true;
+          allBtns[i].style.opacity = "0.7";
+        }
+        btn.style.opacity = "1";
+        
+        submitTaskAnswer(currentTask.type, q.id, idx, function(res) {
+          if (res.ok) {
+            if (res.correct) {
+              btn.style.background = "rgba(46, 204, 113, 0.2)";
+              btn.style.borderColor = "#2ecc71";
+              if (window.tg && window.tg.HapticFeedback) window.tg.HapticFeedback.notificationOccurred("success");
+            } else {
+              btn.style.background = "rgba(231, 76, 60, 0.2)";
+              btn.style.borderColor = "#e74c3c";
+              if (res.correct_index !== undefined && allBtns[res.correct_index]) {
+                allBtns[res.correct_index].style.background = "rgba(46, 204, 113, 0.2)";
+                allBtns[res.correct_index].style.borderColor = "#2ecc71";
+                allBtns[res.correct_index].style.opacity = "1";
+              }
+              if (window.tg && window.tg.HapticFeedback) window.tg.HapticFeedback.notificationOccurred("error");
+            }
+            if (res.points && res.points > 0 && cupData && cupData.me) {
+               cupData.me.points = (cupData.me.points || 0) + res.points;
+            }
+          } else {
+            btn.style.background = "rgba(231, 76, 60, 0.2)";
+          }
+          
+          setTimeout(function() {
+            currentQuestionIndex++;
+            renderQuizQuestion();
+          }, 1500);
+        });
+      };
+      
+      opts.appendChild(btn);
+    });
+  }
+
+  function cupPts(v) {
+    var n = Number(v);
+    return isFinite(n) ? Math.round(n).toString() : "0";
+  }
+
+  function cupHouseName(id) {
+    return (HOUSES[id] && HOUSES[id][lang]) || id;
+  }
+
+  function cupCrestImg(houseId, size) {
+    var h = HOUSES[houseId];
+    if (!h || !h.img) { return null; }
+    var img = document.createElement("img");
+    img.src = IMG_DIR + h.img;
+    img.alt = "";
+    if (size) { img.style.width = img.style.height = size + "px"; }
+    return img;
+  }
+
+  // "2 kun 14 soat qoldi" yoki "9 soat qoldi"
+  function cupTimer(t) {
+    if (!cupData || !cupData.season) { return ""; }
+    var diff;
+    try { diff = new Date(cupData.season.ends_at).getTime() - Date.now(); }
+    catch (e) { return ""; }
+    if (!(diff > 0)) { return t.cupEnding; }
+
+    // Avval muddat yig'iladi, keyin tilga mos qolipga qo'yiladi:
+    // o'zbekchada "... qoldi", ruschada "осталось ..." - so'z tartibi teskari.
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var span;
+    if (days >= 1) {
+      span = (days === 1 ? t.cupDay1 : t.cupDays).replace("%d", days);
+      if (hours >= 1) {
+        span += " " + (hours === 1 ? t.cupHour1 : t.cupHours).replace("%d", hours);
+      }
+    } else {
+      var h = Math.max(1, Math.floor(diff / 3600000));
+      span = (h === 1 ? t.cupHour1 : t.cupHours).replace("%d", h);
+    }
+    return t.cupLeftFmt.replace("%s", span);
+  }
+
+  // Chegaradan o'tganlar tepada, keyin o'rtacha ball bo'yicha.
+  function cupSorted() {
+    if (!cupData || !cupData.houses) { return []; }
+    var list = cupData.houses.slice();
+    list.sort(function (a, b) {
+      if (a.qualified !== b.qualified) { return a.qualified ? -1 : 1; }
+      if ((b.total_points || 0) !== (a.total_points || 0)) {
+        return (b.total_points || 0) - (a.total_points || 0);
+      }
+      return HOUSE_ORDER.indexOf(a.house) - HOUSE_ORDER.indexOf(b.house);
+    });
+    return list;
+  }
+
+  function cupMe() { return (cupData && cupData.me) || {}; }
+
+  // Gerb 34px + 9px pastdan = naycha balandligining 23%. To'ldirish
+  // undan past bo'lsa, gerb havoda osilib qolgandek ko'rinadi.
+  var MIN_FILL = 28;
+
+  // Bu mavsumda imtihoni topshirilmagan qismlar. Bot bu maydonni hali
+  // yubormasa - bo'sh massiv, ya'ni katalogda hech narsa o'zgarmaydi.
+  function examPending(part) {
+    var me = cupMe();
+    var list = me.exam_pending;
+    if (!list || !list.length) { return false; }
+    for (var i = 0; i < list.length; i++) {
+      if (Number(list[i]) === Number(part)) { return true; }
+    }
+    return false;
+  }
+  var SCALE_FLOOR = 100;   // mavsumdagi maksimum 350
+
+  // Farq bugun yopilsa - nuqtalar yaqin, yopilmasa - uzoq.
+  // closable yuborilmagan bo'lsa (eski server) - neytral masofa.
+  function gapRatio(diff, closable) {
+    var d = (typeof diff === "number" && diff > 0) ? diff : 0;
+    // closable 0 - bu muvaffaqiyatsizlik emas, "bugun hammasi qilingan".
+    // Bunday holatda uzun masofa ko'rsatish matnga zid bo'lardi.
+    if (typeof closable !== "number" || closable <= 0) { return 0.6; }
+    var r = d / (d + closable);
+    if (r < 0.12) { return 0.12; }
+    if (r > 0.9) { return 0.9; }   // hech qachon umidsiz ko'rinmasin
+    return r;
+  }
+
+  // Chegaradan o'tganlar orasidagi o'rin (1 dan boshlab), yoki null
+  function cupPlaceOf(house) {
+    var place = 0, list = cupSorted(), i;
+    for (i = 0; i < list.length; i++) {
+      if (!list[i].qualified) { continue; }
+      place++;
+      if (list[i].house === house) { return place; }
+    }
+    return null;
+  }
+
+  function cupRowOf(list, house) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].house === house) { return list[i]; }
+    }
+    return null;
+  }
+
+  /* ---------- katalogdagi tasma ---------- */
+
+  function renderCupStrip() {
+    var strip = $("cup-strip");
+    if (!strip) { return; }
+    if (!strip) { return; }
+    var t = T[lang];
+
+    if (!cupData) { strip.classList.add("hidden"); return; }
+
+    var me = cupMe();
+    var house = me.house;
+    var list = cupSorted();
+
+    $("cup-strip-kicker").textContent = t.cupTitle;
+
+    var time = $("cup-strip-time");
+    time.innerHTML = "";
+    var left = cupTimer(t);
+    if (left) {
+      time.appendChild(document.createElement("i"));
+      time.appendChild(document.createTextNode(left));
+      time.style.display = "";
+    } else {
+      time.style.display = "none";
+    }
+
+    // Yotiq naychalar: balandlik o'rniga kenglik to'ladi. Shkala kubok
+    // ekranidagidek - yetakchi SCALE_FLOOR dan past bo'lsa, hisob o'sha
+    // chegaraga nisbatan olinadi, aks holda mavsum boshida naychalar
+    // to'lib ketgandek ko'rinadi.
+    var top = 0;
+    for (var i = 0; i < list.length; i++) {
+      if ((list[i].total_points || 0) > top) { top = list[i].total_points || 0; }
+    }
+    var scale = Math.max(top, SCALE_FLOOR);
+
+    var tubes = $("cup-strip-tubes");
+    var names = $("cup-strip-names");
+    tubes.innerHTML = "";
+    names.innerHTML = "";
+
+    list.forEach(function (row) {
+      var hh = HOUSES[row.house] || {};
+      var mine = !!house && row.house === house;
+
+      var tube = document.createElement("span");
+      tube.className = "cup-strip-tube" + (row.qualified ? "" : " out");
+      if (mine) { tube.style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.6)"; }
+
+      var fill = document.createElement("i");
+      fill.style.width = Math.max(4, Math.round((row.total_points || 0) / scale * 100)) + "%";
+      fill.style.background = "rgba(" + (hh.rgb || "151,161,174") + "," + (mine ? ".62" : ".5") + ")";
+      tube.appendChild(fill);
+      tubes.appendChild(tube);
+
+      var nm = document.createElement("span");
+      nm.className = "cup-strip-name" + (mine ? " mine" : "");
+      nm.appendChild(document.createTextNode(cupHouseName(row.house)));
+      var val = document.createElement("b");
+      val.textContent = Math.round(row.total_points || 0);
+      val.style.color = hh.accent || "var(--accent)";
+      nm.appendChild(val);
+      names.appendChild(nm);
+    });
+
+
+
+    strip.classList.remove("hidden");
+  }
+  /* ---------- FAKULTETLAR HAQIDA (kitoblar asosida) ----------
+     Ismlar ilovadagi boshqa matnlar bilan bir xil yozilgan: uz - savollardagi
+     (Sneyp, Uizli, Slaggorn, Tom Ridl), ru - "Росмэн" tarjimasi (fakultet
+     nomlari ham shundan: Когтевран, Пуффендуй). Har rol: [ism, izoh]. */
+  var HOUSE_LORE = {
+    gryffindor: {
+      colors: ["#ae0001", "#d3a625"],
+      uz: {
+        traits: "Jasorat · matonat · olijanoblik", symbol: "Sher", element: "Olov", colors: "Qizil va oltin",
+        founder: ["Godrik Grifindor", "Jasur duelchi. Uning qilichi haqiqiy grifindorlikka kerak bo'lganda Saralovchi shlyapadan chiqadi."],
+        head: ["Minerva Makgonagall", "Transfiguratsiya ustozi, maktab direktorining o'rinbosari."],
+        ghost: ["Deyarli Boshsiz Nik", "Ser Nikolas de Mimsi-Porpington — boshi oxirigacha kesilmay qolgan."],
+        captain: ["Oliver Vud", "1–3-kitoblarda. Keyin Anjelina Jonson (5) va Garri Potter (6)."],
+        prefects: ["Persi Uizli", "Keyin maktabning Bosh o'quvchisi bo'ldi. 5-kitobdan — Ron Uizli va Germiona Greynjer."],
+        room: "Grifindor minorasida. Kirish — Semiz xonim portreti ortida: parolni aytsangiz, portret ochiladi.",
+        famous: ["Garri Potter", "Germiona Greynjer", "Ron Uizli", "Nevill Longbottom", "Jinni Uizli", "Jeyms va Lili Potter", "Sirius Blek"]
+      },
+      ru: {
+        traits: "Храбрость · отвага · благородство", symbol: "Лев", element: "Огонь", colors: "Алый и золотой",
+        founder: ["Годрик Гриффиндор", "Храбрый дуэлянт. Его меч появляется из Распределяющей шляпы, когда он нужен настоящему гриффиндорцу."],
+        head: ["Минерва Макгонагалл", "Преподаёт трансфигурацию, заместитель директора школы."],
+        ghost: ["Почти Безголовый Ник", "Сэр Николас де Мимси-Дельфингтон — голову ему отрубили не до конца."],
+        captain: ["Оливер Вуд", "В 1–3 книгах. Затем Анджелина Джонсон (5) и Гарри Поттер (6)."],
+        prefects: ["Перси Уизли", "Позже стал старостой школы. С 5-й книги — Рон Уизли и Гермиона Грейнджер."],
+        room: "В башне Гриффиндора. Вход — за портретом Полной Дамы: назовите пароль, и портрет откроется.",
+        famous: ["Гарри Поттер", "Гермиона Грейнджер", "Рон Уизли", "Невилл Долгопупс", "Джинни Уизли", "Джеймс и Лили Поттер", "Сириус Блэк"]
+      },
+      en: {
+        traits: "Bravery · daring · chivalry", symbol: "Lion", element: "Fire", colors: "Scarlet and gold",
+        founder: ["Godric Gryffindor", "A brave duellist. His sword comes out of the Sorting Hat when a true Gryffindor needs it."],
+        head: ["Minerva McGonagall", "Transfiguration teacher and Deputy Headmistress."],
+        ghost: ["Nearly Headless Nick", "Sir Nicholas de Mimsy-Porpington — his head was never quite cut off."],
+        captain: ["Oliver Wood", "Books 1–3. Then Angelina Johnson (5) and Harry Potter (6)."],
+        prefects: ["Percy Weasley", "Later Head Boy. From book 5 — Ron Weasley and Hermione Granger."],
+        room: "In Gryffindor Tower. The entrance is behind the portrait of the Fat Lady: say the password and she swings open.",
+        famous: ["Harry Potter", "Hermione Granger", "Ron Weasley", "Neville Longbottom", "Ginny Weasley", "James and Lily Potter", "Sirius Black"]
+      }
+    },
+    slytherin: {
+      colors: ["#1a472a", "#aaaaaa"],
+      uz: {
+        traits: "Maqsad · zukkolik · tadbirkorlik", symbol: "Ilon", element: "Suv", colors: "Yashil va kumush",
+        founder: ["Salazar Sliterin", "Ilonlar tilini bilgan. Qasr ichida Maxfiy hujrani yashirincha qurib ketgan."],
+        head: ["Severus Sneyp", "Iksirlar ustozi. 7-kitobda mudirlik Horas Slaggornga o'tadi."],
+        ghost: ["Qonli Baron", "Kiyimi kumushrang qon dog'lari bilan qoplangan. Hatto Pivz ham undan qo'rqadi."],
+        captain: ["Markus Flint", "1–3-kitoblarda. 5-kitobda — Grexem Montegyu."],
+        prefects: ["Drako Malfoy va Pensi Parkinson", "5-kitobdan boshlab."],
+        room: "Zindonlarda, Qora ko'l ostida — derazalardan ko'l suvi ko'rinadi, xona yashil tusda tovlanadi. Kirish — tosh devordagi yashirin eshik, parol bilan.",
+        famous: ["Tom Ridl (Voldemort)", "Severus Sneyp", "Horas Slaggorn", "Drako Malfoy", "Krabb va Goyl"]
+      },
+      ru: {
+        traits: "Амбиции · хитрость · находчивость", symbol: "Змея", element: "Вода", colors: "Зелёный и серебряный",
+        founder: ["Салазар Слизерин", "Владел змеиным языком. Тайно построил в замке Тайную комнату."],
+        head: ["Северус Снегг", "Преподаёт зельеварение. В 7-й книге деканом становится Гораций Слизнорт."],
+        ghost: ["Кровавый Барон", "Его одежда в серебристых пятнах крови. Даже Пивз его боится."],
+        captain: ["Маркус Флинт", "В 1–3 книгах. В 5-й — Грэхэм Монтегю."],
+        prefects: ["Драко Малфой и Пэнси Паркинсон", "С 5-й книги."],
+        room: "В подземельях, под Чёрным озером — в окнах видна вода, комната светится зелёным. Вход — потайная дверь в каменной стене, по паролю.",
+        famous: ["Том Реддл (Волан-де-Морт)", "Северус Снегг", "Гораций Слизнорт", "Драко Малфой", "Крэбб и Гойл"]
+      },
+      en: {
+        traits: "Ambition · cunning · resourcefulness", symbol: "Serpent", element: "Water", colors: "Green and silver",
+        founder: ["Salazar Slytherin", "A Parselmouth. He secretly built the Chamber of Secrets inside the castle."],
+        head: ["Severus Snape", "Potions master. In book 7 Horace Slughorn takes over the house."],
+        ghost: ["The Bloody Baron", "His robes are stained with silver blood. Even Peeves is afraid of him."],
+        captain: ["Marcus Flint", "Books 1–3. In book 5 — Graham Montague."],
+        prefects: ["Draco Malfoy and Pansy Parkinson", "From book 5."],
+        room: "In the dungeons, under the Black Lake — the windows look into the water and the room glows green. The entrance is a hidden door in a stone wall, opened by password.",
+        famous: ["Tom Riddle (Voldemort)", "Severus Snape", "Horace Slughorn", "Draco Malfoy", "Crabbe and Goyle"]
+      }
+    },
+    ravenclaw: {
+      colors: ["#222f5b", "#946b2d"],
+      uz: {
+        traits: "Aql · donolik · ijodkorlik", symbol: "Burgut", element: "Havo", colors: "Ko'k va bronza",
+        founder: ["Rovena Reyvenklo", "O'z davrining eng aqlli sehrgar ayoli. Uning yo'qolgan diademasi taqqanga donolik berardi."],
+        head: ["Filius Flitvik", "Afsunlar ustozi. Bo'yi kichkina, lekin kuchli duelchi."],
+        ghost: ["Kulrang xonim", "Aslida Xelena Reyvenklo — asoschining qizi. Diadema sirini Garriga aynan u aytgan."],
+        captain: ["Rojer Devis", "4–5-kitoblarda. Yul balida Fler Delakur bilan raqsga tushgan."],
+        prefects: ["Padma Patil va Entoni Goldsteyn", "5-kitobdan. Ulardan oldin — Penelopa Klirvoter."],
+        room: "Reyvenklo minorasida. Parol yo'q: burgut shaklidagi bronza taqillatgich topishmoq so'raydi — to'g'ri javob bergan kiradi.",
+        famous: ["Luna Lavgud", "Cho Chang", "Padma Patil", "Terri But", "Maykl Korner"]
+      },
+      ru: {
+        traits: "Ум · мудрость · творчество", symbol: "Орёл", element: "Воздух", colors: "Синий и бронзовый",
+        founder: ["Кандида Когтевран", "Самая умная волшебница своего времени. Её утерянная диадема дарила мудрость."],
+        head: ["Филиус Флитвик", "Преподаёт заклинания. Маленького роста, но сильный дуэлянт."],
+        ghost: ["Серая Дама", "На самом деле Елена Когтевран, дочь основательницы. Именно она открыла Гарри тайну диадемы."],
+        captain: ["Роджер Дэвис", "В 4–5 книгах. На Святочном балу танцевал с Флёр Делакур."],
+        prefects: ["Падма Патил и Энтони Голдстейн", "С 5-й книги. До них — Пенелопа Кристалл."],
+        room: "В башне Когтеврана. Пароля нет: бронзовый молоток в виде орла задаёт загадку — войдёт тот, кто ответит.",
+        famous: ["Полумна Лавгуд", "Чжоу Чанг", "Падма Патил", "Терри Бут", "Майкл Корнер"]
+      },
+      en: {
+        traits: "Wit · wisdom · creativity", symbol: "Eagle", element: "Air", colors: "Blue and bronze",
+        founder: ["Rowena Ravenclaw", "The cleverest witch of her age. Her lost diadem granted wisdom to whoever wore it."],
+        head: ["Filius Flitwick", "Charms teacher. Tiny, but a formidable duellist."],
+        ghost: ["The Grey Lady", "Really Helena Ravenclaw, the founder's daughter. She told Harry the secret of the diadem."],
+        captain: ["Roger Davies", "Books 4–5. He took Fleur Delacour to the Yule Ball."],
+        prefects: ["Padma Patil and Anthony Goldstein", "From book 5. Before them — Penelope Clearwater."],
+        room: "In Ravenclaw Tower. There is no password: a bronze eagle knocker asks a riddle, and whoever answers may enter.",
+        famous: ["Luna Lovegood", "Cho Chang", "Padma Patil", "Terry Boot", "Michael Corner"]
+      }
+    },
+    hufflepuff: {
+      colors: ["#ecb939", "#000000"],
+      uz: {
+        traits: "Mehnatsevarlik · sadoqat · adolat", symbol: "Bo'rsiq", element: "Yer", colors: "Sariq va qora",
+        founder: ["Xelga Xaffelpaff", "Hech kimni ajratmay, hammani o'qitgan. Uning oltin kosasi keyin Voldemort qo'liga tushgan."],
+        head: ["Pomona Spraut", "O'simlikshunoslik ustozi. 2-kitobda mandragora o'stirib, toshga aylanganlarni qutqargan."],
+        ghost: ["Semiz rohib", "Xushchaqchaq arvoh — hammani, hatto Pivzni ham kechirishga tayyor."],
+        captain: ["Sedrik Diggori", "3-kitobda sardor va izlovchi — Grifindorni yenggan."],
+        prefects: ["Erni Makmillan va Xanna Ebbot", "5-kitobdan. Ulardan oldin — Sedrik Diggori."],
+        room: "Oshxona yaqinida, yerto'lada. Kirish — bochkalar uyumi ortida: kerakli bochkani maxsus ritmda taqillatish kerak.",
+        famous: ["Sedrik Diggori", "Nyut Skamander («Fantastik maxluqlar»)", "Xanna Ebbot", "Erni Makmillan", "Jastin Finch-Fletchli", "Syuzan Bouns"]
+      },
+      ru: {
+        traits: "Трудолюбие · верность · справедливость", symbol: "Барсук", element: "Земля", colors: "Жёлтый и чёрный",
+        founder: ["Пенелопа Пуффендуй", "Принимала всех без разбора. Её золотая чаша позже попала к Волан-де-Морту."],
+        head: ["Помона Стебль", "Преподаёт травологию. Во 2-й книге вырастила мандрагоры и спасла окаменевших."],
+        ghost: ["Толстый Монах", "Добродушное привидение — готов простить всех, даже Пивза."],
+        captain: ["Седрик Диггори", "В 3-й книге — капитан и ловец, обыграл Гриффиндор."],
+        prefects: ["Эрни Макмиллан и Ханна Аббот", "С 5-й книги. До них — Седрик Диггори."],
+        room: "Рядом с кухней, в подвале. Вход — за штабелем бочек: нужную бочку надо простучать в особом ритме.",
+        famous: ["Седрик Диггори", "Ньют Скамандер («Фантастические твари»)", "Ханна Аббот", "Эрни Макмиллан", "Джастин Финч-Флетчли", "Сьюзен Боунс"]
+      },
+      en: {
+        traits: "Hard work · loyalty · fair play", symbol: "Badger", element: "Earth", colors: "Yellow and black",
+        founder: ["Helga Hufflepuff", "She took in every student. Her golden cup later fell into Voldemort's hands."],
+        head: ["Pomona Sprout", "Herbology teacher. In book 2 she grew the Mandrakes that saved the petrified."],
+        ghost: ["The Fat Friar", "A cheerful ghost, ready to forgive everyone — even Peeves."],
+        captain: ["Cedric Diggory", "Book 3 — captain and Seeker, beat Gryffindor."],
+        prefects: ["Ernie Macmillan and Hannah Abbott", "From book 5. Before them — Cedric Diggory."],
+        room: "Near the kitchens, in the basement. The entrance hides behind a stack of barrels: tap the right one in a special rhythm.",
+        famous: ["Cedric Diggory", "Newt Scamander (Fantastic Beasts)", "Hannah Abbott", "Ernie Macmillan", "Justin Finch-Fletchley", "Susan Bones"]
+      }
+    }
+  };
+
+  /* ---------- ball manbalari ----------
+     Kalitlar serverdagi hpcup.SOURCE_KEYS bilan bir xil. Ranglar rang ko'rlikka
+     tekshirilgan (qo'shni juftlar ajraladi), belgi har doim rang yonida turadi. */
+  var SRC_ICON = {
+    film: '<path d="M4 5h16v14H4z M8 5v14 M16 5v14 M4 9.5h4 M4 14.5h4 M16 9.5h4 M16 14.5h4"/>',
+    exam: '<path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/>',
+    daily: '<path d="M4.5 6h15v14h-15z M4.5 10h15 M8.5 3.5v4 M15.5 3.5v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/>',
+    chess: '<path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/>',
+    friends: '<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/>'
+  };
+  var CUP_SRC = [
+    { key: "film",    color: "#3987e5" },
+    { key: "exam",    color: "#d95926" },
+    { key: "daily",   color: "#199e70" },
+    { key: "chess",   color: "#9085e9" },
+    { key: "friends", color: "#c98500" }
+  ];
+
+  // Fakultet sahifasidagi rollar belgilari
+  var ROLE_ICON = {
+    founder: '<path d="M12 3l7 3v5.2c0 4.3-3 7.9-7 9.8c-4-1.9-7-5.5-7-9.8V6z M12 8v7 M9 11h6"/>',
+    head: '<path d="M2.5 9.5L12 5l9.5 4.5L12 14z M6.5 11.5v4.3c0 1.3 2.5 2.7 5.5 2.7s5.5-1.4 5.5-2.7v-4.3 M21.5 9.5v5"/>',
+    ghost: '<path d="M6 20.5V10.5a6 6 0 0 1 12 0v10l-2-1.6-2 1.6-2-1.6-2 1.6-2-1.6z"/><ellipse cx="9.8" cy="10.6" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="14.2" cy="10.6" rx="1.1" ry="1.5" fill="currentColor" stroke="none"/><ellipse cx="12" cy="14.6" rx="1" ry="1.3"/>',
+    captain: '<path d="M20.5 3.5l-9.6 9.6 M9.2 11.6l3.2 3.2 M10.6 13.4C8.2 12.9 5 15 3.5 20.5c5.5-1.5 7.6-4.7 7.1-7.1z M7.3 16.8l-2.2 2.2 M9 17.6l-1.4 1.8"/>',
+    prefects: '<path d="M12 3.2l2.5 5 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/>',
+    room: '<path d="M5.5 11V8a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3v3 M3.5 12.5a1.5 1.5 0 0 1 3 0V15h11v-2.5a1.5 1.5 0 0 1 3 0V18h-17z M6 18v2 M18 18v2"/>',
+    famous: '<path d="M12 3.5l1.7 4.3 4.3 1.7-4.3 1.7L12 15.5l-1.7-4.3L6 9.5l4.3-1.7z M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z M5.5 15.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>'
+  };
+  var CUP_TROPHY =
+    '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
+      '<path d="M15 7h18v9.5c0 5.2-4 9.5-9 9.5s-9-4.3-9-9.5z" fill="url(#cupGold)" stroke="#f3d58f" stroke-width="1.2"/>' +
+      '<path d="M15 10.5H9.5c0 5 2.6 8 6.8 8.6 M33 10.5h5.5c0 5-2.6 8-6.8 8.6" stroke="#e0b25b" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M24 26v6 M18.5 40.5h11 M20 32h8l1.6 8.5H18.4z" stroke="#e0b25b" stroke-width="2" stroke-linejoin="round" fill="rgba(224,178,91,.18)"/>' +
+      '<path d="M24 11.2l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#fff6dc" opacity=".9"/>' +
+      '<defs><linearGradient id="cupGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc98"/><stop offset="1" stop-color="#b8862f"/></linearGradient></defs>' +
+    '</svg>';
+
+  function svgIcon(paths, cls) {
+    return '<svg class="' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
+  }
+
+  var CUP_T = {
+    uz: {
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", friends: "Do'stlar" },
+      rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
+              daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
+              friends: "Har do'st uchun +20 · cheklanmagan" },
+      histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
+      histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
+      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Hech bir fakultet hisobga kirmadi (hech kim 30 ballga yetmagan).",
+      noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.", best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
+      months: ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"],
+      srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
+      tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
+      prevWin: "O'tgan hafta kubogi: %s", place: "%d-o'rin", total: "Jami", none: "Bu hafta hali ball yo'q",
+      tasksT: "Vazifalar", tasksS: "Imtihon va kunlik savol", tasksNew: "%d ta yangi", tasksDone: "Bajarildi",
+      chatT: "Umumiy xona", chatS: "Fakultetdoshlar bilan suhbat",
+      chessT: "Sehrgar shaxmati", chessS: "Botlar va do'stlar bilan jang",
+      refsS: "Taklif qiling — darajangiz oshadi",
+      youHow: "Qayerdan qancha", about: "Fakultet haqida",
+      hKick: "Xogvarts fakulteti", hSymbol: "Ramzi", hElement: "Unsuri", hColors: "Ranglari",
+      hCup: "Bu haftaki kubokda", hActive: "%d faol a'zo", hPeople: "Fakultet ahli",
+      founder: "Asoschisi", head: "Mudiri", ghost: "Arvohi", captain: "Kvidich sardori", prefects: "Prefektlar",
+      room: "Umumiy xonasi", famous: "Mashhur a'zolari", members: "Bu haftaning a'zolari",
+      showAll: "Hammasini ko'rish (%d)", loading: "Yuklanmoqda…", empty: "Bu hafta hali hech kim ball to'plamagan.",
+      lore: "Ma'lumotlar J. K. Rouling kitoblari va uning rasmiy yozuvlari asosida.",
+      rulesKick: "Kubok qoidalari",
+      rules: ["Mavsum — bir hafta: dushanba 00:00 dan yakshanba 23:59 gacha (Toshkent vaqti).",
+              "Fakultet bali — uning faol a'zolari ballari yig'indisi. Faol a'zo — mavsumda kamida 30 ball to'plagan sehrgar.",
+              "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
+              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 400 ball.",
+              "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
+    },
+    ru: {
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", friends: "Друзья" },
+      rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
+              daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
+              friends: "+20 за каждого друга · без лимита" },
+      histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
+      histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
+      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "Ни один факультет не прошёл в зачёт (никто не набрал 30 очков).",
+      noWinnerSet: "Победитель этой недели не объявлялся.", best: "Волшебник недели", bestLive: "Пока больше всех",
+      months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
+      srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
+      tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
+      prevWin: "Кубок прошлой недели: %s", place: "%d место", total: "Всего", none: "На этой неделе очков пока нет",
+      tasksT: "Задания", tasksS: "Экзамены и вопрос дня", tasksNew: "%d новых", tasksDone: "Готово",
+      chatT: "Гостиная", chatS: "Беседа с однокурсниками",
+      chessT: "Волшебные шахматы", chessS: "Бои с ботами и друзьями",
+      refsS: "Приглашайте — растёт уровень",
+      youHow: "Откуда сколько", about: "О факультете",
+      hKick: "Факультет Хогвартса", hSymbol: "Символ", hElement: "Стихия", hColors: "Цвета",
+      hCup: "В кубке этой недели", hActive: "%d активных", hPeople: "Люди факультета",
+      founder: "Основатель", head: "Декан", ghost: "Привидение", captain: "Капитан по квиддичу", prefects: "Старосты",
+      room: "Гостиная", famous: "Известные ученики", members: "Участники этой недели",
+      showAll: "Показать всех (%d)", loading: "Загрузка…", empty: "На этой неделе очков пока ни у кого нет.",
+      lore: "По книгам Дж. К. Роулинг и её официальным материалам.",
+      rulesKick: "Правила кубка",
+      rules: ["Сезон длится неделю: с понедельника 00:00 до воскресенья 23:59 (по Ташкенту).",
+              "Очки факультета — сумма очков его активных участников. Активный — набравший за сезон минимум 30 очков.",
+              "В конце недели кубок получает факультет с наибольшей суммой.",
+              "У всех источников, кроме приглашений, есть лимит за сезон — всего 400 очков.",
+              "Игра с ботом очков не даёт — только партии с живым соперником."]
+    },
+    en: {
+      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", friends: "Friends" },
+      rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
+              daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
+              friends: "+20 per friend · no limit" },
+      histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
+      histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
+      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house qualified (nobody reached 30 points).",
+      noWinnerSet: "No winner was announced this week.", best: "Wizard of the week", bestLive: "Top scorer so far",
+      months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
+      tapHint: "Tap a house — its founder, head, ghost and members",
+      prevWin: "Last week's cup: %s", place: "#%d", total: "Total", none: "No points yet this week",
+      tasksT: "Tasks", tasksS: "Exams and daily question", tasksNew: "%d new", tasksDone: "Done",
+      chatT: "Common room", chatS: "Chat with your housemates",
+      chessT: "Wizard chess", chessS: "Duel bots and friends",
+      refsS: "Invite friends and rank up",
+      youHow: "Where from", about: "About the house",
+      hKick: "Hogwarts house", hSymbol: "Emblem", hElement: "Element", hColors: "Colours",
+      hCup: "In this week's cup", hActive: "%d active", hPeople: "House figures",
+      founder: "Founder", head: "Head of House", ghost: "House ghost", captain: "Quidditch captain", prefects: "Prefects",
+      room: "Common room", famous: "Famous members", members: "Members this week",
+      showAll: "Show all (%d)", loading: "Loading…", empty: "Nobody has scored yet this week.",
+      lore: "Based on J.K. Rowling's books and her official writing.",
+      rulesKick: "Cup rules",
+      rules: ["A season is one week: Monday 00:00 to Sunday 23:59 (Tashkent time).",
+              "A house's score is the sum of its active members' points. Active means at least 30 points this season.",
+              "At the end of the week the house with the most points wins the cup.",
+              "Every source except inviting friends has a season cap — 400 points in total.",
+              "Chess against a bot gives no points — only live games do."]
+    }
+  };
+
+  function cupT() { return CUP_T[lang] || CUP_T.uz; }
+
+  // "#3987e5" -> "rgba(57,135,229,.16)" (color-mix eski Android'da yo'q)
+  function hexA(hex, a) {
+    var n = parseInt(String(hex).slice(1), 16);
+    return "rgba(" + (n >> 16 & 255) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")";
+  }
+
+  function cupEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text !== undefined && text !== null) { el.textContent = text; }
+    return el;
+  }
+
+  function srcSum(by) {
+    var s = 0;
+    CUP_SRC.forEach(function (x) { s += (by && by[x.key]) || 0; });
+    return s;
+  }
+
+  // Ustma-ust chiziq: har manba o'z rangida, oralarida 2px bo'shliq.
+  // width - chiziqning umumiy uzunligi (%), shunda fakultetlar solishtiriladi.
+  function srcBar(by, width, cls) {
+    var bar = cupEl("div", "src-bar" + (cls ? " " + cls : ""));
+    var sum = srcSum(by);
+    var inner = cupEl("div", "src-bar-in");
+    inner.style.width = Math.max(0, Math.min(100, width)) + "%";
+    if (sum > 0) {
+      CUP_SRC.forEach(function (x) {
+        var v = (by && by[x.key]) || 0;
+        if (!v) { return; }
+        var seg = cupEl("i");
+        seg.style.flexGrow = v;
+        seg.style.background = x.color;
+        seg.title = cupT().src[x.key] + ": " + v;
+        inner.appendChild(seg);
+      });
+    }
+    bar.appendChild(inner);
+    return bar;
+  }
+
+  // Kichik belgilar: faqat ball bor manbalar ("🎞 35  📅 60")
+  function srcChips(by) {
+    var box = cupEl("span", "src-chips");
+    CUP_SRC.forEach(function (x) {
+      var v = (by && by[x.key]) || 0;
+      if (!v) { return; }
+      var chip = cupEl("span", "src-chip");
+      chip.title = cupT().src[x.key];
+      chip.innerHTML = svgIcon(SRC_ICON[x.key]);
+      chip.firstChild.style.color = x.color;
+      chip.appendChild(document.createTextNode(String(v)));
+      box.appendChild(chip);
+    });
+    return box;
+  }
+
+  function srcLegend() {
+    var row = cupEl("div", "src-legend");
+    var c = cupT();
+    CUP_SRC.forEach(function (x) {
+      var cell = cupEl("span", "src-leg");
+      cell.innerHTML = svgIcon(SRC_ICON[x.key]);
+      cell.firstChild.style.color = x.color;
+      cell.appendChild(cupEl("span", "", c.src[x.key]));
+      row.appendChild(cell);
+    });
+    return row;
+  }
+
+  /* ---------- qum soatlari ---------- */
+
+  function renderGlasses(list, me) {
+    var box = $("cup-glasses");
+    box.innerHTML = "";
+    var t = T[lang];
+
+    var top = 0, i;
+    for (i = 0; i < list.length; i++) {
+      if ((list[i].total_points || 0) > top) { top = list[i].total_points; }
+    }
+
+    list.forEach(function (row, idx) {
+      var h = HOUSES[row.house] || {};
+      var cell = document.createElement("button");
+      cell.type = "button";
+      cell.className = "glass" + (row.house === me.house ? " mine" : "") +
+                       (row.qualified ? "" : " out") + (idx === 0 && top > 0 ? " lead" : "");
+      cell.style.setProperty("--hc", h.accent || "#97a1ae");
+      cell.style.setProperty("--hc-rgb", h.rgb || "151,161,174");
+      cell.addEventListener("click", function () { openHouse(row.house); });
+
+      var tube = document.createElement("div");
+      tube.className = "tube";
+
+      // Minimal to'ldirish gerbni to'liq sig'diradigan balandlikda bo'lishi
+      // shart (34px gerb). Shkalada quyi chegara bor: yetakchi SCALE_FLOOR
+      // dan past bo'lsa, balandlik o'sha chegaraga nisbatan hisoblanadi -
+      // aks holda mavsum boshida naycha "to'lib" ketgandek ko'rinardi.
+      var scale = Math.max(top, SCALE_FLOOR);
+      var pct = Math.round((row.total_points || 0) / scale * 78);
+      var fill = document.createElement("span");
+      fill.className = "tube-fill";
+      fill.style.height = Math.max(MIN_FILL, pct) + "%";
+      tube.appendChild(fill);
+
+      var crest = document.createElement("span");
+      crest.className = "tube-crest";
+      var img = cupCrestImg(row.house, 26);
+      if (img) { crest.appendChild(img); }
+      else { crest.textContent = h.crest || "?"; }
+      tube.appendChild(crest);
+
+      // O'rin belgisi: yetakchiga toj
+      var place = cupEl("span", "g-place", String(idx + 1));
+      if (idx === 0 && top > 0) {
+        place.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16l1-10-5 4-4-7-4 7-5-4z" fill="currentColor"/></svg>';
+      }
+      tube.appendChild(place);
+      cell.appendChild(tube);
+
+      var nm = document.createElement("span");
+      nm.className = "g-name";
+      nm.textContent = cupHouseName(row.house);
+      cell.appendChild(nm);
+
+      var val = document.createElement("span");
+      val.className = "g-val";
+      val.textContent = cupPts(row.total_points);
+      cell.appendChild(val);
+
+      cell.appendChild(cupEl("span", "g-need", cupT().hActive.replace("%d", row.active_members || 0)));
+      box.appendChild(cell);
+    });
+  }
+
+  /* ---------- ballar qayerdan keldi ---------- */
+
+  function renderSources(list) {
+    var box = $("cup-src");
+    if (!box) { return; }
+    var c = cupT();
+    box.innerHTML = "";
+
+    var head = cupEl("div", "cc-head");
+    head.appendChild(cupEl("span", "cc-kick", c.srcKick));
+    box.appendChild(head);
+    box.appendChild(cupEl("p", "cc-note", c.srcNote));
+    box.appendChild(srcLegend());
+
+    var top = 0;
+    list.forEach(function (r) { if ((r.total_points || 0) > top) { top = r.total_points || 0; } });
+
+    list.forEach(function (r, idx) {
+      var hh = HOUSES[r.house] || {};
+      var by = r.by || {};
+      var row = cupEl("button", "src-row");
+      row.type = "button";
+      row.addEventListener("click", function () { openHouse(r.house); });
+
+      var line = cupEl("span", "src-row-top");
+      var crest = cupEl("span", "src-crest");
+      crest.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+      var im = cupCrestImg(r.house, 18);
+      if (im) { crest.appendChild(im); }
+      line.appendChild(crest);
+      var nm = cupEl("span", "src-name", cupHouseName(r.house));
+      nm.appendChild(cupEl("em", "", T[lang].cupPlace.replace("%d", idx + 1)));
+      line.appendChild(nm);
+      var tot = cupEl("b", "src-total", cupPts(r.total_points));
+      line.appendChild(tot);
+      row.appendChild(line);
+
+      if (srcSum(by) > 0) {
+        row.appendChild(srcBar(by, top ? (r.total_points || 0) / top * 100 : 0));
+        var nums = cupEl("span", "src-nums");
+        CUP_SRC.forEach(function (x) {
+          var v = by[x.key] || 0;
+          var n = cupEl("span", v ? "" : "zero", v ? String(v) : "—");
+          nums.appendChild(n);
+        });
+        row.appendChild(nums);
+      } else {
+        row.appendChild(cupEl("span", "src-empty", c.none));
+      }
+      box.appendChild(row);
+    });
+  }
+
+  /* ---------- fakultet zali va jonli tasma ---------- */
+
+  // Ism va fakultetdan barqaror rang: bir odam har safar bir xil doira oladi.
+  function faceColor(name, houseId) {
+    var hh = HOUSES[houseId] || {};
+    if (hh.accent) { return hh.accent; }
+    var s = String(name || "?"), n = 0;
+    for (var i = 0; i < s.length; i++) { n = (n * 31 + s.charCodeAt(i)) % 360; }
+    return "hsl(" + n + ",42%,66%)";
+  }
+
+  // Telegram ismlarida emoji tez uchraydi. charAt(0) emojini ikkiga bo'lib
+  // buzuq belgi chiqaradi, shuning uchun avval birinchi HARFNI qidiramiz.
+  function initialOf(name) {
+    var s = String(name || "").trim();
+    if (!s) { return "?"; }
+    var letter = s.match(/[\p{L}\p{N}]/u);
+    if (letter) { return letter[0].toUpperCase(); }
+    return "?";
+  }
+
+  function faceEl(cls, name, houseId) {
+    var el = document.createElement("span");
+    el.className = cls;
+    el.textContent = initialOf(name);
+    el.style.background = faceColor(name, houseId);
+    return el;
+  }
+
+  // "45 daqiqa" / "3 soat" / "2 kun"
+  function agoText(mins, t) {
+    var m = Number(mins);
+    if (!isFinite(m) || m < 0) { return ""; }
+    if (m < 60) { return t.agoMin.replace("%d", Math.max(1, Math.round(m))); }
+    if (m < 1440) { return t.agoHour.replace("%d", Math.round(m / 60)); }
+    return t.agoDay.replace("%d", Math.round(m / 1440));
+  }
+
+  // A'zo qatori: o'rni, ism, ball va uning qayerdan kelgani
+  function memberRow(m, idx, houseId) {
+    var t = T[lang];
+    var hh = HOUSES[houseId] || {};
+    var row = cupEl("div", "hall-row" + (m.active === false ? " idle" : ""));
+    row.appendChild(cupEl("div", "hall-pos", String(idx + 1)));
+    row.appendChild(faceEl("hall-face", m.name, houseId));
+
+    var who = cupEl("div", "hall-nm");
+    var nm = cupEl("span", "hall-nm-t", m.name || "");
+    if (m.me) {
+      var tag = cupEl("i", "", t.hallYou);
+      tag.style.color = hh.accent || "var(--accent)";
+      nm.appendChild(tag);
+    }
+    who.appendChild(nm);
+    if (srcSum(m.by) > 0) { who.appendChild(srcChips(m.by)); }
+    row.appendChild(who);
+
+    var pts = cupEl("div", "hall-pts", String(m.points || 0));
+    pts.style.color = hh.accent || "var(--accent)";
+    row.appendChild(pts);
+    return row;
+  }
+
+  // Ro'yxat: dastlab `shown` ta, qolgani "Hammasini ko'rish" tugmasi ortida
+  function memberList(box, members, houseId, shown) {
+    box.innerHTML = "";
+    members.forEach(function (m, idx) {
+      var row = memberRow(m, idx, houseId);
+      if (idx >= shown) { row.classList.add("hidden"); }
+      box.appendChild(row);
+    });
+    if (members.length > shown) {
+      var more = cupEl("button", "cup-more", cupT().showAll.replace("%d", members.length));
+      more.type = "button";
+      more.addEventListener("click", function () {
+        var rows = box.querySelectorAll(".hall-row.hidden");
+        for (var i = 0; i < rows.length; i++) { rows[i].classList.remove("hidden"); }
+        more.remove();
+      });
+      box.appendChild(more);
+    }
+  }
+
+  function renderHall() {
+    var box = $("cup-hall");
+    if (!box) { return; }
+    var me = cupMe();
+    var hall = cupData && cupData.hall;
+
+    // Bot hall yubormasa - blok umuman ko'rinmaydi.
+    if (!hall || !me.house) { box.classList.add("hidden"); return; }
+
+    var t = T[lang];
+    var hh = HOUSES[me.house] || {};
+
+    var crest = $("hall-crest");
+    crest.innerHTML = "";
+    var img = cupCrestImg(me.house, 34);
+    if (img) { crest.appendChild(img); }
+    crest.style.borderColor = "rgba(" + (hh.rgb || "151,161,174") + ",.42)";
+    crest.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.13)";
+
+    var nm = $("hall-name");
+    nm.textContent = t.hallName.replace("%s", cupHouseName(me.house));
+    nm.style.color = hh.accent || "var(--accent)";
+
+    $("hall-sub").textContent = t.hallSub
+      .replace("%a", hall.total || 0).replace("%b", hall.active || 0);
+    $("hall-about").textContent = cupT().about + " ›";
+
+    memberList($("hall-list"), hall.members || [], me.house, 10);
+
+    var wait = $("hall-wait");
+    var idle = (hall.total || 0) - (hall.active || 0);
+    if (idle > 0) {
+      wait.innerHTML = "";
+      var parts = t.hallWaiting.split("%d");
+      wait.appendChild(document.createTextNode(parts[0]));
+      var b = document.createElement("b");
+      b.textContent = idle;
+      wait.appendChild(b);
+      if (parts.length > 1) { wait.appendChild(document.createTextNode(parts[1])); }
+      wait.classList.remove("hidden");
+    } else {
+      wait.classList.add("hidden");
+    }
+
+    box.classList.remove("hidden");
+  }
+
+  function feedRow(ev, t) {
+    var hh = HOUSES[ev.house] || {};
+    var row = cupEl("div", "feed-row");
+    var cr = cupEl("div", "feed-crest");
+    cr.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.14)";
+    var im = cupCrestImg(ev.house, 22);
+    if (im) { cr.appendChild(im); }
+    row.appendChild(cr);
+
+    var txt = cupEl("div", "feed-txt");
+    var parts = t.feedSorted.split("%h");
+    txt.appendChild(cupEl("b", "", ev.name || ""));
+    txt.appendChild(document.createTextNode(parts[0]));
+    var hn = cupEl("span", "", cupHouseName(ev.house));
+    hn.style.color = hh.accent || "inherit";
+    txt.appendChild(hn);
+    if (parts.length > 1) { txt.appendChild(document.createTextNode(parts[1])); }
+    row.appendChild(txt);
+
+    row.appendChild(cupEl("div", "feed-time", agoText(ev.ago_minutes, t)));
+    return row;
+  }
+
+  function renderFeed() {
+    var box = $("cup-feed");
+    if (!box) { return; }
+    var feed = cupData && cupData.feed;
+
+    if (!feed || !feed.length) { box.classList.add("hidden"); return; }
+
+    var t = T[lang];
+    $("feed-kick").textContent = t.feedKick;
+
+    var list = $("feed-list");
+    list.innerHTML = "";
+    var MAX_FEED = 5;
+    feed.forEach(function (ev, idx) {
+      var row = feedRow(ev, t);
+      if (idx >= MAX_FEED) { row.classList.add("hidden"); }
+      list.appendChild(row);
+    });
+
+    if (feed.length > MAX_FEED) {
+      var more = cupEl("button", "cup-more",
+        lang === "uz" ? "Barcha tasmani ko'rish" : lang === "ru" ? "Показать всю ленту" : "Show the whole feed");
+      more.type = "button";
+      more.addEventListener("click", function () {
+        var rows = list.querySelectorAll(".feed-row.hidden");
+        for (var i = 0; i < rows.length; i++) { rows[i].classList.remove("hidden"); }
+        more.remove();
+      });
+      list.appendChild(more);
+    }
+
+    box.classList.remove("hidden");
+  }
+
+  /* ---------- shaxsiy blok ---------- */
+
+  // Manba qatorini bosganda - o'sha ballni olish joyiga
+  function srcGo(key) {
+    if (key === "exam" || key === "daily") { openTasks(); }
+    else if (key === "chess") { openChessHub(); }
+    else if (key === "friends") { openRefs(); }
+    else { closeCup(); }
+  }
+
+  function renderYou(me) {
+    var box = $("cup-you");
+    var t = T[lang];
+    var c = cupT();
+
+    if (!me.house) { box.classList.add("hidden"); return; }
+
+    box.className = "cup-you" + (me.is_active ? "" : " gate");
+    box.innerHTML = "";
+
+    var top = cupEl("div", "you-top");
+    top.appendChild(cupEl("span", "you-lbl", t.cupYourPts));
+    var val = cupEl("span", "you-val", String(me.points || 0));
+    val.appendChild(cupEl("s", "", " / " + (me.max_points || 400)));
+    top.appendChild(val);
+    box.appendChild(top);
+
+    // Chiziq manbalar bo'yicha bo'lingan (do'st bali 400 dan oshirib yuborishi mumkin)
+    var by = me.by || {};
+    var pct = (me.points || 0) / (me.max_points || 400) * 100;
+    box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
+
+    if (!me.is_active) {
+      // Ayblov yo'q: "hisobga kirmaysiz" emas, faqat qancha qolgani
+      var msg = cupEl("div", "gate-msg");
+      var gp = t.cupGate.split("%n");
+      msg.appendChild(document.createTextNode(gp[0]));
+      msg.appendChild(cupEl("b", "", t.cupGatePts.replace("%d", me.to_active || 0)));
+      if (gp.length > 1) {
+        msg.appendChild(document.createTextNode(gp[1].replace("%s", cupHouseName(me.house))));
+      }
+      var quizzes = Math.ceil((me.to_active || 0) / 10);
+      if (quizzes > 0) {
+        msg.appendChild(document.createTextNode(" " + t.cupGateTail.replace("%d", quizzes)));
+      }
+      box.appendChild(msg);
+    } else if (me.house_rank) {
+      var foot = cupEl("div", "you-foot");
+      foot.appendChild(cupEl("span", "", t.cupInHouse.replace("%s", cupHouseName(me.house))));
+      foot.appendChild(cupEl("b", "", t.cupPlace.replace("%d", me.house_rank)));
+      box.appendChild(foot);
+    }
+
+    // Har manba: qancha oldingiz, chegarasi, qanday olinadi - bosilsa o'sha joyga
+    var caps = me.caps || {};
+    var rows = cupEl("div", "you-src");
+    CUP_SRC.forEach(function (x) {
+      var v = by[x.key] || 0;
+      var cap = caps[x.key];
+      var row = cupEl("button", "you-src-row");
+      row.type = "button";
+      row.addEventListener("click", function () { srcGo(x.key); });
+
+      var ic = cupEl("span", "you-src-ic");
+      ic.innerHTML = svgIcon(SRC_ICON[x.key]);
+      ic.style.color = x.color;
+      ic.style.background = hexA(x.color, .16);
+      row.appendChild(ic);
+
+      var mid = cupEl("span", "you-src-mid");
+      mid.appendChild(cupEl("b", "", c.src[x.key]));
+      mid.appendChild(cupEl("small", "", c.rule[x.key]));
+      if (cap) {
+        var mb = cupEl("span", "you-src-bar");
+        var fi = cupEl("i");
+        fi.style.width = Math.min(100, v / cap * 100) + "%";
+        fi.style.background = x.color;
+        mb.appendChild(fi);
+        mid.appendChild(mb);
+      }
+      row.appendChild(mid);
+
+      var num = cupEl("span", "you-src-num" + (cap && v >= cap ? " full" : ""), String(v));
+      if (cap) { num.appendChild(cupEl("s", "", "/" + cap)); }
+      row.appendChild(num);
+      rows.appendChild(row);
+    });
+    box.appendChild(rows);
+    box.classList.remove("hidden");
+  }
+
+  /* ---------- tugmalar (vazifalar, chat, shaxmat, do'stlar) ---------- */
+
+  function renderCupTiles() {
+    var c = cupT();
+    $("chat-kicker").textContent = c.chatT;
+    $("chat-title").textContent = c.chatS;
+    $("chess-kicker").textContent = c.chessT;
+    $("chess-title").textContent = c.chessS;
+  }
+
+  /* ---------- to'liq ekran ---------- */
+
+  function renderCupScreen() {
+    var t = T[lang];
+    var c = cupT();
+    applyXT();
+    // Vazifalar tasmasi til tanlanishidan oldin chizilgan bo'lishi mumkin
+    if (!$("tasks-strip").classList.contains("hidden")) { renderTasksStrip(); }
+    var list = cupSorted();
+    var me = cupMe();
+
+    $("cup-timer-txt").textContent = cupTimer(t);
+    $("cup-kick").textContent = t.cupKicker;
+    $("cup-title").textContent = t.cupTitle;
+    $("cup-emblem").innerHTML = CUP_TROPHY;
+    $("cup-back-txt").textContent = t.cupBack;
+    $("hall-back-txt").textContent = t.cupBack;
+    $("feed-back-txt").textContent = t.cupBack;
+    $("cup-tap-hint").textContent = c.tapHint;
+
+    // Tepadagi yorliq: o'tgan hafta g'olibi (bo'lsa) va kubok tarixiga yo'l
+    var prev = cupData && cupData.season && cupData.season.prev_winner;
+    var pw = $("cup-prev");
+    pw.innerHTML = "";
+    pw.appendChild(svgNode(CUP_MINI));
+    if (prev && HOUSES[prev]) {
+      var parts = c.prevWin.split("%s");
+      pw.appendChild(document.createTextNode(parts[0]));
+      var b = cupEl("b", "", cupHouseName(prev));
+      b.style.color = HOUSES[prev].accent;
+      pw.appendChild(b);
+      if (parts.length > 1) { pw.appendChild(document.createTextNode(parts[1])); }
+      pw.appendChild(cupEl("em", "", " · " + c.histLink + " ›"));
+    } else {
+      pw.appendChild(document.createTextNode(c.histLink + " ›"));
+    }
+    pw.classList.remove("hidden");
+    $("cup-hist-btn").textContent = c.histAll + " ›";
+
+    renderGlasses(list, me);
+    renderSources(list);
+    renderYou(me);
+    renderCupTiles();
+
+    if (me && me.house) {
+      $("chat-strip").classList.remove("hidden");
+      $("chess-strip").classList.remove("hidden");
+      chatRefreshCounts();
+    } else {
+      $("chat-strip").classList.add("hidden");
+      $("chess-strip").classList.add("hidden");
+    }
+
+    renderRefsStrip();
+    renderHall();
+    renderFeed();
+
+    // Qoidalar
+    $("cup-rules-kick").textContent = c.rulesKick;
+    var rl = $("cup-rules-list");
+    rl.innerHTML = "";
+    c.rules.forEach(function (r) { rl.appendChild(cupEl("p", "refs-rule", r)); });
+
+    // Taklif tugmasi: fakultetsizga saralanish
+    var cta = $("cup-cta");
+    if (!me.house) {
+      cta.textContent = t.cupSortCta;
+      cta.setAttribute("data-act", "sort");
+      cta.classList.remove("hidden");
+    } else {
+      cta.classList.add("hidden");
+    }
+  }
+
+  /* ---------- KUBOK TARIXI ---------- */
+
+  var API_CUP_HISTORY = "https://bot.tizimshunos.uz/api/cup/history";
+  var cupHistory = null;
+  var CUP_MINI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M7.5 4h9v4.5a4.5 4.5 0 0 1-9 0z M7.5 6H5a2.5 2.5 0 0 0 2.8 3.4 M16.5 6H19a2.5 2.5 0 0 1-2.8 3.4 M12 13v3.5 M9 20h6 M10 16.5h4l.6 3.5H9.4z"/></svg>';
+
+  function svgNode(html) {
+    var box = document.createElement("span");
+    box.className = "svg-i";
+    box.innerHTML = html;
+    return box;
+  }
+
+  // Server vaqti UTC; hafta Toshkent vaqti bilan (+5) dushanbadan yakshanbagacha
+  function histDay(iso) {
+    var d = new Date(Date.parse(iso) + 5 * 3600000);
+    var m = cupT().months[d.getUTCMonth()];
+    var n = d.getUTCDate();
+    if (lang === "en") { return m + " " + n; }
+    if (lang === "ru") { return n + " " + m; }
+    return n + "-" + m;
+  }
+
+  function fetchCupHistory(cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { cb(null); return; }
+    try {
+      window.fetch(API_CUP_HISTORY, { headers: { "X-Telegram-Init-Data": initData } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.ok) { cupHistory = d; } cb(d && d.ok ? d : null); })
+        ["catch"](function () { cb(null); });
+    } catch (e) { cb(null); }
+  }
+
+  function openCupHistory() {
+    var c = cupT();
+    $("hist-back-txt").textContent = T[lang].cupBack;
+    $("hist-emblem").innerHTML = CUP_TROPHY;
+    $("hist-kick").textContent = c.histKick;
+    $("hist-title").textContent = c.histTitle;
+    $("scr-cup").classList.add("hidden");
+    $("scr-cup-hist").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    if (cupHistory) { renderCupHistory(); }
+    else {
+      $("hist-wins").innerHTML = "";
+      $("hist-list").innerHTML = "";
+      $("hist-list").appendChild(cupEl("p", "cc-note hist-wait", c.loading));
+    }
+    fetchCupHistory(function () { renderCupHistory(); });
+  }
+
+  function closeCupHistory() {
+    $("scr-cup-hist").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+  }
+
+  function renderCupHistory() {
+    var c = cupT();
+    var t = T[lang];
+    var d = cupHistory;
+    var winsBox = $("hist-wins");
+    var list = $("hist-list");
+    winsBox.innerHTML = "";
+    list.innerHTML = "";
+    if (!d) { list.appendChild(cupEl("p", "cc-note hist-wait", c.empty)); return; }
+
+    // Kim nechta kubok olgan
+    var wins = d.wins || {};
+    var order = HOUSE_ORDER.slice().sort(function (a, b) {
+      return (wins[b] || 0) - (wins[a] || 0) || HOUSE_ORDER.indexOf(a) - HOUSE_ORDER.indexOf(b);
+    });
+    var most = wins[order[0]] || 0;
+    winsBox.appendChild(cupEl("div", "cc-kick", c.histWins));
+    var grid = cupEl("div", "hist-wins");
+    order.forEach(function (h) {
+      var hh = HOUSES[h] || {};
+      var n = wins[h] || 0;
+      var cell = cupEl("button", "hist-win-cell" + (n && n === most ? " top" : "") + (n ? "" : " none"));
+      cell.type = "button";
+      cell.style.setProperty("--hc", hh.accent || "#97a1ae");
+      cell.style.setProperty("--hc-rgb", hh.rgb || "151,161,174");
+      cell.addEventListener("click", function () { $("scr-cup-hist").classList.add("hidden"); openHouse(h); houseFromHist = true; });
+      var cr = cupEl("span", "hist-win-crest");
+      var im = cupCrestImg(h, 30);
+      if (im) { cr.appendChild(im); }
+      cell.appendChild(cr);
+      cell.appendChild(cupEl("b", "", String(n)));
+      cell.appendChild(cupEl("span", "", cupHouseName(h)));
+      grid.appendChild(cell);
+    });
+    winsBox.appendChild(grid);
+
+    // Haftalar - yangisi tepada
+    (d.seasons || []).forEach(function (s) {
+      var live = s.status !== "closed";
+      var houses = s.houses || [];
+      var top = houses.length ? (houses[0].total_points || 0) : 0;
+      var win = live ? (top > 0 ? houses[0].house : null) : s.winner;
+      var wh = HOUSES[win] || {};
+      var card = cupEl("div", "hist-card" + (live ? " live" : "") + (win ? "" : " nowin"));
+      card.style.setProperty("--hc", wh.accent || "#97a1ae");
+      card.style.setProperty("--hc-rgb", wh.rgb || "151,161,174");
+
+      var head = cupEl("div", "hist-head");
+      head.appendChild(cupEl("span", "cc-kick", c.week.replace("%d", s.number)));
+      var when = cupEl("span", "hist-when", histDay(s.starts_at) + " – " + histDay(s.ends_at));
+      head.appendChild(when);
+      card.appendChild(head);
+
+      var hero = cupEl("div", "hist-hero");
+      var cr = cupEl("span", "hist-crest");
+      if (win) { var im = cupCrestImg(win, 34); if (im) { cr.appendChild(im); } }
+      else { cr.appendChild(svgNode(CUP_MINI)); }
+      hero.appendChild(cr);
+      var txt = cupEl("span", "hist-hero-txt");
+      if (live) {
+        var badge = cupEl("span", "hist-live");
+        badge.appendChild(cupEl("i"));
+        badge.appendChild(document.createTextNode(c.live));
+        txt.appendChild(badge);
+      }
+      txt.appendChild(cupEl("span", "hist-lbl", win ? (live ? c.leading : c.winner) : c.noWinner));
+      if (win) {
+        var wr = houses.filter(function (x) { return x.house === win; })[0] || {};
+        var nm = cupEl("b", "hist-name", cupHouseName(win));
+        txt.appendChild(nm);
+        txt.appendChild(cupEl("span", "hist-pts", cupPts(wr.total_points) + " " + t.cupPts));
+      } else {
+        txt.appendChild(cupEl("span", "hist-pts", top > 0 ? c.noWinnerSet : c.noWinnerZero));
+      }
+      hero.appendChild(txt);
+      if (win && !live) { hero.appendChild(svgNode(CUP_MINI)); hero.lastChild.classList.add("hist-cup"); }
+      card.appendChild(hero);
+
+      // Yakuniy jadval
+      if (top > 0) {
+        var rows = cupEl("div", "hist-rows");
+        houses.forEach(function (x, i) {
+          var hh = HOUSES[x.house] || {};
+          var r = cupEl("div", "hist-row");
+          r.appendChild(cupEl("span", "hist-pos", String(i + 1)));
+          var c2 = cupEl("span", "hist-rc");
+          var im2 = cupCrestImg(x.house, 16);
+          if (im2) { c2.appendChild(im2); }
+          r.appendChild(c2);
+          r.appendChild(cupEl("span", "hist-rn", cupHouseName(x.house)));
+          var bar = cupEl("span", "hist-bar");
+          var fill = cupEl("i");
+          fill.style.width = Math.max(x.total_points ? 3 : 0, Math.round((x.total_points || 0) / top * 100)) + "%";
+          fill.style.background = hh.accent || "#97a1ae";
+          bar.appendChild(fill);
+          r.appendChild(bar);
+          r.appendChild(cupEl("b", "hist-rp", cupPts(x.total_points)));
+          rows.appendChild(r);
+        });
+        card.appendChild(rows);
+      }
+
+      if (s.best && s.best.points > 0) {
+        var bh = HOUSES[s.best.house] || {};
+        var best = cupEl("div", "hist-best");
+        best.appendChild(svgNode(svgIcon(ROLE_ICON.prefects)));
+        var bt = cupEl("span", "");
+        bt.appendChild(cupEl("em", "", (live ? c.bestLive : c.best) + ": "));
+        bt.appendChild(cupEl("b", "", s.best.name));
+        var bn = cupEl("span", "", " · " + cupHouseName(s.best.house));
+        bn.style.color = bh.accent || "inherit";
+        bt.appendChild(bn);
+        bt.appendChild(document.createTextNode(" · " + s.best.points + " " + t.cupPts));
+        best.appendChild(bt);
+        card.appendChild(best);
+      }
+      list.appendChild(card);
+    });
+  }
+
+  /* ---------- FAKULTET SAHIFASI ---------- */
+
+  var API_CUP_HOUSE = "https://bot.tizimshunos.uz/api/cup/house";
+  var houseBoards = {};       // fakultet -> /api/cup/house javobi
+  var houseOpen = null;
+
+  function fetchHouseBoard(id, cb) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { cb(null); return; }
+    try {
+      window.fetch(API_CUP_HOUSE + "?house=" + encodeURIComponent(id), {
+        headers: { "X-Telegram-Init-Data": initData }
+      }).then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.ok) { houseBoards[id] = d; } cb(d && d.ok ? d : null); })
+        ["catch"](function () { cb(null); });
+    } catch (e) { cb(null); }
+  }
+
+  function openHouse(id) {
+    if (!HOUSE_LORE[id]) { return; }
+    houseOpen = id;
+    houseFromHist = false;
+    renderHousePage(id);
+    $("scr-cup").classList.add("hidden");
+    $("scr-house").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    // O'z fakulteti uchun zal ma'lumoti allaqachon bor, boshqalar - so'raladi
+    var me = cupMe();
+    if (id === me.house && cupData && cupData.hall) {
+      houseBoards[id] = cupData.hall;
+      renderHouseMembers(id);
+    }
+    fetchHouseBoard(id, function () { if (houseOpen === id) { renderHouseMembers(id); } });
+  }
+
+  var houseFromHist = false;
+
+  function closeHouse() {
+    houseOpen = null;
+    $("scr-house").classList.add("hidden");
+    $(houseFromHist ? "scr-cup-hist" : "scr-cup").classList.remove("hidden");
+    houseFromHist = false;
+  }
+
+  function loreRow(icon, label, pair) {
+    var row = cupEl("div", "lore-row");
+    var ic = cupEl("span", "lore-ic");
+    ic.innerHTML = svgIcon(ROLE_ICON[icon]);
+    row.appendChild(ic);
+    var body = cupEl("div", "lore-body");
+    body.appendChild(cupEl("span", "lore-lbl", label));
+    body.appendChild(cupEl("b", "lore-name", pair[0]));
+    if (pair[1]) { body.appendChild(cupEl("p", "lore-note", pair[1])); }
+    row.appendChild(body);
+    return row;
+  }
+
+  function renderHousePage(id) {
+    var c = cupT();
+    var t = T[lang];
+    var hh = HOUSES[id] || {};
+    var lore = HOUSE_LORE[id];
+    var L2 = lore[lang] || lore.uz;
+    var scr = $("scr-house");
+    scr.style.setProperty("--hc", hh.accent || "#97a1ae");
+    scr.style.setProperty("--hc-rgb", hh.rgb || "151,161,174");
+    $("house-back-txt").textContent = t.cupBack;
+
+    // Bosh qism
+    var hero = $("house-hero");
+    hero.innerHTML = "";
+    var crest = cupEl("div", "hh-crest");
+    var img = cupCrestImg(id, 74);
+    if (img) { crest.appendChild(img); }
+    hero.appendChild(crest);
+    hero.appendChild(cupEl("span", "hh-kick", c.hKick));
+    hero.appendChild(cupEl("h2", "hh-name", cupHouseName(id)));
+    hero.appendChild(cupEl("p", "hh-traits", L2.traits));
+    var facts = cupEl("div", "hh-facts");
+    function fact(label, value, swatches) {
+      var f = cupEl("div", "hh-fact");
+      f.appendChild(cupEl("span", "", label));
+      var v = cupEl("b", "", value);
+      if (swatches) {
+        var sw = cupEl("i", "hh-sw");
+        swatches.forEach(function (col) { var d = cupEl("u"); d.style.background = col; sw.appendChild(d); });
+        v.insertBefore(sw, v.firstChild);
+      }
+      f.appendChild(v);
+      facts.appendChild(f);
+    }
+    fact(c.hSymbol, L2.symbol);
+    fact(c.hElement, L2.element);
+    fact(c.hColors, L2.colors, lore.colors);
+    hero.appendChild(facts);
+    var note = hh["note_" + lang] || hh.note_uz;
+    if (note) { hero.appendChild(cupEl("p", "hh-note", note)); }
+
+    // Kubokdagi o'rni va ballar manbasi
+    var cupBox = $("house-cup");
+    cupBox.innerHTML = "";
+    var list = cupSorted();
+    var idx = -1;
+    list.forEach(function (r, i) { if (r.house === id) { idx = i; } });
+    var row = idx >= 0 ? list[idx] : null;
+    var head = cupEl("div", "cc-head");
+    head.appendChild(cupEl("span", "cc-kick", c.hCup));
+    if (row) { head.appendChild(cupEl("span", "hc-place", t.cupPlace.replace("%d", idx + 1))); }
+    cupBox.appendChild(head);
+    if (row) {
+      var big = cupEl("div", "hc-big");
+      var num = cupEl("b", "", cupPts(row.total_points));
+      big.appendChild(num);
+      big.appendChild(cupEl("span", "", t.cupPts + " · " + c.hActive.replace("%d", row.active_members || 0)));
+      cupBox.appendChild(big);
+      var by = row.by || {};
+      var sum = srcSum(by);
+      if (sum > 0) {
+        cupBox.appendChild(srcBar(by, 100, "big"));
+        var tbl = cupEl("div", "hc-src");
+        CUP_SRC.forEach(function (x) {
+          var v = by[x.key] || 0;
+          var r2 = cupEl("div", "hc-src-row" + (v ? "" : " zero"));
+          var ic = cupEl("span", "hc-src-ic");
+          ic.innerHTML = svgIcon(SRC_ICON[x.key]);
+          ic.style.color = x.color;
+          r2.appendChild(ic);
+          r2.appendChild(cupEl("span", "hc-src-name", c.src[x.key]));
+          r2.appendChild(cupEl("span", "hc-src-pct", sum ? Math.round(v / sum * 100) + "%" : ""));
+          r2.appendChild(cupEl("b", "hc-src-val", String(v)));
+          tbl.appendChild(r2);
+        });
+        cupBox.appendChild(tbl);
+      } else {
+        cupBox.appendChild(cupEl("p", "cc-note", c.none));
+      }
+    }
+
+    // Fakultet ahli
+    var people = $("house-people");
+    people.innerHTML = "";
+    people.appendChild(cupEl("div", "cc-kick", c.hPeople));
+    people.appendChild(loreRow("founder", c.founder, L2.founder));
+    people.appendChild(loreRow("head", c.head, L2.head));
+    people.appendChild(loreRow("ghost", c.ghost, L2.ghost));
+    people.appendChild(loreRow("captain", c.captain, L2.captain));
+    people.appendChild(loreRow("prefects", c.prefects, L2.prefects));
+    people.appendChild(loreRow("room", c.room, ["", ""]));
+    var roomRow = people.lastChild;
+    roomRow.querySelector(".lore-name").remove();
+    roomRow.querySelector(".lore-body").appendChild(cupEl("p", "lore-note strong", L2.room));
+
+    var fam = cupEl("div", "lore-row");
+    var fic = cupEl("span", "lore-ic");
+    fic.innerHTML = svgIcon(ROLE_ICON.famous);
+    fam.appendChild(fic);
+    var fb = cupEl("div", "lore-body");
+    fb.appendChild(cupEl("span", "lore-lbl", c.famous));
+    var chips = cupEl("div", "lore-chips");
+    L2.famous.forEach(function (n) { chips.appendChild(cupEl("span", "", n)); });
+    fb.appendChild(chips);
+    fam.appendChild(fb);
+    people.appendChild(fam);
+    people.appendChild(cupEl("p", "lore-src", c.lore));
+
+    // A'zolar - serverdan keladi
+    var mem = $("house-members");
+    mem.innerHTML = "";
+    mem.appendChild(cupEl("div", "cc-kick", c.members));
+    var ml = cupEl("div", "", null);
+    ml.id = "house-members-list";
+    ml.appendChild(cupEl("p", "cc-note", c.loading));
+    mem.appendChild(ml);
+    if (houseBoards[id]) { renderHouseMembers(id); }
+  }
+
+  function renderHouseMembers(id) {
+    var box = $("house-members-list");
+    if (!box) { return; }
+    var d = houseBoards[id];
+    var c = cupT();
+    if (!d) { box.innerHTML = ""; box.appendChild(cupEl("p", "cc-note", c.empty)); return; }
+    var members = (d.members || []).filter(function (m) { return (m.points || 0) > 0; });
+    if (!members.length) { box.innerHTML = ""; box.appendChild(cupEl("p", "cc-note", c.empty)); return; }
+    memberList(box, members, id, 10);
+  }
+
+  /* ---------- ONLAYN ----------
+     Ilova ochiq turganda serverga har 20 soniyada "shu yerdaman" yuboriladi.
+     Chatdagi onlayn belgisi shunga qaraydi - odam chatga kirmagan bo'lsa ham
+     ilovada bo'lsa, onlayn ko'rinadi. Ilova yashirilsa/yopilsa - darhol oflayn.
+     text/plain - brauzer oldindan "ruxsat so'rovi" yubormasin (keepalive bilan
+     yopilish paytida ham yetib boradi). */
+  var API_PRESENCE = "https://bot.tizimshunos.uz/api/presence";
+  var presenceTimer = null;
+  var presenceLast = { off: null, t: 0 };
+
+  function presencePing(off) {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch) { return; }
+    // Bir xil holat qisqa vaqtda qayta yuborilmaydi (oyna tez-tez yashirinib-ochilsa)
+    var now = Date.now();
+    if (presenceLast.off === !!off && now - presenceLast.t < 5000) { return; }
+    presenceLast = { off: !!off, t: now };
+    try {
+      window.fetch(API_PRESENCE, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ initData: initData, off: off ? 1 : 0 }),
+        keepalive: true
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
+  function presenceStart() {
+    if (presenceTimer) { return; }
+    presencePing(false);
+    presenceTimer = setInterval(function () {
+      if (!document.hidden) { presencePing(false); }
+    }, 20000);
+    document.addEventListener("visibilitychange", function () { presencePing(document.hidden); });
+    window.addEventListener("pagehide", function () { presencePing(true); });
+  }
+
+  function openCup() {
+    if (!cupData) { return; }
+    renderCupScreen();
+    stopSortTimer();
+    $("scr-cat").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-detail").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    fetchRefs(renderRefsStrip);
+  }
+
+  function closeCup() {
+    $("scr-cup").classList.add("hidden");
+    openCatalog(lang, false);
+  }
+
+  function reportHouse(id) { report("house", id); }
+
+  function reportWand(w) { report("wand", w.wood + "_" + w.core + "_" + w.flex); }
+
+  /* ---------- SVG CHIZMALAR ----------
+     currentColor ishlatadi — fakultet rangiga o'zi moslashadi.        */
+
+  // Tayoqcha. Kvadrat nisbatda (100x100) chizilgan, chunki barcha uyalar kvadrat:
+  // ochilish 104px, profil kartasi 62px, mashhur sehrgar yonida 44px.
+  // Avval 240x40 (6:1) edi va kvadrat uyada ingichka chiziqchaga aylanardi.
+  var SVG_WAND =
+    '<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M33.02 84.83 L57.16 29.67 L58.84 30.33 L38.98 87.17 Z" ' +
+        'fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.6" ' +
+        'stroke-linejoin="round"/>' +
+      '<path d="M40.9 81.46 L35.5 79.34 M42.25 77.47 L37.23 75.49 M43.61 73.47 L38.95 71.65" ' +
+        'stroke="currentColor" stroke-width="1.3" stroke-opacity=".6" stroke-linecap="round"/>' +
+      '<path d="M63 14 L64.84 20.16 L71 22 L64.84 23.84 L63 30 L61.16 23.84 L55 22 L61.16 20.16 Z" ' +
+        'fill="currentColor" fill-opacity=".9"/>' +
+      '<path d="M77 28.5 L78.06 31.94 L81.5 33 L78.06 34.06 L77 37.5 L75.94 34.06 L72.5 33 ' +
+        'L75.94 31.94 Z" fill="currentColor" fill-opacity=".55"/>' +
+      '<path d="M50 12.8 L50.74 15.26 L53.2 16 L50.74 16.74 L50 19.2 L49.26 16.74 L46.8 16 ' +
+        'L49.26 15.26 Z" fill="currentColor" fill-opacity=".4"/>' +
+    '</svg>';
+
+  // Ollivander javoni: tayoqcha qutilari, bittasi tortib olingan
+  var SVG_SHELF =
+    '<svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<g stroke="currentColor" stroke-width="1.3" stroke-opacity=".38">' +
+        '<rect x="14" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="12" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="37" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="37" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="96" width="52" height="17" rx="2"/>' +
+        '<rect x="14" y="121" width="52" height="17" rx="2"/>' +
+        '<rect x="74" y="121" width="52" height="17" rx="2"/>' +
+        '<rect x="134" y="121" width="52" height="17" rx="2"/>' +
+      '</g>' +
+      '<g stroke="currentColor" stroke-width="1.1" stroke-opacity=".2">' +
+        '<path d="M8 33 H192 M8 92 H192 M8 117 H192"/>' +
+      '</g>' +
+      '<rect x="58" y="63" width="84" height="24" rx="3" ' +
+        'fill="currentColor" fill-opacity=".10" stroke="currentColor" stroke-width="1.5"/>' +
+      '<path d="M70 75 L126 75 L131 75" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-opacity=".9"/>' +
+      '<circle cx="133" cy="75" r="2.6" fill="currentColor"/>' +
+      '<circle cx="133" cy="75" r="6.5" fill="currentColor" fill-opacity=".16"/>' +
+    '</svg>';
+
+  function drawSvg(el, svg, cls) {
+    if (!el) { return; }
+    el.className = cls;
+    el.innerHTML = svg;
+  }
+
+  var IMG_DIR = "img/";
+  var HAT_IMG = "sorting_hat.png";
+
+  // Gerbni chizadi. Rasm topilmasa — belgiga qaytadi.
+  function paintCrest(el, houseId, fallback) {
+    if (!el) { return; }
+    el.innerHTML = "";
+    var h = HOUSES[houseId];
+    var file = h && h.img;
+    if (!file) { el.textContent = fallback; return; }
+
+    var img = document.createElement("img");
+    img.src = IMG_DIR + file;
+    img.alt = "";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = fallback;
+    };
+    el.appendChild(img);
+  }
+
+  function paintHat(el) {
+    if (!el) { return; }
+    el.innerHTML = "";
+    var img = document.createElement("img");
+    img.src = IMG_DIR + HAT_IMG;
+    img.alt = "";
+    img.className = "hat-img";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = "?";
+      el.className = "hat-mark";
+    };
+    el.className = "hat-mark bare";
+    el.appendChild(img);
+  }
+
+  // Natija chiqqanda bo'sh joy ko'rinmasligi uchun
+  function preloadCrests() {
+    var names = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+    for (var i = 0; i < names.length; i++) {
+      var f = HOUSES[names[i]].img;
+      if (f) { try { new Image().src = IMG_DIR + f; } catch (e) {} }
+    }
+    try { new Image().src = IMG_DIR + HAT_IMG; } catch (e) {}
+  }
+
+  function validHouse(v) { return v && HOUSES[v] && v !== "none" ? v : null; }
+
+  function readLocalHouse() {
+    try { return validHouse(window.localStorage.getItem(HOUSE_KEY)); }
+    catch (e) { return null; }
+  }
+
+  function validWand(v) {
+    if (!v) { return null; }
+    var o = v;
+    if (typeof v === "string") {
+      try { o = JSON.parse(v); } catch (e) { return null; }
+    }
+    if (!o || !WOODS[o.wood] || !CORES[o.core] || !FLEX[o.flex]) { return null; }
+    return { wood: o.wood, core: o.core, flex: o.flex };
+  }
+
+  function readLocalWand() {
+    try { return validWand(window.localStorage.getItem(WAND_KEY)); }
+    catch (e) { return null; }
+  }
+
+  function setWand(w) {
+    var v = validWand(w);
+    if (!v) { return; }
+    wand = v;
+    var raw = JSON.stringify(v);
+    try { window.localStorage.setItem(WAND_KEY, raw); } catch (e) {}
+    if (cloudOk) {
+      try { tg.CloudStorage.setItem(WAND_KEY, raw, function () {}); } catch (e) {}
+    }
+  }
+
+  function setHouse(id) {
+    var v = validHouse(id) || "none";
+    house = v;
+    applyHouse(v);
+    try { window.localStorage.setItem(HOUSE_KEY, v); } catch (e) {}
+    if (cloudOk) {
+      try { tg.CloudStorage.setItem(HOUSE_KEY, v, function () {}); } catch (e) {}
+    }
+  }
+
+  function load(done) {
+    var localLang = readLocalLang();
+    var houseChanged = false;
+
+    if (!hasCloud()) { done(localLang, false); return; }
+    cloudOk = true;
+
+    var fired = false;
+    function once(l) {
+      if (!fired) { fired = true; done(l, houseChanged); return; }
+      // Bulut kechikib kelgan bo'lsa ham fakultet yangilansin
+      if (houseChanged) { houseChanged = false; refreshHouseView(); }
+    }
+    setTimeout(function () { once(localLang); }, 1200);
+
+    try {
+      tg.CloudStorage.getItems([KEY, LANG_KEY, HOUSE_KEY, WAND_KEY], function (err, vals) {
+        var l = localLang;
+        if (!err && vals) {
+          if (vals[KEY]) { absorb(vals[KEY].split(",")); writeLocal(); }
+          var cl = validLang(vals[LANG_KEY]);
+          if (!l && cl) { l = cl; try { window.localStorage.setItem(LANG_KEY, cl); } catch (e) {} }
+          // Fakultet uchun bulut asosiy manba: qurilmalar orasida
+          // yagona bo'lishi kerak, shuning uchun lokal qiymatni almashtiradi.
+          var ch = validHouse(vals[HOUSE_KEY]);
+          if (ch && ch !== house) {
+            house = ch;
+            applyHouse(ch);
+            try { window.localStorage.setItem(HOUSE_KEY, ch); } catch (e) {}
+            houseChanged = true;
+          }
+          var cw = validWand(vals[WAND_KEY]);
+          if (cw) {
+            var same = wand && wand.wood === cw.wood && wand.core === cw.core && wand.flex === cw.flex;
+            if (!same) {
+              wand = cw;
+              try { window.localStorage.setItem(WAND_KEY, JSON.stringify(cw)); } catch (e) {}
+              houseChanged = true;
+            }
+          }
+        }
+        once(l);
+      });
+    } catch (e) { once(localLang); }
+  }
+
+  // Fakultet o'zgargach ochiq ekranni qayta chizadi
+  function refreshHouseView() {
+    if (!$("scr-prof").classList.contains("hidden")) { renderProfile(); }
+    else if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
+  }
+
+  function persist(cb) {
+    writeLocal();
+    if (!cloudOk) { if (cb) { cb(); } return; }
+
+    var fired = false;
+    function once() { if (!fired) { fired = true; if (cb) { cb(); } } }
+    setTimeout(once, 1200);
+
+    try { tg.CloudStorage.setItem(KEY, list().join(","), once); }
+    catch (e) { once(); }
+  }
+
+  /* ---------- HARAKATLAR ---------- */
+
+  // Kartaga bosilganda tasdiq so'raladi — tasodifiy teginishdan himoya
+  /* ---------- XABAR OYNALARI ---------- */
+
+  // Xabarlar bir-birini o'chirmaydi - bir vaqtda bir nechtasi ko'rinishi mumkin.
+  function addNote(el, life) {
+    var box = $("notes");
+    if (!box) { return null; }
+    box.appendChild(el);
+    // Brauzer o'lchamni hisoblab ulgursin, keyin ochamiz
+    setTimeout(function () { el.classList.add("on"); }, 20);
+    setTimeout(function () { dismissNote(el); }, life);
+    return el;
+  }
+
+  // Xabarni vaqtidan oldin yopadi ("Yuborilmoqda..." natija kelgach qolib
+  // ketmasligi uchun kerak).
+  function dismissNote(el) {
+    if (!el || !el.parentNode) { return; }
+    el.classList.remove("on");
+    setTimeout(function () {
+      if (el.parentNode) { el.parentNode.removeChild(el); }
+    }, 260);
+  }
+
+  function showToast(text, kind) {
+    var el = document.createElement("div");
+    el.className = "note" + (kind ? " " + kind : "");
+    el.textContent = text;
+    return addNote(el, 3400);
+  }
+
+  // Film yuborilgach chiqadigan xabar. Tasdiq oynasi o'rniga shu ishlatiladi:
+  // to'g'ri bosgan odam to'siqni sezmaydi, xato bosgan esa qaytara oladi.
+  // Bekor qilish muhlati. Aylana animatsiyasi ham shu vaqtga moslanadi:
+  // ikkalasi shu yerdan boshqariladi, shuning uchun ajralib qolmaydi.
+  var UNDO_LIFE = 5000;
+
+  // Strelka + atrofida bo'shab boruvchi aylana.
+  function undoIcon(ms) {
+    var wrap = document.createElement("span");
+    wrap.className = "u-ring";
+    wrap.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<circle class="u-track" cx="12" cy="12" r="10"></circle>' +
+        '<circle class="u-prog" cx="12" cy="12" r="10" transform="rotate(-90 12 12)"></circle>' +
+        '<path class="u-arrow" transform="translate(6 6) scale(0.5)" ' +
+              'd="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 ' +
+                 '3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 ' +
+                 '11.03 17.15 8 12.5 8z"></path>' +
+      '</svg>';
+    var prog = wrap.querySelector(".u-prog");
+    if (prog) { prog.style.animationDuration = ms + "ms"; }
+    return wrap;
+  }
+
+  function showUndoNote(id, title, messageId) {
+    var t = T[lang];
+    var el = document.createElement("div");
+    el.className = "note ok note-undo";
+
+    var txt = document.createElement("span");
+    txt.className = "u-txt";
+    txt.textContent = "✅ " + t.sentTo(title);
+
+    var btn = document.createElement("button");
+    btn.className = "u-btn";
+    var ring = undoIcon(UNDO_LIFE);
+    var label = document.createElement("span");
+    label.textContent = t.undoBtn;
+    btn.appendChild(ring);
+    btn.appendChild(label);
+
+    btn.addEventListener("click", function () {
+      btn.disabled = true;
+      // Faqat yozuvni almashtiramiz - belgi joyida qoladi, aks holda
+      // tugma bosilgan zahoti "sakrab" ketardi.
+      label.textContent = "…";
+      var p = ring.querySelector(".u-prog");
+      if (p) { p.style.animationPlayState = "paused"; }
+      undoSend(id, messageId, el);
+    });
+
+    el.appendChild(txt);
+    el.appendChild(btn);
+    return addNote(el, UNDO_LIFE);
+  }
+
+  function undoSend(id, messageId, noteEl) {
+    var t = T[lang];
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init || !window.fetch || !messageId) {
+      dismissNote(noteEl); showToast(t.undoFail, "err"); return;
+    }
+
+    window.fetch(API_UNDO, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ message_id: messageId })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      dismissNote(noteEl);
+      if (d && d.ok) {
+        // Xabar chatdan o'chdi, lekin ✓ qoladi: yuklab olingan film qaytib "olinmagan" bo'lmaydi.
+        showToast(t.undone);
+        return;
+      }
+      showToast(d && d.error === "expired" ? t.undoExpired : t.undoFail, "err");
+    })["catch"](function () {
+      dismissNote(noteEl); showToast(t.undoFail, "err");
+    });
+  }
+
+  /* ---------- FILM YUBORISH ---------- */
+
+  // Eski usul: botga o'tish. Ilova YOPILADI. Telegram tashqarisida yoki
+  // API ishlamay qolganda zaxira yo'l sifatida qoladi.
+  //
+  // belgilash === false: film yetib BORMASLIGI aniq (masalan obuna yo'q).
+  // Qolgan hollarda natijani bilmaymiz - ilova yopiladi va javob kelmaydi -
+  // shuning uchun eski xatti-harakat saqlanadi.
+  function openInBot(id, belgilash) {
+    // `web_` - bot jadvalga film WebApp'dan olinganini yozadi
+    var link = "https://t.me/" + BOT + "?start=web_" + id + "_" + lang;
+    if (belgilash !== false) {
+      watched[key(id)] = true;
+      renderCatalog();
+    }
+    persist(function () {
+      if (tg && tg.openTelegramLink) { tg.openTelegramLink(link); tg.close(); }
+      else { window.open(link, "_blank"); }
+    });
+  }
+
+  var sending = false;
+
+  function play(id) {
+    if (sending) { return; }
+    var t = T[lang];
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init || !window.fetch) { openInBot(id); return; }
+
+    sending = true;
+    var pending = showToast(t.sending);
+
+    window.fetch(API_SEND, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ movie_id: id, lang: lang })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      sending = false;
+      dismissNote(pending);
+
+      if (res && res.ok) {
+        // Belgi endi HAQIQIY: film chindan yuborilgandan keyin qo'yiladi.
+        // Ilgari u bosilgan zahoti qo'yilardi - obuna yo'q bo'lsa ham.
+        watched[key(id)] = true;
+        renderCatalog();
+        persist();
+        showUndoNote(id, res.title || "", res.message_id);
+        return;
+      }
+
+      var err = res && res.error;
+      if (err === "not_ready") { showToast(t.notReadyMsg, "err"); return; }
+      // Film manbada topilmadi: botga o'tish ham yordam bermaydi, adminlar xabardor
+      if (err === "film_missing") { showToast(t.filmMissing, "err"); return; }
+      // Obuna yo'q: bot filmni emas, obuna taklifini ko'rsatadi -
+      // shuning uchun "ko'rilgan" deb belgilamaymiz.
+      if (err === "not_subscribed") {
+        showToast(t.notSubscribed, "err");
+        openInBot(id, false);
+        return;
+      }
+      openInBot(id);   // qolgan xatolarda jim eski usulga o'tamiz
+    })["catch"](function () {
+      sending = false;
+      dismissNote(pending);
+      openInBot(id);
+    });
+  }
+
+  /* ---------- CHIZISH ---------- */
+
+  /* Rasm yuklanmasa darhol taslim bo'lmaymiz. Ilgari karta rasmni birinchi xatodayoq
+     olib tashlardi — internet bir lahza uzilsa yoki GitHub sekin javob bersa, plakatlar
+     ilova qayta ochilguncha yo'qolib qolardi (2026-09-27, Mac Telegram). Endi: zaxira
+     manzillar ketma-ket (masalan ruscha -> o'zbekcha), OXIRGISI esa 1.5 / 4 / 8 soniyadan
+     keyin qayta so'raladi; shundan keyingina rasm olib tashlanadi.
+     onStep(i, url) — har yangi manzilga o'tilganda (masalan uslubni moslash uchun). */
+  var IMG_RETRY = [1500, 4000, 8000];
+  function imgTry(img, urls, onStep) {
+    var list = [];
+    urls.forEach(function (u) { if (list.indexOf(u) === -1) { list.push(u); } });
+    var at = 0, tries = 0;
+    function go(url) {
+      if (onStep) { try { onStep(at, url); } catch (e) {} }
+      img.src = url;
+    }
+    img.onerror = function () {
+      if (at < list.length - 1) { at++; go(list[at]); return; }
+      if (tries < IMG_RETRY.length) {
+        var wait = IMG_RETRY[tries++];
+        setTimeout(function () {
+          if (!img.parentNode) { return; }           // karta allaqachon qayta chizilgan
+          img.src = list[at] + (list[at].indexOf("?") === -1 ? "?" : "&") + "r=" + tries;
+        }, wait);
+        return;
+      }
+      img.onerror = null;
+      if (img.parentNode) { img.parentNode.removeChild(img); }
+    };
+    go(list[0]);
+  }
+
+  function poster(id) {
+    return "img/" + id + "_" + lang + ".jpg?v=3";
+  }
+
+  // Film shu tilda yuklanganmi? NOT_READY ro'yxati catalog.py dan
+  // generatsiya qilinadi: u yerda message_id = 0 bo'lgan filmlar.
+  function isReady(id) {
+    var yoq = (typeof NOT_READY !== "undefined" && NOT_READY && NOT_READY[lang]) || [];
+    for (var i = 0; i < yoq.length; i++) { if (yoq[i] === id) { return false; } }
+    return true;
+  }
+
+  function nextIndex() {
+    for (var i = 0; i < MOVIES.length; i++) {
+      if (isReady(MOVIES[i].id) && !watched[key(MOVIES[i].id)]) { return i; }
+    }
+    return -1;
+  }
+
+  function renderLangs() {
+    var box = $("lang-list");
+    box.innerHTML = "";
+    LANGS.forEach(function (l) {
+      var b = document.createElement("button");
+      b.className = "lang-btn";
+
+      var mark = document.createElement("span");
+      mark.className = "lang-mark";
+      mark.style.background = l.grad;
+      mark.textContent = l.flag;
+
+      var nm = document.createElement("span");
+      nm.className = "lang-name";
+      var strong = document.createElement("b");
+      strong.textContent = l.name;
+      var small = document.createElement("small");
+      small.textContent = l.note;
+      nm.appendChild(strong);
+      nm.appendChild(small);
+
+      var chev = document.createElement("span");
+      chev.className = "chev";
+      chev.textContent = "›";
+
+      b.appendChild(mark);
+      b.appendChild(nm);
+      b.appendChild(chev);
+      b.addEventListener("click", function () { openCatalog(l.code, true); });
+      box.appendChild(b);
+    });
+  }
+
+  var LIB_TITLE = { uz: "Kutubxona", ru: "Библиотека", en: "Library" };
+  var SERIES_TITLE = {
+    hp: { uz: "Garri Potter", ru: "Гарри Поттер", en: "Harry Potter" },
+    fb: { uz: "Fantastik maxluqlar", ru: "Фантастические твари", en: "Fantastic Beasts" }
+  };
+  var FILM_WORD = { uz: "film", ru: "фильма", en: "films" };
+  var SEEN_WORD = { uz: "Ko'rilgan", ru: "Просмотрено", en: "Watched" };
+  var SOON_TILES = [
+    { key: "series", icon: "M3.5 7.5h17v11h-17z M8.5 3.5l3.5 4 3.5-4",
+      name: { uz: "Seriallar", ru: "Сериалы", en: "Series" },
+      sub: { uz: "Dekabr, 2026", ru: "Декабрь 2026", en: "December 2026" } },
+    { key: "music", icon: "M9 18V6l10-2v12 M9 18a2.5 2.5 0 1 1-5 0a2.5 2.5 0 1 1 5 0 M19 16a2.5 2.5 0 1 1-5 0a2.5 2.5 0 1 1 5 0",
+      name: { uz: "Soundtrack", ru: "Саундтреки", en: "Soundtracks" }, sub: null },
+    { key: "books", icon: "M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13",
+      name: { uz: "Kitoblar", ru: "Книги", en: "Books" }, sub: null }
+  ];
+
+  // ==MS==
+  /* ---------- SOUNDTRACK ----------
+     Albomlar ro'yxati serverdan (/api/music) keladi. Fayllar filmlar kabi yopiq
+     Telegram kanalida turadi, server ularni oqim bilan uzatadi (ilovada ham,
+     GitHub'da ham musiqa fayli YO'Q). Ikki yo'l: ilova ichida tinglash va butun
+     albomni / bitta trekni Telegram chatga yuborish (u yerda ekran o'chsa ham chaladi).
+     HOZIRCHA BEPUL. Keyin butun albom galleonga bir marta ochiladi (server: album_open). */
+  var API_MUSIC = "https://bot.tizimshunos.uz/api/music";
+  var MS_LOCAL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  if (MS_LOCAL) { API_MUSIC = "http://" + window.location.hostname + ":8799/api/music"; }
+  var MS_CHANNEL = "https://t.me/garripotter_kolleksiya";
+
+  function msPlural(n, one, few, many) {
+    var a = n % 10, b = n % 100;
+    if (a === 1 && b !== 11) { return one; }
+    if (a >= 2 && a <= 4 && (b < 12 || b > 14)) { return few; }
+    return many;
+  }
+
+  var MS_TX = {
+    uz: { shelf: "Soundtrack", kick: "Filmning asl musiqasi", play: "Tinglash", pause: "Pauza",
+          dl: "Yuklab olish", sentAll: "Albom bot chatiga yuborildi",
+          sentOne: function (t) { return "«" + t + "» bot chatiga yuborildi"; },
+          slow: "Biroz kuting…", fail: "Yuborib bo'lmadi, birozdan keyin urinib ko'ring",
+          loadFail: "Musiqani yuklab bo'lmadi", big: "Bu trek faqat Telegramda chalinadi",
+          hint: "Ilova yopilsa musiqa to'xtaydi. Yo'lda tinglash uchun albomni Telegramga yuboring — u yerda ekran o'chsa ham chalinaveradi.",
+          albums: function (n) { return n + " albom"; }, tracks: function (n) { return n + " trek"; },
+          min: function (n) { return n + " daq"; }, dlAria: "Yuklab olish (bot chatiga)", likeAria: "Yoqdi",
+          likeFail: "Like saqlanmadi, qayta urinib ko'ring" },
+    ru: { shelf: "Саундтреки", kick: "Оригинальный саундтрек", play: "Слушать", pause: "Пауза",
+          dl: "Скачать", sentAll: "Альбом отправлен в чат с ботом",
+          sentOne: function (t) { return "«" + t + "» отправлен в чат с ботом"; },
+          slow: "Подождите немного…", fail: "Не удалось отправить, попробуйте чуть позже",
+          loadFail: "Не удалось загрузить музыку", big: "Этот трек играет только в Telegram",
+          hint: "Если закрыть приложение, музыка остановится. Чтобы слушать в дороге, отправьте альбом в Telegram — там он играет даже с выключенным экраном.",
+          albums: function (n) { return n + " " + msPlural(n, "альбом", "альбома", "альбомов"); },
+          tracks: function (n) { return n + " " + msPlural(n, "трек", "трека", "треков"); },
+          min: function (n) { return n + " мин"; }, dlAria: "Скачать (в чат с ботом)", likeAria: "Нравится",
+          likeFail: "Лайк не сохранился, попробуйте ещё раз" },
+    en: { shelf: "Soundtracks", kick: "Original motion picture soundtrack", play: "Play", pause: "Pause",
+          dl: "Download", sentAll: "Album sent to your bot chat",
+          sentOne: function (t) { return "“" + t + "” sent to your bot chat"; },
+          slow: "One moment…", fail: "Couldn't send it, please try again shortly",
+          loadFail: "Couldn't load the music", big: "This track plays only in Telegram",
+          hint: "Music stops when the app is closed. To listen on the go, send the album to Telegram — it keeps playing there even with the screen off.",
+          albums: function (n) { return n + (n === 1 ? " album" : " albums"); },
+          tracks: function (n) { return n + (n === 1 ? " track" : " tracks"); },
+          min: function (n) { return n + " min"; }, dlAria: "Download (to your bot chat)", likeAria: "Like",
+          likeFail: "Couldn't save the like, please try again" }
+  };
+
+  var MS_COMPOSER = {
+    "John Williams": { uz: "Jon Uilyams", ru: "Джон Уильямс" },
+    "Patrick Doyle": { uz: "Patrik Doyl", ru: "Патрик Дойл" },
+    "Nicholas Hooper": { uz: "Nikolas Xuper", ru: "Николас Хупер" },
+    "Alexandre Desplat": { uz: "Aleksandr Despla", ru: "Александр Деспла" }
+  };
+
+  var MS_ICON = {
+    play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.3-6.8a1 1 0 0 0 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 6.2v11.6c0 .8.9 1.2 1.5.8l8.6-5.8a1 1 0 0 0 0-1.6L6.5 5.4C5.9 5 5 5.4 5 6.2z"/><rect x="16.6" y="5" width="2.6" height="14" rx="1.1"/></svg>',
+    dl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M7 10.5l5 5 5-5 M5 20h14"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.35-9.2-8.7C1.3 8.3 3.1 5 6.4 5c2.1 0 3.5 1.2 5.6 3.3C14.1 6.2 15.5 5 17.6 5c3.3 0 5.1 3.3 3.6 6.3C19 15.65 12 20 12 20z"/></svg>',
+    eq: '<i></i><i></i><i></i>'
+  };
+
+  var msData = null;        // { hp1: {year, composer, tracks:[{t, d, big}]} }
+  var msKey = "";           // tinglash kaliti (server imzolaydi, 12 soat)
+  var msCur = null;         // hozir chalinayotgan: {album, i}
+  var msOpen = null;        // ochiq albom sahifasi
+  var msAudio = null;
+  var msSending = false;
+  var msRetried = false;
+  var msLogged = {};
+  var msScroll = 0;
+
+  function msInitData() {
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    return init;
+  }
+
+  // Albom muqovasi guruhdagi albom sarlavhasi rasmidan (server saqlaydi); bo'lmasa film plakati
+  function msCover(id) {
+    var cv = msData && msData[id] && msData[id].cv;
+    return cv ? API_MUSIC + "/cover/" + id + ".jpg?v=" + cv : "img/sq/" + id + "_" + lang + ".jpg";
+  }
+  function msTracks(id) { return (msData && msData[id] && msData[id].tracks) || []; }
+  function msName(id) {
+    for (var i = 0; i < MOVIES.length; i++) { if (MOVIES[i].id === id) { return MOVIES[i][lang]; } }
+    return id;
+  }
+  function msNumeral(id) {
+    for (var i = 0; i < MOVIES.length; i++) { if (MOVIES[i].id === id) { return NUMERALS[i]; } }
+    return "";
+  }
+  function msComposer(id) {
+    var c = (msData && msData[id] && msData[id].composer) || "";
+    return (MS_COMPOSER[c] && MS_COMPOSER[c][lang]) || c;
+  }
+  function msAlbums() {
+    var out = [];
+    MOVIES.forEach(function (m) { if (msTracks(m.id).length) { out.push(m.id); } });
+    return out;
+  }
+  function msDur(sec) {
+    sec = Math.max(0, Math.round(sec || 0));
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+  function msPlaying() { return !!(msAudio && msCur && !msAudio.paused && !msAudio.ended); }
+
+  /* --- ro'yxatni olish --- */
+  function msFetch(cb) {
+    if (!window.fetch) { return; }
+    window.fetch(API_MUSIC, { headers: { "X-Telegram-Init-Data": msInitData() } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) { if (cb) { cb(); } return; }
+        var before = JSON.stringify(msData || {});
+        msData = res.albums || {};
+        msKey = res.key || "";
+        try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
+        if (JSON.stringify(msData) !== before) {
+          var cat = $("scr-cat");
+          if (cat && !cat.classList.contains("hidden")) { renderCatalog(); }
+          if (msOpen) { msRenderAlbum(); }
+        }
+        msMaybeOst();
+        if (cb) { cb(); }
+      })["catch"](function () { if (cb) { cb(); } });
+  }
+
+  /* --- kutubxona javoni --- */
+  function msShelf() {
+    var list = msAlbums();
+    if (!list.length) { return null; }
+    var x = MS_TX[lang];
+    var sec = document.createElement("div");
+    sec.className = "rowsec";
+    var head = document.createElement("div");
+    head.className = "rowsec-h";
+    var b = document.createElement("b");
+    b.textContent = x.shelf;
+    var c = document.createElement("span");
+    c.textContent = x.albums(list.length);
+    head.appendChild(b);
+    head.appendChild(c);
+    sec.appendChild(head);
+
+    var row = document.createElement("div");
+    row.className = "ms-row";
+    list.forEach(function (id) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "ms-card" + (msCur && msCur.album === id && msPlaying() ? " on" : "") +
+                       (msData[id].cv ? " art" : "");
+      card.setAttribute("data-album", id);
+      card.innerHTML =
+        '<span class="ms-art"><span class="ms-disc"></span><span class="ms-shine"></span>' +
+        '<span class="ms-cover"><img alt="" loading="lazy" decoding="async"><b class="ms-num"></b>' +
+        '<span class="ms-eq">' + MS_ICON.eq + '</span><span class="ms-lk"></span></span></span>' +
+        '<span class="ms-name"></span><span class="ms-sub"></span>';
+      card.querySelector("img").src = msCover(id);
+      card.querySelector(".ms-disc").style.setProperty("--lbl", "url('" + msCover(id) + "')");
+      card.querySelector(".ms-num").textContent = msNumeral(id);
+      card.querySelector(".ms-name").textContent = msName(id);
+      card.querySelector(".ms-sub").textContent = msComposer(id) + " · " + msData[id].year;
+      var sum = msSum(id), pill = card.querySelector(".ms-lk");
+      pill.innerHTML = sum ? MS_ICON.heart + "<span>" + msLikeNum(sum) + "</span>" : "";
+      pill.classList.toggle("hidden", !sum);
+      card.addEventListener("click", function () { msOpenAlbum(id); });
+      row.appendChild(card);
+    });
+    sec.appendChild(row);
+    return sec;
+  }
+
+  /* --- albom sahifasi --- */
+  function msOpenAlbum(id) {
+    msOpen = id;
+    msScroll = window.scrollY || 0;
+    msRenderAlbum();
+    $("scr-cat").classList.add("hidden");
+    $("scr-album").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    jrBack(msCloseAlbum);
+  }
+
+  function msCloseAlbum() {
+    msOpen = null;
+    jrBack(null);
+    $("scr-album").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    try { window.scrollTo(0, msScroll); } catch (e) {}
+  }
+
+  function msRenderAlbum() {
+    var id = msOpen;
+    if (!id) { return; }
+    var x = MS_TX[lang];
+    var list = msTracks(id);
+    var total = 0;
+    list.forEach(function (tr) { total += tr.d || 0; });
+
+    $("ms-sleeve").src = msCover(id);
+    $("ms-vinyl").style.setProperty("--lbl", "url('" + msCover(id) + "')");
+    $("ms-kick").textContent = x.kick;
+    $("ms-title").textContent = msName(id);
+    $("ms-meta").textContent = [msComposer(id), (msData && msData[id] ? msData[id].year : ""),
+                                x.tracks(list.length), x.min(Math.round(total / 60))].join(" · ");
+    $("ms-dl").innerHTML = MS_ICON.dl + "<span></span>";
+    $("ms-dl").querySelector("span").textContent = x.dl;
+    $("ms-dl").setAttribute("aria-label", x.dlAria);
+    $("ms-hint").textContent = x.hint;
+
+    var box = $("ms-list");
+    box.innerHTML = "";
+    list.forEach(function (tr, i) {
+      var row = document.createElement("div");
+      row.className = "ms-tr" + (tr.big ? " big" : "");
+      row.innerHTML =
+        '<button class="ms-tr-main" type="button"><span class="ms-tr-n"></span>' +
+        '<span class="ms-tr-eq">' + MS_ICON.eq + '</span><span class="ms-tr-t"></span>' +
+        '<span class="ms-tr-d"></span></button>' +
+        '<button class="ms-tr-lk" type="button">' + MS_ICON.heart + '<b></b></button>' +
+        '<button class="ms-tr-dl" type="button">' + MS_ICON.dl + '</button>';
+      row.querySelector(".ms-tr-n").textContent = i + 1;
+      row.querySelector(".ms-tr-t").textContent = tr.t;
+      // Ba'zi fayllarda davomiylik yozilmagan (0) — bo'sh qoldiramiz, "0:00" chalg'itadi
+      row.querySelector(".ms-tr-d").textContent = tr.d ? msDur(tr.d) : "";
+      row.querySelector(".ms-tr-dl").setAttribute("aria-label", x.dlAria);
+      row.querySelector(".ms-tr-lk").setAttribute("aria-label", x.likeAria);
+      row.querySelector(".ms-tr-main").addEventListener("click", function () {
+        if (tr.big) { showToast(x.big); msSend(id, i + 1); return; }
+        if (msCur && msCur.album === id && msCur.i === i) { msToggle(); } else { msPlay(id, i); }
+      });
+      row.querySelector(".ms-tr-dl").addEventListener("click", function () { msSend(id, i + 1); });
+      row.querySelector(".ms-tr-lk").addEventListener("click", function () { msLike(id, i); });
+      box.appendChild(row);
+    });
+    msSync();
+  }
+
+  /* --- pleyer --- */
+  function msEnsureAudio() {
+    if (msAudio) { return msAudio; }
+    msAudio = new Audio();
+    msAudio.preload = "auto";
+    ["play", "pause", "playing", "waiting"].forEach(function (ev) { msAudio.addEventListener(ev, msSync); });
+    msAudio.addEventListener("timeupdate", msProgress);
+    msAudio.addEventListener("ended", function () { msNext(true); });
+    msAudio.addEventListener("error", msError);
+    try {
+      if (navigator.mediaSession) {
+        var ms = navigator.mediaSession;
+        ms.setActionHandler("play", function () { msToggle(); });
+        ms.setActionHandler("pause", function () { msToggle(); });
+        ms.setActionHandler("nexttrack", function () { msNext(false); });
+        ms.setActionHandler("previoustrack", msPrev);
+      }
+    } catch (e) {}
+    return msAudio;
+  }
+
+  function msUrl(id, i) {
+    return API_MUSIC + "/a/" + id + "/" + (i + 1) + "?k=" + encodeURIComponent(msKey);
+  }
+
+  function msPlay(id, i) {
+    var list = msTracks(id);
+    while (i < list.length && list[i].big) { i++; }
+    if (i >= list.length) { return; }
+    if (!msKey) {
+      // Kalit hali kelmagan (yoki eskirgan) — olib, keyin chalamiz
+      msFetch(function () {
+        if (msKey) { msPlay(id, i); } else { showToast(MS_TX[lang].loadFail, "err"); }
+      });
+      return;
+    }
+    var a = msEnsureAudio();
+    msCur = { album: id, i: i };
+    msRetried = false;
+    a.src = msUrl(id, i);
+    var p = a.play();
+    if (p && p["catch"]) { p["catch"](function () { msSync(); }); }
+    msMeta();
+    msSync();
+    if (!msLogged[id]) { msLogged[id] = true; msLogPlay(id); }
+  }
+
+  function msToggle() {
+    if (!msAudio || !msCur) { return; }
+    if (msAudio.ended) { msPlay(msCur.album, 0); return; }
+    if (msAudio.paused) {
+      var p = msAudio.play();
+      if (p && p["catch"]) { p["catch"](function () {}); }
+    } else {
+      msAudio.pause();
+    }
+  }
+
+  function msNext(auto) {
+    if (!msCur) { return; }
+    var list = msTracks(msCur.album);
+    var j = msCur.i + 1;
+    while (j < list.length && list[j].big) { j++; }
+    if (j < list.length) { msPlay(msCur.album, j); return; }
+    // Albom tugadi: to'xtaymiz, "Tinglash" boshidan boshlaydi
+    if (!auto && msAudio) { msAudio.pause(); }
+    msSync();
+  }
+
+  function msPrev() {
+    if (!msCur || !msAudio) { return; }
+    if (msAudio.currentTime > 3 || msCur.i === 0) { msAudio.currentTime = 0; return; }
+    var j = msCur.i - 1;
+    var list = msTracks(msCur.album);
+    while (j > 0 && list[j].big) { j--; }
+    msPlay(msCur.album, j);
+  }
+
+  function msError() {
+    if (!msCur || !msAudio || !msAudio.getAttribute("src")) { return; }
+    // Kalit eskirgan bo'lishi mumkin (12 soat) — bir marta yangisini olib qayta urinamiz
+    if (!msRetried) {
+      msRetried = true;
+      var cur = msCur;
+      msFetch(function () {
+        if (!msCur || msCur !== cur || !msKey) { return; }
+        msAudio.src = msUrl(cur.album, cur.i);
+        var p = msAudio.play();
+        if (p && p["catch"]) { p["catch"](function () { msSync(); }); }
+      });
+      return;
+    }
+    showToast(MS_TX[lang].loadFail, "err");
+    msSync();
+  }
+
+  function msMeta() {
+    try {
+      if (!navigator.mediaSession || !window.MediaMetadata || !msCur) { return; }
+      var tr = msTracks(msCur.album)[msCur.i];
+      var art = new URL(msCover(msCur.album), window.location.href).href;
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: tr ? tr.t : "", artist: msComposer(msCur.album), album: msName(msCur.album),
+        artwork: [{ src: art, type: "image/jpeg" }]
+      });
+    } catch (e) {}
+  }
+
+  function msProgress() {
+    var bar = $("mp-prog");
+    if (!bar || !msAudio) { return; }
+    var d = msAudio.duration;
+    if (!d || !isFinite(d)) {
+      var tr = msCur && msTracks(msCur.album)[msCur.i];
+      d = tr ? tr.d : 0;
+    }
+    bar.style.width = d ? Math.min(100, msAudio.currentTime / d * 100) + "%" : "0";
+  }
+
+  // Hamma joydagi holatni bir yerdan yangilaydi: mini pleyer, albom sahifasi, javon
+  function msSync() {
+    var playing = msPlaying();
+    var x = MS_TX[lang];
+
+    var mp = $("mp");
+    if (mp && msCur) {
+      var tr = msTracks(msCur.album)[msCur.i];
+      $("mp-img").src = msCover(msCur.album);
+      $("mp-t").textContent = tr ? tr.t : "";
+      $("mp-a").textContent = msName(msCur.album) + " · " + msComposer(msCur.album);
+      $("mp-pp").innerHTML = playing ? MS_ICON.pause : MS_ICON.play;
+      $("mp-pp").setAttribute("aria-label", playing ? x.pause : x.play);
+      $("mp-next").innerHTML = MS_ICON.next;
+    }
+    msBarVisible();
+
+    if (msOpen) {
+      var mine = !!(msCur && msCur.album === msOpen);
+      var on = mine && playing;
+      $("ms-play").innerHTML = (on ? MS_ICON.pause : MS_ICON.play) + "<span></span>";
+      $("ms-play").querySelector("span").textContent = on ? x.pause : x.play;
+      $("ms-stage").classList.toggle("out", mine);
+      $("ms-stage").classList.toggle("spin", on);
+      var rows = $("ms-list").children;
+      for (var i = 0; i < rows.length; i++) {
+        var cur = mine && msCur.i === i;
+        rows[i].classList.toggle("on", cur);
+        rows[i].classList.toggle("paused", cur && !playing);
+      }
+    }
+
+    var cards = document.querySelectorAll(".ms-card");
+    for (var k = 0; k < cards.length; k++) {
+      var own = !!(msCur && cards[k].getAttribute("data-album") === msCur.album);
+      cards[k].classList.toggle("on", own && playing);
+    }
+    msLikeUI();
+  }
+
+  /* --- like'lar --- */
+  function msSum(id) {
+    var n = 0;
+    msTracks(id).forEach(function (tr) { n += tr.l || 0; });
+    return n;
+  }
+
+  function msLikeNum(n) { return n > 999 ? (Math.floor(n / 100) / 10) + "k" : String(n); }
+
+  // Yurakchalar va sonlarni hamma joyda yangilaydi: treklar, albom, javon, mini pleyer
+  function msLikeUI() {
+    if (msOpen) {
+      var list = msTracks(msOpen);
+      var rows = $("ms-list").children;
+      for (var i = 0; i < rows.length && i < list.length; i++) {
+        var b = rows[i].querySelector(".ms-tr-lk");
+        if (!b) { continue; }
+        b.classList.toggle("on", !!list[i].me);
+        b.setAttribute("aria-pressed", list[i].me ? "true" : "false");
+        b.querySelector("b").textContent = list[i].l ? msLikeNum(list[i].l) : "";
+      }
+      var sum = msSum(msOpen);
+      var chip = $("ms-lk");
+      chip.innerHTML = MS_ICON.heart + "<span></span>";
+      chip.querySelector("span").textContent = msLikeNum(sum);
+      chip.classList.toggle("zero", !sum);
+    }
+    var cards = document.querySelectorAll(".ms-card");
+    for (var k = 0; k < cards.length; k++) {
+      var s = msSum(cards[k].getAttribute("data-album"));
+      var pill = cards[k].querySelector(".ms-lk");
+      if (!pill) { continue; }
+      pill.innerHTML = s ? MS_ICON.heart + "<span>" + msLikeNum(s) + "</span>" : "";
+      pill.classList.toggle("hidden", !s);
+    }
+    var mb = $("mp-lk");
+    if (mb && msCur) {
+      var tr = msTracks(msCur.album)[msCur.i];
+      mb.innerHTML = MS_ICON.heart;
+      mb.classList.toggle("on", !!(tr && tr.me));
+      mb.setAttribute("aria-label", MS_TX[lang].likeAria);
+    }
+  }
+
+  var msLiking = {};
+  function msLike(id, i) {
+    var tr = msTracks(id)[i];
+    if (!tr) { return; }
+    var key = id + ":" + i;
+    if (msLiking[key]) { return; }
+    var init = msInitData();
+    if (!init && !MS_LOCAL) { showToast(MS_TX[lang].likeFail, "err"); return; }
+    // Darhol ko'rsatamiz, server javobi kelgach aniq son bilan almashtiramiz
+    var was = { me: !!tr.me, l: tr.l || 0 };
+    tr.me = !was.me;
+    tr.l = Math.max(0, was.l + (tr.me ? 1 : -1));
+    msLiking[key] = true;
+    msLikeUI();
+    msPop(id, i);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred(tr.me ? "medium" : "light"); } } catch (e) {}
+    window.fetch(API_MUSIC + "/like", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ album: id, track: i + 1, on: tr.me })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      msLiking[key] = false;
+      if (res && res.ok) { tr.me = !!res.me; tr.l = res.l || 0; }
+      else { tr.me = was.me; tr.l = was.l; showToast(MS_TX[lang].likeFail, "err"); }
+      msLikeUI();
+      try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
+    })["catch"](function () {
+      msLiking[key] = false;
+      tr.me = was.me; tr.l = was.l;
+      msLikeUI();
+      showToast(MS_TX[lang].likeFail, "err");
+    });
+  }
+
+  // Like bosilganda yurakcha "sakraydi"
+  function msPop(id, i) {
+    var els = [];
+    if (msOpen === id) {
+      var row = $("ms-list").children[i];
+      if (row) { els.push(row.querySelector(".ms-tr-lk")); }
+    }
+    if (msCur && msCur.album === id && msCur.i === i) { els.push($("mp-lk")); }
+    els.forEach(function (el) {
+      if (!el) { return; }
+      el.classList.remove("pop");
+      void el.offsetWidth;
+      el.classList.add("pop");
+    });
+  }
+
+  // Mini pleyer faqat kutubxona va albom sahifasida. Boshqa ekranlarda (chat,
+  // shaxmat...) pastki joy band — musiqa baribir chalinaveradi.
+  function msBarVisible() {
+    var mp = $("mp");
+    if (!mp) { return; }
+    var cat = $("scr-cat"), alb = $("scr-album");
+    var here = (cat && !cat.classList.contains("hidden")) || (alb && !alb.classList.contains("hidden"));
+    var show = !!(msCur && here);
+    mp.classList.toggle("hidden", !show);
+    document.body.classList.toggle("mp-on", show);
+  }
+
+  /* --- Telegramga yuborish --- */
+  function msSend(id, n) {
+    if (msSending) { return; }
+    var x = MS_TX[lang], t = T[lang];
+    var init = msInitData();
+    if (!init && !MS_LOCAL) { showToast(x.fail, "err"); return; }
+    msSending = true;
+    var pending = showToast(t.sending);
+    var body = { album: id, lang: lang };
+    if (n) { body.track = n; }
+    window.fetch(API_MUSIC + "/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      msSending = false;
+      dismissNote(pending);
+      if (res && res.ok) {
+        var tr = n ? msTracks(id)[n - 1] : null;
+        showToast(tr ? x.sentOne(tr.t) : x.sentAll, "ok");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+        return;
+      }
+      var err = res && res.error;
+      if (err === "not_subscribed") {
+        showToast(t.notSubscribed, "err");
+        try { if (tg && tg.openTelegramLink) { tg.openTelegramLink(MS_CHANNEL); } } catch (e) {}
+        return;
+      }
+      showToast(err === "slow" ? x.slow : x.fail, err === "slow" ? "" : "err");
+    })["catch"](function () {
+      msSending = false;
+      dismissNote(pending);
+      showToast(x.fail, "err");
+    });
+  }
+
+  // Statistikaga: albom shu sessiyada birinchi marta ilovada chalindi
+  function msLogPlay(id) {
+    var init = msInitData();
+    if (!init || !window.fetch) { return; }
+    window.fetch(API_MUSIC + "/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ album: id, action: "play" })
+    })["catch"](function () {});
+  }
+
+  // Trek ostidagi "GARRI POTTER KOLLEKSIYA" havolasi: t.me/<bot>/catalog?startapp=ost_hp1
+  // — ilova ochilishi bilan o'sha albom sahifasi ochiladi.
+  var msPendingOst = null;
+  try {
+    var msSp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
+    if (!msSp) {
+      var msSpm = /[?&#]tgWebAppStartParam=([^&#]+)/.exec((window.location.search || "") + (window.location.hash || ""));
+      if (msSpm) { msSp = decodeURIComponent(msSpm[1]); }
+    }
+    var msOm = /^ost_(hp[1-8])$/i.exec(msSp);
+    if (msOm) { msPendingOst = msOm[1].toLowerCase(); }
+  } catch (e) { msPendingOst = null; }
+
+  function msMaybeOst() {
+    if (!msPendingOst || !msTracks(msPendingOst).length) { return; }
+    var cat = $("scr-cat");
+    if (!cat || cat.classList.contains("hidden")) { return; }
+    var id = msPendingOst;
+    msPendingOst = null;
+    msOpenAlbum(id);
+  }
+
+  function msInit() {
+    try { msData = JSON.parse(window.localStorage.getItem("hp_music") || "null"); } catch (e) { msData = null; }
+    $("ms-back").addEventListener("click", msCloseAlbum);
+    $("ms-play").addEventListener("click", function () {
+      if (!msOpen) { return; }
+      if (msCur && msCur.album === msOpen) { msToggle(); } else { msPlay(msOpen, 0); }
+    });
+    $("ms-dl").addEventListener("click", function () { if (msOpen) { msSend(msOpen, null); } });
+    $("mp-lk").addEventListener("click", function () { if (msCur) { msLike(msCur.album, msCur.i); } });
+    $("mp-pp").addEventListener("click", msToggle);
+    $("mp-next").addEventListener("click", function () { msNext(false); });
+    $("mp-main").addEventListener("click", function () {
+      if (msCur && msOpen !== msCur.album) {
+        if (msOpen) { msOpen = msCur.album; msRenderAlbum(); try { window.scrollTo(0, 0); } catch (e) {} }
+        else { msOpenAlbum(msCur.album); }
+      }
+    });
+    // Ekranlar ko'p joyda to'g'ridan-to'g'ri yashiriladi — mini pleyer o'zi kuzatadi
+    try {
+      if (window.MutationObserver) {
+        var mo = new MutationObserver(msBarVisible);
+        mo.observe($("scr-cat"), { attributes: true, attributeFilter: ["class"] });
+        mo.observe($("scr-album"), { attributes: true, attributeFilter: ["class"] });
+      }
+    } catch (e) {}
+    msFetch();
+  }
+  msInit();
+  // ==/MS==
+  // Katta karta uchun 16:9 rasm; bo'lmasa o'zbekchasi, u ham bo'lmasa plakat.
+  // img/hero — img/wide ning 800px li yengil nusxasi (wide ni bot Telegram kartalari uchun ishlatadi)
+  function heroArt(id) {
+    return "img/hero/" + id + "_" + lang + ".jpg";
+  }
+
+  function renderHero(t) {
+    var hero = $("hero");
+    var i = nextIndex();
+    var n = 0;
+    MOVIES.forEach(function (m) { if (watched[key(m.id)]) { n++; } });
+    var total = MOVIES.length;
+
+    if (i < 0) { hero.classList.add("hidden"); return; }
+    hero.classList.remove("hidden");
+
+    var m = MOVIES[i];
+    var art = $("hero-art");
+    var old = art.querySelector("img");
+    if (old) { old.remove(); }
+
+    var img = document.createElement("img");
+    img.alt = "";
+    img.decoding = "async";
+    // 16:9 rasm (shu til -> o'zbekcha), bo'lmasa plakat
+    imgTry(img, [heroArt(m.id), "img/hero/" + m.id + "_uz.jpg", poster(m.id)], function (step, url) {
+      img.style.objectPosition = url.indexOf("/hero/") === -1 ? "center 20%" : "";
+    });
+    art.insertBefore(img, art.firstChild);
+
+    $("hero-kick").textContent = t.next;
+    $("hero-title").textContent = m[lang];
+
+    var ticks = $("hero-ticks");
+    ticks.innerHTML = "";
+    for (var k = 0; k < total; k++) {
+      var s2 = document.createElement("i");
+      if (k < n) { s2.className = "on"; }
+      ticks.appendChild(s2);
+    }
+    $("hero-meta").textContent = SEEN_WORD[lang] + ": " + n + " / " + total;
+    hero.onclick = function () { play(m.id); };
+  }
+
+  function rowSection(title, count) {
+    var sec = document.createElement("div");
+    sec.className = "rowsec";
+    var head = document.createElement("div");
+    head.className = "rowsec-h";
+    var b = document.createElement("b");
+    b.textContent = title;
+    var c = document.createElement("span");
+    c.textContent = count;
+    head.appendChild(b);
+    head.appendChild(c);
+    sec.appendChild(head);
+    var scroll = document.createElement("div");
+    scroll.className = "rowscroll";
+    sec.appendChild(scroll);
+    sec.scroller = scroll;
+    return sec;
+  }
+
+  var BADGE_SVG = {
+    get: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" ' +
+         'stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M7 10.5l5 5 5-5 M5 20h14"></path></svg>',
+    got: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" ' +
+         'stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>',
+    soon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" ' +
+          'stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>'
+  };
+
+  // Bitta film kartasi. O'ng tepadagi belgi: yuklab olinmagan bo'lsa "yuklab olish",
+  // olingan bo'lsa ✓, hali yuklanmagan bo'lsa soat. ✓ bir marta qo'yilgach qaytarib olinmaydi.
+  // Sarlavha doim ikki qatorda: eng teng bo'ladigan bo'shliqdan bo'linadi
+  // ("Maxfiy / Hujra", "Ajal / Tuhfasi 1"). Kartalar tagi bir tekis turadi.
+  function twoLines(text) {
+    var words = String(text).split(" ");
+    if (words.length < 2) { return [text]; }
+    var best = 1, bestLen = Infinity;
+    for (var i = 1; i < words.length; i++) {
+      var a = words.slice(0, i).join(" ").length, b = words.slice(i).join(" ").length;
+      if (Math.max(a, b) < bestLen) { bestLen = Math.max(a, b); best = i; }
+    }
+    return [words.slice(0, best).join(" "), words.slice(best).join(" ")];
+  }
+
+  function filmCard(m, numeral, t, pending) {
+    var ready = isReady(m.id);
+    var seen = ready && !!watched[key(m.id)];
+
+    var card = document.createElement("div");
+    card.className = "card" + (!ready ? " soon" : (seen ? " seen" : "")) + (pending ? " exam" : "");
+    card.style.background = CARD_BG;
+    if (ready) { card.addEventListener("click", function () { play(m.id); }); }
+
+    var img = document.createElement("img");
+    img.className = "card-img";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.alt = m[lang];
+    img.onload = function () { card.classList.add("has-img"); };
+    imgTry(img, [poster(m.id), "img/" + m.id + "_uz.jpg?v=3"]);
+    card.appendChild(img);
+
+    var veil = document.createElement("span");
+    veil.className = "veil";
+    card.appendChild(veil);
+
+    var num = document.createElement("span");
+    num.className = "numeral";
+    num.textContent = numeral;
+    card.appendChild(num);
+
+    if (!ready) {
+      var clock = document.createElement("span");
+      clock.className = "card-badge";
+      clock.innerHTML = BADGE_SVG.soon;
+      clock.setAttribute("role", "img");
+      clock.setAttribute("aria-label", t.soon + ": " + m[lang]);
+      card.appendChild(clock);
+    } else {
+      var badge = document.createElement("button");
+      badge.type = "button";
+      badge.className = "card-badge";
+      badge.innerHTML = seen ? BADGE_SVG.got : BADGE_SVG.get;
+      badge.setAttribute("aria-label", (seen ? t.seen : t.download) + ": " + m[lang]);
+      badge.addEventListener("click", function (ev) {
+        ev.stopPropagation();
+        if (!seen) { play(m.id); }
+      });
+      card.appendChild(badge);
+    }
+
+    var foot = document.createElement("span");
+    foot.className = "card-foot";
+    var textCol = document.createElement("span");
+    textCol.className = "card-text";
+    var ttl = document.createElement("span");
+    ttl.className = "card-title";
+    twoLines(m[lang]).forEach(function (part) {
+      var line = document.createElement("span");
+      line.className = "card-title-line";
+      line.textContent = part;
+      ttl.appendChild(line);
+    });
+    textCol.appendChild(ttl);
+    foot.appendChild(textCol);
+    card.appendChild(foot);
+
+    return card;
+  }
+
+  // Uzun so'z ("Фантастические") kartaga sig'masa, BARCHA sarlavhalar bir xil
+  // miqdorda kichrayadi - kartalar bir-biridan farq qilmasin.
+  var TITLE_FS = 23;
+  function fitTitles() {
+    var rows = $("rows");
+    if (!rows || !rows.clientWidth) { return; }
+    rows.style.removeProperty("--title-fs");
+    var ratio = 1;
+    var lines = rows.querySelectorAll(".card-title-line");
+    for (var i = 0; i < lines.length; i++) {
+      var need = lines[i].scrollWidth, room = lines[i].clientWidth;
+      if (need > room && room > 0) { ratio = Math.min(ratio, room / need); }
+    }
+    if (ratio < 1) {
+      rows.style.setProperty("--title-fs", Math.floor(TITLE_FS * ratio * 2) / 2 + "px");
+    }
+  }
+  try {
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { fitTitles(); }).observe($("rows"));
+    }
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fitTitles); }
+  } catch (e) {}
+
+  function renderCards(t) {
+    var rows = $("rows");
+    rows.innerHTML = "";
+
+    var hp = rowSection(SERIES_TITLE.hp[lang], MOVIES.length + " " + FILM_WORD[lang]);
+    MOVIES.forEach(function (m, i) {
+      var ready = isReady(m.id);
+      var seen = ready && !!watched[key(m.id)];
+      // Uchinchi holat: film ko'rilgan, lekin bu mavsumning imtihoni topshirilmagan.
+      var pending = seen && examPending(i + 1);
+      hp.scroller.appendChild(filmCard(m, NUMERALS[i], t, pending));
+    });
+    rows.appendChild(hp);
+
+    if (typeof MOVIES_FB !== "undefined" && MOVIES_FB && MOVIES_FB.length) {
+      var fb = rowSection(SERIES_TITLE.fb[lang], MOVIES_FB.length + " " + FILM_WORD[lang]);
+      MOVIES_FB.forEach(function (m) {
+        fb.scroller.appendChild(filmCard(m, m.num, t, false));
+      });
+      rows.appendChild(fb);
+    }
+
+    // Soundtrack javoni (albomlar serverdan kelgan bo'lsa)
+    var msSec = msShelf();
+    if (msSec) { rows.appendChild(msSec); }
+
+    // Kutubxonaning bo'sh javonlari: seriallar, musiqa, kitoblar.
+    var soon = document.createElement("div");
+    soon.className = "rowsec";
+    var soonHead = document.createElement("div");
+    soonHead.className = "rowsec-h";
+    var sb = document.createElement("b");
+    sb.textContent = t.soon;
+    soonHead.appendChild(sb);
+    soon.appendChild(soonHead);
+
+    var tiles = document.createElement("div");
+    tiles.className = "soonrow";
+    var soonItems = SOON_TILES.filter(function (item) { return !(item.key === "music" && msSec); });
+    tiles.style.gridTemplateColumns = "repeat(" + soonItems.length + ",minmax(0,1fr))";
+    soonItems.forEach(function (item) {
+      var tile = document.createElement("div");
+      tile.className = "soontile";
+      tile.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+                       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' +
+                       item.icon + '"></path></svg>';
+      var b = document.createElement("b");
+      b.textContent = item.name[lang];
+      var sp = document.createElement("span");
+      sp.textContent = item.sub ? item.sub[lang] : t.soon;
+      tile.appendChild(b);
+      tile.appendChild(sp);
+      tiles.appendChild(tile);
+    });
+    soon.appendChild(tiles);
+    rows.appendChild(soon);
+    fitTitles();
+  }
+
+  function renderSortCard(t) {
+    var card = $("sort-card");
+    var dot = $("avatar-dot");
+    if (!card) { return; }
+
+    if (house !== "none") {
+      card.classList.add("hidden");
+      dot.classList.add("hidden");
+      return;
+    }
+
+    paintHatSmall($("sort-card-mark"));
+    $("sort-card-title").textContent = t.cardTitle;
+    // Birinchi ogohlantirish nuqtasi: taklif kartasining o'zida
+    $("sort-card-sub").textContent = t.cardSub + " " + t.lockOnce;
+    $("sort-card-btn").textContent = t.sortCta;
+    card.classList.remove("hidden");
+    dot.classList.remove("hidden");
+  }
+
+  function renderWandCard(t) {
+    var card = $("wand-card");
+    if (!card) { return; }
+    // Faqat fakultet bor, tayoqcha yo'q bo'lganda
+    if (house === "none" || wand) { card.classList.add("hidden"); return; }
+    $("wand-card-title").textContent = t.wandCardTitle;
+    $("wand-card-sub").textContent = t.wandCardSub;
+    $("wand-card-btn").textContent = t.wandCta;
+    card.classList.remove("hidden");
+    if ($("avatar-dot")) { $("avatar-dot").classList.remove("hidden"); }
+  }
+
+  function paintHatSmall(el) {
+    if (!el || el.getAttribute("data-done") === "1") { return; }
+    el.innerHTML = "";
+    var img = document.createElement("img");
+    img.src = IMG_DIR + HAT_IMG;
+    img.alt = "";
+    img.onerror = function () {
+      this.onerror = null;
+      this.remove();
+      el.textContent = "?";
+    };
+    el.appendChild(img);
+    el.setAttribute("data-done", "1");
+  }
+
+  /* ---------- HBO SERIALI E'LONI ----------
+     Premyera 25-dekabr 2026. Sanash Toshkent vaqti bilan shu kun boshigacha
+     (24-dekabr 19:00 UTC). Serial kutubxonaga qo'shilgach karta olib tashlanadi. */
+  var SRL_AT = Date.UTC(2026, 11, 24, 19, 0, 0);
+  var SRL_TX = {
+    uz: { chip: "Yangi serial", date: "25-dekabr", sub: "1-mavsum · Hikmatlar Toshi · 8 qism",
+          d: "kun", h: "soat", m: "daqiqa", s: "soniya",
+          t1: "Yuqori sifatli video", t2: "Sifatli dublyaj",
+          note: "Serial chiqishi bilan shu botda bo'ladi — sizga xabar beramiz.",
+          done: "Premyera bo'ldi! Serial tez orada shu yerda.",
+          left: function (d, h) { return d + " kun " + h + " soat qoldi"; }, doneShort: "Premyera bo'ldi!" },
+    ru: { chip: "Новый сериал", date: "25 декабря", sub: "1 сезон · Философский камень · 8 серий",
+          d: "дней", h: "часов", m: "минут", s: "секунд",
+          t1: "Высокое качество видео", t2: "Качественная озвучка",
+          note: "Как только сериал выйдет, он появится в этом боте — мы вам сообщим.",
+          done: "Премьера состоялась! Сериал скоро будет здесь.",
+          left: function (d, h) { return "Осталось " + d + " дн. " + h + " ч."; }, doneShort: "Премьера состоялась!" },
+    en: { chip: "New series", date: "December 25", sub: "Season 1 · Philosopher's Stone · 8 episodes",
+          d: "days", h: "hours", m: "min", s: "sec",
+          t1: "High-quality video", t2: "Quality dubbing",
+          note: "As soon as it's out, it'll be right here in the bot — we'll let you know.",
+          done: "It has premiered! The series is coming here soon.",
+          left: function (d, h) { return d + " days " + h + " h left"; }, doneShort: "It has premiered!" }
+  };
+  var srlTimer = null;
+  var srlMini = null;   // null — hali aniqlanmagan; katta karta faqat BIRINCHI kirishda
+
+  function srlSetMini(on) {
+    srlMini = on;
+    $("srl").classList.toggle("mini", on);
+  }
+
+  function srlTick() {
+    var box = $("srl");
+    if (!box || box.classList.contains("hidden")) { return; }
+    var left = Math.max(0, Math.floor((SRL_AT - Date.now()) / 1000));
+    var over = left <= 0;
+    $("srl-cd").classList.toggle("hidden", over);
+    $("srl-done").classList.toggle("hidden", !over);
+    var x = SRL_TX[lang] || SRL_TX.uz;
+    if (over) {
+      $("srl-mt").textContent = x.doneShort;
+      if (srlTimer) { clearInterval(srlTimer); srlTimer = null; }
+      return;
+    }
+    $("srl-mt").textContent = x.left(Math.floor(left / 86400), Math.floor(left % 86400 / 3600));
+    $("srl-d").textContent = Math.floor(left / 86400);
+    $("srl-h").textContent = Math.floor(left % 86400 / 3600);
+    $("srl-m").textContent = Math.floor(left % 3600 / 60);
+    $("srl-s").textContent = left % 60;
+  }
+
+  function renderSerial() {
+    var box = $("srl");
+    if (!box) { return; }
+    var x = SRL_TX[lang] || SRL_TX.uz;
+    var art = $("srl-art");
+    if (!art.querySelector(".srl-bg")) {
+      var bg = document.createElement("img");
+      bg.className = "srl-bg";
+      bg.alt = "";
+      bg.decoding = "async";
+      imgTry(bg, [IMG_DIR + "serial/bg.jpg"]);
+      art.insertBefore(bg, art.firstChild);
+
+      var logo = document.createElement("img");
+      logo.className = "srl-logo";
+      logo.alt = "Harry Potter";
+      logo.onerror = function () {
+        var tx = document.createElement("span");
+        tx.className = "srl-logo-tx";
+        tx.textContent = "Harry Potter";
+        if (logo.parentNode) { logo.parentNode.replaceChild(tx, logo); }
+      };
+      logo.src = IMG_DIR + "serial/logo.png";
+      art.appendChild(logo);
+
+      // Qor: dekabr premyerasi va kadrdagi qorli maydonga mos
+      var snow = $("srl-snow");
+      for (var k = 0; k < 18; k++) {
+        var f = document.createElement("i");
+        var sz = 2 + Math.random() * 3;
+        f.style.left = (Math.random() * 100) + "%";
+        f.style.width = f.style.height = sz + "px";
+        f.style.opacity = (0.35 + Math.random() * 0.5).toFixed(2);
+        f.style.animationDuration = (6 + Math.random() * 7).toFixed(1) + "s";
+        f.style.animationDelay = (-Math.random() * 12).toFixed(1) + "s";
+        snow.appendChild(f);
+      }
+    }
+    $("srl-chip").textContent = x.chip;
+    $("srl-date").textContent = x.date;
+    $("srl-sub").textContent = x.sub;
+    $("srl-dl").textContent = x.d;
+    $("srl-hl").textContent = x.h;
+    $("srl-ml").textContent = x.m;
+    $("srl-sl").textContent = x.s;
+    $("srl-t1").textContent = x.t1;
+    $("srl-t2").textContent = x.t2;
+    $("srl-note").textContent = x.note;
+    $("srl-done").textContent = x.done;
+    $("srl-mk").textContent = x.date;
+    if (srlMini === null) {
+      // Birinchi kirish: katta karta. Belgi darhol qo'yiladi — shu seansda karta
+      // katta qoladi, keyingi kirishda esa ixcham qator bo'lib chiqadi.
+      var seen = false;
+      try { seen = window.localStorage.getItem(TK("hp_srl_seen")) === "1"; } catch (e) {}
+      try { window.localStorage.setItem(TK("hp_srl_seen"), "1"); } catch (e) {}
+      srlSetMini(seen);
+      box.addEventListener("click", function () { srlSetMini(!srlMini); });
+    }
+    box.classList.remove("hidden");
+    srlTick();
+    if (!srlTimer && SRL_AT > Date.now()) { srlTimer = setInterval(srlTick, 1000); }
+  }
+
+  function renderCatalog() {
+    var t = T[lang];
+    $("cat-kicker").textContent = t.title;
+    $("cat-title").textContent = LIB_TITLE[lang];
+    $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
+    renderHero(t);
+    renderSerial();
+    renderCards(t);
+    renderWorldBtn();
+  }
+
+  /* Kutubxona tepasidagi tugma. Yo'lni hali boshlamagan odam 9¾ ni emas,
+     MUHRLANGAN XATNI ko'radi (asarda ham hammasi xatdan boshlanadi):
+       - xatni umuman ochmagan  -> muhr sekin pulsda
+       - ochgan, lekin "Keyinroq" bosgan -> xat, pulssiz
+       - yo'lga chiqqan yoki saralangan  -> 9¾
+     Ko'rish/sinov rejimida ham shu qoida ishlaydi. */
+  function letterStage() {
+    // Bilet olinmaguncha (yoki saralanmaguncha) kutubxonada 9¾ EMAS, xat turadi:
+    // odam hali yo'lda, platformaga chiqishga haqqi yo'q.
+    if (hasHouse() || walHas("ticket")) { return "world"; }
+    var seen = false;
+    try { seen = window.localStorage.getItem(TK("hp_onb_letter")) === "1"; } catch (e) {}
+    return seen ? "letter" : "new";
+  }
+
+  function renderWorldBtn() {
+    var btn = $("world-btn");
+    if (!btn) { return; }
+    var stage = letterStage();
+    var isLetter = stage !== "world";
+    $("coin-934").classList.toggle("hidden", isLetter);
+    $("coin-lt").classList.toggle("hidden", !isLetter);
+    btn.classList.toggle("yangi", stage === "new");
+    btn.setAttribute("aria-label", isLetter ? al("letterAria") : "9¾");
+  }
+
+  function openCatalog(code, remember) {
+    lang = code;
+    applyXT();
+    if (remember) { saveLang(code); }
+    stopSortTimer();
+    $("scr-detail").classList.add("hidden");
+    $("scr-lang").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-hall-full").classList.add("hidden");
+    $("scr-feed-full").classList.add("hidden");
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.add("hidden");
+    $("scr-cup").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    renderCupStrip();
+    maybeAutoSort();
+    maybeChessLink();
+    maybeWorldLink();
+    msMaybeOst();
+  }
+
+  // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda
+  // katalog o'rniga to'g'ridan-to'g'ri saralash boshlanadi. Bir marta
+  // ishlaydi va majburiy emas: saralash ekranidagi "Ortga" katalogga qaytaradi.
+  var pendingSort = false;
+  var cameForSort = false;      // bot taklifi orqali kelindimi
+  try {
+    pendingSort = /(^|[?&])screen=sort(&|$)/.test(window.location.search || "");
+  } catch (e) { pendingSort = false; }
+
+  function maybeAutoSort() {
+    if (!pendingSort) { return; }
+    pendingSort = false;
+    if (house === "none") {
+      cameForSort = true;
+      startSorting();
+    }
+  }
+
+  // Bot orqali saralashga kelgan foydalanuvchi uchun chiqish yo'li.
+  // Oddiy holatda "Ortga" til tanlashga qaytaradi, lekin bu yerda til
+  // allaqachon tanlangan - o'tkazib yuborgan odam kinolar ro'yxatini
+  // ko'rishi kerak (spetsifikatsiya 7-bo'lim).
+  function leaveSort() {
+    if (!cameForSort) { return false; }
+    cameForSort = false;
+    openCatalog(lang, false);
+    return true;
+  }
+
+  /* ---------- PROFIL ---------- */
+
+  function tgUser() {
+    try {
+      var u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+      return u && u.id ? u : null;
+    } catch (e) { return null; }
+  }
+
+  function fullName(u) {
+    var n = (u.first_name || "") + " " + (u.last_name || "");
+    return n.trim() || u.username || "";
+  }
+
+  function initials(name) {
+    var parts = name.split(/\s+/).filter(Boolean);
+    if (!parts.length) { return "?"; }
+    var s = parts[0].charAt(0);
+    if (parts.length > 1) { s += parts[1].charAt(0); }
+    return s.toUpperCase();
+  }
+
+  function countFor(code) {
+    var n = 0;
+    MOVIES.forEach(function (m) { if (watched[code + ":" + m.id]) { n++; } });
+    return n;
+  }
+
+  function uniqueWatched() {
+    var seen = {};
+    MOVIES.forEach(function (m) {
+      LANGS.forEach(function (l) {
+        if (watched[l.code + ":" + m.id]) { seen[m.id] = true; }
+      });
+    });
+    var n = 0;
+    for (var k in seen) { if (seen[k]) { n++; } }
+    return n;
+  }
+
+  function fillAvatar(el, u, name, big) {
+    el.innerHTML = "";
+    if (u && u.photo_url) {
+      var img = document.createElement("img");
+      img.src = u.photo_url;
+      img.alt = "";
+      img.onerror = function () {
+        this.remove();
+        el.textContent = initials(name);
+      };
+      el.appendChild(img);
+    } else {
+      el.textContent = big ? initials(name) : initials(name);
+    }
+  }
+
+  function renderProfile() {
+    var t = T[lang];
+    var u = tgUser();
+    var name = u ? fullName(u) : t.guest;
+
+    $("prof-kicker").textContent = t.profKicker;
+    $("prof-heading").textContent = t.profTitle;
+    $("prof-back-txt").textContent = t.back;
+    $("stats-label").textContent = t.stats;
+    $("total-label").textContent = t.total;
+    var h = HOUSES[house] || HOUSES.none;
+    $("house-label").textContent = t.houseLbl;
+    $("house-name").textContent = h[lang];
+    $("house-note").textContent = house === "none" ? t.houseNote : t.houseSet;
+    paintCrest($("house-crest"), house, h.crest);
+    if (house === "none") { $("house-crest").classList.remove("filled"); }
+    else { $("house-crest").classList.add("filled"); }
+
+    var cta = $("sort-cta");
+    var again = $("resort-btn");
+    cta.textContent = t.sortCta;
+    again.textContent = t.resort;
+    if (house === "none") {
+      cta.classList.remove("hidden");
+      again.classList.add("hidden");
+    } else {
+      cta.classList.add("hidden");
+      // Fakultet UMRBOD: qayta saralanish faqat muhlat ichida ko'rinadi.
+      // Server ham rad etadi, bu yerda tugma shunchaki yashiriladi.
+      var me = cupMe();
+      if (me.can_resort) { again.classList.remove("hidden"); }
+      else { again.classList.add("hidden"); }
+    }
+
+    $("prof-name").textContent = name;
+    $("prof-tag").textContent = u
+      ? (u.username ? "@" + u.username : "ID " + u.id)
+      : t.noTag;
+
+    fillAvatar($("prof-pic"), u, name, true);
+
+    var rows = $("stat-rows");
+    rows.innerHTML = "";
+    LANGS.forEach(function (l) {
+      var n = countFor(l.code);
+      var total = MOVIES.length;
+
+      var row = document.createElement("div");
+      row.className = "stat-row";
+
+      var chip = document.createElement("span");
+      chip.className = "stat-chip";
+      chip.style.background = LANG_GRADS[l.code];
+      chip.textContent = l.code.toUpperCase();
+
+      var bar = document.createElement("span");
+      bar.className = "stat-bar";
+      var fill = document.createElement("span");
+      fill.className = "stat-fill";
+      fill.style.width = Math.round(n / total * 100) + "%";
+      bar.appendChild(fill);
+
+      var num = document.createElement("span");
+      num.className = "stat-num" + (n === total ? " full" : "");
+      num.textContent = n + "/" + total;
+
+      row.appendChild(chip);
+      row.appendChild(bar);
+      row.appendChild(num);
+      rows.appendChild(row);
+    });
+
+    $("total-val").textContent = uniqueWatched() + " / " + MOVIES.length;
+
+    renderWandPanel(t);
+    renderChecklist(t);
+  }
+
+  function renderWandPanel(t) {
+    var panel = $("wand-panel");
+    // Tayoqcha faqat fakultet aniqlangach ochiladi
+    if (house === "none") { panel.classList.add("hidden"); return; }
+    panel.classList.remove("hidden");
+
+    $("wand-label").textContent = t.wandLbl;
+    $("wand-cta").textContent = t.wandCta;
+    $("wand-again").textContent = t.wandAgain;
+    $("wand-more").textContent = t.wandMore;
+
+    var icon = $("wand-icon");
+
+    if (wand) {
+      icon.innerHTML = SVG_WAND;
+      $("wand-wood").textContent = WOODS[wand.wood][lang];
+      $("wand-l1").textContent = CORES[wand.core][lang];
+      $("wand-l2").textContent = FLEX[wand.flex].len + " " + t.inch;
+      $("wand-l3").textContent = FLEX[wand.flex][lang];
+      $("wand-more").classList.remove("hidden");
+      $("wand-cta").classList.add("hidden");
+      $("wand-again").classList.remove("hidden");
+    } else {
+      icon.innerHTML = SVG_WAND;
+      $("wand-wood").textContent = t.wandNone;
+      $("wand-l1").textContent = t.wandNote;
+      $("wand-l2").textContent = "";
+      $("wand-l3").textContent = "";
+      $("wand-more").classList.add("hidden");
+      $("wand-cta").classList.remove("hidden");
+      $("wand-again").classList.add("hidden");
+    }
+  }
+
+  /* ---------- CHECKLIST ---------- */
+
+  function renderChecklist(t) {
+    var box = $("checklist");
+    box.innerHTML = "";
+
+    var items = [
+      { label: t.ckHouse,    state: house !== "none" ? "done" : "todo" },
+      { label: t.ckWand,     state: wand ? "done" : (house !== "none" ? "todo" : "soon") },
+      { label: t.ckPatronus, state: "soon" },
+      { label: t.ckPet,      state: "soon" }
+    ];
+
+    items.forEach(function (it) {
+      var el = document.createElement("span");
+      el.className = "ck-item " + it.state;
+      var dot = document.createElement("span");
+      dot.className = "ck-dot";
+      dot.textContent = "\u2713";
+      var tx = document.createElement("span");
+      tx.textContent = it.label;
+      el.appendChild(dot);
+      el.appendChild(tx);
+      box.appendChild(el);
+    });
+  }
+
+  /* ---------- TAYOQCHA: BATAFSIL ---------- */
+
+  function openWandDetail() {
+    if (!wand) { return; }
+    var t = T[lang];
+    var wd = WOODS[wand.wood], cr = CORES[wand.core], fl = FLEX[wand.flex];
+
+    $("det-kicker").textContent = t.detKicker;
+    $("det-back-txt").textContent = t.back;
+
+    $("det-art").innerHTML = SVG_WAND;
+    $("det-title").textContent = wd[lang];
+    $("det-spec").textContent = cr[lang] + " \u00b7 " + fl.len + " " + t.inch + " \u00b7 " + fl[lang];
+
+    var key = wand.wood + "_" + wand.core;
+    var fam = FAMOUS[key];
+    if (fam) {
+      $("det-famous-icon").innerHTML = SVG_WAND;
+      $("det-famous-lbl").textContent = t.famousLbl;
+      $("det-famous-who").textContent = fam[lang];
+      $("det-famous").classList.remove("hidden");
+    } else {
+      $("det-famous").classList.add("hidden");
+    }
+
+    $("det-h-wood").textContent = t.hWood;
+    $("det-wood").textContent = WOOD_LORE[wand.wood][lang];
+    $("det-h-core").textContent = t.hCore;
+    $("det-core").textContent = CORE_LORE[wand.core][lang];
+
+    $("det-h-rare").textContent = t.hRare;
+    $("det-rk1").textContent = t.rareCore;
+    $("det-rv1").textContent = RARITY_CORE[wand.core] + "%";
+    $("det-rk2").textContent = t.rarePair;
+    $("det-rv2").textContent = RARITY_PAIR[wand.core] + "%";
+
+    hideSortScreens();
+    $("scr-prof").classList.add("hidden");
+    $("scr-detail").classList.remove("hidden");
+  }
+
+  function closeWandDetail() {
+    $("scr-detail").classList.add("hidden");
+    openProfile();
+  }
+
+  /* ---------- UMUMIY SAYOHAT DVIGATELI ----------
+     Saralash, tayoqcha va kelajakdagi patronus/hayvon/fan uchun
+     bitta mexanika: kirish -> savollar -> o'ylanish -> natija.
+     Har sayohat o'z konfiguratsiyasini beradi.                        */
+
+  var QUEST = null;
+  var qIdx = 0, qScore = null, qPicks = [], qBusy = false, qTimer = null;
+
+  function stopSortTimer() {
+    if (qTimer) { clearTimeout(qTimer); qTimer = null; }
+    qBusy = false;
+  }
+
+  function pickOne(arr) {
+    if (!arr || !arr.length) { return ""; }
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function hideSortScreens() {
+    $("scr-detail").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+  }
+
+  // 1-bosqich: tanishuv
+  function startQuest(cfg) {
+    QUEST = cfg;
+    var v = cfg.voice[lang];
+    stopSortTimer();
+    hideSortScreens();
+    if (cfg.mark) { cfg.mark($("hat-mark")); }
+    $("hat-top").textContent = v.introTop;
+    $("hat-mid").textContent = v.introMid;
+    $("hat-bot").textContent = v.introBot;
+    $("hat-go").textContent = v.ready;
+    $("scr-hat").classList.remove("hidden");
+  }
+
+  // 2-bosqich: savollar
+  function beginQuestions() {
+    if (!QUEST) { return; }
+    stopSortTimer();
+    qIdx = 0;
+    qPicks = [];
+    qScore = {};
+    hideSortScreens();
+    $("scr-sort").classList.remove("hidden");
+    renderSortQ();
+  }
+
+  function scoreFor(idx, opt, sign) {
+    var w = QUEST.q[idx].w[opt] || {};
+    var mult = QUEST.lastWeight && idx === QUEST.q.length - 1 ? 2 : 1;
+    for (var k in w) {
+      qScore[k] = (qScore[k] || 0) + sign * w[k] * mult;
+    }
+  }
+
+  function sortBack() {
+    if (qBusy || !QUEST) { return; }
+    if (qIdx === 0) {
+      hideSortScreens();
+      if (journey) { jrQuit(); return; }
+      if (leaveSort()) { return; }
+      openProfile();
+      return;
+    }
+    qIdx--;
+    scoreFor(qIdx, qPicks.pop(), -1);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+    renderSortQ();
+  }
+
+  function renderSortQ() {
+    var t = T[lang];
+    var v = QUEST.voice[lang];
+    var text = QUEST.q[qIdx][lang];
+
+    $("react-box").classList.add("hidden");
+    $("sort-opts").classList.remove("hidden");
+    $("hat-say").classList.remove("hidden");
+    $("sort-q").classList.remove("hidden");
+
+    var bar = $("sort-bar");
+    bar.innerHTML = "";
+    for (var i = 0; i < QUEST.q.length; i++) {
+      var seg = document.createElement("span");
+      if (i <= qIdx) { seg.className = "on"; }
+      bar.appendChild(seg);
+    }
+
+    $("sort-step").textContent = t.step(qIdx + 1, QUEST.q.length);
+    $("sort-back-txt").textContent = qIdx === 0 ? t.sortExit : t.back;
+    $("hat-say").textContent = pickOne(v.before[qIdx]);
+    $("sort-q").textContent = text.q;
+    paintSortPic();
+
+    var box = $("sort-opts");
+    box.innerHTML = "";
+    text.a.forEach(function (label, i) {
+      var b = document.createElement("button");
+      b.className = "sort-opt";
+      b.textContent = label;
+      b.addEventListener("click", function () { answerSort(i); });
+      box.appendChild(b);
+    });
+  }
+
+  // Savolga mos rasm (faqat saralashda bor). Keyingisi oldindan yuklab qo'yiladi.
+  function paintSortPic() {
+    var wrap = $("sort-pic"), img = $("sort-pic-img");
+    var src = QUEST.q[qIdx].img;
+    var scr = $("scr-sort");
+    if (!src) { wrap.classList.add("hidden"); scr.classList.remove("sq-has-pic"); return; }
+    wrap.classList.remove("hidden");
+    scr.classList.add("sq-has-pic");
+    if (img.getAttribute("src") !== src) {
+      img.classList.remove("on");
+      img.onload = function () { img.classList.add("on"); };
+      img.src = src;
+      if (img.complete && img.naturalWidth) { img.classList.add("on"); }
+    }
+    var next = QUEST.q[qIdx + 1];
+    if (next && next.img) { try { (new Image()).src = next.img; } catch (e) {} }
+  }
+
+  function answerSort(i) {
+    if (qBusy) { return; }
+    qBusy = true;
+
+    scoreFor(qIdx, i, 1);
+    qPicks.push(i);
+
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+
+    $("hat-say").classList.add("hidden");
+    $("sort-q").classList.add("hidden");
+    $("sort-opts").classList.add("hidden");
+    var line = pickOne(QUEST.voice[lang].after);
+    $("react-line").textContent = line;
+    $("react-box").classList.remove("hidden");
+
+    qIdx++;
+    qTimer = setTimeout(function () {
+      qBusy = false;
+      if (qIdx < QUEST.q.length) { renderSortQ(); }
+      else { runThinking(); }
+    }, readMs(line));
+  }
+
+  // 3-bosqich: o'ylanish
+  function runThinking() {
+    var lines = QUEST.voice[lang].think;
+    hideSortScreens();
+    $("scr-think").classList.remove("hidden");
+
+    var n = 0;
+    function step() {
+      if (n >= lines.length) { QUEST.finish(); return; }
+      var el = $("think-line");
+      var line = lines[n];
+      el.textContent = line;
+      el.className = "think-line";
+      try { void el.offsetWidth; } catch (e) {}
+      n++;
+      qTimer = setTimeout(step, readMs(line));
+    }
+    step();
+  }
+
+  // Berilgan ro'yxatdan eng ko'p ball to'plaganini tanlaydi
+  function topOf(keys, tieKey) {
+    var best = null, top = -1, tied = [];
+    for (var i = 0; i < keys.length; i++) {
+      var v = qScore[keys[i]] || 0;
+      if (v > top) { top = v; best = keys[i]; tied = [keys[i]]; }
+      else if (v === top) { tied.push(keys[i]); }
+    }
+    if (tied.length > 1 && tieKey && tied.indexOf(tieKey) >= 0) { return tieKey; }
+    return best;
+  }
+
+  /* ---------- SARALASH ---------- */
+
+  var HOUSE_IDS = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+
+  var QUEST_HOUSE = {
+    id: "house",
+    q: SORTING,
+    voice: HAT,
+    lastWeight: true,
+    mark: paintHat,
+    finish: finishSorting
+  };
+
+  function startSorting() { startQuest(QUEST_HOUSE); }
+
+  // Fakultet umrbod bo'lgani uchun tasdiq SAVOLLARDAN OLDIN so'raladi.
+  // Yetti savolga javob bergandan keyingi ogohlantirish - ogohlantirish
+  // emas, tuzoq. Tayoqcha uchun bu shart emas - u o'zgartirilishi mumkin.
+  function confirmSorting() {
+    if (QUEST !== QUEST_HOUSE) { beginQuestions(); return; }
+    var t = T[lang];
+
+    function go(agreed) {
+      if (!agreed) { return; }
+      if (!jrPreview) { report("sort_start", "1"); }     // boshlaganlar/tugatganlar nisbati uchun
+      beginQuestions();
+    }
+
+    try {
+      if (tg && tg.showPopup) {
+        tg.showPopup({
+          title: t.lockTitle,
+          message: t.lockAsk,
+          buttons: [
+            { id: "go", type: "default", text: t.lockYes },
+            { id: "no", type: "cancel", text: t.lockNo }
+          ]
+        }, function (id) { go(id === "go"); });
+        return;
+      }
+      if (tg && tg.showConfirm) {
+        tg.showConfirm(t.lockAsk, go);
+        return;
+      }
+    } catch (e) {}
+    go(window.confirm ? window.confirm(t.lockAsk) : true);
+  }
+
+  function pickHouse() {
+    // Tenglikda oxirgi savoldagi tanlov hal qiladi
+    var lastPick = qPicks[qPicks.length - 1];
+    var lastW = SORTING[SORTING.length - 1].w[lastPick] || {};
+    var tie = null;
+    for (var k in lastW) { if (lastW[k] === 3) { tie = k; } }
+    return topOf(HOUSE_IDS, tie);
+  }
+
+  function finishSorting() {
+    var id = pickHouse();
+    if (jrPreview) { applyHouse(id); } else {
+      setHouse(id);
+      reportHouse(id);
+    }
+
+    var t = T[lang];
+    var h = HOUSES[id];
+    paintCrest($("rv-crest"), id, h.crest);
+    $("rv-kicker").textContent = t.rvKicker;
+    $("rv-place").textContent = HAT[lang].place;
+    $("rv-name").textContent = h[lang];
+    $("rv-sub").textContent = "";
+    $("rv-sub").classList.add("hidden");
+    // Uchinchi ogohlantirish nuqtasi: natija e'lon qilingandan keyin.
+    // Ohang tantanali, xavotirli emas.
+    $("rv-note").textContent = ((h["note_" + lang] || "") + " " + t.lockFinal).trim();
+    $("rv-done").textContent = journey ? al("rvHouse") : t.rvDone;
+
+    hideSortScreens();
+    $("scr-reveal").classList.remove("hidden");
+
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
+  }
+
+  /* ---------- TAYOQCHA ---------- */
+
+  var CORE_IDS = ["phoenix", "dragon", "unicorn"];
+  var WOOD_IDS = ["oak", "yew", "cherry", "holly", "aspen", "walnut"];
+  var FLEX_IDS = ["rigid", "springy", "supple", "yielding"];
+
+  var QUEST_WAND = {
+    id: "wand",
+    q: WANDQ,
+    voice: OLLI,
+    lastWeight: false,
+    mark: paintWandMark,
+    finish: finishWand
+  };
+
+  function startWand() { startQuest(QUEST_WAND); }
+
+  function paintWandMark(el) {
+    drawSvg(el, SVG_SHELF, "hat-mark art art-shelf");
+  }
+
+  function finishWand() {
+    var w = {
+      wood: topOf(WOOD_IDS),
+      core: topOf(CORE_IDS),
+      flex: topOf(FLEX_IDS)
+    };
+    if (jrPreview) { pv.wand = w; } else {
+      setWand(w);
+      reportWand(w);
+      // Olivanderda tayoqcha 7 galleon turadi (asardagi narx)
+      if (walHas("vault") && !walHas("wand")) { walApi("buy", "wand", null); }
+    }
+
+    var t = T[lang];
+    var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
+
+    drawSvg($("rv-crest"), SVG_WAND, "reveal-crest art art-wand");
+    $("rv-kicker").textContent = t.wandKicker;
+    $("rv-place").textContent = OLLI[lang].place;
+    $("rv-name").textContent = wd[lang] + ", " + cr[lang];
+    $("rv-sub").textContent = fl.len + " " + t.inch + ", " + fl[lang];
+    $("rv-sub").classList.remove("hidden");
+    $("rv-note").textContent = wd["t_" + lang] + ". " + cr["note_" + lang];
+    $("rv-done").textContent = journey ? al("rvWand") : t.rvDone;
+
+    hideSortScreens();
+    $("scr-reveal").classList.remove("hidden");
+
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
+  }
+
+  function wandLabel(w, code) {
+    if (!w || !WOODS[w.wood] || !CORES[w.core]) { return ""; }
+    return WOODS[w.wood][code] + ", " + CORES[w.core][code];
+  }
+
+  function closeReveal() {
+    $("scr-reveal").classList.add("hidden");
+    if (journey) {
+      // Tayoqchadan keyin - xiyobonga, saralanishdan keyin - Xogvartsga
+      var was = journey;
+      journey = null;
+      if (was === "house" && endPreview()) { return; }
+      // Tayoqcha olingach xat ochiladi: kundalikda belgi qo'yilgani ko'rinadi
+      // va keyingi ish ajralib turadi. Saralangach - Xogvartsga.
+      if (was === "wand" && !hasHouse()) {
+        jrHideAll();
+        $("scr-cat").classList.remove("hidden");
+        renderCatalog();
+        openLetter(false);
+        return;
+      }
+      enterWorld();
+      return;
+    }
+    openProfile();
+  }
+
+
+
+
+  // ---------------------------------------------------------------- SEHRLI OLAM (A)
+  // 9¾ ortidagi bosh sahifa: profil, kubok, bo'limlar. Xarita (WORLD_MAPS) keyinroq
+  // ikkinchi ko'rinish bo'lib qaytadi, hozircha 9¾ shu yerga olib keladi.
+  var HUB_TX = {
+    kick: { uz: "Xogvarts qasri", ru: "Замок Хогвартс", en: "Hogwarts Castle" },
+    title: { uz: "Sehrli olam", ru: "Волшебный мир", en: "The Wizarding World" },
+    pts: { uz: "ball", ru: "очков", en: "points" },
+    wandT: { uz: "Tayoqcha", ru: "Волшебная палочка", en: "Wand" },
+    wandNone: { uz: "Olivander do'koni: tayoqcha sizni tanlaydi",
+                ru: "Лавка Олливандера: палочка выбирает волшебника",
+                en: "Ollivanders: the wand chooses the wizard" },
+    chessNone: { uz: "Botlar va do'stlar bilan jang", ru: "Бои с ботами и друзьями", en: "Battle bots and friends" },
+    rating: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" }
+  };
+
+  var HUB_ICONS = {
+    tasks: "M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3",
+    chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
+    chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
+    refs: "M9 5.5a3 3 0 1 1 0 6a3 3 0 1 1 0-6z M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5",
+    wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2"
+  };
+
+  var hubChess = null;     // {rating, title, games} - shaxmat serveridan
+
+  function hubSvg(d) {
+    if (!d) { return ""; }
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + d + '"></path></svg>';
+  }
+
+  function hubVisible() {
+    var el = $("scr-hub");
+    return !!el && !el.classList.contains("hidden");
+  }
+
+  // Bo'limga o'tish: "Ortga" bosilganda shu sahifaga qaytadi.
+  function hubGo(fn) {
+    return function () {
+      worldFrom = "hub";
+      $("scr-hub").classList.add("hidden");
+      hubBackButton(false);
+      fn();
+    };
+  }
+
+  function renderHub() {
+    var t = T[lang];
+    var c = cupT();
+    var me = cupMe();
+    var hid = me.house || house || "none";
+    var hh = HOUSES[hid] || HOUSES.none;
+    var root = $("scr-hub");
+    root.style.setProperty("--hub-rgb", hh.rgb);
+    root.style.setProperty("--hub-accent", hh.accent);
+
+    $("hub-back").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13");
+    $("hub-gear").innerHTML = worldIcon("gear");
+    $("hub-kick").textContent = HUB_TX.kick[lang];
+    $("hub-title").textContent = HUB_TX.title[lang];
+
+    // Profil kartasi
+    var u = tgUser();
+    $("hub-name").textContent = u ? (u.first_name || fullName(u)) : t.guest;
+    var rank = refsData && refsData.me && refsData.me.rank_name;
+    $("hub-house").textContent = hid === "none" ? t.houseNote : (cupHouseName(hid) + (rank ? " · " + rank : ""));
+    paintCrest($("hub-crest"), hid, hh.crest);
+    $("hub-pts").textContent = String(me.points || 0);
+    $("hub-pts-l").textContent = HUB_TX.pts[lang];
+
+    // Fakultetsiz: avval saralanish
+    var sort = $("hub-sort");
+    if (hid === "none") {
+      sort.classList.remove("hidden");
+      paintHatSmall($("hub-sort-mark"));
+      $("hub-sort-t").textContent = t.cardTitle;
+      $("hub-sort-s").textContent = t.cardSub;
+    } else {
+      sort.classList.add("hidden");
+    }
+
+    // Kubok: to'rtta qum soati
+    var cup = $("hub-cup");
+    if (!cupData) {
+      cup.classList.add("hidden");
+    } else {
+      cup.classList.remove("hidden");
+      $("hub-cup-t").textContent = t.cupTitle;
+      $("hub-cup-time").textContent = cupTimer(t);
+      var list = cupSorted();
+      var top = 0;
+      list.forEach(function (row) { if ((row.total_points || 0) > top) { top = row.total_points || 0; } });
+      var scale = Math.max(top, SCALE_FLOOR);
+      var tubes = $("hub-tubes");
+      tubes.innerHTML = "";
+      list.forEach(function (row) {
+        var rh = HOUSES[row.house] || HOUSES.none;
+        var cell = document.createElement("span");
+        cell.className = "hub-tube" + (row.house === hid ? " mine" : "");
+        cell.style.setProperty("--tc-rgb", rh.rgb);
+        var g = document.createElement("span");
+        g.className = "hub-tube-g";
+        var f = document.createElement("span");
+        f.className = "hub-tube-f";
+        f.style.height = Math.max(6, Math.round((row.total_points || 0) / scale * 100)) + "%";
+        f.style.background = "linear-gradient(" + rh.accent + ", " + (rh.accent2 || rh.accent) + ")";
+        g.appendChild(f);
+        cell.appendChild(g);
+        var n = document.createElement("span");
+        n.className = "hub-tube-n";
+        n.textContent = cupHouseName(row.house);
+        cell.appendChild(n);
+        var p = document.createElement("span");
+        p.className = "hub-tube-p";
+        p.style.color = rh.accent;
+        p.textContent = String(row.total_points || 0);
+        cell.appendChild(p);
+        tubes.appendChild(cell);
+      });
+    }
+
+    // Bo'limlar
+    var grid = $("hub-grid");
+    grid.innerHTML = "";
+    var tasksN = worldTasksN();
+    var chatN = worldChatN();
+    var refsN = (refsData && refsData.me && refsData.me.refs) || 0;
+    var tiles = [
+      { key: "tasks", rgb: "232,132,60", title: c.tasksT, sub: c.tasksS, badge: tasksN, go: openTasks },
+      { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
+      { key: "chess", rgb: "165,127,224", title: c.chessT,
+        sub: hubChess && hubChess.rating ? HUB_TX.rating[lang].replace("%d", hubChess.rating) : HUB_TX.chessNone[lang],
+        badge: 0, go: openChessHub, needHouse: true },
+      { key: "refs", rgb: "var(--gold-rgb)", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
+    ];
+    tiles.forEach(function (tile) {
+      if (tile.needHouse && hid === "none") { return; }
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "hub-tile";
+      el.style.setProperty("--tc-rgb", tile.rgb);
+      el.innerHTML = '<span class="hub-tile-ic">' + hubSvg(HUB_ICONS[tile.key]) + "</span>";
+      if (tile.badge > 0) {
+        var bd = document.createElement("i");
+        bd.textContent = tile.badge > 99 ? "99+" : String(tile.badge);
+        el.appendChild(bd);
+      }
+      var bt = document.createElement("b");
+      bt.textContent = tile.title;
+      el.appendChild(bt);
+      var sp = document.createElement("span");
+      sp.textContent = tile.sub;
+      el.appendChild(sp);
+      el.onclick = hubGo(tile.go);
+      grid.appendChild(el);
+    });
+
+    // Tayoqcha
+    $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
+    $("hub-wand-t").textContent = HUB_TX.wandT[lang];
+    $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
+  }
+
+  function hubBackButton(on) {
+    try {
+      if (!tg || !tg.BackButton) { return; }
+      if (on) { tg.BackButton.show(); tg.BackButton.onClick(leaveHub); }
+      else { tg.BackButton.offClick(leaveHub); tg.BackButton.hide(); }
+    } catch (e) {}
+  }
+
+  function openHub() {
+    if (!hasHouse()) { openAlley(); return; }
+    jrBack(null);
+    stopSortTimer();
+    ["scr-cat", "scr-world", "scr-alley", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
+     "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
+     "scr-chess-hub", "scr-chess-stats"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+    $("hub-set").classList.add("hidden");
+    $("scr-hub").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    renderHub();
+    hubBackButton(true);
+
+    // Sonlar va reyting fonda yangilanadi
+    fetchRefs(function () { if (hubVisible()) { renderHub(); } });
+    fetchTasks(function () { if (hubVisible()) { renderHub(); } });
+    try { chatRefreshCounts(); } catch (e) {}
+    try { jrAdminCheck(); } catch (e) {}
+    try {
+      chessApi("mine").then(function (res) {
+        if (res && res.rating) { hubChess = res.rating; if (hubVisible()) { renderHub(); } }
+      })["catch"](function () {});
+    } catch (e) {}
+  }
+
+  function leaveHub() {
+    $("scr-hub").classList.add("hidden");
+    hubBackButton(false);
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+  }
+
+  function renderHubSettings() {
+    var cur = readStart();
+    $("hub-set-title").textContent = W_SET_TX.title[lang];
+    $("hub-set-note").textContent = {
+      uz: "Sehrli olam tanlansa, ilovani ochganingizda to'g'ridan-to'g'ri shu yerga tushasiz.",
+      ru: "Если выбрать волшебный мир, приложение будет открываться сразу здесь.",
+      en: "Choose the wizarding world and the app will open straight here."
+    }[lang];
+    $("hub-set-close").textContent = W_SET_TX.close[lang];
+    $("hub-set-lib").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13") +
+                                 "<span>" + W_SET_TX.lib[lang] + "</span>";
+    $("hub-set-hub").innerHTML = '<span class="n934">9¾</span><span>' + HUB_TX.title[lang] + "</span>";
+    $("hub-set-lib").className = cur === "lib" ? "on" : "";
+    $("hub-set-pv").classList.toggle("hidden", !jrIsAdmin());
+    $("hub-pv-ic").innerHTML = hubSvg(AL_ICONS.letter);
+    $("hub-pv-t").textContent = al("pvBtn");
+    $("hub-pv-s").textContent = al("pvNote");
+    $("hub-set-hub").className = cur === "world" ? "on" : "";
+  }
+
+  // ---------------------------------------------------------------- DIAGON XIYOBONI
+  // Saralanmagan o'quvchi 9¾ dan to'g'ri Xogvartsga tushmaydi - asardagi yo'lni
+  // bosib o'tadi: maktub -> g'isht devor -> Diagon xiyoboni (Olivander) ->
+  // Kings Kross, 9¾ -> Xogvarts ekspressi -> Katta zal (saralanish) -> Xogvarts.
+  var LETTER_KEY = TK("hp_letter"), TRAIN_KEY = TK("hp_train");
+  var journey = null;        // "wand" | "house": savollar yo'l ichidan boshlangan
+  var jrBackFn = null;
+  var trTimer = null;
+  // Ko'rish rejimi (adminlar): o'quvchi saralanmagandek ko'rinadi, hech narsa saqlanmaydi
+  var jrPreview = false;
+  var pv = { wand: null, letter: false, train: false };
+  var jrAdminAsked = false;
+
+  var AL_TX = {
+    kick: { uz: "London", ru: "Лондон", en: "London" },
+    title: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    intro: { uz: "Maktubdagi ro'yxat bo'yicha yuring — Xogvartsga yo'l shu yerdan boshlanadi.",
+             ru: "Идите по списку из письма — путь в Хогвартс начинается здесь.",
+             en: "Follow the list in your letter — the road to Hogwarts starts here." },
+    prog: { uz: "Yo'l", ru: "Путь", en: "Journey" },
+    letterAria: { uz: "Maktub", ru: "Письмо", en: "Letter" },
+    s0p: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    s0t: { uz: "Gringotts banki", ru: "Банк Гринготтс", en: "Gringotts Bank" },
+    s0s: { uz: "Ota-onangiz qoldirgan pul shu yerda", ru: "Здесь лежат деньги, оставленные вашими родителями",
+           en: "The money your family left is kept here" },
+    s0d: { uz: "Hamyoningizda %s galleon", ru: "В кошельке %s галлеонов", en: "%s Galleons in your purse" },
+    s0c: { uz: "Bankka kirish", ru: "Войти в банк", en: "Enter the bank" },
+    sTp: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
+    sTt: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
+    sTs: { uz: "Xogvarts ekspressiga chipta", ru: "Билет на Хогвартс-экспресс",
+           en: "A ticket for the Hogwarts Express" },
+    sTl: { uz: "Avval xaridlarni tugating", ru: "Сначала закончите покупки", en: "Finish your shopping first" },
+    sTd: { uz: "Bilet cho'ntagingizda", ru: "Билет у вас в кармане", en: "The ticket is in your pocket" },
+    s2n: { uz: "Avval biletni oling", ru: "Сначала получите билет", en: "Get your ticket first" },
+    sTc: { uz: "Biletni olish", ru: "Получить билет", en: "Take the ticket" },
+    s1p: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    s1t: { uz: "Olivander do'koni", ru: "Лавка Олливандера", en: "Ollivanders" },
+    s1s: { uz: "Tayoqcha sizni tanlaydi · 5 savol", ru: "Палочка выбирает волшебника · 5 вопросов",
+           en: "The wand chooses the wizard · 5 questions" },
+    s1l: { uz: "Avval Gringottsdan pul oling", ru: "Сначала возьмите деньги в Гринготтсе",
+           en: "Get money from Gringotts first" },
+    s1c: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
+    s2p: { uz: "Kings Kross vokzali", ru: "Вокзал Кингс-Кросс", en: "King's Cross Station" },
+    s2t: { uz: "9¾ platforma", ru: "Платформа 9¾", en: "Platform 9¾" },
+    s2s: { uz: "Xogvarts ekspressi soat 11:00 da jo'naydi", ru: "Хогвартс-экспресс отходит в 11:00",
+           en: "The Hogwarts Express leaves at 11:00" },
+    s2c: { uz: "Vokzalga yo'l olish", ru: "На вокзал", en: "To the station" },
+    s2l: { uz: "Avval tayoqcha oling", ru: "Сначала получите палочку", en: "Get your wand first" },
+    s2d: { uz: "Ekspressda Xogvartsga keldingiz", ru: "Вы приехали в Хогвартс на экспрессе", en: "You rode the Express to Hogwarts" },
+    s3p: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
+    s3t: { uz: "Katta zal", ru: "Большой зал", en: "The Great Hall" },
+    s3s: { uz: "Saralovchi shlyapa fakultetingizni aytadi · 8 savol",
+           ru: "Распределяющая шляпа назовёт факультет · 8 вопросов",
+           en: "The Sorting Hat names your house · 8 questions" },
+    s3c: { uz: "Saralanishga kirish", ru: "На распределение", en: "To the Sorting" },
+    s3l: { uz: "Avval ekspressga chiqing", ru: "Сначала сядьте на экспресс", en: "Board the Express first" },
+    more: { uz: "Xiyobonda yana", ru: "Ещё в переулке", en: "Also in the alley" },
+    bankT: { uz: "Gringotts", ru: "Гринготтс", en: "Gringotts" },
+    bankS: { uz: "Sehrgarlar banki · tez orada", ru: "Банк волшебников · скоро", en: "The wizarding bank · coming soon" },
+
+    seal: { uz: "X", ru: "Х", en: "H" },
+    school: { uz: "Xogvarts jodugarlik va sehrgarlik maktabi", ru: "Школа чародейства и волшебства «Хогвартс»",
+              en: "Hogwarts School of Witchcraft and Wizardry" },
+    hi: { uz: "Hurmatli %s,", ru: "Дорогой(ая) %s!", en: "Dear %s," },
+    body: { uz: "Xogvarts maktabida siz uchun joy ajratilganini mamnuniyat bilan ma'lum qilamiz. O'qish boshlanishidan oldin quyidagilarni bajaring:",
+            ru: "С удовольствием сообщаем, что вам предоставлено место в школе «Хогвартс». До начала учёбы сделайте следующее:",
+            en: "We are pleased to inform you that a place has been reserved for you at Hogwarts. Before term starts, do the following:" },
+    list: {
+      uz: ["Diagon xiyobonidagi Olivander do'konidan tayoqcha oling",
+           "Kings Kross vokzalida 9¾ platformadan Xogvarts ekspressiga chiqing",
+           "Katta zalda Saralovchi shlyapa fakultetingizni aytadi"],
+      ru: ["Получите палочку в лавке Олливандера в Косом переулке",
+           "Сядьте на Хогвартс-экспресс на платформе 9¾ вокзала Кингс-Кросс",
+           "В Большом зале Распределяющая шляпа назовёт ваш факультет"],
+      en: ["Get a wand at Ollivanders in Diagon Alley",
+           "Board the Hogwarts Express at King's Cross, platform 9¾",
+           "In the Great Hall, the Sorting Hat will name your house"]
+    },
+    share: { uz: "Ulashish", ru: "Поделиться", en: "Share" },
+    shareWait: { uz: "Xat tayyorlanmoqda…", ru: "Письмо готовится…", en: "Preparing the letter…" },
+    shareErr: { uz: "Xat tayyorlanmadi, birozdan keyin urinib ko'ring",
+                ru: "Письмо не подготовилось, попробуйте позже",
+                en: "The letter could not be prepared, try again later" },
+    shareStory: { uz: "Menga Xogvartsdan maktub keldi", ru: "Мне пришло письмо из Хогвартса",
+                  en: "My Hogwarts letter has arrived" },
+    shareBtn: { uz: "Xogvartsga kirish", ru: "В Хогвартс", en: "Enter Hogwarts" },
+    sign: { uz: "Minerva Makgonagall, direktor o'rinbosari", ru: "Минерва Макгонагалл, заместитель директора",
+            en: "Minerva McGonagall, Deputy Headmistress" },
+    hint: { uz: "Xagrid sizni qovoqxona hovlisidagi g'isht devor oldida kutmoqda.",
+            ru: "Хагрид ждёт вас у кирпичной стены во дворе «Дырявого котла».",
+            en: "Hagrid is waiting by the brick wall behind the Leaky Cauldron." },
+    go: { uz: "Diagon xiyoboniga yo'l olish", ru: "Отправиться в Косой переулок", en: "Head to Diagon Alley" },
+    later: { uz: "Keyinroq", ru: "Позже", en: "Later" },
+    close: { uz: "Yopish", ru: "Закрыть", en: "Close" },
+
+    grKick: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+    grTitle: { uz: "Gringotts", ru: "Гринготтс", en: "Gringotts" },
+    grP1: { uz: "Goblin kalitingizni ko'zdan kechirdi va boshini qimirlatdi: «Aravacha tayyor».",
+            ru: "Гоблин осмотрел ваш ключ и кивнул: «Тележка подана».",
+            en: "The goblin examined your key and nodded: \u201cThe cart is ready.\u201d" },
+    grGo: { uz: "Aravachaga o'tirish", ru: "Сесть в тележку", en: "Get into the cart" },
+    grRide: { uz: ["Aravacha zulmatga sho'ng'idi.",
+                   "Tosh yo'laklar, stalaktitlar va yer ostidagi ko'l yonidan o'tdingiz.",
+                   "Qayerdadir olovli nafas eshitildi — pastda ajdaho qo'riqlaydi.",
+                   "Aravacha keskin to'xtadi: 687-xona."],
+              ru: ["Тележка нырнула во тьму.",
+                   "Каменные тоннели, сталактиты и подземное озеро промелькнули мимо.",
+                   "Где-то внизу послышалось огненное дыхание — там сторожит дракон.",
+                   "Тележка резко остановилась: сейф 687."],
+              en: ["The cart plunged into the dark.",
+                   "Stone tunnels, stalactites and an underground lake rushed past.",
+                   "Somewhere below came a fiery breath \u2014 a dragon stands guard.",
+                   "The cart stopped sharply: vault 687."] },
+    grOpen: { uz: "Xonani ochish", ru: "Открыть сейф", en: "Open the vault" },
+    grGot: { uz: "galleon", ru: "галлеонов", en: "Galleons" },
+    grDone: { uz: "Ota-onangiz qoldirgan pul. Xaridlarga yetadi.",
+              ru: "Деньги, оставленные вашими родителями. На покупки хватит.",
+              en: "The money your family left you. Enough for your shopping." },
+    grNext: { uz: "Xiyobonga qaytish", ru: "Вернуться в переулок", en: "Back to the alley" },
+
+
+    tkKick: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
+    tkTitle: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
+    tkSay: { uz: "«Mana, biletingni yo'qotib qo'yma. Bir sentabr, soat o'n bir. Kings Krossda ko'rishamiz.»",
+             ru: "«Вот твой билет, не потеряй. Первого сентября, одиннадцать часов. Увидимся на Кингс-Кроссе.»",
+             en: "\u201cHere\u2019s your ticket, don\u2019t lose it. First of September, eleven o\u2019clock. See you at King\u2019s Cross.\u201d" },
+    tkTop: { uz: "XOGVARTS EKSPRESSI", ru: "ХОГВАРТС-ЭКСПРЕСС", en: "HOGWARTS EXPRESS" },
+    tkSub: { uz: "Kings Kross vokzali · London", ru: "Вокзал Кингс-Кросс · Лондон",
+             en: "King's Cross Station · London" },
+    tkWhen: { uz: "Jo'nash", ru: "Отправление", en: "Departure" },
+    tkWhenV: { uz: "1-sentabr, 11:00", ru: "1 сентября, 11:00", en: "1 September, 11:00" },
+    tkSeat: { uz: "Yo'nalish", ru: "Направление", en: "To" },
+    tkSeatV: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
+    tkGo: { uz: "Biletni olish", ru: "Взять билет", en: "Take the ticket" },
+    tkNext: { uz: "Vokzalga yo'l olish", ru: "На вокзал", en: "To the station" },
+
+    trSign: { uz: "PLATFORMA", ru: "ПЛАТФОРМА", en: "PLATFORM" },
+    trSignSub: { uz: "Xogvarts ekspressi", ru: "Хогвартс-экспресс", en: "Hogwarts Express" },
+    trP1: { uz: "Chiptada yozilgan: 9¾ platforma, soat 11:00. Lekin 9 va 10-platformalar orasida faqat g'isht ustun turibdi…",
+            ru: "В билете написано: платформа 9¾, 11:00. Но между платформами 9 и 10 — только кирпичная колонна…",
+            en: "Your ticket says platform 9¾, 11:00. But between platforms 9 and 10 there is only a brick pillar…" },
+    trP2: { uz: "Sehrgarlar unga to'xtamasdan yurib kirishadi. Ikkilanmang.",
+            ru: "Волшебники проходят сквозь неё не останавливаясь. Не сомневайтесь.",
+            en: "Wizards walk straight into it without stopping. Don't hesitate." },
+    trGo: { uz: "Devorga qarab yurish", ru: "Шагнуть в стену", en: "Walk into the wall" },
+    trRideT: { uz: "Shimolga", ru: "На север", en: "Northbound" },
+    trHint: { uz: "Davom etish uchun bosing", ru: "Нажмите, чтобы продолжить", en: "Tap to continue" },
+    endT: { uz: "Saralanish marosimi", ru: "Церемония распределения", en: "The Sorting Ceremony" },
+    endS: { uz: "Saralovchi shlyapa sizni kutmoqda. U aytgan fakultet umrbod qoladi.",
+            ru: "Распределяющая шляпа ждёт вас. Факультет, который она назовёт, — навсегда.",
+            en: "The Sorting Hat is waiting. The house it names is yours for life." },
+    endGo: { uz: "Shlyapa oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
+    rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
+    rvWand: { uz: "Diagon xiyoboniga qaytish", ru: "Вернуться в Косой переулок", en: "Back to Diagon Alley" },
+
+    pvBtn: { uz: "Sinov o'quvchisi bo'lib kirish", ru: "Войти как тестовый ученик", en: "Enter as a test student" },
+    pvNote: { uz: "Faqat adminlar uchun: ilova noldan boshlanadi - fakultet, tayoqcha, ball, chat. Asl profilingizga tegilmaydi.",
+              ru: "Только для админов: приложение начнётся с нуля — факультет, палочка, баллы, чат. Ваш профиль не тронут.",
+              en: "Admins only: the app starts from zero — house, wand, points, chat. Your real profile is untouched." },
+    pvTag: { uz: "Ko'rish rejimi · hech narsa saqlanmaydi", ru: "Режим просмотра · ничего не сохраняется",
+             en: "Preview · nothing is saved" }
+  };
+
+  var TR_LINES = {
+    uz: ["Devor ortida — bug' va qirmizi paravoz: Xogvarts ekspressi.",
+         "Soat o'n bir. Hushtak chalindi, poyezd shimolga yo'l oldi.",
+         "Deraza ortidan dalalar, keyin tog'lar o'tib bordi. Shirinlik aravachasi ham keldi.",
+         "Qorong'i tushdi. Poyezd kichkina bekatda to'xtadi.",
+         "Birinchi kurslar qayiqlarda qora ko'l bo'ylab suzdi — ro'parada qasr chiroqlari.",
+         "Eshiklar ochildi. Katta zalda minglab shamlar havoda suzib yuribdi."],
+    ru: ["За стеной — пар и алый паровоз: Хогвартс-экспресс.",
+         "Одиннадцать часов. Гудок — и поезд уходит на север.",
+         "За окном поля, потом горы. Мимо проезжает тележка со сладостями.",
+         "Стемнело. Поезд остановился на маленькой станции.",
+         "Первокурсники плывут в лодках по чёрному озеру — впереди огни замка.",
+         "Двери открылись. Над Большим залом парят тысячи свечей."],
+    en: ["Beyond the wall — steam and a scarlet engine: the Hogwarts Express.",
+         "Eleven o'clock. A whistle, and the train heads north.",
+         "Fields roll past the window, then mountains. The sweets trolley rattles by.",
+         "Night falls. The train stops at a tiny station.",
+         "First-years cross the black lake in little boats — castle lights ahead.",
+         "The doors swing open. Thousands of candles float above the Great Hall."]
+  };
+
+  var AL_ICONS = {
+    book: "M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13",
+    letter: "M3.5 6h17v12h-17z M3.5 6.5l8.5 6.5 8.5-6.5",
+    back: "M15 6l-6 6 6 6",
+    wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2",
+    train: "M7 3.5h10a2.5 2.5 0 0 1 2.5 2.5v9a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 15V6A2.5 2.5 0 0 1 7 3.5z M4.5 10.5h15 M8.5 14.2h.01 M15.5 14.2h.01 M8 17.5l-2 3.5 M16 17.5l2 3.5",
+    castle: "M4 20.5h16 M5 20.5V8h3v2h2V8h4v2h2V8h3v12.5 M10 20.5v-4.5a2 2 0 0 1 4 0v4.5",
+    bank: "M3.5 9.5L12 4.5l8.5 5 M5 10v7 M9.7 10v7 M14.3 10v7 M19 10v7 M3.5 20h17",
+    check: "M5 12.5l4.5 4.5L19 7.5",
+    arrow: "M9 6l6 6-6 6",
+    share: "M12 15.5V3.5 M8 7l4-3.5L16 7 M4.5 13v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V13",
+    ticket: "M4 8.5A2.5 2.5 0 0 0 6.5 6h11A2.5 2.5 0 0 0 20 8.5v2a1.5 1.5 0 0 0 0 3v2a2.5 2.5 0 0 0-2.5 2.5h-11A2.5 2.5 0 0 0 4 15.5v-2a1.5 1.5 0 0 0 0-3z M9.5 6v12",
+    coin: "M12 3.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17z M9.5 9.5h5 M9.5 14.5h5 M12 7v10"
+  };
+
+
+  function al(k) { return (AL_TX[k] && (AL_TX[k][lang] || AL_TX[k].uz)) || ""; }
+  function jrGet(k) {
+    if (jrPreview) { return k === LETTER_KEY ? pv.letter : pv.train; }
+    try { return window.localStorage.getItem(k) === "1"; } catch (e) { return false; }
+  }
+  function jrSet(k) {
+    if (jrPreview) { if (k === LETTER_KEY) { pv.letter = true; } else { pv.train = true; } return; }
+    try { window.localStorage.setItem(k, "1"); } catch (e) {}
+  }
+
+  /* Onboarding qadamlari (asardagi yo'l): xat -> xiyobon -> Gringotts ->
+     hayvon -> tayoqcha -> bilet -> poyezd -> saralanish. Har qadam serverga
+     BIR MARTA yoziladi, panel voronkasi shulardan yig'iladi. Tayoqcha,
+     saralash boshlanishi va fakultet alohida yoziladi (report("wand"...)). */
+  function onbStep(name) {
+    if (jrPreview) { return; }              // eski ko'rish rejimi - yozilmaydi
+    var k = TK("hp_onb_" + name);
+    try {
+      if (window.localStorage.getItem(k) === "1") { return; }
+      window.localStorage.setItem(k, "1");
+    } catch (e) {}
+    report("onb", name);
+    try { renderWorldBtn(); } catch (e) {}
+  }
+
+  // Yo'l ichidagi tayoqcha: ko'rish rejimida haqiqiysi emas
+  function jrWandNow() { return jrPreview ? pv.wand : wand; }
+
+  function jrEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text != null) { el.textContent = text; }
+    return el;
+  }
+
+  function hasHouse() { return !jrPreview && !!validHouse(cupMe().house || house); }
+
+  // Admin ekani chat serveridan bilinadi (umumiy xonaning oddiy so'rovi "admin" qaytaradi)
+  function jrIsAdmin() {
+    if (chatAdmin) { return true; }
+    var local = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    return local && !chatInitData();
+  }
+
+  // ---------------------------------------------------------------- SINOV O'QUVCHISI
+  var API_TEST_RESET = "https://bot.tizimshunos.uz/api/test/reset";
+  var FRESH_KEY = "hp_test_fresh";
+  var TEST_LS = ["watched_movies", "house", "wand", "hp_letter", "hp_train", "hp_start"];
+
+  var TEST_TX = {
+    bar: { uz: "SINOV O'QUVCHISI", ru: "ТЕСТОВЫЙ УЧЕНИК", en: "TEST STUDENT" },
+    zero: { uz: "Noldan", ru: "С нуля", en: "Reset" },
+    exit: { uz: "Chiqish", ru: "Выйти", en: "Exit" },
+    askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Ilova noldan boshlanadi, asl profilingiz saqlanib qoladi.",
+             ru: "Войти как тестовый ученик? Приложение начнётся с нуля, ваш профиль сохранится.",
+             en: "Enter as a test student? The app starts from zero; your real profile stays." },
+    askZero: { uz: "Sinov o'quvchisini butunlay tozalaymizmi? U yana yangi odamdek boshlaydi.",
+               ru: "Полностью очистить тестового ученика? Он снова начнёт как новичок.",
+               en: "Wipe the test student completely? It starts again as a newcomer." }
+  };
+
+  function testAsk(msg, done) {
+    // Eski Telegram'da showConfirm xato tashlaydi - o'shanda oddiy confirm
+    if (tg && tg.showConfirm) {
+      try {
+        tg.showConfirm(msg, function (ok) { if (ok) { done(); } });
+        return;
+      } catch (e) {}
+    }
+    if (!window.confirm || window.confirm(msg)) { done(); }
+  }
+
+  function testTx(k) { return (TEST_TX[k] && (TEST_TX[k][lang] || TEST_TX[k].uz)) || ""; }
+
+  // Qurilmadagi sinov xotirasi (localStorage + Telegram buluti)
+  function testWipeLocal(done) {
+    var keys = TEST_LS.map(function (n) { return "t_" + n; });
+    // Onboarding belgilari ("t_hp_onb_*") ro'yxatda yo'q - o'zi topiladi
+    try {
+      for (var i = 0; i < window.localStorage.length; i++) {
+        var k = window.localStorage.key(i);
+        if (k && k.indexOf("t_") === 0 && keys.indexOf(k) === -1) { keys.push(k); }
+      }
+    } catch (e) {}
+    keys.forEach(function (k) {
+      try { window.localStorage.removeItem(k); } catch (e) {}
+    });
+    var cloud = false;
+    try { cloud = !!(tg && tg.CloudStorage && tg.isVersionAtLeast && tg.isVersionAtLeast("6.9")); } catch (e) {}
+    if (!cloud) { done(); return; }
+    try { tg.CloudStorage.removeItems(keys, function () { done(); }); }
+    catch (e) { done(); }
+  }
+
+  function testStart() {
+    testAsk(testTx("askIn"), function () {
+      try {
+        window.localStorage.setItem(TEST_KEY, "1");
+        // Kirishda har doim toza boshlansin: qayta yuklangach server tozalanadi
+        window.localStorage.setItem(FRESH_KEY, "1");
+      } catch (e) {}
+      window.location.reload();
+    });
+  }
+
+  function testExit() {
+    try { window.localStorage.removeItem(TEST_KEY); } catch (e) {}
+    window.location.reload();
+  }
+
+  // Serverdagi sinov hisobini o'chiradi (manfiy raqamli hisob), keyin qurilmani
+  function testServerWipe(done) {
+    var d = chatInitData();
+    if (!d || !window.fetch) { done(); return; }
+    fetch(API_TEST_RESET, { method: "POST", headers: { "X-Telegram-Init-Data": d } })
+      .then(function (r) { return r.json(); })
+      ["catch"](function () { return null; })
+      .then(function () { done(); });
+  }
+
+  function testReset() {
+    testAsk(testTx("askZero"), function () {
+      testServerWipe(function () {
+        testWipeLocal(function () { window.location.reload(); });
+      });
+    });
+  }
+
+  // Kirgandan keyingi birinchi ochilish: hisobni tozalab, chinakam noldan boshlaymiz
+  function testFreshCheck() {
+    if (!HP_TEST) { return; }
+    var fresh = false;
+    try { fresh = window.localStorage.getItem(FRESH_KEY) === "1"; } catch (e) {}
+    if (!fresh) { return; }
+    try { window.localStorage.removeItem(FRESH_KEY); } catch (e) {}
+    testServerWipe(function () {
+      testWipeLocal(function () { window.location.reload(); });
+    });
+  }
+
+  function testBar() {
+    if (!HP_TEST || document.querySelector(".hptest-bar")) { return; }
+    document.body.classList.add("hptest");
+    var bar = document.createElement("div");
+    bar.className = "hptest-bar";
+    var tag = document.createElement("span");
+    tag.textContent = testTx("bar");
+    var zero = document.createElement("button");
+    zero.type = "button";
+    zero.textContent = testTx("zero");
+    zero.addEventListener("click", testReset);
+    var out = document.createElement("button");
+    out.type = "button";
+    out.textContent = testTx("exit");
+    out.addEventListener("click", testExit);
+    bar.appendChild(tag);
+    bar.appendChild(zero);
+    bar.appendChild(out);
+    document.body.appendChild(bar);
+  }
+
+  function jrAdminCheck() {
+    if (jrAdminAsked || chatAdmin || !window.fetch) { return; }
+    var d = chatInitData();
+    if (!d) { return; }
+    jrAdminAsked = true;
+    fetch(API_CHAT + "?room=global", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { if (res && res.admin !== undefined) { chatAdmin = !!res.admin; } })
+      ["catch"](function () { jrAdminAsked = false; });
+  }
+
+  function startPreview() {
+    jrPreview = true;
+    pv = { wand: null, letter: false, train: false };
+    applyHouse("none");
+    $("hub-set").classList.add("hidden");
+    hubBackButton(false);
+    jrBack(null);
+    jrHideAll();
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    openLetter(false);
+  }
+
+  // Ko'rishdan chiqish: asl fakultet ranglari bilan Xogvartsga
+  function endPreview() {
+    if (!jrPreview) { return false; }
+    jrPreview = false;
+    trStop();
+    closeLetter();
+    applyHouse(house);
+    openHub();
+    return true;
+  }
+
+  function jrLetterCancel() {
+    closeLetter();
+    endPreview();
+  }
+
+  // 9¾ ortiga: saralangan - Xogvarts (hub), saralanmagan - Diagon xiyoboni.
+  function enterWorld() { if (hasHouse()) { openHub(); } else { openAlley(); } }
+
+  function alleyVisible() {
+    var el = $("scr-alley");
+    return !!el && !el.classList.contains("hidden");
+  }
+
+  // Fakultet serverdan kechroq kelsa - xiyobonda qolib ketmasin
+  function jrRecheck() { if (alleyVisible() && hasHouse()) { openHub(); } }
+
+  // Telegram "Orqaga" tugmasi: yo'l ekranlarining har biri o'z qaytishini beradi
+  function jrBack(fn) {
+    try {
+      if (!tg || !tg.BackButton) { return; }
+      if (jrBackFn) { tg.BackButton.offClick(jrBackFn); }
+      jrBackFn = fn || null;
+      if (fn) { tg.BackButton.onClick(fn); tg.BackButton.show(); }
+      else { tg.BackButton.hide(); }
+    } catch (e) {}
+  }
+
+  function jrHideAll() {
+    ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-alley", "scr-train",
+     "scr-vault", "scr-ticket",
+     "scr-hat", "scr-think", "scr-sort", "scr-reveal"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+  }
+
+  function openAlley() {
+    if (hasHouse()) { openHub(); return; }
+    stopSortTimer();
+    trStop();
+    journey = null;
+    hubBackButton(false);
+    jrHideAll();
+    $("scr-alley").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    onbStep("alley");
+    renderAlley();
+    jrBack(leaveAlley);
+  }
+
+  function leaveAlley() {
+    if (endPreview()) { return; }
+    jrBack(null);
+    $("scr-alley").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+  }
+
+  function renderAlley() {
+    var rode = jrGet(TRAIN_KEY);
+    var wand = jrWandNow();
+    $("al-pv").textContent = al("pvTag");
+    $("al-pv").classList.toggle("hidden", !jrPreview);
+    $("al-back").innerHTML = hubSvg(AL_ICONS.book);
+    $("al-back").setAttribute("aria-label", LIB_TITLE[lang] || "");
+    walShow($("al-wal"));
+    $("al-letter-btn").innerHTML = hubSvg(AL_ICONS.letter);
+    $("al-letter-btn").setAttribute("aria-label", al("letterAria"));
+    $("al-kick").textContent = al("kick");
+    $("al-title").textContent = al("title");
+    $("al-intro").textContent = al("intro");
+
+    // Faqat XIYOBONDAGI joylar. Vokzal va Katta zal boshqa shaharda -
+    // butun yo'l xatning o'zida kuzatiladi (ltPath).
+    var steps = jrSteps().filter(function (st) { return st.alley; });
+    var next = jrNext(steps);
+    steps.forEach(function (st) { st.on = (st === next); });
+
+    var path = $("al-path");
+    path.innerHTML = "";
+    var done = 0;
+    steps.forEach(function (st) {
+      if (st.done) { done++; }
+      var el = jrEl("button", "al-step" + (st.done ? " done" : st.on ? " on" : " lock"));
+      el.type = "button";
+      var mk = jrEl("span", "al-mk");
+      mk.innerHTML = hubSvg(st.done ? AL_ICONS.check : AL_ICONS[st.icon]);
+      el.appendChild(mk);
+      var tx = jrEl("span", "al-tx");
+      tx.appendChild(jrEl("small", "", st.place));
+      tx.appendChild(jrEl("b", "", st.title));
+      tx.appendChild(jrEl("span", "", st.sub));
+      if (st.on) {
+        var cta = jrEl("span", "al-cta", st.cta);
+        cta.insertAdjacentHTML("beforeend", hubSvg(AL_ICONS.arrow));
+        tx.appendChild(cta);
+      }
+      el.appendChild(tx);
+      el.onclick = function () {
+        if (st.on) { st.go(); return; }
+        if (st.done) { return; }
+        el.classList.remove("shake");
+        try { void el.offsetWidth; } catch (e) {}
+        el.classList.add("shake");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("warning"); } } catch (e) {}
+      };
+      path.appendChild(el);
+    });
+
+    // Kundalik xatda; bu yerda bitta do'kon qolsa yo'lakcha ortiqcha
+    var prog = document.querySelector(".al-prog");
+    if (prog) { prog.classList.toggle("hidden", steps.length < 2); }
+    $("al-prog-t").textContent = al("prog");
+    $("al-prog-n").textContent = done + " / " + steps.length;
+    $("al-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
+
+    // "Xiyobonda yana" bloki: Gringotts endi haqiqiy qadam, bu yer hozircha bo'sh
+    $("al-more").classList.add("hidden");
+    $("al-shop").classList.add("hidden");
+  }
+
+  // Savollardan chiqish (Telegram "Orqaga" yoki 1-savoldagi "Chiqish") - xiyobonga
+  function jrQuit() {
+    stopSortTimer();
+    hideSortScreens();
+    openAlley();
+  }
+
+  /* Yo'lning barcha qadamlari - YAGONA MANBA. Xat kundalik sifatida hammasini
+     ko'rsatadi, xiyobon esa faqat o'zidagilarini (`alley: true`). */
+  function jrSteps() {
+    var w = jrWandNow(), rode = jrGet(TRAIN_KEY), sorted = hasHouse();
+    var vault = walHas("vault");
+    return [
+      { icon: "bank", alley: true, done: vault, place: al("s0p"), title: al("s0t"),
+        sub: vault ? al("s0d").replace("%s", walSum()) : al("s0s"), cta: al("s0c"),
+        go: alleyGo(openVault) },
+      { icon: "wand", alley: true, done: !!w, place: al("s1p"), title: al("s1t"),
+        sub: !vault ? al("s1l") : ((w && wandLabel(w, lang)) || al("s1s")), cta: al("s1c"), lock: !vault,
+        go: alleyGo(jrWand) },
+      { icon: "ticket", done: walHas("ticket"), place: al("sTp"), title: al("sTt"),
+        sub: !w ? al("sTl") : (walHas("ticket") ? al("sTd") : al("sTs")), cta: al("sTc"), lock: !w,
+        go: function () { closeLetter(); openTicket(); } },
+      { icon: "train", done: !!w && rode, place: al("s2p"), title: al("s2t"),
+        sub: !walHas("ticket") ? al("s2n") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
+        lock: !walHas("ticket"),
+        go: function () { closeLetter(); openTrain(); } },
+      { icon: "castle", done: sorted, place: al("s3p"), title: al("s3t"),
+        sub: (w && rode) || sorted ? al("s3s") : al("s3l"), cta: al("s3c"),
+        go: function () { closeLetter(); jrSort(); } }
+    ];
+  }
+
+  /* Xiyobondagi ish: ko'chada bo'lsak - to'g'ri do'konga, bo'lmasa avval
+     g'isht devor ochilib, xiyobonning o'zi ko'rinadi (asardagi yo'l). */
+  function alleyGo(fn) {
+    return function () {
+      if (alleyVisible()) { closeLetter(); fn(); return; }
+      jrToAlley();
+    };
+  }
+
+  // Birinchi bajarilmagan qadam - hozir qilinishi kerak bo'lgani
+  function jrNext(steps) {
+    for (var i = 0; i < steps.length; i++) { if (!steps[i].done) { return steps[i]; } }
+    return null;
+  }
+
+  // Xatdan xiyobonga: g'isht devor ochilib, ko'cha ko'rinadi
+  function jrToAlley() {
+    playGate(function () { closeLetter(); openAlley(); });
+  }
+
+  function jrWand() {
+    $("scr-alley").classList.add("hidden");
+    startWand();
+    journey = "wand";
+    jrBack(jrQuit);
+  }
+
+  function jrSort() {
+    trStop();
+    $("scr-train").classList.add("hidden");
+    $("scr-alley").classList.add("hidden");
+    startSorting();
+    journey = "house";
+    jrBack(jrQuit);
+  }
+
+  // ---------------------------------------------------------------- maktub
+  function openLetter(readOnly) {
+    // Qayta o'qish (readOnly) emas, haqiqiy yo'l boshlanishi - voronkaning
+    // birinchi qadami. Davom etganlar "alley" bilan ajraladi.
+    if (!readOnly) { onbStep("letter"); }
+    var u = tgUser();
+    var name = u ? (u.first_name || fullName(u)) : T[lang].guest;
+    $("lt-seal").textContent = al("seal");
+    $("lt-school").textContent = al("school");
+    $("lt-hi").textContent = al("hi").replace("%s", name);
+    $("lt-body").textContent = al("body");
+    ltPath(readOnly);
+    $("lt-share").innerHTML = hubSvg(AL_ICONS.share);
+    $("lt-share").setAttribute("aria-label", al("share"));
+    $("lt-share").setAttribute("title", al("share"));
+    $("lt-sign").textContent = al("sign");
+    // Qayta o'qiyotganda pastdagi tugma "Yopish" bo'ladi
+    $("lt-later").textContent = readOnly ? al("close") : al("later");
+    $("lt").scrollTop = 0;
+    $("lt").classList.remove("hidden");
+    ltFit();
+  }
+
+  /* Xat BITTA EKRANGA sig'ishi kerak: Telegram'da pastga surish ilovani
+     yopib yuborardi va odam xatni o'qiy olmasdi. Sig'masa yozuvlar ikki
+     bosqichda kichrayadi (.lt-sm -> .lt-xs). */
+  function ltFit() {
+    var box = $("lt"), card = document.querySelector(".lt-card");
+    if (!box || !card) { return; }
+    card.classList.remove("lt-sm", "lt-xs");
+    var joy = box.clientHeight - 48;        // tepa/past bo'shlig'i
+    if (card.offsetHeight <= joy) { return; }
+    card.classList.add("lt-sm");
+    if (card.offsetHeight > joy) { card.classList.add("lt-xs"); }
+  }
+
+  function closeLetter() { $("lt").classList.add("hidden"); }
+
+  /* Xatni ulashish. Server ismga qarab 9:16 rasm yasaydi (bir marta), keyin:
+       1) Telegram Stories (7.8+) - eng yaxshisi;
+       2) chatga tayyor xabar (8.0+);
+       3) oddiy havola (eski Telegram).
+     Rasm manzili tokenli - unda ism ham, odam raqami ham yo'q. */
+  var API_XAT = "https://bot.tizimshunos.uz/api/xat";
+  var xatBor = null;            // {url, share_id} - bir marta so'raladi
+  var xatBand = false;
+
+  function xatOl(done) {
+    if (xatBor) { done(xatBor); return; }
+    var d = chatInitData();
+    if (!d || !window.fetch) { done(null); return; }
+    fetch(API_XAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ lang: lang })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        xatBor = (res && res.ok && res.url) ? res : null;
+        done(xatBor);
+      })["catch"](function () { done(null); });
+  }
+
+  function xatStory(url) {
+    var params = { text: al("shareStory") };
+    try {
+      // Havolali tasma faqat Premium hisoblarda ishlaydi - bo'lmasa havolasiz
+      tg.shareToStory(url, {
+        text: params.text,
+        widget_link: { url: "https://t.me/" + BOT + "/catalog?startapp=olam",
+                       name: al("shareBtn") }
+      });
+      return true;
+    } catch (e) {}
+    try { tg.shareToStory(url, params); return true; } catch (e) {}
+    return false;
+  }
+
+  function ltShare() {
+    if (xatBand) { return; }
+    xatBand = true;
+    var kut = showToast(al("shareWait"));
+    xatOl(function (res) {
+      xatBand = false;
+      dismissNote(kut);
+      if (!res) { showToast(al("shareErr"), "err"); return; }
+
+      var story = false, chat = false;
+      try { story = !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast("7.8")); } catch (e) {}
+      try { chat = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+
+      if (story && xatStory(res.url)) { return; }
+      if (chat && res.share_id) {
+        try { tg.shareMessage(res.share_id, function () {}); return; } catch (e) {}
+      }
+      // Eng eski holat: rasmni shunchaki ochamiz - odam o'zi saqlaydi
+      try { tg.openLink ? tg.openLink(res.url) : window.open(res.url, "_blank"); }
+      catch (e) { showToast(al("shareErr"), "err"); }
+    });
+  }
+
+  /* Xatdagi yo'l kundaligi: bajarilgani ✓ bo'lib chiziladi, navbatdagisi
+     ajralib turadi va bosilsa o'sha ishga olib boradi, qolganlari qulflangan. */
+  function ltPath(readOnly) {
+    var box = $("lt-list");
+    box.innerHTML = "";
+    var steps = jrSteps(), next = jrNext(steps), done = 0;
+
+    steps.forEach(function (st) {
+      if (st.done) { done++; }
+      var on = (st === next);
+      var el = jrEl("button", "lt-step " + (st.done ? "done" : on ? "on" : "lock"));
+      el.type = "button";
+      var mk = jrEl("span", "lt-mk");
+      mk.innerHTML = hubSvg(st.done ? AL_ICONS.check : AL_ICONS[st.icon]);
+      el.appendChild(mk);
+      var tx = jrEl("span", "lt-st");
+      tx.appendChild(jrEl("span", "lt-st-t", st.title));
+      // Qulflangan qadamlarda izoh yozilmaydi: kundalik bitta ekranga sig'sin
+      if (on || st.done) { tx.appendChild(jrEl("span", "lt-st-s", st.sub)); }
+      el.appendChild(tx);
+      el.onclick = function () {
+        if (on) { jrSet(LETTER_KEY); st.go(); return; }
+        if (st.done) { return; }
+        el.classList.remove("shake");
+        try { void el.offsetWidth; } catch (e) {}
+        el.classList.add("shake");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("warning"); } } catch (e) {}
+      };
+      box.appendChild(el);
+    });
+
+    $("lt-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
+
+    // Asosiy tugma har doim navbatdagi ishni bajaradi
+    var go = $("lt-go");
+    if (!next) {
+      go.textContent = al("close");
+      go.onclick = closeLetter;
+    } else {
+      // Xiyobondan tashqarida turganda birinchi qadam avval ko'chaga olib boradi
+      var toAlley = next.alley && !alleyVisible();
+      go.textContent = toAlley ? al("go") : (next.cta || al("go"));
+      go.onclick = function () {
+        jrSet(LETTER_KEY);
+        next.go();
+      };
+    }
+  }
+
+  /* ---------------------------------------------------------------- GRINGOTTS HAMYONI
+     Onboarding iqtisodi: xona ochilganda 25 galleon beriladi, hayvon va
+     tayoqcha shundan sotib olinadi, bilet bepul (Xagrid beradi).
+     Haqiqiy holat SERVERDA (hpcup), bu yerda faqat nusxasi turadi. */
+  var API_WALLET = "https://bot.tizimshunos.uz/api/wallet";
+  var wal = null;              // {galleons, vault, pet, wand, ticket, prices}
+  var walBusy = false;
+  var PET_ORDER = ["owl", "cat", "toad", "rat"];
+  var PRICE_FALLBACK = { wand: 7, pets: { owl: 10, cat: 8, toad: 2, rat: 1 } };
+
+  function walPrice(kind) {
+    var pr = (wal && wal.prices) || PRICE_FALLBACK;
+    return kind === "wand" ? pr.wand : (pr.pets || {})[kind];
+  }
+
+  function walHas(k) { return !!(wal && wal[k]); }
+  function walSum() { return wal ? (wal.galleons || 0) : 0; }
+
+  // Mahalliy sinov (localhost, imzo yo'q): hamyon shu qurilmada yuradi.
+  // Jonli Telegram'da bu yo'l ISHLAMAYDI - haqiqiy holat serverdan keladi.
+  function walLocal(action, item) {
+    var key = TK("hp_wal_demo"), w;
+    try { w = JSON.parse(window.localStorage.getItem(key) || "null"); } catch (e) { w = null; }
+    if (!w) { w = { galleons: 0, vault: false, pet: null, wand: false, ticket: false, prices: PRICE_FALLBACK }; }
+    var res = { ok: true, wallet: w };
+    if (action === "vault" && !w.vault) { w.vault = true; w.galleons += 25; res["new"] = true; }
+    else if (action === "buy") {
+      var narx = item === "wand" ? w.prices.wand : w.prices.pets[item];
+      if (!narx || (item === "wand" ? w.wand : w.pet) || w.galleons < narx) { res.ok = false; }
+      else { w.galleons -= narx; if (item === "wand") { w.wand = true; } else { w.pet = item; } }
+    } else if (action === "ticket") {
+      if (!w.wand) { res.ok = false; } else { w.ticket = true; }
+    }
+    try { window.localStorage.setItem(key, JSON.stringify(w)); } catch (e) {}
+    wal = w;
+    return res;
+  }
+
+  function walIsLocal() {
+    return !chatInitData() && (window.location.hostname === "localhost"
+      || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:");
+  }
+
+  // Serverga murojaat. Javob kelmasa (masalan tarmoq uzilsa) - jim o'tadi.
+  function walApi(action, item, done) {
+    if (walIsLocal()) {
+      var res = walLocal(action, item);
+      setTimeout(function () { done && done(res); }, 40);
+      return;
+    }
+    var d = chatInitData();
+    if (!d || !window.fetch) { done && done(null); return; }
+    fetch(API_WALLET, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ action: action, item: item || "" })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.wallet) { wal = res.wallet; }
+        done && done(res);
+      })["catch"](function () { done && done(null); });
+  }
+
+  function walLoad(done) { walApi("get", null, function () { done && done(); }); }
+
+  function walShow(el) {
+    if (!el) { return; }
+    el.textContent = walSum();
+    el.classList.toggle("hidden", !walHas("vault"));
+  }
+
+  /* ---------- Gringotts: aravachada yer ostiga ---------- */
+  var grTimer = null;
+
+  function grStop() { if (grTimer) { clearTimeout(grTimer); grTimer = null; } }
+
+  function openVault() {
+    grStop();
+    jrHideAll();
+    $("scr-vault").classList.remove("hidden");
+    $("gr-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("gr-kick").textContent = al("grKick");
+    $("gr-title").textContent = al("grTitle");
+    jrBack(openAlley);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    if (walHas("vault")) { grVault(false); return; }
+    grIntro();
+  }
+
+  function grIntro() {
+    var st = $("gr-stage");
+    st.className = "gr-center";
+    st.innerHTML = "";
+    st.appendChild(jrEl("p", "tr-p", al("grP1")));
+    var b = jrEl("button", "tr-go", al("grGo"));
+    b.type = "button";
+    b.onclick = grRide;
+    st.appendChild(b);
+  }
+
+  // Tunnel: yorug'liklar yuqoridan pastga uchadi (rAF emas - CSS animatsiya)
+  function grSparks(box) {
+    var t = jrEl("div", "gr-tunnel");
+    for (var i = 0; i < 26; i++) {
+      var sp = jrEl("span", "gr-spark");
+      sp.style.left = Math.round(Math.random() * 100) + "%";
+      sp.style.animationDuration = (0.5 + Math.random() * 0.7).toFixed(2) + "s";
+      sp.style.animationDelay = (Math.random() * 0.9).toFixed(2) + "s";
+      t.appendChild(sp);
+    }
+    box.appendChild(t);
+    setTimeout(function () { t.classList.add("on"); }, 20);
+    return t;
+  }
+
+  function grRide() {
+    var st = $("gr-stage");
+    st.className = "gr-ride";
+    st.innerHTML = "";
+    grSparks(st);
+    var lines = al("grRide") || [];
+    var line = jrEl("p", "gr-line", lines[0] || "");
+    st.appendChild(line);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("medium"); } } catch (e) {}
+
+    var i = 0;
+    function next() {
+      i++;
+      if (i >= lines.length) { grDoor(); return; }
+      line.textContent = lines[i];
+      line.style.animation = "none";
+      try { void line.offsetWidth; } catch (e) {}
+      line.style.animation = "";
+      grTimer = setTimeout(next, 1700);
+    }
+    grTimer = setTimeout(next, 1700);
+    st.onclick = function () { grStop(); next(); };
+  }
+
+  function grDoor() {
+    grStop();
+    var st = $("gr-stage");
+    st.onclick = null;
+    st.className = "gr-center";
+    st.innerHTML = "";
+    var door = jrEl("div", "gr-door");
+    door.innerHTML = hubSvg(AL_ICONS.bank);
+    var coins = jrEl("div", "gr-coins");
+    for (var i = 0; i < 14; i++) {
+      var c = jrEl("span", "gr-coin");
+      c.style.left = (12 + Math.random() * 70) + "%";
+      c.style.top = (18 + Math.random() * 62) + "%";
+      coins.appendChild(c);
+    }
+    door.appendChild(coins);
+    st.appendChild(door);
+    var b = jrEl("button", "tr-go", al("grOpen"));
+    b.type = "button";
+    b.onclick = function () {
+      b.disabled = true;
+      door.classList.add("open");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+      walApi("vault", null, function () {
+        onbStep("gringotts");
+        setTimeout(function () { grVault(true); }, 700);
+      });
+    };
+    st.appendChild(b);
+  }
+
+  // Xona ochilgandan keyingi ko'rinish (qayta kirganda ham shu)
+  function grVault(yangi) {
+    var st = $("gr-stage");
+    st.className = "gr-center";
+    st.innerHTML = "";
+    var sum = jrEl("div", "gr-sum", String(walSum()));
+    sum.appendChild(jrEl("small", "", al("grGot")));
+    st.appendChild(sum);
+    st.appendChild(jrEl("p", "tr-note", al("grDone")));
+    var b = jrEl("button", "tr-go", al("grNext"));
+    b.type = "button";
+    b.onclick = openAlley;
+    st.appendChild(b);
+    if (yangi) { renderWorldBtn(); }
+  }
+
+  /* ---------- Xagrid biletni beradi ---------- */
+  function openTicket() {
+    jrHideAll();
+    $("scr-ticket").classList.remove("hidden");
+    $("tk-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("tk-kick").textContent = al("tkKick");
+    $("tk-title").textContent = al("tkTitle");
+    jrBack(openAlley);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    renderTicket();
+  }
+
+  function renderTicket() {
+    var st = $("tk-stage");
+    st.className = "tk-wrap";
+    st.innerHTML = "";
+    st.appendChild(jrEl("p", "tk-say", al("tkSay")));
+
+    var card = jrEl("div", "tk-card");
+    card.appendChild(jrEl("div", "tk-top", al("tkTop")));
+    card.appendChild(jrEl("div", "tk-big", "9¾"));
+    card.appendChild(jrEl("div", "tk-sub", al("tkSub")));
+    var row = jrEl("div", "tk-row");
+    [[al("tkWhen"), al("tkWhenV")], [al("tkSeat"), al("tkSeatV")]].forEach(function (pair) {
+      var cell = jrEl("span", "tk-cell");
+      cell.appendChild(jrEl("small", "", pair[0]));
+      cell.appendChild(jrEl("b", "", pair[1]));
+      row.appendChild(cell);
+    });
+    card.appendChild(row);
+    st.appendChild(card);
+
+    var b = jrEl("button", "tr-go", walHas("ticket") ? al("tkNext") : al("tkGo"));
+    b.type = "button";
+    b.style.marginTop = "22px";
+    b.onclick = function () {
+      if (walHas("ticket")) { openTrain(); return; }
+      b.disabled = true;
+      walApi("ticket", null, function (res) {
+        b.disabled = false;
+        if (res && res.ok) {
+          onbStep("ticket");
+          renderWorldBtn();
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+          renderTicket();
+        }
+      });
+    };
+    st.appendChild(b);
+  }
+
+  // ---------------------------------------------------------------- 9¾ platforma
+  function trStop() {
+    if (trTimer) { clearTimeout(trTimer); trTimer = null; }
+  }
+
+  function openTrain() {
+    // Biletsiz platformaga chiqib bo'lmaydi (eski foydalanuvchilarda bilet
+    // belgisi yo'q, lekin ular allaqachon saralangan - bu yerga tushmaydi).
+    if (!jrWandNow()) { openAlley(); return; }
+    if (!walHas("ticket")) { openTicket(); return; }
+    trStop();
+    jrHideAll();
+    $("scr-train").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    $("tr-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("tr-back").setAttribute("aria-label", al("title"));
+    $("tr-kick").textContent = al("s2p");
+    $("tr-title").textContent = al("s2t");
+    var stage = $("tr-stage");
+    stage.innerHTML = "";
+    var wrap = jrEl("div", "tr-center");
+    var sign = jrEl("div", "tr-sign");
+    sign.appendChild(jrEl("small", "", al("trSign")));
+    sign.appendChild(jrEl("b", "", "9¾"));
+    sign.appendChild(jrEl("span", "", al("trSignSub")));
+    wrap.appendChild(sign);
+    wrap.appendChild(jrEl("p", "tr-p", al("trP1")));
+    wrap.appendChild(jrEl("p", "tr-note", al("trP2")));
+    var go = jrEl("button", "tr-go", al("trGo"));
+    go.type = "button";
+    go.onclick = trRun;
+    wrap.appendChild(go);
+    stage.appendChild(wrap);
+    jrBack(openAlley);
+  }
+
+  // Devorga yurish: ekranni bug' qoplaydi, ortidan poyezd yo'li
+  function trRun() {
+    trStop();
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("medium"); } } catch (e) {}
+    var fog = $("tr-fog");
+    fog.classList.add("on");
+    trTimer = setTimeout(function () {
+      $("tr-kick").textContent = al("trSignSub");
+      $("tr-title").textContent = al("trRideT");
+      trRide(0);
+      setTimeout(function () { fog.classList.remove("on"); }, 150);
+    }, 480);
+  }
+
+  function trRide(i) {
+    trStop();
+    if ($("scr-train").classList.contains("hidden")) { return; }
+    var lines = TR_LINES[lang] || TR_LINES.uz;
+    if (i >= lines.length) { jrSet(TRAIN_KEY); onbStep("train"); trEnd(); return; }
+    var stage = $("tr-stage");
+    stage.innerHTML = "";
+    var ride = jrEl("div", "tr-ride");
+    for (var p = 0; p < 5; p++) {
+      var puff = jrEl("i", "tr-puff");
+      puff.style.left = (12 + p * 19) + "%";
+      puff.style.animationDelay = (-p * 1.4 - i * 0.7) + "s";
+      ride.appendChild(puff);
+    }
+    ride.appendChild(jrEl("p", "tr-line", lines[i]));
+    var dots = jrEl("div", "tr-dots");
+    for (var k = 0; k < lines.length; k++) { dots.appendChild(jrEl("i", k <= i ? "on" : "")); }
+    ride.appendChild(dots);
+    ride.appendChild(jrEl("span", "tr-hint", al("trHint")));
+    ride.onclick = function () { trRide(i + 1); };
+    stage.appendChild(ride);
+    trTimer = setTimeout(function () { trRide(i + 1); }, readMs(lines[i]) + 1200);
+  }
+
+  function trEnd() {
+    $("tr-kick").textContent = al("s3p");
+    $("tr-title").textContent = al("s3t");
+    var stage = $("tr-stage");
+    stage.innerHTML = "";
+    var end = jrEl("div", "tr-end");
+    var hat = jrEl("div", "tr-hat");
+    paintHatSmall(hat);
+    end.appendChild(hat);
+    end.appendChild(jrEl("h2", "tr-h", al("endT")));
+    end.appendChild(jrEl("p", "tr-note", al("endS")));
+    var go = jrEl("button", "tr-go", al("endGo"));
+    go.type = "button";
+    go.onclick = jrSort;
+    end.appendChild(go);
+    stage.appendChild(end);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+  }
+
+  // ---------------------------------------------------------------- 9¾ eshigi
+  // Diagon Alley ravog'i ruhida: g'isht devor paydo bo'ladi, tayoqcha uch g'ishtga
+  // tegadi, keyin g'ishtlar o'rtadan chetga qarab bittalab ichkariga buklanib,
+  // ravoq ochiladi. Ovoz (snd/gate.m4a, tools/soundgen.py s_gate) shu vaqtlarga
+  // moslangan - GATE_* ni o'zgartirsangiz, ovozni ham qayta yarating.
+  var GATE_FADE = 160, GATE_TAPS = [200, 290, 380], GATE_SWAP = 520, GATE_OPEN = 820;
+  var gateSnd = { ctx: null, data: null, buf: null };
+  var gateBusy = false;
+
+  function gatePreload() {
+    if (gateSnd.buf || gateSnd.data || !window.fetch) { return; }
+    gateSnd.data = true;   // yuklanmoqda
+    fetch("snd/gate.m4a?v=2").then(function (r) { return r.arrayBuffer(); })
+      .then(function (d) { gateSnd.data = d; })["catch"](function () { gateSnd.data = null; });
+  }
+
+  function gateSound(t0) {
+    try {
+      // iPhone jim rejimda bo'lsa, eshik ham jim ochiladi
+      if (navigator.audioSession) { navigator.audioSession.type = "ambient"; }
+      if (!gateSnd.ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) { return; }
+        gateSnd.ctx = new AC();
+      }
+      var ctx = gateSnd.ctx;
+      if (ctx.state === "suspended") { ctx.resume(); }
+      var play = function (buf) {
+        var late = (Date.now() - t0) / 1000;
+        if (late > 0.35) { return; }   // juda kechiksa, ovoz animatsiyadan ajralib qoladi
+        var src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(ctx.destination);
+        src.start(0, late);
+      };
+      if (gateSnd.buf) { play(gateSnd.buf); return; }
+      if (gateSnd.data && gateSnd.data.byteLength) {
+        var d = gateSnd.data;
+        gateSnd.data = null;             // decodeAudioData buferni o'zlashtirib oladi
+        ctx.decodeAudioData(d, function (buf) { gateSnd.buf = buf; play(buf); }, function () {});
+      } else { gatePreload(); }
+    } catch (e) {}
+  }
+
+  function gateRound(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.lineTo(x + w - r, y); g.quadraticCurveTo(x + w, y, x + w, y + r);
+    g.lineTo(x + w, y + h - r); g.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    g.lineTo(x + r, y + h); g.quadraticCurveTo(x, y + h, x, y + h - r);
+    g.lineTo(x, y + r); g.quadraticCurveTo(x, y, x + r, y);
+    g.closePath();
+  }
+
+  // Bir necha xil g'isht (rang, dog'lar, qirralar) - devor bir xil ko'rinmasin.
+  function gateSprites(bw, bh, sc) {
+    var bases = [[122, 58, 40], [106, 50, 36], [134, 68, 46], [96, 46, 34],
+                 [118, 64, 44], [140, 76, 52], [102, 56, 42], [128, 54, 38]];
+    return bases.map(function (b) {
+      var c = document.createElement("canvas");
+      c.width = Math.ceil(bw * sc); c.height = Math.ceil(bh * sc);
+      var g = c.getContext("2d");
+      g.scale(sc, sc);
+      var gr = g.createLinearGradient(0, 0, 0, bh);
+      gr.addColorStop(0, "rgb(" + (b[0] + 18) + "," + (b[1] + 10) + "," + (b[2] + 8) + ")");
+      gr.addColorStop(1, "rgb(" + (b[0] - 24) + "," + (b[1] - 15) + "," + (b[2] - 11) + ")");
+      g.fillStyle = gr;
+      gateRound(g, 0, 0, bw, bh, 2.5);
+      g.fill();
+      for (var i = 0; i < 30; i++) {
+        var r = Math.random() * 2.2 + 0.6;
+        g.fillStyle = Math.random() < 0.55 ? "rgba(0,0,0," + (Math.random() * 0.22).toFixed(3) + ")"
+                                           : "rgba(255,222,190," + (Math.random() * 0.1).toFixed(3) + ")";
+        g.fillRect(Math.random() * bw, Math.random() * bh, r, r);
+      }
+      g.fillStyle = "rgba(255,215,180,.14)"; g.fillRect(2, 0.5, bw - 4, 1.2);
+      g.fillStyle = "rgba(0,0,0,.3)"; g.fillRect(2, bh - 1.8, bw - 4, 1.8);
+      return c;
+    });
+  }
+
+  function gateLayout(W, H) {
+    var bh = Math.max(24, Math.round(H / 30)), bw = Math.round(bh * 2.3), gap = 3;
+    var cw = bw + gap, ch = bh + gap, cx = W / 2, cy = H * 0.55;
+    var bricks = [], dust = [], maxd = 0;
+    for (var r = 0; r * ch < H + ch; r++) {
+      var off = r % 2 ? -cw / 2 : -cw;
+      for (var c = 0; off + c * cw < W + cw; c++) {
+        var x = off + c * cw, y = r * ch - gap;
+        var dx = (x + bw / 2 - cx) / (W * 0.5), dy = (y + bh / 2 - cy) / (H * 0.62);
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d > maxd) { maxd = d; }
+        bricks.push({ x: x, y: y, d: d, sp: Math.floor(Math.random() * 8),
+                      rot: (Math.random() - 0.5) * 0.6, j: Math.random() * 0.05 });
+      }
+    }
+    bricks.forEach(function (b) { b.d /= maxd; });
+    // tayoqcha tegadigan uch g'isht - o'rtaga eng yaqinlari
+    var near = bricks.slice().sort(function (a, b) { return a.d - b.d; }).slice(0, 3);
+    // surilgan g'isht ortidan ko'tariladigan chang
+    bricks.forEach(function (b, k) {
+      if (k % 3) { return; }
+      var n = 2;
+      while (n--) {
+        var ang = Math.atan2(b.y + bh / 2 - cy, b.x + bw / 2 - cx) + (Math.random() - 0.5) * 1.2;
+        var sp = 20 + Math.random() * 60;
+        dust.push({ x: b.x + Math.random() * bw, y: b.y + Math.random() * bh,
+                    vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp - 15,
+                    t0: b.d * 0.55 + b.j + 0.12, life: 0.35 + Math.random() * 0.3, r: 1 + Math.random() * 2 });
+      }
+    });
+    return { W: W, H: H, bw: bw, bh: bh, gap: gap, cx: cx, cy: cy, bricks: bricks, near: near, dust: dust };
+  }
+
+  function gateFrame(st, now) {
+    var g = st.g, W = st.W, H = st.H, bw = st.bw, bh = st.bh, gap = st.gap, t = now - st.t0;
+    var cw = bw + gap, ch = bh + gap;
+    g.setTransform(st.sc, 0, 0, st.sc, 0, 0);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = "source-over";
+    g.clearRect(0, 0, W, H);
+    var i, b, big = Math.max(W, H);
+
+    if (t < GATE_SWAP) {
+      g.globalAlpha = Math.min(1, t / GATE_FADE);
+      g.fillStyle = "#1b120d";
+      g.fillRect(0, 0, W, H);
+      for (i = 0; i < st.bricks.length; i++) {
+        b = st.bricks[i];
+        var k = st.near.indexOf(b), push = 0;
+        if (k >= 0) {
+          var tt = t - GATE_TAPS[k];
+          if (tt >= 0 && tt < 140) { push = Math.sin(tt / 140 * Math.PI); }
+        }
+        if (push) {
+          var s1 = 1 - push * 0.08;
+          g.drawImage(st.sp[b.sp], b.x + bw * (1 - s1) / 2, b.y + bh * (1 - s1) / 2, bw * s1, bh * s1);
+        } else {
+          g.drawImage(st.sp[b.sp], b.x, b.y, bw, bh);
+        }
+      }
+      g.globalAlpha = Math.min(1, t / GATE_FADE);
+      g.fillStyle = st.vig;
+      g.fillRect(0, 0, W, H);
+      // tayoqcha uchqunlari
+      g.globalCompositeOperation = "lighter";
+      for (k = 0; k < 3; k++) {
+        var ta = (t - GATE_TAPS[k]) / 260;
+        if (ta < 0 || ta > 1) { continue; }
+        b = st.near[k];
+        var gx = b.x + bw / 2, gy = b.y + bh / 2, rad = 30 + ta * 50;
+        var sg = g.createRadialGradient(gx, gy, 0, gx, gy, rad);
+        sg.addColorStop(0, "rgba(255,236,190," + (0.9 * (1 - ta)).toFixed(3) + ")");
+        sg.addColorStop(0.35, "rgba(240,180,90," + (0.45 * (1 - ta)).toFixed(3) + ")");
+        sg.addColorStop(1, "rgba(240,180,90,0)");
+        g.fillStyle = sg;
+        g.fillRect(gx - rad, gy - rad, rad * 2, rad * 2);
+      }
+      return;
+    }
+
+    var p = (t - GATE_SWAP) / GATE_OPEN;
+    for (i = 0; i < st.bricks.length; i++) {
+      b = st.bricks[i];
+      var q = (p - b.d * 0.55 - b.j) / 0.42;
+      if (q >= 1) { continue; }
+      q = q < 0 ? 0 : q;
+      // qorishma (g'isht orasidagi chok) g'ishtdan tezroq yo'qoladi
+      var mq = Math.min(1, q * 1.8);
+      if (mq < 1) {
+        g.globalAlpha = 1 - mq;
+        g.fillStyle = "#1b120d";
+        g.fillRect(b.x - gap / 2, b.y - gap / 2, cw, ch);
+      }
+      var e = q * q, s2 = 1 - e * 0.88;
+      var ox = (b.x + bw / 2 - st.cx) / W * 26 * e, oy = (b.y + bh / 2 - st.cy) / H * 26 * e;
+      g.globalAlpha = 1 - e;
+      g.save();
+      g.translate(b.x + bw / 2 + ox, b.y + bh / 2 + oy);
+      if (e) { g.rotate(b.rot * e); g.scale(s2, s2); }
+      g.drawImage(st.sp[b.sp], -bw / 2, -bh / 2, bw, bh);
+      if (e > 0.02) {
+        g.globalAlpha = (1 - e) * e * 1.6;
+        g.fillStyle = "#000";
+        g.fillRect(-bw / 2, -bh / 2, bw, bh);
+      }
+      g.restore();
+    }
+    g.globalAlpha = Math.max(0, 1 - p * 1.6);
+    g.fillStyle = st.vig;
+    g.fillRect(0, 0, W, H);
+    // chang
+    g.globalAlpha = 1;
+    for (i = 0; i < st.dust.length; i++) {
+      var ds = st.dust[i], age = p - ds.t0;
+      if (age < 0 || age > ds.life) { continue; }
+      var sec = age * GATE_OPEN / 1000;
+      g.fillStyle = "rgba(214,176,136," + (0.55 * (1 - age / ds.life)).toFixed(3) + ")";
+      g.fillRect(ds.x + ds.vx * sec, ds.y + ds.vy * sec, ds.r, ds.r);
+    }
+    // ravoq ortidan iliq tilla nur
+    if (p < 0.6) {
+      var fl = Math.sin(p / 0.6 * Math.PI);
+      var fr = big * (0.25 + p * 0.7);
+      var fg = g.createRadialGradient(st.cx, st.cy, 0, st.cx, st.cy, fr);
+      fg.addColorStop(0, "rgba(255,226,160," + (0.42 * fl).toFixed(3) + ")");
+      fg.addColorStop(0.4, "rgba(231,170,80," + (0.2 * fl).toFixed(3) + ")");
+      fg.addColorStop(1, "rgba(231,170,80,0)");
+      g.globalCompositeOperation = "lighter";
+      g.fillStyle = fg;
+      g.fillRect(0, 0, W, H);
+    }
+  }
+
+  function playGate(after) {
+    var gate = $("w-gate"), cv = $("w-gate-cv");
+    var slow = false;
+    try { slow = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+    catch (e) { slow = false; }
+    if (!gate || !cv || !cv.getContext || slow) { after(); return; }
+    if (gateBusy) { return; }
+    gateBusy = true;
+
+    var t0 = Date.now();
+    gateSound(t0);
+    var W = window.innerWidth, H = window.innerHeight, sc = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * sc);
+    cv.height = Math.round(H * sc);
+    var st = gateLayout(W, H);
+    st.g = cv.getContext("2d");
+    st.sc = sc;
+    st.t0 = t0;
+    st.sp = gateSprites(st.bw, st.bh, sc);
+    st.vig = st.g.createRadialGradient(st.cx, st.cy, Math.min(W, H) * 0.2, st.cx, st.cy, Math.max(W, H) * 0.75);
+    st.vig.addColorStop(0, "rgba(0,0,0,0)");
+    st.vig.addColorStop(1, "rgba(0,0,0,.62)");
+    st.live = true;
+
+    gate.className = "wgate";
+    gate.style.pointerEvents = "auto";   // animatsiya paytida ikkinchi bosish o'tmasin
+    var raf = window.requestAnimationFrame || function (f) { return setTimeout(f, 16); };
+    (function loop() {
+      if (!st.live) { return; }
+      gateFrame(st, Date.now());
+      raf(loop);
+    })();
+    // rAF ekran yashiringanda to'xtashi mumkin - asosiy qadamlar setTimeout da
+    setTimeout(after, GATE_SWAP);
+    setTimeout(function () {
+      st.live = false;
+      gate.className = "wgate hidden";
+      gate.style.pointerEvents = "";
+      cv.width = cv.height = 1;
+      gateBusy = false;
+    }, GATE_SWAP + GATE_OPEN + 60);
+  }
+
+  // ---------------------------------------------------------------- sozlama
+  var START_KEY = TK("hp_start");        // "lib" (kutubxona) yoki "world" (xarita)
+
+  function readStart() {
+    try { return window.localStorage.getItem(START_KEY) === "world" ? "world" : "lib"; }
+    catch (e) { return "lib"; }
+  }
+
+  function saveStart(v) {
+    try { window.localStorage.setItem(START_KEY, v); } catch (e) {}
+  }
+
+  var W_SET_TX = {
+    title: { uz: "Ilova ochilganda", ru: "При открытии", en: "When the app opens" },
+    note: {
+      uz: "Xarita tanlansa, ilovani ochganingizda to'g'ridan-to'g'ri sehrli olamga tushasiz.",
+      ru: "Если выбрать карту, приложение будет открываться сразу в волшебном мире.",
+      en: "Choose the map and the app will open straight into the wizarding world."
+    },
+    lib: { uz: "Kutubxona", ru: "Библиотека", en: "Library" },
+    map: { uz: "Xarita", ru: "Карта", en: "Map" },
+    close: { uz: "Yopish", ru: "Закрыть", en: "Close" }
+  };
+
+  function renderWorldSettings() {
+    var cur = readStart();
+    $("w-set-title").textContent = W_SET_TX.title[lang];
+    $("w-set-note").textContent = W_SET_TX.note[lang];
+    $("w-set-close").textContent = W_SET_TX.close[lang];
+    $("w-set-lib").innerHTML = worldIcon("book") + "<span>" + W_SET_TX.lib[lang] + "</span>";
+    $("w-set-map").innerHTML = worldIcon("map") + "<span>" + W_SET_TX.map[lang] + "</span>";
+    $("w-set-lib").className = cur === "lib" ? "on" : "";
+    $("w-set-map").className = cur === "world" ? "on" : "";
+  }
+
+  function openWorldSettings() {
+    renderWorldSettings();
+    $("w-set").classList.remove("hidden");
+  }
+
+  function setStart(v) {
+    saveStart(v);
+    renderWorldSettings();
+  }
+
+  // ---------------------------------------------------------------- sonlar
+  function worldChatN() {
+    try { return (chatCounts.house || 0) + (chatCounts.global || 0) + (chatCounts.dm || 0); }
+    catch (e) { return 0; }
+  }
+
+  function worldTasksN() {
+    try { return (tasksData && tasksData.tasks) ? tasksData.tasks.length : 0; }
+    catch (e) { return 0; }
+  }
+
+  // Xarita ochiq bo'lsa sonlarni yangilab turamiz.
+  function worldRefresh() {
+    var w = $("scr-world");
+    if (w && !w.classList.contains("hidden")) { renderWorld(); }
+    if (hubVisible()) { renderHub(); }
+  }
+
+  // ---------------------------------------------------------------- qaytish
+  // Xaritadan ochilgan ekran "Ortga" bosilganda xaritaga qaytsin.
+  var worldFrom = null;
+
+  function worldReturnTo() {
+    if (!worldFrom) { return false; }
+    var place = worldFrom;
+    worldFrom = null;
+    ["scr-cup", "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-prof",
+     "scr-chess-hub", "scr-chess-stats", "scr-hall-full", "scr-feed-full"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+    if (place === "hub") { openHub(); } else { openWorld(place); }
+    return true;
+  }
+
+  function worldGuard(fn) {
+    return function () {
+      if (worldReturnTo()) { return; }
+      return fn.apply(this, arguments);
+    };
+  }
+
+  // ---------------------------------------------------------------- SEHRLI OLAM
+  // Uch xarita: olam -> Xogvarts qasri va Diagon xiyoboni. Rasm soatga qarab
+  // almashadi: tong 05-07, kun 07-17, oqshom 17-19, tun 19-05.
+  var WORLD_ICONS = {
+    castle: "M3 21h18 M5 21V9l3-2 3 2v12 M13 21V6l4-3 4 3v18",
+    village: "M4 20h16 M6 20v-8l4-3 4 3v8 M14 20v-6l3-2 3 2v6",
+    city: "M4 20V8l5-3 5 3v12 M14 20v-7h6v7 M7 11h1 M7 15h1 M11 11h1 M11 15h1 M17 16h1",
+    owl: "M12 7c-3.5 0-6 2.8-6 6.5c0 3.5 2.7 6.5 6 6.5s6-3 6-6.5C18 9.8 15.5 7 12 7z M6.5 9.5L4 4l5 2.2 M17.5 9.5L20 4l-5 2.2 M9.5 12.5h.01 M14.5 12.5h.01",
+    chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
+    book: "M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13",
+    quiz: "M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3",
+    hall: "M7 3.5h10 M7 20.5h10 M8 3.5c0 4 8 5 8 8.5s-8 4.5-8 8.5 M16 3.5c0 4-8 5-8 8.5s8 4.5 8 8.5",
+    chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
+    wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2",
+    bank: "M3 20h18 M4 20V9h16v11 M12 3l9 6H3z M8 20v-6h3v6 M14 14h3v3h-3z",
+    gear: "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z M19.4 13.5l1.6 1.2-2 3.4-1.9-.7a7 7 0 0 1-2 1.2l-.3 2h-4l-.3-2a7 7 0 0 1-2-1.2l-1.9.7-2-3.4 1.6-1.2a7 7 0 0 1 0-2.9L3 9.3l2-3.4 1.9.7a7 7 0 0 1 2-1.2l.3-2h4l.3 2a7 7 0 0 1 2 1.2l1.9-.7 2 3.4-1.6 1.2a7 7 0 0 1 0 2.9z",
+    back: "M15 6l-6 6 6 6",
+    map: "M3.5 6.5l6-2.5 5 2.5 6-2.5v13.5l-6 2.5-5-2.5-6 2.5z M9.5 4v13.5 M14.5 6.5V20"
+  };
+
+  var WORLD_SOON = { uz: "Tez orada", ru: "Скоро", en: "Coming soon" };
+  var WORLD_MAPS = {
+    world: {
+      img: "world",
+      title: { uz: "Sehrgarlar olami", ru: "Мир волшебников", en: "The Wizarding World" },
+      sub: { uz: "Joyni tanlang", ru: "Выберите место", en: "Choose a place" },
+      pins: [
+        { dot: [22, 12], side: "l", top: 15.5, icon: "castle",
+          name: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
+          sub: { uz: "6 ta joy", ru: "6 мест", en: "6 places" },
+          badge: function () { return worldChatN() + worldTasksN(); },
+          go: function () { openWorld("castle"); } },
+        { dot: [73, 58], side: "r", top: 61.5, icon: "village", soon: true,
+          name: { uz: "Xogsmid", ru: "Хогсмид", en: "Hogsmeade" },
+          sub: WORLD_SOON, go: null },
+        { dot: [24, 84], side: "l", top: 87.5, icon: "city",
+          name: { uz: "London", ru: "Лондон", en: "London" },
+          sub: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+          go: function () { openWorld("alley"); } }
+      ]
+    },
+    castle: {
+      img: "castle", parent: "world",
+      title: { uz: "Xogvarts qasri", ru: "Замок Хогвартс", en: "Hogwarts Castle" },
+      sub: { uz: "Xonani tanlang", ru: "Выберите комнату", en: "Choose a room" },
+      pins: [
+        { dot: [50, 9], side: "r", top: 13, icon: "owl",
+          name: { uz: "Boyqushxona", ru: "Совятня", en: "Owlery" },
+          sub: { uz: "Do'stlarni taklif qilish", ru: "Пригласить друзей", en: "Invite friends" },
+          go: function () { worldFrom = "castle"; leaveWorld(true); openRefs(); } },
+        { dot: [50, 27], side: "l", top: 24, icon: "chat",
+          name: { uz: "Umumiy xona", ru: "Гостиная", en: "Common Room" },
+          sub: { uz: "Muloqot", ru: "Общение", en: "Chat" },
+          badge: worldChatN,
+          go: function () { worldFrom = "castle"; leaveWorld(true); openChat(); } },
+        { dot: [50, 43], side: "r", top: 40, icon: "book",
+          name: { uz: "Kutubxona", ru: "Библиотека", en: "Library" },
+          sub: { uz: "Filmlar", ru: "Фильмы", en: "Films" },
+          go: function () { leaveWorld(false); } },
+        { dot: [50, 58], side: "l", top: 55, icon: "quiz",
+          name: { uz: "Darsxona", ru: "Класс", en: "Classroom" },
+          sub: { uz: "Kunlik savol", ru: "Вопрос дня", en: "Daily question" },
+          badge: worldTasksN,
+          go: function () { worldFrom = "castle"; leaveWorld(true); openTasks(); } },
+        { dot: [50, 73], side: "r", top: 70, icon: "hall",
+          name: { uz: "Katta zal", ru: "Большой зал", en: "Great Hall" },
+          sub: { uz: "Kubok · imtihon", ru: "Кубок · экзамен", en: "Cup · exam" },
+          go: function () { worldFrom = "castle"; leaveWorld(true); openCup(); } },
+        { dot: [50, 89], side: "l", top: 86, icon: "chess",
+          name: { uz: "Shaxmat kamerasi", ru: "Шахматный зал", en: "Chess Chamber" },
+          sub: { uz: "Sehrgar shaxmati", ru: "Волшебные шахматы", en: "Wizard chess" },
+          go: function () { worldFrom = "castle"; leaveWorld(true); openChessHub(); } }
+      ]
+    },
+    alley: {
+      img: "alley", parent: "world",
+      title: { uz: "Diagon xiyoboni", ru: "Косой переулок", en: "Diagon Alley" },
+      sub: { uz: "London", ru: "Лондон", en: "London" },
+      pins: [
+        { dot: [56, 14], side: "l", top: 17, icon: "bank", soon: true,
+          name: { uz: "Gringotts", ru: "Гринготтс", en: "Gringotts" },
+          sub: WORLD_SOON, go: null },
+        { dot: [78, 70], side: "l", top: 74, icon: "wand",
+          name: { uz: "Olivander do'koni", ru: "Лавка Олливандера", en: "Ollivanders" },
+          sub: { uz: "Tayoqchangizni toping", ru: "Найдите палочку", en: "Find your wand" },
+          go: function () { worldFrom = "alley"; leaveWorld(true); if (wand) { openProfile(); } else { startWand(); } } }
+      ]
+    }
+  };
+
+  var worldPlace = "world";
+
+  // Kun qismi: tong 05:00-07:00, kun 07:00-17:00, oqshom 17:00-19:00, tun 19:00-05:00.
+  function worldPhase() {
+    var h = new Date().getHours();
+    if (h >= 7 && h < 17) { return "kun"; }
+    if (h >= 17 && h < 19) { return "oqshom"; }
+    if (h >= 5 && h < 7) { return "tong"; }
+    return "tun";
+  }
+
+  function worldIcon(name) {
+    if (!WORLD_ICONS[name]) { return ""; }
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' +
+           WORLD_ICONS[name] + '"></path></svg>';
+  }
+
+  function renderWorld() {
+    var map = WORLD_MAPS[worldPlace];
+    var bg = $("w-bg");
+    var phase = worldPhase();
+    bg.onerror = function () {
+      // Bu joy uchun shu payt rasmi hali yo'q bo'lsa - kunduzgisi.
+      if (this.src.indexOf("_kun.jpg") === -1) { this.src = "img/world/" + map.img + "_kun.jpg"; }
+    };
+    bg.src = "img/world/" + map.img + "_" + phase + ".jpg";
+
+    $("w-title").textContent = map.title[lang];
+    $("w-sub").textContent = map.sub[lang];
+
+    var left = $("w-left");
+    var right = $("w-right");
+    left.className = "w-glass";
+    right.className = "w-glass";
+    if (map.parent) {
+      left.innerHTML = worldIcon("back") + "<span>" +
+                       (lang === "ru" ? "Карта" : (lang === "en" ? "Map" : "Xarita")) + "</span>";
+      left.onclick = function () { openWorld(map.parent); };
+      right.innerHTML = "";
+      right.appendChild(document.createTextNode(meShort()));
+      var crest = document.createElement("span");
+      paintCrest(crest, house);
+      right.appendChild(crest);
+      right.onclick = function () { worldFrom = worldPlace; leaveWorld(true); openProfile(); };
+    } else {
+      left.innerHTML = "";
+      left.appendChild(document.createTextNode(meShort()));
+      var crest2 = document.createElement("span");
+      paintCrest(crest2, house);
+      left.appendChild(crest2);
+      left.onclick = function () { worldFrom = worldPlace; leaveWorld(true); openProfile(); };
+      right.className = "w-glass w-ic";
+      right.innerHTML = worldIcon("gear");
+      right.onclick = openWorldSettings;
+    }
+
+    var box = $("w-pins");
+    box.innerHTML = "";
+    map.pins.forEach(function (p) {
+      var dot = document.createElement("span");
+      dot.className = "w-dot";
+      dot.style.left = p.dot[0] + "%";
+      dot.style.top = p.dot[1] + "%";
+      box.appendChild(dot);
+
+      var pin = document.createElement("button");
+      pin.type = "button";
+      pin.className = "w-pin" + (p.soon ? " soon" : "");
+      pin.style.top = p.top + "%";
+      if (p.side === "l") { pin.style.left = "14px"; } else { pin.style.right = "14px"; }
+      pin.innerHTML = worldIcon(p.icon) +
+                      '<span class="w-pin-tx"><b>' + p.name[lang] + '</b><i>' + p.sub[lang] + '</i></span>';
+      var n = p.badge ? p.badge() : 0;
+      if (n > 0) {
+        var wax = document.createElement("span");
+        wax.className = "w-wax";
+        wax.textContent = n > 99 ? "99+" : String(n);
+        pin.appendChild(wax);
+      }
+      pin.onclick = function () {
+        if (!p.go) { showToast(WORLD_SOON[lang]); return; }
+        p.go();
+      };
+      box.appendChild(pin);
+    });
+  }
+
+  // Sarlavhadagi qisqa ism: "Sardor · 245"
+  function meShort() {
+    var name = "";
+    try {
+      var u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+      if (u) { name = u.first_name || u.username || ""; }
+    } catch (e) { name = ""; }
+    if (!name) { name = "?"; }
+    var pts = (cupMe() && cupMe().points) || 0;
+    return name + " · " + pts;
+  }
+
+  function openWorld(place) {
+    worldPlace = (typeof place === "string" && WORLD_MAPS[place]) ? place : "world";
+    stopSortTimer();
+    ["scr-cat", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-tasks",
+     "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full"].forEach(function (id) {
+      var el = $(id);
+      if (el) { el.classList.add("hidden"); }
+    });
+    $("w-set").classList.add("hidden");
+    $("scr-world").classList.remove("hidden");
+    renderWorld();
+    try {
+      if (tg && tg.BackButton) {
+        tg.BackButton.show();
+        tg.BackButton.onClick(worldBack);
+      }
+    } catch (e) {}
+  }
+
+  function worldBack() {
+    var map = WORLD_MAPS[worldPlace];
+    if (map && map.parent) { openWorld(map.parent); } else { leaveWorld(false); }
+  }
+
+  // keepHidden = true bo'lsa katalog ochilmaydi (boshqa ekran ochilmoqchi).
+  function leaveWorld(keepHidden) {
+    $("scr-world").classList.add("hidden");
+    try {
+      if (tg && tg.BackButton) {
+        tg.BackButton.offClick(worldBack);
+        tg.BackButton.hide();
+      }
+    } catch (e) {}
+    if (!keepHidden) {
+      $("scr-cat").classList.remove("hidden");
+      renderCatalog();
+    }
+  }
+
+  function openProfile() {
+    stopSortTimer();
+    $("scr-detail").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-lang").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-prof").classList.remove("hidden");
+    renderProfile();
+  }
+
+  function closeProfile() {
+    $("scr-prof").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    renderCupStrip();
+  }
+
+  /* ---------- CHAT VA SHAXMAT MATNLARI (uch tilda) ----------
+     Ekrandagi qat'iy yozuvlar HTML da data-xt="kalit" (placeholder uchun
+     data-xt-ph) bilan belgilangan - applyXT() ularni joriy tilga
+     almashtiradi. Kod ichidagi matnlar L("kalit") orqali olinadi. */
+  var XT = {
+    uz: {
+      back: "Ortga", chatTitle: "Muloqot", chatKicker: "Umumiy xona",
+      chatStrip: "Fakultetdoshlar bilan suhbat ›", chessKicker: "Sehrgar shaxmati",
+      chessStrip: "Botlar va do'stlar bilan jangga kiring ›",
+      chatGlobalTab: "🏰 Katta zal", chatHouseTitle: "%s umumiy xonasi",
+      chatGlobalTitle: "Katta zal (hamma uchun)", chatPh: "Xabar yozing...",
+      chatPhHouse: "Fakultetdoshlarga yozing...", chatPhGlobal: "Barcha o'quvchilarga yozing...",
+      loading: "Yuklanmoqda...", chatEmpty: "Hozircha xabarlar yo'q. Birinchi bo'lib yozing!",
+      chatToday: "Bugun", chatYesterday: "Kecha",
+      chatMonths: ["yanvar","fevral","mart","aprel","may","iyun","iyul","avgust","sentabr","oktabr","noyabr","dekabr"],
+      chatSlow: "Juda tez yozyapsiz — %s soniyadan keyin xabarni bosing", chatFailed: "Yuborilmadi — qayta urinish uchun xabarni bosing",
+      chatLong: "Xabar juda uzun (ko'pi bilan 1000 belgi)",
+      chatReply: "Javob berish", chatCopy: "Nusxa olish", chatEdit: "Tahrirlash", chatDelete: "O'chirish",
+      chatDeleteAsk: "Xabar hamma uchun o'chirilsinmi?", chatCopied: "Nusxa olindi", chatEdited: "tahrirlandi",
+      chatEditing: "Xabarni tahrirlash", chatReplyTo: "Javob: %s", chatDeletedMsg: "O'chirilgan xabar",
+      chatNotLoaded: "Bu xabar ancha tepada — yuqoriga suring", chatActFail: "Bajarilmadi, qayta urinib ko'ring",
+      chatSlowAct: "Juda tez — %s soniya kuting", chatTooOld: "Bu xabarni endi tahrirlab bo'lmaydi", chatUnreadBar: "Yangi xabarlar", chatJoinTitle: "Xush kelibsiz, %s!", chatJoinSub: "Saralash qalpog'i %s fakultetini tanladi. Yangi do'stingizga salom bering!", chatJoinMine: "Saralash qalpog'i sizni %s fakultetiga yubordi. O'zingizni tanishtiring!", chatJoinWave: "👋 Salom berish", chatJoinQuote: "🎩 Fakultetga qo'shildi",
+      chatOnline: "%s kishi onlayn", chatOnlyYou: "Hozircha faqat siz", chatTyping1: "%s yozmoqda",
+      chatTyping2: "%s va %s yozmoqda", chatTypingN: "%s kishi yozmoqda", chatBan24: "24 soatga bloklash",
+      chatBanForever: "Butunlay bloklash", chatUnban: "Blokdan chiqarish", chatBanAsk: "%s chatda bloklansinmi?",
+      chatBanned: "Siz chatda bloklangansiz — %s gacha", chatBannedForever: "Siz chatda bloklangansiz",
+      chatBanDone: "%s bloklandi", chatUnbanDone: "%s blokdan chiqarildi",
+      chatDmTab: "💬 Shaxsiy", chatDmTitle: "Shaxsiy suhbatlar", chatDmYou: "Siz: ",
+      chatDmEmpty: "Hali shaxsiy suhbat yo'q. Istalgan fakultet talabasiga yozishingiz mumkin.", chatDmFind: "Talabani tanlash",
+      chatTypingDm: "yozmoqda", chatPeerOnline: "onlayn", chatSeenAgo: "%s daqiqa oldin onlayn edi", chatSeenNow: "hozirgina onlayn edi", chatSeenAt: "oxirgi marta: %s", chatSeenLong: "uzoq vaqt oldin", chatWrite: "Shaxsiy xabar", chatSearch: "Ism bo'yicha qidirish",
+      chatAll: "Hammasi", chatMembersSub: "%s a'zo, %s onlayn", chatPoints: "%s ball", chatYou: "siz", chatNobody: "Hech kim topilmadi",
+      chatDmWho: "Kim menga shaxsiy xabar yoza oladi", chatDmWhoShort: "Kim menga yoza oladi", chatDmAll: "Hamma",
+      chatDmHouse: "Faqat fakultetdoshlarim", chatDmNone: "Hech kim", chatDmWhoNote: "Siz o'zingiz yozgan odam baribir javob bera oladi.",
+      chatDmBlock: "Bloklash", chatDmUnblock: "Blokdan chiqarish", chatDmBlockAsk: "%s sizga shaxsiy xabar yoza olmasin?",
+      chatDmYouBlocked: "Siz bu talabani bloklagansiz", chatDmClosed: "Bu talaba hozir shaxsiy xabar qabul qilmaydi", chatDmBlockedList: "Bloklanganlar",
+      chessHubTitle: "Sehrgar shaxmati", chessHero: "Sehrgarlar shaxmat jangi",
+      chessHeroSub: "\"Bu shaxmat oddiy emas, haqiqiy sehrgarlar jangi!\" — 5 daqiqalik blits bahslarida qatnashing.",
+      chessBotHead: "Botga qarshi o'ynash (mashg'ulot)",
+      botEasy: "🟢 Ron Uizli (oson)", botEasySub: "Yangi boshlovchilar uchun",
+      botMed: "🟡 Germiona Grenjer (o'rta)", botMedSub: "Mantiqiy va taktik yurishlar",
+      botHard: "🔴 Prof. Makgonagall (qiyin)", botHardSub: "Sehrgar grossmeyster darajasi",
+      botNames: { novice: "Nevill Longbottom", easy: "Ron Uizli", med: "Germiona Grenjer", hard: "Prof. Makgonagall", master: "Albus Dambldor" },
+      startBot: "⚔️ Bot bilan o'yinni boshlash (5:00)", pvpHead: "Do'st bilan 1v1 blits",
+      createGame: "➕ Yangi o'yin yaratish", joinPh: "O'yin kodi (masalan: 9a3f2b1c)", join: "Ulanish",
+      exit: "Chiqish", share: "Ulashish", cont: "Davom etish", resign: "Taslim bo'lish",
+      yourTurn: "Sizning navbatingiz", oppThinking: "Raqib o'ylamoqda...", opp: "Raqib", you: "Siz",
+      white: "Oq donalar", black: "Qora donalar", waitFriend: "Do'stingiz (kutilmoqda...)",
+      win: "G'alaba!", loss: "Mag'lubiyat", draw: "Durang",
+      lossTail: "Yana bir bor mashq qilib ko'ring!", drawTail: "Kuchlar teng keldi!",
+      winPts: "Fakultetingizga +%d ball qo'shildi!",
+      limitFull: "Bu mavsumda shaxmat ballari to'lgan (%d ta o'yin).",
+      r_mate: "Mot", r_stalemate: "Pat", r_over: "O'yin tugadi",
+      r_timeout_loss: "Vaqtingiz tugadi", r_timeout_win: "Raqibning vaqti tugadi",
+      r_resign_loss: "Taslim bo'ldingiz", r_resign_win: "Raqib taslim bo'ldi",
+      r_left_loss: "O'yinni tark etdingiz", r_left_win: "Raqib o'yinni tark etdi",
+      inviteText: "Sehrgar shaxmati (blits) o'ynaymizmi? ♟️ Yuqoridagi havolani bosing — o'yinga to'g'ri tushasiz.",
+      linkPrompt: "Do'stingizga yuborish uchun havola:",
+      joinFail: "O'yinga ulanib bo'lmadi: ", err: "Xato",
+      leaveAsk: "O'yindan chiqmoqchimisiz? (O'yin tugaydi)",
+      resignAsk: "Rostdan ham taslim bo'lmoqchimisiz?",
+      myRating: "Sizning reytingingiz",
+      ratingsBtn: "Jadval",
+      rateSub: "%r-o'rin · %g ta o'yin",
+      rateNew: "Birinchi jonli o'yiningizdan keyin reyting paydo bo'ladi",
+      statsTitle: "Shaxmat reytingi",
+      titleLine: "Unvon: %s",
+      rankLine: "Jadvalda %r-o'rin · eng yuqorisi %b",
+      statGames: "O'yin",
+      statWins: "G'alaba",
+      statDraws: "Durang",
+      statLosses: "Mag'lubiyat",
+      tabTop: "Jadval",
+      tabHist: "Tarix",
+      tabLadder: "Zinapoya",
+      filterAll: "Hammasi",
+      filterHouse: "Fakultetim",
+      topEmpty: "Hali hech kim jonli o'yin o'ynamagan. Birinchi bo'ling!",
+      histEmpty: "Jonli o'yinlaringiz shu yerda ko'rinadi.",
+      gamesN: "%d ta o'yin",
+      resW: "G",
+      resL: "M",
+      resD: "D",
+      wdl: "%w G · %d D · %l M",
+      beaten: "Yengildi",
+      notBeaten: "Hali yo'q",
+      ratingNote: "Reyting faqat jonli o'yinlarda o'zgaradi: kuchliroq raqibni yengsangiz ko'proq qo'shiladi. Hamma 1200 dan boshlaydi. Unvonlar: hamma Piyodadan boshlaydi, keyin Ot (1250+), Fil (1400+), Ruh (1550+), Farzin (1700+), Shoh (1850+).",
+      ratingAfter: "Reyting: %r (%d).",
+      title_pawn: "Piyoda",
+      title_knight: "Ot",
+      title_bishop: "Fil",
+      title_rook: "Ruh",
+      title_queen: "Farzin",
+      title_king: "Shoh",
+      pvpTitle2: "Jonli jang",
+      pvpNote2: "Tasodifiy raqib toping yoki do'stingizni chaqiring — g'alaba fakultetingizga ball keltiradi.",
+      seekBtn: "Raqib topish",
+      seekersHere: "Hozir %d kishi shu vaqtda raqib qidirmoqda — bosing, darhol boshlanadi!",
+      inviteBtn2: "Do'stni chaqirish",
+      announceBtn: "Chatga e'lon",
+      toHouseChat: "Fakultet chatiga",
+      toGreatHall: "Katta zalga",
+      seeking: "Raqib qidirilmoqda…",
+      seekHint: "Hozircha shu vaqtda hech kim qidirmayapti. Katta zalga e'lon qiling yoki bot bilan mashq qiling — qidiruv davom etadi.",
+      playBot: "Bot bilan",
+      announced: "Taklif chatga joylandi — raqib kutilmoqda",
+      chatBannedShort: "Siz chatda bloklangansiz",
+      chatDmClosedShort: "Bu odam shaxsiy xabar qabul qilmaydi",
+      cardLive: "jonli jang",
+      cardMine: "Taklifingiz — raqib kutilmoqda",
+      cardOpen: "O'yinga o'tish",
+      cardCalls: "%s jangga chaqirmoqda!",
+      cardAccept: "Qabul qilish",
+      cardPlaying: "o'yin ketmoqda",
+      cardWon: "%s yutdi",
+      cardExpired: "Taklif eskirdi",
+      chatChess: "Shaxmatga chaqirish",
+      lvlNovice: "Boshlovchi",
+      lvlMaster: "Usta",
+      botTags: {"novice": "Endi o'rganyapti — tez-tez adashadi", "easy": "Yangi boshlovchilar uchun", "med": "Mantiqiy va taktik yurishlar", "hard": "Kuchli va puxta o'yinchi", "master": "Eng kuchli sehrgar — deyarli yengilmas"},
+      noMoves: "Yurishlar shu yerda ko'rinadi",
+      playAgain: "Yana o'ynash",
+      viewBoard: "Taxtani ko'rish",
+      toHub: "Shaxmat bo'limiga",
+      timeLbl: "Vaqt",
+      minShort: "daq",
+      colorLbl: "Rangingiz",
+      colWhite: "Oq",
+      colRandom: "Tasodifiy",
+      colBlack: "Qora",
+      themeTitle: "Sehrli taxta",
+      themeNote: "Taxta va donalar ko'rinishini tanlang.",
+      thStone: "Sehrli tosh",
+      thHouse: "Fakultet",
+      thClassic: "Klassik",
+      hubKicker: "Jonli o'yin",
+      hubSub: "Raqibni yenging — fakultetingizga ball olib keling.",
+      pillWin: "G'alaba %s",
+      pillDraw: "Durang %s",
+      pillSeason: "Mavsumda %s o'yin",
+      pvpTitle: "Do'st bilan jang",
+      pvpNote: "Do'stingizga taklif kartasini yuboring — u tugmani bosishi bilan o'yin boshlanadi.",
+      inviteBtn: "Do'stni jangga chaqirish",
+      orCode: "yoki kod bilan qo'shiling",
+      botTitle: "Mashg'ulot: bot bilan",
+      botNote: "Ball berilmaydi — qo'lni charxlash uchun.",
+      lvlEasy: "Oson",
+      lvlMed: "O'rta",
+      lvlHard: "Qiyin",
+      startBot2: "Bot bilan boshlash",
+      rulesText: "Birinchi yurish uchun 60 soniya beriladi. Ilovadan chiqsangiz ham o'yin davom etadi va soatingiz yuradi. Mavsumda 5 ta o'yin ballanadi.",
+      abortBtn: "Bekor qilish",
+      abortAsk: "O'yin bekor qilinsinmi? Ball berilmaydi.",
+      drawBtn: "½ Durang taklifi",
+      drawSent: "Durang taklif qilindi",
+      drawIn: "Raqib durang taklif qilmoqda",
+      accept: "Qabul qilish",
+      decline: "Rad etish",
+      leaveLive: "O'yin davom etadi va soatingiz yuradi. Shu yerga istalgan payt qaytishingiz mumkin. Chiqasizmi?",
+      firstMove: "Birinchi yurish · %s",
+      oppFirstMove: "Raqib kutilmoqda · %s",
+      waitShort: "Do'stingiz kutilmoqda…",
+      reconnect: "Aloqa uzildi, qayta ulanmoqda…",
+      offline: "aloqada emas",
+      codeLbl: "Kod:",
+      resumeHead: "Davom etayotgan o'yin",
+      waitHead: "Do'stingizni kutayotgan o'yin",
+      resumeBtn: "Qaytish",
+      aborted: "Bekor qilindi",
+      promoTitle: "Piyoda qaysi donaga aylansin?",
+      moveRejected: "Yurish qabul qilinmadi — taxta yangilandi",
+      offerLimit: "Keyingi taklif — navbatdagi yurishingizdan keyin",
+      netErr: "Aloqa xatosi. Qayta urinib ko'ring.",
+      hasActive: "Sizda tugallanmagan o'yin bor — o'shanga qaytamiz",
+      jNotFound: "o'yin topilmadi",
+      jStarted: "bu o'yin allaqachon boshlangan",
+      badCode: "O'yin kodini to'g'ri kiriting (8 ta belgi)",
+      slowCreate: "Juda tez-tez. Bir daqiqadan keyin urinib ko'ring.",
+      r_aborted: "O'yin boshlanmay turib bekor qilindi",
+      r_cancelled: "Taklif bekor qilindi",
+      r_expired: "Taklif muddati o'tdi",
+      r_agreement: "Kelishuv bo'yicha durang",
+      r_repetition: "Bir xil holat uch marta takrorlandi",
+      r_fifty: "50 yurish davomida urish ham, piyoda yurishi ham bo'lmadi",
+      r_insufficient: "Mot qilishga dona yetarli emas",
+      r_timeout_draw: "Vaqt tugadi, lekin raqibda mot qilishga dona yetarli emas"
+    },
+    ru: {
+      back: "Назад", chatTitle: "Общение", chatKicker: "Гостиная",
+      chatStrip: "Беседа с однокурсниками факультета ›", chessKicker: "Волшебные шахматы",
+      chessStrip: "Сразитесь с ботами и друзьями ›",
+      chatGlobalTab: "🏰 Большой зал", chatHouseTitle: "Гостиная: %s",
+      chatGlobalTitle: "Большой зал (для всех)", chatPh: "Напишите сообщение...",
+      chatPhHouse: "Напишите своему факультету...", chatPhGlobal: "Напишите всем ученикам...",
+      loading: "Загрузка...", chatEmpty: "Сообщений пока нет. Напишите первым!",
+      chatToday: "Сегодня", chatYesterday: "Вчера",
+      chatMonths: ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"],
+      chatSlow: "Слишком быстро — нажмите на сообщение через %s с", chatFailed: "Не отправлено — нажмите на сообщение, чтобы повторить",
+      chatLong: "Сообщение слишком длинное (до 1000 символов)",
+      chatReply: "Ответить", chatCopy: "Копировать", chatEdit: "Изменить", chatDelete: "Удалить",
+      chatDeleteAsk: "Удалить сообщение для всех?", chatCopied: "Скопировано", chatEdited: "изменено",
+      chatEditing: "Редактирование", chatReplyTo: "Ответ: %s", chatDeletedMsg: "Удалённое сообщение",
+      chatNotLoaded: "Это сообщение выше — прокрутите вверх", chatActFail: "Не получилось, попробуйте ещё раз",
+      chatSlowAct: "Слишком быстро — подождите %s с", chatTooOld: "Это сообщение уже нельзя изменить", chatUnreadBar: "Непрочитанные сообщения", chatJoinTitle: "Добро пожаловать, %s!", chatJoinSub: "Распределяющая шляпа выбрала факультет %s. Поприветствуйте нового друга!", chatJoinMine: "Распределяющая шляпа отправила вас на факультет %s. Расскажите о себе!", chatJoinWave: "👋 Поприветствовать", chatJoinQuote: "🎩 Присоединился к факультету",
+      chatOnline: "%s в сети", chatOnlyYou: "Пока только вы", chatTyping1: "%s печатает",
+      chatTyping2: "%s и %s печатают", chatTypingN: "%s человек печатают", chatBan24: "Заблокировать на 24 часа",
+      chatBanForever: "Заблокировать навсегда", chatUnban: "Разблокировать", chatBanAsk: "Заблокировать %s в чате?",
+      chatBanned: "Вы заблокированы в чате до %s", chatBannedForever: "Вы заблокированы в чате",
+      chatBanDone: "%s заблокирован(а)", chatUnbanDone: "%s разблокирован(а)",
+      chatDmTab: "💬 Личные", chatDmTitle: "Личные сообщения", chatDmYou: "Вы: ",
+      chatDmEmpty: "Личных переписок пока нет. Можно написать ученику любого факультета.", chatDmFind: "Выбрать ученика",
+      chatTypingDm: "печатает", chatPeerOnline: "в сети", chatSeenAgo: "был(а) %s мин. назад", chatSeenNow: "был(а) только что", chatSeenAt: "был(а): %s", chatSeenLong: "давно", chatWrite: "Написать лично", chatSearch: "Поиск по имени",
+      chatAll: "Все", chatMembersSub: "%s участников, %s в сети", chatPoints: "%s очков", chatYou: "вы", chatNobody: "Никого не найдено",
+      chatDmWho: "Кто может писать мне лично", chatDmWhoShort: "Кто может мне писать", chatDmAll: "Все",
+      chatDmHouse: "Только мой факультет", chatDmNone: "Никто", chatDmWhoNote: "Тот, кому вы написали сами, всё равно сможет ответить.",
+      chatDmBlock: "Заблокировать", chatDmUnblock: "Разблокировать", chatDmBlockAsk: "Запретить %s писать вам?",
+      chatDmYouBlocked: "Вы заблокировали этого ученика", chatDmClosed: "Этот ученик сейчас не принимает личные сообщения", chatDmBlockedList: "Заблокированные",
+      chessHubTitle: "Волшебные шахматы", chessHero: "Шахматная битва волшебников",
+      chessHeroSub: "«Это не простые шахматы, а настоящая битва волшебников!» — играйте 5-минутный блиц.",
+      chessBotHead: "Игра против бота (тренировка)",
+      botEasy: "🟢 Рон Уизли (легко)", botEasySub: "Для новичков",
+      botMed: "🟡 Гермиона Грейнджер (средне)", botMedSub: "Логичные и тактические ходы",
+      botHard: "🔴 Проф. Макгонагалл (сложно)", botHardSub: "Уровень гроссмейстера-волшебника",
+      botNames: { novice: "Невилл Долгопупс", easy: "Рон Уизли", med: "Гермиона Грейнджер", hard: "Проф. Макгонагалл", master: "Альбус Дамблдор" },
+      startBot: "⚔️ Начать игру с ботом (5:00)", pvpHead: "Блиц 1 на 1 с другом",
+      createGame: "➕ Создать новую игру", joinPh: "Код игры (например: 9a3f2b1c)", join: "Войти",
+      exit: "Выйти", share: "Поделиться", cont: "Продолжить", resign: "Сдаться",
+      yourTurn: "Ваш ход", oppThinking: "Соперник думает...", opp: "Соперник", you: "Вы",
+      white: "Белые", black: "Чёрные", waitFriend: "Друг (ожидание...)",
+      win: "Победа!", loss: "Поражение", draw: "Ничья",
+      lossTail: "Потренируйтесь и попробуйте снова!", drawTail: "Силы оказались равны!",
+      winPts: "Вашему факультету +%d очков!",
+      limitFull: "Шахматные очки в этом сезоне исчерпаны (%d игр).",
+      r_mate: "Мат", r_stalemate: "Пат", r_over: "Игра окончена",
+      r_timeout_loss: "Ваше время вышло", r_timeout_win: "Время соперника вышло",
+      r_resign_loss: "Вы сдались", r_resign_win: "Соперник сдался",
+      r_left_loss: "Вы покинули игру", r_left_win: "Соперник покинул игру",
+      inviteText: "Сыграем в волшебные шахматы (блиц)? ♟️ Нажмите на ссылку выше — попадёте прямо в игру.",
+      linkPrompt: "Ссылка для друга:",
+      joinFail: "Не удалось подключиться к игре: ", err: "Ошибка",
+      leaveAsk: "Выйти из игры? (Игра закончится)",
+      resignAsk: "Вы действительно хотите сдаться?",
+      myRating: "Ваш рейтинг",
+      ratingsBtn: "Таблица",
+      rateSub: "%r-е место · игр: %g",
+      rateNew: "Рейтинг появится после первой живой партии",
+      statsTitle: "Шахматный рейтинг",
+      titleLine: "Звание: %s",
+      rankLine: "%r-е место · лучший %b",
+      statGames: "Игры",
+      statWins: "Победы",
+      statDraws: "Ничьи",
+      statLosses: "Пораж.",
+      tabTop: "Таблица",
+      tabHist: "История",
+      tabLadder: "Лестница",
+      filterAll: "Все",
+      filterHouse: "Мой факультет",
+      topEmpty: "Живых партий ещё не было. Будьте первым!",
+      histEmpty: "Здесь появятся ваши живые партии.",
+      gamesN: "игр: %d",
+      resW: "В",
+      resL: "П",
+      resD: "Н",
+      wdl: "%w В · %d Н · %l П",
+      beaten: "Побеждён",
+      notBeaten: "Пока нет",
+      ratingNote: "Рейтинг меняется только в живых партиях: победа над сильным соперником даёт больше. Все начинают с 1200. Звания: все начинают Пешкой, затем Конь (1250+), Слон (1400+), Ладья (1550+), Ферзь (1700+), Король (1850+).",
+      ratingAfter: "Рейтинг: %r (%d).",
+      title_pawn: "Пешка",
+      title_knight: "Конь",
+      title_bishop: "Слон",
+      title_rook: "Ладья",
+      title_queen: "Ферзь",
+      title_king: "Король",
+      pvpTitle2: "Живой бой",
+      pvpNote2: "Найдите случайного соперника или позовите друга — победа принесёт очки факультету.",
+      seekBtn: "Найти соперника",
+      seekersHere: "Сейчас соперника на это время ищут: %d — нажмите, игра начнётся сразу!",
+      inviteBtn2: "Позвать друга",
+      announceBtn: "В чат",
+      toHouseChat: "В чат факультета",
+      toGreatHall: "В Большой зал",
+      seeking: "Ищем соперника…",
+      seekHint: "Сейчас на это время никто не ищет. Объявите в Большом зале или потренируйтесь с ботом — поиск продолжится.",
+      playBot: "С ботом",
+      announced: "Приглашение в чате — ждём соперника",
+      chatBannedShort: "Вы заблокированы в чате",
+      chatDmClosedShort: "Этот человек не принимает личные сообщения",
+      cardLive: "живой бой",
+      cardMine: "Ваш вызов — ждём соперника",
+      cardOpen: "Перейти к игре",
+      cardCalls: "%s вызывает на бой!",
+      cardAccept: "Принять вызов",
+      cardPlaying: "идёт игра",
+      cardWon: "победа: %s",
+      cardExpired: "Вызов истёк",
+      chatChess: "Вызвать на шахматы",
+      lvlNovice: "Новичок",
+      lvlMaster: "Мастер",
+      botTags: {"novice": "Только учится — часто ошибается", "easy": "Для начинающих", "med": "Логичные и тактические ходы", "hard": "Сильный и точный игрок", "master": "Сильнейший волшебник — почти непобедим"},
+      noMoves: "Здесь появятся ходы",
+      playAgain: "Сыграть ещё",
+      viewBoard: "Посмотреть доску",
+      toHub: "К шахматам",
+      timeLbl: "Время",
+      minShort: "мин",
+      colorLbl: "Ваш цвет",
+      colWhite: "Белые",
+      colRandom: "Случайно",
+      colBlack: "Чёрные",
+      themeTitle: "Волшебная доска",
+      themeNote: "Выберите вид доски и фигур.",
+      thStone: "Волшебный камень",
+      thHouse: "Факультет",
+      thClassic: "Классика",
+      hubKicker: "Живая игра",
+      hubSub: "Победите соперника — принесите очки своему факультету.",
+      pillWin: "Победа %s",
+      pillDraw: "Ничья %s",
+      pillSeason: "В сезоне %s игр",
+      pvpTitle: "Бой с другом",
+      pvpNote: "Отправьте другу карточку-приглашение — игра начнётся, как только он нажмёт кнопку.",
+      inviteBtn: "Вызвать друга на бой",
+      orCode: "или войдите по коду",
+      botTitle: "Тренировка с ботом",
+      botNote: "Очки не начисляются — только для практики.",
+      lvlEasy: "Легко",
+      lvlMed: "Средне",
+      lvlHard: "Сложно",
+      startBot2: "Начать с ботом",
+      rulesText: "На первый ход даётся 60 секунд. Если выйти из приложения, игра продолжится и ваше время будет идти. В сезоне засчитываются 5 игр.",
+      abortBtn: "Отменить",
+      abortAsk: "Отменить игру? Очки не начисляются.",
+      drawBtn: "½ Предложить ничью",
+      drawSent: "Ничья предложена",
+      drawIn: "Соперник предлагает ничью",
+      accept: "Принять",
+      decline: "Отклонить",
+      leaveLive: "Игра продолжится, и ваше время идёт. Вернуться сюда можно в любой момент. Выйти?",
+      firstMove: "Первый ход · %s",
+      oppFirstMove: "Ждём соперника · %s",
+      waitShort: "Ждём друга…",
+      reconnect: "Нет связи, переподключение…",
+      offline: "не в сети",
+      codeLbl: "Код:",
+      resumeHead: "Текущая партия",
+      waitHead: "Партия ждёт друга",
+      resumeBtn: "Вернуться",
+      aborted: "Отменено",
+      promoTitle: "В какую фигуру превратить пешку?",
+      moveRejected: "Ход не принят — доска обновлена",
+      offerLimit: "Следующее предложение — после вашего хода",
+      netErr: "Ошибка связи. Попробуйте ещё раз.",
+      hasActive: "У вас есть незаконченная партия — возвращаемся к ней",
+      jNotFound: "игра не найдена",
+      jStarted: "эта игра уже началась",
+      badCode: "Введите код игры (8 символов)",
+      slowCreate: "Слишком часто. Попробуйте через минуту.",
+      r_aborted: "Игра отменена до начала",
+      r_cancelled: "Приглашение отменено",
+      r_expired: "Срок приглашения истёк",
+      r_agreement: "Ничья по соглашению",
+      r_repetition: "Троекратное повторение позиции",
+      r_fifty: "Правило 50 ходов",
+      r_insufficient: "Недостаточно фигур для мата",
+      r_timeout_draw: "Время вышло, но у соперника недостаточно фигур для мата"
+    },
+    en: {
+      back: "Back", chatTitle: "Chat", chatKicker: "Common room",
+      chatStrip: "Chat with your housemates ›", chessKicker: "Wizard's chess",
+      chessStrip: "Battle bots and friends ›",
+      chatGlobalTab: "🏰 Great Hall", chatHouseTitle: "%s common room",
+      chatGlobalTitle: "Great Hall (everyone)", chatPh: "Write a message...",
+      chatPhHouse: "Write to your house...", chatPhGlobal: "Write to all students...",
+      loading: "Loading...", chatEmpty: "No messages yet. Be the first to write!",
+      chatToday: "Today", chatYesterday: "Yesterday",
+      chatMonths: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+      chatSlow: "Too fast — tap the message again in %s s", chatFailed: "Not sent — tap the message to retry",
+      chatLong: "Message is too long (max 1000 characters)",
+      chatReply: "Reply", chatCopy: "Copy", chatEdit: "Edit", chatDelete: "Delete",
+      chatDeleteAsk: "Delete this message for everyone?", chatCopied: "Copied", chatEdited: "edited",
+      chatEditing: "Editing message", chatReplyTo: "Reply to %s", chatDeletedMsg: "Deleted message",
+      chatNotLoaded: "That message is further up — scroll up", chatActFail: "Didn't work, try again",
+      chatSlowAct: "Too fast — wait %s s", chatTooOld: "This message can no longer be edited", chatUnreadBar: "Unread messages", chatJoinTitle: "Welcome, %s!", chatJoinSub: "The Sorting Hat chose %s. Say hello to your new housemate!", chatJoinMine: "The Sorting Hat sent you to %s. Introduce yourself!", chatJoinWave: "👋 Say hello", chatJoinQuote: "🎩 Joined the house",
+      chatOnline: "%s online", chatOnlyYou: "Only you for now", chatTyping1: "%s is typing",
+      chatTyping2: "%s and %s are typing", chatTypingN: "%s people are typing", chatBan24: "Block for 24 hours",
+      chatBanForever: "Block permanently", chatUnban: "Unblock", chatBanAsk: "Block %s from the chat?",
+      chatBanned: "You are blocked from the chat until %s", chatBannedForever: "You are blocked from the chat",
+      chatBanDone: "%s blocked", chatUnbanDone: "%s unblocked",
+      chatDmTab: "💬 Private", chatDmTitle: "Private chats", chatDmYou: "You: ",
+      chatDmEmpty: "No private chats yet. You can write to a student of any house.", chatDmFind: "Choose a student",
+      chatTypingDm: "typing", chatPeerOnline: "online", chatSeenAgo: "last seen %s min ago", chatSeenNow: "last seen just now", chatSeenAt: "last seen: %s", chatSeenLong: "a long time ago", chatWrite: "Message privately", chatSearch: "Search by name",
+      chatAll: "All", chatMembersSub: "%s members, %s online", chatPoints: "%s pts", chatYou: "you", chatNobody: "Nobody found",
+      chatDmWho: "Who can message me privately", chatDmWhoShort: "Who can message me", chatDmAll: "Everyone",
+      chatDmHouse: "Only my house", chatDmNone: "Nobody", chatDmWhoNote: "People you have written to can still reply.",
+      chatDmBlock: "Block", chatDmUnblock: "Unblock", chatDmBlockAsk: "Stop %s from messaging you?",
+      chatDmYouBlocked: "You have blocked this student", chatDmClosed: "This student isn't accepting private messages right now", chatDmBlockedList: "Blocked",
+      chessHubTitle: "Wizard's chess", chessHero: "Wizards' chess battle",
+      chessHeroSub: "“This isn't ordinary chess — it's a true wizards' duel!” — play 5-minute blitz games.",
+      chessBotHead: "Play against a bot (practice)",
+      botEasy: "🟢 Ron Weasley (easy)", botEasySub: "For beginners",
+      botMed: "🟡 Hermione Granger (medium)", botMedSub: "Logical, tactical moves",
+      botHard: "🔴 Prof. McGonagall (hard)", botHardSub: "Wizard grandmaster level",
+      botNames: { novice: "Neville Longbottom", easy: "Ron Weasley", med: "Hermione Granger", hard: "Prof. McGonagall", master: "Albus Dumbledore" },
+      startBot: "⚔️ Start a game with the bot (5:00)", pvpHead: "1v1 blitz with a friend",
+      createGame: "➕ Create a new game", joinPh: "Game code (e.g. 9a3f2b1c)", join: "Join",
+      exit: "Exit", share: "Share", cont: "Continue", resign: "Resign",
+      yourTurn: "Your turn", oppThinking: "Opponent is thinking...", opp: "Opponent", you: "You",
+      white: "White", black: "Black", waitFriend: "Your friend (waiting...)",
+      win: "Victory!", loss: "Defeat", draw: "Draw",
+      lossTail: "Practice and try again!", drawTail: "Evenly matched!",
+      winPts: "+%d points for your house!",
+      limitFull: "Chess points for this season are maxed out (%d games).",
+      r_mate: "Checkmate", r_stalemate: "Stalemate", r_over: "Game over",
+      r_timeout_loss: "Your time ran out", r_timeout_win: "Your opponent's time ran out",
+      r_resign_loss: "You resigned", r_resign_win: "Your opponent resigned",
+      r_left_loss: "You left the game", r_left_win: "Your opponent left the game",
+      inviteText: "Up for a game of wizard's chess (blitz)? ♟️ Tap the link above to jump straight into the game.",
+      linkPrompt: "Link to send to your friend:",
+      joinFail: "Couldn't join the game: ", err: "Error",
+      leaveAsk: "Leave the game? (It will end)",
+      resignAsk: "Do you really want to resign?",
+      myRating: "Your rating",
+      ratingsBtn: "Table",
+      rateSub: "#%r · %g games",
+      rateNew: "Your rating appears after your first live game",
+      statsTitle: "Chess rating",
+      titleLine: "Title: %s",
+      rankLine: "#%r in the table · best %b",
+      statGames: "Games",
+      statWins: "Wins",
+      statDraws: "Draws",
+      statLosses: "Losses",
+      tabTop: "Table",
+      tabHist: "History",
+      tabLadder: "Ladder",
+      filterAll: "All",
+      filterHouse: "My house",
+      topEmpty: "No live games yet. Be the first!",
+      histEmpty: "Your live games will appear here.",
+      gamesN: "%d games",
+      resW: "W",
+      resL: "L",
+      resD: "D",
+      wdl: "%w W · %d D · %l L",
+      beaten: "Beaten",
+      notBeaten: "Not yet",
+      ratingNote: "Your rating changes only in live games: beating a stronger opponent gains more. Everyone starts at 1200. Titles: everyone starts as a Pawn, then Knight (1250+), Bishop (1400+), Rook (1550+), Queen (1700+), King (1850+).",
+      ratingAfter: "Rating: %r (%d).",
+      title_pawn: "Pawn",
+      title_knight: "Knight",
+      title_bishop: "Bishop",
+      title_rook: "Rook",
+      title_queen: "Queen",
+      title_king: "King",
+      pvpTitle2: "Live battle",
+      pvpNote2: "Find a random opponent or invite a friend — a win brings points to your house.",
+      seekBtn: "Find an opponent",
+      seekersHere: "%d player(s) are looking for this time right now — tap to start instantly!",
+      inviteBtn2: "Invite a friend",
+      announceBtn: "Post to chat",
+      toHouseChat: "House chat",
+      toGreatHall: "Great Hall",
+      seeking: "Looking for an opponent…",
+      seekHint: "Nobody is looking for this time right now. Post in the Great Hall or practise with a bot — the search keeps going.",
+      playBot: "Vs bot",
+      announced: "Posted to chat — waiting for an opponent",
+      chatBannedShort: "You are blocked in chat",
+      chatDmClosedShort: "This person doesn't accept private messages",
+      cardLive: "live battle",
+      cardMine: "Your challenge — waiting for an opponent",
+      cardOpen: "Go to game",
+      cardCalls: "%s is challenging!",
+      cardAccept: "Accept",
+      cardPlaying: "game in progress",
+      cardWon: "%s won",
+      cardExpired: "Challenge expired",
+      chatChess: "Challenge to chess",
+      lvlNovice: "Beginner",
+      lvlMaster: "Master",
+      botTags: {"novice": "Still learning — often blunders", "easy": "For beginners", "med": "Logical, tactical play", "hard": "Strong and precise", "master": "The greatest wizard — nearly unbeatable"},
+      noMoves: "Moves will appear here",
+      playAgain: "Play again",
+      viewBoard: "View board",
+      toHub: "Back to chess",
+      timeLbl: "Time",
+      minShort: "min",
+      colorLbl: "Your colour",
+      colWhite: "White",
+      colRandom: "Random",
+      colBlack: "Black",
+      themeTitle: "Enchanted board",
+      themeNote: "Choose how the board and pieces look.",
+      thStone: "Enchanted stone",
+      thHouse: "House",
+      thClassic: "Classic",
+      hubKicker: "Live play",
+      hubSub: "Beat your opponent — bring points to your house.",
+      pillWin: "Win %s",
+      pillDraw: "Draw %s",
+      pillSeason: "This season %s games",
+      pvpTitle: "Play a friend",
+      pvpNote: "Send your friend an invitation card — the game starts as soon as they tap the button.",
+      inviteBtn: "Challenge a friend",
+      orCode: "or join with a code",
+      botTitle: "Practice with a bot",
+      botNote: "No points — just for practice.",
+      lvlEasy: "Easy",
+      lvlMed: "Medium",
+      lvlHard: "Hard",
+      startBot2: "Start vs bot",
+      rulesText: "You get 60 seconds for the first move. If you leave the app, the game goes on and your clock keeps running. 5 games per season earn points.",
+      abortBtn: "Abort",
+      abortAsk: "Abort the game? No points are awarded.",
+      drawBtn: "½ Offer draw",
+      drawSent: "Draw offered",
+      drawIn: "Your opponent offers a draw",
+      accept: "Accept",
+      decline: "Decline",
+      leaveLive: "The game continues and your clock keeps running. You can come back here any time. Leave?",
+      firstMove: "First move · %s",
+      oppFirstMove: "Waiting for opponent · %s",
+      waitShort: "Waiting for your friend…",
+      reconnect: "Connection lost, reconnecting…",
+      offline: "offline",
+      codeLbl: "Code:",
+      resumeHead: "Game in progress",
+      waitHead: "Game waiting for your friend",
+      resumeBtn: "Resume",
+      aborted: "Aborted",
+      promoTitle: "Promote the pawn to:",
+      moveRejected: "Move not accepted — board refreshed",
+      offerLimit: "You can offer again after your next move",
+      netErr: "Connection error. Please try again.",
+      hasActive: "You have an unfinished game — taking you back",
+      jNotFound: "game not found",
+      jStarted: "this game has already started",
+      badCode: "Enter the game code (8 characters)",
+      slowCreate: "Too often. Try again in a minute.",
+      r_aborted: "The game was aborted before it started",
+      r_cancelled: "Invitation cancelled",
+      r_expired: "Invitation expired",
+      r_agreement: "Draw by agreement",
+      r_repetition: "Threefold repetition",
+      r_fifty: "50-move rule",
+      r_insufficient: "Insufficient material",
+      r_timeout_draw: "Time ran out, but the opponent can't checkmate"
+    }
+  };
+
+  function L(key) {
+    var d = XT[lang] || XT.uz;
+    return d[key] !== undefined ? d[key] : XT.uz[key];
+  }
+
+  function applyXT() {
+    var i, els = document.querySelectorAll("[data-xt]");
+    for (i = 0; i < els.length; i++) { els[i].textContent = L(els[i].getAttribute("data-xt")); }
+    els = document.querySelectorAll("[data-xt-ph]");
+    for (i = 0; i < els.length; i++) { els[i].placeholder = L(els[i].getAttribute("data-xt-ph")); }
+  }
+
+  // Shaxmat natijasi serverda KOD bilan saqlanadi ("resign", "timeout"...)
+  // va har bir o'yinchiga o'z tomonidan ko'rsatiladi: taslim bo'lgan -
+  // "Taslim bo'ldingiz", g'olib - "Raqib taslim bo'ldi". Ilgari matn
+  // saqlanardi va g'olib ham "Taslim bo'ldingiz" ni ko'rardi.
+  // Eski o'yinlarda saqlangan matn kod emas - o'shandayligicha ko'rsatiladi.
+  function reasonText(code, result) {
+    if (code === "checkmate") { code = "mate"; }
+    var side = result === "win" ? "_win" : "_loss";
+    var d = XT[lang] || XT.uz;
+    if (d["r_" + code + side] !== undefined) { return d["r_" + code + side]; }
+    if (d["r_" + code] !== undefined) { return d["r_" + code]; }
+    return String(code || "");
+  }
+
+  function goBack() {
+    stopSortTimer();
+    $("scr-detail").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-hall-full").classList.add("hidden");
+    $("scr-feed-full").classList.add("hidden");
+    $("scr-tasks").classList.add("hidden");
+    $("scr-quiz").classList.add("hidden");
+    $("scr-cup").classList.add("hidden");
+    $("scr-chat").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-refs").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
+    if (leaveSort()) { return; }
+    $("scr-lang").classList.remove("hidden");
+  }
+
+  /* ---------- CHAT ----------
+     Telegramdek ishlaydi: ilova serverdan "oxirgi ko'rgan o'zgarishimdan
+     keyin nima bo'ldi?" deb so'raydi, server esa biror narsa o'zgarguncha
+     javobni ushlab turadi - yangi xabar, tahrir, o'chirish va reaksiya
+     shu zahoti yetib keladi. Ro'yxat qayta chizilganda o'qilayotgan joy
+     saqlanadi: pastda turgan odam yangi xabarga suriladi, yuqorida
+     o'qiyotgan odam esa joyidan qo'zg'almaydi.
+     Xabarni bosib ushlab turish (kompyuterda o'ng tugma) - menyu; chapga
+     surish - javob; ikki marta bosish - ❤️. */
+  var chatRooms = { house: chatNewRoom(), global: chatNewRoom() };
+  var chatRoom = "house";     // "house" yoki "global"
+  var chatOpen = false;
+  var chatSeq = 0;            // so'rovlar zanjiri raqami: eskisi o'zini to'xtatadi
+  var chatCtl = null;         // hozirgi so'rovni uzish uchun
+  var chatFails = 0;
+  var chatStick = true;       // ro'yxat pastida turibmizmi
+  var chatCounts = {};        // { house: n, global: n } - o'qilmaganlar
+  var chatLive = { typing: [], online: 0, until: 0 };   // sarlavha ostidagi yozuv
+  var chatLiveTimer = null;
+  var chatTypingSent = 0;
+  var chatAdmin = false;
+  var chatBans = {};          // uid -> until (null - butunlay); faqat admin ko'radi
+  var chatBannedUntil = false; // o'zim bloklanganmanmi
+  var chatPeers = {};         // uid -> { uid, name, house, online } - shaxsiy suhbatdoshlar
+  var chatDmState = "ok";     // ochiq shaxsiy suhbatda yoza olamanmi: ok / blocked_by_me / closed
+  var chatDmSet = null;       // { privacy: all|house|none, blocked: [...] } - o'z sozlamalarim
+  var chatPeople = null;      // a'zolar oynasi: { room, list, filter }
+  var chatDmTimer = null;
+  var chatCountTimer = null;
+  var CHAT_HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+  var chatReadTimer = null;
+  var chatNewIds = {};
+  var chatCompose = null;     // { mode: "reply" | "edit", id }
+  var chatPress = null;       // barmoq xabar ustida: uzoq bosish yoki surish
+  var chatPendingPaint = false;
+  var chatSuppressClick = 0;
+  var chatLastTap = {};
+  var chatMenuEl = null;
+  var chatTouch = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  // Server ro'yxati bilan bir xil bo'lishi shart (hpcup.CHAT_REACTIONS).
+  var CHAT_REACTS = ["\ud83d\udc4d", "\u2764\ufe0f", "\ud83d\ude02", "\ud83d\udd25", "\ud83d\ude2e", "\u26a1"];
+  var CHAT_EDIT_MS = 48 * 3600 * 1000;
+  // Menyu va tugmalardagi belgilar: bir xil chiziqli uslub (emoji har telefonda har xil chiqadi).
+  function chatSvg(d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+      'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+  }
+  var CHAT_SVG = {
+    reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
+    copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+    edit: chatSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+    check: chatSvg('<path d="m5 12.5 4.5 4.5L19 7"/>'),
+    lock: chatSvg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+    dm: chatSvg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),
+    ban: chatSvg('<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/>'),
+    ban24: chatSvg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+    unban: chatSvg('<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 5-5.5"/>'),
+    trash: chatSvg('<path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>')
+  };
+  var CHAT_ICON = {
+    sending: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.8V8l2 1.3"/></svg>',
+    sent: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 8.4l3 3 6.6-6.8"/></svg>',
+    failed: '<b>!</b>'
+  };
+
+  // read    - qaysi xabargacha o'qilgan (serverda ham saqlanadi);
+  // divider - "Yangi xabarlar" chizig'i shu id dan keyin (chat ochilgandagi holat);
+  // moreNew - pastda hali yuklanmagan xabarlar bor (o'qilmaganlar ko'p bo'lsa);
+  // hidden  - o'shalardan nechtasi o'qilmagan.
+  // Xonalar: "house", "global", "dm:<odam id>" (shaxsiy suhbat); "dms" - suhbatlar ro'yxati.
+  function chatIsDm(room) { return String(room).indexOf("dm:") === 0; }
+  // Fakultet xonasi: "house" - o'zimniki, "h:<fakultet>" - boshqasi (faqat admin ochadi).
+  function chatIsHouseRoom(room) { return room === "house" || String(room).indexOf("h:") === 0; }
+  function chatRoomHouse(room) {
+    if (room === "house") return cupMe().house;
+    return String(room).indexOf("h:") === 0 ? String(room).slice(2) : null;
+  }
+  function chatPeerOf(room) {
+    var id = parseInt(String(room).slice(3), 10);
+    return chatPeers[id] || { uid: id, name: "Sehrgar", house: null };
+  }
+
+  function chatNewRoom() {
+    return { msgs: [], loaded: false, more: false, loadingOld: false, oldFail: 0, rev: 0,
+             read: 0, sentRead: 0, divider: 0, moreNew: false, loadingNew: false, newFail: 0,
+             hidden: 0, hiddenIds: {}, latest: false };
+  }
+
+  // Xonani qayta yuklashga tayyorlaydi (yuborilayotgan xabarlar saqlanib qoladi).
+  function chatResetRoom(room, latest) {
+    var fresh = chatNewRoom(), old = chatRooms[room];
+    fresh.msgs = old ? old.msgs.filter(function(m) { return m.tmp; }) : [];
+    fresh.latest = !!latest;
+    chatRooms[room] = fresh;
+  }
+  function chatInitData() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
+  function chatUser() { return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {}; }
+  // Ism o'z fakultetining rangida (fakulteti yo'q bo'lsa - umumiy kulrang).
+  function chatColor(house) { return (HOUSES[house] || HOUSES.none).accent; }
+  function chatHaptic(kind) {
+    try {
+      var h = tg && tg.HapticFeedback;
+      if (!h) return;
+      if (kind === "sel") h.selectionChanged(); else h.impactOccurred(kind);
+    } catch (e) {}
+  }
+
+  // Kutilayotgan (hali serverga yetmagan) xabarlar doim ro'yxat oxirida turadi.
+  function chatLastId(R) {
+    for (var i = R.msgs.length - 1; i >= 0; i--) { if (!R.msgs[i].tmp) return R.msgs[i].id; }
+    return 0;
+  }
+  function chatFirstId(R) {
+    for (var i = 0; i < R.msgs.length; i++) { if (!R.msgs[i].tmp) return R.msgs[i].id; }
+    return 0;
+  }
+  function chatFind(R, id) {
+    for (var i = 0; i < R.msgs.length; i++) { if (String(R.msgs[i].id) === String(id)) return R.msgs[i]; }
+    return null;
+  }
+
+  // Serverdan kelgan xabarlarni ro'yxatga qo'shadi yoki yangilaydi:
+  // o'chirilganini olib tashlaydi, tahrir/reaksiya olganini almashtiradi,
+  // o'zimiz yuborib javobini kutayotgan nusxani (cid) haqiqiysi bilan almashtiradi.
+  // live - jonli yangilanish: yuklanmagan eski xabarning o'zgarishi e'tiborsiz qoladi.
+  function chatMerge(R, list, live) {
+    var map = {}, tmps = [], added = [], changed = false, first = chatFirstId(R), last = chatLastId(R);
+    var me = chatUser().id || 0;
+    R.msgs.forEach(function(m) { if (m.tmp) tmps.push(m); else map[m.id] = m; });
+    (list || []).forEach(function(m) {
+      var old = map[m.id], k;
+      if (m.deleted) {
+        if (old) { delete map[m.id]; changed = true; }
+        for (k in map) {
+          if (map[k].reply && map[k].reply.id === m.id && !map[k].reply.deleted) {
+            map[k].reply = { id: m.id, deleted: true };
+            changed = true;
+          }
+        }
+        return;
+      }
+      if (old) {
+        if ((old.rev || 0) < (m.rev || 0)) { map[m.id] = m; changed = true; }
+        return;
+      }
+      if (live && first && m.id < first) return;
+      if (live && R.moreNew && m.id > last) {
+        if (m.uid != me && !R.hiddenIds[m.id]) { R.hiddenIds[m.id] = 1; R.hidden++; }
+        return;
+      }
+      if (m.cid) tmps = tmps.filter(function(x) { return x.cid !== m.cid; });
+      map[m.id] = m;
+      added.push(m);
+    });
+    if (added.length || changed) {
+      var real = Object.keys(map).map(function(k) { return map[k]; });
+      real.sort(function(a, b) { return a.id - b.id; });
+      R.msgs = real.concat(tmps);
+    }
+    return { added: added, changed: changed };
+  }
+
+  function chatDate(m) { var d = new Date(m.time); return isNaN(d.getTime()) ? new Date() : d; }
+  function chatHM(d) { return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
+  function chatDayKey(d) { return d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate(); }
+  function chatDayLabel(d) {
+    var now = new Date();
+    var yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+    if (chatDayKey(d) === chatDayKey(now)) return L("chatToday");
+    if (chatDayKey(d) === chatDayKey(yest)) return L("chatYesterday");
+    var mon = L("chatMonths")[d.getMonth()], day = d.getDate(), s;
+    if (lang === "en") s = mon + " " + day;
+    else if (lang === "ru") s = day + " " + mon;
+    else s = day + "-" + mon;
+    if (d.getFullYear() !== now.getFullYear()) s += (lang === "en" ? ", " : " ") + d.getFullYear();
+    return s;
+  }
+
+  // "Oxirgi marta onlayn" matni (iso - serverdagi UTC vaqt). Bo'sh: hech qachon ko'rilmagan.
+  function chatSeenText(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    var mins = Math.floor((Date.now() - d.getTime()) / 60000);
+    if (mins < 1) return L("chatSeenNow");
+    if (mins < 60) return L("chatSeenAgo").replace("%s", mins);
+    if (mins > 60 * 24 * 60) return L("chatSeenAt").replace("%s", L("chatSeenLong"));
+    return L("chatSeenAt").replace("%s", chatDayLabel(d).toLowerCase() + " " + chatHM(d));
+  }
+
+  function chatHint(text) {
+    var el = document.createElement("div");
+    el.className = "chat-hint";
+    el.textContent = text;
+    return el;
+  }
+
+  // Matn + "@ism" lar ajratib ko'rsatiladi.
+  function chatFillText(el, text) {
+    String(text).split(/(@[^\s@.,!?:;()]+)/).forEach(function(part, i) {
+      if (i % 2) {
+        var at = document.createElement("span");
+        at.className = "cm-at";
+        at.textContent = part;
+        el.appendChild(at);
+      } else if (part) {
+        el.appendChild(document.createTextNode(part));
+      }
+    });
+  }
+
+  function chatMyTag() {
+    var n = String(chatUser().first_name || "").split(/\s+/)[0];
+    return n ? "@" + n.toLowerCase() : "";
+  }
+
+  function renderChat() {
+    var box = $("chat-messages");
+    if (!box) return;
+    var R = chatRooms[chatRoom];
+    if (!R) return;
+    box.innerHTML = "";
+    if (!R.loaded) { box.appendChild(chatHint(L("loading"))); return; }
+    if (!R.msgs.length) { box.appendChild(chatHint(L("chatEmpty"))); return; }
+
+    var meUid = chatUser().id || 0, myTag = chatMyTag();
+    var frag = document.createDocumentFragment();
+    if (R.loadingOld) frag.appendChild(chatHint(L("loading")));
+    var prev = null, lastDay = "", GAP = 5 * 60000, divided = false;
+
+    R.msgs.forEach(function(m, i) {
+      var d = chatDate(m), day = chatDayKey(d), next = R.msgs[i + 1];
+      if (day !== lastDay) {
+        var sep = document.createElement("div");
+        sep.className = "cm-day";
+        sep.textContent = chatDayLabel(d);
+        frag.appendChild(sep);
+        lastDay = day;
+        prev = null;
+      }
+      var mine = m.uid == meUid;
+      if (R.divider && !divided && !m.tmp && !mine && m.id > R.divider) {
+        var bar = document.createElement("div");
+        bar.className = "cm-unread";
+        bar.id = "chat-unread-bar";
+        bar.textContent = L("chatUnreadBar");
+        frag.appendChild(bar);
+        divided = true;
+        prev = null;
+      }
+      if (m.kind === "join") { frag.appendChild(chatJoinCard(m, mine)); m.anim = false; prev = null; return; }
+      // Bir odamning 5 daqiqa ichidagi ketma-ket xabarlari bitta to'da bo'ladi.
+      var first = !prev || prev.uid != m.uid || (d - chatDate(prev)) > GAP;
+      var nd = next ? chatDate(next) : null;
+      var last = !next || next.kind || next.uid != m.uid || chatDayKey(nd) !== day || (nd - d) > GAP;
+      // Menga javob yoki meni @ism bilan chaqirishgan bo'lsa - ajratib ko'rsatiladi.
+      var hl = !mine && ((m.reply && m.reply.uid == meUid) ||
+        (myTag && String(m.text).toLowerCase().indexOf(myTag) >= 0));
+
+      var row = document.createElement("div");
+      row.className = "cm" + (mine ? " me" : "") + (first ? " first" : "") + (last ? " last" : "") +
+        (hl ? " hl" : "") + (m.st === "failed" ? " failed" : "") +
+        ((chatNewIds[m.id] || m.anim) ? " new" : "");
+      row.setAttribute("data-id", m.id);
+
+      if (first && !mine && !chatIsDm(chatRoom)) {
+        var name = document.createElement("div");
+        name.className = "cm-name";
+        var nm = document.createElement("span");
+        nm.textContent = m.name || "Sehrgar";
+        nm.style.color = chatColor(m.house);
+        name.appendChild(nm);
+        var hh = HOUSES[m.house];
+        if (hh && m.house !== "none" && (chatRoom === "global" || m.house !== chatRoomHouse(chatRoom))) {
+          var badge = document.createElement("span");
+          badge.className = "cm-house";
+          badge.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house);
+          badge.style.background = "rgba(" + (hh.rgb || "151,161,174") + ",.18)";
+          badge.style.color = hh.accent || "var(--accent)";
+          name.appendChild(badge);
+        }
+        row.appendChild(name);
+      }
+
+      var line = document.createElement("div");
+      line.className = "cm-row";
+      var b = document.createElement("div");
+      b.className = "cm-b";
+      if (m.reply) {
+        var q = document.createElement("div");
+        q.className = "cm-q";
+        q.setAttribute("data-jump", m.reply.id);
+        q.style.color = mine ? "inherit" : (m.reply.deleted ? "var(--dim)" : chatColor(m.reply.house));
+        var qb = document.createElement("b");
+        qb.textContent = m.reply.deleted ? L("chatDeletedMsg") : (m.reply.name || "Sehrgar");
+        q.appendChild(qb);
+        if (!m.reply.deleted) {
+          var qs = document.createElement("span");
+          qs.textContent = m.reply.kind === "join" ? L("chatJoinQuote") : m.reply.text;
+          q.appendChild(qs);
+        }
+        b.appendChild(q);
+      }
+      if (m.chess) { b.className += " cm-chess"; b.appendChild(chessChatCard(m)); }
+      else { chatFillText(b, m.text); }
+      var reacts = m.reactions || [];
+      if (reacts.length) {
+        var rx = document.createElement("div");
+        rx.className = "cm-rx" + (m.edited ? " ed" : "");
+        reacts.forEach(function(r) {
+          var pill = document.createElement("button");
+          pill.type = "button";
+          pill.className = "rx" + (r.me ? " me" : "");
+          pill.setAttribute("data-rx", r.e);
+          pill.textContent = r.e + " " + r.n;
+          rx.appendChild(pill);
+        });
+        b.appendChild(rx);
+      } else {
+        var sp = document.createElement("span");
+        sp.className = "cm-sp" + (m.edited ? " ed" : "");
+        b.appendChild(sp);
+      }
+      var meta = document.createElement("span");
+      meta.className = "cm-meta";
+      meta.appendChild(document.createTextNode((m.edited ? L("chatEdited") + " " : "") + chatHM(d)));
+      if (mine) {
+        var st = document.createElement("span");
+        st.innerHTML = CHAT_ICON[m.st || "sent"];
+        meta.appendChild(st);
+      }
+      b.appendChild(meta);
+      line.appendChild(b);
+      if (!m.tmp) {
+        var sw = document.createElement("span");
+        sw.className = "cm-swipe";
+        sw.innerHTML = CHAT_SVG.reply;
+        line.appendChild(sw);
+      }
+      row.appendChild(line);
+      if (m.st === "failed" && m.err) {
+        var err = document.createElement("div");
+        err.className = "cm-err";
+        err.textContent = m.err;
+        row.appendChild(err);
+      }
+      frag.appendChild(row);
+      m.anim = false;
+      prev = m;
+    });
+    chatNewIds = {};
+    box.appendChild(frag);
+  }
+
+  // Yangi saralangan o'quvchi: fakultet gerbi, xush kelibsiz va "Salom berish" (👋 javob).
+  function chatJoinCard(m, mine) {
+    var hh = HOUSES[m.house] || HOUSES.none || {};
+    var row = document.createElement("div");
+    row.className = "cm cm-join" + ((chatNewIds[m.id] || m.anim) ? " new" : "");
+    row.setAttribute("data-id", m.id);
+    var card = document.createElement("div");
+    card.className = "cm-jc";
+    card.style.setProperty("--jc-rgb", hh.rgb || "151,161,174");
+    card.style.setProperty("--jc-ac", hh.accent || "var(--accent)");
+    var img = cupCrestImg(m.house, 46);
+    if (img) card.appendChild(img);
+    var t = document.createElement("div");
+    t.className = "cm-jc-t";
+    var parts = L("chatJoinTitle").split("%s"), nm = document.createElement("b");
+    nm.textContent = m.name || "Sehrgar";
+    t.appendChild(document.createTextNode(parts[0]));
+    t.appendChild(nm);
+    t.appendChild(document.createTextNode(parts[1] || ""));
+    card.appendChild(t);
+    var sub = document.createElement("div");
+    sub.className = "cm-jc-s";
+    sub.textContent = L(mine ? "chatJoinMine" : "chatJoinSub").replace("%s", cupHouseName(m.house));
+    card.appendChild(sub);
+    var reacts = m.reactions || [];
+    if (reacts.length) {
+      var rx = document.createElement("div");
+      rx.className = "cm-rx";
+      reacts.forEach(function(r) {
+        var pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "rx" + (r.me ? " me" : "");
+        pill.setAttribute("data-rx", r.e);
+        pill.textContent = r.e + " " + r.n;
+        rx.appendChild(pill);
+      });
+      card.appendChild(rx);
+    }
+    if (!mine && chatBannedUntil === false) {
+      var w = document.createElement("button");
+      w.type = "button";
+      w.className = "cm-jc-w";
+      w.textContent = L("chatJoinWave");
+      w.addEventListener("click", function(e) { e.stopPropagation(); chatWave(m); });
+      card.appendChild(w);
+    }
+    var h = document.createElement("div");
+    h.className = "cm-jc-h";
+    h.textContent = chatHM(chatDate(m));
+    card.appendChild(h);
+    row.appendChild(card);
+    return row;
+  }
+
+  // "Salom berish": 👋 xabari shu kartaga javob bo'lib ketadi (yozilayotgan matn saqlanadi).
+  function chatWave(m) {
+    if (chatCompose) chatCancelCompose();
+    var inp = $("chat-input"), draft = inp.value;
+    chatCompose = { mode: "reply", id: m.id };
+    inp.value = "\ud83d\udc4b";
+    chatSend();
+    inp.value = draft;
+    chatGrow();
+    chatSendState();
+  }
+
+  // Qayta chizadi va ko'rinib turgan joyni saqlaydi.
+  // "bottom" - pastga tushadi; "keep" - joyida qoladi; "prepend" - tepaga eski xabarlar qo'shildi.
+  // Barmoq xabarni surayotgan paytda chizish keyinga qoldiriladi.
+  function chatPaint(mode) {
+    var box = $("chat-messages");
+    if (!box) return;
+    if (chatPress && mode !== "prepend") { chatPendingPaint = true; return; }
+    var oldH = box.scrollHeight, oldTop = box.scrollTop;
+    renderChat();
+    var bar = mode === "divider" ? $("chat-unread-bar") : null;
+    if (bar) box.scrollTop = Math.max(0, bar.offsetTop - 56);
+    else if (mode === "bottom" || mode === "divider") box.scrollTop = box.scrollHeight;
+    else if (mode === "prepend") box.scrollTop = oldTop + (box.scrollHeight - oldH);
+    else box.scrollTop = oldTop;
+    chatScrolled();
+  }
+
+  function chatScrolled() {
+    var box = $("chat-messages");
+    if (!box) return;
+    var R = chatRooms[chatRoom];
+    if (!R) return;
+    var gap = box.scrollHeight - box.scrollTop - box.clientHeight;
+    chatStick = gap < 80 && !R.moreNew;
+    chatSeen();
+    var below = chatBelow(R);
+    $("chat-down").classList.toggle("hidden", chatStick || !(gap > 300 || below > 0 || R.moreNew));
+    var n = $("chat-down-n");
+    n.textContent = chatBadge(below);
+    n.classList.toggle("hidden", !below);
+    if (box.scrollTop < 200 && R.loaded && R.more && !R.loadingOld && Date.now() - R.oldFail > 3000) {
+      chatLoadOlder();
+    }
+    if (gap < 300 && R.loaded && R.moreNew && !R.loadingNew && Date.now() - R.newFail > 3000) {
+      chatLoadNewer();
+    }
+  }
+
+  // Pastda qolgan o'qilmaganlar: yuklanganlar + hali yuklanmaganlar.
+  function chatBelow(R) {
+    var me = chatUser().id || 0, n = 0;
+    R.msgs.forEach(function(m) { if (!m.tmp && m.uid != me && m.id > R.read) n++; });
+    return n + (R.moreNew ? R.hidden : 0);
+  }
+
+  // Ekranning pastki chetigacha ko'ringan eng oxirgi xabar - o'qilgan.
+  function chatSeen() {
+    var box = $("chat-messages"), R = chatRooms[chatRoom];
+    if (!R || !R.loaded || !chatOpen || document.hidden) return;
+    var edge = box.scrollTop + box.clientHeight + 4, rows = box.querySelectorAll(".cm");
+    for (var i = rows.length - 1; i >= 0; i--) {
+      var id = parseInt(rows[i].getAttribute("data-id"), 10);
+      if (!id) continue;
+      if (rows[i].offsetTop + rows[i].offsetHeight <= edge) {
+        if (id > R.read) { R.read = id; chatSendRead(chatRoom); }
+        return;
+      }
+    }
+  }
+
+  // Serverga "shu yergacha o'qidim" - tez-tez emas, bir oz to'plab.
+  function chatSendRead(room) {
+    clearTimeout(chatReadTimer);
+    chatReadTimer = setTimeout(function() {
+      var R = chatRooms[room];
+      if (R.read <= R.sentRead) return;
+      R.sentRead = R.read;
+      chatAct(room, { action: "read", id: R.read }).catch(function() { R.sentRead = 0; });
+    }, 800);
+  }
+
+  function chatPoll() {
+    if (!chatOpen || chatRoom === "dms") return;
+    if ($("scr-chat").classList.contains("hidden")) { chatStop(); return; }
+    var d = chatInitData();
+    if (!d) return;
+    var room = chatRoom, R = chatRooms[room], seq = ++chatSeq;
+    if (chatCtl) { try { chatCtl.abort(); } catch (e) {} }
+    var ctl = window.AbortController ? new AbortController() : null;
+    chatCtl = ctl;
+    var url = API_CHAT + "?room=" + room +
+      (R.loaded ? "&since=" + R.rev + "&wait=1" : (R.latest ? "" : "&unread=1"));
+    var started = Date.now();
+    fetch(url, { headers: { "X-Telegram-Init-Data": d }, signal: ctl ? ctl.signal : undefined })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (seq !== chatSeq) return;
+        if (!res || !res.ok) throw new Error("chat");
+        chatFails = 0;
+        chatApplyLive(res);
+        if (!R.loaded) {
+          R.loaded = true;
+          R.more = !!res.more;
+          R.moreNew = !!res.more_new;
+          R.rev = res.rev || 0;
+          R.read = R.sentRead = res.read || 0;
+          R.divider = res.unread ? R.read : 0;
+          chatMerge(R, res.messages, false);
+          if (R.moreNew) {
+            var me = chatUser().id || 0, loadedNew = 0;
+            R.msgs.forEach(function(m) { if (!m.tmp && m.uid != me && m.id > R.read) loadedNew++; });
+            R.hidden = Math.max(0, (res.unread || 0) - loadedNew);
+          }
+          chatPaint(R.divider ? "divider" : "bottom");
+        } else {
+          if (res.rev) R.rev = Math.max(R.rev, res.rev);
+          var r = chatMerge(R, res.messages, true);
+          if (r.added.length) chatArrived(r.added);
+          else if (r.changed) chatPaint(chatStick ? "bottom" : "keep");
+        }
+        // Eski server (yangilanish paytida) javobni ushlab turmaydi va
+        // o'zgarish raqamini bermaydi - tinmay so'rab qolmaslik uchun kutamiz.
+        var delay = (res.rev === undefined && Date.now() - started < 1500) ? 3000 : 0;
+        setTimeout(function() { if (seq === chatSeq) chatPoll(); }, delay);
+      })
+      .catch(function() {
+        if (seq !== chatSeq) return;
+        chatFails++;
+        setTimeout(function() { if (seq === chatSeq) chatPoll(); },
+          Math.min(15000, 1000 * Math.pow(2, chatFails)));
+      });
+  }
+
+  // Server har javobda: onlaynlar soni, kim yozmoqda, men bloklanganmanmi, (admin uchun) bloklar.
+  function chatApplyLive(res) {
+    if (res.online !== undefined) chatLive.online = res.online;
+    if (res.typing) { chatLive.typing = res.typing; chatLive.until = Date.now() + 6500; }
+    if (res.admin !== undefined && chatAdmin !== !!res.admin) { chatAdmin = !!res.admin; chatAdmUI(); }
+    if (res.bans) {
+      chatBans = {};
+      res.bans.forEach(function(b) { chatBans[b.uid] = b.until; });
+    }
+    if (res.banned !== undefined) chatSetBanned(res.banned);
+    if (res.peer) {
+      chatPeers[res.peer.uid] = res.peer;
+      chatLive.peerOnline = res.peer.online;
+      chatLive.peerSeen = res.peer.seen || null;
+      updateChatRoomUI();
+    }
+    if (res.peer_online !== undefined) chatLive.peerOnline = res.peer_online;
+    if (res.peer_seen) chatLive.peerSeen = res.peer_seen;
+    if (res.dm_state !== undefined) { chatDmState = res.dm_state; chatFootUI(); }
+    chatSubUI();
+    clearTimeout(chatLiveTimer);
+    if (chatLive.typing.length) chatLiveTimer = setTimeout(chatSubUI, 6600);
+  }
+
+  function chatSubUI() {
+    var el = $("chat-sub");
+    if (!el) return;
+    var t = Date.now() < chatLive.until ? chatLive.typing : [];
+    el.classList.toggle("typing", t.length > 0 || (chatIsDm(chatRoom) && !!chatLive.peerOnline));
+    el.innerHTML = "";
+    if (chatRoom === "dms") return;
+    if (chatIsDm(chatRoom)) {
+      // Shaxsiy suhbat: "yozmoqda" / "onlayn" / suhbatdoshning fakulteti.
+      var p = chatPeerOf(chatRoom), ph = HOUSES[p.house];
+      if (t.length) {
+        el.appendChild(document.createTextNode(L("chatTypingDm")));
+        var d2 = document.createElement("span");
+        d2.className = "chat-dots";
+        d2.innerHTML = "<i></i><i></i><i></i>";
+        el.appendChild(d2);
+      } else if (chatLive.peerOnline) {
+        el.textContent = L("chatPeerOnline");
+      } else if (chatSeenText(chatLive.peerSeen || p.seen)) {
+        el.textContent = chatSeenText(chatLive.peerSeen || p.seen);
+      } else if (ph) {
+        el.textContent = (ph.crest ? ph.crest + " " : "") + cupHouseName(p.house);
+      }
+      return;
+    }
+    if (t.length) {
+      var txt = t.length === 1 ? L("chatTyping1").replace("%s", t[0].name) :
+                t.length === 2 ? L("chatTyping2").replace("%s", t[0].name).replace("%s", t[1].name) :
+                L("chatTypingN").replace("%s", t.length);
+      el.appendChild(document.createTextNode(txt));
+      var dots = document.createElement("span");
+      dots.className = "chat-dots";
+      dots.innerHTML = "<i></i><i></i><i></i>";
+      el.appendChild(dots);
+    } else if (chatLive.online) {
+      el.textContent = chatLive.online <= 1 ? L("chatOnlyYou") : L("chatOnline").replace("%s", chatLive.online);
+    }
+  }
+
+  function chatWhen(until) {
+    var d = new Date(until);
+    return chatDayLabel(d) + " " + chatHM(d);
+  }
+
+  // Bloklangan odam yozish maydoni o'rnida sababini ko'radi.
+  function chatSetBanned(until) {
+    chatBannedUntil = until === undefined ? false : until;
+    var on = chatBannedUntil !== false;
+    $("chat-banned").textContent = !on ? "" : chatBannedUntil ?
+      L("chatBanned").replace("%s", chatWhen(chatBannedUntil)) : L("chatBannedForever");
+    chatFootUI();
+  }
+
+  // Pastki qism: yozish maydoni, yoki chatdan blok izohi, yoki shaxsiy suhbat yopiqligi izohi.
+  function chatFootUI() {
+    var banned = chatBannedUntil !== false;
+    var dmNo = !banned && chatIsDm(chatRoom) && chatDmState !== "ok";
+    $("chat-banned").classList.toggle("hidden", !banned);
+    var note = $("chat-dmnote");
+    note.classList.toggle("hidden", !dmNo);
+    note.innerHTML = "";
+    if (dmNo) {
+      var mine = chatDmState === "blocked_by_me";
+      note.appendChild(document.createTextNode(L(mine ? "chatDmYouBlocked" : "chatDmClosed")));
+      if (mine) {
+        var p = chatPeerOf(chatRoom), btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = L("chatDmUnblock");
+        btn.addEventListener("click", function() { chatBlock(p, false); });
+        note.appendChild(document.createElement("br"));
+        note.appendChild(btn);
+      }
+    }
+    $("chat-form").classList.toggle("hidden", banned || dmNo);
+    if (banned || dmNo) { chatCancelCompose(); $("chat-at").classList.add("hidden"); }
+  }
+
+  // Pastdan chiqadigan tanlov oynasi (sozlamalar, bloklash).
+  function chatSheet(title, note, items) {
+    chatCloseMenu();
+    var ov = document.createElement("div");
+    ov.className = "chat-menu";
+    var panel = document.createElement("div");
+    panel.className = "chat-sheet";
+    var list = document.createElement("div");
+    list.className = "chat-menu-list";
+    if (title) {
+      var t = document.createElement("div");
+      t.className = "chat-sheet-t";
+      t.textContent = title;
+      list.appendChild(t);
+    }
+    if (note) {
+      var n = document.createElement("div");
+      n.className = "chat-sheet-n";
+      n.textContent = note;
+      list.appendChild(n);
+    }
+    items.forEach(function(it) {
+      if (it.head) {
+        var h = document.createElement("div");
+        h.className = "chat-sheet-h";
+        h.textContent = it.head;
+        list.appendChild(h);
+        return;
+      }
+      var btn = document.createElement("button");
+      btn.type = "button";
+      if (it.danger) btn.className = "danger";
+      var ic = document.createElement("i");
+      ic.innerHTML = it.icon || "";
+      btn.appendChild(ic);
+      btn.appendChild(document.createTextNode(it.label));
+      if (it.on) {
+        var ck = document.createElement("span");
+        ck.className = "chat-sheet-ck";
+        ck.innerHTML = CHAT_SVG.check;
+        btn.appendChild(ck);
+      }
+      btn.addEventListener("click", function() { chatCloseMenu(); it.fn(); });
+      list.appendChild(btn);
+    });
+    panel.appendChild(list);
+    ov.appendChild(panel);
+    ov.addEventListener("click", function(e) { if (e.target === ov) chatCloseMenu(); });
+    $("scr-chat").appendChild(ov);
+    chatMenuEl = ov;
+  }
+
+  function chatPrivacyLabel(v) {
+    return L(v === "house" ? "chatDmHouse" : v === "none" ? "chatDmNone" : "chatDmAll");
+  }
+
+  // "Kim menga yoza oladi" + bloklanganlar ro'yxati.
+  function chatPrivacySheet() {
+    var set = chatDmSet || { privacy: "all", blocked: [] };
+    var items = ["all", "house", "none"].map(function(v) {
+      return { label: chatPrivacyLabel(v), on: set.privacy === v, fn: function() { chatSetPrivacy(v); } };
+    });
+    if (set.blocked.length) {
+      items.push({ head: L("chatDmBlockedList") });
+      set.blocked.forEach(function(p) {
+        items.push({ icon: CHAT_SVG.unban, label: L("chatDmUnblock") + ": " + (p.name || "Sehrgar"),
+                     fn: function() { chatBlock(p, false); } });
+      });
+    }
+    chatSheet(L("chatDmWho"), L("chatDmWhoNote"), items);
+  }
+
+  function chatSetPrivacy(v) {
+    chatAct("global", { action: "dm_privacy", value: v }).then(function(res) {
+      if (!(res && res.ok)) { chatActFail(res); return; }
+      chatDmSet = res.settings;
+      if (chatRoom === "dms") chatLoadDms();
+    }).catch(function() { chatActFail(); });
+  }
+
+  // Shaxsiy suhbat sarlavhasi bosilganda: bloklash / blokdan chiqarish.
+  function chatPeerSheet() {
+    var p = chatPeerOf(chatRoom), blocked = chatDmState === "blocked_by_me";
+    chatSheet(p.name || "Sehrgar", null, [
+      { icon: CHESS_IC.swords, label: L("chatChess"), fn: function() { chessAnnounce(chatRoom); } },
+      blocked ?
+      { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
+      { icon: CHAT_SVG.ban, label: L("chatDmBlock"), danger: true, fn: function() { chatBlock(p, true); } }]);
+  }
+
+  function chatBlock(p, on) {
+    function go() {
+      chatAct("global", { action: on ? "block" : "unblock", uid: p.uid }).then(function(res) {
+        if (!(res && res.ok)) { chatActFail(res); return; }
+        chatDmSet = res.settings;
+        showToast(L(on ? "chatBanDone" : "chatUnbanDone").replace("%s", p.name || "Sehrgar"), "ok");
+        if (chatIsDm(chatRoom) && chatPeerOf(chatRoom).uid == p.uid) {
+          // Holatni serverdan qayta olamiz (blokdan chiqqach ham sozlama yopiq bo'lishi mumkin).
+          chatResetRoom(chatRoom);
+          chatPaint("bottom");
+          chatPoll();
+        } else if (chatRoom === "dms") {
+          chatLoadDms();
+        }
+      }).catch(function() { chatActFail(); });
+    }
+    if (!on) { go(); return; }
+    var ask = L("chatDmBlockAsk").replace("%s", p.name || "Sehrgar");
+    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+      tg.showConfirm(ask, function(ok) { if (ok) go(); });
+    } else if (window.confirm(ask)) {
+      go();
+    }
+  }
+
+  // "Yozmoqda" - 4 soniyada bir martadan ko'p yuborilmaydi.
+  function chatTyping() {
+    if (chatBannedUntil !== false || (chatCompose && chatCompose.mode === "edit")) return;
+    if (chatIsDm(chatRoom) && chatDmState !== "ok") return;
+    if (!$("chat-input").value.trim() || Date.now() - chatTypingSent < 4000) return;
+    chatTypingSent = Date.now();
+    chatAct(chatRoom, { action: "typing" }).catch(function() {});
+  }
+
+  // Admin: bloklash / blokdan chiqarish.
+  function chatBanAct(m, hours, unban) {
+    function go() {
+      var body = { action: unban ? "unban" : "ban", uid: m.uid };
+      if (hours) body.hours = hours;
+      chatAct(chatRoom, body).then(function(res) {
+        if (!(res && res.ok)) { chatActFail(res); return; }
+        chatApplyLive({ bans: res.bans });
+        showToast(L(unban ? "chatUnbanDone" : "chatBanDone").replace("%s", m.name || "Sehrgar"), "ok");
+      }).catch(function() { chatActFail(); });
+    }
+    if (unban) { go(); return; }
+    var ask = L("chatBanAsk").replace("%s", m.name || "Sehrgar");
+    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+      tg.showConfirm(ask, function(ok) { if (ok) go(); });
+    } else if (window.confirm(ask)) {
+      go();
+    }
+  }
+
+  function chatArrived(added) {
+    var me = chatUser().id || 0;
+    added.forEach(function(m) { if (m.uid != me) chatNewIds[m.id] = true; });
+    chatPaint(chatStick ? "bottom" : "keep");
+  }
+
+  // O'qilmaganlar ko'p bo'lsa pastga surgan sari keyingi sahifa yuklanadi.
+  function chatLoadNewer() {
+    var room = chatRoom, R = chatRooms[room], d = chatInitData(), after = chatLastId(R);
+    if (!d || !after) return;
+    R.loadingNew = true;
+    fetch(API_CHAT + "?room=" + room + "&after=" + after, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        R.loadingNew = false;
+        if (!(res && res.ok)) { R.newFail = Date.now(); return; }
+        var me = chatUser().id || 0;
+        chatMerge(R, res.messages, false).added.forEach(function(m) {
+          if (m.uid != me && R.hidden > 0) R.hidden--;
+        });
+        R.moreNew = !!res.more_new;
+        if (!R.moreNew) { R.hidden = 0; R.hiddenIds = {}; }
+        if (chatRoom === room) chatPaint("keep");
+      })
+      .catch(function() { R.loadingNew = false; R.newFail = Date.now(); });
+  }
+
+  // Eng so'nggi xabarlarga o'tish (o'rtadan pastdagi tugma yoki xabar yozganda).
+  function chatJumpLatest() {
+    chatResetRoom(chatRoom, true);
+    chatPaint("bottom");
+    chatPoll();
+  }
+
+  function chatLoadOlder() {
+    var room = chatRoom, R = chatRooms[room], d = chatInitData(), before = chatFirstId(R);
+    if (!d || !before) return;
+    R.loadingOld = true;
+    chatPaint("prepend");
+    fetch(API_CHAT + "?room=" + room + "&before=" + before, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        R.loadingOld = false;
+        if (res && res.ok) {
+          R.more = !!res.more;
+          chatMerge(R, res.messages, false);
+        } else {
+          R.oldFail = Date.now();
+        }
+        if (chatRoom === room) chatPaint("prepend");
+      })
+      .catch(function() {
+        R.loadingOld = false;
+        R.oldFail = Date.now();
+        if (chatRoom === room) chatPaint("prepend");
+      });
+  }
+
+  function chatSend() {
+    var inp = $("chat-input");
+    var text = (inp.value || "").trim();
+    if (!text) return;
+    if (text.length > 1000) { showToast(L("chatLong")); return; }
+    var R = chatRooms[chatRoom];
+    $("chat-at").classList.add("hidden");
+    if (chatCompose && chatCompose.mode === "edit") {
+      var em = chatFind(R, chatCompose.id);
+      chatCancelCompose();
+      if (em && em.text !== text) chatEdit(em, text);
+      return;
+    }
+    var reply = null;
+    if (chatCompose && chatCompose.mode === "reply") {
+      var rm = chatFind(R, chatCompose.id);
+      if (rm) reply = { id: rm.id, uid: rm.uid, name: rm.name, house: rm.house, text: String(rm.text).slice(0, 120), kind: rm.kind };
+      chatCancelCompose();
+    }
+    if (R.moreNew) { chatJumpLatest(); R = chatRooms[chatRoom]; }
+    var u = chatUser();
+    var m = {
+      tmp: true, anim: true, st: "sending",
+      id: "t" + Date.now(),
+      cid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      uid: u.id || 0, name: u.first_name || "Sehrgar", house: cupMe().house,
+      text: text, time: new Date().toISOString(), reply: reply
+    };
+    R.msgs.push(m);
+    inp.value = "";
+    chatGrow();
+    chatSendState();
+    chatPaint("bottom");
+    chatPost(chatRoom, m);
+  }
+
+  // Internet uzilsa o'zi 2 marta qayta urinadi; server cid bo'yicha
+  // takrorni taniydi, shuning uchun xabar ikki marta chiqmaydi.
+  function chatPost(room, m) {
+    var R = chatRooms[room], d = chatInitData();
+    if (m.st !== "sending") {
+      m.st = "sending";
+      m.err = "";
+      if (chatRoom === room) chatPaint("keep");
+    }
+    fetch(API_CHAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ text: m.text, room: room, cid: m.cid, v: 2, initData: d,
+                             reply_to: m.reply ? m.reply.id : undefined })
+    }).then(function(r) { return r.json(); })
+      .then(function(res) {
+        m.tries = 0;
+        if (res && res.ok && (res.message || res.messages)) {
+          R.msgs = R.msgs.filter(function(x) { return x !== m; });
+          if (res.message) {
+            res.message.cid = m.cid;
+            R.read = R.sentRead = Math.max(R.read, res.message.id);
+            R.divider = 0;
+          }
+          chatMerge(R, res.message ? [res.message] : res.messages, false);
+        } else if (res && res.error === "slow") {
+          m.st = "failed";
+          m.err = L("chatSlow").replace("%s", res.retry || 5);
+        } else if (res && res.error === "banned") {
+          m.st = "failed";
+          m.err = "";
+          chatSetBanned(res.until);
+        } else if (res && (res.error === "dm_closed" || res.error === "dm_blocked_by_me")) {
+          m.st = "failed";
+          m.err = "";
+          chatDmState = res.error.slice(3);
+          chatFootUI();
+        } else {
+          m.st = "failed";
+          m.err = L("chatFailed");
+        }
+        if (chatRoom === room) chatPaint(chatStick ? "bottom" : "keep");
+      })
+      .catch(function() {
+        m.tries = (m.tries || 0) + 1;
+        if (m.tries < 3) { setTimeout(function() { chatPost(room, m); }, 1500 * m.tries); return; }
+        m.tries = 0;
+        m.st = "failed";
+        m.err = L("chatFailed");
+        if (chatRoom === room) chatPaint("keep");
+      });
+  }
+
+  // Tahrir, o'chirish, reaksiya - bitta manzil, "action" bilan.
+  function chatAct(room, body) {
+    var d = chatInitData();
+    body.room = room;
+    body.initData = d;
+    return fetch(API_CHAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify(body)
+    }).then(function(r) { return r.json(); });
+  }
+
+  function chatActFail(res) {
+    var e = res && res.error;
+    if (e === "banned") { chatSetBanned(res.until); return; }
+    if (e === "dm_closed" || e === "dm_blocked_by_me") { chatDmState = e.slice(3); chatFootUI(); return; }
+    showToast(e === "slow" ? L("chatSlowAct").replace("%s", res.retry || 5) :
+              e === "too_old" ? L("chatTooOld") : L("chatActFail"));
+  }
+
+  // Bir odam - bir xabarga bitta reaksiya; o'sha belgini qayta bosish uni olib tashlaydi.
+  // Ekranda darhol ko'rinadi, server rad etsa - qaytariladi.
+  function chatReact(m, emoji) {
+    if (m.tmp) return;
+    var room = chatRoom, R = chatRooms[room], saved = JSON.stringify(m.reactions || []);
+    var list = JSON.parse(saved), had = null;
+    list.forEach(function(r) { if (r.me) { had = r.e; r.n--; r.me = false; } });
+    if (had !== emoji) {
+      var ex = list.filter(function(r) { return r.e === emoji; })[0];
+      if (ex) { ex.n++; ex.me = true; } else list.push({ e: emoji, n: 1, me: true });
+    }
+    m.reactions = list.filter(function(r) { return r.n > 0; });
+    chatHaptic("light");
+    chatPaint(chatStick ? "bottom" : "keep");
+    function undo(res) {
+      m.reactions = JSON.parse(saved);
+      chatActFail(res);
+      if (chatRoom === room) chatPaint("keep");
+    }
+    chatAct(room, { action: "react", id: m.id, emoji: emoji }).then(function(res) {
+      if (!(res && res.ok && res.message)) { undo(res); return; }
+      chatMerge(R, [res.message], false);
+      if (chatRoom === room) chatPaint(chatStick ? "bottom" : "keep");
+    }).catch(function() { undo(); });
+  }
+
+  function chatEdit(m, text) {
+    var room = chatRoom, R = chatRooms[room], oldText = m.text, oldEd = m.edited;
+    m.text = text;
+    m.edited = true;
+    chatPaint("keep");
+    function undo(res) {
+      m.text = oldText;
+      m.edited = oldEd;
+      chatActFail(res);
+      if (chatRoom === room) chatPaint("keep");
+    }
+    chatAct(room, { action: "edit", id: m.id, text: text }).then(function(res) {
+      if (!(res && res.ok && res.message)) { undo(res); return; }
+      chatMerge(R, [res.message], false);
+      if (chatRoom === room) chatPaint("keep");
+    }).catch(function() { undo(); });
+  }
+
+  function chatDelete(m) {
+    var room = chatRoom, R = chatRooms[room];
+    function go() {
+      R.msgs = R.msgs.filter(function(x) { return x !== m; });
+      chatPaint("keep");
+      if (m.tmp) return;
+      function undo(res) {
+        chatMerge(R, [m], false);
+        chatActFail(res);
+        if (chatRoom === room) chatPaint("keep");
+      }
+      chatAct(room, { action: "delete", id: m.id }).then(function(res) {
+        if (!(res && res.ok)) undo(res);
+      }).catch(function() { undo(); });
+    }
+    if (m.tmp) { go(); return; }
+    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+      tg.showConfirm(L("chatDeleteAsk"), function(ok) { if (ok) go(); });
+    } else if (window.confirm(L("chatDeleteAsk"))) {
+      go();
+    }
+  }
+
+  function chatCopy(text) {
+    function done() { showToast(L("chatCopied"), "ok"); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+    else fallback();
+  }
+
+  function chatJump(id) {
+    var el = $("chat-messages").querySelector('.cm[data-id="' + id + '"]');
+    if (!el) { showToast(L("chatNotLoaded")); return; }
+    el.scrollIntoView({ block: "center", behavior: "smooth" });
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+  }
+
+  // Yozish maydoni ustidagi "Javob: ..." yoki "Tahrirlash" tasmasi.
+  function chatShowBar(icon, title, text) {
+    $("chat-bar-ic").innerHTML = icon;
+    $("chat-bar-t").textContent = title;
+    $("chat-bar-s").textContent = text;
+    $("chat-bar").classList.remove("hidden");
+    var box = $("chat-messages");
+    if (chatStick) box.scrollTop = box.scrollHeight;
+  }
+
+  function chatStartReply(m) {
+    if (m.tmp) return;
+    if (chatCompose && chatCompose.mode === "edit") $("chat-input").value = "";
+    chatCompose = { mode: "reply", id: m.id };
+    chatShowBar(CHAT_SVG.reply, L("chatReplyTo").replace("%s", m.name || "Sehrgar"), m.kind === "join" ? L("chatJoinQuote") : m.text);
+    chatSendState();
+    $("chat-input").focus();
+  }
+
+  function chatStartEdit(m) {
+    var inp = $("chat-input");
+    chatCompose = { mode: "edit", id: m.id };
+    chatShowBar(CHAT_SVG.edit, L("chatEditing"), m.text);
+    inp.value = m.text;
+    chatGrow();
+    chatSendState();
+    inp.focus();
+    try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {}
+  }
+
+  function chatCancelCompose() {
+    if (!chatCompose) return;
+    if (chatCompose.mode === "edit") $("chat-input").value = "";
+    chatCompose = null;
+    $("chat-bar").classList.add("hidden");
+    chatGrow();
+    chatSendState();
+  }
+
+  function chatCanEdit(m) { return !m.tmp && Date.now() - chatDate(m).getTime() < CHAT_EDIT_MS; }
+
+  function chatCloseMenu() {
+    if (chatMenuEl) { chatMenuEl.remove(); chatMenuEl = null; }
+  }
+
+  // Bosib ushlab turilganda: tepada reaksiyalar, pastda amallar.
+  function chatMenu(m, bub) {
+    chatCloseMenu();
+    chatHaptic("medium");
+    var own = m.uid == (chatUser().id || 0);
+    var ov = document.createElement("div");
+    ov.className = "chat-menu";
+    var panel = document.createElement("div");
+    panel.className = "chat-menu-box";
+    if (!m.tmp && chatBannedUntil === false) {
+      var mineR = (m.reactions || []).filter(function(r) { return r.me; })[0];
+      var rx = document.createElement("div");
+      rx.className = "chat-menu-rx";
+      CHAT_REACTS.forEach(function(e) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = e;
+        if (mineR && mineR.e === e) btn.className = "on";
+        btn.addEventListener("click", function() { chatCloseMenu(); chatReact(m, e); });
+        rx.appendChild(btn);
+      });
+      panel.appendChild(rx);
+    }
+    var list = document.createElement("div");
+    list.className = "chat-menu-list";
+    function item(icon, label, fn, danger) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      if (danger) btn.className = "danger";
+      var ic = document.createElement("i");
+      ic.innerHTML = icon;
+      btn.appendChild(ic);
+      btn.appendChild(document.createTextNode(label));
+      btn.addEventListener("click", function() { chatCloseMenu(); fn(); });
+      list.appendChild(btn);
+    }
+    if (!m.tmp && chatBannedUntil === false) item(CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
+    if (!own && !m.tmp && !chatIsDm(chatRoom)) {
+      item(CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
+    }
+    if (!m.kind) item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
+    if (own && chatCanEdit(m) && !m.chess && !m.kind) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
+    if (own || (chatAdmin && !m.tmp)) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);
+    if (chatAdmin && !own && !m.tmp) {
+      if (m.uid in chatBans) {
+        item(CHAT_SVG.unban, L("chatUnban"), function() { chatBanAct(m, 0, true); });
+      } else {
+        item(CHAT_SVG.ban24, L("chatBan24"), function() { chatBanAct(m, 24); });
+        item(CHAT_SVG.ban, L("chatBanForever"), function() { chatBanAct(m, 0); }, true);
+      }
+    }
+    panel.appendChild(list);
+    ov.appendChild(panel);
+    ov.addEventListener("click", function(e) { if (e.target === ov) chatCloseMenu(); });
+    ov.addEventListener("contextmenu", function(e) { e.preventDefault(); chatCloseMenu(); });
+
+    // Bosilgan xabarning nusxasi xiralashgan fon ustida aniq turadi (Telegramdagidek).
+    var host = $("scr-chat"), hr = host.getBoundingClientRect(), r = bub.getBoundingClientRect();
+    var ghost = document.createElement("div");
+    ghost.className = bub.closest(".cm").className.replace(/\b(new|flash)\b/g, "") + " cm-ghost";
+    ghost.style.left = (r.left - hr.left) + "px";
+    ghost.style.top = (r.top - hr.top) + "px";
+    ghost.style.width = r.width + "px";
+    ghost.appendChild(bub.cloneNode(true));
+    ov.insertBefore(ghost, panel);
+    host.appendChild(ov);
+    chatMenuEl = ov;
+
+    var W = hr.width, H = hr.height, x = r.left - hr.left, y = r.top - hr.top;
+    var bw = panel.offsetWidth, bh = panel.offsetHeight;
+    var left = Math.max(8, Math.min(W - bw - 8, own ? x + r.width - bw : x));
+    var top = y + r.height + 8;
+    if (top + bh > H - 8) top = y - bh - 8;
+    if (top < 8) top = Math.max(8, (H - bh) / 2);
+    panel.style.left = left + "px";
+    panel.style.top = top + "px";
+  }
+
+  // "@" yozilganda shu xonada yozgan odamlarning ismlari taklif qilinadi.
+  function chatAtUpdate() {
+    var inp = $("chat-input"), bar = $("chat-at");
+    var head = inp.value.slice(0, inp.selectionStart == null ? inp.value.length : inp.selectionStart);
+    var mt = head.match(/(^|\s)@([^\s@]*)$/);
+    bar.innerHTML = "";
+    if (!mt) { bar.classList.add("hidden"); return; }
+    var q = mt[2].toLowerCase(), me = chatUser().id || 0, seen = {}, names = [], R = chatRooms[chatRoom] || chatNewRoom();
+    for (var i = R.msgs.length - 1; i >= 0 && names.length < 6; i--) {
+      var m = R.msgs[i], nm = String(m.name || "").split(/\s+/)[0], key = nm.toLowerCase();
+      if (m.uid == me || !nm || seen[key]) continue;
+      seen[key] = true;
+      if (key.indexOf(q) === 0) names.push(nm);
+    }
+    if (!names.length) { bar.classList.add("hidden"); return; }
+    names.forEach(function(nm) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = "@" + nm;
+      function pick(e) {
+        e.preventDefault();
+        var pos = inp.selectionStart == null ? inp.value.length : inp.selectionStart;
+        var left = inp.value.slice(0, pos).replace(/@([^\s@]*)$/, "@" + nm + " ");
+        inp.value = left + inp.value.slice(pos);
+        try { inp.setSelectionRange(left.length, left.length); } catch (err) {}
+        inp.focus();
+        chatGrow();
+        chatSendState();
+        bar.classList.add("hidden");
+      }
+      btn.addEventListener("mousedown", function(e) { e.preventDefault(); });
+      btn.addEventListener("touchend", pick);
+      btn.addEventListener("click", pick);
+      bar.appendChild(btn);
+    });
+    bar.classList.remove("hidden");
+  }
+
+  function setChatRoom(room) {
+    if (chatRoom === room) return;
+    chatRoom = room;
+    if (room !== "dms") chatResetRoom(room);
+    chatLive = { typing: [], online: 0, until: 0 };
+    chatDmState = "ok";
+    chatCancelCompose();
+    $("chat-at").classList.add("hidden");
+    updateChatRoomUI();
+    chatSubUI();
+    chatShowView();
+    chatFootUI();
+    if (room === "dms") {
+      chatSeq++;
+      if (chatCtl) { try { chatCtl.abort(); } catch (e) {} chatCtl = null; }
+      chatLoadDms();
+    } else {
+      chatPaint("bottom");
+      chatPoll();
+    }
+    chatRefreshCounts();
+  }
+
+  // Suhbatlar ro'yxati yoki xabarlar oynasi.
+  function chatShowView() {
+    var list = chatRoom === "dms";
+    $("chat-messages").classList.toggle("hidden", list);
+    $("chat-dms").classList.toggle("hidden", !list);
+    $("scr-chat").querySelector(".chat-foot").classList.toggle("hidden", list);
+    if (list) $("chat-down").classList.add("hidden");
+    clearInterval(chatDmTimer);
+    if (list) chatDmTimer = setInterval(chatLoadDms, 8000);
+  }
+
+  function chatOpenDm(peer) {
+    if (!peer || peer.uid == (chatUser().id || 0)) return;
+    chatPeers[peer.uid] = chatPeers[peer.uid] || peer;
+    chatClosePeople();
+    setChatRoom("dm:" + peer.uid);
+  }
+
+  function chatLoadDms() {
+    var d = chatInitData();
+    if (!d) return;
+    fetch(API_CHAT + "?dms=1", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!(res && res.ok) || chatRoom !== "dms") return;
+        res.dms.forEach(function(x) { chatPeers[x.peer.uid] = x.peer; });
+        if (res.settings) chatDmSet = res.settings;
+        chatRenderDms(res.dms);
+      }).catch(function() {});
+  }
+
+  // Bitta odam qatori: fakultet gerbi (onlayn bo'lsa yashil nuqta), ism, izoh, o'ng tomon.
+  function chatPersonRow(p, sub, subOn, right, badge) {
+    var hh = HOUSES[p.house] || HOUSES.none;
+    var row = document.createElement("button");
+    row.type = "button";
+    row.className = "pp";
+    var av = document.createElement("span");
+    av.className = "pp-av" + (p.online ? " on" : "");
+    av.style.setProperty("--pp-rgb", hh.rgb || "151,161,174");
+    av.textContent = hh.crest || "?";
+    var tx = document.createElement("span");
+    tx.className = "pp-tx";
+    var nm = document.createElement("b");
+    nm.textContent = p.name || "Sehrgar";
+    nm.style.color = hh.accent || "var(--text)";
+    var sb = document.createElement("span");
+    sb.textContent = sub;
+    if (subOn) sb.className = "on";
+    tx.appendChild(nm);
+    tx.appendChild(sb);
+    var r = document.createElement("span");
+    r.className = "pp-r";
+    if (right) {
+      var rt = document.createElement("span");
+      if (right.charAt(0) === "<") rt.innerHTML = right; else rt.textContent = right;
+      r.appendChild(rt);
+    }
+    if (badge) {
+      var bd = document.createElement("span");
+      bd.className = "pp-n";
+      bd.textContent = chatBadge(badge);
+      r.appendChild(bd);
+    }
+    row.appendChild(av);
+    row.appendChild(tx);
+    row.appendChild(r);
+    return row;
+  }
+
+  function chatRenderDms(list) {
+    var box = $("chat-dms"), me = chatUser().id || 0;
+    box.innerHTML = "";
+    var set = document.createElement("button");
+    set.type = "button";
+    set.className = "chat-dms-set";
+    set.innerHTML = "<i>" + CHAT_SVG.lock + "</i>";
+    var sl = document.createElement("span");
+    sl.textContent = L("chatDmWhoShort");
+    var sv = document.createElement("em");
+    sv.textContent = chatPrivacyLabel(chatDmSet && chatDmSet.privacy) + " ›";
+    set.appendChild(sl);
+    set.appendChild(sv);
+    set.addEventListener("click", chatPrivacySheet);
+    box.appendChild(set);
+    if (!list.length) {
+      var empty = document.createElement("div");
+      empty.className = "chat-dms-empty";
+      empty.appendChild(document.createTextNode(L("chatDmEmpty")));
+      var go = document.createElement("button");
+      go.type = "button";
+      go.textContent = L("chatDmFind");
+      go.addEventListener("click", function() { chatOpenPeople("global"); });
+      empty.appendChild(document.createElement("br"));
+      empty.appendChild(go);
+      box.appendChild(empty);
+      return;
+    }
+    var today = chatDayKey(new Date());
+    list.forEach(function(x) {
+      var d = chatDate(x.last);
+      var when = chatDayKey(d) === today ? chatHM(d) : chatDayLabel(d);
+      var sub = (x.last.uid == me ? L("chatDmYou") : "") + x.last.text;
+      var row = chatPersonRow(x.peer, sub, false, when, x.unread);
+      row.addEventListener("click", function() { chatOpenDm(x.peer); });
+      box.appendChild(row);
+    });
+  }
+
+  // A'zolar oynasi: xonadagi hamma (Katta zalda - fakultet bo'yicha saralash).
+  function chatOpenPeople(room) {
+    var me = cupMe();
+    chatPeople = { room: room, list: null, filter: "all" };
+    $("chat-people-q").value = "";
+    $("chat-people-title").textContent = room === "global" ? L("chatGlobalTitle") : cupHouseName(chatRoomHouse(room));
+    $("chat-people-sub").textContent = "";
+    $("chat-people-f").innerHTML = "";
+    $("chat-people-list").innerHTML = "";
+    $("chat-people-list").appendChild(chatHint(L("loading")));
+    $("chat-people").classList.remove("hidden");
+    var d = chatInitData();
+    fetch(API_CHAT + "?members=" + room, { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!chatPeople || chatPeople.room !== room || !(res && res.ok)) return;
+        chatPeople.list = res.members;
+        chatRenderPeople();
+      }).catch(function() {});
+  }
+
+  function chatClosePeople() {
+    chatPeople = null;
+    $("chat-people").classList.add("hidden");
+  }
+
+  function chatRenderPeople() {
+    if (!chatPeople || !chatPeople.list) return;
+    var all = chatPeople.list, f = chatPeople.filter, me = chatUser().id || 0;
+    var q = $("chat-people-q").value.trim().toLowerCase();
+    var fb = $("chat-people-f");
+    fb.innerHTML = "";
+    fb.classList.toggle("hidden", chatPeople.room !== "global");
+    if (chatPeople.room === "global") {
+      ["all"].concat(CHAT_HOUSES).forEach(function(h) {
+        var n = h === "all" ? all.length : all.filter(function(m) { return m.house === h; }).length;
+        var hh = HOUSES[h];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = (h === "all" ? L("chatAll") : (hh.crest ? hh.crest + " " : "") + cupHouseName(h)) + " " + n;
+        if (f === h) { btn.className = "on"; if (hh) btn.style.color = hh.accent; }
+        btn.addEventListener("click", function() { chatPeople.filter = h; chatRenderPeople(); });
+        fb.appendChild(btn);
+      });
+    }
+    var list = all.filter(function(m) {
+      return (f === "all" || m.house === f) && (!q || String(m.name).toLowerCase().indexOf(q) >= 0);
+    });
+    // Onlaynlar tepada, keyin oxirgi marta onlayn bo'lgani bo'yicha (yangisi tepada);
+    // hech qachon ko'rinmaganlar oxirida, kubok ballari bo'yicha (server tartibi).
+    function seenMs(m) { var t = m.seen ? new Date(m.seen).getTime() : 0; return isNaN(t) ? 0 : t; }
+    list = list.map(function(m, i) { return { m: m, i: i }; }).sort(function(a, b) {
+      if (!!a.m.online !== !!b.m.online) return a.m.online ? -1 : 1;
+      var d = seenMs(b.m) - seenMs(a.m);
+      return d || a.i - b.i;
+    }).map(function(x) { return x.m; });
+    var online = list.filter(function(m) { return m.online; }).length;
+    $("chat-people-sub").textContent = L("chatMembersSub").replace("%s", list.length).replace("%s", online);
+    var box = $("chat-people-list");
+    box.innerHTML = "";
+    if (!list.length) { box.appendChild(chatHint(L("chatNobody"))); return; }
+    var frag = document.createDocumentFragment();
+    list.forEach(function(m) {
+      var hh = HOUSES[m.house] || {};
+      var sub = m.online ? L("chatPeerOnline") :
+        (chatSeenText(m.seen) ? chatSeenText(m.seen) + " · " : "") +
+        (chatPeople.room === "global" ? (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house) + " · " : "") +
+        L("chatPoints").replace("%s", m.points);
+      var mine = m.uid == me;
+      var row = chatPersonRow(m, sub, m.online, mine ? L("chatYou") : CHAT_SVG.dm);
+      if (!mine) row.addEventListener("click", function() { chatOpenDm(m); });
+      frag.appendChild(row);
+    });
+    box.appendChild(frag);
+  }
+
+  // O'qilmaganlar soni: kubok oynasidagi chat tugmasida (ikkala xona jami)
+  // va chat ichida - hozir ochiq bo'lmagan xona yorlig'ida.
+  function chatRefreshCounts() {
+    var d = chatInitData();
+    if (!d) return;
+    fetch(API_CHAT + "?counts=1", { headers: { "X-Telegram-Init-Data": d } })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (!(res && res.ok && res.counts)) return;
+        chatCounts = res.counts;
+        chatCountsUI();
+      }).catch(function() {});
+  }
+
+  function chatBadge(n) { return n > 99 ? "99+" : String(n); }
+
+  function chatCountsUI() {
+    setTimeout(worldRefresh, 0);
+    var total = (chatCounts.house || 0) + (chatCounts.global || 0) + (chatCounts.dm || 0);
+    var sb = $("chat-strip-n");
+    if (sb) { sb.textContent = chatBadge(total); sb.classList.toggle("hidden", !total); }
+    ["house", "global", "dm"].forEach(function(room) {
+      var tab = $("tab-" + room), n = chatCounts[room] || 0, b = tab.querySelector("b");
+      if (!b) { b = document.createElement("b"); b.className = "chat-tab-n"; tab.appendChild(b); }
+      b.textContent = chatBadge(n);
+      b.classList.toggle("hidden", !n || (chatOpen && chatRoom === (room === "dm" ? "dms" : room)));
+    });
+    chatAdmUI();
+  }
+
+  // Admin uchun: tablar ostida to'rttala fakultet xonasi (o'ziniki - "house").
+  function chatAdmUI() {
+    var bar = $("chat-adm");
+    if (!bar) return;
+    bar.classList.toggle("hidden", !chatAdmin);
+    if (!chatAdmin) return;
+    var mine = cupMe().house;
+    bar.innerHTML = "";
+    CHAT_HOUSES.forEach(function(h) {
+      var room = h === mine ? "house" : "h:" + h, hh = HOUSES[h] || {};
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = chatRoom === room ? "on" : "";
+      btn.style.setProperty("--adm-rgb", hh.rgb || "151,161,174");
+      if (chatRoom === room) btn.style.color = hh.accent || "";
+      btn.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(h);
+      var n = chatCounts[room === "house" ? "house" : room] || 0;
+      if (n && chatRoom !== room) {
+        var b = document.createElement("b");
+        b.textContent = chatBadge(n);
+        btn.appendChild(b);
+      }
+      btn.addEventListener("click", function() { setChatRoom(room); });
+      bar.appendChild(btn);
+    });
+  }
+
+  function updateChatRoomUI() {
+    var me = cupMe(), hh = HOUSES[me.house] || {};
+    var scr = $("scr-chat"), title = $("chat-title-txt"), inp = $("chat-input");
+    scr.style.setProperty("--me-bg", hh.accent || "var(--accent)");
+    scr.style.setProperty("--me-ink", hh.ink || "#fff");
+    scr.style.setProperty("--me-rgb", hh.rgb || "151,161,174");
+    $("tab-house").textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(me.house);
+    $("tab-global").textContent = L("chatGlobalTab");
+    $("tab-dm").textContent = L("chatDmTab");
+    $("tab-house").classList.toggle("on", chatRoom === "house");
+    $("tab-global").classList.toggle("on", chatRoom === "global");
+    $("tab-dm").classList.toggle("on", chatRoom === "dms" || chatIsDm(chatRoom));
+    chatCountsUI();
+    if (chatRoom === "dms") {
+      title.textContent = L("chatDmTitle");
+      title.style.color = "var(--text)";
+    } else if (chatIsDm(chatRoom)) {
+      var p = chatPeerOf(chatRoom), ph = HOUSES[p.house] || {};
+      title.textContent = p.name || "Sehrgar";
+      title.style.color = ph.accent || "var(--text)";
+      inp.placeholder = L("chatPh");
+    } else if (chatIsHouseRoom(chatRoom)) {
+      var rh = chatRoomHouse(chatRoom), rhh = HOUSES[rh] || {};
+      title.textContent = L("chatHouseTitle").replace("%s", cupHouseName(rh));
+      title.style.color = rhh.accent || "var(--accent)";
+      inp.placeholder = L("chatPhHouse");
+    } else {
+      title.textContent = L("chatGlobalTitle");
+      title.style.color = "var(--text)";
+      inp.placeholder = L("chatPhGlobal");
+    }
+  }
+
+  function openChat() {
+    applyXT();
+    $("scr-cup").classList.add("hidden");
+    $("scr-chat").classList.remove("hidden");
+    chatRoom = "global";
+    chatOpen = true;
+    // Har ochilishda yangidan: o'qilmaganlar joyidan boshlanadi.
+    chatResetRoom("house");
+    chatResetRoom("global");
+    chatLive = { typing: [], online: 0, until: 0 };
+    chatClosePeople();
+    updateChatRoomUI();
+    chatSubUI();
+    chatShowView();
+    clearInterval(chatCountTimer);
+    chatCountTimer = setInterval(chatRefreshCounts, 20000);
+    chatSendState();
+    chatPaint("bottom");
+    chatPoll();
+    chatRefreshCounts();
+  }
+
+  function chatStop() {
+    chatOpen = false;
+    chatSeq++;
+    if (chatCtl) { try { chatCtl.abort(); } catch (e) {} chatCtl = null; }
+  }
+
+  function closeChat() {
+    chatStop();
+    chatCloseMenu();
+    chatCancelCompose();
+    chatClosePeople();
+    clearInterval(chatDmTimer);
+    clearInterval(chatCountTimer);
+    $("scr-chat").classList.add("hidden");
+    $("scr-cup").classList.remove("hidden");
+    // O'qilgan joy serverga yetib borgach sonlarni yangilaymiz.
+    var room = chatRoom, R = chatRooms[room] || chatNewRoom();
+    clearTimeout(chatReadTimer);
+    var send = R.read > R.sentRead ? chatAct(room, { action: "read", id: R.read }) : Promise.resolve();
+    R.sentRead = R.read;
+    send.then(chatRefreshCounts, chatRefreshCounts);
+  }
+
+  function chatGrow() {
+    var inp = $("chat-input");
+    inp.style.height = "auto";
+    inp.style.height = Math.min(inp.scrollHeight + 2, 120) + "px";
+  }
+
+  function chatSendState() { $("chat-send").disabled = !$("chat-input").value.trim(); }
+
+  function chatMsgOf(el) {
+    var row = el && el.closest ? el.closest(".cm") : null;
+    return row ? chatFind(chatRooms[chatRoom], row.getAttribute("data-id")) : null;
+  }
+
+  function chatPressEnd() {
+    var p = chatPress;
+    chatPress = null;
+    if (p) {
+      clearTimeout(p.timer);
+      p.row.classList.remove("drag");
+      p.row.style.transform = "";
+      var ic = p.row.querySelector(".cm-swipe");
+      if (ic) ic.style.opacity = "";
+      if (p.fired) chatSuppressClick = Date.now();
+    }
+    if (chatPendingPaint) { chatPendingPaint = false; chatPaint(chatStick ? "bottom" : "keep"); }
+  }
+
+  function initChatUI() {
+    var inp = $("chat-input"), btn = $("chat-send"), box = $("chat-messages");
+    $("chat-strip").addEventListener("click", openChat);
+    // Shaxsiy suhbatdan "Ortga" - suhbatlar ro'yxatiga, qolgan joyda - chatdan chiqish.
+    $("chat-back").addEventListener("click", function() {
+      if (chatIsDm(chatRoom)) { setChatRoom("dms"); return; }
+      if (worldReturnTo()) { return; }
+      closeChat();
+    });
+    $("tab-house").addEventListener("click", function() { setChatRoom("house"); });
+    $("tab-global").addEventListener("click", function() { setChatRoom("global"); });
+    $("tab-dm").addEventListener("click", function() { setChatRoom("dms"); });
+    $("chat-head").addEventListener("click", function() {
+      if (chatIsHouseRoom(chatRoom) || chatRoom === "global") chatOpenPeople(chatRoom);
+      else if (chatIsDm(chatRoom)) chatPeerSheet();
+    });
+    $("chat-people-back").addEventListener("click", chatClosePeople);
+    $("chat-people-q").addEventListener("input", chatRenderPeople);
+    $("chat-bar-x").addEventListener("mousedown", function(e) { e.preventDefault(); });
+    $("chat-bar-x").addEventListener("click", chatCancelCompose);
+    inp.addEventListener("input", function() {
+      var stick = chatStick;
+      chatGrow();
+      chatSendState();
+      chatAtUpdate();
+      chatTyping();
+      if (stick) box.scrollTop = box.scrollHeight;
+    });
+    // Kompyuterda Enter - yuborish, Shift+Enter - yangi qator. Telefonda Enter yangi qator.
+    inp.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !chatTouch) {
+        e.preventDefault();
+        chatSend();
+      } else if (e.key === "Escape" && chatCompose) {
+        chatCancelCompose();
+      }
+    });
+    document.addEventListener("keydown", function(e) { if (e.key === "Escape") chatCloseMenu(); });
+    $("chat-form").addEventListener("submit", function(e) { e.preventDefault(); chatSend(); });
+    // Tugma bosilganda yozish maydoni fokusni yo'qotmaydi - klaviatura yopilib-ochilmaydi.
+    btn.addEventListener("mousedown", function(e) { e.preventDefault(); });
+    btn.addEventListener("touchend", function(e) { e.preventDefault(); chatSend(); });
+    btn.addEventListener("click", function(e) { e.preventDefault(); chatSend(); });
+    box.addEventListener("scroll", chatScrolled, { passive: true });
+    $("chat-down").addEventListener("click", function() {
+      if (chatRooms[chatRoom].moreNew) { chatJumpLatest(); return; }
+      if (box.scrollTo) box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
+      else box.scrollTop = box.scrollHeight;
+    });
+
+    // Barmoq: uzoq bosish - menyu, chapga surish - javob.
+    box.addEventListener("touchstart", function(e) {
+      var bub = e.target.closest && e.target.closest(".cm-b");
+      if (!bub || e.touches.length > 1) return;
+      var m = chatMsgOf(bub);
+      if (!m) return;
+      var t = e.touches[0];
+      var p = { m: m, bub: bub, row: bub.parentNode, x: t.clientX, y: t.clientY, dx: 0 };
+      p.timer = setTimeout(function() {
+        if (chatPress !== p || p.swiping) return;
+        p.fired = true;
+        chatMenu(p.m, p.bub);
+      }, 420);
+      chatPress = p;
+    }, { passive: true });
+    box.addEventListener("touchmove", function(e) {
+      var p = chatPress;
+      if (!p || p.fired) return;
+      var t = e.touches[0], dx = t.clientX - p.x, dy = t.clientY - p.y;
+      if (!p.swiping) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        clearTimeout(p.timer);
+        if (dx < 0 && Math.abs(dx) > Math.abs(dy) * 1.5 && !p.m.tmp) p.swiping = true;
+        else { chatPressEnd(); return; }
+      }
+      p.dx = Math.max(-72, Math.min(0, dx));
+      p.row.classList.add("drag");
+      p.row.style.transform = "translateX(" + p.dx + "px)";
+      var ic = p.row.querySelector(".cm-swipe");
+      if (ic) ic.style.opacity = String(Math.min(1, -p.dx / 56));
+      if (p.dx <= -56 && !p.buzz) { p.buzz = true; chatHaptic("sel"); }
+    }, { passive: true });
+    box.addEventListener("touchend", function() {
+      var p = chatPress;
+      if (!p) return;
+      var reply = p.swiping && p.dx <= -56 ? p.m : null;
+      chatPressEnd();
+      if (reply) chatStartReply(reply);
+    });
+    box.addEventListener("touchcancel", chatPressEnd);
+    // Kompyuterda o'ng tugma; Android'da uzoq bosish ham shu hodisani beradi.
+    box.addEventListener("contextmenu", function(e) {
+      var bub = e.target.closest && e.target.closest(".cm-b");
+      if (!bub) return;
+      e.preventDefault();
+      if (chatMenuEl) return;
+      var m = chatMsgOf(bub);
+      if (!m) return;
+      if (chatPress) { clearTimeout(chatPress.timer); chatPress.fired = true; }
+      chatMenu(m, bub);
+    });
+    box.addEventListener("click", function(e) {
+      if (Date.now() - chatSuppressClick < 500) return;
+      var t = e.target;
+      if (!t.closest) return;
+      var pill = t.closest(".rx");
+      if (pill) {
+        var pm = chatMsgOf(pill);
+        if (pm) chatReact(pm, pill.getAttribute("data-rx"));
+        return;
+      }
+      var ca = t.closest("[data-chess-act]");
+      if (ca) { chessFromChat(ca.getAttribute("data-g")); return; }
+      var q = t.closest(".cm-q");
+      if (q) { chatJump(q.getAttribute("data-jump")); return; }
+      var bub = t.closest(".cm-b");
+      if (!bub) return;
+      var m = chatMsgOf(bub);
+      if (!m) return;
+      if (m.st === "failed") { chatPost(chatRoom, m); return; }
+      if (m.tmp) return;
+      // Ikki marta bosish - ❤️
+      var now = Date.now();
+      if (chatLastTap.id === m.id && now - chatLastTap.t < 320) {
+        chatLastTap = {};
+        chatReact(m, CHAT_REACTS[1]);
+      } else {
+        chatLastTap = { id: m.id, t: now };
+      }
+    });
+
+    // Klaviatura ochilib oyna kichraysa - pastda turgan odam pastda qoladi.
+    function keepBottom() {
+      setTimeout(function() { if (chatOpen && chatStick) box.scrollTop = box.scrollHeight; }, 60);
+    }
+    window.addEventListener("resize", keepBottom);
+    if (tg && tg.onEvent) tg.onEvent("viewportChanged", keepBottom);
+    // Ilova qaytib ochilganda kutib qolmay darhol yangilanadi.
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden && chatOpen) chatPoll();
+    });
+  }
+
+  var CHESS_SVGS = {
+    P: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-pawn" class="white pawn"><path d="M22.5 9c-2.21 0-4 1.79-4 4 0 .89.29 1.71.78 2.38C17.33 16.5 16 18.59 16 21c0 2.03.94 3.84 2.41 5.03-3 1.06-7.41 5.55-7.41 13.47h23c0-7.92-4.41-12.41-7.41-13.47 1.47-1.19 2.41-3 2.41-5.03 0-2.41-1.33-4.5-3.28-5.62.49-.67.78-1.49.78-2.38 0-2.21-1.79-4-4-4z" fill="#fff" stroke="#000" stroke-width="1.5" stroke-linecap="round" /></g></svg>',
+    N: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-knight" class="white knight" fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M 22,10 C 32.5,11 38.5,18 38,39 L 15,39 C 15,30 25,32.5 23,18" style="fill:#ffffff; stroke:#000000;" /><path d="M 24,18 C 24.38,20.91 18.45,25.37 16,27 C 13,29 13.18,31.34 11,31 C 9.958,30.06 12.41,27.96 11,28 C 10,28 11.19,29.23 10,30 C 9,30 5.997,31 6,26 C 6,24 12,14 12,14 C 12,14 13.89,12.1 14,10.5 C 13.27,9.506 13.5,8.5 13.5,7.5 C 14.5,6.5 16.5,10 16.5,10 L 18.5,10 C 18.5,10 19.28,8.008 21,7 C 22,7 22,10 22,10" style="fill:#ffffff; stroke:#000000;" /><path d="M 9.5 25.5 A 0.5 0.5 0 1 1 8.5,25.5 A 0.5 0.5 0 1 1 9.5 25.5 z" style="fill:#000000; stroke:#000000;" /><path d="M 15 15.5 A 0.5 1.5 0 1 1 14,15.5 A 0.5 1.5 0 1 1 15 15.5 z" transform="matrix(0.866,0.5,-0.5,0.866,9.693,-5.173)" style="fill:#000000; stroke:#000000;" /></g></svg>',
+    B: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-bishop" class="white bishop" fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><g fill="#fff" stroke-linecap="butt"><path d="M9 36c3.39-.97 10.11.43 13.5-2 3.39 2.43 10.11 1.03 13.5 2 0 0 1.65.54 3 2-.68.97-1.65.99-3 .5-3.39-.97-10.11.46-13.5-1-3.39 1.46-10.11.03-13.5 1-1.354.49-2.323.47-3-.5 1.354-1.94 3-2 3-2zM15 32c2.5 2.5 12.5 2.5 15 0 .5-1.5 0-2 0-2 0-2.5-2.5-4-2.5-4 5.5-1.5 6-11.5-5-15.5-11 4-10.5 14-5 15.5 0 0-2.5 1.5-2.5 4 0 0-.5.5 0 2zM25 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 1 1 5 0z" /></g><path d="M17.5 26h10M15 30h15m-7.5-14.5v5M20 18h5" stroke-linejoin="miter" /></g></svg>',
+    R: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-rook" class="white rook" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 39h27v-3H9v3zM12 36v-4h21v4H12zM11 14V9h4v2h5V9h5v2h5V9h4v5" stroke-linecap="butt" /><path d="M34 14l-3 3H14l-3-3" /><path d="M31 17v12.5H14V17" stroke-linecap="butt" stroke-linejoin="miter" /><path d="M31 29.5l1.5 2.5h-20l1.5-2.5" /><path d="M11 14h23" fill="none" stroke-linejoin="miter" /></g></svg>',
+    Q: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-queen" class="white queen" fill="#fff" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12a2 2 0 1 1-4 0 2 2 0 1 1 4 0zM24.5 7.5a2 2 0 1 1-4 0 2 2 0 1 1 4 0zM41 12a2 2 0 1 1-4 0 2 2 0 1 1 4 0zM16 8.5a2 2 0 1 1-4 0 2 2 0 1 1 4 0zM33 9a2 2 0 1 1-4 0 2 2 0 1 1 4 0z" /><path d="M9 26c8.5-1.5 21-1.5 27 0l2-12-7 11V11l-5.5 13.5-3-15-3 15-5.5-14V25L7 14l2 12zM9 26c0 2 1.5 2 2.5 4 1 1.5 1 1 .5 3.5-1.5 1-1.5 2.5-1.5 2.5-1.5 1.5.5 2.5.5 2.5 6.5 1 16.5 1 23 0 0 0 1.5-1 0-2.5 0 0 .5-1.5-1-2.5-.5-2.5-.5-2 .5-3.5 1-2 2.5-2 2.5-4-8.5-1.5-18.5-1.5-27 0z" stroke-linecap="butt" /><path d="M11.5 30c3.5-1 18.5-1 22 0M12 33.5c6-1 15-1 21 0" fill="none" /></g></svg>',
+    K: '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45 45"><g id="white-king" class="white king" fill="none" fill-rule="evenodd" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.5 11.63V6M20 8h5" stroke-linejoin="miter" /><path d="M22.5 25s4.5-7.5 3-10.5c0 0-1-2.5-3-2.5s-3 2.5-3 2.5c-1.5 3 3 10.5 3 10.5" fill="#fff" stroke-linecap="butt" stroke-linejoin="miter" /><path d="M11.5 37c5.5 3.5 15.5 3.5 21 0v-7s9-4.5 6-10.5c-4-6.5-13.5-3.5-16 4V27v-3.5c-3.5-7.5-13-10.5-16-4-3 6 5 10 5 10V37z" fill="#fff" /><path d="M11.5 30c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0m-21 3.5c5.5-3 15.5-3 21 0" /></g></svg>',
+  };
+
+  function getPieceSVG(p, style) {
+    if (!p) return "";
+    var svg = CHESS_SVGS[p.toUpperCase()] || "";
+    var paint = PIECE_PAINT[style || chessPieceStyle()][p === p.toUpperCase() ? "w" : "b"];
+    svg = svg.replace(/#(?:ffffff|fff)\b/g, "@B@").replace(/#(?:000000|000)\b/g, paint[1]).replace(/@B@/g, paint[0]);
+    return svg.replace("<svg ", '<svg width="100%" height="100%" style="display:block" ');
+  }
+
+  // Donalar qiymati (bot baholashi uchun). Ilgari bu jadval yo'q edi va
+  // "o'rta" / "qiyin" bot birinchi yurishdayoq xatoga uchrab to'xtab qolardi.
+  var CHESS_PIECES = (function () {
+    var v = { P: 100, N: 320, B: 330, R: 500, Q: 900, K: 20000 }, out = {};
+    for (var k in v) { out[k] = { val: v[k] }; out[k.toLowerCase()] = { val: v[k] }; }
+    return out;
+  })();
+
+  var PST = {
+    P: [
+      [0,  0,  0,  0,  0,  0,  0,  0],
+      [50, 50, 50, 50, 50, 50, 50, 50],
+      [10, 10, 20, 30, 30, 20, 10, 10],
+      [5,  5, 10, 25, 25, 10,  5,  5],
+      [0,  0,  0, 20, 20,  0,  0,  0],
+      [5, -5,-10,  0,  0,-10, -5,  5],
+      [5, 10, 10,-20,-20, 10, 10,  5],
+      [0,  0,  0,  0,  0,  0,  0,  0]
+    ],
+    N: [
+      [-50,-40,-30,-30,-30,-30,-40,-50],
+      [-40,-20,  0,  0,  0,  0,-20,-40],
+      [-30,  0, 10, 15, 15, 10,  0,-30],
+      [-30,  5, 15, 20, 20, 15,  5,-30],
+      [-30,  0, 15, 20, 20, 15,  0,-30],
+      [-30,  5, 10, 15, 15, 10,  5,-30],
+      [-40,-20,  0,  5,  5,  0,-20,-40],
+      [-50,-40,-30,-30,-30,-30,-40,-50]
+    ],
+    B: [
+      [-20,-10,-10,-10,-10,-10,-10,-20],
+      [-10,  0,  0,  0,  0,  0,  0,-10],
+      [-10,  0,  5, 10, 10,  5,  0,-10],
+      [-10,  5,  5, 10, 10,  5,  5,-10],
+      [-10,  0, 10, 10, 10, 10,  0,-10],
+      [-10, 10, 10, 10, 10, 10, 10,-10],
+      [-10,  5,  0,  0,  0,  0,  5,-10],
+      [-20,-10,-10,-10,-10,-10,-10,-20]
+    ],
+    R: [
+      [0,  0,  0,  0,  0,  0,  0,  0],
+      [5, 10, 10, 10, 10, 10, 10,  5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [-5,  0,  0,  0,  0,  0,  0, -5],
+      [0,  0,  0,  5,  5,  0,  0,  0]
+    ],
+    Q: [
+      [-20,-10,-10, -5, -5,-10,-10,-20],
+      [-10,  0,  0,  0,  0,  0,  0,-10],
+      [-10,  0,  5,  5,  5,  5,  0,-10],
+      [-5,  0,  5,  5,  5,  5,  0, -5],
+      [0,  0,  5,  5,  5,  5,  0, -5],
+      [-10,  5,  5,  5,  5,  5,  0,-10],
+      [-10,  0,  5,  0,  0,  0,  0,-10],
+      [-20,-10,-10, -5, -5,-10,-10,-20]
+    ],
+    K: [
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-30,-40,-40,-50,-50,-40,-40,-30],
+      [-20,-30,-30,-40,-40,-30,-20,-20],
+      [-10,-20,-20,-20,-20,-20,-10,-10],
+      [20, 20,  0,  0,  0,  0, 20, 20],
+      [20, 30, 10,  0,  0, 10, 30, 20]
+    ]
+  };
+
+  var chessState = {
+    board: [],
+    turn: "w", // "w" or "b"
+    castling: { wK: true, wQ: true, bK: true, bQ: true },
+    ep: null,
+    history: [],
+    selectedSq: null,
+    legalMoves: [],
+    lastMove: null,
+    gameMode: "bot", // "bot" or "pvp"
+    botDiff: "easy",
+    myColor: "w",
+    pvpGameId: null,
+    whiteTime: 300,
+    blackTime: 300,
+    clockTimer: null,
+    pollTimer: null,
+    gameOver: false
+  };
+
+  function initChessEngine() {
+    chessState.board = [
+      ["r","n","b","q","k","b","n","r"],
+      ["p","p","p","p","p","p","p","p"],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      [null,null,null,null,null,null,null,null],
+      ["P","P","P","P","P","P","P","P"],
+      ["R","N","B","Q","K","B","N","R"]
+    ];
+    chessState.turn = "w";
+    chessState.castling = { wK: true, wQ: true, bK: true, bQ: true };
+    chessState.ep = null;
+    chessState.history = [];
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessState.lastMove = null;
+    chessState.whiteTime = 300;
+    chessState.blackTime = 300;
+    chessState.gameOver = false;
+    chessState.halfmove = 0;
+    chessState.seen = {};
+    chessState.seen[posKey()] = 1;
+    chessState.sans = [];
+    chessState.ucis = [];
+    chessState.hist = [{ board: cloneBoard(chessState.board), last: null, turn: "w" }];
+  }
+
+  function cloneBoard(b) {
+    return b.map(function(r) { return r.slice(); });
+  }
+
+  function isWhitePiece(p) { return p && p === p.toUpperCase(); }
+  function isBlackPiece(p) { return p && p === p.toLowerCase(); }
+  function getPieceColor(p) { if (!p) return null; return isWhitePiece(p) ? "w" : "b"; }
+
+  function isSquareAttacked(board, r, c, byColor) {
+    // Knight attacks
+    var knightDeltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+    var targetKnight = (byColor === "w" ? "N" : "n");
+    for (var i = 0; i < knightDeltas.length; i++) {
+      var nr = r + knightDeltas[i][0], nc = c + knightDeltas[i][1];
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && board[nr][nc] === targetKnight) return true;
+    }
+
+    // Pawn attacks
+    var pawnDir = (byColor === "w" ? 1 : -1);
+    var targetPawn = (byColor === "w" ? "P" : "p");
+    if (r + pawnDir >= 0 && r + pawnDir < 8) {
+      if (c - 1 >= 0 && board[r + pawnDir][c - 1] === targetPawn) return true;
+      if (c + 1 < 8 && board[r + pawnDir][c + 1] === targetPawn) return true;
+    }
+
+    // King attacks
+    var kingDeltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    var targetKing = (byColor === "w" ? "K" : "k");
+    for (var k = 0; k < kingDeltas.length; k++) {
+      var kr = r + kingDeltas[k][0], kc = c + kingDeltas[k][1];
+      if (kr >= 0 && kr < 8 && kc >= 0 && kc < 8 && board[kr][kc] === targetKing) return true;
+    }
+
+    // Straight (Rook/Queen)
+    var straights = [[-1,0],[1,0],[0,-1],[0,1]];
+    var targetR = (byColor === "w" ? "R" : "r"), targetQ = (byColor === "w" ? "Q" : "q");
+    for (var s = 0; s < straights.length; s++) {
+      var sr = r + straights[s][0], sc = c + straights[s][1];
+      while (sr >= 0 && sr < 8 && sc >= 0 && sc < 8) {
+        var p = board[sr][sc];
+        if (p) {
+          if (p === targetR || p === targetQ) return true;
+          break;
+        }
+        sr += straights[s][0]; sc += straights[s][1];
+      }
+    }
+
+    // Diagonal (Bishop/Queen)
+    var diags = [[-1,-1],[-1,1],[1,-1],[1,1]];
+    var targetB = (byColor === "w" ? "B" : "b");
+    for (var d = 0; d < diags.length; d++) {
+      var dr = r + diags[d][0], dc = c + diags[d][1];
+      while (dr >= 0 && dr < 8 && dc >= 0 && dc < 8) {
+        var dp = board[dr][dc];
+        if (dp) {
+          if (dp === targetB || dp === targetQ) return true;
+          break;
+        }
+        dr += diags[d][0]; dc += diags[d][1];
+      }
+    }
+
+    return false;
+  }
+
+  function findKing(board, color) {
+    var target = (color === "w" ? "K" : "k");
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        if (board[r][c] === target) return { r: r, c: c };
+      }
+    }
+    return null;
+  }
+
+  function isKingInCheck(board, color) {
+    var kp = findKing(board, color);
+    if (!kp) return false;
+    var opp = (color === "w" ? "b" : "w");
+    return isSquareAttacked(board, kp.r, kp.c, opp);
+  }
+
+  function getRawMoves(board, r, c, castling, ep) {
+    var p = board[r][c];
+    if (!p) return [];
+    var color = isWhitePiece(p) ? "w" : "b";
+    var moves = [];
+    var type = p.toUpperCase();
+
+    if (type === "P") {
+      var dir = (color === "w" ? -1 : 1);
+      var startRow = (color === "w" ? 6 : 1);
+      // 1 step forward
+      if (r + dir >= 0 && r + dir < 8 && !board[r + dir][c]) {
+        moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: c } });
+        // 2 steps forward
+        if (r === startRow && !board[r + dir * 2][c]) {
+          moves.push({ from: { r: r, c: c }, to: { r: r + dir * 2, c: c }, isDoublePawn: true });
+        }
+      }
+      // Captures
+      var capCols = [c - 1, c + 1];
+      for (var i = 0; i < capCols.length; i++) {
+        var cc = capCols[i];
+        if (cc >= 0 && cc < 8 && r + dir >= 0 && r + dir < 8) {
+          var target = board[r + dir][cc];
+          if (target && getPieceColor(target) !== color) {
+            moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: cc } });
+          } else if (ep && ep.r === r + dir && ep.c === cc) {
+            moves.push({ from: { r: r, c: c }, to: { r: r + dir, c: cc }, isEnPassant: true });
+          }
+        }
+      }
+    } else if (type === "N") {
+      var nDeltas = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+      for (var ni = 0; ni < nDeltas.length; ni++) {
+        var nr = r + nDeltas[ni][0], nc = c + nDeltas[ni][1];
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+          var nt = board[nr][nc];
+          if (!nt || getPieceColor(nt) !== color) moves.push({ from: { r: r, c: c }, to: { r: nr, c: nc } });
+        }
+      }
+    } else if (type === "B" || type === "R" || type === "Q") {
+      var dirs = [];
+      if (type === "B" || type === "Q") dirs.push([-1,-1],[-1,1],[1,-1],[1,1]);
+      if (type === "R" || type === "Q") dirs.push([-1,0],[1,0],[0,-1],[0,1]);
+      for (var di = 0; di < dirs.length; di++) {
+        var dr = r + dirs[di][0], dc = c + dirs[di][1];
+        while (dr >= 0 && dr < 8 && dc >= 0 && dc < 8) {
+          var dt = board[dr][dc];
+          if (!dt) {
+            moves.push({ from: { r: r, c: c }, to: { r: dr, c: dc } });
+          } else {
+            if (getPieceColor(dt) !== color) moves.push({ from: { r: r, c: c }, to: { r: dr, c: dc } });
+            break;
+          }
+          dr += dirs[di][0]; dc += dirs[di][1];
+        }
+      }
+    } else if (type === "K") {
+      var kDeltas = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+      for (var ki = 0; ki < kDeltas.length; ki++) {
+        var kr = r + kDeltas[ki][0], kc = c + kDeltas[ki][1];
+        if (kr >= 0 && kr < 8 && kc >= 0 && kc < 8) {
+          var kt = board[kr][kc];
+          if (!kt || getPieceColor(kt) !== color) moves.push({ from: { r: r, c: c }, to: { r: kr, c: kc } });
+        }
+      }
+      // Castling
+      var opp = (color === "w" ? "b" : "w");
+      if (color === "w" && r === 7 && c === 4 && !isSquareAttacked(board, 7, 4, opp)) {
+        if (castling.wK && !board[7][5] && !board[7][6] && !isSquareAttacked(board, 7, 5, opp) && !isSquareAttacked(board, 7, 6, opp) && board[7][7] === "R") {
+          moves.push({ from: { r: 7, c: 4 }, to: { r: 7, c: 6 }, isCastle: "wK" });
+        }
+        if (castling.wQ && !board[7][3] && !board[7][2] && !board[7][1] && !isSquareAttacked(board, 7, 3, opp) && !isSquareAttacked(board, 7, 2, opp) && board[7][0] === "R") {
+          moves.push({ from: { r: 7, c: 4 }, to: { r: 7, c: 2 }, isCastle: "wQ" });
+        }
+      }
+      if (color === "b" && r === 0 && c === 4 && !isSquareAttacked(board, 0, 4, opp)) {
+        if (castling.bK && !board[0][5] && !board[0][6] && !isSquareAttacked(board, 0, 5, opp) && !isSquareAttacked(board, 0, 6, opp) && board[0][7] === "r") {
+          moves.push({ from: { r: 0, c: 4 }, to: { r: 0, c: 6 }, isCastle: "bK" });
+        }
+        if (castling.bQ && !board[0][3] && !board[0][2] && !board[0][1] && !isSquareAttacked(board, 0, 3, opp) && !isSquareAttacked(board, 0, 2, opp) && board[0][0] === "r") {
+          moves.push({ from: { r: 0, c: 4 }, to: { r: 0, c: 2 }, isCastle: "bQ" });
+        }
+      }
+    }
+
+    return moves;
+  }
+
+  function makeSimMove(board, move) {
+    var nb = cloneBoard(board);
+    var p = nb[move.from.r][move.from.c];
+    nb[move.from.r][move.from.c] = null;
+    
+    if (move.isEnPassant) {
+      var capRow = (p === "P" ? move.to.r + 1 : move.to.r - 1);
+      nb[capRow][move.to.c] = null;
+    }
+    
+    if (move.isCastle === "wK") { nb[7][7] = null; nb[7][5] = "R"; }
+    else if (move.isCastle === "wQ") { nb[7][0] = null; nb[7][3] = "R"; }
+    else if (move.isCastle === "bK") { nb[0][7] = null; nb[0][5] = "r"; }
+    else if (move.isCastle === "bQ") { nb[0][0] = null; nb[0][3] = "r"; }
+
+    // Piyoda aylanishi: o'yinchi tanlagan dona, tanlanmagan bo'lsa (bot) - farzin
+    var promo = move.promo || "q";
+    if (p === "P" && move.to.r === 0) p = promo.toUpperCase();
+    if (p === "p" && move.to.r === 7) p = promo;
+
+    nb[move.to.r][move.to.c] = p;
+    return nb;
+  }
+
+  function getLegalMovesForSquare(board, r, c, castling, ep) {
+    var raw = getRawMoves(board, r, c, castling, ep);
+    var color = getPieceColor(board[r][c]);
+    var legal = [];
+    for (var i = 0; i < raw.length; i++) {
+      var simulated = makeSimMove(board, raw[i]);
+      if (!isKingInCheck(simulated, color)) {
+        legal.push(raw[i]);
+      }
+    }
+    return legal;
+  }
+
+  function getAllLegalMoves(board, color, castling, ep) {
+    var all = [];
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        if (getPieceColor(board[r][c]) === color) {
+          all = all.concat(getLegalMovesForSquare(board, r, c, castling, ep));
+        }
+      }
+    }
+    return all;
+  }
+
+  /* --- AI ENGINE --- */
+
+  function evaluateBoard(board) {
+    var total = 0;
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var p = board[r][c];
+        if (p) {
+          var type = p.toUpperCase();
+          var val = (CHESS_PIECES[p] ? CHESS_PIECES[p].val : 0);
+          var pstTable = PST[type];
+          var posVal = 0;
+          if (pstTable) {
+            posVal = isWhitePiece(p) ? pstTable[r][c] : pstTable[7 - r][c];
+          }
+          if (isWhitePiece(p)) {
+            total += val + posVal;
+          } else {
+            total -= (val + posVal);
+          }
+        }
+      }
+    }
+    return total;
+  }
+
+  function minimax(board, depth, alpha, beta, isMaximizing, castling, ep) {
+    if (depth === 0) return { score: evaluateBoard(board) };
+
+    var color = isMaximizing ? "w" : "b";
+    var moves = getAllLegalMoves(board, color, castling, ep);
+    if (moves.length === 0) {
+      if (isKingInCheck(board, color)) {
+        return { score: isMaximizing ? -50000 + (3 - depth) : 50000 - (3 - depth) };
+      }
+      return { score: 0 }; // Stalemate
+    }
+
+    var bestMove = moves[Math.floor(Math.random() * moves.length)];
+
+    if (isMaximizing) {
+      var maxEval = -999999;
+      for (var i = 0; i < moves.length; i++) {
+        var nextBoard = makeSimMove(board, moves[i]);
+        var nextEp = moves[i].isDoublePawn ? { r: (moves[i].from.r + moves[i].to.r)/2, c: moves[i].from.c } : null;
+        var evaluation = minimax(nextBoard, depth - 1, alpha, beta, false, castling, nextEp).score;
+        if (evaluation > maxEval) {
+          maxEval = evaluation;
+          bestMove = moves[i];
+        }
+        alpha = Math.max(alpha, evaluation);
+        if (beta <= alpha) break;
+      }
+      return { score: maxEval, move: bestMove };
+    } else {
+      var minEval = 999999;
+      for (var j = 0; j < moves.length; j++) {
+        var nBoard = makeSimMove(board, moves[j]);
+        var nEp = moves[j].isDoublePawn ? { r: (moves[j].from.r + moves[j].to.r)/2, c: moves[j].from.c } : null;
+        var ev = minimax(nBoard, depth - 1, alpha, beta, true, castling, nEp).score;
+        if (ev < minEval) {
+          minEval = ev;
+          bestMove = moves[j];
+        }
+        beta = Math.min(beta, ev);
+        if (beta <= alpha) break;
+      }
+      return { score: minEval, move: bestMove };
+    }
+  }
+
+  function getBestBotMove(board, diff, color, castling, ep) {
+    var moves = getAllLegalMoves(board, color, castling, ep);
+    if (moves.length === 0) return null;
+
+    if (diff === "easy") {
+      // 70% random, 30% capture
+      var captures = moves.filter(function(m) { return !!board[m.to.r][m.to.c]; });
+      if (captures.length > 0 && Math.random() < 0.3) {
+        return captures[Math.floor(Math.random() * captures.length)];
+      }
+      return moves[Math.floor(Math.random() * moves.length)];
+    } else if (diff === "med") {
+      // Depth 2
+      var res2 = minimax(board, 2, -999999, 999999, (color === "w"), castling, ep);
+      return res2.move || moves[0];
+    } else {
+      // Depth 3
+      var res3 = minimax(board, 3, -999999, 999999, (color === "w"), castling, ep);
+      return res3.move || moves[0];
+    }
+  }
+
+  /* --- UI CONTROLLER & CLOCK --- */
+
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return (m < 10 ? "0" + m : m) + ":" + (sec < 10 ? "0" + sec : sec);
+  }
+
+  function fmtClock(ms) {
+    ms = Math.max(0, ms);
+    if (ms >= 10000) { return formatTime(Math.ceil(ms / 1000)); }
+    // So'nggi 10 soniyada o'ndan bir soniya ham ko'rinadi (chess.com dagidek).
+    return "00:0" + (Math.floor(ms / 100) / 10).toFixed(1);
+  }
+
+  function updateChessClocks() {
+    var myClock = $("chess-my-clock");
+    var oppClock = $("chess-opp-clock");
+    if (!myClock || !oppClock) return;
+
+    var pvp = chessState.gameMode === "pvp";
+    var me = chessState.myColor, opp = (me === "w" ? "b" : "w");
+    var myMs = pvp ? pvpClockMs(me) : (me === "w" ? chessState.whiteTime : chessState.blackTime) * 1000;
+    var oppMs = pvp ? pvpClockMs(opp) : (me === "w" ? chessState.blackTime : chessState.whiteTime) * 1000;
+    var isMyTurn = (chessState.turn === me);
+    var running = !chessState.gameOver;
+
+    myClock.textContent = fmtClock(myMs);
+    oppClock.textContent = fmtClock(oppMs);
+
+    var badge = $("chess-status-badge");
+    var text = isMyTurn ? L("yourTurn") : L("oppThinking");
+    var color = isMyTurn ? "#f1c40f" : "var(--dim)";
+    if (pvp) {
+      var g = chessNet.game;
+      if (!g || g.status !== "active") {
+        text = (!g || g.status === "waiting") ? L("waitShort") : L("r_over");
+        color = "var(--dim)";
+        running = false;
+      } else if (g.ply < 2 && g.first_move_left !== null) {
+        var left = Math.max(0, g.first_move_left - (Date.now() - chessNet.recvAt));
+        text = L(isMyTurn ? "firstMove" : "oppFirstMove").replace("%s", formatTime(Math.ceil(left / 1000)));
+      }
+      if (chessNet.fails >= 2) { text = L("reconnect"); color = "#e74c3c"; }
+    } else if (chessState.gameOver) {
+      text = L("r_over");
+      color = "var(--dim)";
+    }
+    myClock.classList.toggle("on", running && isMyTurn);
+    oppClock.classList.toggle("on", running && !isMyTurn);
+    myClock.classList.toggle("low", running && isMyTurn && myMs <= 30000);
+    oppClock.classList.toggle("low", running && !isMyTurn && oppMs <= 30000);
+    myClock.style.color = running && isMyTurn ? (myMs <= 30000 ? "#ff8a7a" : "var(--text)") : "var(--dim)";
+    oppClock.style.color = running && !isMyTurn ? (oppMs <= 30000 ? "#ff8a7a" : "var(--text)") : "var(--dim)";
+    badge.textContent = text;
+    badge.style.color = color;
+  }
+
+  /* --- JONLI O'YIN (PvP) ---
+     Hakam - server (bot.tizimshunos.uz/api/chess/*). Ilova faqat yurishni
+     ("e2e4", piyoda aylansa "e7e8n") yuboradi; qaysi yurishlar mumkinligi,
+     soat, natija va ball - hammasi serverdan keladi, ilova ularni faqat
+     ko'rsatadi. O'zgarishlar chatdagi kabi jonli: ilova "shu raqamdan keyin
+     nima o'zgardi?" deb so'raydi, server javobni o'zgarish bo'lguncha
+     (25 soniyagacha) ushlab turadi. Soat ham server vaqti bo'yicha: ilova
+     yig'ilib qolsa ham raqibning vaqti to'g'ri yuradi. */
+
+  var API_CHESS = "https://bot.tizimshunos.uz/api/chess/";
+  var FILES = "abcdefgh";
+  var chessNet = { game: null, pollGen: 0, ctrl: null, busy: false, frozen: null,
+                   recvAt: 0, fails: 0, ended: false, tick: null };
+
+  function sqName(r, c) { return FILES.charAt(c) + (8 - r); }
+  function uciSq(s) { return { r: 8 - parseInt(s.charAt(1), 10), c: FILES.indexOf(s.charAt(0)) }; }
+  function moveUci(m) { return sqName(m.from.r, m.from.c) + sqName(m.to.r, m.to.c) + (m.promo || ""); }
+
+  // Server holatni FEN ko'rinishida yuboradi - ilova uni o'z taxtasiga o'giradi.
+  function fenState(fen) {
+    var parts = String(fen || "").split(" ");
+    var rows = (parts[0] || "").split("/");
+    var board = [];
+    for (var r = 0; r < 8; r++) {
+      var row = [], src = rows[r] || "8";
+      for (var i = 0; i < src.length; i++) {
+        var ch = src.charAt(i);
+        if (/[1-8]/.test(ch)) { for (var k = 0; k < +ch; k++) { row.push(null); } }
+        else { row.push(ch); }
+      }
+      while (row.length < 8) { row.push(null); }
+      board.push(row.slice(0, 8));
+    }
+    var cs = parts[2] || "-";
+    return {
+      board: board,
+      turn: parts[1] === "b" ? "b" : "w",
+      castling: { wK: cs.indexOf("K") > -1, wQ: cs.indexOf("Q") > -1, bK: cs.indexOf("k") > -1, bQ: cs.indexOf("q") > -1 },
+      ep: (parts[3] && parts[3] !== "-") ? uciSq(parts[3]) : null
+    };
+  }
+
+  function chessApi(what, body, query, ctrl) {
+    var d = ""; try { d = (tg && tg.initData) || ""; } catch (e) {}
+    var opt = { method: body ? "POST" : "GET", headers: { "X-Telegram-Init-Data": d } };
+    if (body) { opt.headers["Content-Type"] = "application/json"; opt.body = JSON.stringify(body); }
+    if (ctrl) { opt.signal = ctrl.signal; }
+    return fetch(API_CHESS + what + (query || ""), opt).then(function (r) { return r.json(); });
+  }
+
+  function chessAsk(msg, cb) {
+    try {
+      if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
+        tg.showConfirm(msg, function (ok) { if (ok) { cb(); } });
+        return;
+      }
+    } catch (e) {}
+    if (window.confirm(msg)) { cb(); }
+  }
+
+  function chessHaptic(kind) {
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred(kind); } } catch (e) {}
+  }
+
+  function pvpIs(gid) { return !!(chessNet.game && chessNet.game.id === gid); }
+
+  function pvpClockMs(color) {
+    var g = chessNet.game;
+    if (!g) { return 0; }
+    if (chessNet.frozen) { return chessNet.frozen[color]; }
+    var ms = g.clock[color];
+    if (g.clock.running && g.status === "active" && g.turn === color) {
+      ms -= (Date.now() - chessNet.recvAt);
+    }
+    return Math.max(0, ms);
+  }
+
+  function timeLabel(g) {
+    return formatTime(g.base) + (g.inc ? " +" + g.inc : "");
+  }
+
+  // Tanlangan dona uchun mumkin bo'lgan yurishlar - serverning ro'yxatidan.
+  function pvpLegalFor(r, c) {
+    var g = chessNet.game, from = sqName(r, c), out = [], seen = {};
+    if (!g || chessNet.busy) { return out; }
+    var p = chessState.board[r][c];
+    (g.legal || []).forEach(function (u) {
+      var to = u.slice(2, 4);
+      if (u.slice(0, 2) !== from || seen[to]) { return; }
+      seen[to] = 1;
+      var m = { from: { r: r, c: c }, to: uciSq(to) };
+      if (p && p.toUpperCase() === "K" && Math.abs(m.to.c - c) === 2) {
+        m.isCastle = (p === "K" ? "w" : "b") + (m.to.c === 6 ? "K" : "Q");
+      }
+      if (p && p.toUpperCase() === "P" && m.to.c !== c && !chessState.board[m.to.r][m.to.c]) {
+        m.isEnPassant = true;
+      }
+      out.push(m);
+    });
+    return out;
+  }
+
+  function pvpRenderPlayers(g) {
+    var mine = g.you === "b" ? g.black : g.white;
+    var opp = g.you === "b" ? g.white : g.black;
+    var myCol = g.you === "b" ? L("black") : L("white");
+    var oppCol = g.you === "b" ? L("white") : L("black");
+    $("chess-my-name").textContent = (mine && mine.name) || L("you");
+    chessAvatar($("chess-my-avatar"), mine && mine.house);
+    $("chess-my-sub").textContent = myCol + (mine && mine.house ? " • " + cupHouseName(mine.house) : "");
+    var invBtn = $("chess-invite-btn");
+    if (opp) {
+      $("chess-opp-name").textContent = opp.name || L("opp");
+      chessAvatar($("chess-opp-avatar"), opp.house);
+      $("chess-opp-sub").textContent = oppCol + " • " + timeLabel(g) +
+        (g.status === "active" && !opp.online ? " • " + L("offline") : "");
+      invBtn.classList.add("hidden");
+    } else {
+      $("chess-opp-name").textContent = L("waitFriend");
+      $("chess-opp-avatar").setAttribute("data-k", "wait");
+      $("chess-opp-avatar").textContent = "⏳";
+      $("chess-opp-sub").textContent = L("codeLbl") + " " + g.id + " • " + timeLabel(g);
+      invBtn.classList.toggle("hidden", g.status !== "waiting");
+    }
+  }
+
+  function pvpRenderControls(g) {
+    var live = g.status === "active";
+    var early = g.status === "waiting" || (live && g.ply < 2);
+    var resign = $("btn-chess-resign"), draw = $("btn-chess-draw");
+    resign.classList.toggle("hidden", !(live || g.status === "waiting"));
+    $("btn-chess-resign-tx").textContent = early ? L("abortBtn") : L("resign");
+    draw.classList.toggle("hidden", !live || g.ply < 2);
+    draw.disabled = !g.can_offer;
+    $("btn-chess-draw-tx").textContent = g.draw_offer === g.you ? L("drawSent") : L("drawBtn");
+    $("chess-offer").classList.toggle("hidden", !(live && g.draw_offer && g.draw_offer !== g.you));
+  }
+
+  function pvpApply(g) {
+    if (!g || g.v !== 2) { return; }
+    var cur = chessNet.game;
+    if (cur && cur.id === g.id && g.rev < cur.rev) { return; }   // eskirgan javob
+    var wasMyTurn = cur && cur.id === g.id && cur.turn === cur.you;
+    chessNet.game = g;
+    chessNet.recvAt = Date.now();
+    chessNet.frozen = null;
+
+    var st = fenState(g.fen);
+    chessState.board = st.board;
+    chessState.turn = st.turn;
+    chessState.castling = st.castling;
+    chessState.ep = st.ep;
+    chessState.myColor = g.you || "w";
+    chessState.pvpGameId = g.id;
+    chessState.lastMove = g.last ? { from: uciSq(g.last.slice(0, 2)), to: uciSq(g.last.slice(2, 4)) } : null;
+    chessState.gameOver = (g.status === "finished" || g.status === "aborted");
+
+    if (chessState.selectedSq && !chessState.gameOver) {
+      chessState.legalMoves = pvpLegalFor(chessState.selectedSq.r, chessState.selectedSq.c);
+      if (!chessState.legalMoves.length) { chessState.selectedSq = null; }
+    } else {
+      chessState.selectedSq = null;
+      chessState.legalMoves = [];
+    }
+    if (chessState.gameOver || g.turn !== g.you) { closePromo(); }
+
+    pvpRenderPlayers(g);
+    pvpRenderControls(g);
+    renderChessBoard();
+    updateChessClocks();
+
+    if (g.status === "active" && g.turn === g.you && cur && !wasMyTurn) {
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    }
+    if (chessState.gameOver && !chessNet.ended) {
+      chessNet.ended = true;
+      pvpStopPoll();
+      if (!chessNet.review) { pvpShowEnd(g); }
+    }
+  }
+
+  function pvpShowEnd(g) {
+    if (g.status === "aborted") {
+      showChessOverlay("aborted", g.reason, "");
+      return;
+    }
+    var mine = g.you === "b" ? g.black : g.white;
+    var res = g.result === "1/2-1/2" ? "draw" : (mine && g.winner_uid === mine.uid ? "win" : "loss");
+    var extra = "";
+    if (g.award && g.award.points) {
+      extra = L("winPts").replace("%d", g.award.points);
+    } else if (g.award && g.award.limit_reached) {
+      extra = L("limitFull").replace("%d", g.award.limit);
+    }
+    var rt = g.rating && g.rating[g.you];
+    if (rt) {
+      // Reyting o'zgarishi: "Reyting: 1216 (+16)"
+      extra += (extra ? " " : "") + L("ratingAfter").replace("%r", rt.r + rt.d).replace("%d", (rt.d > 0 ? "+" : "") + rt.d);
+    }
+    showChessOverlay(res, g.reason, extra);
+    chessHaptic(res === "win" ? "success" : res === "loss" ? "error" : "warning");
+  }
+
+  function pvpPoll() {
+    var g = chessNet.game, gen = chessNet.pollGen;
+    if (!g || g.status === "finished" || g.status === "aborted") { return; }
+    var ctrl = null;
+    try { ctrl = new AbortController(); } catch (e) {}
+    chessNet.ctrl = ctrl;
+    chessApi("state", null, "?game_id=" + encodeURIComponent(g.id) + "&since=" + g.rev + "&wait=1", ctrl)
+      .then(function (res) {
+        if (gen !== chessNet.pollGen) { return; }
+        if (!res || !res.game) { throw new Error("bad"); }
+        chessNet.fails = 0;
+        if (chessNet.busy) { setTimeout(function () { if (gen === chessNet.pollGen) { pvpPoll(); } }, 300); return; }
+        pvpApply(res.game);
+        pvpPoll();
+      })["catch"](function () {
+        if (gen !== chessNet.pollGen) { return; }
+        chessNet.fails++;
+        updateChessClocks();
+        setTimeout(function () { if (gen === chessNet.pollGen) { pvpPoll(); } },
+                   Math.min(1000 * chessNet.fails, 5000));
+      });
+  }
+
+  function pvpStopPoll() {
+    chessNet.pollGen++;
+    if (chessNet.ctrl) { try { chessNet.ctrl.abort(); } catch (e) {} }
+    chessNet.ctrl = null;
+    if (chessNet.tick) { clearInterval(chessNet.tick); chessNet.tick = null; }
+  }
+
+  function pvpStartPoll() {
+    pvpStopPoll();
+    if (!chessNet.game || chessState.gameOver) { return; }
+    chessNet.tick = setInterval(updateChessClocks, 200);
+    pvpPoll();
+  }
+
+  function pvpRefresh() {
+    var g = chessNet.game;
+    if (!g) { return; }
+    chessApi("state", null, "?game_id=" + encodeURIComponent(g.id)).then(function (res) {
+      if (res && res.game && pvpIs(g.id)) { pvpApply(res.game); }
+    })["catch"](function () {});
+  }
+
+  function pvpSendMove(move) {
+    var g = chessNet.game;
+    if (!g || chessNet.busy) { return; }
+    var uci = moveUci(move);
+    // Yurish darhol ko'rinadi; server javobi kelgach uning holati ustun turadi.
+    chessNet.frozen = { w: pvpClockMs("w"), b: pvpClockMs("b") };
+    chessState.board = makeSimMove(chessState.board, move);
+    chessState.lastMove = move;
+    chessState.turn = (chessState.turn === "w" ? "b" : "w");
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessNet.busy = true;
+    renderChessBoard();
+    updateChessClocks();
+    var tries = 0;
+    (function send() {
+      chessApi("move", { game_id: g.id, uci: uci, ply: g.ply }).then(function (res) {
+        if (!pvpIs(g.id)) { return; }
+        chessNet.busy = false;
+        if (res && res.game) { pvpApply(res.game); } else { pvpRefresh(); }
+        if (res && !res.ok && res.error !== "not_active") { showToast(L("moveRejected"), "err"); }
+      })["catch"](function () {
+        if (!pvpIs(g.id)) { return; }
+        // Takror yuborish xavfsiz: server bir yurishni ikki marta qabul qilmaydi.
+        if (++tries < 4) { setTimeout(send, 800 * tries); return; }
+        chessNet.busy = false;
+        showToast(L("netErr"), "err");
+        pvpRefresh();
+      });
+    })();
+  }
+
+  function pvpAction(action) {
+    var g = chessNet.game;
+    if (!g) { return; }
+    chessApi("action", { game_id: g.id, action: action }).then(function (res) {
+      if (!pvpIs(g.id)) { return; }
+      if (res && res.game) { pvpApply(res.game); }
+      if (res && res.ok && action === "draw_offer") { showToast(L("drawSent")); }
+      if (res && res.error === "offer_limit") { showToast(L("offerLimit"), "err"); }
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  function openPvP(g, review) {
+    chessSoundUnlock();
+    seekStop(false);
+    stopHubTimer();
+    // Chatdagi kartadan kelinsa - chat yopiladi (o'qilgan joy saqlanadi).
+    if (!$("scr-chat").classList.contains("hidden")) { closeChat(); }
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
+    chessState.gameMode = "pvp";
+    chessNet.game = null;
+    chessNet.busy = false;
+    chessNet.frozen = null;
+    chessNet.fails = 0;
+    chessNet.ended = false;
+    chessNet.review = !!review;       // tarixdan: natija oynasisiz, faqat ko'rish
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessResetView();
+    $("chess-board-overlay").classList.add("hidden");
+    $("scr-lang").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-cup").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
+    $("scr-chess-game").classList.remove("hidden");
+    pvpApply(g);
+    pvpStartPoll();
+    if (review) {
+      $("chess-controls").classList.add("hidden");
+      $("btn-chess-again").classList.add("hidden");
+      $("chess-end-row").classList.remove("hidden");
+    }
+    if (g.status === "active" && g.ply === 0) { chessSound("start"); }
+  }
+
+  // Ilova qayta ochilganda (telefonda yig'ilib turgan bo'lsa) darhol yangilaymiz:
+  // yo'lda qolgan so'rov o'lik bo'lishi mumkin.
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden || chessState.gameMode !== "pvp" || chessState.gameOver) { return; }
+    if (!chessNet.game || $("scr-chess-game").classList.contains("hidden")) { return; }
+    pvpStartPoll();
+  });
+
+  function stopBotClock() {
+    if (chessState.clockTimer) { clearInterval(chessState.clockTimer); chessState.clockTimer = null; }
+  }
+
+  function startBotClock() {
+    stopBotClock();
+    chessState.clockTimer = setInterval(function() {
+      if (chessState.gameOver) return;
+      if (chessState.turn === "w") {
+        chessState.whiteTime = Math.max(0, chessState.whiteTime - 1);
+        if (chessState.whiteTime === 0) finishChessGame(chessState.myColor === "w" ? "loss" : "win", "timeout");
+      } else {
+        chessState.blackTime = Math.max(0, chessState.blackTime - 1);
+        if (chessState.blackTime === 0) finishChessGame(chessState.myColor === "b" ? "loss" : "win", "timeout");
+      }
+      updateChessClocks();
+    }, 1000);
+  }
+
+  /* --- SEHRLI TAXTA ---
+     Garri Potter olamidagi sehrgar shaxmatidek: tosh taxta, oltin ramka,
+     fil suyagi va obsidian donalar; dona urilganda tosh kabi sinib ketadi.
+     Uslublar: "Sehrli tosh" (asosiy), "Fakultet" (o'z fakultetingiz ranglari),
+     "Klassik" (oddiy yog'och). Taxta faqat shu yerda chiziladi; bosish va
+     sudrash ham taxta darajasida ushlanadi (har katakka alohida emas). */
+
+  var THEME_KEY = "chess_theme";
+  var SOUND_KEY = "chess_sound";
+  var BOARD_STONE = ["#d3cab8", "#5d626b"];
+  var BOARD_CLASSIC = ["#dfc7a7", "#885c35"];
+  var BOARD_HOUSE = {
+    gryffindor: ["#e7c77e", "#8a2a22"], slytherin: ["#cfd6d9", "#1f5c40"],
+    ravenclaw: ["#d6bd8f", "#2b4f86"], hufflepuff: ["#eed27f", "#3b352c"]
+  };
+  var PIECE_PAINT = {
+    marble: { w: ["url(#hpIvory)", "#3b2a16"], b: ["url(#hpObsidian)", "#d9a74a"] },
+    classic: { w: ["#fff", "#000"], b: ["#000", "#fff"] }
+  };
+  var CG_IC = {
+    half: chatSvg('<path d="M5 9h14M5 15h14"/>'),
+    flag: chatSvg('<path d="M5 22V4"/><path d="M5 4h13l-2.5 4.5L18 13H5"/>'),
+    again: chatSvg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
+    soundOn: chatSvg('<path d="M11 5 6 9H2v6h4l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>'),
+    soundOff: chatSvg('<path d="M11 5 6 9H2v6h4l5 4Z"/><path d="m22 9-6 6M16 9l6 6"/>'),
+    prev: chatSvg('<path d="m15 18-6-6 6-6"/>'),
+    next: chatSvg('<path d="m9 18 6-6-6-6"/>')
+  };
+
+  var chessThemeSel = null;
+
+  function chessThemeName() {
+    if (chessThemeSel) { return chessThemeSel; }
+    var n = "stone";
+    try { n = window.localStorage.getItem(THEME_KEY) || "stone"; } catch (e) {}
+    chessThemeSel = (n === "house" || n === "classic") ? n : "stone";
+    return chessThemeSel;
+  }
+
+  function setChessTheme(name) {
+    chessThemeSel = name;
+    try { window.localStorage.setItem(THEME_KEY, name); } catch (e) {}
+  }
+
+  function chessTheme(name) {
+    name = name || chessThemeName();
+    if (name === "classic") { return { name: name, sq: BOARD_CLASSIC, pieces: "classic", frame: "chf-wood" }; }
+    if (name === "house") {
+      var h = BOARD_HOUSE[cupMe().house] || BOARD_HOUSE[house];
+      return { name: name, sq: h || BOARD_STONE, pieces: "marble", frame: "chf-gold" };
+    }
+    return { name: "stone", sq: BOARD_STONE, pieces: "marble", frame: "chf-gold" };
+  }
+
+  function chessPieceStyle() { return chessTheme().pieces; }
+
+  /* --- Tarix: har yurishdan keyingi holat (ro'yxatdan orqaga qarash uchun) --- */
+
+  var chessHist = { view: null, cacheKey: null, cache: null, drawnKey: null };
+
+  function startBoard() {
+    return fenState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").board;
+  }
+
+  function applyUciTo(board, uci) {
+    var from = uciSq(uci.slice(0, 2)), to = uciSq(uci.slice(2, 4)), p = board[from.r][from.c];
+    var m = { from: from, to: to };
+    if (p && p.toUpperCase() === "K" && Math.abs(to.c - from.c) === 2) {
+      m.isCastle = (p === "K" ? "w" : "b") + (to.c === 6 ? "K" : "Q");
+    }
+    if (p && p.toUpperCase() === "P" && to.c !== from.c && !board[to.r][to.c]) { m.isEnPassant = true; }
+    if (uci.length > 4) { m.promo = uci.charAt(4); }
+    return { board: makeSimMove(board, m), move: m };
+  }
+
+  function chessPositions() {
+    if (chessState.gameMode !== "pvp") { return chessState.hist || []; }
+    var g = chessNet.game;
+    if (!g) { return []; }
+    var key = g.id + ":" + g.ply;
+    if (chessHist.cacheKey === key) { return chessHist.cache; }
+    var b = startBoard(), list = [{ board: b, last: null, turn: "w" }];
+    (g.moves || []).forEach(function (u, i) {
+      var res = applyUciTo(b, u);
+      b = res.board;
+      list.push({ board: b, last: res.move, turn: i % 2 ? "w" : "b" });
+    });
+    chessHist.cacheKey = key;
+    chessHist.cache = list;
+    return list;
+  }
+
+  function chessSans() {
+    if (chessState.gameMode === "pvp") { return (chessNet.game && chessNet.game.san) || []; }
+    return chessState.sans || [];
+  }
+
+  function chessViewState() {
+    if (chessHist.view !== null) {
+      var pos = chessPositions()[chessHist.view];
+      if (pos) { return { board: pos.board, last: pos.last, turn: pos.turn, live: false }; }
+      chessHist.view = null;
+    }
+    return { board: chessState.board, last: chessState.lastMove, turn: chessState.turn, live: true };
+  }
+
+  // Bot bilan o'yinda yurish yozuvi (jonli o'yinda buni server yuboradi).
+  function sanFor(board, move, castling, ep) {
+    var p = board[move.from.r][move.from.c], type = p.toUpperCase(), color = getPieceColor(p);
+    var s;
+    if (move.isCastle) {
+      s = move.to.c === 6 ? "O-O" : "O-O-O";
+    } else {
+      var cap = !!board[move.to.r][move.to.c] || !!move.isEnPassant;
+      if (type === "P") {
+        s = (cap ? FILES.charAt(move.from.c) + "x" : "") + sqName(move.to.r, move.to.c);
+        if (move.to.r === 0 || move.to.r === 7) { s += "=" + (move.promo || "q").toUpperCase(); }
+      } else {
+        s = type;
+        var others = [];
+        for (var r = 0; r < 8; r++) {
+          for (var c = 0; c < 8; c++) {
+            if (board[r][c] !== p || (r === move.from.r && c === move.from.c)) { continue; }
+            var ok = getLegalMovesForSquare(board, r, c, castling, ep).some(function (m) {
+              return m.to.r === move.to.r && m.to.c === move.to.c;
+            });
+            if (ok) { others.push({ r: r, c: c }); }
+          }
+        }
+        if (others.length) {
+          var sameFile = others.some(function (o) { return o.c === move.from.c; });
+          var sameRank = others.some(function (o) { return o.r === move.from.r; });
+          if (!sameFile) { s += FILES.charAt(move.from.c); }
+          else if (!sameRank) { s += (8 - move.from.r); }
+          else { s += sqName(move.from.r, move.from.c); }
+        }
+        s += (cap ? "x" : "") + sqName(move.to.r, move.to.c);
+      }
+    }
+    var nb = makeSimMove(board, move), opp = color === "w" ? "b" : "w";
+    if (isKingInCheck(nb, opp)) {
+      s += getAllLegalMoves(nb, opp, castling, null).length ? "+" : "#";
+    }
+    return s;
+  }
+
+  function sanHtml(s, white) {
+    var m = /^([KQRBN])(.*)$/.exec(s);
+    if (!m) { return escapeHtmlChess(s); }
+    return "<i>" + getPieceSVG(white ? m[1] : m[1].toLowerCase()) + "</i>" + escapeHtmlChess(m[2]);
+  }
+
+  function escapeHtmlChess(s) {
+    return String(s).replace(/[&<>"]/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch];
+    });
+  }
+
+  function renderChessMoves() {
+    var strip = $("chess-moves");
+    if (!strip) { return; }
+    var sans = chessSans();
+    var cur = chessHist.view === null ? sans.length : chessHist.view;
+    var key = chessState.gameMode + (chessState.pvpGameId || "") + ":" + sans.length + ":" + cur + ":" + chessThemeName();
+    if (chessHist.drawnKey !== key) {
+      chessHist.drawnKey = key;
+      if (!sans.length) {
+        strip.innerHTML = '<span class="cg-mv-empty">' + escapeHtmlChess(L("noMoves")) + "</span>";
+      } else {
+        var html = "";
+        for (var i = 0; i < sans.length; i++) {
+          html += '<span class="cg-mv' + (i + 1 === cur ? " cur" : "") + '" data-i="' + (i + 1) + '">' +
+            (i % 2 === 0 ? '<span class="num">' + (i / 2 + 1) + ".</span>" : "") + sanHtml(sans[i], i % 2 === 0) + "</span>";
+        }
+        strip.innerHTML = html;
+      }
+      if (chessHist.view === null) {
+        strip.scrollLeft = strip.scrollWidth;
+      } else {
+        var el = strip.querySelector(".cg-mv.cur");
+        if (el) { strip.scrollLeft = Math.max(0, el.offsetLeft - strip.clientWidth / 2); }
+      }
+    }
+    $("chess-mv-prev").disabled = cur <= 0;
+    $("chess-mv-next").disabled = chessHist.view === null;
+    $("chess-frame").classList.toggle("browsing", chessHist.view !== null);
+  }
+
+  function chessBrowse(index) {
+    var last = chessPositions().length - 1;
+    if (index === null || index >= last) { chessHist.view = null; }
+    else { chessHist.view = Math.max(0, index); }
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    renderChessBoard();
+  }
+
+  /* --- Olingan donalar va ustunlik --- */
+
+  function renderChessCaps(board) {
+    var start = { p: 8, n: 2, b: 2, r: 2, q: 1 }, val = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+    var cnt = { w: { p: 0, n: 0, b: 0, r: 0, q: 0 }, b: { p: 0, n: 0, b: 0, r: 0, q: 0 } };
+    var score = { w: 0, b: 0 };
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var p = board[r][c];
+        if (!p || p.toUpperCase() === "K") { continue; }
+        var col = getPieceColor(p), t = p.toLowerCase();
+        cnt[col][t]++;
+        score[col] += val[t];
+      }
+    }
+    function caps(by) {
+      var victim = by === "w" ? "b" : "w", html = "";
+      ["q", "r", "b", "n", "p"].forEach(function (t) {
+        var miss = Math.max(0, start[t] - cnt[victim][t]);
+        for (var i = 0; i < miss; i++) {
+          html += '<i' + (i === miss - 1 ? ' class="gap"' : "") + ">" +
+            getPieceSVG(victim === "w" ? t.toUpperCase() : t) + "</i>";
+        }
+      });
+      var adv = score[by] - score[victim];
+      if (adv > 0) { html += "<b>+" + adv + "</b>"; }
+      return html;
+    }
+    var me = chessState.myColor, opp = me === "w" ? "b" : "w";
+    $("chess-my-caps").innerHTML = caps(me);
+    $("chess-opp-caps").innerHTML = caps(opp);
+  }
+
+  /* --- Chizish --- */
+
+  var chessFx = { key: null, prev: null, noSlide: false };
+  var chessDrag = null;
+
+  function moveKey(m) {
+    return m ? "" + m.from.r + m.from.c + m.to.r + m.to.c : "-";
+  }
+
+  function renderChessBoard() {
+    var boardEl = $("chess-board");
+    if (!boardEl) return;
+    var th = chessTheme();
+    var frame = $("chess-frame");
+    frame.className = th.frame + (chessHist.view !== null ? " browsing" : "");
+
+    // Yangi yurishmi? (tovush, silliq siljish, sinish - faqat hozirgi holatda)
+    var fxMove = null, fxCaptured = null, fxCheck = false, fxPromo = false;
+    var liveKey = chessState.gameMode + ":" + (chessState.pvpGameId || "") + ":" + moveKey(chessState.lastMove) + ":" + chessState.turn;
+    if (chessFx.key !== null && liveKey !== chessFx.key && chessState.lastMove && chessFx.prev) {
+      var lm = chessState.lastMove, prev = chessFx.prev;
+      var mover = prev[lm.from.r] && prev[lm.from.r][lm.from.c];
+      fxMove = lm;
+      fxCaptured = prev[lm.to.r][lm.to.c];
+      if (!fxCaptured && mover && mover.toUpperCase() === "P" && lm.from.c !== lm.to.c) {
+        fxCaptured = prev[lm.from.r][lm.to.c];
+      }
+      fxCheck = isKingInCheck(chessState.board, chessState.turn);
+      fxPromo = !!(mover && mover.toUpperCase() === "P" && (lm.to.r === 0 || lm.to.r === 7));
+      chessHist.view = null;
+    }
+    chessFx.key = liveKey;
+    chessFx.prev = cloneBoard(chessState.board);
+
+    var view = chessViewState();
+    var board = view.board;
+    boardEl.innerHTML = "";
+    var checkKing = isKingInCheck(board, view.turn) ? findKing(board, view.turn) : null;
+    var flipped = (chessState.myColor === "b");
+    var lift = chessDrag && chessDrag.lifted ? chessDrag : null;
+    var targets = view.live ? chessState.legalMoves : [];
+
+    for (var ri = 0; ri < 8; ri++) {
+      for (var ci = 0; ci < 8; ci++) {
+        var r = flipped ? 7 - ri : ri;
+        var c = flipped ? 7 - ci : ci;
+        var light = ((r + c) % 2 === 0);
+        var sq = document.createElement("div");
+        sq.className = "csq";
+        sq.setAttribute("data-sq", "" + r + c);
+        sq.style.background = light ? th.sq[0] : th.sq[1];
+        var html = "";
+        var lmv = view.last;
+        if (lmv && ((lmv.from.r === r && lmv.from.c === c) || (lmv.to.r === r && lmv.to.c === c))) { html += '<div class="hl"></div>'; }
+        if (view.live && chessState.selectedSq && chessState.selectedSq.r === r && chessState.selectedSq.c === c) { html += '<div class="sel"></div>'; }
+        if (checkKing && checkKing.r === r && checkKing.c === c) { html += '<div class="chk"></div>'; }
+        var coordCol = light ? th.sq[1] : th.sq[0];
+        if (ci === 0) { html += '<span class="co rk" style="color:' + coordCol + '">' + (8 - r) + "</span>"; }
+        if (ri === 7) { html += '<span class="co fl" style="color:' + coordCol + '">' + FILES.charAt(c) + "</span>"; }
+        var p = board[r][c];
+        if (p) {
+          html += '<span class="pc' + (lift && lift.r === r && lift.c === c ? " lift" : "") + '">' + getPieceSVG(p, th.pieces) + "</span>";
+        }
+        for (var k = 0; k < targets.length; k++) {
+          if (targets[k].to.r === r && targets[k].to.c === c) { html += p ? '<div class="ring"></div>' : '<div class="dot"></div>'; break; }
+        }
+        sq.innerHTML = html;
+        boardEl.appendChild(sq);
+      }
+    }
+
+    renderChessCaps(board);
+    renderChessMoves();
+
+    if (fxMove) {
+      if (!chessFx.noSlide) { chessSlide(fxMove, flipped); }
+      if (fxCaptured) {
+        chessSound("capture");
+        if (th.pieces === "marble") {
+          var cr = fxMove.to.r, cc = fxMove.to.c, white = getPieceColor(fxCaptured) === "w";
+          setTimeout(function () { chessShatter(cr, cc, white); }, chessFx.noSlide ? 0 : 140);
+        }
+      } else {
+        chessSound("move");
+      }
+      if (fxPromo) { setTimeout(function () { chessSound("promote"); }, 60); }
+      if (fxCheck) { setTimeout(function () { chessSound("check"); }, 90); }
+    }
+    chessFx.noSlide = false;
+  }
+
+  function chessSlide(m, flipped) {
+    var boardEl = $("chess-board");
+    var size = boardEl.clientWidth / 8, dir = flipped ? -1 : 1;
+    function slide(from, to) {
+      var el = boardEl.querySelector('[data-sq="' + to.r + to.c + '"] .pc');
+      if (!el) { return; }
+      el.style.transform = "translate(" + ((from.c - to.c) * dir * size) + "px," + ((from.r - to.r) * dir * size) + "px)";
+      el.getBoundingClientRect();
+      el.style.transition = "transform 170ms cubic-bezier(.2,.8,.3,1)";
+      el.style.transform = "";
+    }
+    slide(m.from, m.to);
+    if (m.isCastle) {
+      var row = m.to.r, kside = m.to.c === 6;
+      slide({ r: row, c: kside ? 7 : 0 }, { r: row, c: kside ? 5 : 3 });
+    }
+  }
+
+  // Urilgan dona tosh kabi sinadi: parchalar sochiladi, oltin chaqnash.
+  function chessShatter(r, c, white) {
+    var fx = $("chess-fx"), boardEl = $("chess-board");
+    if (!fx || !boardEl || !fx.animate) { return; }
+    var fl = chessState.myColor === "b", size = boardEl.clientWidth / 8;
+    var cx = boardEl.offsetLeft + ((fl ? 7 - c : c) + 0.5) * size;
+    var cy = boardEl.offsetTop + ((fl ? 7 - r : r) + 0.5) * size;
+    var cols = white ? ["#fbf6ea", "#e6dcc6", "#c8b995", "#d9a74a"] : ["#43434f", "#1d1d25", "#0b0b0f", "#d9a74a"];
+    function gone(el) { return function () { if (el.parentNode) { el.parentNode.removeChild(el); } }; }
+    var flash = document.createElement("div");
+    flash.style.cssText = "position:absolute;left:" + (cx - size * 0.7) + "px;top:" + (cy - size * 0.7) + "px;width:" +
+      (size * 1.4) + "px;height:" + (size * 1.4) + "px;border-radius:50%;background:radial-gradient(circle,rgba(255,228,150,.9),rgba(217,167,74,.35) 42%,transparent 70%)";
+    fx.appendChild(flash);
+    flash.animate([{ transform: "scale(.3)", opacity: 1 }, { transform: "scale(1.35)", opacity: 0 }],
+      { duration: 420, easing: "ease-out" }).onfinish = gone(flash);
+    for (var i = 0; i < 16; i++) {
+      var s = document.createElement("div"), w = 4 + Math.random() * 8;
+      s.style.cssText = "position:absolute;left:" + cx + "px;top:" + cy + "px;width:" + w + "px;height:" + (w * (0.6 + Math.random())) +
+        "px;margin:" + (-w / 2) + "px 0 0 " + (-w / 2) + "px;background:" + cols[i % cols.length] + ";clip-path:polygon(50% 0,100% 100%,0 70%)";
+      fx.appendChild(s);
+      var ang = Math.random() * Math.PI * 2, dist = size * (0.45 + Math.random() * 0.9);
+      s.animate([
+        { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+        { transform: "translate(" + (Math.cos(ang) * dist) + "px," + (Math.sin(ang) * dist + size * 0.3) + "px) rotate(" +
+          (Math.random() * 540 - 270) + "deg) scale(.4)", opacity: 0 }
+      ], { duration: 520 + Math.random() * 260, easing: "cubic-bezier(.15,.7,.3,1)" }).onfinish = gone(s);
+    }
+  }
+
+  /* --- Ovoz ---
+     Sehrgar shaxmati ovozlari (snd/chess_*.m4a, tools/soundgen.py): tosh haykal
+     yurishi va sinishi, selesta tembridagi sehrli kuylar, tosh zal aks-sadosi.
+     Hammasi noldan sintez qilingan - filmdagi yozuvlar ishlatilmaydi.
+     iPhone ovozni faqat bosishdan keyin yoqadi - shuning uchun birinchi
+     bosishda "ochiladi" va fayllar o'shanda yuklanadi. */
+
+  var CHESS_SND = ["move", "capture", "check", "start", "win", "loss", "draw", "promote"];
+  var chessAudio = { ctx: null, bufs: {}, loading: false, on: true };
+  try { chessAudio.on = window.localStorage.getItem(SOUND_KEY) !== "0"; } catch (e) {}
+
+  function chessSoundUnlock() {
+    if (!chessAudio.on) { return; }
+    try {
+      if (!chessAudio.ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) { return; }
+        chessAudio.ctx = new AC();
+      }
+      if (chessAudio.ctx.state === "suspended") { chessAudio.ctx.resume(); }
+    } catch (e) { return; }
+    if (chessAudio.loading) { return; }
+    chessAudio.loading = true;
+    CHESS_SND.forEach(function (k) {
+      fetch("snd/chess_" + k + ".m4a?v=1").then(function (r) { return r.arrayBuffer(); }).then(function (data) {
+        chessAudio.ctx.decodeAudioData(data, function (buf) { chessAudio.bufs[k] = buf; }, function () {});
+      })["catch"](function () {});
+    });
+  }
+
+  function chessSound(kind) {
+    var ctx = chessAudio.ctx, buf = chessAudio.bufs[kind];
+    if (!chessAudio.on || !ctx || !buf) { return; }
+    try {
+      var src = ctx.createBufferSource(), g = ctx.createGain();
+      src.buffer = buf;
+      g.gain.value = 0.9;
+      src.connect(g);
+      g.connect(ctx.destination);
+      src.start(0);
+    } catch (e) {}
+  }
+
+  function renderSoundBtn() {
+    var b = $("chess-sound-btn");
+    if (!b) { return; }
+    b.innerHTML = chessAudio.on ? CG_IC.soundOn : CG_IC.soundOff;
+    b.classList.toggle("off", !chessAudio.on);
+  }
+
+  /* --- Bosish va sudrash --- */
+
+  function sqFromPoint(x, y) {
+    var rect = $("chess-board").getBoundingClientRect();
+    if (x < rect.left || y < rect.top || x >= rect.right || y >= rect.bottom) { return null; }
+    var ci = Math.floor((x - rect.left) / (rect.width / 8)), ri = Math.floor((y - rect.top) / (rect.height / 8));
+    var fl = chessState.myColor === "b";
+    return { r: fl ? 7 - ri : ri, c: fl ? 7 - ci : ci };
+  }
+
+  function chessCanAct() {
+    if (chessState.gameOver || chessState.turn !== chessState.myColor) { return false; }
+    if (chessState.gameMode === "pvp" && (chessNet.busy || !chessNet.game || chessNet.game.status !== "active")) { return false; }
+    return true;
+  }
+
+  function selectSquare(r, c) {
+    chessState.selectedSq = { r: r, c: c };
+    chessState.legalMoves = chessState.gameMode === "pvp" ? pvpLegalFor(r, c)
+      : getLegalMovesForSquare(chessState.board, r, c, chessState.castling, chessState.ep);
+  }
+
+  function tryChessMove(r, c, dragged) {
+    var move = (chessState.legalMoves || []).find(function (m) { return m.to.r === r && m.to.c === c; });
+    if (!move) { return false; }
+    if (isPromotion(move)) {
+      askPromo(chessState.myColor, function (k) {
+        if (!chessCanAct()) return;
+        move.promo = k;
+        chessFx.noSlide = !!dragged;
+        executeMove(move);
+      });
+      renderChessBoard();
+    } else {
+      chessFx.noSlide = !!dragged;
+      executeMove(move);
+    }
+    return true;
+  }
+
+  // Oddiy bosish (sinovlar ham shuni chaqiradi).
+  function handleSquareClick(r, c) {
+    if (chessHist.view !== null) { chessBrowse(null); return; }
+    if (!chessCanAct()) return;
+    if (chessState.selectedSq && tryChessMove(r, c, false)) return;
+    var p = chessState.board[r][c];
+    if (p && getPieceColor(p) === chessState.myColor) { selectSquare(r, c); }
+    else { chessState.selectedSq = null; chessState.legalMoves = []; }
+    renderChessBoard();
+  }
+
+  function onBoardDown(e) {
+    chessSoundUnlock();
+    if (e.button) { return; }
+    var sq = sqFromPoint(e.clientX, e.clientY);
+    if (!sq) { return; }
+    e.preventDefault();
+    if (chessHist.view !== null) { chessBrowse(null); return; }
+    if (!chessCanAct()) { return; }
+    if (chessState.selectedSq && tryChessMove(sq.r, sq.c, false)) { return; }
+    var p = chessState.board[sq.r][sq.c];
+    if (p && getPieceColor(p) === chessState.myColor) {
+      var again = !!(chessState.selectedSq && chessState.selectedSq.r === sq.r && chessState.selectedSq.c === sq.c);
+      selectSquare(sq.r, sq.c);
+      chessDrag = { r: sq.r, c: sq.c, x: e.clientX, y: e.clientY, id: e.pointerId, active: false, again: again, piece: p };
+    } else {
+      chessState.selectedSq = null;
+      chessState.legalMoves = [];
+    }
+    renderChessBoard();
+  }
+
+  function onBoardMove(e) {
+    if (!chessDrag || e.pointerId !== chessDrag.id) { return; }
+    if (!chessDrag.active) {
+      if (Math.abs(e.clientX - chessDrag.x) + Math.abs(e.clientY - chessDrag.y) < 6) { return; }
+      chessDrag.active = true;
+      var size = $("chess-board").getBoundingClientRect().width / 8;
+      var gh = document.createElement("div");
+      gh.className = "cg-ghost";
+      gh.style.width = gh.style.height = size + "px";
+      gh.innerHTML = getPieceSVG(chessDrag.piece);
+      document.body.appendChild(gh);
+      chessDrag.ghost = gh;
+      chessDrag.lifted = true;
+      renderChessBoard();
+    }
+    chessDrag.ghost.style.left = e.clientX + "px";
+    chessDrag.ghost.style.top = e.clientY + "px";
+    e.preventDefault();
+  }
+
+  function onBoardUp(e, cancel) {
+    if (!chessDrag || e.pointerId !== chessDrag.id) { return; }
+    var d = chessDrag;
+    chessDrag = null;
+    if (d.ghost && d.ghost.parentNode) { d.ghost.parentNode.removeChild(d.ghost); }
+    if (!d.active) {
+      if (d.again) { chessState.selectedSq = null; chessState.legalMoves = []; renderChessBoard(); }
+      return;
+    }
+    var sq = cancel ? null : sqFromPoint(e.clientX, e.clientY);
+    if (!sq || !chessCanAct() || !tryChessMove(sq.r, sq.c, true)) { renderChessBoard(); }
+  }
+
+  function initChessBoardInput() {
+    var b = $("chess-board");
+    b.addEventListener("pointerdown", onBoardDown);
+    window.addEventListener("pointermove", onBoardMove, { passive: false });
+    window.addEventListener("pointerup", function (e) { onBoardUp(e, false); });
+    window.addEventListener("pointercancel", function (e) { onBoardUp(e, true); });
+    b.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    $("chess-mv-prev").innerHTML = CG_IC.prev;
+    $("chess-mv-next").innerHTML = CG_IC.next;
+    $("chess-mv-prev").addEventListener("click", function () {
+      var cur = chessHist.view === null ? chessPositions().length - 1 : chessHist.view;
+      chessBrowse(cur - 1);
+    });
+    $("chess-mv-next").addEventListener("click", function () {
+      if (chessHist.view !== null) { chessBrowse(chessHist.view + 1); }
+    });
+    $("chess-moves").addEventListener("click", function (e) {
+      var el = e.target.closest ? e.target.closest(".cg-mv") : null;
+      if (el) { chessBrowse(parseInt(el.getAttribute("data-i"), 10)); }
+    });
+    var els = document.querySelectorAll("#scr-chess-game [data-ic]");
+    for (var i = 0; i < els.length; i++) { els[i].innerHTML = CG_IC[els[i].getAttribute("data-ic")] || ""; }
+    renderSoundBtn();
+    $("chess-sound-btn").addEventListener("click", function () {
+      chessAudio.on = !chessAudio.on;
+      try { window.localStorage.setItem(SOUND_KEY, chessAudio.on ? "1" : "0"); } catch (e) {}
+      renderSoundBtn();
+      if (chessAudio.on) { chessSoundUnlock(); chessSound("move"); }
+    });
+  }
+
+  // O'yin boshlanganda (bot yoki jonli): eski effekt va tarix holati tozalanadi.
+  function chessResetView() {
+    chessFx.key = null;
+    chessFx.prev = null;
+    chessFx.noSlide = false;
+    chessHist.view = null;
+    chessHist.cacheKey = null;
+    chessHist.drawnKey = null;
+    if (chessDrag && chessDrag.ghost && chessDrag.ghost.parentNode) { chessDrag.ghost.parentNode.removeChild(chessDrag.ghost); }
+    chessDrag = null;
+    $("chess-end-row").classList.add("hidden");
+    $("chess-controls").classList.remove("hidden");
+  }
+
+  function isPromotion(move) {
+    var p = chessState.board[move.from.r][move.from.c];
+    return (p === "P" && move.to.r === 0) || (p === "p" && move.to.r === 7);
+  }
+
+  // Piyoda oxirgi qatorga yetganda - qaysi donaga aylanishini o'yinchi tanlaydi.
+  function askPromo(color, cb) {
+    var row = $("chess-promo-row");
+    row.innerHTML = "";
+    ["q", "r", "b", "n"].forEach(function (k) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.style.cssText = "width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:#dfc7a7;cursor:pointer;padding:6px;";
+      b.innerHTML = getPieceSVG(color === "w" ? k.toUpperCase() : k);
+      b.addEventListener("click", function (e) {
+        e.stopPropagation();
+        closePromo();
+        cb(k);
+      });
+      row.appendChild(b);
+    });
+    $("chess-promo").classList.remove("hidden");
+  }
+
+  function closePromo() {
+    var el = $("chess-promo");
+    if (el) { el.classList.add("hidden"); }
+  }
+
+  // Bot bilan o'yin uchun durang qoidalari (jonli o'yinda buni server qiladi).
+  function posKey() {
+    var cs = chessState.castling;
+    return chessState.board.map(function (row) {
+      return row.map(function (p) { return p || "."; }).join("");
+    }).join("/") + chessState.turn + (cs.wK ? "K" : "") + (cs.wQ ? "Q" : "") +
+      (cs.bK ? "k" : "") + (cs.bQ ? "q" : "") + (chessState.ep ? sqName(chessState.ep.r, chessState.ep.c) : "-");
+  }
+
+  function insufficientMaterial(board) {
+    var rest = [];
+    for (var r = 0; r < 8; r++) {
+      for (var c = 0; c < 8; c++) {
+        var p = board[r][c];
+        if (p && p.toUpperCase() !== "K") { rest.push({ p: p, sq: (r + c) % 2 }); }
+      }
+    }
+    if (rest.length === 0) return true;
+    if (rest.length === 1) return /[NBnb]/.test(rest[0].p);
+    if (rest.length === 2 && rest[0].p.toUpperCase() === "B" && rest[1].p.toUpperCase() === "B") {
+      return rest[0].sq === rest[1].sq;     // bir xil rangli katakdagi fillar
+    }
+    return false;
+  }
+
+  function executeMove(move) {
+    if (chessState.gameMode === "pvp") { pvpSendMove(move); return; }
+
+    var p = chessState.board[move.from.r][move.from.c];
+    var target = chessState.board[move.to.r][move.to.c];
+    var san = sanFor(chessState.board, move, chessState.castling, chessState.ep);
+
+    // Handle castling rights
+    if (p === "K") { chessState.castling.wK = false; chessState.castling.wQ = false; }
+    if (p === "k") { chessState.castling.bK = false; chessState.castling.bQ = false; }
+    if (move.from.r === 7 && move.from.c === 7 || move.to.r === 7 && move.to.c === 7) chessState.castling.wK = false;
+    if (move.from.r === 7 && move.from.c === 0 || move.to.r === 7 && move.to.c === 0) chessState.castling.wQ = false;
+    if (move.from.r === 0 && move.from.c === 7 || move.to.r === 0 && move.to.c === 7) chessState.castling.bK = false;
+    if (move.from.r === 0 && move.from.c === 0 || move.to.r === 0 && move.to.c === 0) chessState.castling.bQ = false;
+
+    // Apply move
+    chessState.board = makeSimMove(chessState.board, move);
+    chessState.ep = move.isDoublePawn ? { r: (move.from.r + move.to.r) / 2, c: move.from.c } : null;
+    chessState.lastMove = move;
+    chessState.selectedSq = null;
+    chessState.legalMoves = [];
+    chessState.halfmove = (target || move.isEnPassant || p.toUpperCase() === "P") ? 0 : chessState.halfmove + 1;
+
+    // Switch turn
+    chessState.turn = (chessState.turn === "w" ? "b" : "w");
+    var key = posKey();
+    chessState.seen[key] = (chessState.seen[key] || 0) + 1;
+    chessState.sans.push(san);
+    chessState.ucis.push(moveUci(move));
+    chessState.hist.push({ board: cloneBoard(chessState.board), last: move, turn: chessState.turn });
+    renderChessBoard();
+    updateChessClocks();
+
+    // Check game over local
+    var nextLegal = getAllLegalMoves(chessState.board, chessState.turn, chessState.castling, chessState.ep);
+    if (nextLegal.length === 0) {
+      if (isKingInCheck(chessState.board, chessState.turn)) {
+        finishChessGame(chessState.turn === chessState.myColor ? "loss" : "win", "mate");
+      } else {
+        finishChessGame("draw", "stalemate");
+      }
+      return;
+    }
+    if (insufficientMaterial(chessState.board)) { finishChessGame("draw", "insufficient"); return; }
+    if (chessState.halfmove >= 100) { finishChessGame("draw", "fifty"); return; }
+    if (chessState.seen[key] >= 3) { finishChessGame("draw", "repetition"); return; }
+
+    if (chessState.turn !== chessState.myColor && !chessState.gameOver) { botMove(400); }
+  }
+
+  /* --- BOT: fon oqimidagi miya (chessbot.js) ---
+     Bot alohida oqimda o'ylaydi - ekran qotmaydi. Har daraja o'z vaqtida
+     javob beradi (soat kam qolsa - tezroq). Fon oqimi ishlamasa (juda eski
+     telefon) - eski sodda hisob, lekin faqat sayoz (qotmasin). */
+
+  var chessBot = { worker: null, failed: false, id: 0 };
+  var BOT_TIME = { novice: 150, easy: 250, med: 700, hard: 900, master: 2000 };
+  var BOT_PIECE = { novice: "p", easy: "n", med: "r", hard: "q", master: "k" };
+
+  function chessBotWorker() {
+    if (chessBot.worker || chessBot.failed) { return chessBot.worker; }
+    try {
+      chessBot.worker = new Worker("chessbot.js?v=1");
+      chessBot.worker.onerror = function () { chessBot.failed = true; chessBot.worker = null; };
+    } catch (e) { chessBot.failed = true; }
+    return chessBot.worker;
+  }
+
+  function uciToLocal(u) {
+    var from = uciSq(u.slice(0, 2)), to = uciSq(u.slice(2, 4));
+    var m = getLegalMovesForSquare(chessState.board, from.r, from.c, chessState.castling, chessState.ep)
+      .find(function (x) { return x.to.r === to.r && x.to.c === to.c; });
+    if (m && u.length > 4) { m.promo = u.charAt(4); }
+    return m || null;
+  }
+
+  function botMove(minDelay) {
+    var seq = chessState.botSeq, started = Date.now();
+    function play(m) {
+      if (!m || seq !== chessState.botSeq || chessState.gameOver || chessState.gameMode !== "bot" ||
+          chessState.turn === chessState.myColor) { return; }
+      setTimeout(function () {
+        if (seq !== chessState.botSeq || chessState.gameOver || chessState.turn === chessState.myColor) { return; }
+        executeMove(m);
+      }, Math.max(0, minDelay - (Date.now() - started)));
+    }
+    function fallback() {
+      play(getBestBotMove(chessState.board, (chessState.botDiff === "easy" || chessState.botDiff === "novice") ? "easy" : "med",
+                          chessState.turn, chessState.castling, chessState.ep));
+    }
+    var w = chessBotWorker();
+    if (!w) { setTimeout(fallback, 50); return; }
+    var id = ++chessBot.id, answered = false;
+    var left = (chessState.turn === "w" ? chessState.whiteTime : chessState.blackTime) * 1000;
+    var budget = Math.max(100, Math.min(BOT_TIME[chessState.botDiff] || 700, left / 25));
+    w.onmessage = function (e) {
+      if (!e.data || e.data.id !== id) { return; }
+      answered = true;
+      var m = e.data.uci ? uciToLocal(e.data.uci) : null;
+      if (m) { play(m); } else { fallback(); }
+    };
+    w.postMessage({ cmd: "move", id: id, moves: chessState.ucis.slice(), level: chessState.botDiff, time: budget });
+    // Javob kelmasa (oqim osilib qolsa) - baribir yuramiz.
+    setTimeout(function () { if (!answered && id === chessBot.id) { answered = true; fallback(); } }, budget + 4000);
+  }
+
+  // Bot bilan o'yin natijasi (jonli o'yinda natijani server aytadi - pvpShowEnd).
+  function finishChessGame(result, reason) {
+    chessState.gameOver = true;
+    stopBotClock();
+    closePromo();
+    showChessOverlay(result, reason, "");
+    // Sehrgarlar zinapoyasi: botlar ustidan natija (bezak - ball va reyting bermaydi).
+    if (chessState.gameMode === "bot" && chessState.sans.length >= 2) {
+      chessApi("botresult", { level: chessState.botDiff, result: result }).then(function () {
+        var b = chessStats.bots || {}, r = b[chessState.botDiff] || { w: 0, d: 0, l: 0 };
+        r[{ win: "w", draw: "d", loss: "l" }[result]]++;
+        b[chessState.botDiff] = r;
+        chessStats.bots = b;
+      })["catch"](function () {});
+    }
+  }
+
+  function showChessOverlay(result, reason, extra) {
+    var icon = $("chess-overlay-icon");
+    var title = $("chess-overlay-title");
+    var desc = $("chess-overlay-desc");
+    var rtxt = reasonText(reason, result);
+
+    chessSound(result === "win" ? "win" : result === "loss" ? "loss" : "draw");
+    $("btn-chess-overlay-again").classList.toggle("hidden", chessState.gameMode !== "bot");
+    $("chess-end-row").classList.add("hidden");
+    if (result === "win") {
+      icon.textContent = "🏆";
+      title.textContent = L("win");
+      title.style.color = "#2ecc71";
+      desc.textContent = rtxt + "." + (extra ? " " + extra : "");
+    } else if (result === "loss") {
+      icon.textContent = "💀";
+      title.textContent = L("loss");
+      title.style.color = "#e74c3c";
+      desc.textContent = rtxt + ". " + (extra || L("lossTail"));
+    } else if (result === "draw") {
+      icon.textContent = "🤝";
+      title.textContent = L("draw");
+      title.style.color = "#f1c40f";
+      desc.textContent = rtxt + ". " + (extra || L("drawTail"));
+    } else {
+      icon.textContent = "🚫";
+      title.textContent = L("aborted");
+      title.style.color = "var(--dim)";
+      desc.textContent = rtxt + ".";
+    }
+    $("chess-board-overlay").classList.remove("hidden");
+  }
+
+  var chessResume = null;
+
+  var CHESS_IC = {
+    swords: chatSvg('<path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5"/><path d="m5 14 4 4"/><path d="m7 17-3 3"/><path d="m3 19 2 2"/>'),
+    send: chatSvg('<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>'),
+    bot: chatSvg('<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/>'),
+    play: chatSvg('<path d="M7 4.5v15l12-7.5Z"/>'),
+    search: chatSvg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+    chat: chatSvg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>'),
+    wand: chatSvg('<path d="m3 21 12-12"/><path d="M15 4V2M15 16v-2M8 9H6M22 9h-2M17.8 11.8 19 13M17.8 6.2 19 5M12.2 6.2 11 5"/>')
+  };
+  var chessHubDrawn = false;
+  var chessSeason = null;
+
+  function renderChessHub() {
+    var i, els, th = chessTheme();
+    if (!chessHubDrawn) {
+      chessHubDrawn = true;
+      els = document.querySelectorAll("#scr-chess-hub [data-ic]");
+      for (i = 0; i < els.length; i++) { els[i].innerHTML = CHESS_IC[els[i].getAttribute("data-ic")] || ""; }
+    }
+    // Uslubga bog'liq qismlar har safar qayta chiziladi.
+    $("ch-mark-piece").innerHTML = getPieceSVG("N");
+    els = document.querySelectorAll("#ch-mark i");
+    for (i = 0; i < els.length; i++) { els[i].style.background = (i === 0 || i === 3) ? th.sq[0] : th.sq[1]; }
+    $("ch-mark").style.borderColor = th.pieces === "marble" ? "rgba(var(--gold-rgb),.75)" : "rgba(155,89,182,.55)";
+    els = document.querySelectorAll("#scr-chess-hub [data-piece]");
+    for (i = 0; i < els.length; i++) {
+      els[i].innerHTML = getPieceSVG(els[i].getAttribute("data-piece"));
+      els[i].style.background = th.sq[0];
+    }
+    chessSegs("ch-time", chessTc().key, chessTcLabel);
+    // Shu vaqtda raqib qidirayotganlar - tugma ustida son (bosilsa darhol o'yin).
+    var seekers = chessSeekers || {};
+    els = document.querySelectorAll("#ch-time [data-v]");
+    for (i = 0; i < els.length; i++) {
+      var n = seekers[els[i].getAttribute("data-v")];
+      if (n) { els[i].insertAdjacentHTML("beforeend", '<span class="n">' + n + "</span>"); }
+    }
+    var here = seekers[chessTc().key] || 0;
+    $("ch-seekers").textContent = here ? L("seekersHere").replace("%d", here) : "";
+    $("ch-seekers").classList.toggle("hidden", !here);
+    $("btn-announce-house").classList.toggle("hidden", !cupMe().house);
+    // Botlar: daraja nuqtalari va tanlanganining ismi, darajasi, tavsifi.
+    els = document.querySelectorAll("#scr-chess-hub [data-lv]");
+    for (i = 0; i < els.length; i++) {
+      var lv = +els[i].getAttribute("data-lv"), dots = "";
+      for (var d = 1; d <= 5; d++) { dots += '<i' + (d <= lv ? ' class="on"' : "") + "></i>"; }
+      els[i].innerHTML = dots;
+    }
+    var bot = chessBotDiff();
+    $("ch-bot-name").textContent = L("botNames")[bot] || "";
+    $("ch-bot-level").textContent = L({ novice: "lvlNovice", easy: "lvlEasy", med: "lvlMed", hard: "lvlHard", master: "lvlMaster" }[bot]);
+    $("ch-bot-tag").textContent = (L("botTags") || {})[bot] || "";
+    chessSegs("ch-color", chessPref(BOT_COLOR_KEY, "w", ["w", "r", "b"]), function (v) {
+      return L({ w: "colWhite", r: "colRandom", b: "colBlack" }[v]);
+    });
+    els = document.querySelectorAll("#ch-themes [data-v]");
+    for (i = 0; i < els.length; i++) {
+      var name = els[i].getAttribute("data-v"), t = chessTheme(name);
+      els[i].classList.toggle("on", name === chessThemeName());
+      var cells = els[i].querySelectorAll(".mini i");
+      for (var k = 0; k < cells.length; k++) { cells[k].style.background = (k === 0 || k === 3) ? t.sq[0] : t.sq[1]; }
+      els[i].querySelector(".mini span").innerHTML = getPieceSVG("n", t.pieces);
+    }
+    $("ch-pill-win").innerHTML = L("pillWin").replace("%s", "<b>+10</b>");
+    $("ch-pill-draw").innerHTML = L("pillDraw").replace("%s", "<b>+5</b>");
+    var sp = $("ch-pill-season");
+    if (chessSeason) {
+      sp.innerHTML = L("pillSeason").replace("%s", "<b>" + chessSeason.used + "/" + chessSeason.limit + "</b>");
+      sp.classList.remove("hidden");
+    } else {
+      sp.classList.add("hidden");
+    }
+  }
+
+  // Tanlov tugmalari (vaqt, rang): tanlangani belgilanadi, matni tilga qarab.
+  function chessSegs(id, current, label) {
+    var els = document.querySelectorAll("#" + id + " [data-v]");
+    for (var i = 0; i < els.length; i++) {
+      var v = els[i].getAttribute("data-v");
+      els[i].textContent = label(v);
+      els[i].classList.toggle("on", v === current);
+    }
+  }
+
+  // O'yinchi belgisi: fakultet gerbi; bot uchun - uning donasi.
+  function chessAvatar(el, house, piece) {
+    var key = piece ? "p:" + piece : "h:" + (house || "");
+    if (el.getAttribute("data-k") === key) { return; }
+    el.setAttribute("data-k", key);
+    el.innerHTML = "";
+    if (piece) {
+      el.innerHTML = '<span style="display:block;width:30px;height:30px;border-radius:8px;background:#dfc7a7;padding:3px;box-sizing:border-box">' + getPieceSVG(piece) + "</span>";
+      return;
+    }
+    var img = house ? cupCrestImg(house, 28) : null;
+    if (img) { el.appendChild(img); } else { el.textContent = "🧙"; }
+  }
+
+  // Hubda: davom etayotgan yoki do'st kutayotgan o'yin - qaytish tugmasi bilan.
+  function chessRefreshMine() {
+    var box = $("chess-resume");
+    chessApi("mine").then(function (res) {
+      if (res && res.seeking) { chessSeekers = res.seeking; }
+      if (res && res.season) { chessSeason = res.season; }
+      if (res && res.rating) { renderRateCard(res.rating); }
+      if (res && res.bots) { renderBotBadges(res.bots); }
+      renderChessHub();
+      var g = res && res.games && res.games[0];
+      chessResume = g || null;
+      if (!g) { box.classList.add("hidden"); return; }
+      var opp = g.you === "b" ? g.white : g.black;
+      if (g.status === "waiting") {
+        $("chess-resume-head").textContent = L("waitHead");
+        $("chess-resume-sub").textContent = L("codeLbl") + " " + g.id + " • " + timeLabel(g);
+      } else {
+        $("chess-resume-head").textContent = L("resumeHead");
+        $("chess-resume-sub").textContent = ((opp && opp.name) || L("opp")) + " • " +
+          (g.turn === g.you ? L("yourTurn") : L("oppThinking"));
+      }
+      $("chess-resume-cancel").classList.toggle("hidden", g.status !== "waiting");
+      box.classList.remove("hidden");
+    })["catch"](function () {});
+  }
+
+  function openChessHub() {
+    applyXT();
+    chessSoundUnlock();     // bosishdan keyin - iPhone ovozni shunda ruxsat beradi; fayllar oldindan yuklanadi
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
+    $("scr-cup").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.add("hidden");
+    $("scr-chess-hub").classList.remove("hidden");
+    renderChessHub();
+    renderBotBadges();
+    chessRefreshMine();
+    // Hub ochiq turganda raqib qidirayotganlar soni yangilanib turadi.
+    stopHubTimer();
+    chessHubTimer = setInterval(function () {
+      if ($("scr-chess-hub").classList.contains("hidden") || document.hidden) { return; }
+      chessRefreshMine();
+    }, 8000);
+  }
+
+  function closeChessHub() {
+    seekStop(true);
+    stopHubTimer();
+    $("scr-chess-hub").classList.add("hidden");
+    openCup();
+  }
+
+  var chessHubTimer = null;
+  var chessSeekers = null;
+
+  function stopHubTimer() {
+    if (chessHubTimer) { clearInterval(chessHubTimer); chessHubTimer = null; }
+  }
+
+  function chessBotDiff() {
+    var r = document.querySelector('input[name="chess-bot-diff"]:checked');
+    return r ? r.value : "easy";
+  }
+
+  function chessTc() {
+    var key = chessPref(TIME_KEY, "300+0", ["60+0", "180+2", "300+0", "600+0"]), p = key.split("+");
+    return { key: key, base: +p[0], inc: +p[1] };
+  }
+
+  function chessTcLabel(v) {
+    var p = String(v).split("+"), m = +p[0] / 60;
+    return m + (+p[1] ? "+" + p[1] : " " + L("minShort"));
+  }
+
+  /* --- TASODIFIY RAQIB ---
+     Server navbati: shu vaqtni tanlagan boshqa odam bo'lsa - darhol o'yin
+     (ranglar tasodifiy), bo'lmasa so'rov o'zgarish bo'lguncha ushlab turiladi.
+     30 soniyadan keyin - chatga e'lon qilish yoki bot bilan o'ynash taklifi. */
+
+  var chessSeek = { on: false, gen: 0, started: 0, timer: null, tc: null };
+
+  function seekUI() {
+    var on = chessSeek.on;
+    $("ch-pvp-actions").classList.toggle("hidden", on);
+    $("ch-seek-panel").classList.toggle("hidden", !on);
+    if (!on) { return; }
+    var sec = Math.floor((Date.now() - chessSeek.started) / 1000);
+    $("ch-seek-sub").textContent = chessTcLabel(chessSeek.tc.key) + " · " + formatTime(sec);
+    var slow = sec >= 30;
+    $("ch-seek-hint").classList.toggle("hidden", !slow);
+    $("ch-seek-more").classList.toggle("hidden", !slow);
+  }
+
+  function seekStart() {
+    if (chessSeek.on) { return; }
+    chessSoundUnlock();
+    chessSeek.on = true;
+    chessSeek.gen++;
+    chessSeek.started = Date.now();
+    chessSeek.tc = chessTc();
+    chessSeek.timer = setInterval(seekUI, 500);
+    $("ch-announce").classList.add("hidden");
+    seekUI();
+    seekPoll(chessSeek.gen);
+  }
+
+  function seekPoll(gen) {
+    var tc = chessSeek.tc;
+    chessApi("seek", { base: tc.base, inc: tc.inc, wait: 1 }).then(function (res) {
+      if (gen !== chessSeek.gen || !chessSeek.on) { return; }
+      if (res && res.game_id) {
+        seekStop(false);
+        if (res.error === "has_active") { showToast(L("hasActive")); }
+        joinPvPGame(res.game_id);
+        return;
+      }
+      if (res && res.searching) {
+        chessSeekers = res.counts;
+        seekPoll(gen);
+        return;
+      }
+      throw new Error("seek");
+    })["catch"](function () {
+      if (gen !== chessSeek.gen || !chessSeek.on) { return; }
+      setTimeout(function () { if (gen === chessSeek.gen && chessSeek.on) { seekPoll(gen); } }, 2000);
+    });
+  }
+
+  function seekStop(tell) {
+    if (!chessSeek.on) { return; }
+    chessSeek.on = false;
+    chessSeek.gen++;
+    clearInterval(chessSeek.timer);
+    seekUI();
+    if (tell) {
+      // Bekor qilish paytida juftlik topilib qolgan bo'lsa - o'yin baribir boshlangan.
+      chessApi("seek", { cancel: true }).then(function (res) {
+        if (res && res.game_id) { joinPvPGame(res.game_id); }
+      })["catch"](function () {});
+    }
+  }
+
+  /* --- CHATGA E'LON / SHAXSIY TAKLIF ---
+     Chatda karta paydo bo'ladi: kim chaqiryapti, vaqt va "Qabul qilish". Kimdir
+     qabul qilsa yoki o'yin tugasa - karta hamma uchun jonli yangilanadi. */
+
+  function chessAnnounce(room) {
+    var tc = chessTc(), d = chatInitData();
+    fetch(API_CHAT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ action: "chess", room: room, base: tc.base, inc: tc.inc, v: 2, initData: d })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      if (res && res.ok && res.game) {
+        seekStop(true);
+        showToast(L("announced"));
+        openPvP(res.game);
+        return;
+      }
+      if (res && res.error === "has_active" && res.game_id) { showToast(L("hasActive")); joinPvPGame(res.game_id); return; }
+      if (res && res.error === "slow") { showToast(L("chatSlow").replace("%s", res.retry || 5), "err"); return; }
+      if (res && res.error === "banned") { showToast(L("chatBannedShort"), "err"); return; }
+      if (res && String(res.error || "").indexOf("dm_") === 0) { showToast(L("chatDmClosedShort"), "err"); return; }
+      showToast(L("err"), "err");
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  function chessChatCard(m) {
+    var c = m.chess, me = (chatUser().id || 0), el = document.createElement("div");
+    el.className = "cmc";
+    var wn = (c.white && c.white.name) || "Sehrgar", bn = (c.black && c.black.name) || "Sehrgar";
+    var player = me == c.white.uid || (c.black && me == c.black.uid);
+    var st, btn = "";
+    function act(label, gold) {
+      return '<button type="button" class="cmc-b' + (gold ? " gold" : "") + '" data-chess-act="1" data-g="' +
+        escapeHtmlChess(c.id) + '">' + escapeHtmlChess(label) + "</button>";
+    }
+    if (c.status === "waiting") {
+      if (me == c.white.uid) { st = L("cardMine"); btn = act(L("cardOpen"), false); }
+      else { st = L("cardCalls").replace("%s", wn); btn = act(L("cardAccept"), true); }
+    } else if (c.status === "active") {
+      st = wn + " ⚔ " + bn + " — " + L("cardPlaying");
+      if (player) { btn = act(L("resumeBtn"), false); }
+    } else if (c.status === "finished") {
+      st = wn + " ⚔ " + bn + " — " + (c.winner ? L("cardWon").replace("%s", c.winner == c.white.uid ? wn : bn) : L("draw"));
+    } else {
+      st = L("cardExpired");
+    }
+    el.innerHTML = '<div class="cmc-h"><span class="cmc-ic">' + getPieceSVG("N", "marble") + "</span><div><b>" +
+      escapeHtmlChess(L("chessHubTitle")) + "</b><span>" + escapeHtmlChess(chessTcLabel(c.base + "+" + (c.inc || 0))) +
+      " · " + escapeHtmlChess(L("cardLive")) + '</span></div></div><div class="cmc-s">' + escapeHtmlChess(st) + "</div>" + btn;
+    return el;
+  }
+
+  function chessFromChat(gid) {
+    joinPvPGame(gid);
+  }
+
+  var BOT_COLOR_KEY = "chess_bot_color";
+  var TIME_KEY = "chess_time";
+
+  function chessPref(key, def, allowed) {
+    var v = def;
+    try { v = window.localStorage.getItem(key) || def; } catch (e) {}
+    return allowed.indexOf(v) > -1 ? v : def;
+  }
+
+  function setChessPref(key, v) {
+    try { window.localStorage.setItem(key, v); } catch (e) {}
+  }
+
+  function startBotGame() {
+    chessSoundUnlock();
+    chessBotWorker();
+    seekStop(true);
+    stopHubTimer();
+    var diff = chessBotDiff();
+    var pick = chessPref(BOT_COLOR_KEY, "w", ["w", "r", "b"]);
+    var color = pick === "r" ? (Math.random() < 0.5 ? "w" : "b") : pick;
+
+    pvpStopPoll();
+    stopBotClock();
+    chessNet.game = null;
+    chessState.botSeq = (chessState.botSeq || 0) + 1;     // eski o'yinning kechikkan javobi e'tiborsiz
+    chessState.gameMode = "bot";
+    chessState.botDiff = diff;
+    chessState.myColor = color;
+    chessState.pvpGameId = null;
+
+    initChessEngine();
+    chessResetView();
+
+    var botColor = color === "w" ? L("black") : L("white");
+    $("chess-my-name").textContent = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) || L("you");
+    $("chess-my-sub").textContent = (color === "w" ? L("white") : L("black")) + " • " + cupHouseName(cupMe().house);
+
+    var botNames = L("botNames");
+    $("chess-opp-name").textContent = botNames[diff] || "Bot";
+    $("chess-opp-sub").textContent = botColor + " • 05:00";
+    chessAvatar($("chess-opp-avatar"), null, BOT_PIECE[diff] || "p");
+    chessAvatar($("chess-my-avatar"), cupMe().house);
+    $("chess-invite-btn").classList.add("hidden");
+    $("btn-chess-resign").classList.remove("hidden");
+    $("btn-chess-resign-tx").textContent = L("resign");
+    $("btn-chess-draw").classList.add("hidden");
+    $("chess-offer").classList.add("hidden");
+    closePromo();
+
+    $("chess-board-overlay").classList.add("hidden");
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.remove("hidden");
+
+    renderChessBoard();
+    updateChessClocks();
+    startBotClock();
+    chessSound("start");
+    if (color === "b") { botMove(700); }     // bot oq donalarda - birinchi yurish uniki
+  }
+  function chessInvite(code, shareId) {
+    var canShare = false;
+    try { canShare = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+    if (canShare && shareId) { chessShare(code, shareId); return; }
+    if (canShare) {
+      chessApi("share", { game_id: code, lang: lang }).then(function (res) {
+        if (res && res.ok && res.id) { chessShare(code, res.id); } else { chessInviteInline(code); }
+      })["catch"](function () { chessInviteInline(code); });
+      return;
+    }
+    chessInviteInline(code);
+  }
+
+  function chessShare(code, id) {
+    try { tg.shareMessage(id, function () {}); }
+    catch (e) { chessInviteInline(code); }
+  }
+
+  function chessInviteInline(code) {
+    try {
+      if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+        tg.switchInlineQuery("chess_" + code, ["users", "groups"]);
+        return;
+      }
+    } catch (e) {}
+    var url = "https://t.me/" + BOT + "/catalog?startapp=chess_" + code;
+    // Kod ham yoziladi: havola ochilmasa, do'st uni shaxmat bo'limida qo'lda kirita oladi.
+    var text = L("inviteText") + "\n" + L("codeLbl") + " " + code;
+    if (tg && tg.openTelegramLink) {
+      tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url) +
+        "&text=" + encodeURIComponent(text));
+    } else {
+      prompt(L("linkPrompt"), text + "\n" + url);
+    }
+  }
+
+  function joinErrText(code) {
+    if (code === "not_found") return L("jNotFound");
+    if (code === "game_already_started") return L("jStarted");
+    return L("err");
+  }
+
+  var chessCreating = false;
+
+  function createPvPGame() {
+    if (chessCreating) return;
+    chessCreating = true;
+    var tc = chessPref(TIME_KEY, "300+0", ["60+0", "180+2", "300+0", "600+0"]).split("+");
+    chessApi("create", { base: +tc[0], inc: +tc[1], lang: lang }).then(function (res) {
+      chessCreating = false;
+      if (res && res.ok && res.game) {
+        openPvP(res.game);
+        chessInvite(res.game.id, res.share_id);
+        return;
+      }
+      if (res && res.error === "has_active" && res.game_id) {
+        showToast(L("hasActive"));
+        joinPvPGame(res.game_id);
+        return;
+      }
+      showToast(res && res.error === "slow" ? L("slowCreate") : L("err"), "err");
+    })["catch"](function () {
+      chessCreating = false;
+      showToast(L("netErr"), "err");
+    });
+  }
+
+  // Kod qo'lda yozilsa ham, butun taklif havolasi tashlansa ham ishlaydi.
+  function joinPvPGame(code) {
+    var text = String(code || "");
+    var m = /chess_([0-9a-f]{8})/i.exec(text) || /\b([0-9a-f]{8})\b/i.exec(text);
+    if (!m) { showToast(L("badCode"), "err"); return; }
+    chessApi("join", { game_id: m[1].toLowerCase() }).then(function (res) {
+      if (res && res.ok && res.game) {
+        $("input-join-code").value = "";
+        openPvP(res.game);
+        return;
+      }
+      if (res && res.error === "has_active" && res.game_id) {
+        showToast(L("hasActive"));
+        joinPvPGame(res.game_id);
+        return;
+      }
+      showToast(L("joinFail") + joinErrText(res && res.error), "err");
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  // Taklif havolasi (t.me/<bot>/catalog?startapp=chess_<kod>) bilan kelgan
+  // do'st katalog ochilishi bilan to'g'ridan-to'g'ri o'yinga tushadi.
+  var pendingChess = null;
+  var pendingWorld = false;     // ?startapp=olam bilan kelinganmi
+  try {
+    var sp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
+    if (!sp) {
+      var spm = /[?&#]tgWebAppStartParam=([^&#]+)/.exec((window.location.search || "") + (window.location.hash || ""));
+      if (spm) { sp = decodeURIComponent(spm[1]); }
+    }
+    var cm = /^chess_([0-9a-f]{8})$/i.exec(sp);
+    if (cm) { pendingChess = cm[1].toLowerCase(); }
+    if (/^(olam|world)$/i.test(sp)) { pendingWorld = true; }
+  } catch (e) { pendingChess = null; pendingWorld = false; }
+
+  function maybeChessLink() {
+    if (!pendingChess) { return; }
+    var code = pendingChess;
+    pendingChess = null;
+    joinPvPGame(code);
+  }
+
+  // 9¾ tugmasining o'zi: saralanmaganga avval maktub, keyin g'isht devor.
+  // Tugma ham, havola ham shu yerdan o'tadi - yo'l bir xil bo'lsin.
+  function goWorld() {
+    if (!hasHouse() && !jrGet(LETTER_KEY)) { openLetter(false); return; }
+    playGate(enterWorld);
+  }
+
+  // Kanaldagi post havolasi (t.me/<bot>/catalog?startapp=olam) bilan kelgan
+  // odam katalog ochilishi bilan to'g'ridan-to'g'ri sehrli olamga tushadi.
+  function maybeWorldLink() {
+    if (!pendingWorld) { return; }
+    pendingWorld = false;
+    goWorld();
+  }
+
+  function leaveChessGame() {
+    chessState.botSeq = (chessState.botSeq || 0) + 1;     // bot o'ylayotgan bo'lsa - javobi kerak emas
+    seekStop(true);
+    pvpStopPoll();
+    stopBotClock();
+    closePromo();
+    // Reyting ekranidan kelingan bo'lsa (tarix, zinapoya, chaqiruv) - o'shanga qaytamiz.
+    if (chessStats.from === "stats") {
+      chessStats.from = null;
+      $("scr-chess-game").classList.add("hidden");
+      openChessStats();
+      return;
+    }
+    openChessHub();
+  }
+
+  function initChessUI() {
+    $("chess-hub-back").addEventListener("click", worldGuard(closeChessHub));
+    $("btn-start-bot-game").addEventListener("click", startBotGame);
+    $("btn-create-pvp-game").addEventListener("click", createPvPGame);
+    $("btn-join-pvp-game").addEventListener("click", function() { joinPvPGame($("input-join-code").value); });
+    $("chess-invite-btn").addEventListener("click", function () {
+      if (chessNet.game) { chessInvite(chessNet.game.id); }
+    });
+    $("chess-resume-go").addEventListener("click", function () {
+      if (chessResume) { joinPvPGame(chessResume.id); }
+    });
+    $("chess-resume-cancel").addEventListener("click", function () {
+      if (!chessResume) return;
+      chessApi("action", { game_id: chessResume.id, action: "abort" })
+        .then(chessRefreshMine)["catch"](function () { showToast(L("netErr"), "err"); });
+    });
+    $("chess-game-back").addEventListener("click", function() {
+      if (chessState.gameMode === "pvp") {
+        // Jonli o'yin serverda davom etadi - chiqish taslim bo'lish EMAS.
+        var g = chessNet.game;
+        if (g && g.status === "active" && g.ply >= 2) { chessAsk(L("leaveLive"), leaveChessGame); }
+        else { leaveChessGame(); }
+        return;
+      }
+      if (chessState.gameOver) { leaveChessGame(); return; }
+      chessAsk(L("leaveAsk"), leaveChessGame);
+    });
+    $("btn-chess-resign").addEventListener("click", function() {
+      if (chessState.gameOver) return;
+      if (chessState.gameMode !== "pvp") {
+        chessAsk(L("resignAsk"), function () { finishChessGame("loss", "resign"); });
+        return;
+      }
+      var g = chessNet.game;
+      if (!g) return;
+      if (g.status === "waiting" || g.ply < 2) { chessAsk(L("abortAsk"), function () { pvpAction("abort"); }); }
+      else { chessAsk(L("resignAsk"), function () { pvpAction("resign"); }); }
+    });
+    $("btn-chess-draw").addEventListener("click", function () {
+      if (chessState.gameMode === "pvp" && chessNet.game && chessNet.game.can_offer) { pvpAction("draw_offer"); }
+    });
+    $("chess-offer-yes").addEventListener("click", function () { pvpAction("draw_accept"); });
+    $("chess-offer-no").addEventListener("click", function () { pvpAction("draw_decline"); });
+    $("chess-promo").addEventListener("click", function (e) { if (e.target === this) { closePromo(); } });
+    $("btn-chess-overlay-ok").addEventListener("click", leaveChessGame);
+    $("btn-chess-overlay-view").addEventListener("click", function () {
+      $("chess-board-overlay").classList.add("hidden");
+      $("chess-controls").classList.add("hidden");
+      $("btn-chess-again").classList.toggle("hidden", chessState.gameMode !== "bot");
+      $("chess-end-row").classList.remove("hidden");
+    });
+    $("btn-chess-overlay-again").addEventListener("click", startBotGame);
+    $("btn-chess-again").addEventListener("click", startBotGame);
+    $("btn-chess-leave").addEventListener("click", leaveChessGame);
+    function segClick(id, key) {
+      $(id).addEventListener("click", function (e) {
+        var b = e.target.closest ? e.target.closest("[data-v]") : null;
+        if (!b) return;
+        setChessPref(key, b.getAttribute("data-v"));
+        renderChessHub();
+      });
+    }
+    segClick("ch-time", TIME_KEY);
+    segClick("ch-color", BOT_COLOR_KEY);
+    $("ch-themes").addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-v]") : null;
+      if (!b) return;
+      setChessTheme(b.getAttribute("data-v"));
+      renderChessHub();
+    });
+    $("btn-seek").addEventListener("click", seekStart);
+    $("btn-seek-cancel").addEventListener("click", function () { seekStop(true); renderChessHub(); });
+    $("btn-announce").addEventListener("click", function () { $("ch-announce").classList.toggle("hidden"); });
+    $("btn-announce-house").addEventListener("click", function () { chessAnnounce("house"); });
+    $("btn-announce-global").addEventListener("click", function () { chessAnnounce("global"); });
+    $("btn-seek-announce").addEventListener("click", function () { chessAnnounce("global"); });
+    $("btn-seek-bot").addEventListener("click", function () { seekStop(true); startBotGame(); });
+    var radios = document.getElementsByName("chess-bot-diff");
+    for (var ri = 0; ri < radios.length; ri++) { radios[ri].addEventListener("change", renderChessHub); }
+    initChessBoardInput();
+    initChessStatsUI();
+  }
+
+  /* --- REYTING, TARIX, SEHRGARLAR ZINAPOYASI ---
+     Reyting (Elo) faqat jonli o'yinlarda o'zgaradi, hisobni server qiladi.
+     Unvon - shaxmat donasi: Piyoda -> Ot -> Fil -> Ruh -> Farzin -> Shoh.
+     Tarixdagi o'yinni bosib, uni yurishma-yurish qayta ko'rish mumkin.
+     Zinapoya - beshta sehrgar botdan qaysilari yengilgani (bezak, ball yo'q). */
+
+  var TITLE_PIECE = { pawn: "P", knight: "N", bishop: "B", rook: "R", queen: "Q", king: "K" };
+  var BOT_ORDER = ["novice", "easy", "med", "hard", "master"];
+  var chessStats = { tab: "top", filter: "all", prof: null, top: {}, bots: null, from: null };
+
+  function titleName(t) { return L("title_" + (t || "pawn")); }
+
+  function renderRateCard(r) {
+    if (!r) { return; }
+    $("ch-rate-piece").innerHTML = getPieceSVG(TITLE_PIECE[r.title] || "P", "marble");
+    $("ch-rate-num").textContent = r.rating;
+    $("ch-rate-title").textContent = titleName(r.title);
+    $("ch-rate-sub").textContent = r.games
+      ? L("rateSub").replace("%r", r.rank || "—").replace("%g", r.games)
+      : L("rateNew");
+  }
+
+  function renderBotBadges(bots) {
+    chessStats.bots = bots || chessStats.bots || {};
+    var els = document.querySelectorAll('#scr-chess-hub input[name="chess-bot-diff"]');
+    for (var i = 0; i < els.length; i++) {
+      var t = els[i].nextElementSibling, won = (chessStats.bots[els[i].value] || {}).w > 0;
+      var mark = t.querySelector(".won");
+      if (won && !mark) { t.insertAdjacentHTML("beforeend", '<span class="won">' + CHAT_SVG.check + "</span>"); }
+      if (!won && mark) { mark.parentNode.removeChild(mark); }
+    }
+  }
+
+  function csDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) { return ""; }
+    return ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + " · " +
+      ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+  }
+
+  function csSpark(series) {
+    var box = $("cs-spark");
+    if (!series || series.length < 2) { box.innerHTML = ""; box.style.display = "none"; return; }
+    box.style.display = "";
+    var w = 300, h = 54, lo = Math.min.apply(null, series), hi = Math.max.apply(null, series), span = Math.max(20, hi - lo);
+    var pts = series.map(function (v, i) {
+      return (i * w / (series.length - 1)).toFixed(1) + "," + (h - 6 - (v - lo) / span * (h - 12)).toFixed(1);
+    });
+    box.innerHTML = '<svg viewBox="0 0 ' + w + " " + h + '" preserveAspectRatio="none">' +
+      '<defs><linearGradient id="csg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:rgba(var(--gold-rgb),.35)"/><stop offset="1" style="stop-color:rgba(var(--gold-rgb),0)"/></linearGradient></defs>' +
+      '<polygon fill="url(#csg)" points="0,' + h + " " + pts.join(" ") + " " + w + "," + h + '"/>' +
+      '<polyline fill="none" style="stroke:var(--gold)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="' + pts.join(" ") + '"/></svg>';
+  }
+
+  function renderStatsProfile(p) {
+    $("cs-piece").innerHTML = getPieceSVG(TITLE_PIECE[p.title] || "P", "marble");
+    $("cs-rating").textContent = p.rating;
+    $("cs-title").textContent = L("titleLine").replace("%s", titleName(p.title));
+    $("cs-sub").textContent = p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew");
+    $("cs-games").textContent = p.games;
+    $("cs-wins").textContent = p.wins;
+    $("cs-draws").textContent = p.draws;
+    $("cs-losses").textContent = p.losses;
+    csSpark(p.series);
+  }
+
+  function csRow(html, attrs, me) {
+    return '<button type="button" class="cs-row' + (me ? " me" : "") + '"' + (attrs || "") + ">" + html + "</button>";
+  }
+
+  function crestHtml(house) {
+    var h = HOUSES[house];
+    return h && h.img ? '<img src="' + IMG_DIR + h.img + '" alt="">' : "";
+  }
+
+  function renderStatsList() {
+    var box = $("cs-list"), tab = chessStats.tab, html = "", me = chatUser().id || 0;
+    $("cs-top-filter").classList.toggle("hidden", tab !== "top");
+    chessSegs("cs-tabs", tab, function (v) { return L({ top: "tabTop", hist: "tabHist", lad: "tabLadder" }[v]); });
+    chessSegs("cs-top-filter", chessStats.filter, function (v) { return L(v === "all" ? "filterAll" : "filterHouse"); });
+    if (tab === "top") {
+      var data = chessStats.top[chessStats.filter];
+      if (!data) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("loading")) + "</div>"; return; }
+      if (!data.top.length) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("topEmpty")) + "</div>"; return; }
+      var inTop = false;
+      data.top.forEach(function (x, i) {
+        var mine = x.uid == me;
+        inTop = inTop || mine;
+        html += csRow('<span class="rk' + (i < 3 ? " top" : "") + '">' + (i + 1) + '</span><span class="av">' + crestHtml(x.house) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(x.name) + "</b><span>" + escapeHtmlChess(titleName(x.title)) + " · " +
+          L("gamesN").replace("%d", x.games) + '</span></span><span class="pc">' + getPieceSVG(TITLE_PIECE[x.title] || "P", "marble") +
+          '</span><span class="rt">' + x.rating + "</span>", ' data-uid="' + x.uid + '"', mine);
+      });
+      if (!inTop && data.me) {
+        html += csRow('<span class="rk">' + data.me.rank + '</span><span class="av">' + crestHtml(cupMe().house) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(L("you")) + "</b><span>" + escapeHtmlChess(titleName(data.me.title)) +
+          '</span></span><span class="rt">' + data.me.rating + "</span>", "", true);
+      }
+    } else if (tab === "hist") {
+      var hist = chessStats.prof ? chessStats.prof.history : null;
+      if (!hist) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("loading")) + "</div>"; return; }
+      if (!hist.length) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("histEmpty")) + "</div>"; return; }
+      hist.forEach(function (h) {
+        var mark = { win: L("resW"), loss: L("resL"), draw: L("resD") }[h.result];
+        var d = h.delta;
+        html += csRow('<span class="res ' + h.result + '">' + escapeHtmlChess(mark) + '</span><span class="nm"><b>' +
+          escapeHtmlChess(h.opp.name) + "</b><span>" + escapeHtmlChess(reasonText(h.reason, h.result)) + " · " +
+          escapeHtmlChess(chessTcLabel(h.base + "+" + (h.inc || 0))) + " · " + csDate(h.time) + '</span></span>' +
+          (d !== null && d !== undefined ? '<span class="dl ' + (d >= 0 ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>" : ""),
+          ' data-game="' + escapeHtmlChess(h.id) + '"');
+      });
+    } else {
+      var bots = chessStats.bots || {}, names = L("botNames");
+      BOT_ORDER.forEach(function (lv, i) {
+        var r = bots[lv] || { w: 0, d: 0, l: 0 }, won = r.w > 0;
+        html += csRow('<span class="rk">' + (i + 1) + '</span><span class="pc">' + getPieceSVG(BOT_PIECE[lv]) +
+          '</span><span class="nm"><b>' + escapeHtmlChess(names[lv]) + "</b><span>" +
+          escapeHtmlChess(L({ novice: "lvlNovice", easy: "lvlEasy", med: "lvlMed", hard: "lvlHard", master: "lvlMaster" }[lv])) +
+          " · " + L("wdl").replace("%w", r.w).replace("%d", r.d).replace("%l", r.l) + '</span></span><span class="cs-badge' +
+          (won ? " won" : "") + '">' + escapeHtmlChess(won ? L("beaten") : L("notBeaten")) + "</span>", ' data-bot="' + lv + '"');
+      });
+    }
+    box.innerHTML = html;
+    var lad = box.querySelectorAll("[data-bot] .pc");
+    for (var i = 0; i < lad.length; i++) { lad[i].parentNode.classList.add("cs-lad"); }
+  }
+
+  function loadStatsTop(filter) {
+    var q = filter === "house" && cupMe().house ? "?house=" + encodeURIComponent(cupMe().house) : "";
+    chessApi("top", null, q).then(function (res) {
+      if (res && res.ok) { chessStats.top[filter] = res; if (chessStats.tab === "top") { renderStatsList(); } }
+    })["catch"](function () {});
+  }
+
+  function loadStatsProfile() {
+    chessApi("profile").then(function (res) {
+      if (!res || !res.ok) { return; }
+      chessStats.prof = res;
+      chessStats.bots = res.bots || {};
+      renderStatsProfile(res);
+      renderStatsList();
+    })["catch"](function () {});
+  }
+
+  function openChessStats(tab) {
+    applyXT();
+    seekStop(true);
+    stopHubTimer();
+    chessStats.tab = tab || chessStats.tab || "top";
+    chessStats.top = {};
+    $("scr-chess-hub").classList.add("hidden");
+    $("scr-chess-game").classList.add("hidden");
+    $("scr-chess-stats").classList.remove("hidden");
+    window.scrollTo(0, 0);
+    renderStatsList();
+    loadStatsProfile();
+    loadStatsTop(chessStats.filter);
+  }
+
+  function closeChessStats() {
+    $("scr-chess-stats").classList.add("hidden");
+    openChessHub();
+  }
+
+  // Jadvaldagi o'yinchi: qisqa ma'lumot va "Shaxmatga chaqirish".
+  function chessPlayerSheet(uid) {
+    chessApi("profile", null, "?uid=" + encodeURIComponent(uid)).then(function (p) {
+      if (!p || !p.ok) { return; }
+      var me = uid == (chatUser().id || 0);
+      var ov = document.createElement("div");
+      ov.className = "cs-sheet";
+      ov.innerHTML = '<div class="box"><div class="cs-prof"><span class="pc">' + getPieceSVG(TITLE_PIECE[p.title] || "P", "marble") +
+        '</span><div style="min-width:0"><div class="r" style="font-size:26px">' + escapeHtmlChess(p.name) + '</div><div class="t">' +
+        p.rating + " · " + escapeHtmlChess(titleName(p.title)) + (p.house ? " · " + escapeHtmlChess(cupHouseName(p.house)) : "") +
+        '</div><div class="s">' + (p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew")) +
+        '</div></div></div><div class="cs-stats"><div><b>' + p.games + "</b><span>" + L("statGames") + '</span></div><div><b style="color:#5fd98f">' +
+        p.wins + "</b><span>" + L("statWins") + '</span></div><div><b style="color:#f3d58f">' + p.draws + "</b><span>" + L("statDraws") +
+        '</span></div><div><b style="color:#ff8a7a">' + p.losses + "</b><span>" + L("statLosses") + "</span></div></div>" +
+        (me ? "" : '<button type="button" class="ch-btn ch-gold" style="margin-top:14px" data-challenge="1">' + CHESS_IC.swords + "<span>" +
+          escapeHtmlChess(L("chatChess")) + "</span></button>") + "</div>";
+      ov.addEventListener("click", function (e) {
+        if (e.target === ov) { ov.parentNode.removeChild(ov); return; }
+        if (e.target.closest && e.target.closest("[data-challenge]")) {
+          ov.parentNode.removeChild(ov);
+          chessStats.from = "stats";
+          chessAnnounce("dm:" + uid);
+        }
+      });
+      document.body.appendChild(ov);
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  // Tarixdagi o'yinni ko'rish: tugagan holat, yurishlar ro'yxati bilan orqaga-oldinga.
+  function chessReview(gid) {
+    chessApi("state", null, "?game_id=" + encodeURIComponent(gid)).then(function (res) {
+      if (!res || !res.game || res.game.v !== 2) { showToast(L("err"), "err"); return; }
+      chessStats.from = "stats";
+      $("scr-chess-stats").classList.add("hidden");
+      openPvP(res.game, true);
+    })["catch"](function () { showToast(L("netErr"), "err"); });
+  }
+
+  function initChessStatsUI() {
+    $("ch-rate").addEventListener("click", function () { openChessStats("top"); });
+    $("chess-stats-back").addEventListener("click", closeChessStats);
+    $("cs-tabs").addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-v]") : null;
+      if (!b) return;
+      chessStats.tab = b.getAttribute("data-v");
+      renderStatsList();
+    });
+    $("cs-top-filter").addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-v]") : null;
+      if (!b) return;
+      chessStats.filter = b.getAttribute("data-v");
+      if (!chessStats.top[chessStats.filter]) { loadStatsTop(chessStats.filter); }
+      renderStatsList();
+    });
+    $("cs-list").addEventListener("click", function (e) {
+      var row = e.target.closest ? e.target.closest(".cs-row") : null;
+      if (!row) return;
+      if (row.getAttribute("data-uid")) { chessPlayerSheet(row.getAttribute("data-uid")); return; }
+      if (row.getAttribute("data-game")) { chessReview(row.getAttribute("data-game")); return; }
+      var lv = row.getAttribute("data-bot");
+      if (lv) {
+        var radio = document.querySelector('input[name="chess-bot-diff"][value="' + lv + '"]');
+        if (radio) { radio.checked = true; }
+        chessStats.from = "stats";
+        $("scr-chess-stats").classList.add("hidden");
+        startBotGame();
+      }
+    });
+  }
+
+  /* ---------- ISHGA TUSHIRISH ---------- */
+
+  function init() {
+    preloadCrests();
+    renderLangs();
+    $("back-btn").addEventListener("click", goBack);
+    $("world-btn").addEventListener("click", goWorld);
+    $("al-back").addEventListener("click", leaveAlley);
+    $("al-letter-btn").addEventListener("click", function () { openLetter(true); });
+    $("tr-back").addEventListener("click", openAlley);
+    $("lt-later").addEventListener("click", jrLetterCancel);
+    $("lt").addEventListener("click", function (ev) {
+      if (ev.target !== $("lt")) { return; }
+      if ($("lt-later").classList.contains("hidden")) { closeLetter(); } else { jrLetterCancel(); }
+    });
+    $("hub-set-pv").addEventListener("click", testStart);
+    $("lt-share").addEventListener("click", ltShare);
+    $("gr-back").addEventListener("click", function () { grStop(); openAlley(); });
+    $("tk-back").addEventListener("click", openAlley);
+    setTimeout(gatePreload, 1500);
+    $("hub-back").addEventListener("click", leaveHub);
+    $("hub-me").addEventListener("click", hubGo(openProfile));
+    $("hub-cup").addEventListener("click", hubGo(openCup));
+    $("hub-sort").addEventListener("click", hubGo(startSorting));
+    $("hub-wand").addEventListener("click", hubGo(function () { if (wand) { openProfile(); } else { startWand(); } }));
+    $("hub-gear").addEventListener("click", function () { renderHubSettings(); $("hub-set").classList.remove("hidden"); });
+    $("hub-set-lib").addEventListener("click", function () { saveStart("lib"); renderHubSettings(); });
+    $("hub-set-hub").addEventListener("click", function () { saveStart("world"); renderHubSettings(); });
+    $("hub-set-close").addEventListener("click", function () { $("hub-set").classList.add("hidden"); });
+    $("hub-set").addEventListener("click", function (ev) { if (ev.target === $("hub-set")) { $("hub-set").classList.add("hidden"); } });
+    $("w-set-lib").addEventListener("click", function () { setStart("lib"); });
+    $("w-set-map").addEventListener("click", function () { setStart("world"); });
+    $("w-set-close").addEventListener("click", function () { $("w-set").classList.add("hidden"); });
+    $("w-set").addEventListener("click", function (ev) {
+      if (ev.target === $("w-set")) { $("w-set").classList.add("hidden"); }
+    });
+    $("prof-back").addEventListener("click", worldGuard(closeProfile));
+    $("sort-cta").addEventListener("click", startSorting);
+    if ($("sort-card-btn")) { $("sort-card-btn").addEventListener("click", startSorting); }
+    $("wand-cta").addEventListener("click", startWand);
+    $("wand-more").addEventListener("click", openWandDetail);
+    $("det-back").addEventListener("click", closeWandDetail);
+    if ($("wand-card-btn")) { $("wand-card-btn").addEventListener("click", startWand); }
+    $("wand-again").addEventListener("click", function () {
+      var msg = T[lang].wandAskAgain;
+      if (tg && tg.showConfirm) {
+        tg.showConfirm(msg, function (ok) { if (ok) { startWand(); } });
+      } else if (window.confirm ? window.confirm(msg) : true) {
+        startWand();
+      }
+    });
+    $("tasks-strip").addEventListener("click", openTasks);
+    $("tasks-back").addEventListener("click", function() {
+      if (worldReturnTo()) { return; }
+      $("scr-tasks").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+      renderTasksStrip();
+    });
+    $("quiz-back").addEventListener("click", function() {
+      // confirm exit?
+      $("scr-quiz").classList.add("hidden");
+      openTasks();
+    });
+    
+    initChatUI();
+
+    // Chess events
+    $("chess-strip").addEventListener("click", openChessHub);
+    $("refs-strip").addEventListener("click", openRefs);
+    $("refs-back").addEventListener("click", worldGuard(closeRefs));
+    $("refs-share").addEventListener("click", function () { shareRefs(""); });
+    $("refs-promo").addEventListener("click", function () { shareRefs("taklif"); });
+    initChessUI();
+    
+    if ($("cup-strip")) { $("cup-strip").addEventListener("click", openCup); }
+    $("cup-back").addEventListener("click", worldGuard(closeCup));
+    $("house-back").addEventListener("click", closeHouse);
+    $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
+    $("cup-prev").addEventListener("click", openCupHistory);
+    $("cup-hist-btn").addEventListener("click", openCupHistory);
+    $("hist-back").addEventListener("click", closeCupHistory);
+    $("hall-back").addEventListener("click", function() {
+      $("scr-hall-full").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+    });
+    $("feed-back").addEventListener("click", function() {
+      $("scr-feed-full").classList.add("hidden");
+      $("scr-cup").classList.remove("hidden");
+    });
+    $("cup-cta").addEventListener("click", function () {
+      // Fakultetsizga - saralanish, chegaradan o'tmaganga - a'zo taklifi
+      if (this.getAttribute("data-act") === "sort") {
+        $("scr-cup").classList.add("hidden");
+        startSorting();
+        return;
+      }
+      // Kolleksiya kartasi - ichidagi havola taklif qilgan odam bilan,
+      // ya'ni do'st kelsa ball ham tushadi. Eski mijozda - pastdagi yo'l.
+      try {
+        if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
+          tg.switchInlineQuery("taklif", ["users", "groups", "channels"]);
+          return;
+        }
+      } catch (e) {}
+      var me0 = tgUser();
+      var url = "https://t.me/" + BOT + (me0 ? "?start=ref" + me0.id : "");
+      var text = T[lang].cupJoin;
+      try {
+        if (tg && tg.openTelegramLink) {
+          tg.openTelegramLink("https://t.me/share/url?url=" +
+            encodeURIComponent(url) + "&text=" + encodeURIComponent(text));
+          return;
+        }
+      } catch (e) {}
+      try { window.open(url, "_blank"); } catch (e) {}
+    });
+    $("hat-go").addEventListener("click", confirmSorting);
+    $("sort-back").addEventListener("click", sortBack);
+    $("rv-done").addEventListener("click", closeReveal);
+    // Ogohlantirish shlyapa ekranidagi confirmSorting() da beriladi.
+    // Bu yerda ikkinchi oyna ko'rsatilmaydi - u lockAsk ga zid edi.
+    $("resort-btn").addEventListener("click", startSorting);
+
+    var u = tgUser();
+    if ($("avatar-btn")) { fillAvatar($("avatar-btn"), u, u ? fullName(u) : "?", false); }
+
+    // Ikkala ekran ham yashirin turadi — saqlangan til aniqlangunicha
+    $("scr-lang").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-prof").classList.add("hidden");
+    $("scr-sort").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("scr-hat").classList.add("hidden");
+    $("scr-think").classList.add("hidden");
+    $("scr-detail").classList.add("hidden");
+    $("scr-cup").classList.add("hidden");
+    $("cup-back-txt").textContent = T[lang].cupBack;
+    $("hall-back-txt").textContent = T[lang].cupBack;
+    $("feed-back-txt").textContent = T[lang].cupBack;
+
+    // Lokal ma'lumot sinxron o'qiladi — kutish shart emas
+    absorb(readLocal());
+    // Tartib: botdan kelgan til -> ilovada saqlangani -> so'rash.
+    var fromBot = urlLang();
+    var quick = fromBot || readLocalLang();
+    if (fromBot) { saveLang(fromBot); }
+    var localHouse = readLocalHouse();
+    if (localHouse) { house = localHouse; }
+    wand = readLocalWand();
+    applyHouse(house);
+
+    var settled = false;
+    function show(saved) {
+      if (settled) { return; }
+      settled = true;
+      if (saved) {
+        openCatalog(saved, false);
+        // Foydalanuvchi shunday sozlagan bo'lsa - to'g'ridan-to'g'ri xaritaga.
+        if (readStart() === "world") { openHub(); }
+      } else { $("scr-lang").classList.remove("hidden"); }
+    }
+
+    if (quick) { migrate(quick); show(quick); }
+
+    load(function (saved, houseChanged) {
+      // Botdan kelgan til bulutdagi eski tanlovdan ustun turadi.
+      migrate(fromBot || saved || quick || "uz");
+      show(fromBot || saved);
+      if (!$("scr-cat").classList.contains("hidden")) { renderCatalog(); }
+      if (houseChanged) { refreshHouseView(); jrRecheck(); }
+    });
+
+    // Ilova ochiq - chatdagi "onlayn" belgisi shunga qaraydi
+    presenceStart();
+
+    // Reyting fon rejimida yuklanadi - kechiksa yoki xato bo'lsa,
+    // katalog baribir ochiladi, tasma shunchaki ko'rinmaydi.
+    fetchCup(function () {
+      $("cup-back-txt").textContent = T[lang].cupBack;
+      $("hall-back-txt").textContent = T[lang].cupBack;
+      $("feed-back-txt").textContent = T[lang].cupBack;
+      if (!$("scr-cat").classList.contains("hidden")) { renderCupStrip(); }
+      jrRecheck();
+      fetchTasks(function() {
+        renderTasksStrip();
+      });
+    });
+  }
+
+  function initTest() { testBar(); testFreshCheck(); }
+
+  // Hamyon holati ishga tushishda o'qiladi: xatdagi kundalik va kutubxona
+  // tugmasi (xat/9¾) shunga qarab chiziladi.
+  function initWallet() {
+    walLoad(function () {
+      try { renderWorldBtn(); } catch (e) {}
+      if (!$("lt").classList.contains("hidden")) { ltPath(false); ltFit(); }
+      if (alleyVisible()) { renderAlley(); }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { init(); initTest(); initWallet(); });
+  } else {
+    init();
+    initTest();
+    initWallet();
+  }
+})();
