@@ -192,7 +192,7 @@
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
       histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
-      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Hech bir fakultet hisobga kirmadi (hech kim 30 ballga yetmagan).", noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.",
+      winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Bu hafta hech bir fakultet ball to'plamadi.", noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.",
       best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
       months: ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"],
       srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
@@ -211,7 +211,7 @@
       lore: "Ma'lumotlar J. K. Rouling kitoblari va uning rasmiy yozuvlari asosida.",
       rulesKick: "Kubok qoidalari",
       rules: ["Mavsum — bir hafta: dushanba 00:00 dan yakshanba 23:59 gacha (Toshkent vaqti).",
-              "Fakultet bali — uning faol a'zolari ballari yig'indisi. Faol a'zo — mavsumda kamida 30 ball to'plagan sehrgar.",
+              "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
               "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 400 ball.",
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
@@ -223,7 +223,7 @@
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
       histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
-      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "Ни один факультет не прошёл в зачёт (никто не набрал 30 очков).", noWinnerSet: "Победитель этой недели не объявлялся.",
+      winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "На этой неделе ни один факультет не набрал очков.", noWinnerSet: "Победитель этой недели не объявлялся.",
       best: "Волшебник недели", bestLive: "Пока больше всех",
       months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
       srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
@@ -242,7 +242,7 @@
       lore: "По книгам Дж. К. Роулинг и её официальным материалам.",
       rulesKick: "Правила кубка",
       rules: ["Сезон длится неделю: с понедельника 00:00 до воскресенья 23:59 (по Ташкенту).",
-              "Очки факультета — сумма очков его активных участников. Активный — набравший за сезон минимум 30 очков.",
+              "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
               "У всех источников, кроме приглашений, есть лимит за сезон — всего 400 очков.",
               "Игра с ботом очков не даёт — только партии с живым соперником."]
@@ -254,7 +254,7 @@
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
       histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
-      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house qualified (nobody reached 30 points).", noWinnerSet: "No winner was announced this week.",
+      winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house scored any points this week.", noWinnerSet: "No winner was announced this week.",
       best: "Wizard of the week", bestLive: "Top scorer so far",
       months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
@@ -273,7 +273,7 @@
       lore: "Based on J.K. Rowling's books and her official writing.",
       rulesKick: "Cup rules",
       rules: ["A season is one week: Monday 00:00 to Sunday 23:59 (Tashkent time).",
-              "A house's score is the sum of its active members' points. Active means at least 30 points this season.",
+              "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
               "Every source except inviting friends has a season cap — 400 points in total.",
               "Chess against a bot gives no points — only live games do."]
@@ -691,18 +691,9 @@
     box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
 
     if (!me.is_active) {
-      // Ayblov yo'q: "hisobga kirmaysiz" emas, faqat qancha qolgani
+      // Hali bitta ham ball yo'q: har bir ball darhol fakultetga qo'shiladi
       var msg = cupEl("div", "gate-msg");
-      var gp = t.cupGate.split("%n");
-      msg.appendChild(document.createTextNode(gp[0]));
-      msg.appendChild(cupEl("b", "", t.cupGatePts.replace("%d", me.to_active || 0)));
-      if (gp.length > 1) {
-        msg.appendChild(document.createTextNode(gp[1].replace("%s", cupHouseName(me.house))));
-      }
-      var quizzes = Math.ceil((me.to_active || 0) / 10);
-      if (quizzes > 0) {
-        msg.appendChild(document.createTextNode(" " + t.cupGateTail.replace("%d", quizzes)));
-      }
+      msg.appendChild(document.createTextNode(t.cupGateFirst.replace("%s", cupHouseName(me.house))));
       box.appendChild(msg);
     } else if (me.house_rank) {
       var foot = cupEl("div", "you-foot");
