@@ -387,8 +387,7 @@
     var items = [
       { label: t.ckHouse,    state: house !== "none" ? "done" : "todo" },
       { label: t.ckWand,     state: wand ? "done" : (house !== "none" ? "todo" : "soon") },
-      { label: t.ckPatronus, state: "soon" },
-      { label: t.ckPet,      state: "soon" }
+      { label: t.ckPatronus, state: "soon" }
     ];
 
     items.forEach(function (it) {

@@ -4,7 +4,7 @@
    narsani chaqirmang - tekshiruv: tools/tartib.js */
 "use strict";
   /* ---------- UMUMIY SAYOHAT DVIGATELI ----------
-     Saralash, tayoqcha va kelajakdagi patronus/hayvon/fan uchun
+     Saralash, tayoqcha va kelajakdagi patronus/fan uchun
      bitta mexanika: kirish -> savollar -> o'ylanish -> natija.
      Har sayohat o'z konfiguratsiyasini beradi.                        */
 

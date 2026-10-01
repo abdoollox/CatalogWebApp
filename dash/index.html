@@ -855,7 +855,6 @@ var YOL = [
 ];
 var YOL_LAB = {letter:"Xatni ochdi", alley:"Diagon xiyoboniga kirdi", gringotts:"Gringottsda xona ochdi",
                ticket:"Xagriddan bilet oldi", train:"Poyezdda Xogvartsga yetdi"};
-var PET_NOM = {owl:"Boyo'g'li", cat:"Mushuk", toad:"Qurbaqa", rat:"Kalamush"};
 
 // Hodisa yo'lning qaysi qadami (yo'q bo'lsa null)
 function yolQadam(e){
@@ -897,7 +896,6 @@ function classify(p){
     var yq = YOL.filter(function(x){ return x.k === m[1]; })[0];
     return {t:"onb", step:m[1], lab:YOL_LAB[m[1]] || p, ic:yq ? yq.ic : "🧭"};
   }
-  if((m = p.match(/^pet_([a-z]+)$/)))     return {t:"pet", pet:m[1], lab:"Uy hayvoni oldi", ic:"🦉"};
   if((m = p.match(/^house_([a-z]+)$/)))   return {t:"house", house:m[1], lab:"Fakultetga tushdi", ic:"🏰"};
   if((m = p.match(/^wand_/)))             return {t:"wand",  lab:"Asosini tanladi", ic:"🪄"};
   if((m = p.match(/^src_(.+)$/)))         return {t:"src",   src:m[1], lab:"Reklamadan keldi", ic:"📣"};
@@ -2500,7 +2498,6 @@ function hodisaMatni(r){
     return "do'st taklifi bilan keldi · <b>" + esc(p ? p.name : "ID " + e.by) + "</b>";
   }
   if(e.t === "undo") return "bekor qildi · <b>" + esc(filmName(e.film)) + "</b>";
-  if(e.t === "pet") return "uy hayvoni oldi · <b>" + esc(PET_NOM[e.pet] || e.pet) + "</b>";
   if(e.t === "mplay") return "<b>" + esc(filmName(e.album)) + "</b> albomini ilovada tingladi";
   if(e.t === "mdl"){
     if(!e.n) return "<b>" + esc(filmName(e.album)) + "</b> albomini yuklab oldi";
@@ -4600,7 +4597,7 @@ function render(){
     {k:"fak",    n:"🏰 Fakultet", t:{sortst:1, house:1, wand:1}},
     {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}},
     {k:"musiqa", n:"🎵 Musiqa",   t:{mdl:1, mplay:1}},
-    {k:"yol",    n:"🧭 Yo'l",     t:{onb:1, pet:1}}
+    {k:"yol",    n:"🧭 Yo'l",     t:{onb:1}}
   ];
   var lHolat = {tur:"all", q:""}, lSoni = 150;
   try{

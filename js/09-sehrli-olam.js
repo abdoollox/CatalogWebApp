@@ -425,7 +425,7 @@
   }
 
   /* Onboarding qadamlari (asardagi yo'l): xat -> xiyobon -> Gringotts ->
-     hayvon -> tayoqcha -> bilet -> poyezd -> saralanish. Har qadam serverga
+     tayoqcha -> bilet -> poyezd -> saralanish. Har qadam serverga
      BIR MARTA yoziladi, panel voronkasi shulardan yig'iladi. Tayoqcha,
      saralash boshlanishi va fakultet alohida yoziladi (report("wand"...)). */
   function onbStep(name) {
@@ -698,10 +698,6 @@
     $("al-prog-t").textContent = al("prog");
     $("al-prog-n").textContent = done + " / " + steps.length;
     $("al-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
-
-    // "Xiyobonda yana" bloki: Gringotts endi haqiqiy qadam, bu yer hozircha bo'sh
-    $("al-more").classList.add("hidden");
-    $("al-shop").classList.add("hidden");
   }
 
   // Savollardan chiqish (Telegram "Orqaga" yoki 1-savoldagi "Chiqish") - xiyobonga
@@ -920,12 +916,12 @@
   }
 
   /* ---------------------------------------------------------------- GRINGOTTS HAMYONI
-     Onboarding iqtisodi: xona ochilganda 25 galleon beriladi, hayvon va
-     tayoqcha shundan sotib olinadi, bilet bepul (Xagrid beradi).
+     Onboarding iqtisodi: xona ochilganda 25 galleon beriladi, tayoqcha
+     shundan sotib olinadi, bilet bepul (Xagrid beradi).
      Haqiqiy holat SERVERDA (hpcup), bu yerda faqat nusxasi turadi. */
   var API_WALLET = "https://bot.tizimshunos.uz/api/wallet";
-  var wal = null;              // {galleons, vault, pet, wand, ticket, prices}
-  var PRICE_FALLBACK = { wand: 7, pets: { owl: 10, cat: 8, toad: 2, rat: 1 } };
+  var wal = null;              // {galleons, vault, wand, ticket, prices}
+  var PRICE_FALLBACK = { wand: 7 };
 
   function walHas(k) { return !!(wal && wal[k]); }
   function walSum() { return wal ? (wal.galleons || 0) : 0; }
@@ -935,13 +931,13 @@
   function walLocal(action, item) {
     var key = TK("hp_wal_demo"), w;
     try { w = JSON.parse(window.localStorage.getItem(key) || "null"); } catch (e) { w = null; }
-    if (!w) { w = { galleons: 0, vault: false, pet: null, wand: false, ticket: false, prices: PRICE_FALLBACK }; }
+    if (!w) { w = { galleons: 0, vault: false, wand: false, ticket: false, prices: PRICE_FALLBACK }; }
     var res = { ok: true, wallet: w };
     if (action === "vault" && !w.vault) { w.vault = true; w.galleons += 25; res["new"] = true; }
     else if (action === "buy") {
-      var narx = item === "wand" ? w.prices.wand : w.prices.pets[item];
-      if (!narx || (item === "wand" ? w.wand : w.pet) || w.galleons < narx) { res.ok = false; }
-      else { w.galleons -= narx; if (item === "wand") { w.wand = true; } else { w.pet = item; } }
+      var narx = item === "wand" ? w.prices.wand : 0;
+      if (!narx || w.wand || w.galleons < narx) { res.ok = false; }
+      else { w.galleons -= narx; w.wand = true; }
     } else if (action === "ticket") {
       if (!w.wand) { res.ok = false; } else { w.ticket = true; }
     }
