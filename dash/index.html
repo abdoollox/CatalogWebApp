@@ -682,6 +682,9 @@ var BOLIMLAR = [
       '<circle cx="9.5" cy="7.5" r="3.6"></circle>' +
       '<path d="M21 20v-1.8a3.8 3.8 0 0 0-2.9-3.7"></path>' +
       '<path d="M15.5 4.1a3.6 3.6 0 0 1 0 6.9"></path>'},
+  {id:"yol",     nom:"Sehrli yo'l",
+   ic:'<path d="M4 6.5h9.5a3.25 3.25 0 0 1 0 6.5h-3a3.25 3.25 0 0 0 0 6.5H20"></path>' +
+      '<circle cx="4" cy="6.5" r="1.6"></circle><path d="M18 17.2l2.4 2.3-2.4 2.3"></path>'},
   {id:"kino",    nom:"Kino",
    ic:'<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"></rect>' +
       '<path d="M10 9.2l5 2.8-5 2.8z"></path>'},
@@ -743,7 +746,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, chat:null};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, oynaY:{a:0, b:1}, chat:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -835,6 +838,48 @@ function mapCols(header){
   return ix;
 }
 
+/* ───────── Sehrli yo'l (onboarding) ─────────
+   Ilovadagi tartib bilan bir xil: xat -> Diagon xiyoboni -> Gringotts ->
+   Olivander -> Xagrid bileti -> 9¾ platforma -> Katta zal. Xiyobon, Gringotts,
+   bilet va poyezd "onb_*" bo'lib yoziladi (23-sentabrdan), tayoqcha, saralash
+   boshlanishi va fakultet esa avvaldan bor yozuvlar. */
+var YOL = [
+  {k:"letter",    n:"Xatni ochdi",          ic:"✉️", c:"#3987e5"},
+  {k:"alley",     n:"Xiyobonga kirdi",      ic:"🧱", c:"#3987e5"},
+  {k:"gringotts", n:"Gringottsda xona",     ic:"🏦", c:"#3987e5"},
+  {k:"wand",      n:"Tayoqcha oldi",        ic:"🪄", c:"#c98500"},
+  {k:"ticket",    n:"Bilet oldi",           ic:"🎫", c:"#c98500"},
+  {k:"train",     n:"Poyezdga chiqdi",      ic:"🚂", c:"#c98500"},
+  {k:"sortst",    n:"Saralanish boshlandi", ic:"🎩", c:"#199e70"},
+  {k:"house",     n:"Fakultetga tushdi",    ic:"🏰", c:"#199e70"}
+];
+var YOL_LAB = {letter:"Xatni ochdi", alley:"Diagon xiyoboniga kirdi", gringotts:"Gringottsda xona ochdi",
+               ticket:"Xagriddan bilet oldi", train:"Poyezdda Xogvartsga yetdi"};
+var PET_NOM = {owl:"Boyo'g'li", cat:"Mushuk", toad:"Qurbaqa", rat:"Kalamush"};
+
+// Hodisa yo'lning qaysi qadami (yo'q bo'lsa null)
+function yolQadam(e){
+  if(e.t === "onb") return e.step;
+  if(e.t === "wand" || e.t === "sortst" || e.t === "house") return e.t;
+  return null;
+}
+function yolMediana(a){
+  if(!a.length) return null;
+  a = a.slice().sort(function(x, y){ return x - y; });
+  var m = a.length >> 1;
+  return a.length % 2 ? a[m] : (a[m-1] + a[m]) / 2;
+}
+// Davomiylik odam tilida: "40 soniya", "3 daq", "1,5 soat", "2 kun"
+function yolVaqt(ms){
+  if(ms == null) return "—";
+  var m = ms / 60000;
+  if(m < 1) return Math.max(1, Math.round(ms / 1000)) + " soniya";
+  if(m < 60) return Math.round(m) + " daq";
+  var h = m / 60;
+  if(h < 24) return (h < 10 ? h.toFixed(1).replace(".", ",").replace(",0", "") : Math.round(h)) + " soat";
+  return Math.round(h / 24) + " kun";
+}
+
 /* ───────── Hodisani tushunish ───────── */
 function classify(p){
   p = String(p||"").trim();
@@ -848,6 +893,11 @@ function classify(p){
   // Yozuv TAKLIF QILINGAN odamda turadi: u kanalga qo'shildi, taklifchiga ball berildi
   if(p === "ref_awarded")  return {t:"refwin",lab:"Kanalga qo'shildi — taklifchiga ball", ic:"🎁"};
   if(p === "sort_start")   return {t:"sortst",lab:"Saralanishni boshladi", ic:"🎩"};
+  if((m = p.match(/^onb_([a-z]+)$/))){
+    var yq = YOL.filter(function(x){ return x.k === m[1]; })[0];
+    return {t:"onb", step:m[1], lab:YOL_LAB[m[1]] || p, ic:yq ? yq.ic : "🧭"};
+  }
+  if((m = p.match(/^pet_([a-z]+)$/)))     return {t:"pet", pet:m[1], lab:"Uy hayvoni oldi", ic:"🦉"};
   if((m = p.match(/^house_([a-z]+)$/)))   return {t:"house", house:m[1], lab:"Fakultetga tushdi", ic:"🏰"};
   if((m = p.match(/^wand_/)))             return {t:"wand",  lab:"Asosini tanladi", ic:"🪄"};
   if((m = p.match(/^src_(.+)$/)))         return {t:"src",   src:m[1], lab:"Reklamadan keldi", ic:"📣"};
@@ -2450,6 +2500,7 @@ function hodisaMatni(r){
     return "do'st taklifi bilan keldi · <b>" + esc(p ? p.name : "ID " + e.by) + "</b>";
   }
   if(e.t === "undo") return "bekor qildi · <b>" + esc(filmName(e.film)) + "</b>";
+  if(e.t === "pet") return "uy hayvoni oldi · <b>" + esc(PET_NOM[e.pet] || e.pet) + "</b>";
   if(e.t === "mplay") return "<b>" + esc(filmName(e.album)) + "</b> albomini ilovada tingladi";
   if(e.t === "mdl"){
     if(!e.n) return "<b>" + esc(filmName(e.album)) + "</b> albomini yuklab oldi";
@@ -2686,6 +2737,11 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
+  "Sehrli yo'l": "9¾ dagi yangi o'quvchining yo'li: xatni ochish, Diagon xiyoboni, Gringotts, Olivander (tayoqcha), Xagrid bileti, 9¾ platforma va Katta zalda saralanish. Shu davrda xatni BIRINCHI marta ochganlar olinadi va ularning keyingi qadamlari bugungacha kuzatiladi — kecha boshlab bugun tugatgan odam ham tugatgan bo'lib ko'rinadi. Qadam xat ochilgandan keyin bajarilgan bo'lsagina sanaladi, har qadam oldingisidan o'tganlar ichidan. Qadamlar 23-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
+  "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
+  "Qayerda to'xtab qolishdi": "Shu davrda xatni ochib, hali fakultetga tushmaganlar — oxirgi bajargan qadami bo'yicha. Eng uzun chiziq — eng ko'p odam yo'qolayotgan joy. Yaqinda boshlaganlar hali davom etishi mumkin.",
+  "Yo'lda qolganlar": "Yo'lni tugatmaganlar ro'yxati: qaysi qadamda to'xtagani, oxirgi qadamni qachon qilgani va shundan beri qancha vaqt o'tgani. Eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz.",
+  "Har qadamga qancha vaqt": "Har qadamni bajargan odamlar oldingi qadamdan qancha vaqtda o'tgani (o'rtacha — mediana, ya'ni odamlarning yarmi bundan tezroq) va xat ochilgandan beri qancha vaqt o'tgani.",
   "Chat faolligi": "Chatdagi xabarlar kun sayin (bir kunlik davrda — soat sayin), xonalar bo'yicha. \"Fakultetga qo'shildi\" kartalari sanalmaydi. Qaytib yozganlar — davr ichida kamida ikki xil kunda yozgan odamlar. Faqat o'qiydi — chatni ochgan, lekin hech qachon yozmagan odamlar (butun tarix).",
   "Xonalar": "Har xona: shu davrdagi xabarlar va yozgan odamlar, xonani kamida bir marta ochganlar (butun tarix) va a'zolarning necha foizi yozgani. Katta zal a'zolari — barcha saralanganlar.",
   "Muloqot sifati": "Odamlar gaplashyaptimi: javob sifatida yozilgan xabarlar ulushi, reaksiyalar, yangi saralanganlarning xush kelibsiz kartasiga javob yozilgani, chat orqali shaxmatga chaqirishlar, tahrirlangan va o'chirilgan xabarlar.",
@@ -3442,7 +3498,7 @@ function render(){
     var fK2 = document.createElement("figure");
     var kBal = null;
     var kSl = kList.length > 14;
-    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
+    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
     var kChiz = function(){
       fK2.innerHTML = "";
@@ -4391,6 +4447,149 @@ function render(){
     put("chat", chC7);
   }
 
+  /* ═══════════════ SEHRLI YO'L ═══════════════ */
+  // Har odamning har qadamni BIRINCHI marta qilgan vaqti. Xatdan oldingi
+  // yozuvlar (masalan yo'l paydo bo'lishidan oldingi saralanish) olinmaydi.
+  var yIlk = {};
+  ST.rows.forEach(function(r){
+    var q = yolQadam(r.ev);
+    if(!q) return;
+    var u = yIlk[r.uid];
+    if(q === "letter"){ if(!u) yIlk[r.uid] = {letter:r.t}; return; }
+    if(u && !u[q]) u[q] = r.t;
+  });
+  // Kogorta: shu davrda xatni birinchi marta ochganlar
+  var yOdam = Object.keys(yIlk).filter(function(uid){
+    var t = yIlk[uid].letter; return t >= w.from && t <= w.to;
+  });
+  // Har odam qaysi qadamgacha UZLUKSIZ yetdi (0 = faqat xat)
+  var yEtdi = {};
+  yOdam.forEach(function(uid){
+    var i = 0;
+    while(i + 1 < YOL.length && yIlk[uid][YOL[i+1].k]) i++;
+    yEtdi[uid] = i;
+  });
+  var yOxir = YOL.length - 1;
+  var ySoni = YOL.map(function(x, i){
+    return yOdam.filter(function(uid){ return yEtdi[uid] >= i; }).length;
+  });
+  var yQoldi = yOdam.filter(function(uid){ return yEtdi[uid] < yOxir; });
+  var yTugatdi = ySoni[yOxir] || 0;
+  // Vaqtlar: oldingi qadamdan va xatdan, faqat shu qadamga yetganlar
+  var yOld = YOL.map(function(){ return []; }), yBosh = YOL.map(function(){ return []; });
+  yOdam.forEach(function(uid){
+    var u = yIlk[uid];
+    for(var i = 1; i <= yEtdi[uid]; i++){
+      yOld[i].push(Math.max(0, u[YOL[i].k] - u[YOL[i-1].k]));
+      yBosh[i].push(Math.max(0, u[YOL[i].k] - u.letter));
+    }
+  });
+  var yJami = yolMediana(yBosh[yOxir]);
+
+  var yC1 = card("Sehrli yo'l", "shu davrda xatni ochganlar · keyingi qadamlari bugungacha", "");
+  if(!yOdam.length){
+    yC1.appendChild(emptyNote("Bu davrda hech kim xatni ochmagan. Yo'l qadamlari 23-sentabrdan beri yoziladi."));
+    put("yol", yC1);
+  } else {
+    var yK = document.createElement("div");
+    yK.className = "tarq-kpi";
+    var yXatda = yQoldi.filter(function(uid){ return yEtdi[uid] === 0; }).length;
+    [["Xatni ochdi", fmtNum(yOdam.length), "yo'lni boshlagan odam", ""],
+     ["Fakultetga tushdi", fmtNum(yTugatdi), Math.round(yTugatdi / yOdam.length * 100) + "% boshlaganlardan",
+      yTugatdi / yOdam.length >= .6 ? "holat-yaxshi" : (yTugatdi / yOdam.length >= .3 ? "holat-ogoh" : "holat-yomon")],
+     ["Yarim yo'lda", fmtNum(yQoldi.length), yXatda ? fmtNum(yXatda) + " tasi xatdan nariga o'tmagan" : "hammasi xatdan o'tgan", ""],
+     ["Butun yo'l", yolVaqt(yJami), yJami == null ? "hali hech kim tugatmagan" : "xatdan fakultetgacha (o'rtacha)", ""]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk" + (m[3] ? " " + m[3] : "");
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + esc(m[1]) +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      yK.appendChild(d);
+    });
+    yC1.appendChild(yK);
+    var yQadam = YOL.map(function(x, i){ return {lab:x.ic + "  " + x.n, val:ySoni[i], color:x.c}; });
+    yC1.appendChild(voronka(yQadam, "Qadam"));
+    addTable(yC1, ["Qadam","Odam","Boshdan","Oldingidan"], yQadam.map(function(x, i){
+      return [YOL[i].n, x.val, (x.val / yOdam.length * 100).toFixed(1) + "%",
+              i ? (ySoni[i-1] ? (x.val / ySoni[i-1] * 100).toFixed(1) + "%" : "—") : "—"];
+    }));
+    put("yol", yC1);
+
+    /* — Kun sayin — */
+    var yKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };
+    var yKun = {};
+    Object.keys(yIlk).forEach(function(uid){
+      var u = yIlk[uid];
+      [["bosh", u.letter], ["tay", u.wand], ["fak", u.house]].forEach(function(p){
+        if(!p[1] || p[1] < w.from || p[1] > w.to) return;
+        var q = yKun[yKey(p[1])] = yKun[yKey(p[1])] || {bosh:0, tay:0, fak:0};
+        q[p[0]]++;
+      });
+    });
+    var yList = dayList.map(function(d){
+      var q = yKun[d.k] || {bosh:0, tay:0, fak:0};
+      return {k:d.k, lab:d.lab, tip:d.tip, bosh:q.bosh, tay:q.tay, fak:q.fak};
+    });
+    put("yol", poygaKarta({
+      nom:"Yo'l kun sayin", kls:"twothird", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin · nomini bosib olib turing",
+      list:yList, dayList:dayList, birKun:birKun, oyna:"oynaY", ls:"hp_dash_yol",
+      ser:[{k:"bosh", n:"Xatni ochdi", t:"Xatni ochdi", c:"#3987e5"},
+           {k:"tay",  n:"Tayoqcha oldi", t:"Tayoqcha oldi", c:"#c98500"},
+           {k:"fak",  n:"Fakultetga tushdi", t:"Fakultetga tushdi", c:"#199e70"}]
+    }));
+
+    /* — Har qadamga qancha vaqt — */
+    var yC5 = card("Har qadamga qancha vaqt", "o'rtacha (mediana)", "third");
+    var yTw2 = document.createElement("div"); yTw2.className = "tbl-wrap";
+    var yH2 = '<table style="min-width:0"><thead><tr><th>Qadam</th><th class="num">Oldingidan</th>' +
+              '<th class="num">Xatdan</th></tr></thead><tbody>';
+    YOL.forEach(function(x, i){
+      if(!i) return;
+      yH2 += "<tr><td>" + x.ic + " " + esc(x.n) + '</td><td class="num">' + yolVaqt(yolMediana(yOld[i])) +
+             '</td><td class="num">' + yolVaqt(yolMediana(yBosh[i])) + "</td></tr>";
+    });
+    yTw2.innerHTML = yH2 + "</tbody></table>";
+    yC5.appendChild(yTw2);
+    put("yol", yC5);
+    /* — Yo'lda qolganlar — */
+    var yC4 = card("Yo'lda qolganlar", "eng yangisi yuqorida · ismni bosing", "twothird");
+    if(!yQoldi.length) yC4.appendChild(emptyNote("Yo'lda qolgan odam yo'q."));
+    else {
+      var yHozir = new Date();
+      var yQ = yQoldi.map(function(uid){
+        var i = yEtdi[uid];
+        return {uid:uid, i:i, t:yIlk[uid][YOL[i].k]};
+      }).sort(function(a, b){ return b.t - a.t; });
+      var yTw = document.createElement("div"); yTw.className = "tbl-wrap";
+      yTw.style.maxHeight = "420px"; yTw.style.overflowY = "auto";
+      var yH = '<table><thead><tr><th>Sehrgar</th><th>To\'xtagan joyi</th><th>Qachon</th>' +
+               '<th class="num">Shundan beri</th></tr></thead><tbody>';
+      yQ.forEach(function(x){
+        var p = personOf(x.uid);
+        yH += "<tr><td>" + odamHavola(x.uid, p && p.name) + "</td><td>" + YOL[x.i].ic + " " + esc(YOL[x.i].n) +
+              "</td><td>" + fmtDay(dayKey(x.t)) + ", " + fmtTime(x.t) + '</td><td class="num">' +
+              yolVaqt(yHozir - x.t) + "</td></tr>";
+      });
+      yTw.innerHTML = yH + "</tbody></table>";
+      yC4.appendChild(yTw);
+    }
+    put("yol", yC4);
+
+    /* — Qayerda to'xtab qolishdi — */
+    var yC3 = card("Qayerda to'xtab qolishdi", "oxirgi bajargan qadami", "third");
+    if(!yQoldi.length) yC3.appendChild(emptyNote("Yo'lni boshlagan hamma fakultetga tushgan."));
+    else {
+      var yTo = YOL.slice(0, yOxir).map(function(x, i){
+        return {lab:x.ic + " " + x.n,
+                val:yQoldi.filter(function(uid){ return yEtdi[uid] === i; }).length, color:"#d03b3b"};
+      });
+      yC3.appendChild(barList(yTo, "#d03b3b", yQoldi.length));
+    }
+    put("yol", yC3);
+
+  }
+
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
   var LTUR = [
@@ -4400,7 +4599,8 @@ function render(){
     {k:"bot",    n:"🔵 Bot",      t:{start:1, blocked:1}},
     {k:"fak",    n:"🏰 Fakultet", t:{sortst:1, house:1, wand:1}},
     {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}},
-    {k:"musiqa", n:"🎵 Musiqa",   t:{mdl:1, mplay:1}}
+    {k:"musiqa", n:"🎵 Musiqa",   t:{mdl:1, mplay:1}},
+    {k:"yol",    n:"🧭 Yo'l",     t:{onb:1, pet:1}}
   ];
   var lHolat = {tur:"all", q:""}, lSoni = 150;
   try{
@@ -4506,6 +4706,7 @@ function render(){
   // Bo'lim qatori: yonidagi son — o'sha bo'limdagi eng muhim raqam
   drawTabs({
     odamlar: s.uniq,
+    yol: yOdam.length,
     kino: s.films,
     kanal: s.left + s.blocked,
     musiqa: mzSon,
@@ -4873,7 +5074,7 @@ function demoRows(){
       else if(roll < .90) p = "bekor_hp4";
       else if(roll < .93) p = "left";
       else if(roll < .95) p = "blocked";
-      else p = "start";
+      else p = rnd() < .5 ? "start" : "onb_" + pick(["letter","alley","gringotts","ticket","train"]);
       raw.push([u.id, u.n, u.u, p,
         t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" + String(t.getDate()).padStart(2,"0") +
         " " + String(t.getHours()).padStart(2,"0") + ":" + String(t.getMinutes()).padStart(2,"0") + ":" +
@@ -4956,7 +5157,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -4973,7 +5174,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -5013,11 +5214,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
