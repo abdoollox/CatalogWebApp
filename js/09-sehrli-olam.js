@@ -779,9 +779,7 @@
     $("lt-hi").textContent = al("hi").replace("%s", name);
     $("lt-body").textContent = al("body");
     ltPath(readOnly);
-    $("lt-share").innerHTML = hubSvg(AL_ICONS.share);
-    $("lt-share").setAttribute("aria-label", al("share"));
-    $("lt-share").setAttribute("title", al("share"));
+    $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     $("lt-sign").textContent = al("sign");
     // Qayta o'qiyotganda pastdagi tugma "Yopish" bo'ladi
     $("lt-later").textContent = readOnly ? al("close") : al("later");
