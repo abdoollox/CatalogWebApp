@@ -47,7 +47,7 @@ button{font-family:inherit; color:inherit}
   padding-inline:clamp(16px, 2.2vw, 34px);
   backdrop-filter:blur(8px);
 }
-.bosh{display:flex; align-items:center; gap:10px 22px; flex-wrap:wrap}
+.bosh{display:flex; align-items:center; gap:10px 14px; flex-wrap:wrap}
 .asboblar{display:flex; align-items:center; gap:8px; margin-left:auto; flex:none}
 .seg{display:flex; background:var(--panel); border:1px solid var(--line-2); border-radius:10px; padding:3px; gap:2px}
 .seg button{
@@ -123,14 +123,20 @@ button{font-family:inherit; color:inherit}
 }
 .range-pick .tayyor button:hover{border-color:var(--gold-2); color:var(--gold)}
 .tabs{
-  display:flex; gap:3px; overflow-x:auto; scrollbar-width:none;
+  display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; scroll-behavior:smooth;
+  flex:1 1 0; min-width:0;
   background:var(--panel); border:1px solid var(--line-2); border-radius:12px; padding:4px;
+  --chap:0px; --ong:0px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--chap),#000 calc(100% - var(--ong)),transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 var(--chap),#000 calc(100% - var(--ong)),transparent 100%);
 }
+.tabs.chap{--chap:28px}
+.tabs.ong{--ong:28px}
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{
   display:inline-flex; align-items:center; gap:7px;
   border:0; background:transparent; color:var(--ink-3); font-family:'Cormorant Garamond',serif;
-  font-size:17.5px; font-weight:600; padding:6px 13px; cursor:pointer; white-space:nowrap;
+  font-size:17px; font-weight:600; padding:6px 11px; cursor:pointer; white-space:nowrap; flex:none;
   border-radius:9px; transition:.15s; letter-spacing:.01em;
 }
 .tabs .tab-ic{width:15px; height:15px; flex:none; opacity:.75; transition:.15s}
@@ -139,7 +145,7 @@ button{font-family:inherit; color:inherit}
 .tabs button[aria-selected="true"]{color:var(--gold-hi); background:rgba(233,231,225,.14)}
 .tabs button .n{
   font-family:'Manrope',sans-serif; font-size:10.5px; font-weight:700; color:var(--ink-3);
-  margin-left:5px; font-variant-numeric:tabular-nums;
+  margin-left:2px; font-variant-numeric:tabular-nums;
 }
 .tabs button[aria-selected="true"] .n{color:var(--gold-2)}
 @media (max-width:900px){
@@ -5095,6 +5101,28 @@ function drawTabs(sonlar){
     });
     nav.appendChild(btn);
   });
+  if(!nav._chet){
+    nav._chet = function(){
+      var ch = nav.scrollLeft > 2, on = nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 2;
+      nav.classList.toggle("chap", ch);
+      nav.classList.toggle("ong", on);
+    };
+    nav.addEventListener("scroll", nav._chet, {passive:true});
+    window.addEventListener("resize", nav._chet);
+  }
+  tabKorin();
+}
+
+/* Tanlangan bo'lim qatorda ko'rinib tursin, chetlari xira bo'lsin */
+function tabKorin(){
+  var nav = document.getElementById("tabs");
+  var b = nav.querySelector('button[aria-selected="true"]');
+  if(b){
+    var l = b.offsetLeft - nav.offsetLeft, r = l + b.offsetWidth;
+    if(l < nav.scrollLeft + 24) nav.scrollLeft = Math.max(0, l - 24);
+    else if(r > nav.scrollLeft + nav.clientWidth - 24) nav.scrollLeft = r - nav.clientWidth + 24;
+  }
+  if(nav._chet) nav._chet();
 }
 
 function selectTab(id){
@@ -5105,6 +5133,7 @@ function selectTab(id){
     b.setAttribute("aria-selected", String(faol));
     b.tabIndex = faol ? 0 : -1;
   });
+  tabKorin();
   BOLIMLAR.forEach(function(b){
     var g = document.getElementById("sec-" + b.id);
     if(g) g.hidden = (b.id !== id);
