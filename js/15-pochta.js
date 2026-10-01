@@ -29,6 +29,8 @@
       cta: "Yo'lni davom ettirish", done: "Bajarildi", again: "Xogvarts sizni unutgani yo'q.",
       setT: "Telegram'da ham eslatilsin", setS: "Ilovaga kirmasangiz, boyo'g'li bot orqali xabar beradi",
       today: "bugun", yest: "kecha", ago: "%s kun oldin",
+      dmT: "%s sizga xat yozdi", dmTN: "%s sizga %d ta xabar yozdi", dmChess: "♟️ shaxmatga chaqirdi",
+      reply: "Javob yozish", seen: "O'qildi",
       steps: {
         alley: ["Diagon xiyoboni sizni kutmoqda", "Xatdagi ro'yxat tayyor, g'isht devor ochiq. Xogvartsga yo'l shu yerdan boshlanadi."],
         gringotts: ["Gringotts eshiklari ochiq", "Ota-onangiz qoldirgan oltinlar bankda sizni kutib turibdi."],
@@ -45,6 +47,8 @@
       cta: "Продолжить путь", done: "Выполнено", again: "Хогвартс вас не забыл.",
       setT: "Напоминать и в Telegram", setS: "Если вы не заходите в приложение, сова напишет через бота",
       today: "сегодня", yest: "вчера", ago: "%s дн. назад",
+      dmT: "%s написал(а) вам", dmTN: "%s написал(а) вам %d сообщ.", dmChess: "♟️ вызывает на дуэль",
+      reply: "Ответить", seen: "Прочитано",
       steps: {
         alley: ["Косой переулок ждёт вас", "Список из письма готов, кирпичная стена открыта. Путь в Хогвартс начинается здесь."],
         gringotts: ["Двери Гринготтса открыты", "Золото, оставленное родителями, ждёт вас в банке."],
@@ -61,6 +65,8 @@
       cta: "Continue the journey", done: "Done", again: "Hogwarts hasn't forgotten you.",
       setT: "Also remind me in Telegram", setS: "If you don't open the app, an owl will write through the bot",
       today: "today", yest: "yesterday", ago: "%s days ago",
+      dmT: "%s wrote to you", dmTN: "%s sent you %d messages", dmChess: "♟️ challenges you to chess",
+      reply: "Reply", seen: "Read",
       steps: {
         alley: ["Diagon Alley is waiting", "The list from your letter is ready and the brick wall is open. The road to Hogwarts starts here."],
         gringotts: ["Gringotts doors are open", "The gold your parents left you is waiting at the bank."],
@@ -87,6 +93,8 @@
     if (!d) {
       var t = Date.now();
       d = { bot: true, items: [
+        { id: 4, tur: "dm", n: 2, from: 7100000037, name: "Hermiona", text: "Ertaga shaxmatda revansh?",
+          t: new Date(t - 120e3).toISOString(), read: false, done: false },
         { id: 3, tur: "xabar", n: 1, t: new Date(t - 600e3).toISOString(), read: false, done: false,
           title: "Grifindor, bu hafta kubokda oldindasiz!", text: "Yakshanbagacha 120 ball farq.\nSliterin yaqinlashyapti - bo'sh kelmang." },
         { id: 2, tur: "onb", qadam: "wand", n: 2, t: new Date(t - 3600e3).toISOString(), read: false, done: false },
@@ -182,7 +190,13 @@
     }
     items.forEach(function (x) {
       // Turlar: onb - yo'l eslatmasi (matn ilovada), xabar - egasi paneldan yozgan xat
+      // dm - chatda shaxsiy xabar keldi (o'qilmagan)
       var st = x.tur === "onb" ? t.steps[x.qadam] : (x.tur === "xabar" && x.title ? [x.title, x.text || ""] : null);
+      if (x.tur === "dm" && x.from) {
+        var ism = x.name || "Sehrgar";
+        st = [x.n > 1 ? t.dmTN.replace("%s", ism).replace("%d", x.n) : t.dmT.replace("%s", ism),
+              x.text === "♟️" ? t.dmChess : "«" + (x.text || "") + "»"];
+      }
       if (!st) { return; }               // ilova hali bilmaydigan tur - ko'rsatilmaydi
       var yangi = !x.read || owlFresh[x.id];
       var c = owlEl("div", "owl-card" + (yangi ? " owl-new" : "") + (x.done ? " owl-done" : ""));
@@ -192,10 +206,18 @@
       top.appendChild(owlEl("span", "owl-when", owlWhen(x.t)));
       if (yangi) { top.appendChild(owlEl("span", "owl-seal")); }
       c.appendChild(top);
-      if (x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
+      if (x.tur === "onb" && x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
       c.appendChild(owlEl("b", "owl-h", st[0]));
       if (st[1]) { c.appendChild(owlEl("p", "owl-p", st[1])); }
-      if (x.tur !== "onb") {
+      if (x.tur === "dm") {
+        if (x.done) { c.appendChild(owlEl("span", "owl-ok", "✓ " + t.seen)); }
+        else {
+          var rb = owlEl("button", "owl-cta", t.reply);
+          rb.type = "button";
+          rb.addEventListener("click", function () { owlGoDm(x.from, x.name); });
+          c.appendChild(rb);
+        }
+      } else if (x.tur !== "onb") {
         // qo'lda yozilgan xatda tugma yo'q
       } else if (x.done) {
         c.appendChild(owlEl("span", "owl-ok", "✓ " + t.done));
@@ -243,6 +265,17 @@
     goWorld();
   }
 
+  // "Javob yozish": o'sha odam bilan shaxsiy suhbat ochiladi. Ortga - 9¾ ga.
+  function owlGoDm(uid, ism) {
+    owlFresh = {};
+    ["scr-owl", "scr-cat", "scr-hub"].forEach(function (id) { $(id).classList.add("hidden"); });
+    worldFrom = "hub";
+    openChat();
+    chatOpenDm({ uid: Number(uid), name: ism || "Sehrgar" });
+    // Suhbat o'qilgach server xatni yopadi - belgidagi son yangilansin
+    setTimeout(function () { owlApi("list"); }, 5000);
+  }
+
   function owlBotToggle() {
     owlApi("bot", { on: $("owl-bot").checked });
   }
@@ -258,9 +291,14 @@
     owlBadge();
 
     var fromBot = /(^|[?&])owl=1(&|$)/.test(window.location.search || "");
+    var dmM = /(^|[?&])dm=(\d+)(&|$)/.exec(window.location.search || "");
     owlApi(fromBot ? "came" : "list", null, function () {
-      // Bot xabaridagi tugma bilan kelgan - pochta darhol ochiladi
-      if (fromBot && $("scr-lang").classList.contains("hidden")) { openOwl(); }
+      if (!fromBot || !$("scr-lang").classList.contains("hidden")) { return; }
+      // Bot xabaridagi "Javob yozish" - to'g'ridan-to'g'ri suhbatga, qolganlari - pochtaga
+      if (dmM && hasHouse()) {
+        var x = ((owlData && owlData.items) || []).filter(function (i) { return i.tur === "dm" && String(i.from) === dmM[2]; })[0];
+        owlGoDm(dmM[2], x ? x.name : "");
+      } else { openOwl(); }
     });
     // Ilova ochiq turganda ham yangi xat kelishi mumkin
     setInterval(function () { if (!document.hidden && !owlVisible()) { owlApi("list"); } }, 180000);
