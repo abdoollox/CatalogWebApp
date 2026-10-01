@@ -146,6 +146,34 @@
     return seen ? "letter" : "new";
   }
 
+  // Kutubxonadagi taklif kartasi: fakulteti yo'q odamga Xogvarts xati (yo'lga kirish eshigi)
+  var HOGC_TX = {
+    "new": {
+      uz: ["Boyo'g'li pochtasi", "Sizga Xogvartsdan xat keldi", "Ochib o'qing — fakultetingiz sizni kutmoqda"],
+      ru: ["Совиная почта", "Вам письмо из Хогвартса", "Откройте — ваш факультет ждёт вас"],
+      en: ["Owl Post", "A letter from Hogwarts has arrived", "Open it — your house is waiting"]
+    },
+    letter: {
+      uz: ["Xogvartsga yo'l", "Yo'lingiz davom etmoqda", "Bir necha qadam qoldi — fakultetingizni bilib oling"],
+      ru: ["Путь в Хогвартс", "Ваш путь продолжается", "Осталось несколько шагов — узнайте свой факультет"],
+      en: ["The road to Hogwarts", "Your journey continues", "A few steps left — find out your house"]
+    }
+  };
+
+  function renderHogCard(stage) {
+    var c = $("hogc");
+    if (!c) { return; }
+    c.classList.toggle("hidden", stage === "world");
+    if (stage === "world") { return; }
+    var t = HOGC_TX[stage][lang] || HOGC_TX[stage].uz;
+    $("hogc-k").textContent = t[0];
+    $("hogc-t").textContent = t[1];
+    $("hogc-s").textContent = t[2];
+    $("hogc-seal").textContent = al("seal");
+    c.classList.toggle("hogc-new", stage === "new");
+    c.onclick = goWorld;
+  }
+
   function renderWorldBtn() {
     var btn = $("world-btn");
     if (!btn) { return; }
@@ -157,6 +185,7 @@
     $("coin-lt").classList.add("hidden");
     btn.classList.remove("yangi");
     btn.setAttribute("aria-label", "9¾");
+    renderHogCard(stage);
     if (typeof owlBadge === "function") { owlBadge(); }
   }
 

@@ -2780,7 +2780,7 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
-  "Sehrli yo'l": "9¾ dagi yangi o'quvchining yo'li: xatni ochish, Diagon xiyoboni, Gringotts, Olivander (tayoqcha), Xagrid bileti, 9¾ platforma va Katta zalda saralanish. Shu davrda xatni BIRINCHI marta ochganlar olinadi va ularning keyingi qadamlari bugungacha kuzatiladi — kecha boshlab bugun tugatgan odam ham tugatgan bo'lib ko'rinadi. Qadam xat ochilgandan keyin bajarilgan bo'lsagina sanaladi, har qadam oldingisidan o'tganlar ichidan. Qadamlar 23-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
+  "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Diagon xiyoboni, Gringotts, Olivander, Xagrid bileti, 9¾ platforma va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
   "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
   "Qayerda to'xtab qolishdi": "Shu davrda xatni ochib, hali fakultetga tushmaganlar — oxirgi bajargan qadami bo'yicha. Eng uzun chiziq — eng ko'p odam yo'qolayotgan joy. Yaqinda boshlaganlar hali davom etishi mumkin.",
   "Yo'lda qolganlar": "Yo'lni tugatmaganlar ro'yxati: qaysi qadamda to'xtagani, oxirgi qadamni qachon qilgani va shundan beri qancha vaqt o'tgani. Eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz.",
@@ -4538,11 +4538,40 @@ function render(){
   });
   var yJami = yolMediana(yBosh[yOxir]);
 
-  var yC1 = card("Sehrli yo'l", "shu davrda xatni ochganlar · keyingi qadamlari bugungacha", "");
-  if(!yOdam.length){
-    yC1.appendChild(emptyNote("Bu davrda hech kim xatni ochmagan. Yo'l qadamlari 23-sentabrdan beri yoziladi."));
-    put("yol", yC1);
-  } else {
+  // Xatdan OLDINGI qadamlar ham (egasi so'radi, 2026-10-01): bot, kanal, film. Har odamning birinchi vaqti.
+  var yPre = {start:{}, sub:{}, film:{}, web:{}};
+  var yPreQo = function(k, uid, t){ var o = yPre[k][uid]; if(!o || t < o) yPre[k][uid] = t; };
+  ST.rows.forEach(function(r){
+    var e = r.ev;
+    if(e.t === "start") yPreQo("start", r.uid, r.t);
+    else if(e.t === "sub") yPreQo("sub", r.uid, r.t);
+    else if(e.t === "film"){ yPreQo("film", r.uid, r.t); if(e.origin === "web") yPreQo("web", r.uid, r.t); }
+  });
+  // Film olgan odam kanalda bo'lgan (bot film berishdan oldin tekshiradi) - asosiy voronka bilan bir xil qoida
+  Object.keys(yPre.film).forEach(function(uid){ yPreQo("sub", uid, yPre.film[uid]); });
+  var yPreV = function(k){ return function(uid){ return yPre[k][uid]; }; };
+  var YQ = [
+    {k:"start", n:"Botni ochdi",       ic:"🤖", c:"#9085e9", v:yPreV("start")},
+    {k:"sub",   n:"Kanalga a'zo",      ic:"📣", c:"#9085e9", v:yPreV("sub")},
+    {k:"film",  n:"Film oldi",         ic:"🎬", c:"#9085e9", v:yPreV("film")},
+    {k:"web",   n:"Ilovada film oldi", ic:"📱", c:"#9085e9", v:yPreV("web")}
+  ].concat(YOL.map(function(x){
+    return {k:x.k, n:x.n, ic:x.ic, c:x.c, v:function(uid){ return yIlk[uid] && yIlk[uid][x.k]; }};
+  }));
+  var yqHamma = {};
+  ["start", "sub", "film", "web"].forEach(function(k){ for(var u in yPre[k]) yqHamma[u] = 1; });
+  for(var yu in yIlk) yqHamma[yu] = 1;
+  yqHamma = Object.keys(yqHamma);
+  var yqH = {};
+  YQ.forEach(function(x){ yqH[x.k] = true; });
+  try{
+    var yqS = JSON.parse(localStorage.getItem("hp_dash_yolq") || "null");
+    if(yqS) YQ.forEach(function(x){ if(typeof yqS[x.k] === "boolean") yqH[x.k] = yqS[x.k]; });
+  }catch(e){}
+  if(!YQ.some(function(x){ return yqH[x.k]; })) YQ.forEach(function(x){ yqH[x.k] = true; });
+
+  var yC1 = card("Sehrli yo'l", "shu davrda birinchi yoniq qadamni qilganlar · keyingilari bugungacha · qadamni bosib yoqing/o'chiring", "");
+  if(yOdam.length){
     var yK = document.createElement("div");
     yK.className = "tarq-kpi";
     var yXatda = yQoldi.filter(function(uid){ return yEtdi[uid] === 0; }).length;
@@ -4559,13 +4588,43 @@ function render(){
       yK.appendChild(d);
     });
     yC1.appendChild(yK);
-    var yQadam = YOL.map(function(x, i){ return {lab:x.ic + "  " + x.n, val:ySoni[i], color:x.c}; });
-    yC1.appendChild(voronka(yQadam, "Qadam"));
-    addTable(yC1, ["Qadam","Odam","Boshdan","Oldingidan"], yQadam.map(function(x, i){
-      return [YOL[i].n, x.val, (x.val / yOdam.length * 100).toFixed(1) + "%",
-              i ? (ySoni[i-1] ? (x.val / ySoni[i-1] * 100).toFixed(1) + "%" : "—") : "—"];
-    }));
-    put("yol", yC1);
+  }
+  // Voronka: shu davrda BIRINCHI yoniq qadamni (birinchi marta) qilganlar; har keyingi yoniq qadam
+  // oldingisidan o'tganlar ichidan, bugungacha. O'chirilgan qadam zanjirdan chiqadi.
+  var yqJadval = [], yqBox = null;
+  function yqChiz(){
+    var on = YQ.filter(function(x){ return yqH[x.k]; });
+    var odam = yqHamma.filter(function(uid){
+      var t = on[0].v(uid); return t && t >= w.from && t <= w.to;
+    });
+    var steps = [];
+    on.forEach(function(x, i){
+      if(i) odam = odam.filter(function(uid){ return !!x.v(uid); });
+      steps.push({lab:x.ic + "  " + x.n, val:odam.length, color:x.c});
+    });
+    var yangi = voronka(steps, "Qadam");
+    if(yqBox) yqBox.replaceWith(yangi); else yC1.appendChild(yangi);
+    yqBox = yangi;
+    var base = Math.max(1, steps[0].val);
+    yqJadval.length = 0;
+    steps.forEach(function(x, i){
+      yqJadval.push([x.lab, x.val, (x.val / base * 100).toFixed(1) + "%",
+                     i ? (steps[i-1].val ? (x.val / steps[i-1].val * 100).toFixed(1) + "%" : "—") : "—"]);
+    });
+  }
+  yC1.appendChild(toggleLegend(YQ, yqH, "k", function(){
+    try{ localStorage.setItem("hp_dash_yolq", JSON.stringify(yqH)); }catch(e){}
+    yqChiz();
+  }));
+  yqChiz();
+  addTable(yC1, ["Qadam","Odam","Boshdan","Oldingidan"], yqJadval);
+  put("yol", yC1);
+
+  if(!yOdam.length){
+    var yBos = card("Yo'l tafsilotlari", "", "");
+    yBos.appendChild(emptyNote("Bu davrda hech kim xatni ochmagan. Yo'l qadamlari 23-sentabrdan beri yoziladi."));
+    put("yol", yBos);
+  } else {
 
     /* — Kun sayin — */
     var yKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };

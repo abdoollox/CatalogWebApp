@@ -1050,6 +1050,29 @@ button.glass:active .tube{transform:scale(.97)}
 /* --- HBO SERIALI E'LONI (premyera 25-dekabr 2026) ---
    Kutubxona tepasida: qorli Kviddich kadri, rasmiy logotip, orqaga sanash.
    Serial kutubxonaga qo'shilgach bu karta olib tashlanadi. */
+/* --- Kutubxona: Xogvartsdan xat keldi (saralanmagan odam) --- */
+.hogc{
+  position:relative;display:flex;align-items:center;gap:14px;width:100%;margin:0 0 18px;padding:14px 14px 14px 16px;
+  border:none;border-radius:16px;cursor:pointer;text-align:left;color:#3b2a1a;overflow:hidden;
+  background:linear-gradient(170deg,#f6eed9,#e9dab7 70%,#ddc99e);
+  box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 0 30px rgba(120,80,30,.16);transition:transform .15s;
+}
+.hogc:active{transform:scale(.985)}
+.hogc::after{content:"";position:absolute;inset:5px;border-radius:12px;border:1px solid rgba(107,78,46,.22);pointer-events:none}
+.hogc-seal{
+  flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#b8352c,#7b1914 72%);color:#f1c8a6;font:600 22px/1 'Cormorant Garamond',serif;
+  box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),inset 0 0 0 4px rgba(255,210,170,.18);
+}
+.hogc-new .hogc-seal{animation:hogcSeal 2.6s ease-in-out infinite}
+@keyframes hogcSeal{0%,100%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),0 0 0 0 rgba(184,53,44,.45)}
+  50%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),0 0 0 7px rgba(184,53,44,0)}}
+.hogc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.hogc-k{font:700 9.5px/1.4 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8b2a22}
+.hogc-t{font:600 19px/1.15 'Cormorant Garamond',serif;color:#2b1d12}
+.hogc-s{font:600 11.5px/1.35 'Manrope',sans-serif;color:#6b4e2e}
+.hogc-go{flex:none;width:20px;height:20px;color:#7a5c38}
+@media (prefers-reduced-motion:reduce){.hogc-new .hogc-seal{animation:none}}
 .srl{position:relative;display:block;margin:0 0 22px;border-radius:20px;overflow:hidden;
   border:1px solid rgba(var(--gold-rgb),.3);background:#0d0a0c;
   box-shadow:0 14px 34px -22px rgba(var(--gold-rgb),.55)}
