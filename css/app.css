@@ -53,7 +53,7 @@ body{
   font:600 10px/1 'Manrope',sans-serif;letter-spacing:0.22em;
   text-transform:uppercase;color:var(--accent);
 }
-.cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:32px;line-height:1.1}
+.cat-head h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(26px,8.2vw,32px);line-height:1.1}
 .back-btn{
   display:flex;align-items:center;gap:7px;height:46px;padding:0 16px;background:transparent;
   border:1px solid var(--line);border-radius:23px;color:var(--dim);
@@ -61,6 +61,9 @@ body{
 }
 .back-btn:hover{color:var(--text);border-color:var(--accent)}
 .back-btn:active{transform:scale(.96)}
+/* til tugmasi: boyo'g'li yonida xuddi shunday doira, ichida faqat bayroq (siqilib shakli buzilmaydi) */
+#back-btn{flex:none;width:46px;padding:0;justify-content:center;border-radius:50%}
+#lang-badge{font-size:21px;line-height:1;letter-spacing:0}
 .head-tools{display:flex;align-items:center;gap:8px}
 @keyframes blip{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.18);opacity:.75}}
 
@@ -987,7 +990,7 @@ button.glass:active .tube{transform:scale(.97)}
 #chat-dmnote button{display:inline-block;margin-top:8px;padding:8px 16px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--text);font:600 13px 'Manrope',sans-serif;cursor:pointer}
 
 /* --- KUTUBXONA: 9¾ tangasi, katta karta, qatorlar --- */
-.cat-head-tx{display:flex;flex-direction:column;gap:4px}
+.cat-head-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
 /* Platforma belgisi: til tugmasi bilan bir xil bo'yli, ichida g'isht ravoq va haqiqiy 3/4.
    Fakultet rangiga bo'yalmaydi - doim klassik tilla (King's Cross belgisi kabi). */
 .coin{

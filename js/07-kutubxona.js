@@ -123,7 +123,8 @@
     var t = T[lang];
     $("cat-kicker").textContent = t.title;
     $("cat-title").textContent = LIB_TITLE[lang];
-    $("lang-badge").textContent = flagOf(lang) + " " + lang.toUpperCase();
+    $("lang-badge").textContent = flagOf(lang);
+    $("back-btn").setAttribute("aria-label", lang.toUpperCase());
     renderHero(t);
     renderSerial();
     renderCards(t);

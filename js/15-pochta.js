@@ -14,13 +14,16 @@
   var owlBusy = false;
   var owlFresh = {};           // shu ochilishda yangi bo'lgan xatlar - yopilguncha muhrli turadi
 
-  // Qanotli xat - boyo'g'li pochtasining belgisi. Muhr yangi xat kelganda qizaradi (CSS: .owl-wax).
-  var OWL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+  // Xat tutgan boyo'g'li - pochtaning belgisi. Muhr yangi xat kelganda qizaradi (CSS: .owl-wax).
+  var OWL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<rect x="6.5" y="8" width="11" height="8.5" rx="1"/><path d="M6.8 8.4l5.2 4.3 5.2-4.3"/>' +
-    '<circle class="owl-wax" cx="12" cy="13.6" r="1.6" fill="currentColor" stroke="none"/>' +
-    '<path d="M6.5 10.2C4.6 9.6 3 8 2.3 6c1.9.1 3.4.7 4.2 1.7M6.5 12.6c-1.7-.1-3.2-.9-4.1-2.2 1.5-.4 2.9-.2 4.1.5"/>' +
-    '<path d="M17.5 10.2c1.9-.6 3.5-2.2 4.2-4.2-1.9.1-3.4.7-4.2 1.7M17.5 12.6c1.7-.1 3.2-.9 4.1-2.2-1.5-.4-2.9-.2-4.1.5"/></svg>';
+    '<path d="M6.2 4.2c1.4.6 2.5 1.3 3.2 2.1h5.2c.7-.8 1.8-1.5 3.2-2.1-.2 1.6-.1 3 .4 4.3.5 1.3.8 2.6.8 4 ' +
+    '0 4.2-3 7.3-7 7.3s-7-3.1-7-7.3c0-1.4.3-2.7.8-4 .5-1.3.6-2.7.4-4.3z"/>' +
+    '<circle cx="9.3" cy="10.3" r="2.1"/><circle cx="14.7" cy="10.3" r="2.1"/>' +
+    '<circle cx="9.3" cy="10.3" r=".55" fill="currentColor"/><circle cx="14.7" cy="10.3" r=".55" fill="currentColor"/>' +
+    '<path d="M11.3 12.3L12 13.6l.7-1.3"/>' +
+    '<rect x="8.6" y="15.4" width="6.8" height="4.6" rx=".6"/><path d="M8.9 15.7L12 18l3.1-2.3"/>' +
+    '<circle class="owl-wax" cx="12" cy="18.2" r=".9" fill="currentColor" stroke="none"/></svg>';
 
   var OWL_TX = {
     uz: {
