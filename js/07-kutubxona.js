@@ -151,10 +151,13 @@
     if (!btn) { return; }
     var stage = letterStage();
     var isLetter = stage !== "world";
-    $("coin-934").classList.toggle("hidden", isLetter);
-    $("coin-lt").classList.toggle("hidden", !isLetter);
-    btn.classList.toggle("yangi", stage === "new");
-    btn.setAttribute("aria-label", isLetter ? al("letterAria") : "9¾");
+    // Yo'ldagi odamda 9¾ tugmasi yo'q: Xogvarts maktubi boyo'g'li pochtasida (js/15-pochta.js owlHog)
+    btn.classList.toggle("hidden", isLetter);
+    $("coin-934").classList.remove("hidden");
+    $("coin-lt").classList.add("hidden");
+    btn.classList.remove("yangi");
+    btn.setAttribute("aria-label", "9¾");
+    if (typeof owlBadge === "function") { owlBadge(); }
   }
 
   function openCatalog(code, remember) {

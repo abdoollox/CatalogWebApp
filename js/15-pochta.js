@@ -24,6 +24,8 @@
     uz: {
       kick: "Xogvarts", title: "Boyo'g'li pochtasi", back: "Ortga",
       empty: "Hozircha xat yo'q. Boyo'g'lilar yangi xat bilan qaytadi.",
+      hogT: "Xogvartsdan maktub", hogS: "Siz Xogvarts sehrgarlik maktabiga qabul qilindingiz. Yo'l Diagon xiyobonidan boshlanadi.",
+      hogNew: "Xatni ochish",
       cta: "Yo'lni davom ettirish", done: "Bajarildi", again: "Xogvarts sizni unutgani yo'q.",
       setT: "Telegram'da ham eslatilsin", setS: "Ilovaga kirmasangiz, boyo'g'li bot orqali xabar beradi",
       today: "bugun", yest: "kecha", ago: "%s kun oldin",
@@ -49,6 +51,8 @@
     ru: {
       kick: "Хогвартс", title: "Совиная почта", back: "Назад",
       empty: "Писем пока нет. Совы вернутся с новыми.",
+      hogT: "Письмо из Хогвартса", hogS: "Вы приняты в Школу чародейства и волшебства Хогвартс. Путь начинается в Косом переулке.",
+      hogNew: "Открыть письмо",
       cta: "Продолжить путь", done: "Выполнено", again: "Хогвартс вас не забыл.",
       setT: "Напоминать и в Telegram", setS: "Если вы не заходите в приложение, сова напишет через бота",
       today: "сегодня", yest: "вчера", ago: "%s дн. назад",
@@ -74,6 +78,8 @@
     en: {
       kick: "Hogwarts", title: "Owl Post", back: "Back",
       empty: "No letters yet. The owls will be back with new ones.",
+      hogT: "A letter from Hogwarts", hogS: "You have been accepted to Hogwarts School of Witchcraft and Wizardry. The journey starts in Diagon Alley.",
+      hogNew: "Open the letter",
       cta: "Continue the journey", done: "Done", again: "Hogwarts hasn't forgotten you.",
       setT: "Also remind me in Telegram", setS: "If you don't open the app, an owl will write through the bot",
       today: "today", yest: "yesterday", ago: "%s days ago",
@@ -176,10 +182,13 @@
 
   // Ikkala tugmadagi qizil son
   function owlBadge() {
-    var n = owlData ? owlData.unread : 0;
+    var n0 = owlData ? owlData.unread : 0, hog = owlHog();
     ["owl-cat", "hub-owl"].forEach(function (id) {
       var b = $(id);
       if (!b) { return; }
+      // Xogvarts maktubi ochilmagan bo'lsa - u ham o'qilmagan xat (faqat kutubxonadagi belgida)
+      var n = n0 + (id === "owl-cat" && hog === "new" ? 1 : 0);
+      b.classList.toggle("owl-yol", id === "owl-cat" && hog === "letter");
       var dot = b.querySelector(".owl-n");
       dot.textContent = n > 9 ? "9+" : String(n);
       dot.classList.toggle("hidden", !n);
@@ -206,6 +215,32 @@
     return el;
   }
 
+  // Saralanmagan, bilet olmagan odam: Xogvarts maktubi 9¾ tugmasida emas, shu pochtada turadi.
+  // "new" - hali ochilmagan, "letter" - ochgan, yo'lda; null - maktub kerak emas.
+  function owlHog() {
+    var st = letterStage();
+    return st === "world" ? null : st;
+  }
+
+  function owlHogCard(t) {
+    var hog = owlHog();
+    if (!hog || owlFrom === "hub") { return null; }
+    var c = owlEl("div", "owl-card owl-hog" + (hog === "new" ? " owl-new" : ""));
+    var top = owlEl("div", "owl-top");
+    var ic = owlEl("span", "owl-ic"); ic.innerHTML = OWL_SVG;
+    top.appendChild(ic);
+    top.appendChild(owlEl("span", "owl-when", t.kick));
+    if (hog === "new") { top.appendChild(owlEl("span", "owl-seal")); }
+    c.appendChild(top);
+    c.appendChild(owlEl("b", "owl-h", t.hogT));
+    c.appendChild(owlEl("p", "owl-p", t.hogS));
+    var b = owlEl("button", "owl-cta", hog === "new" ? t.hogNew : t.cta);
+    b.type = "button";
+    b.addEventListener("click", owlGoJourney);
+    c.appendChild(b);
+    return c;
+  }
+
   function owlRender() {
     var t = owlTx();
     $("owl-kick").textContent = t.kick;
@@ -218,7 +253,9 @@
     var box = $("owl-list");
     box.innerHTML = "";
     var items = (owlData && owlData.items) || [];
-    if (!items.length) {
+    var hogC = owlHogCard(t);
+    if (hogC) { box.appendChild(hogC); }
+    if (!items.length && !hogC) {
       var em = owlEl("div", "owl-empty");
       em.innerHTML = OWL_SVG;
       em.appendChild(owlEl("p", "", t.empty));
@@ -338,7 +375,11 @@
     $("owl-cat").innerHTML = OWL_SVG + '<span class="owl-n hidden"></span>';
     $("hub-owl").innerHTML = OWL_SVG + '<span class="owl-n hidden"></span>';
     $("owl-back").innerHTML = hubSvg("M15 18l-6-6 6-6");
-    $("owl-cat").addEventListener("click", openOwl);
+    $("owl-cat").addEventListener("click", function () {
+      // Birinchi marta: boyo'g'li Xogvarts maktubini to'g'ridan-to'g'ri olib keladi
+      if (owlHog() === "new" && !(owlData && owlData.unread)) { goWorld(); return; }
+      openOwl();
+    });
     $("hub-owl").addEventListener("click", openOwl);
     $("owl-back").addEventListener("click", closeOwl);
     $("owl-bot").addEventListener("change", owlBotToggle);

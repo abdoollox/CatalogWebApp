@@ -1698,6 +1698,9 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .owl-btn.owl-yangi svg{animation:owlHop 3.2s ease-in-out infinite}
 @keyframes owlHop{0%,80%,100%{transform:none}86%{transform:translateY(-3px)}92%{transform:translateY(-1px) rotate(-3deg)}}
 .owl-yangi .owl-wax{fill:#d9524a}
+/* yo'ldagi odam: maktub pochtada - belgi oltin halqa bilan ko'zga tashlanib turadi */
+.owl-btn.owl-yol{color:var(--gold);border-color:rgba(var(--gold-rgb),.45)}
+.owl-card.owl-hog{border-color:rgba(var(--gold-rgb),.45);background:linear-gradient(180deg,rgba(var(--gold-rgb),.09),transparent 70%),var(--card)}
 .owl-n{
   position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;
   background:#d9524a;color:#fff;font:700 11px/18px 'Manrope',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg);
