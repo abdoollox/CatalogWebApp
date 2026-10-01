@@ -31,6 +31,13 @@
       today: "bugun", yest: "kecha", ago: "%s kun oldin",
       dmT: "%s sizga xat yozdi", dmTN: "%s sizga %d ta xabar yozdi", dmChess: "♟️ shaxmatga chaqirdi",
       reply: "Javob yozish", seen: "O'qildi",
+      cupWin: "🏆 %s kubokni oldi!", cupWinYou: "Tabriklaymiz! Fakultetingiz hafta g'olibi: %s ball.",
+      cupLost: "🏆 Hafta g'olibi — %s", cupPlace: "%s %d-o'rinda: %s ball.",
+      cupNone: "🏆 Hafta yakunlandi", cupNoneB: "Bu hafta g'olib aniqlanmadi.",
+      cupMe: "Siz %s ball qo'shdingiz.", cupZero: "Siz bu hafta ball to'plamadingiz — yangi haftada fakultetingizga yordam bering.",
+      cupBadge: "Yangi nishon: %s", cupGo: "Kubokni ko'rish",
+      houses: { gryffindor: "Grifindor", slytherin: "Sliterin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
+      badges: { all_films: "Sakkiz qism", flawless_exam: "Benuqson imtihon", perfect_week: "Mukammal hafta", streak_7: "Yetti kun ketma-ket" },
       steps: {
         alley: ["Diagon xiyoboni sizni kutmoqda", "Xatdagi ro'yxat tayyor, g'isht devor ochiq. Xogvartsga yo'l shu yerdan boshlanadi."],
         gringotts: ["Gringotts eshiklari ochiq", "Ota-onangiz qoldirgan oltinlar bankda sizni kutib turibdi."],
@@ -49,6 +56,13 @@
       today: "сегодня", yest: "вчера", ago: "%s дн. назад",
       dmT: "%s написал(а) вам", dmTN: "%s написал(а) вам %d сообщ.", dmChess: "♟️ вызывает на дуэль",
       reply: "Ответить", seen: "Прочитано",
+      cupWin: "🏆 %s забирает кубок!", cupWinYou: "Поздравляем! Ваш факультет - победитель недели: %s очков.",
+      cupLost: "🏆 Победитель недели — %s", cupPlace: "%s на %d-м месте: %s очков.",
+      cupNone: "🏆 Неделя завершена", cupNoneB: "На этой неделе победитель не определён.",
+      cupMe: "Вы принесли %s очков.", cupZero: "На этой неделе у вас нет очков — помогите факультету в новой неделе.",
+      cupBadge: "Новый значок: %s", cupGo: "Открыть кубок",
+      houses: { gryffindor: "Гриффиндор", slytherin: "Слизерин", ravenclaw: "Когтевран", hufflepuff: "Пуффендуй" },
+      badges: { all_films: "Восемь частей", flawless_exam: "Безупречный экзамен", perfect_week: "Идеальная неделя", streak_7: "Семь дней подряд" },
       steps: {
         alley: ["Косой переулок ждёт вас", "Список из письма готов, кирпичная стена открыта. Путь в Хогвартс начинается здесь."],
         gringotts: ["Двери Гринготтса открыты", "Золото, оставленное родителями, ждёт вас в банке."],
@@ -67,6 +81,13 @@
       today: "today", yest: "yesterday", ago: "%s days ago",
       dmT: "%s wrote to you", dmTN: "%s sent you %d messages", dmChess: "♟️ challenges you to chess",
       reply: "Reply", seen: "Read",
+      cupWin: "🏆 %s takes the Cup!", cupWinYou: "Congratulations! Your house won the week: %s points.",
+      cupLost: "🏆 House of the week — %s", cupPlace: "%s is in place %d: %s points.",
+      cupNone: "🏆 The week is over", cupNoneB: "No winner this week.",
+      cupMe: "You earned %s points.", cupZero: "You earned no points this week — help your house in the new one.",
+      cupBadge: "New badge: %s", cupGo: "Open the Cup",
+      houses: { gryffindor: "Gryffindor", slytherin: "Slytherin", ravenclaw: "Ravenclaw", hufflepuff: "Hufflepuff" },
+      badges: { all_films: "All eight parts", flawless_exam: "Flawless exam", perfect_week: "Perfect week", streak_7: "Seven days in a row" },
       steps: {
         alley: ["Diagon Alley is waiting", "The list from your letter is ready and the brick wall is open. The road to Hogwarts starts here."],
         gringotts: ["Gringotts doors are open", "The gold your parents left you is waiting at the bank."],
@@ -81,6 +102,22 @@
 
   function owlTx() { return OWL_TX[lang] || OWL_TX.uz; }
 
+  function owlSon(n) { return String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+
+  // Kubok xati: bot ham xuddi shu qoida bilan yozadi (hppochta.kubok_matni)
+  function owlCupText(d) {
+    var t = owlTx(), uy = t.houses[d.uy] || d.uy || "", sar, q;
+    if (!d.g) { sar = t.cupNone; q = [t.cupNoneB]; }
+    else if (d.g === d.uy) { sar = t.cupWin.replace("%s", uy); q = [t.cupWinYou.replace("%s", owlSon(d.uy_ball))]; }
+    else {
+      sar = t.cupLost.replace("%s", t.houses[d.g] || d.g);
+      q = [t.cupPlace.replace("%s", uy).replace("%d", d.orin || 0).replace("%s", owlSon(d.uy_ball))];
+    }
+    q.push(d.ball ? t.cupMe.replace("%s", owlSon(d.ball)) : t.cupZero);
+    (d.nish || []).forEach(function (b) { q.push("🎖 " + t.cupBadge.replace("%s", t.badges[b] || b)); });
+    return [sar, q.join("\n")];
+  }
+
   function owlLocal() {
     return !chatInitData() && (window.location.hostname === "localhost" ||
       window.location.hostname === "127.0.0.1" || window.location.protocol === "file:");
@@ -93,6 +130,8 @@
     if (!d) {
       var t = Date.now();
       d = { bot: true, items: [
+        { id: 5, tur: "kubok", n: 1, t: new Date(t - 60e3).toISOString(), read: false, done: false,
+          cup: { s: 7, g: "slytherin", uy: "gryffindor", orin: 2, uy_ball: 1240, ball: 45, nish: ["streak_7"] } },
         { id: 4, tur: "dm", n: 2, from: 7100000037, name: "Hermiona", text: "Ertaga shaxmatda revansh?",
           t: new Date(t - 120e3).toISOString(), read: false, done: false },
         { id: 3, tur: "xabar", n: 1, t: new Date(t - 600e3).toISOString(), read: false, done: false,
@@ -192,6 +231,7 @@
       // Turlar: onb - yo'l eslatmasi (matn ilovada), xabar - egasi paneldan yozgan xat
       // dm - chatda shaxsiy xabar keldi (o'qilmagan)
       var st = x.tur === "onb" ? t.steps[x.qadam] : (x.tur === "xabar" && x.title ? [x.title, x.text || ""] : null);
+      if (x.tur === "kubok" && x.cup) { st = owlCupText(x.cup); }
       if (x.tur === "dm" && x.from) {
         var ism = x.name || "Sehrgar";
         st = [x.n > 1 ? t.dmTN.replace("%s", ism).replace("%d", x.n) : t.dmT.replace("%s", ism),
@@ -209,7 +249,12 @@
       if (x.tur === "onb" && x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
       c.appendChild(owlEl("b", "owl-h", st[0]));
       if (st[1]) { c.appendChild(owlEl("p", "owl-p", st[1])); }
-      if (x.tur === "dm") {
+      if (x.tur === "kubok") {
+        var cb = owlEl("button", "owl-cta", t.cupGo);
+        cb.type = "button";
+        cb.addEventListener("click", owlGoCup);
+        c.appendChild(cb);
+      } else if (x.tur === "dm") {
         if (x.done) { c.appendChild(owlEl("span", "owl-ok", "✓ " + t.seen)); }
         else {
           var rb = owlEl("button", "owl-cta", t.reply);
@@ -276,6 +321,17 @@
     setTimeout(function () { owlApi("list"); }, 5000);
   }
 
+  // "Kubokni ko'rish": kubok sahifasi. Ortga - 9¾ ga.
+  function owlGoCup() {
+    owlFresh = {};
+    function och() {
+      ["scr-owl", "scr-hub"].forEach(function (id) { $(id).classList.add("hidden"); });
+      worldFrom = "hub";
+      openCup();
+    }
+    if (cupData) { och(); } else { fetchCup(och); }
+  }
+
   function owlBotToggle() {
     owlApi("bot", { on: $("owl-bot").checked });
   }
@@ -295,7 +351,8 @@
     owlApi(fromBot ? "came" : "list", null, function () {
       if (!fromBot || !$("scr-lang").classList.contains("hidden")) { return; }
       // Bot xabaridagi "Javob yozish" - to'g'ridan-to'g'ri suhbatga, qolganlari - pochtaga
-      if (dmM && hasHouse()) {
+      if (/(^|[?&])cup=1(&|$)/.test(window.location.search || "")) { owlGoCup(); }
+      else if (dmM && hasHouse()) {
         var x = ((owlData && owlData.items) || []).filter(function (i) { return i.tur === "dm" && String(i.from) === dmM[2]; })[0];
         owlGoDm(dmM[2], x ? x.name : "");
       } else { openOwl(); }
