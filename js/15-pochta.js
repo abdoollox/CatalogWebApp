@@ -190,6 +190,9 @@
       var n = n0 + (id === "owl-cat" && hog === "new" ? 1 : 0);
       b.classList.toggle("owl-yol", id === "owl-cat" && hog === "letter");
       var dot = b.querySelector(".owl-n");
+      // Ilova ishga tushayotganda (owlInit hali belgini chizmagan) - o'tkazib yuboramiz.
+      // Ilgari shu yerda xato chiqib, ishga tushirish to'xtardi va kubok umuman yuklanmasdi.
+      if (!dot) { return; }
       dot.textContent = n > 9 ? "9+" : String(n);
       dot.classList.toggle("hidden", !n);
       b.classList.toggle("owl-yangi", n > 0);

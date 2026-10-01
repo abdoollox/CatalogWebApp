@@ -140,6 +140,19 @@
     } catch (e) { done(null); }
   }
 
+  // Kubok ilova ochilganda bir marta yuklanardi: keyin film ko'rilsa, savolga javob berilsa
+  // yoki shaxmatda yutilsa, ballar ilova qayta ochilmaguncha o'zgarmasdi. Endi 9¾ va kubok
+  // ekrani ochilganda qayta so'raladi; cb faqat raqamlar o'zgargan bo'lsa chaqiriladi.
+  function cupKalit(d) {
+    if (!d || !d.houses) { return ""; }
+    return JSON.stringify([d.houses.map(function (h) { return [h.house, h.total_points]; }),
+                           d.me && d.me.points, d.me && d.me.house]);
+  }
+  function cupRefresh(cb) {
+    var eski = cupKalit(cupData);
+    fetchCup(function () { if (cupKalit(cupData) !== eski && cb) { cb(); } });
+  }
+
   function fetchTasks(cb) {
     var initData = "";
     try { initData = (tg && tg.initData) || ""; } catch (e) {}

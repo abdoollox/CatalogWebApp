@@ -180,6 +180,7 @@
     renderHub();
 
     // Sonlar va reyting fonda yangilanadi
+    cupRefresh(function () { if (hubVisible()) { renderHub(); } });
     fetchRefs(function () { if (hubVisible()) { renderHub(); } });
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}

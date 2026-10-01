@@ -186,7 +186,7 @@
     btn.classList.remove("yangi");
     btn.setAttribute("aria-label", "9¾");
     renderHogCard(stage);
-    if (typeof owlBadge === "function") { owlBadge(); }
+    try { if (typeof owlBadge === "function") { owlBadge(); } } catch (e) {}
   }
 
   function openCatalog(code, remember) {

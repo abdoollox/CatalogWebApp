@@ -479,6 +479,10 @@
             }
             if (res.points && res.points > 0 && cupData && cupData.me) {
                cupData.me.points = (cupData.me.points || 0) + res.points;
+               // Fakultet jamisi ham darhol o'ssin (keyingi ochilishda server aniq sonni beradi)
+               (cupData.houses || []).forEach(function (h) {
+                 if (h.house === cupData.me.house) { h.total_points = (h.total_points || 0) + res.points; }
+               });
             }
           } else {
             btn.style.background = "rgba(231, 76, 60, 0.2)";

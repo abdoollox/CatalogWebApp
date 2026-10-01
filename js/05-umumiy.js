@@ -51,6 +51,7 @@
     $("scr-cup").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     fetchRefs(renderRefsStrip);
+    cupRefresh(function () { if (!$("scr-cup").classList.contains("hidden")) { renderCupScreen(); } });
   }
 
   function closeCup() {
