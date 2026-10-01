@@ -1681,3 +1681,68 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .hub-pv .hub-row-tx span{white-space:normal}
 .al-pv{display:table;margin:-6px auto 16px;padding:6px 12px;border-radius:99px;border:1px dashed rgba(var(--gold-rgb),.5);
   font:700 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.06em;color:var(--gold)}
+
+/* --- BOYO'G'LI POCHTASI (js/15-pochta.js) --- */
+.owl-btn{
+  position:relative;display:grid;place-items:center;width:46px;height:46px;padding:0;flex:none;
+  border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--dim);cursor:pointer;transition:.2s;
+}
+.owl-btn svg{width:22px;height:22px}
+.owl-btn:active{transform:scale(.94)}
+.owl-btn.hub-ic{width:42px;height:42px}
+.owl-btn.owl-yangi{color:var(--gold-hi);border-color:rgba(var(--gold-rgb),.55);box-shadow:0 0 14px rgba(var(--gold-rgb),.18)}
+.owl-btn.owl-yangi svg{animation:owlHop 3.2s ease-in-out infinite}
+@keyframes owlHop{0%,82%,100%{transform:none}88%{transform:translateY(-3px) rotate(-6deg)}94%{transform:translateY(0) rotate(4deg)}}
+.owl-n{
+  position:absolute;right:-3px;top:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;
+  background:#d9524a;color:#fff;font:700 11px/18px 'Manrope',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--bg);
+}
+.hub-head{grid-template-columns:92px 1fr 92px}
+.hub-head #hub-back{justify-self:start}
+.hub-tools{display:flex;gap:8px;justify-self:end}
+.owl-head{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:10px;padding:2px 0 18px}
+.owl-list{display:flex;flex-direction:column;gap:12px}
+.owl-card{
+  position:relative;padding:16px 16px 15px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(var(--gold-rgb),.07),rgba(255,255,255,.02) 55%),var(--card);
+}
+.owl-card.owl-new{border-color:rgba(var(--gold-rgb),.45);box-shadow:0 0 0 1px rgba(var(--gold-rgb),.12),0 10px 28px rgba(0,0,0,.35)}
+.owl-card.owl-done{opacity:.62}
+.owl-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.owl-ic{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;color:var(--gold);background:rgba(var(--gold-rgb),.1)}
+.owl-ic svg{width:19px;height:19px}
+.owl-when{font:600 11px/1 'Manrope',sans-serif;letter-spacing:.04em;color:var(--dim)}
+.owl-seal{
+  margin-left:auto;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#e0675e,#9e2a24 70%);box-shadow:0 0 8px rgba(217,82,74,.45);
+}
+.owl-again{display:block;margin:0 0 4px;font:italic 400 14px/1.3 'Cormorant Garamond',serif;color:var(--gold)}
+.owl-h{display:block;font:400 22px/1.2 'Cormorant Garamond',serif;color:var(--text)}
+.owl-p{margin:6px 0 0;font:500 13px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.owl-cta{
+  margin-top:14px;width:100%;height:44px;border:0;border-radius:22px;cursor:pointer;
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);
+  font:700 13px/1 'Manrope',sans-serif;letter-spacing:.04em;
+}
+.owl-cta:active{transform:scale(.98)}
+.owl-ok{display:inline-block;margin-top:12px;font:700 12px/1 'Manrope',sans-serif;color:var(--ok)}
+.owl-empty{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px;text-align:center;color:var(--dim)}
+.owl-empty svg{width:52px;height:52px;color:var(--gold);opacity:.7}
+.owl-empty p{margin:0;font:400 18px/1.4 'Cormorant Garamond',serif}
+.owl-set{
+  display:flex;align-items:center;gap:14px;margin-top:22px;padding:14px 16px;border-radius:16px;
+  border:1px solid var(--line);cursor:pointer;
+}
+.owl-set-tx{flex:1;min-width:0}
+.owl-set-tx b{display:block;font:700 13px/1.3 'Manrope',sans-serif;color:var(--text)}
+.owl-set-tx span{display:block;margin-top:3px;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.owl-sw{
+  -webkit-appearance:none;appearance:none;flex:none;position:relative;width:46px;height:28px;margin:0;
+  border-radius:14px;background:rgba(255,255,255,.14);cursor:pointer;transition:background .2s;
+}
+.owl-sw::after{
+  content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;
+  transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.4);
+}
+.owl-sw:checked{background:var(--gold-2)}
+.owl-sw:checked::after{transform:translateX(18px)}

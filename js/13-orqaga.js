@@ -28,6 +28,7 @@
   var BACK_OF = {
     "scr-album": "ms-back",
     "scr-hub": "hub-back",
+    "scr-owl": "owl-back",
     "scr-alley": "al-back",
     "scr-vault": "gr-back",
     "scr-ticket": "tk-back",

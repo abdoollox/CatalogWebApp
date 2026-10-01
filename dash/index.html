@@ -2738,6 +2738,7 @@ var KARTA_INFO = {
   "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
   "Qayerda to'xtab qolishdi": "Shu davrda xatni ochib, hali fakultetga tushmaganlar — oxirgi bajargan qadami bo'yicha. Eng uzun chiziq — eng ko'p odam yo'qolayotgan joy. Yaqinda boshlaganlar hali davom etishi mumkin.",
   "Yo'lda qolganlar": "Yo'lni tugatmaganlar ro'yxati: qaysi qadamda to'xtagani, oxirgi qadamni qachon qilgani va shundan beri qancha vaqt o'tgani. Eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz.",
+  "Boyo'g'li eslatmalari": "Yo'lda to'xtab qolganlarga boradigan eslatmalar: oxirgi qadamdan 1 kun keyin birinchisi, 3 kun keyin ikkinchisi (ko'pi bilan 2 ta). Xat ilova ichidagi 🦉 pochtaga tushadi; odam o'chirmagan bo'lsa bot ham yozadi (10:00–21:00). Telegramda yetdi — bot xabari borgan, Bosib kirdi — xabardagi tugma bilan ilovaga qaytgan, Davom etdi — eslatilgan qadamni keyin bajargan. O'chirib qo'ygan — bot xabarlarini o'chirganlar (butun tarix).",
   "Har qadamga qancha vaqt": "Har qadamni bajargan odamlar oldingi qadamdan qancha vaqtda o'tgani (o'rtacha — mediana, ya'ni odamlarning yarmi bundan tezroq) va xat ochilgandan beri qancha vaqt o'tgani.",
   "Chat faolligi": "Chatdagi xabarlar kun sayin (bir kunlik davrda — soat sayin), xonalar bo'yicha. \"Fakultetga qo'shildi\" kartalari sanalmaydi. Qaytib yozganlar — davr ichida kamida ikki xil kunda yozgan odamlar. Faqat o'qiydi — chatni ochgan, lekin hech qachon yozmagan odamlar (butun tarix).",
   "Xonalar": "Har xona: shu davrdagi xabarlar va yozgan odamlar, xonani kamida bir marta ochganlar (butun tarix) va a'zolarning necha foizi yozgani. Katta zal a'zolari — barcha saralanganlar.",
@@ -4587,6 +4588,67 @@ function render(){
 
   }
 
+  /* — Boyo'g'li eslatmalari — */
+  var poM = ST.pochta;
+  var poC = card("Boyo'g'li eslatmalari", "yo'lda to'xtaganlarga · ilova + bot", "");
+  if(!poM){
+    poC.appendChild(emptyNote(ST.demo || !ST.src || ST.src.kind !== "api"
+      ? "Eslatmalar bot bazasidan keladi — buning uchun «Ma'lumot manbai» da bot serveriga ulanish kerak."
+      : "Eslatmalar yuklanmoqda…"));
+  } else {
+    var poX = poM.xatlar.filter(function(x){ return x.tur === "onb" && x.t >= w.from && x.t <= w.to; });
+    var poSan = function(f){ return poX.filter(f).length; };
+    var poTg = poSan(function(x){ return x.bot === "yuborildi"; });
+    var poBos = poSan(function(x){ return x.bosildi; });
+    var poDav = poSan(function(x){ return x.bajarildi; });
+    var poFoiz = function(a, b){ return b ? Math.round(a / b * 100) + "%" : "—"; };
+    var poK = document.createElement("div");
+    poK.className = "tarq-kpi";
+    [["Eslatma", fmtNum(poX.length), fmtNum(poSan(function(x){ return x.n > 1; })) + " tasi ikkinchi eslatma", ""],
+     ["Telegramda yetdi", fmtNum(poTg), poSan(function(x){ return x.bot === "bloklagan"; }) + " ta bloklagan · " +
+       poSan(function(x){ return x.bot === "ochirilgan"; }) + " ta o'chirgan", ""],
+     ["Bosib kirdi", fmtNum(poBos), poFoiz(poBos, poTg) + " Telegramda yetganlardan", ""],
+     ["Davom etdi", fmtNum(poDav), poFoiz(poDav, poX.length) + " eslatmalardan",
+      !poX.length ? "" : poDav / poX.length >= .3 ? "yaxshi" : poDav / poX.length >= .1 ? "ogoh" : "yomon"],
+     ["O'chirib qo'ygan", fmtNum(poM.ochirgan), "bot xabarini xohlamaydi", ""]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk" + (m[3] ? " holat-" + m[3] : "");
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      poK.appendChild(d);
+    });
+    poC.appendChild(poK);
+    if(!poX.length){
+      poC.appendChild(emptyNote("Bu davrda eslatma yuborilmagan. Eslatmalar 1-oktabrdan boshlandi."));
+    } else {
+      var poQ = {};
+      poX.forEach(function(x){
+        var q = poQ[x.qadam] = poQ[x.qadam] || {xat:0, tg:0, oq:0, bos:0, dav:0};
+        q.xat++; if(x.bot === "yuborildi") q.tg++; if(x.oqildi) q.oq++; if(x.bosildi) q.bos++; if(x.bajarildi) q.dav++;
+      });
+      var poH = '<table><thead><tr><th>Nima haqida eslatildi</th><th class="num">Eslatma</th><th class="num">Telegramda</th>' +
+        '<th class="num">Ilovada o\'qidi</th><th class="num">Bosib kirdi</th><th class="num">Davom etdi</th></tr></thead><tbody>';
+      YOL.forEach(function(y){
+        var q = poQ[y.k];
+        if(!q) return;
+        poH += "<tr><td>" + y.ic + " " + esc(y.n) + '</td><td class="num">' + fmtNum(q.xat) + '</td><td class="num">' +
+          fmtNum(q.tg) + '</td><td class="num">' + fmtNum(q.oq) + '</td><td class="num">' + fmtNum(q.bos) +
+          '</td><td class="num">' + fmtNum(q.dav) + ' <span class="uname">' + poFoiz(q.dav, q.xat) + "</span></td></tr>";
+      });
+      var poTw = document.createElement("div"); poTw.className = "tbl-wrap";
+      poTw.innerHTML = poH + "</tbody></table>";
+      poC.appendChild(poTw);
+      addTable(poC, ["Vaqt","Odam","Qadam","Nechanchi","Telegram","O'qidi","Bosdi","Davom etdi"],
+        poX.slice().reverse().map(function(x){
+          var p = personOf(x.uid);
+          return [fmtDay(dayKey(x.t)) + " " + fmtTime(x.t), p ? p.name : "ID " + x.uid, x.qadam, x.n,
+                  x.bot || "—", x.oqildi ? "ha" : "", x.bosildi ? "ha" : "", x.bajarildi ? "ha" : ""];
+        }));
+    }
+  }
+  put("yol", poC);
+
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
   var LTUR = [
@@ -4945,7 +5007,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat();
+    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat(); loadPochta();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -4992,6 +5054,28 @@ function loadMusiqa(){
       ST.jim = true; render(); ST.jim = false;
     })
     .catch(function(){ /* eski bot bo'lsa bo'lim ma'lumotsiz chiqadi */ });
+}
+
+/* Boyo'g'li pochtasi: eslatmalar va ularning natijasi — bot bazasidan. */
+function loadPochta(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.pochta = null; return; }
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/pochtapanel");
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, "pochtapanel");
+  fetch(u, {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){
+      if(!j || !j.ok) return;
+      var vq = function(x){ return x ? new Date(x) : null; };
+      ST.pochta = {
+        xatlar:(j.xatlar || []).map(function(a){
+          return {id:a[0], uid:a[1], tur:a[2], qadam:a[3], n:a[4], t:vq(a[5]), oqildi:vq(a[6]),
+                  bot:a[7], bosildi:vq(a[8]), bajarildi:vq(a[9])};
+        }),
+        ochirgan:j.ochirgan || 0
+      };
+      ST.jim = true; render(); ST.jim = false;
+    })
+    .catch(function(){ /* eski bot bo'lsa karta ma'lumotsiz chiqadi */ });
 }
 
 /* Chat: xabarlar, reaksiyalar, kim qaysi xonani ochgan, onlayn tarixi — bot bazasidan. */

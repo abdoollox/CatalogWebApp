@@ -1,0 +1,267 @@
+/* Boyo'g'li pochtasi - ilovadagi bildirishnomalar
+   Ilova kodi bir necha faylga bo'lingan; hammasi BIR umumiy maydonda ishlaydi
+   va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
+   narsani chaqirmang - tekshiruv: tools/tartib.js
+
+   Xatlar serverda (CatalogBot/hppochta.py). Kutubxona va 9¾ sarlavhasidagi
+   🦉 tugmasi o'qilmaganlar sonini ko'rsatadi. Bot ham eslatishi mumkin -
+   buni odam shu ekrandagi tugma bilan o'zi yoqadi yoki o'chiradi.
+   Bot xabaridagi "Xatni o'qish" ilovani `?owl=1` bilan ochadi. */
+"use strict";
+  var API_POCHTA = "https://bot.tizimshunos.uz/api/pochta";
+  var owlData = null;          // {items, unread, bot}
+  var owlFrom = "cat";         // pochta qaysi ekrandan ochilgani
+  var owlBusy = false;
+  var owlFresh = {};           // shu ochilishda yangi bo'lgan xatlar - yopilguncha muhrli turadi
+
+  var OWL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M12 6.5c-3.6 0-6.2 2.9-6.2 6.7 0 3.6 2.8 6.8 6.2 6.8s6.2-3.2 6.2-6.8c0-3.8-2.6-6.7-6.2-6.7z"/>' +
+    '<path d="M6.3 9.2L4.2 3.8l4.9 2.1M17.7 9.2l2.1-5.4-4.9 2.1"/>' +
+    '<circle cx="9.6" cy="12" r="1.5"/><circle cx="14.4" cy="12" r="1.5"/><path d="M11.2 14.6l.8 1 .8-1"/></svg>';
+
+  var OWL_TX = {
+    uz: {
+      kick: "Xogvarts", title: "Boyo'g'li pochtasi", back: "Ortga",
+      empty: "Hozircha xat yo'q. Boyo'g'lilar yangi xat bilan qaytadi.",
+      cta: "Yo'lni davom ettirish", done: "Bajarildi", again: "Xogvarts sizni unutgani yo'q.",
+      setT: "Telegram'da ham eslatilsin", setS: "Ilovaga kirmasangiz, boyo'g'li bot orqali xabar beradi",
+      today: "bugun", yest: "kecha", ago: "%s kun oldin",
+      steps: {
+        alley: ["Diagon xiyoboni sizni kutmoqda", "Xatdagi ro'yxat tayyor, g'isht devor ochiq. Xogvartsga yo'l shu yerdan boshlanadi."],
+        gringotts: ["Gringotts eshiklari ochiq", "Ota-onangiz qoldirgan oltinlar bankda sizni kutib turibdi."],
+        wand: ["Olivander tayoqchangizni kutyapti", "Tayoqchani sehrgar emas, tayoqcha sehrgarni tanlaydi."],
+        ticket: ["Xagrid biletingizni ushlab turibdi", "9¾ platformaga bilet - Qovoqxonada, Xagridning qo'lida."],
+        train: ["Xogvarts ekspressi jo'nashga tayyor", "9¾ platformada poyezd sizsiz ketmaydi."],
+        sortst: ["Katta zalda Saralovchi qalpoq kutmoqda", "Bir qadam qoldi - qaysi fakultetga tushasiz?"],
+        house: ["Saralovchi qalpoq hali qaror qilmadi", "Savollarni oxirigacha javob bering - fakultetingiz e'lon qilinadi."]
+      }
+    },
+    ru: {
+      kick: "Хогвартс", title: "Совиная почта", back: "Назад",
+      empty: "Писем пока нет. Совы вернутся с новыми.",
+      cta: "Продолжить путь", done: "Выполнено", again: "Хогвартс вас не забыл.",
+      setT: "Напоминать и в Telegram", setS: "Если вы не заходите в приложение, сова напишет через бота",
+      today: "сегодня", yest: "вчера", ago: "%s дн. назад",
+      steps: {
+        alley: ["Косой переулок ждёт вас", "Список из письма готов, кирпичная стена открыта. Путь в Хогвартс начинается здесь."],
+        gringotts: ["Двери Гринготтса открыты", "Золото, оставленное родителями, ждёт вас в банке."],
+        wand: ["Олливандер ждёт вас", "Не волшебник выбирает палочку, а палочка - волшебника."],
+        ticket: ["Хагрид держит ваш билет", "Билет на платформу 9¾ - в «Дырявом котле», у Хагрида."],
+        train: ["Хогвартс-экспресс готов к отправлению", "На платформе 9¾ поезд без вас не уйдёт."],
+        sortst: ["Распределяющая шляпа ждёт в Большом зале", "Остался один шаг - на какой факультет вы попадёте?"],
+        house: ["Шляпа ещё не приняла решение", "Ответьте на вопросы до конца - и факультет будет объявлен."]
+      }
+    },
+    en: {
+      kick: "Hogwarts", title: "Owl Post", back: "Back",
+      empty: "No letters yet. The owls will be back with new ones.",
+      cta: "Continue the journey", done: "Done", again: "Hogwarts hasn't forgotten you.",
+      setT: "Also remind me in Telegram", setS: "If you don't open the app, an owl will write through the bot",
+      today: "today", yest: "yesterday", ago: "%s days ago",
+      steps: {
+        alley: ["Diagon Alley is waiting", "The list from your letter is ready and the brick wall is open. The road to Hogwarts starts here."],
+        gringotts: ["Gringotts doors are open", "The gold your parents left you is waiting at the bank."],
+        wand: ["Ollivander is waiting for you", "The wand chooses the wizard, not the other way round."],
+        ticket: ["Hagrid is holding your ticket", "Your Platform 9¾ ticket is at the Leaky Cauldron, with Hagrid."],
+        train: ["The Hogwarts Express is ready to leave", "On Platform 9¾ the train won't leave without you."],
+        sortst: ["The Sorting Hat is waiting in the Great Hall", "One step left - which house will you join?"],
+        house: ["The Sorting Hat hasn't decided yet", "Answer the questions to the end and your house will be announced."]
+      }
+    }
+  };
+
+  function owlTx() { return OWL_TX[lang] || OWL_TX.uz; }
+
+  function owlLocal() {
+    return !chatInitData() && (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" || window.location.protocol === "file:");
+  }
+
+  // Mahalliy sinov uchun namuna xatlar (jonli Telegram'da ishlatilmaydi)
+  function owlDemo(action, body) {
+    var key = "hp_owl_demo", d = null;
+    try { d = JSON.parse(window.localStorage.getItem(key) || "null"); } catch (e) {}
+    if (!d) {
+      var t = Date.now();
+      d = { bot: true, items: [
+        { id: 2, tur: "onb", qadam: "wand", n: 2, t: new Date(t - 3600e3).toISOString(), read: false, done: false },
+        { id: 1, tur: "onb", qadam: "alley", n: 1, t: new Date(t - 3 * 864e5).toISOString(), read: true, done: true }
+      ] };
+    }
+    if (action === "read") { d.items.forEach(function (x) { x.read = true; }); }
+    if (action === "bot") { d.bot = !!body.on; }
+    try { window.localStorage.setItem(key, JSON.stringify(d)); } catch (e) {}
+    d.unread = d.items.filter(function (x) { return !x.read; }).length;
+    return d;
+  }
+
+  function owlApi(action, extra, done) {
+    var body = { action: action };
+    if (extra) { for (var k in extra) { body[k] = extra[k]; } }
+    if (owlLocal()) {
+      var res = owlDemo(action, body);
+      setTimeout(function () { owlSet(res); done && done(res); }, 40);
+      return;
+    }
+    var d = chatInitData();
+    if (!d || !window.fetch) { done && done(null); return; }
+    fetch(API_POCHTA, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.ok) { owlSet(res); }
+        done && done(res);
+      })["catch"](function () { done && done(null); });
+  }
+
+  function owlSet(res) {
+    owlData = { items: res.items || [], unread: res.unread || 0, bot: res.bot !== false };
+    owlBadge();
+    if (owlVisible()) { owlRender(); }
+  }
+
+  function owlVisible() { var el = $("scr-owl"); return !!el && !el.classList.contains("hidden"); }
+
+  // Ikkala tugmadagi qizil son
+  function owlBadge() {
+    var n = owlData ? owlData.unread : 0;
+    ["owl-cat", "hub-owl"].forEach(function (id) {
+      var b = $(id);
+      if (!b) { return; }
+      var dot = b.querySelector(".owl-n");
+      dot.textContent = n > 9 ? "9+" : String(n);
+      dot.classList.toggle("hidden", !n);
+      b.classList.toggle("owl-yangi", n > 0);
+      b.setAttribute("aria-label", owlTx().title + (n ? " (" + n + ")" : ""));
+    });
+  }
+
+  function owlWhen(iso) {
+    var t = owlTx(), d = new Date(iso);
+    if (isNaN(d)) { return ""; }
+    var hm = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    var bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+    var kun = Math.floor((bugun - new Date(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5);
+    if (kun <= 0) { return t.today + ", " + hm; }
+    if (kun === 1) { return t.yest + ", " + hm; }
+    return t.ago.replace("%s", kun);
+  }
+
+  function owlEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text != null) { el.textContent = text; }
+    return el;
+  }
+
+  function owlRender() {
+    var t = owlTx();
+    $("owl-kick").textContent = t.kick;
+    $("owl-title").textContent = t.title;
+    $("owl-back").setAttribute("aria-label", t.back);
+    $("owl-set-t").textContent = t.setT;
+    $("owl-set-s").textContent = t.setS;
+    $("owl-bot").checked = !owlData || owlData.bot;
+
+    var box = $("owl-list");
+    box.innerHTML = "";
+    var items = (owlData && owlData.items) || [];
+    if (!items.length) {
+      var em = owlEl("div", "owl-empty");
+      em.innerHTML = OWL_SVG;
+      em.appendChild(owlEl("p", "", t.empty));
+      box.appendChild(em);
+      return;
+    }
+    items.forEach(function (x) {
+      var st = (x.tur === "onb" && t.steps[x.qadam]) || null;
+      if (!st) { return; }               // ilova hali bilmaydigan tur - ko'rsatilmaydi
+      var yangi = !x.read || owlFresh[x.id];
+      var c = owlEl("div", "owl-card" + (yangi ? " owl-new" : "") + (x.done ? " owl-done" : ""));
+      var top = owlEl("div", "owl-top");
+      var ic = owlEl("span", "owl-ic"); ic.innerHTML = OWL_SVG;
+      top.appendChild(ic);
+      top.appendChild(owlEl("span", "owl-when", owlWhen(x.t)));
+      if (yangi) { top.appendChild(owlEl("span", "owl-seal")); }
+      c.appendChild(top);
+      if (x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
+      c.appendChild(owlEl("b", "owl-h", st[0]));
+      c.appendChild(owlEl("p", "owl-p", st[1]));
+      if (x.done) {
+        c.appendChild(owlEl("span", "owl-ok", "✓ " + t.done));
+      } else {
+        var b = owlEl("button", "owl-cta", t.cta);
+        b.type = "button";
+        b.addEventListener("click", owlGoJourney);
+        c.appendChild(b);
+      }
+      box.appendChild(c);
+    });
+  }
+
+  function openOwl() {
+    if (owlBusy) { return; }
+    owlFrom = hubVisible() ? "hub" : "cat";
+    $("scr-hub").classList.add("hidden");
+    $("scr-cat").classList.add("hidden");
+    $("scr-owl").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+    owlRender();
+    owlBusy = true;
+    owlApi("list", null, function () {
+      owlBusy = false;
+      // Ko'rsatilganidan keyin o'qilgan deb belgilanadi (muhr hozircha ko'rinib turadi)
+      if (owlData && owlData.unread) {
+        owlData.items.forEach(function (x) { if (!x.read) { owlFresh[x.id] = 1; } });
+        owlApi("read");
+      }
+    });
+  }
+
+  function closeOwl() {
+    owlFresh = {};
+    $("scr-owl").classList.add("hidden");
+    if (owlFrom === "hub") { openHub(); } else { $("scr-cat").classList.remove("hidden"); }
+    owlRender();
+  }
+
+  // Xatdagi tugma: yo'l to'xtagan joyidan davom etadi (9¾ tugmasi bilan bir xil yo'l)
+  function owlGoJourney() {
+    owlFresh = {};
+    $("scr-owl").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    goWorld();
+  }
+
+  function owlBotToggle() {
+    owlApi("bot", { on: $("owl-bot").checked });
+  }
+
+  function owlInit() {
+    $("owl-cat").innerHTML = OWL_SVG + '<span class="owl-n hidden"></span>';
+    $("hub-owl").innerHTML = OWL_SVG + '<span class="owl-n hidden"></span>';
+    $("owl-back").innerHTML = hubSvg("M15 18l-6-6 6-6");
+    $("owl-cat").addEventListener("click", openOwl);
+    $("hub-owl").addEventListener("click", openOwl);
+    $("owl-back").addEventListener("click", closeOwl);
+    $("owl-bot").addEventListener("change", owlBotToggle);
+    owlBadge();
+
+    var fromBot = /(^|[?&])owl=1(&|$)/.test(window.location.search || "");
+    owlApi(fromBot ? "came" : "list", null, function () {
+      // Bot xabaridagi tugma bilan kelgan - pochta darhol ochiladi
+      if (fromBot && $("scr-lang").classList.contains("hidden")) { openOwl(); }
+    });
+    // Ilova ochiq turganda ham yangi xat kelishi mumkin
+    setInterval(function () { if (!document.hidden && !owlVisible()) { owlApi("list"); } }, 180000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) { owlApi("list"); } });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", owlInit);
+  } else {
+    owlInit();
+  }
