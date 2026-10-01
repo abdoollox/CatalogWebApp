@@ -193,6 +193,7 @@
 
   function leaveHub() {
     $("scr-hub").classList.add("hidden");
+    $("hub-set").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
   }

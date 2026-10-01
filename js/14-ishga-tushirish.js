@@ -29,7 +29,13 @@
     $("hub-cup").addEventListener("click", hubGo(openCup));
     $("hub-sort").addEventListener("click", hubGo(startSorting));
     $("hub-wand").addEventListener("click", hubGo(function () { if (wand) { openProfile(); } else { startWand(); } }));
-    $("hub-gear").addEventListener("click", function () { renderHubSettings(); $("hub-set").classList.remove("hidden"); });
+    $("hub-gear").addEventListener("click", function () {
+      renderHubSettings();
+      // Ekran kirish harakatida (transform) "fixed" oyna ekranga emas, butun sahifaga yopishib qoladi -
+      // past qismi ko'rinmay qolardi. Shuning uchun oyna to'g'ridan-to'g'ri body ichida turadi.
+      if ($("hub-set").parentNode !== document.body) { document.body.appendChild($("hub-set")); }
+      $("hub-set").classList.remove("hidden");
+    });
     $("hub-set-lib").addEventListener("click", function () { saveStart("lib"); renderHubSettings(); });
     $("hub-set-hub").addEventListener("click", function () { saveStart("world"); renderHubSettings(); });
     $("hub-set-close").addEventListener("click", function () { $("hub-set").classList.add("hidden"); });

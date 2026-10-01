@@ -1432,6 +1432,7 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   width:100%;max-width:440px;box-sizing:border-box;padding:20px 18px calc(20px + env(safe-area-inset-bottom));
   border-radius:20px 20px 0 0;background:#141920;border-top:1px solid rgba(var(--gold-rgb),.35);
   box-shadow:0 -20px 40px rgba(0,0,0,.5);animation:wSheetUp .22s ease both;
+  max-height:100%;overflow-y:auto;overscroll-behavior:contain;
 }
 .hub-sheet-box h3{margin:0 0 4px;font:400 23px/1.15 'Cormorant Garamond',serif;color:var(--text)}
 .hub-sheet-box p{margin:0;font:500 12.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
