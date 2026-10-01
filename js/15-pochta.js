@@ -14,8 +14,11 @@
   var owlBusy = false;
   var owlFresh = {};           // shu ochilishda yangi bo'lgan xatlar - yopilguncha muhrli turadi
 
-  // Boyo'g'li - pochtaning belgisi. Tayyor belgi: Google Material Symbols "owl" (Apache-2.0).
-  var OWL_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 22q-3.35 0-5.675-2.325T4 14V9q0-3.05 2.4-5.025T12 2t5.6 1.975T20 9v11q0 .825-.587 1.413T18 22zm0-2h2q-.475-.625-.737-1.388T13 17v-1.05q-.25.025-.5.038T12 16q-1.675 0-3.238-.588T6 13.625V14q0 2.5 1.75 4.25T12 20m3-3q0 1.25.875 2.125T18 20v-6.375q-.65.65-1.4 1.113T15 15.5zm-3-3q2.375 0 4.188-1.388T18 9q0-.875-.3-1.638T16.85 6q-1.6.05-2.725 1.2T13 10q0 .425-.287.713T12 11t-.712-.288T11 10q0-1.65-1.125-2.775t-2.725-1.2q-.55.6-.85 1.35T6 9q0 2.225 1.813 3.613T12 14M7.788 9.713Q7.5 9.425 7.5 9t.288-.712T8.5 8t.713.288T9.5 9t-.288.713T8.5 10t-.712-.288m7 0Q14.5 9.426 14.5 9t.288-.712T15.5 8t.713.288T16.5 9t-.288.713T15.5 10t-.712-.288M9.25 4.55q.85.35 1.55.925t1.2 1.3q.5-.725 1.188-1.3t1.537-.925q-.625-.275-1.312-.413T12 4t-1.412.138t-1.338.412M20 20h-7zm-8 0q-2.5 0-4.25-1.75T6 14q0 2.5 1.75 4.25T12 20h2zm3-3q0 1.25.875 2.125T18 20q-1.25 0-2.125-.875T15 17M12 6.775"/></svg>';
+  // Boyo'g'li - pochtaning belgisi. Tayyor belgi: Lucide Lab "owl" (ISC litsenziyasi, (c) Lucide Contributors).
+  var OWL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+    'stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="9" rx="8" ry="7"/>' +
+    '<path d="M12 9a4 4 0 1 1 8 0v12h-4C9.4 21 4 15.6 4 9a4 4 0 1 1 8 0v1M8 9h.01M16 9h.01"/>' +
+    '<path d="M20 21a3.9 3.9 0 1 1 0-7.8m-10 6.2V22m4-1.15V22"/></svg>';
 
   var OWL_TX = {
     uz: {
