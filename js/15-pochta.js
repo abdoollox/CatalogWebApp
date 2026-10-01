@@ -14,11 +14,13 @@
   var owlBusy = false;
   var owlFresh = {};           // shu ochilishda yangi bo'lgan xatlar - yopilguncha muhrli turadi
 
+  // Qanotli xat - boyo'g'li pochtasining belgisi. Muhr yangi xat kelganda qizaradi (CSS: .owl-wax).
   var OWL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M12 6.5c-3.6 0-6.2 2.9-6.2 6.7 0 3.6 2.8 6.8 6.2 6.8s6.2-3.2 6.2-6.8c0-3.8-2.6-6.7-6.2-6.7z"/>' +
-    '<path d="M6.3 9.2L4.2 3.8l4.9 2.1M17.7 9.2l2.1-5.4-4.9 2.1"/>' +
-    '<circle cx="9.6" cy="12" r="1.5"/><circle cx="14.4" cy="12" r="1.5"/><path d="M11.2 14.6l.8 1 .8-1"/></svg>';
+    '<rect x="6.5" y="8" width="11" height="8.5" rx="1"/><path d="M6.8 8.4l5.2 4.3 5.2-4.3"/>' +
+    '<circle class="owl-wax" cx="12" cy="13.6" r="1.6" fill="currentColor" stroke="none"/>' +
+    '<path d="M6.5 10.2C4.6 9.6 3 8 2.3 6c1.9.1 3.4.7 4.2 1.7M6.5 12.6c-1.7-.1-3.2-.9-4.1-2.2 1.5-.4 2.9-.2 4.1.5"/>' +
+    '<path d="M17.5 10.2c1.9-.6 3.5-2.2 4.2-4.2-1.9.1-3.4.7-4.2 1.7M17.5 12.6c1.7-.1 3.2-.9 4.1-2.2-1.5-.4-2.9-.2-4.1.5"/></svg>';
 
   var OWL_TX = {
     uz: {
@@ -85,6 +87,8 @@
     if (!d) {
       var t = Date.now();
       d = { bot: true, items: [
+        { id: 3, tur: "xabar", n: 1, t: new Date(t - 600e3).toISOString(), read: false, done: false,
+          title: "Grifindor, bu hafta kubokda oldindasiz!", text: "Yakshanbagacha 120 ball farq.\nSliterin yaqinlashyapti - bo'sh kelmang." },
         { id: 2, tur: "onb", qadam: "wand", n: 2, t: new Date(t - 3600e3).toISOString(), read: false, done: false },
         { id: 1, tur: "onb", qadam: "alley", n: 1, t: new Date(t - 3 * 864e5).toISOString(), read: true, done: true }
       ] };
@@ -177,7 +181,8 @@
       return;
     }
     items.forEach(function (x) {
-      var st = (x.tur === "onb" && t.steps[x.qadam]) || null;
+      // Turlar: onb - yo'l eslatmasi (matn ilovada), xabar - egasi paneldan yozgan xat
+      var st = x.tur === "onb" ? t.steps[x.qadam] : (x.tur === "xabar" && x.title ? [x.title, x.text || ""] : null);
       if (!st) { return; }               // ilova hali bilmaydigan tur - ko'rsatilmaydi
       var yangi = !x.read || owlFresh[x.id];
       var c = owlEl("div", "owl-card" + (yangi ? " owl-new" : "") + (x.done ? " owl-done" : ""));
@@ -189,8 +194,10 @@
       c.appendChild(top);
       if (x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
       c.appendChild(owlEl("b", "owl-h", st[0]));
-      c.appendChild(owlEl("p", "owl-p", st[1]));
-      if (x.done) {
+      if (st[1]) { c.appendChild(owlEl("p", "owl-p", st[1])); }
+      if (x.tur !== "onb") {
+        // qo'lda yozilgan xatda tugma yo'q
+      } else if (x.done) {
         c.appendChild(owlEl("span", "owl-ok", "✓ " + t.done));
       } else {
         var b = owlEl("button", "owl-cta", t.cta);
