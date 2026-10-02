@@ -335,6 +335,12 @@ tbody tr:hover{background:rgba(255,255,255,.025)}
   text-align:right; font-size:12px; color:var(--ink-3); font-variant-numeric:tabular-nums;
 }
 .vor-foiz.oldin{color:var(--ink-2); font-weight:600}
+/* Qadam nomining o'zi yoqib-o'chirish tugmasi (Sehrli yo'l) */
+.vor-lab.vor-tog{border:0; background:transparent; font:inherit; font-size:13px; color:var(--ink-2); text-align:left;
+  padding:4px 8px; margin:-4px -8px; border-radius:7px; cursor:pointer; transition:.15s}
+.vor-lab.vor-tog:hover{background:var(--panel-2); color:var(--ink)}
+.vor-row.off .vor-lab{text-decoration:line-through; text-decoration-thickness:1px; opacity:.5}
+.vor-row.off .vor-son, .vor-row.off .vor-foiz{opacity:.4}
 .vor-bosh{
   display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.2fr) 74px 62px 72px;
   gap:12px; font-size:10.5px; color:var(--ink-3); text-transform:uppercase;
@@ -2201,29 +2207,40 @@ function voronka(qadamlar, birinchiUstun){
     "<span>Boshdan</span><span>Oldingidan</span>";
   box.appendChild(bosh);
 
-  var birinchi = qadamlar.length ? qadamlar[0].val : 0;
+  // q.off - qadam o'chirilgan (qatori xira turadi, hisobga kirmaydi);
+  // q.bos - nom bosilganda chaqiriladi (nomning o'zi yoqib-o'chirish tugmasi)
+  var yoniq = qadamlar.filter(function(q){ return !q.off; });
+  var birinchi = yoniq.length ? yoniq[0].val : 0;
+  var oldVal = null, ilk = true;
   qadamlar.forEach(function(q, i){
-    var oldingi = i ? qadamlar[i-1].val : null;
+    var oldingi = q.off ? null : (ilk ? null : oldVal);
     var row = document.createElement("div");
-    row.className = "vor-row";
+    row.className = "vor-row" + (q.off ? " off" : "");
 
-    var lab = document.createElement("div");
-    lab.className = "vor-lab"; lab.textContent = q.lab; lab.title = q.lab;
+    var lab = document.createElement(q.bos ? "button" : "div");
+    lab.className = "vor-lab"; lab.textContent = q.lab;
+    if(q.bos){
+      lab.type = "button";
+      lab.className += " vor-tog";
+      lab.title = q.off ? "Bosing — qadamni yoqish" : "Bosing — qadamni o'chirish";
+      lab.setAttribute("aria-pressed", String(!q.off));
+      lab.addEventListener("click", q.bos);
+    } else lab.title = q.lab;
 
     var tr = document.createElement("div"); tr.className = "vor-track";
     var fl = document.createElement("div"); fl.className = "vor-fill";
     fl.style.background = q.color;
     fl.style.width = "0%";
-    var kengligi = (birinchi ? (q.val / birinchi * 100) : 0).toFixed(1) + "%";
+    var kengligi = (!q.off && birinchi ? (q.val / birinchi * 100) : 0).toFixed(1) + "%";
     keyinroq(function(){ fl.style.width = kengligi; });
     tr.appendChild(fl);
 
     var son = document.createElement("div");
-    son.className = "vor-son"; son.textContent = fmtNum(q.val);
+    son.className = "vor-son"; son.textContent = q.off ? "—" : fmtNum(q.val);
 
     var f1 = document.createElement("div");
     f1.className = "vor-foiz";
-    f1.textContent = birinchi ? (q.val / birinchi * 100).toFixed(1) + "%" : "—";
+    f1.textContent = !q.off && birinchi ? (q.val / birinchi * 100).toFixed(1) + "%" : "—";
 
     var f2 = document.createElement("div");
     f2.className = "vor-foiz oldin";
@@ -2238,6 +2255,7 @@ function voronka(qadamlar, birinchiUstun){
     row.appendChild(lab); row.appendChild(tr); row.appendChild(son);
     row.appendChild(f1); row.appendChild(f2);
     box.appendChild(row);
+    if(!q.off){ oldVal = q.val; ilk = false; }
   });
   return box;
 }
@@ -4570,7 +4588,7 @@ function render(){
   }catch(e){}
   if(!YQ.some(function(x){ return yqH[x.k]; })) YQ.forEach(function(x){ yqH[x.k] = true; });
 
-  var yC1 = card("Sehrli yo'l", "shu davrda birinchi yoniq qadamni qilganlar · keyingilari bugungacha · qadamni bosib yoqing/o'chiring", "");
+  var yC1 = card("Sehrli yo'l", "shu davrda birinchi yoniq qadamni qilganlar · keyingilari bugungacha · qadam nomini bosib yoqing/o'chiring", "");
   if(yOdam.length){
     var yK = document.createElement("div");
     yK.className = "tarq-kpi";
@@ -4597,12 +4615,24 @@ function render(){
     var odam = yqHamma.filter(function(uid){
       var t = on[0].v(uid); return t && t >= w.from && t <= w.to;
     });
-    var steps = [];
+    var steps = [], hamma = [];
     on.forEach(function(x, i){
       if(i) odam = odam.filter(function(uid){ return !!x.v(uid); });
       steps.push({lab:x.ic + "  " + x.n, val:odam.length, color:x.c});
     });
-    var yangi = voronka(steps, "Qadam");
+    // Hamma qadam ko'rinadi, o'chirilgani xira; nomni bosib yoqib-o'chirasiz
+    var si = 0;
+    YQ.forEach(function(x){
+      var bos = function(){
+        if(yqH[x.k] && on.length === 1) return;          // oxirgisini o'chirmaymiz
+        yqH[x.k] = !yqH[x.k];
+        try{ localStorage.setItem("hp_dash_yolq", JSON.stringify(yqH)); }catch(e){}
+        yqChiz();
+      };
+      if(yqH[x.k]){ var q = steps[si++]; q.bos = bos; hamma.push(q); }
+      else hamma.push({lab:x.ic + "  " + x.n, val:0, color:x.c, off:true, bos:bos});
+    });
+    var yangi = voronka(hamma, "Qadam");
     if(yqBox) yqBox.replaceWith(yangi); else yC1.appendChild(yangi);
     yqBox = yangi;
     var base = Math.max(1, steps[0].val);
@@ -4612,10 +4642,6 @@ function render(){
                      i ? (steps[i-1].val ? (x.val / steps[i-1].val * 100).toFixed(1) + "%" : "—") : "—"]);
     });
   }
-  yC1.appendChild(toggleLegend(YQ, yqH, "k", function(){
-    try{ localStorage.setItem("hp_dash_yolq", JSON.stringify(yqH)); }catch(e){}
-    yqChiz();
-  }));
   yqChiz();
   addTable(yC1, ["Qadam","Odam","Boshdan","Oldingidan"], yqJadval);
   put("yol", yC1);
