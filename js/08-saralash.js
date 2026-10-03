@@ -433,6 +433,11 @@
       closeReveal();
     };
     r.appendChild(b);
+    // Fakultetni ulashish: ismi va fakulteti yozilgan rasm (Stories yoki chatga)
+    var ul = lentaEl("button", "lnt-ul", al("uyShare"));
+    ul.type = "button";
+    ul.onclick = uyShare;
+    r.appendChild(ul);
     $("hat-km").appendChild(r);
     try {
       if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }

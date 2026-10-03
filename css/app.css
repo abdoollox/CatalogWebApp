@@ -1717,6 +1717,8 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .lnt-rv{max-width:460px;margin:0 auto;padding:0 6px 30px;text-align:center;animation:riseIn .5s .15s ease both}
 .lnt-rv .reveal-name{color:var(--gold)}
 .lnt-house .reveal-name{color:var(--accent)}
+.lnt-ul{display:block;margin:16px auto 0;padding:10px 14px;border:none;background:none;cursor:pointer;color:var(--text);
+  font:700 13px/1 'Manrope',sans-serif;text-decoration:underline;text-underline-offset:4px}
 .lnt-house .grk-go{background:var(--accent);color:var(--accent-ink)}
 #hat-km .grk-p{scroll-margin-top:14px}
 #hat-km .grk-go{margin-bottom:26px}

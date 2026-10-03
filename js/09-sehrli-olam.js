@@ -336,6 +336,10 @@
     ltReHint: { uz: "Bu yo'lni bosib o'tgansiz. Istagan qadamni bosib, qayta tomosha qiling.",
                 ru: "Этот путь вы уже прошли. Нажмите на любой шаг, чтобы посмотреть его снова.",
                 en: "You have walked this road. Tap any step to watch it again." },
+    uyShare: { uz: "Fakultetimni ulashish", ru: "Поделиться факультетом", en: "Share my house" },
+    uyWait: { uz: "Rasm tayyorlanmoqda…", ru: "Картинка готовится…", en: "Preparing the picture…" },
+    uyStory: { uz: "Saralovchi qalpoq qaror qildi", ru: "Распределяющая шляпа решила", en: "The Sorting Hat has decided" },
+    uyBtn: { uz: "Saralanish", ru: "Распределение", en: "Get sorted" },
     olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     olTake: { uz: "Tayoqchani qo'lga olish", ru: "Взять палочку в руку", en: "Take the wand" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
@@ -819,14 +823,14 @@
       })["catch"](function () { done(null); });
   }
 
-  function xatStory(url) {
-    var params = { text: al("shareStory") };
+  function xatStory(url, matn, tugma) {
+    var params = { text: matn || al("shareStory") };
     try {
       // Havolali tasma faqat Premium hisoblarda ishlaydi - bo'lmasa havolasiz
       tg.shareToStory(url, {
         text: params.text,
         widget_link: { url: "https://t.me/" + BOT + "/catalog?startapp=olam",
-                       name: al("shareBtn") }
+                       name: tugma || al("shareBtn") }
       });
       return true;
     } catch (e) {}
@@ -842,19 +846,49 @@
       xatBand = false;
       dismissNote(kut);
       if (!res) { showToast(al("shareErr"), "err"); return; }
-
-      var story = false, chat = false;
-      try { story = !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast("7.8")); } catch (e) {}
-      try { chat = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
-
-      if (story && xatStory(res.url)) { return; }
-      if (chat && res.share_id) {
-        try { tg.shareMessage(res.share_id, function () {}); return; } catch (e) {}
-      }
-      // Eng eski holat: rasmni shunchaki ochamiz - odam o'zi saqlaydi
-      try { tg.openLink ? tg.openLink(res.url) : window.open(res.url, "_blank"); }
-      catch (e) { showToast(al("shareErr"), "err"); }
+      rasmUlash(res);
     });
+  }
+
+  // Tayyor rasmni ulashadi: Stories -> chatga tayyor xabar -> oddiy havola (eski Telegram)
+  function rasmUlash(res, matn, tugma) {
+    var story = false, chat = false;
+    try { story = !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast("7.8")); } catch (e) {}
+    try { chat = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+
+    if (story && xatStory(res.url, matn, tugma)) { return; }
+    if (chat && res.share_id) {
+      try { tg.shareMessage(res.share_id, function () {}); return; } catch (e) {}
+    }
+    // Eng eski holat: rasmni shunchaki ochamiz - odam o'zi saqlaydi
+    try { tg.openLink ? tg.openLink(res.url) : window.open(res.url, "_blank"); }
+    catch (e) { showToast(al("shareErr"), "err"); }
+  }
+
+  /* Fakultetni ulashish (egasi, 2026-10-04): server odamning ismi va fakulteti bilan 9:16 rasm
+     yasaydi (hpuy.py); fakultet serverdan olinadi. Ulashish usuli - maktubdagi kabi. */
+  var API_UY = "https://bot.tizimshunos.uz/api/uy";
+  var uyBor = null, uyBand = false;
+
+  function uyShare() {
+    if (uyBand) { return; }
+    var d = chatInitData();
+    if (!d || !window.fetch) { showToast(al("shareErr"), "err"); return; }
+    if (uyBor) { rasmUlash(uyBor, al("uyStory"), al("uyBtn")); return; }
+    uyBand = true;
+    var kut = showToast(al("uyWait"));
+    fetch(API_UY, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ lang: lang, house: validHouse(cupMe().house || house) || "" })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        uyBand = false;
+        dismissNote(kut);
+        if (!(res && res.ok && res.url)) { showToast(al("shareErr"), "err"); return; }
+        uyBor = res;
+        rasmUlash(res, al("uyStory"), al("uyBtn"));
+      })["catch"](function () { uyBand = false; dismissNote(kut); showToast(al("shareErr"), "err"); });
   }
 
   /* Xatdagi yo'l kundaligi: bajarilgani ✓ bo'lib chiziladi, navbatdagisi

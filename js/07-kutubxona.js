@@ -574,6 +574,12 @@
     if (house === "none") { $("house-crest").classList.remove("filled"); }
     else { $("house-crest").classList.add("filled"); }
 
+    // Fakulteti borlar uni rasm qilib ulasha oladi (uyShare, js/09)
+    var ush = $("house-share");
+    ush.textContent = al("uyShare");
+    ush.classList.toggle("hidden", house === "none");
+    if (!ush.onclick) { ush.onclick = function () { uyShare(); }; }
+
     var cta = $("sort-cta");
     var again = $("resort-btn");
     cta.textContent = t.sortCta;
