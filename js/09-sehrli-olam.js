@@ -23,7 +23,7 @@
     chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
     chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
     refs: "M9 5.5a3 3 0 1 1 0 6a3 3 0 1 1 0-6z M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5",
-    wand: "M6 21L21 6l-3-3L3 18z M15 6l3 3 M9 3a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2 M19 13a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2"
+    wand: "M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M15 9h.01 M17.8 6.2L19 5 M3 21l9-9 M12.2 6.2L11 5"
   };
 
   var hubChess = null;     // {rating, title, games} - shaxmat serveridan
@@ -413,13 +413,13 @@
          "The doors swing open. Thousands of candles float above the Great Hall."]
   };
 
-  // bank, wand, train, castle - tayyor belgilar: Tabler Icons (MIT litsenziyasi)
+  // Tayyor belgilar: bank, castle - Tabler Icons (MIT); wand - Lucide (ISC); train - Iconoir (MIT)
   var AL_ICONS = {
     book: "M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13",
     letter: "M3.5 6h17v12h-17z M3.5 6.5l8.5 6.5 8.5-6.5",
     back: "M15 6l-6 6 6 6",
     wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2",
-    train: "M21 13c0-3.87-3.37-7-10-7H3 M3 15h16a2 2 0 0 0 2-2 M3 6v5h17.5 M3 11v4 M8 11V6 M13 11V6.5 M3 19h18",
+    train: "M9.609 7h4.782A2.61 2.61 0 0 1 17 9.609a.39.39 0 0 1-.391.391H7.39A.39.39 0 0 1 7 9.609A2.61 2.61 0 0 1 9.609 7 M9 3h6a6 6 0 0 1 6 6v4a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6V9a6 6 0 0 1 6-6 M16 15.01l.01-.011 M8 15.01l.01-.011 M10.5 19l-2 2.5 M13.5 19l2 2.5 M16.5 19l2 2.5 M7.5 19l-2 2.5",
     castle: "M15 19v-2a3 3 0 0 0-6 0v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5h4v3h3V5h4v3h3V5h4v14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1 M3 11h18",
     bank: "M3 21h18 M3 10h18 M5 6l7-3l7 3 M4 10v11 M20 10v11 M8 14v3 M12 14v3 M16 14v3",
     check: "M5 12.5l4.5 4.5L19 7.5",
