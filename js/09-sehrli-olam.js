@@ -332,6 +332,10 @@
     trIn: { uz: "Qasrga kirish", ru: "Войти в замок", en: "Enter the castle" },
     lntCh: { uz: "Javobni o'zgartirish", ru: "Изменить ответ", en: "Change answer" },
     gzHear: { uz: "Qalpoq qarorini eshitish", ru: "Услышать решение шляпы", en: "Hear the Hat's decision" },
+    ltRe: { uz: "Qayta ko'rish", ru: "Посмотреть снова", en: "Watch again" },
+    ltReHint: { uz: "Bu yo'lni bosib o'tgansiz. Istagan qadamni bosib, qayta tomosha qiling.",
+                ru: "Этот путь вы уже прошли. Нажмите на любой шаг, чтобы посмотреть его снова.",
+                en: "You have walked this road. Tap any step to watch it again." },
     olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     olTake: { uz: "Tayoqchani qo'lga olish", ru: "Взять палочку в руку", en: "Take the wand" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
@@ -679,7 +683,9 @@
   // (uzluksiz yo'ldan beri xiyobon ro'yxati oraliq bekat emas). Maktubda bajarilgani
   // belgilangan, tugma esa to'xtagan joydan davom ettiradi.
   function jrHome() {
-    if (hasHouse()) { openHub(); return; }
+    // Qayta ko'rishdan saralangan odam ham maktubga (esdalik) qaytadi, Xogvartsga emas
+    if (hasHouse() && !jrQayta) { openHub(); return; }
+    jrQayta = false;
     grStop();
     trStop();
     journey = null;
@@ -761,7 +767,7 @@
     $("lt-seal").textContent = al("seal");
     $("lt-school").textContent = al("school");
     $("lt-hi").textContent = al("hi").replace("%s", name);
-    $("lt-body").textContent = al("body") + (readOnly && hasHouse() ? "" : "\n" + al("mins"));
+    $("lt-body").textContent = al("body") + "\n" + (readOnly && hasHouse() ? al("ltReHint") : al("mins"));
     ltPath(readOnly);
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     // Saralangan odam uchun maktub - esdalik: asosiy tugmaning o'zi "ulashish", pastda faqat "Yopish"
@@ -860,12 +866,18 @@
     // Esdalik: fakultetga tushgan odam maktubni qayta ochsa, yo'l bosib o'tilgan bo'ladi
     // (yo'l paydo bo'lishidan oldin saralanganlarda ham) va tugma ulashadi.
     var esdalik = !!readOnly && hasHouse();
-    if (esdalik) { steps.forEach(function (st) { st.done = true; st.sub = ""; }); next = null; }
+    if (esdalik) {
+      // Bosib o'tilgan yo'lni qayta tomosha qilsa bo'ladi (egasi, 2026-10-03): eski
+      // saralanganlar yangi komiks yo'lni ko'rsin. Hech narsa o'zgarmaydi (jrQayta).
+      var qayta = [openVault, jrWand, openTrain, jrSort];
+      steps.forEach(function (st, i) { st.done = true; st.sub = al("ltRe"); st.re = qayta[i]; });
+      next = null;
+    }
 
     steps.forEach(function (st) {
       if (st.done) { done++; }
       var on = (st === next);
-      var el = jrEl("button", "lt-step " + (st.done ? "done" : on ? "on" : "lock"));
+      var el = jrEl("button", "lt-step " + (st.done ? "done" : on ? "on" : "lock") + (st.re ? " lt-re" : ""));
       el.type = "button";
       var mk = jrEl("span", "lt-mk");
       mk.innerHTML = st.done ? hubSvg(AL_ICONS.check) : alIcon(st.icon);
@@ -877,6 +889,7 @@
       el.appendChild(tx);
       el.onclick = function () {
         if (on) { jrSet(LETTER_KEY); st.go(); return; }
+        if (st.re) { jrQayta = true; closeLetter(); try { closeOwl(); } catch (e) {} st.re(); return; }
         if (st.done) { return; }
         el.classList.remove("shake");
         try { void el.offsetWidth; } catch (e) {}
@@ -983,7 +996,7 @@
     var st = $("gr-stage");
     st.className = "grk";
     st.innerHTML = "";
-    if (walHas("vault")) { grVault(false); return; }
+    if (walHas("vault") && !jrQayta) { grVault(false); return; }
     GR_IMG.forEach(function (u) { var im = new Image(); im.src = u; });
     grPanel(0, al("grP1"));
     grBtn(al("grGo"), function () {
@@ -993,6 +1006,7 @@
         grBtn(al("grOpen"), function (b) {
           b.disabled = true;
           try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+          if (jrQayta) { grVault(true); return; }
           walApi("vault", null, function () {
             onbStep("gringotts");
             grVault(true);
@@ -1047,7 +1061,8 @@
     var sum = jrEl("div", "gr-sum", yangi ? "0" : String(jami));
     var num = sum.firstChild;
     sum.appendChild(jrEl("small", "", al("grGot")));
-    c.appendChild(sum);
+    // Qayta ko'rishda xonasi yo'q (eski) odamga "0 galleon" ko'rsatilmaydi
+    if (!(jrQayta && !walHas("vault"))) { c.appendChild(sum); }
     c.appendChild(jrEl("span", "grk-t", al("grDone")));
     if (yangi && jami > 0) {
       // Tangalar sanaladi: 0 dan jamigacha
@@ -1059,7 +1074,7 @@
       }, Math.max(30, Math.round(1300 / jami)));
     }
     var narx = wal && wal.prices && wal.prices.wand;
-    if (narx && !jrWandNow()) {
+    if (narx && !jrWandNow() && !jrQayta) {
       st.appendChild(jrEl("p", "tr-note grk-note", al("grWand").replace("{n}", narx)));
     }
     // Ish bitdi - maktubdagi ro'yxatga qaytiladi, odam u yerdan o'zi davom etadi
@@ -1111,7 +1126,7 @@
 
   function openTrain() {
     // Tayoqchasiz platformaga chiqib bo'lmaydi
-    if (!jrWandNow()) { jrHome(); return; }
+    if (!jrWandNow() && !jrQayta) { jrHome(); return; }
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");
@@ -1125,12 +1140,12 @@
     stage.innerHTML = "";
     TR_IMG.forEach(function (u) { try { (new Image()).src = u; } catch (e) {} });
     var lines = TR_LINES[lang] || TR_LINES.uz;
-    var bilet = walHas("ticket");
+    var bilet = walHas("ticket") && !jrQayta;     // qayta ko'rishda Xagrid sahnasi yana ko'rsatiladi
 
     // 1) Kings Kross: bilet alohida ekran emas - Xagrid uni shu yerda beradi
     trPanel(0, bilet ? al("trP1") : al("tkSay"));
     trBtn(bilet ? al("trGo") : al("trTake"), function (b) {
-      if (bilet) { poyezd(); return; }
+      if (bilet || jrQayta) { poyezd(); return; }
       b.disabled = true;
       walApi("ticket", null, function (res) {
         b.disabled = false;
@@ -1162,8 +1177,7 @@
     // 5) Katta zal: yo'l shu yerda tugaydi, saralanish - maktubdagi keyingi qadam
     function zal() {
       trClear();
-      jrSet(TRAIN_KEY);
-      onbStep("train");
+      if (!jrQayta) { jrSet(TRAIN_KEY); onbStep("train"); }
       $("tr-kick").textContent = al("s3p");
       $("tr-title").textContent = al("s3t");
       trPanel(4, lines[5]);

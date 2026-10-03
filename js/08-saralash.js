@@ -9,6 +9,9 @@
      Har sayohat o'z konfiguratsiyasini beradi.                        */
 
   var QUEST = null;
+  // Qayta ko'rish: saralangan odam maktubdan yo'lni yana tomosha qiladi. Hech narsa yozilmaydi
+  // va o'zgarmaydi - savollar o'tkazib yuboriladi, bor tayoqcha va fakultet ko'rsatiladi.
+  var jrQayta = false;
   var qIdx = 0, qScore = null, qPicks = [], qBusy = false, qTimer = null;
 
   function stopSortTimer() {
@@ -108,7 +111,13 @@
     qPicks = [];
     qScore = {};
     // Rasmli sayohat (tayoqcha): savollar alohida ekranda emas, shu lentaning davomida
-    if (QUEST.pics) { $("hat-go").classList.add("hidden"); lentaQ(); return; }
+    if (QUEST.pics) {
+      $("hat-go").classList.add("hidden");
+      // Qayta ko'rishda (va javobi allaqachon bor bo'lsa) savollar so'ralmaydi
+      if (jrQayta && (QUEST === QUEST_HOUSE || wand)) { lentaThink(); return; }
+      lentaQ();
+      return;
+    }
     hideSortScreens();
     $("scr-sort").classList.remove("hidden");
     renderSortQ();
@@ -375,7 +384,7 @@
   // Yetti savolga javob bergandan keyingi ogohlantirish - ogohlantirish
   // emas, tuzoq. Tayoqcha uchun bu shart emas - u o'zgartirilishi mumkin.
   function confirmSorting() {
-    if (QUEST !== QUEST_HOUSE) { beginQuestions(); return; }
+    if (QUEST !== QUEST_HOUSE || jrQayta) { beginQuestions(); return; }
     var t = T[lang];
 
     function go(agreed) {
@@ -398,8 +407,8 @@
 
   // Lentadagi natija: fakultet bayrami sahnasi, gerb va fakultet nomi
   function lentaHouse() {
-    var id = pickHouse();
-    if (jrPreview) { applyHouse(id); } else {
+    var id = jrQayta ? validHouse(cupMe().house || house) : pickHouse();
+    if (jrQayta) { /* faqat ko'rsatiladi */ } else if (jrPreview) { applyHouse(id); } else {
       setHouse(id);
       reportHouse(id);
     }
@@ -414,12 +423,13 @@
     r.appendChild(lentaEl("span", "reveal-kicker", t.rvKicker));
     r.appendChild(lentaEl("span", "rv-place", HAT[lang].place));
     r.appendChild(lentaEl("span", "reveal-name", h[lang]));
-    r.appendChild(lentaEl("span", "reveal-note", ((h["note_" + lang] || "") + " " + t.lockFinal).trim()));
-    var b = lentaEl("button", "tr-go grk-go", journey ? al("rvHouse") : t.rvDone);
+    r.appendChild(lentaEl("span", "reveal-note", ((h["note_" + lang] || "") + (jrQayta ? "" : " " + t.lockFinal)).trim()));
+    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : journey ? al("rvHouse") : t.rvDone);
     b.type = "button";
     b.onclick = function () {
       $("scr-hat").classList.add("hidden");
       $("hat-km").innerHTML = "";
+      if (jrQayta) { jrHome(); return; }
       closeReveal();
     };
     r.appendChild(b);
@@ -500,7 +510,7 @@
 
   // Lentadagi natija: uchqun sochgan tayoqcha sahnasi va tayoqcha tavsifi
   function lentaWand() {
-    var w = wandPick();
+    var w = (jrQayta && wand) ? wand : wandPick();
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
     lentaLock();
@@ -511,11 +521,12 @@
     r.appendChild(lentaEl("span", "reveal-name", wd[lang] + ", " + cr[lang]));
     r.appendChild(lentaEl("span", "reveal-sub", fl.len + " " + t.inch + ", " + fl[lang]));
     r.appendChild(lentaEl("span", "reveal-note", wd["t_" + lang] + ". " + cr["note_" + lang]));
-    var b = lentaEl("button", "tr-go grk-go", journey ? al("rvWand") : t.rvDone);
+    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : journey ? al("rvWand") : t.rvDone);
     b.type = "button";
     b.onclick = function () {
       $("scr-hat").classList.add("hidden");
       $("hat-km").innerHTML = "";
+      if (jrQayta) { jrHome(); return; }
       closeReveal();
     };
     r.appendChild(b);

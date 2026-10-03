@@ -1561,6 +1561,10 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .lt-step.on{background:rgba(59,42,26,.07);box-shadow:inset 0 0 0 1px rgba(59,42,26,.2)}
 .lt-step.lock{opacity:.48;cursor:default}
 .lt-step.done{cursor:default}
+.lt-step.done.lt-re{cursor:pointer}
+.lt-step.done.lt-re .lt-st-t{opacity:1;text-decoration:none}
+.lt-step.done.lt-re .lt-st-s{color:#8b2a22}
+.lt-step.lt-re:active{background:rgba(59,42,26,.07)}
 .lt-mk{
   width:26px;height:26px;flex:none;border-radius:50%;box-sizing:border-box;display:grid;place-items:center;
   border:1px solid rgba(59,42,26,.45);font:700 11px/1 'Manrope',sans-serif;color:#6b4e2e;
