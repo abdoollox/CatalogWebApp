@@ -1652,6 +1652,16 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .grk-t{display:block;text-align:center}
 .grk-go{margin-top:2px}
 .grk-note{margin:0 auto 18px}
+/* Savol-javobli sayohatlarda (tayoqcha) komiks sahnalari */
+.hat-has-km .hat-mark,.hat-has-km .hat-top,.hat-has-km .hat-mid,.hat-has-km .hat-bot{display:none}
+.hat-has-km .hat-wrap{padding-top:14px}
+#hat-km{padding:0 8px}
+#think-km{width:100%;align-self:end}
+#think-km:empty{display:none}
+#think-km .grk-p{margin-bottom:22px}
+#think-km + .think-line{align-self:start}
+#think-km:empty + .think-line{align-self:center}
+#rv-km .grk-p{margin-bottom:20px}
 .gr-sum{font:700 46px/1 'Cormorant Garamond',serif;color:var(--gold);text-shadow:0 2px 14px rgba(var(--gold-rgb),.45)}
 .gr-sum small{display:block;margin-top:6px;font:700 11px/1 'Manrope',sans-serif;letter-spacing:.2em;color:var(--dim)}
 

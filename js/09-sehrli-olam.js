@@ -327,6 +327,7 @@
     grP3: { uz: "Aravacha keskin to'xtadi: 687-xona. Goblin oltin kalitni qulfga yaqinlashtirdi.",
             ru: "Тележка резко остановилась: сейф 687. Гоблин поднёс золотой ключ к замку.",
             en: "The cart stopped sharply: vault 687. The goblin raised the golden key to the lock." },
+    olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
               en: "A wand at Ollivanders costs {n} Galleons." },
     grOpen: { uz: "Xonani ochish", ru: "Открыть сейф", en: "Open the vault" },

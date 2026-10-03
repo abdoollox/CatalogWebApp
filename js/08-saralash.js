@@ -31,6 +31,57 @@
     $("scr-sort").classList.add("hidden");
   }
 
+  // Komiks sahnasi: rasm + (bo'lsa) ostidagi hikoya yozuvi. Uslublar: css "grk-".
+  function kmPanel(src, num, text, ong) {
+    var f = document.createElement("figure");
+    f.className = "grk-p" + (ong ? " grk-r" : "");
+    var im = document.createElement("img");
+    im.src = src;
+    im.alt = "";
+    f.appendChild(im);
+    var n = document.createElement("span");
+    n.className = "grk-n";
+    n.textContent = String(num);
+    f.appendChild(n);
+    if (text) {
+      var c = document.createElement("figcaption");
+      c.className = "grk-c";
+      c.textContent = text;
+      f.appendChild(c);
+    }
+    return f;
+  }
+
+  // Sayohatda rasmlar bo'lsa (cfg.pics) kirish ekrani komiks bo'ladi: 1-sahna, tugma, 2-sahna
+  function questIntroKm(cfg, v) {
+    var km = $("hat-km"), go = $("hat-go");
+    var pics = cfg.pics && cfg.pics.intro;
+    km.innerHTML = "";
+    $("scr-hat").classList.toggle("hat-has-km", !!pics);
+    go.classList.remove("hidden");
+    if (!pics) { return; }
+    [cfg.pics.intro[1], cfg.pics.think, cfg.pics.reveal].forEach(function (u) {
+      if (u) { try { (new Image()).src = u; } catch (e) {} }
+    });
+    km.appendChild(kmPanel(pics[0], 1, v.introTop));
+    go.classList.add("hidden");
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "tr-go grk-go";
+    b.textContent = al("olIn");
+    b.onclick = function () {
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+      km.removeChild(b);
+      var f = kmPanel(pics[1], 2, v.introMid + " " + v.introBot, true);
+      km.appendChild(f);
+      go.classList.remove("hidden");
+      setTimeout(function () {
+        try { f.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+      }, 60);
+    };
+    km.appendChild(b);
+  }
+
   // 1-bosqich: tanishuv
   function startQuest(cfg) {
     QUEST = cfg;
@@ -42,6 +93,7 @@
     $("hat-mid").textContent = v.introMid;
     $("hat-bot").textContent = v.introBot;
     $("hat-go").textContent = v.ready;
+    questIntroKm(cfg, v);
     $("scr-hat").classList.remove("hidden");
   }
 
@@ -167,6 +219,9 @@
     var lines = QUEST.voice[lang].think;
     hideSortScreens();
     $("scr-think").classList.remove("hidden");
+    var tk = $("think-km");
+    tk.innerHTML = "";
+    if (QUEST.pics && QUEST.pics.think) { tk.appendChild(kmPanel(QUEST.pics.think, 3, "")); }
 
     var n = 0;
     function step() {
@@ -243,6 +298,8 @@
 
     var t = T[lang];
     var h = HOUSES[id];
+    $("rv-km").innerHTML = "";
+    $("rv-crest").classList.remove("hidden");
     paintCrest($("rv-crest"), id, h.crest);
     $("rv-kicker").textContent = t.rvKicker;
     $("rv-place").textContent = HAT[lang].place;
@@ -273,6 +330,8 @@
     q: WANDQ,
     voice: OLLI,
     lastWeight: false,
+    // Komiks rasmlari (dizayn tizimidagi uslubda): ko'cha, do'kon ichi, quti, uchqun
+    pics: { intro: ["img/yol/ol1.jpg", "img/yol/ol2.jpg"], think: "img/yol/ol3.jpg", reveal: "img/yol/ol4.jpg" },
     mark: paintWandMark,
     finish: finishWand
   };
@@ -300,6 +359,10 @@
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
 
     drawSvg($("rv-crest"), SVG_WAND, "reveal-crest art art-wand");
+    // Tayoqcha uchqun sochgan sahna - belgi o'rniga rasm
+    $("rv-km").innerHTML = "";
+    $("rv-km").appendChild(kmPanel(QUEST_WAND.pics.reveal, 4, ""));
+    $("rv-crest").classList.add("hidden");
     $("rv-kicker").textContent = t.wandKicker;
     $("rv-place").textContent = OLLI[lang].place;
     $("rv-name").textContent = wd[lang] + ", " + cr[lang];
