@@ -162,6 +162,11 @@
 
   // Kartani odam yopib qo'ya oladi (x) - shu qurilmada qaytib chiqmaydi; maktub boyo'g'li pochtasida qoladi.
   var HOGC_X = { uz: "Yopish", ru: "Скрыть", en: "Hide" };
+  var HOGC_ASK = {
+    uz: "Bu kartani yopasizmi?\n\nXogvarts maktubi yo'qolmaydi — uni istalgan payt yuqoridagi 🦉 boyo'g'li pochtasidan topasiz.",
+    ru: "Скрыть эту карточку?\n\nПисьмо из Хогвартса не пропадёт — вы всегда найдёте его в 🦉 совиной почте наверху.",
+    en: "Hide this card?\n\nYour Hogwarts letter won't be lost — you can always find it in the 🦉 Owl Post at the top."
+  };
   function hogcYopiq() {
     try { return window.localStorage.getItem(TK("hp_hogc_off")) === "1"; } catch (e) { return false; }
   }
@@ -183,8 +188,10 @@
     x.setAttribute("aria-label", HOGC_X[lang] || HOGC_X.uz);
     x.onclick = function (ev) {
       ev.stopPropagation();
-      try { window.localStorage.setItem(TK("hp_hogc_off"), "1"); } catch (e) {}
-      c.classList.add("hidden");
+      testAsk(HOGC_ASK[lang] || HOGC_ASK.uz, function () {
+        try { window.localStorage.setItem(TK("hp_hogc_off"), "1"); } catch (e) {}
+        c.classList.add("hidden");
+      });
     };
     x.onkeydown = function (ev) { ev.stopPropagation(); };
   }
