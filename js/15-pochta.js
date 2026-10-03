@@ -28,6 +28,7 @@
       hogNew: "Xatni ochish",
       hogOldS: "Sizni Xogvartsga chaqirgan o'sha maktub. Uni saqlab qo'ydik — do'stlaringizga ham ko'rsating.",
       hogOld: "Maktubni ochish",
+      del: "Xatni o'chirish", delAsk: "Bu xat o'chirilsinmi?",
       cta: "Yo'lni davom ettirish", done: "Bajarildi", again: "Xogvarts sizni unutgani yo'q.",
       setT: "Telegram'da ham eslatilsin", setS: "Ilovaga kirmasangiz, boyo'g'li bot orqali xabar beradi",
       today: "bugun", yest: "kecha", ago: "%s kun oldin",
@@ -57,6 +58,7 @@
       hogNew: "Открыть письмо",
       hogOldS: "То самое письмо, которое позвало вас в Хогвартс. Мы его сохранили — покажите друзьям.",
       hogOld: "Открыть письмо",
+      del: "Удалить письмо", delAsk: "Удалить это письмо?",
       cta: "Продолжить путь", done: "Выполнено", again: "Хогвартс вас не забыл.",
       setT: "Напоминать и в Telegram", setS: "Если вы не заходите в приложение, сова напишет через бота",
       today: "сегодня", yest: "вчера", ago: "%s дн. назад",
@@ -86,6 +88,7 @@
       hogNew: "Open the letter",
       hogOldS: "The very letter that called you to Hogwarts. We kept it for you — show it to your friends.",
       hogOld: "Open the letter",
+      del: "Delete the letter", delAsk: "Delete this letter?",
       cta: "Continue the journey", done: "Done", again: "Hogwarts hasn't forgotten you.",
       setT: "Also remind me in Telegram", setS: "If you don't open the app, an owl will write through the bot",
       today: "today", yest: "yesterday", ago: "%s days ago",
@@ -151,6 +154,7 @@
       ] };
     }
     if (action === "read") { d.items.forEach(function (x) { x.read = true; }); }
+    if (action === "delete") { d.items = d.items.filter(function (x) { return (body.ids || []).indexOf(x.id) < 0; }); }
     if (action === "bot") { d.bot = !!body.on; }
     try { window.localStorage.setItem(key, JSON.stringify(d)); } catch (e) {}
     d.unread = d.items.filter(function (x) { return !x.read; }).length;
@@ -186,6 +190,37 @@
 
   function owlVisible() { var el = $("scr-owl"); return !!el && !el.classList.contains("hidden"); }
 
+  // Saralangan odamning esdalik maktubi (owlHogOld) hali ko'rilmagan bo'lsa - u ham o'qilmagan xat.
+  // Faqat shu qurilmada eslab qolinadi.
+  var owlEsdFresh = false;
+  function owlEsdYangi() {
+    try {
+      if (owlHog() || !hasHouse()) { return false; }
+      return window.localStorage.getItem(TK("hp_owl_esd")) !== "1";
+    } catch (e) { return false; }
+  }
+
+  var OWL_DEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" ' +
+    'stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.8 12.2h9.4L17.5 7M10 10.5v5.5M14 10.5v5.5"/></svg>';
+
+  // Xatni o'chirish (serverdagi xatlar). Xogvarts maktubida bu tugma yo'q - u o'chirilmaydi.
+  function owlDelBtn(x, card) {
+    var t = owlTx();
+    var b = owlEl("button", "owl-del");
+    b.type = "button";
+    b.innerHTML = OWL_DEL;
+    b.setAttribute("aria-label", t.del);
+    b.title = t.del;
+    b.addEventListener("click", function () {
+      testAsk(t.delAsk, function () {
+        card.classList.add("owl-gone");
+        delete owlFresh[x.id];
+        owlApi("delete", { ids: [x.id] });
+      });
+    });
+    return b;
+  }
+
   // Ikkala tugmadagi qizil son
   function owlBadge() {
     var n0 = owlData ? owlData.unread : 0, hog = owlHog();
@@ -193,7 +228,7 @@
       var b = $(id);
       if (!b) { return; }
       // Xogvarts maktubi ochilmagan bo'lsa - u ham o'qilmagan xat (faqat kutubxonadagi belgida)
-      var n = n0 + (id === "owl-cat" && hog === "new" ? 1 : 0);
+      var n = n0 + (id === "owl-cat" && hog === "new" ? 1 : 0) + (owlEsdYangi() ? 1 : 0);
       b.classList.toggle("owl-yol", id === "owl-cat" && hog === "letter");
       var dot = b.querySelector(".owl-n");
       // Ilova ishga tushayotganda (owlInit hali belgini chizmagan) - o'tkazib yuboramiz.
@@ -254,11 +289,12 @@
   // (egasi so'radi, 2026-10-03). Eng birinchi xat bo'lgani uchun ro'yxat oxirida.
   function owlHogOld(t) {
     if (owlHog() || !hasHouse()) { return null; }
-    var c = owlEl("div", "owl-card owl-hog");
+    var c = owlEl("div", "owl-card owl-hog" + (owlEsdFresh ? " owl-new" : ""));
     var top = owlEl("div", "owl-top");
     var ic = owlEl("span", "owl-ic"); ic.innerHTML = OWL_SVG;
     top.appendChild(ic);
     top.appendChild(owlEl("span", "owl-when", t.kick));
+    if (owlEsdFresh) { top.appendChild(owlEl("span", "owl-seal")); }
     c.appendChild(top);
     c.appendChild(owlEl("b", "owl-h", t.hogT));
     c.appendChild(owlEl("p", "owl-p", t.hogOldS));
@@ -308,6 +344,7 @@
       top.appendChild(ic);
       top.appendChild(owlEl("span", "owl-when", owlWhen(x.t)));
       if (yangi) { top.appendChild(owlEl("span", "owl-seal")); }
+      top.appendChild(owlDelBtn(x, c));
       c.appendChild(top);
       if (x.tur === "onb" && x.n > 1 && !x.done) { c.appendChild(owlEl("i", "owl-again", t.again)); }
       c.appendChild(owlEl("b", "owl-h", st[0]));
@@ -347,6 +384,9 @@
     $("scr-cat").classList.add("hidden");
     $("scr-owl").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
+    // Esdalik maktub shu ochilishda "yangi" bo'lib ko'rinadi, keyin o'qilgan hisoblanadi
+    owlEsdFresh = owlEsdYangi();
+    if (owlEsdFresh) { try { window.localStorage.setItem(TK("hp_owl_esd"), "1"); } catch (e) {} owlBadge(); }
     owlRender();
     owlBusy = true;
     owlApi("list", null, function () {
@@ -361,6 +401,7 @@
 
   function closeOwl() {
     owlFresh = {};
+    owlEsdFresh = false;
     $("scr-owl").classList.add("hidden");
     if (owlFrom === "hub") { openHub(); } else { $("scr-cat").classList.remove("hidden"); }
     owlRender();
