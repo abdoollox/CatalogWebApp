@@ -344,6 +344,110 @@
     });
   }
 
+  /* ---------- PROFIL MENYUSI (egasi, 2026-10-04) ----------
+     O'ng tepadagi tugma: fakultet gerbi + galleon soni. Bosilsa pastdan menyu:
+     hamyon, profil (fakultet va tayoqcha), til, bot xabarlari. Til bayrog'i tugmasi
+     shu menyuga ko'chdi (#back-btn yashirin qoldi - eski kod unga tayanadi). */
+  var PM_TX = {
+    uz: { guest: "Sehrgar", noHouse: "Hali saralanmagan", gal: function (n) { return n + " galleon"; },
+          walS: "Har hafta yakunida kubok ballaringiz uchun beriladi: 10 ballga 1 galleon.",
+          prof: "Profil", profS: "Fakultet, tayoqcha va nishonlar", lang: "Til",
+          bot: "Bot xabarlari", botS: "Boyo'g'li xatlari Telegram'da ham kelsin", close: "Yopish" },
+    ru: { guest: "Волшебник", noHouse: "Ещё не распределён", gal: function (n) { return n + " галлеонов"; },
+          walS: "Выдаются в конце каждой недели за очки Кубка: 1 галлеон за 10 очков.",
+          prof: "Профиль", profS: "Факультет, палочка и значки", lang: "Язык",
+          bot: "Сообщения бота", botS: "Присылать письма совы и в Telegram", close: "Закрыть" },
+    en: { guest: "Wizard", noHouse: "Not sorted yet", gal: function (n) { return n + " Galleons"; },
+          walS: "Paid at the end of each week for your Cup points: 1 Galleon per 10 points.",
+          prof: "Profile", profS: "House, wand and badges", lang: "Language",
+          bot: "Bot messages", botS: "Also send owl letters in Telegram", close: "Close" }
+  };
+  var PM_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 12a4.5 4.5 0 1 0 0-9a4.5 4.5 0 0 0 0 9m0 2c-4.4 0-8 2.2-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.8-3.6-5-8-5"/></svg>';
+
+  function pmGal() {
+    try { if (wal) { return wal.galleons || 0; } } catch (e) {}
+    try { return msGal || 0; } catch (e) {}
+    return 0;
+  }
+
+  function pmAvatar(el) {
+    var h = validHouse(cupMe().house || house);
+    el.innerHTML = "";
+    if (h && HOUSES[h] && HOUSES[h].img) {
+      var im = document.createElement("img");
+      im.alt = "";
+      im.src = IMG_DIR + HOUSES[h].img;
+      el.appendChild(im);
+    } else { el.innerHTML = PM_ICON; }
+  }
+
+  // Tepadagi tugma: gerb va (bo'lsa) galleon soni
+  function pmRender() {
+    var b = $("pm-btn");
+    if (!b) { return; }
+    pmAvatar($("pm-av"));
+    var n = pmGal();
+    $("pm-gal").classList.toggle("hidden", !n);
+    $("pm-gal-n").textContent = n;
+    if (!b.onclick) { b.onclick = pmOpen; }
+    if (!$("pm").classList.contains("hidden")) { pmFill(); }
+  }
+
+  function pmFill() {
+    var x = PM_TX[lang] || PM_TX.uz;
+    var u = tgUser(), h = validHouse(cupMe().house || house);
+    pmAvatar($("pm-av2"));
+    $("pm-name").textContent = (u && (u.first_name || fullName(u))) || x.guest;
+    $("pm-house").textContent = h ? HOUSES[h][lang] : x.noHouse;
+    $("pm-wal-n").textContent = x.gal(pmGal());
+    $("pm-wal-s").textContent = x.walS;
+    $("pm-prof-t").textContent = x.prof;
+    $("pm-prof-s").textContent = x.profS;
+    $("pm-lang-l").textContent = x.lang;
+    $("pm-bot-t").textContent = x.bot;
+    $("pm-bot-s").textContent = x.botS;
+    $("pm-close").textContent = x.close;
+    var box = $("pm-langs");
+    box.innerHTML = "";
+    ["uz", "ru", "en"].forEach(function (code) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = code === lang ? "on" : "";
+      b.innerHTML = '<span class="pm-flag"></span><span></span>';
+      b.firstChild.textContent = flagOf(code);
+      b.lastChild.textContent = { uz: "O'zbekcha", ru: "Русский", en: "English" }[code];
+      b.onclick = function () {
+        if (code === lang) { return; }
+        openCatalog(code, true);          // tilni saqlaydi va kutubxonani qayta chizadi
+        pmFill();
+      };
+      box.appendChild(b);
+    });
+    try { $("pm-bot").checked = !owlData || owlData.bot; } catch (e) { $("pm-bot").checked = true; }
+  }
+
+  function pmOpen() {
+    var el = $("pm");
+    // .screen ichida position:fixed siljiydi - oyna body ning o'zida turishi kerak
+    if (el.parentNode !== document.body) { document.body.appendChild(el); }
+    if (!el.getAttribute("data-on")) {
+      el.setAttribute("data-on", "1");
+      $("pm-close").onclick = pmClose;
+      el.addEventListener("click", function (e) { if (e.target === el) { pmClose(); } });
+      $("pm-prof").onclick = function () { pmClose(); openProfile(); };
+      $("pm-wal").onclick = function () { pmClose(); try { openCup(); } catch (e) {} };
+      $("pm-bot").addEventListener("change", function () {
+        try { owlApi("bot", { on: $("pm-bot").checked }); } catch (e) {}
+      });
+    }
+    pmFill();
+    el.classList.remove("hidden");
+    // Qoldiq eskirgan bo'lishi mumkin (hafta yakunidagi mukofot) - yangilab olamiz
+    try { walLoad(function () { pmRender(); }); } catch (e) {}
+  }
+
+  function pmClose() { $("pm").classList.add("hidden"); }
+
   function renderCatalog() {
     var t = T[lang];
     $("cat-kicker").textContent = t.title;
@@ -351,6 +455,7 @@
     $("lang-badge").textContent = flagOf(lang);
     $("back-btn").setAttribute("aria-label", lang.toUpperCase());
     renderHero(t);
+    pmRender();
     renderSerial();
     srLoad();
     srBlock();

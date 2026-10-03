@@ -194,6 +194,7 @@
   function initWallet() {
     walLoad(function () {
       try { renderWorldBtn(); } catch (e) {}
+      try { pmRender(); } catch (e) {}
       if (!$("lt").classList.contains("hidden")) { ltPath(false); ltFit(); }
     });
   }

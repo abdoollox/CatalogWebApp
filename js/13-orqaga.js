@@ -21,6 +21,7 @@
     ["lt", "lt-later"],
     ["chat-people", "chat-people-back"],
     ["hub-set", "hub-set-close"],
+    ["pm", "pm-close"],
     ["w-set", "w-set-close"]
   ];
 

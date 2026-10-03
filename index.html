@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=e624e6fb">
+<link rel="stylesheet" href="css/app.css?v=d33ec043">
 </head>
 <body>
 <div class="shell">
@@ -29,7 +29,8 @@
       </div>
       <div class="head-tools">
         <button class="owl-btn" id="owl-cat" type="button" aria-label="Boyo'g'li pochtasi"></button>
-        <button class="back-btn" id="back-btn"><span id="lang-badge">UZ</span></button>
+        <button class="back-btn hidden" id="back-btn"><span id="lang-badge">UZ</span></button>
+        <button class="pm-btn" id="pm-btn" type="button" aria-label="Profil"><span class="pm-av" id="pm-av"></span><span class="pm-gal hidden" id="pm-gal"><i></i><b id="pm-gal-n"></b></span></button>
         <button class="coin" id="world-btn" aria-label="9¾"><span class="coin-934" id="coin-934"><svg class="coin-arch" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18V9a7 7 0 0 1 14 0v9"/><path d="M1.5 18h17"/><path d="M3 9h14M3 13.5h14M7 9v4.5M13 9v4.5M10 13.5V18M10 2.5V9"/></svg><span class="coin-num">9<span class="coin-fr"><i>3</i><i>4</i></span></span></span><span class="coin-lt hidden" id="coin-lt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 6h17v12h-17z"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg><span class="coin-wax"></span></span><span class="coin-dot hidden" id="world-dot"></span></button>
       </div>
     </div>
@@ -93,6 +94,19 @@
     </div>
     <div class="sr-tabs" id="sr-tabs"></div>
     <div id="sr-list"></div>
+  </div>
+
+  <!-- Profil menyusi (o'ng tepadagi tugma): hamyon, profil, til, bot xabarlari. js/07 pm* -->
+  <div id="pm" class="hub-sheet hidden">
+    <div class="hub-sheet-box">
+      <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
+      <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span></button>
+      <button class="hub-row" id="pm-prof" type="button"><span class="hub-row-tx"><b id="pm-prof-t"></b><span id="pm-prof-s"></span></span></button>
+      <span class="pm-lbl" id="pm-lang-l"></span>
+      <div class="hub-seg pm-seg" id="pm-langs"></div>
+      <label class="pm-sw"><span class="hub-row-tx"><b id="pm-bot-t"></b><span id="pm-bot-s"></span></span><input type="checkbox" id="pm-bot" class="owl-sw"></label>
+      <button class="hub-sheet-close" type="button" id="pm-close"></button>
+    </div>
   </div>
 
   <!-- ==MS== -->
@@ -1102,14 +1116,14 @@
 <script src="js/04-kubok-oyna.js?v=82b330c5"></script>
 <script src="js/05-umumiy.js?v=2519fff0"></script>
 <script src="js/06-soundtrack.js?v=af49646f"></script>
-<script src="js/07-kutubxona.js?v=b55fb964"></script>
+<script src="js/07-kutubxona.js?v=b4b7cd67"></script>
 <script src="js/08-saralash.js?v=fd3df35b"></script>
 <script src="js/09-sehrli-olam.js?v=37826a69"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=e922ac9f"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>
-<script src="js/13-orqaga.js?v=0b866ee7"></script>
-<script src="js/14-ishga-tushirish.js?v=f7e507c2"></script>
+<script src="js/13-orqaga.js?v=85def9cb"></script>
+<script src="js/14-ishga-tushirish.js?v=2ac83192"></script>
 <script src="js/15-pochta.js?v=f369cb0a"></script>
 
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
