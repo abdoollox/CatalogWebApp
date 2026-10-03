@@ -149,7 +149,8 @@
   var SR_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
   var srData = null;       // {eps:[{s,e,lang,dur,at}], test, covers:{s1e3: versiya}}
   var srAsked = false, srSeason = null, srBusy = false, srScroll = 0, srPending = false;
-  try { srPending = /(^|[?&#])tgWebAppStartParam=serial\b/.test(window.location.href) ||
+  // Bot xabari ostidagi "Barcha qismlar" tugmasi ilovani ?serial=1 bilan ochadi
+  try { srPending = /(^|[?&#])(tgWebAppStartParam=serial|serial=1)\b/.test(window.location.href) ||
         ((window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe || {}).start_param === "serial"); } catch (e) {}
 
   function srInit() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
