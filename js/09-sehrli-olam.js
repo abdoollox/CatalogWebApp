@@ -166,9 +166,9 @@
   }
 
   function openHub() {
-    if (!hasHouse()) { openAlley(); return; }
+    if (!hasHouse()) { jrHome(); return; }
     stopSortTimer();
-    ["scr-cat", "scr-world", "scr-alley", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
+    ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
      "scr-chess-hub", "scr-chess-stats"].forEach(function (id) {
       var el = $(id);
@@ -339,6 +339,11 @@
               en: "The galleons Hogwarts set aside for you. Enough for your shopping." },
     grNext: { uz: "Xiyobonga qaytish", ru: "Вернуться в переулок", en: "Back to the alley" },
     // Uzluksiz yo'l: har qadam tugagach tugma to'g'ri keyingi joyga olib boradi
+    arrT: { uz: "Xogvartsga yetib keldingiz", ru: "Вы прибыли в Хогвартс", en: "You have arrived at Hogwarts" },
+    arrS: { uz: "Poyezd to'xtadi. Oldinda — Katta zal va Saralovchi qalpoq.",
+            ru: "Поезд остановился. Впереди — Большой зал и Распределяющая шляпа.",
+            en: "The train has stopped. Ahead lie the Great Hall and the Sorting Hat." },
+    ltBack: { uz: "Maktubga qaytish", ru: "Вернуться к письму", en: "Back to the letter" },
     nxWand: { uz: "Olivander do'koniga", ru: "В лавку Олливандера", en: "To Ollivanders" },
     nxTrain: { uz: "9¾ platformaga", ru: "На платформу 9¾", en: "To Platform 9¾" },
     nxSort: { uz: "Katta zalga", ru: "В Большой зал", en: "To the Great Hall" },
@@ -378,7 +383,7 @@
             en: "The Sorting Hat is waiting. The house it names is yours for life." },
     endGo: { uz: "Shlyapa oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
-    rvWand: { uz: "9¾ platformaga yo'l olish", ru: "Отправиться на платформу 9¾", en: "Head to Platform 9¾" },
+    rvWand: { uz: "Maktubga qaytish", ru: "Вернуться к письму", en: "Back to the letter" },
 
     pvBtn: { uz: "Sinov o'quvchisi bo'lib kirish", ru: "Войти как тестовый ученик", en: "Enter as a test student" },
     pvNote: { uz: "Faqat adminlar uchun: ilova noldan boshlanadi - fakultet, tayoqcha, ball, chat. Asl profilingizga tegilmaydi.",
@@ -629,114 +634,26 @@
   }
 
   // 9¾ ortiga: saralangan - Xogvarts (hub), saralanmagan - Diagon xiyoboni.
-  // Saralanmagan odam ro'yxatda to'xtamaydi: to'g'ri navbatdagi qadamga (uzluksiz yo'l).
-  function enterWorld() { if (hasHouse()) { openHub(); } else { jrNextGo(); } }
+  // Saralanmagan odam - maktubga: u yerda qayerga kelgani ko'rinadi (jrHome).
+  function enterWorld() { if (hasHouse()) { openHub(); } else { jrHome(); } }
 
-  function alleyVisible() {
-    var el = $("scr-alley");
-    return !!el && !el.classList.contains("hidden");
+  // Fakultet serverdan kechroq kelsa - yo'l ekranlarida qolib ketmasin
+  function jrRecheck() {
+    if (!hasHouse()) { return; }
+    var yolda = ["scr-vault", "scr-train"].some(function (id) { return !$(id).classList.contains("hidden"); });
+    if (yolda) { openHub(); }
   }
 
-  // Fakultet serverdan kechroq kelsa - xiyobonda qolib ketmasin
-  function jrRecheck() { if (alleyVisible() && hasHouse()) { openHub(); } }
-
   function jrHideAll() {
-    ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-alley", "scr-train",
-     "scr-vault", "scr-ticket",
+    ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-train",
+     "scr-vault",
      "scr-hat", "scr-think", "scr-sort", "scr-reveal"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
   }
 
-  function openAlley() {
-    if (hasHouse()) { openHub(); return; }
-    stopSortTimer();
-    trStop();
-    journey = null;
-    jrHideAll();
-    $("scr-alley").classList.remove("hidden");
-    try { window.scrollTo(0, 0); } catch (e) {}
-    onbStep("alley");
-    renderAlley();
-  }
-
-  function leaveAlley() {
-    if (endPreview()) { return; }
-    $("scr-alley").classList.add("hidden");
-    $("scr-cat").classList.remove("hidden");
-    renderCatalog();
-  }
-
-  function renderAlley() {
-    var rode = jrGet(TRAIN_KEY);
-    var wand = jrWandNow();
-    $("al-pv").textContent = al("pvTag");
-    $("al-pv").classList.toggle("hidden", !jrPreview);
-    $("al-back").innerHTML = hubSvg(AL_ICONS.book);
-    $("al-back").setAttribute("aria-label", LIB_TITLE[lang] || "");
-    walShow($("al-wal"));
-    $("al-letter-btn").innerHTML = hubSvg(AL_ICONS.letter);
-    $("al-letter-btn").setAttribute("aria-label", al("letterAria"));
-    $("al-kick").textContent = al("kick");
-    $("al-title").textContent = al("title");
-    $("al-intro").textContent = al("intro");
-
-    // Faqat XIYOBONDAGI joylar. Vokzal va Katta zal boshqa shaharda -
-    // butun yo'l xatning o'zida kuzatiladi (ltPath).
-    var steps = jrSteps().filter(function (st) { return st.alley; });
-    var next = jrNext(steps);
-    steps.forEach(function (st) { st.on = (st === next); });
-
-    var path = $("al-path");
-    path.innerHTML = "";
-    var done = 0;
-    steps.forEach(function (st) {
-      if (st.done) { done++; }
-      var el = jrEl("button", "al-step" + (st.done ? " done" : st.on ? " on" : " lock"));
-      el.type = "button";
-      var mk = jrEl("span", "al-mk");
-      mk.innerHTML = hubSvg(st.done ? AL_ICONS.check : AL_ICONS[st.icon]);
-      el.appendChild(mk);
-      var tx = jrEl("span", "al-tx");
-      tx.appendChild(jrEl("small", "", st.place));
-      tx.appendChild(jrEl("b", "", st.title));
-      tx.appendChild(jrEl("span", "", st.sub));
-      if (st.on) {
-        var cta = jrEl("span", "al-cta", st.cta);
-        cta.insertAdjacentHTML("beforeend", hubSvg(AL_ICONS.arrow));
-        tx.appendChild(cta);
-      }
-      el.appendChild(tx);
-      el.onclick = function () {
-        if (st.on) { st.go(); return; }
-        if (st.done) { return; }
-        el.classList.remove("shake");
-        try { void el.offsetWidth; } catch (e) {}
-        el.classList.add("shake");
-        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("warning"); } } catch (e) {}
-      };
-      path.appendChild(el);
-    });
-
-    // Xiyobondagi ishlar bitgan bo'lsa - yo'l shu yerda tugab qolmasin: keyingi joyga tugma
-    if (!next) {
-      var dav = jrEl("button", "tr-go", jrNextLabel());
-      dav.type = "button";
-      dav.style.cssText = "display:block;margin:22px auto 0";
-      dav.onclick = jrNextGo;
-      path.appendChild(dav);
-    }
-
-    // Kundalik xatda; bu yerda bitta do'kon qolsa yo'lakcha ortiqcha
-    var prog = document.querySelector(".al-prog");
-    if (prog) { prog.classList.toggle("hidden", steps.length < 2); }
-    $("al-prog-t").textContent = al("prog");
-    $("al-prog-n").textContent = done + " / " + steps.length;
-    $("al-prog-b").style.width = Math.round(done / steps.length * 100) + "%";
-  }
-
-  // Savollardan chiqish (Telegram "Orqaga" yoki 1-savoldagi "Chiqish") - xiyobonga
+  // Savollardan chiqish (Telegram "Orqaga" yoki 1-savoldagi "Chiqish") - maktubga
   function jrQuit() {
     stopSortTimer();
     hideSortScreens();
@@ -764,10 +681,10 @@
     var w = jrWandNow(), rode = jrGet(TRAIN_KEY), sorted = hasHouse();
     var vault = walHas("vault");
     return [
-      { icon: "bank", alley: true, done: vault, place: al("s0p"), title: al("s0t"),
+      { icon: "bank", done: vault, place: al("s0p"), title: al("s0t"),
         sub: vault ? al("s0d").replace("%s", walSum()) : al("s0s"), cta: al("s0c"),
         go: alleyGo(openVault) },
-      { icon: "wand", alley: true, done: !!w, place: al("s1p"), title: al("s1t"),
+      { icon: "wand", done: !!w, place: al("s1p"), title: al("s1t"),
         sub: !vault ? al("s1l") : ((w && wandLabel(w, lang)) || al("s1s")), cta: al("s1c"), lock: !vault,
         go: alleyGo(jrWand) },
       { icon: "train", done: !!w && rode, place: al("s2p"), title: al("s2t"),
@@ -780,13 +697,11 @@
     ];
   }
 
-  /* Xiyobondagi ish: ko'chada bo'lsak - to'g'ri do'konga, bo'lmasa avval
-     g'isht devor ochilib, xiyobonning o'zi ko'rinadi (asardagi yo'l). */
+  /* Diagon xiyobonidagi ish (Gringotts, Olivander): birinchi marta g'isht devor ochiladi,
+     keyin to'g'ri joyning o'ziga kiriladi. Alohida "xiyobon ro'yxati" ekrani yo'q -
+     ro'yxat maktubning o'zida (egasi, 2026-10-03). "alley" qadami baribir yoziladi. */
   function alleyGo(fn) {
     return function () {
-      if (alleyVisible()) { closeLetter(); fn(); return; }
-      // Uzluksiz yo'l (2026-10-03): devor ochilgach xiyobon ro'yxatida to'xtamay,
-      // to'g'ri navbatdagi joyga kiriladi. "alley" qadami baribir yoziladi.
       var birinchi = false;
       try { birinchi = window.localStorage.getItem(TK("hp_onb_alley")) !== "1"; } catch (e) {}
       function kir() { closeLetter(); jrHideAll(); onbStep("alley"); fn(); }
@@ -794,20 +709,12 @@
     };
   }
 
-  // Navbatdagi bajarilmagan qadamga to'g'ridan-to'g'ri o'tish (ro'yxatga qaytmasdan)
+  // Maktubdagi tugma yozuvi: navbatdagi joy nomi
   function jrNextLabel() {
     if (!walHas("vault")) { return al("s0c"); }
     if (!jrWandNow()) { return al("nxWand"); }
     if (!jrGet(TRAIN_KEY)) { return al("nxTrain"); }
     return al("nxSort");
-  }
-  function jrNextGo() {
-    jrHideAll();
-    onbStep("alley");
-    if (!walHas("vault")) { openVault(); return; }
-    if (!jrWandNow()) { jrWand(); return; }
-    if (!jrGet(TRAIN_KEY)) { openTrain(); return; }
-    jrSort();
   }
 
   /* Yo'l chizig'i: "2-qadam · jami 4" - odam yo'l qisqa ekanini ko'radi.
@@ -840,11 +747,6 @@
   function jrNext(steps) {
     for (var i = 0; i < steps.length; i++) { if (!steps[i].done) { return steps[i]; } }
     return null;
-  }
-
-  // Xatdan xiyobonga: g'isht devor ochilib, ko'cha ko'rinadi
-  function jrToAlley() {
-    playGate(function () { closeLetter(); openAlley(); });
   }
 
   function jrWand() {
@@ -1008,10 +910,8 @@
       go.textContent = al("close");
       go.onclick = closeLetter;
     } else {
-      // Xiyobondan tashqarida turganda birinchi qadam avval ko'chaga olib boradi
-      var toAlley = next.alley && !alleyVisible();
-      // Yo'l boshlangan bo'lsa tugma qayerga olib borishini aytadi ("Olivander do'koniga" ...)
-      go.textContent = walHas("vault") ? jrNextLabel() : (toAlley ? al("go") : (next.cta || al("go")));
+      // Tugma qayerga olib borishini aytadi; birinchi qadamda - "Diagon xiyoboniga yo'l olish"
+      go.textContent = walHas("vault") ? jrNextLabel() : al("go");
       go.onclick = function () {
         jrSet(LETTER_KEY);
         next.go();
@@ -1076,12 +976,6 @@
   }
 
   function walLoad(done) { walApi("get", null, function () { done && done(); }); }
-
-  function walShow(el) {
-    if (!el) { return; }
-    el.textContent = walSum();
-    el.classList.toggle("hidden", !walHas("vault"));
-  }
 
   /* ---------- Gringotts: aravachada yer ostiga ---------- */
   var grTimer = null;
@@ -1191,62 +1085,13 @@
     sum.appendChild(jrEl("small", "", al("grGot")));
     st.appendChild(sum);
     st.appendChild(jrEl("p", "tr-note", al("grDone")));
-    // To'g'ri keyingi joyga (ilgari xiyobon ro'yxatiga qaytarardi)
-    var b = jrEl("button", "tr-go", jrNextLabel());
+    // Ish bitdi - maktubdagi ro'yxatga qaytiladi, odam u yerdan o'zi davom etadi
+    // (egasi, 2026-10-03: uzluksiz o'tish shoshirib qo'ydi).
+    var b = jrEl("button", "tr-go", al("ltBack"));
     b.type = "button";
-    b.onclick = jrNextGo;
+    b.onclick = jrHome;
     st.appendChild(b);
     if (yangi) { renderWorldBtn(); }
-  }
-
-  /* ---------- Xagrid biletni beradi ---------- */
-  function openTicket() {
-    jrHideAll();
-    $("scr-ticket").classList.remove("hidden");
-    $("tk-back").innerHTML = hubSvg(AL_ICONS.back);
-    $("tk-kick").textContent = al("tkKick");
-    $("tk-title").textContent = al("tkTitle");
-    try { window.scrollTo(0, 0); } catch (e) {}
-    renderTicket();
-  }
-
-  function renderTicket() {
-    var st = $("tk-stage");
-    st.className = "tk-wrap";
-    st.innerHTML = "";
-    st.appendChild(jrEl("p", "tk-say", al("tkSay")));
-
-    var card = jrEl("div", "tk-card");
-    card.appendChild(jrEl("div", "tk-top", al("tkTop")));
-    card.appendChild(jrEl("div", "tk-big", "9¾"));
-    card.appendChild(jrEl("div", "tk-sub", al("tkSub")));
-    var row = jrEl("div", "tk-row");
-    [[al("tkWhen"), al("tkWhenV")], [al("tkSeat"), al("tkSeatV")]].forEach(function (pair) {
-      var cell = jrEl("span", "tk-cell");
-      cell.appendChild(jrEl("small", "", pair[0]));
-      cell.appendChild(jrEl("b", "", pair[1]));
-      row.appendChild(cell);
-    });
-    card.appendChild(row);
-    st.appendChild(card);
-
-    var b = jrEl("button", "tr-go", walHas("ticket") ? al("tkNext") : al("tkGo"));
-    b.type = "button";
-    b.style.marginTop = "22px";
-    b.onclick = function () {
-      if (walHas("ticket")) { openTrain(); return; }
-      b.disabled = true;
-      walApi("ticket", null, function (res) {
-        b.disabled = false;
-        if (res && res.ok) {
-          onbStep("ticket");
-          renderWorldBtn();
-          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
-          renderTicket();
-        }
-      });
-    };
-    st.appendChild(b);
   }
 
   // ---------------------------------------------------------------- 9¾ platforma
@@ -1355,11 +1200,11 @@
     var hat = jrEl("div", "tr-hat");
     paintHatSmall(hat);
     end.appendChild(hat);
-    end.appendChild(jrEl("h2", "tr-h", al("endT")));
-    end.appendChild(jrEl("p", "tr-note", al("endS")));
-    var go = jrEl("button", "tr-go", al("endGo"));
+    end.appendChild(jrEl("h2", "tr-h", al("arrT")));
+    end.appendChild(jrEl("p", "tr-note", al("arrS")));
+    var go = jrEl("button", "tr-go", al("ltBack"));
     go.type = "button";
-    go.onclick = jrSort;
+    go.onclick = jrHome;
     end.appendChild(go);
     stage.appendChild(end);
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}

@@ -11,8 +11,6 @@
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
     $("world-btn").addEventListener("click", goWorld);
-    $("al-back").addEventListener("click", leaveAlley);
-    $("al-letter-btn").addEventListener("click", function () { openLetter(true); });
     $("tr-back").addEventListener("click", jrHome);
     $("lt-later").addEventListener("click", jrLetterCancel);
     $("lt").addEventListener("click", function (ev) {
@@ -22,7 +20,6 @@
     $("hub-set-pv").addEventListener("click", testStart);
     $("lt-share").addEventListener("click", ltShare);
     $("gr-back").addEventListener("click", jrHome);
-    $("tk-back").addEventListener("click", jrHome);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
@@ -198,7 +195,6 @@
     walLoad(function () {
       try { renderWorldBtn(); } catch (e) {}
       if (!$("lt").classList.contains("hidden")) { ltPath(false); ltFit(); }
-      if (alleyVisible()) { renderAlley(); }
     });
   }
 

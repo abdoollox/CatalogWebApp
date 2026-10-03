@@ -331,7 +331,8 @@
       if (was === "house" && endPreview()) { return; }
       // Tayoqcha olingach xat ochiladi: kundalikda belgi qo'yilgani ko'rinadi
       // va keyingi ish ajralib turadi. Saralangach - Xogvartsga.
-      if (was === "wand" && !hasHouse()) { jrNextGo(); return; }
+      // Tayoqcha olingach - maktubga: ro'yxatda belgi qo'yilgani va keyingi ish ko'rinadi
+      if (was === "wand" && !hasHouse()) { jrHome(); return; }
       enterWorld();
       return;
     }
