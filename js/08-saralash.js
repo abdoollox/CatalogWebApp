@@ -104,9 +104,84 @@
     qIdx = 0;
     qPicks = [];
     qScore = {};
+    // Rasmli sayohat (tayoqcha): savollar alohida ekranda emas, shu lentaning davomida
+    if (QUEST.pics) { $("hat-go").classList.add("hidden"); lentaQ(); return; }
     hideSortScreens();
     $("scr-sort").classList.remove("hidden");
     renderSortQ();
+  }
+
+  /* ---------- LENTA: savollar, o'ylanish va natija komiks davomida ----------
+     Egasi (2026-10-03): tayoqcha testi do'kon sahnalarining davomi bo'lib kelsin.
+     Hammasi #hat-km ichiga pastga qarab qo'shiladi; javob berilgan savol tepada qoladi. */
+  function lentaEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text != null) { el.textContent = text; }
+    return el;
+  }
+
+  function lentaShow(el) {
+    $("hat-km").appendChild(el);
+    setTimeout(function () {
+      try { el.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+    }, 60);
+  }
+
+  function lentaQ() {
+    var v = QUEST.voice[lang];
+    var text = QUEST.q[qIdx][lang];
+    var box = lentaEl("div", "lnt-q");
+    box.appendChild(lentaEl("span", "lnt-n", (qIdx + 1) + " / " + QUEST.q.length));
+    // Olivander gapining ichida savol bo'lsa, u ikki marta yozilmaydi
+    var say = pickOne(v.before[qIdx]);
+    var ichida = say.indexOf(text.q) >= 0;
+    box.appendChild(lentaEl("p", "lnt-say" + (ichida ? " lnt-big" : ""), say));
+    if (!ichida) { box.appendChild(lentaEl("h3", "lnt-t", text.q)); }
+    var opts = lentaEl("div", "sort-opts");
+    text.a.forEach(function (label, i) {
+      var b = lentaEl("button", "sort-opt", label);
+      b.type = "button";
+      b.onclick = function () { lentaPick(box, opts, b, i); };
+      opts.appendChild(b);
+    });
+    box.appendChild(opts);
+    lentaShow(box);
+  }
+
+  function lentaPick(box, opts, btn, i) {
+    if (qBusy) { return; }
+    qBusy = true;
+    scoreFor(qIdx, i, 1);
+    qPicks.push(i);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    // Tanlangan javob qoladi, qolganlari yo'qoladi
+    var all = opts.querySelectorAll(".sort-opt");
+    for (var k = 0; k < all.length; k++) {
+      all[k].disabled = true;
+      if (all[k] !== btn) { all[k].classList.add("hidden"); }
+    }
+    btn.classList.add("lnt-on");
+    box.classList.add("lnt-done");
+    box.appendChild(lentaEl("p", "lnt-re", pickOne(QUEST.voice[lang].after)));
+    qIdx++;
+    qTimer = setTimeout(function () {
+      qBusy = false;
+      if (qIdx < QUEST.q.length) { lentaQ(); } else { lentaThink(); }
+    }, 550);
+  }
+
+  // O'ylanish: ochiq quti sahnasi, tayoqchani odamning o'zi qo'lga oladi
+  function lentaThink() {
+    var f = kmPanel(QUEST.pics.think, 3, QUEST.voice[lang].think.join(" "));
+    lentaShow(f);
+    var b = lentaEl("button", "tr-go grk-go", al("olTake"));
+    b.type = "button";
+    b.onclick = function () {
+      b.parentNode.removeChild(b);
+      QUEST.lenta();
+    };
+    $("hat-km").appendChild(b);
   }
 
   function scoreFor(idx, opt, sign) {
@@ -219,9 +294,6 @@
     var lines = QUEST.voice[lang].think;
     hideSortScreens();
     $("scr-think").classList.remove("hidden");
-    var tk = $("think-km");
-    tk.innerHTML = "";
-    if (QUEST.pics && QUEST.pics.think) { tk.appendChild(kmPanel(QUEST.pics.think, 3, "")); }
 
     var n = 0;
     function step() {
@@ -298,8 +370,6 @@
 
     var t = T[lang];
     var h = HOUSES[id];
-    $("rv-km").innerHTML = "";
-    $("rv-crest").classList.remove("hidden");
     paintCrest($("rv-crest"), id, h.crest);
     $("rv-kicker").textContent = t.rvKicker;
     $("rv-place").textContent = HAT[lang].place;
@@ -333,6 +403,7 @@
     // Komiks rasmlari (dizayn tizimidagi uslubda): ko'cha, do'kon ichi, quti, uchqun
     pics: { intro: ["img/yol/ol1.jpg", "img/yol/ol2.jpg"], think: "img/yol/ol3.jpg", reveal: "img/yol/ol4.jpg" },
     mark: paintWandMark,
+    lenta: lentaWand,
     finish: finishWand
   };
 
@@ -342,7 +413,8 @@
     drawSvg(el, SVG_SHELF, "hat-mark art art-shelf");
   }
 
-  function finishWand() {
+  // Javoblardan tayoqchani aniqlaydi va saqlaydi
+  function wandPick() {
     var w = {
       wood: topOf(WOOD_IDS),
       core: topOf(CORE_IDS),
@@ -354,15 +426,42 @@
       // Olivanderda tayoqcha 7 galleon turadi (asardagi narx)
       if (walHas("vault") && !walHas("wand")) { walApi("buy", "wand", null); }
     }
+    return w;
+  }
+
+  // Lentadagi natija: uchqun sochgan tayoqcha sahnasi va tayoqcha tavsifi
+  function lentaWand() {
+    var w = wandPick();
+    var t = T[lang];
+    var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
+    lentaShow(kmPanel(QUEST_WAND.pics.reveal, 4, ""));
+    var r = lentaEl("div", "lnt-rv");
+    r.appendChild(lentaEl("span", "reveal-kicker", t.wandKicker));
+    r.appendChild(lentaEl("span", "rv-place", OLLI[lang].place));
+    r.appendChild(lentaEl("span", "reveal-name", wd[lang] + ", " + cr[lang]));
+    r.appendChild(lentaEl("span", "reveal-sub", fl.len + " " + t.inch + ", " + fl[lang]));
+    r.appendChild(lentaEl("span", "reveal-note", wd["t_" + lang] + ". " + cr["note_" + lang]));
+    var b = lentaEl("button", "tr-go grk-go", journey ? al("rvWand") : t.rvDone);
+    b.type = "button";
+    b.onclick = function () {
+      $("scr-hat").classList.add("hidden");
+      $("hat-km").innerHTML = "";
+      closeReveal();
+    };
+    r.appendChild(b);
+    $("hat-km").appendChild(r);
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
+  }
+
+  function finishWand() {
+    var w = wandPick();
 
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
 
     drawSvg($("rv-crest"), SVG_WAND, "reveal-crest art art-wand");
-    // Tayoqcha uchqun sochgan sahna - belgi o'rniga rasm
-    $("rv-km").innerHTML = "";
-    $("rv-km").appendChild(kmPanel(QUEST_WAND.pics.reveal, 4, ""));
-    $("rv-crest").classList.add("hidden");
     $("rv-kicker").textContent = t.wandKicker;
     $("rv-place").textContent = OLLI[lang].place;
     $("rv-name").textContent = wd[lang] + ", " + cr[lang];
