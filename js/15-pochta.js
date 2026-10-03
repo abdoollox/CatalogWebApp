@@ -42,10 +42,10 @@
       houses: { gryffindor: "Grifindor", slytherin: "Sliterin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
       badges: { all_films: "Sakkiz qism", flawless_exam: "Benuqson imtihon", perfect_week: "Mukammal hafta", streak_7: "Yetti kun ketma-ket" },
       steps: {
-        alley: ["Diagon xiyoboni sizni kutmoqda", "Xatdagi ro'yxat tayyor, g'isht devor ochiq. Xogvartsga yo'l shu yerdan boshlanadi."],
+        alley: ["Gringotts sizni kutmoqda", "Xogvartsga yo'l sehrgarlar bankidan boshlanadi: goblin kalitingizni ko'zdan kechirmoqchi."],
         gringotts: ["Gringotts eshiklari ochiq", "Xogvarts sizga ajratgan galleonlar bankda kutib turibdi."],
         wand: ["Olivander tayoqchangizni kutyapti", "Tayoqchani sehrgar emas, tayoqcha sehrgarni tanlaydi."],
-        ticket: ["Xagrid biletingizni ushlab turibdi", "9¾ platformaga bilet - Qovoqxonada, Xagridning qo'lida."],
+        ticket: ["Xagrid 9¾ platformada kutmoqda", "Biletingiz Xagridning qo'lida - Kings Kross vokzalida, g'isht ustun yonida."],
         train: ["Xogvarts ekspressi jo'nashga tayyor", "9¾ platformada poyezd sizsiz ketmaydi."],
         sortst: ["Katta zalda Saralovchi qalpoq kutmoqda", "Bir qadam qoldi - qaysi fakultetga tushasiz?"],
         house: ["Saralovchi qalpoq hali qaror qilmadi", "Savollarni oxirigacha javob bering - fakultetingiz e'lon qilinadi."]
@@ -72,10 +72,10 @@
       houses: { gryffindor: "Гриффиндор", slytherin: "Слизерин", ravenclaw: "Когтевран", hufflepuff: "Пуффендуй" },
       badges: { all_films: "Восемь частей", flawless_exam: "Безупречный экзамен", perfect_week: "Идеальная неделя", streak_7: "Семь дней подряд" },
       steps: {
-        alley: ["Косой переулок ждёт вас", "Список из письма готов, кирпичная стена открыта. Путь в Хогвартс начинается здесь."],
+        alley: ["Гринготтс ждёт вас", "Путь в Хогвартс начинается с банка волшебников: гоблин хочет осмотреть ваш ключ."],
         gringotts: ["Двери Гринготтса открыты", "Галлеоны, которые выделил вам Хогвартс, ждут вас в банке."],
         wand: ["Олливандер ждёт вас", "Не волшебник выбирает палочку, а палочка - волшебника."],
-        ticket: ["Хагрид держит ваш билет", "Билет на платформу 9¾ - в «Дырявом котле», у Хагрида."],
+        ticket: ["Хагрид ждёт на платформе 9¾", "Ваш билет у Хагрида - на вокзале Кингс-Кросс, у кирпичной колонны."],
         train: ["Хогвартс-экспресс готов к отправлению", "На платформе 9¾ поезд без вас не уйдёт."],
         sortst: ["Распределяющая шляпа ждёт в Большом зале", "Остался один шаг - на какой факультет вы попадёте?"],
         house: ["Шляпа ещё не приняла решение", "Ответьте на вопросы до конца - и факультет будет объявлен."]
@@ -102,10 +102,10 @@
       houses: { gryffindor: "Gryffindor", slytherin: "Slytherin", ravenclaw: "Ravenclaw", hufflepuff: "Hufflepuff" },
       badges: { all_films: "All eight parts", flawless_exam: "Flawless exam", perfect_week: "Perfect week", streak_7: "Seven days in a row" },
       steps: {
-        alley: ["Diagon Alley is waiting", "The list from your letter is ready and the brick wall is open. The road to Hogwarts starts here."],
+        alley: ["Gringotts is waiting", "The road to Hogwarts starts at the wizarding bank: a goblin wants to examine your key."],
         gringotts: ["Gringotts doors are open", "The galleons Hogwarts set aside for you are waiting at the bank."],
         wand: ["Ollivander is waiting for you", "The wand chooses the wizard, not the other way round."],
-        ticket: ["Hagrid is holding your ticket", "Your Platform 9¾ ticket is at the Leaky Cauldron, with Hagrid."],
+        ticket: ["Hagrid is waiting at Platform 9¾", "Hagrid has your ticket - at King's Cross, by the brick pillar."],
         train: ["The Hogwarts Express is ready to leave", "On Platform 9¾ the train won't leave without you."],
         sortst: ["The Sorting Hat is waiting in the Great Hall", "One step left - which house will you join?"],
         house: ["The Sorting Hat hasn't decided yet", "Answer the questions to the end and your house will be announced."]
