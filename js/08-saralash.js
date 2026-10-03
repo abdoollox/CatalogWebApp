@@ -222,24 +222,7 @@
       beginQuestions();
     }
 
-    try {
-      if (tg && tg.showPopup) {
-        tg.showPopup({
-          title: t.lockTitle,
-          message: t.lockAsk,
-          buttons: [
-            { id: "go", type: "default", text: t.lockYes },
-            { id: "no", type: "cancel", text: t.lockNo }
-          ]
-        }, function (id) { go(id === "go"); });
-        return;
-      }
-      if (tg && tg.showConfirm) {
-        tg.showConfirm(t.lockAsk, go);
-        return;
-      }
-    } catch (e) {}
-    go(window.confirm ? window.confirm(t.lockAsk) : true);
+    testAsk(t.lockAsk, function () { go(true); }, { title: t.lockTitle, ok: t.lockYes, no: t.lockNo });
   }
 
   function pickHouse() {

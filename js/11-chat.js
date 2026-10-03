@@ -755,11 +755,7 @@
     }
     if (!on) { go(); return; }
     var ask = L("chatDmBlockAsk").replace("%s", p.name || "Sehrgar");
-    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
-      tg.showConfirm(ask, function(ok) { if (ok) go(); });
-    } else if (window.confirm(ask)) {
-      go();
-    }
+    testAsk(ask, go);
   }
 
   // "Yozmoqda" - 4 soniyada bir martadan ko'p yuborilmaydi.
@@ -784,11 +780,7 @@
     }
     if (unban) { go(); return; }
     var ask = L("chatBanAsk").replace("%s", m.name || "Sehrgar");
-    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
-      tg.showConfirm(ask, function(ok) { if (ok) go(); });
-    } else if (window.confirm(ask)) {
-      go();
-    }
+    testAsk(ask, go);
   }
 
   function chatArrived(added) {
@@ -1018,11 +1010,7 @@
       }).catch(function() { undo(); });
     }
     if (m.tmp) { go(); return; }
-    if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
-      tg.showConfirm(L("chatDeleteAsk"), function(ok) { if (ok) go(); });
-    } else if (window.confirm(L("chatDeleteAsk"))) {
-      go();
-    }
+    testAsk(L("chatDeleteAsk"), go);
   }
 
   function chatCopy(text) {

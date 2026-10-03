@@ -53,11 +53,7 @@
     $("det-back").addEventListener("click", closeWandDetail);
     $("wand-again").addEventListener("click", function () {
       var msg = T[lang].wandAskAgain;
-      if (tg && tg.showConfirm) {
-        tg.showConfirm(msg, function (ok) { if (ok) { startWand(); } });
-      } else if (window.confirm ? window.confirm(msg) : true) {
-        startWand();
-      }
+      testAsk(msg, startWand);
     });
     $("tasks-strip").addEventListener("click", openTasks);
     $("tasks-back").addEventListener("click", function() {

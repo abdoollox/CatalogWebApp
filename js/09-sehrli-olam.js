@@ -481,19 +481,22 @@
   // Tasdiqlash oynasi - o'zimizning uslubda (egasi Telegram oynasini yoqtirmadi, 2026-10-03).
   // Matnning birinchi xatboshisi - sarlavha, qolgani - izoh.
   var ASK_TX = { uz: ["Ha", "Yo'q"], ru: ["Да", "Нет"], en: ["Yes", "No"] };
-  function testAsk(msg, done) {
+  // opt (ixtiyoriy): {title, ok, no} - sarlavha va tugma yozuvlari
+  function testAsk(msg, done, opt) {
     var box = $("hpask");
+    opt = opt || {};
     if (!box) { if (!window.confirm || window.confirm(msg)) { done(); } return; }
     var bolak = String(msg || "").split("\n\n"), t = ASK_TX[lang] || ASK_TX.uz;
     // Bitta xatboshi bo'lsa - birinchi savol sarlavha, davomi izoh
     var sv = bolak[0].indexOf("? ");
-    if (bolak.length === 1 && sv > 0) { bolak = [bolak[0].slice(0, sv + 1), bolak[0].slice(sv + 2)]; }
+    if (opt.title) { bolak = [opt.title, String(msg || "")]; }
+    else if (bolak.length === 1 && sv > 0) { bolak = [bolak[0].slice(0, sv + 1), bolak[0].slice(sv + 2)]; }
     $("hpask-ic").innerHTML = hubSvg("M12 8.2v5.1 M12 16.6v.2 M12 3.2l9.3 16.3H2.7z");
     $("hpask-t").textContent = bolak[0];
     $("hpask-p").textContent = bolak.slice(1).join("\n\n");
     $("hpask-p").classList.toggle("hidden", bolak.length < 2);
-    $("hpask-ok").textContent = t[0];
-    $("hpask-no").textContent = t[1];
+    $("hpask-ok").textContent = opt.ok || t[0];
+    $("hpask-no").textContent = opt.no || t[1];
     function yop() { box.classList.add("hidden"); }
     $("hpask-ok").onclick = function () { yop(); done(); };
     $("hpask-no").onclick = yop;

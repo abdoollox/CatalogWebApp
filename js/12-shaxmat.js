@@ -561,15 +561,7 @@
     return fetch(API_CHESS + what + (query || ""), opt).then(function (r) { return r.json(); });
   }
 
-  function chessAsk(msg, cb) {
-    try {
-      if (tg && tg.showConfirm && tg.isVersionAtLeast && tg.isVersionAtLeast("6.2")) {
-        tg.showConfirm(msg, function (ok) { if (ok) { cb(); } });
-        return;
-      }
-    } catch (e) {}
-    if (window.confirm(msg)) { cb(); }
-  }
+  function chessAsk(msg, cb) { testAsk(msg, cb); }
 
   function chessHaptic(kind) {
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred(kind); } } catch (e) {}
