@@ -740,7 +740,22 @@
   function jrQuit() {
     stopSortTimer();
     hideSortScreens();
-    openAlley();
+    jrHome();
+  }
+
+  // Yo'ldan "orqaga": odam kelgan joyiga - kutubxona ustida ochiq maktubga qaytadi
+  // (uzluksiz yo'ldan beri xiyobon ro'yxati oraliq bekat emas). Maktubda bajarilgani
+  // belgilangan, tugma esa to'xtagan joydan davom ettiradi.
+  function jrHome() {
+    if (hasHouse()) { openHub(); return; }
+    grStop();
+    trStop();
+    journey = null;
+    jrHideAll();
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    try { window.scrollTo(0, 0); } catch (e) {}
+    openLetter(true);
   }
 
   /* Yo'lning barcha qadamlari - YAGONA MANBA. Xat kundalik sifatida hammasini
@@ -995,7 +1010,8 @@
     } else {
       // Xiyobondan tashqarida turganda birinchi qadam avval ko'chaga olib boradi
       var toAlley = next.alley && !alleyVisible();
-      go.textContent = toAlley ? al("go") : (next.cta || al("go"));
+      // Yo'l boshlangan bo'lsa tugma qayerga olib borishini aytadi ("Olivander do'koniga" ...)
+      go.textContent = walHas("vault") ? jrNextLabel() : (toAlley ? al("go") : (next.cta || al("go")));
       go.onclick = function () {
         jrSet(LETTER_KEY);
         next.go();
@@ -1241,7 +1257,7 @@
   function openTrain() {
     // Biletsiz platformaga chiqib bo'lmaydi (eski foydalanuvchilarda bilet
     // belgisi yo'q, lekin ular allaqachon saralangan - bu yerga tushmaydi).
-    if (!jrWandNow()) { openAlley(); return; }
+    if (!jrWandNow()) { jrHome(); return; }
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");

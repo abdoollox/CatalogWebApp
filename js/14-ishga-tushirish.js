@@ -13,7 +13,7 @@
     $("world-btn").addEventListener("click", goWorld);
     $("al-back").addEventListener("click", leaveAlley);
     $("al-letter-btn").addEventListener("click", function () { openLetter(true); });
-    $("tr-back").addEventListener("click", openAlley);
+    $("tr-back").addEventListener("click", jrHome);
     $("lt-later").addEventListener("click", jrLetterCancel);
     $("lt").addEventListener("click", function (ev) {
       if (ev.target !== $("lt")) { return; }
@@ -21,8 +21,8 @@
     });
     $("hub-set-pv").addEventListener("click", testStart);
     $("lt-share").addEventListener("click", ltShare);
-    $("gr-back").addEventListener("click", function () { grStop(); openAlley(); });
-    $("tk-back").addEventListener("click", openAlley);
+    $("gr-back").addEventListener("click", jrHome);
+    $("tk-back").addEventListener("click", jrHome);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
     $("hub-me").addEventListener("click", hubGo(openProfile));
