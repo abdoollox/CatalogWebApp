@@ -2097,7 +2097,10 @@
   // 9¾ tugmasining o'zi: saralanmaganga avval maktub, keyin g'isht devor.
   // Tugma ham, havola ham shu yerdan o'tadi - yo'l bir xil bo'lsin.
   function goWorld() {
-    if (!hasHouse() && !jrGet(LETTER_KEY)) { openLetter(false); return; }
+    // Saralanmagan odam har doim avval MAKTUBNI ko'radi (egasi, 2026-10-03): yo'lni boshlab,
+    // to'xtab qaytgan bo'lsa ham - qaysi qadamga kelganini ko'rib, o'zi "davom" ni bosadi.
+    // Ilgari yo'l shu zahoti boshlanib ketardi va odam nima bo'layotganini tushunmasdi.
+    if (!hasHouse()) { openLetter(false); return; }
     playGate(enterWorld);
   }
 

@@ -448,7 +448,10 @@
     $("owl-back").innerHTML = hubSvg("M15 18l-6-6 6-6");
     $("owl-cat").addEventListener("click", function () {
       // Birinchi marta: boyo'g'li Xogvarts maktubini to'g'ridan-to'g'ri olib keladi
-      if (owlHog() === "new" && filmOlgan() && !(owlData && owlData.unread)) { goWorld(); return; }
+      // Yo'ldagi odam (maktubni ochgan yoki ochmagan): boshqa o'qilmagan xati bo'lmasa -
+      // to'g'ri maktubning o'zi ochiladi, u yerda qayerga kelgani ko'rinadi.
+      var hg = owlHog();
+      if (hg && (hg === "letter" || filmOlgan()) && !(owlData && owlData.unread)) { goWorld(); return; }
       openOwl();
     });
     $("hub-owl").addEventListener("click", openOwl);
