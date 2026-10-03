@@ -160,18 +160,33 @@
     }
   };
 
+  // Kartani odam yopib qo'ya oladi (x) - shu qurilmada qaytib chiqmaydi; maktub boyo'g'li pochtasida qoladi.
+  var HOGC_X = { uz: "Yopish", ru: "Скрыть", en: "Hide" };
+  function hogcYopiq() {
+    try { return window.localStorage.getItem(TK("hp_hogc_off")) === "1"; } catch (e) { return false; }
+  }
+
   function renderHogCard(stage) {
     var c = $("hogc");
     if (!c) { return; }
-    c.classList.toggle("hidden", stage === "world");
-    if (stage === "world") { return; }
+    var yoq = stage === "world" || hogcYopiq();
+    c.classList.toggle("hidden", yoq);
+    if (yoq) { return; }
     var t = HOGC_TX[stage][lang] || HOGC_TX[stage].uz;
     $("hogc-k").textContent = t[0];
     $("hogc-t").textContent = t[1];
-    $("hogc-s").textContent = t[2];
     $("hogc-seal").textContent = al("seal");
     c.classList.toggle("hogc-new", stage === "new");
     c.onclick = goWorld;
+    c.onkeydown = function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); goWorld(); } };
+    var x = $("hogc-x");
+    x.setAttribute("aria-label", HOGC_X[lang] || HOGC_X.uz);
+    x.onclick = function (ev) {
+      ev.stopPropagation();
+      try { window.localStorage.setItem(TK("hp_hogc_off"), "1"); } catch (e) {}
+      c.classList.add("hidden");
+    };
+    x.onkeydown = function (ev) { ev.stopPropagation(); };
   }
 
   function renderWorldBtn() {

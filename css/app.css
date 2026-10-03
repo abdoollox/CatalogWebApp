@@ -1052,27 +1052,31 @@ button.glass:active .tube{transform:scale(.97)}
    Serial kutubxonaga qo'shilgach bu karta olib tashlanadi. */
 /* --- Kutubxona: Xogvartsdan xat keldi (saralanmagan odam) --- */
 .hogc{
-  position:relative;display:flex;align-items:center;gap:14px;width:100%;margin:0 0 22px;padding:15px 14px 15px 16px;
-  border:1px solid rgba(var(--gold-rgb),.3);border-radius:20px;cursor:pointer;text-align:left;color:var(--text);overflow:hidden;
-  font-family:inherit;
-  background:radial-gradient(120% 160% at 0% 0%,rgba(var(--gold-rgb),.13),transparent 62%),#0d0a0c;
+  position:relative;display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;height:64px;margin:0 0 14px;
+  padding:0 8px 0 14px;border:1px solid rgba(var(--gold-rgb),.3);border-radius:20px;cursor:pointer;text-align:left;
+  color:var(--text);overflow:hidden;-webkit-user-select:none;user-select:none;
+  background:radial-gradient(120% 220% at 0% 0%,rgba(var(--gold-rgb),.13),transparent 62%),#0d0a0c;
   box-shadow:0 14px 34px -22px rgba(var(--gold-rgb),.55);transition:transform .14s,border-color .3s;
 }
 .hogc:active{transform:scale(.99)}
 .hogc.hogc-new{border-color:rgba(var(--gold-rgb),.5)}
 .hogc-seal{
-  flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#b8352c,#7b1914 72%);color:#f1c8a6;font:600 22px/1 'Cormorant Garamond',serif;
-  box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),inset 0 0 0 4px rgba(255,210,170,.18);
+  flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#b8352c,#7b1914 72%);color:#f1c8a6;font:600 18px/1 'Cormorant Garamond',serif;
+  box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 2px rgba(0,0,0,.16),inset 0 0 0 3px rgba(255,210,170,.18);
 }
 .hogc-new .hogc-seal{animation:hogcSeal 2.6s ease-in-out infinite}
-@keyframes hogcSeal{0%,100%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),0 0 0 0 rgba(184,53,44,.45)}
-  50%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 3px rgba(0,0,0,.16),0 0 0 7px rgba(184,53,44,0)}}
-.hogc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.hogc-k{font:600 10px/1.4 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
-.hogc-t{font:400 21px/1.15 'Cormorant Garamond',serif;color:var(--text)}
-.hogc-s{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
-.hogc-go{flex:none;width:20px;height:20px;color:var(--gold)}
+@keyframes hogcSeal{0%,100%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 2px rgba(0,0,0,.16),0 0 0 0 rgba(184,53,44,.45)}
+  50%{box-shadow:0 3px 9px rgba(0,0,0,.35),inset 0 0 0 2px rgba(0,0,0,.16),0 0 0 6px rgba(184,53,44,0)}}
+.hogc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.hogc-k{font:600 9.5px/1.2 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.hogc-t{font:400 19px/1.1 'Cormorant Garamond',serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hogc-x{
+  flex:none;display:grid;place-items:center;width:38px;height:38px;padding:0;border:none;border-radius:50%;
+  background:transparent;color:var(--dim);cursor:pointer;opacity:.75;
+}
+.hogc-x svg{width:17px;height:17px}
+.hogc-x:active{opacity:1;background:rgba(255,255,255,.08)}
 @media (prefers-reduced-motion:reduce){.hogc-new .hogc-seal{animation:none}}
 .srl{position:relative;display:block;margin:0 0 22px;border-radius:20px;overflow:hidden;
   border:1px solid rgba(var(--gold-rgb),.3);background:#0d0a0c;
