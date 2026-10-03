@@ -163,12 +163,32 @@
     }
     btn.classList.add("lnt-on");
     box.classList.add("lnt-done");
-    box.appendChild(lentaEl("p", "lnt-re", pickOne(QUEST.voice[lang].after)));
+    var re = lentaEl("p", "lnt-re", pickOne(QUEST.voice[lang].after));
+    // Javobni o'zgartirish: shu savolga qaytadi, undan keyingi hamma narsa o'chadi
+    var idx = qIdx;
+    var ch = lentaEl("button", "lnt-ch", al("lntCh"));
+    ch.type = "button";
+    ch.onclick = function () { lentaUndo(box, idx); };
+    re.appendChild(ch);
+    box.appendChild(re);
     qIdx++;
     qTimer = setTimeout(function () {
       qBusy = false;
       if (qIdx < QUEST.q.length) { lentaQ(); } else { lentaThink(); }
     }, 550);
+  }
+
+  function lentaUndo(box, idx) {
+    if (qBusy) { return; }
+    stopSortTimer();
+    while (qIdx > idx) {
+      qIdx--;
+      scoreFor(qIdx, qPicks.pop(), -1);
+    }
+    var km = $("hat-km");
+    while (box.nextSibling) { km.removeChild(box.nextSibling); }
+    km.removeChild(box);
+    lentaQ();
   }
 
   // O'ylanish: ochiq quti sahnasi, tayoqchani odamning o'zi qo'lga oladi
@@ -434,6 +454,9 @@
     var w = wandPick();
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
+    // Tayoqcha olindi - endi javoblar o'zgarmaydi
+    var chs = $("hat-km").querySelectorAll(".lnt-ch");
+    for (var k = 0; k < chs.length; k++) { chs[k].parentNode.removeChild(chs[k]); }
     lentaShow(kmPanel(QUEST_WAND.pics.reveal, 4, ""));
     var r = lentaEl("div", "lnt-rv");
     r.appendChild(lentaEl("span", "reveal-kicker", t.wandKicker));

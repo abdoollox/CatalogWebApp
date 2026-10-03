@@ -327,6 +327,10 @@
     grP3: { uz: "Aravacha keskin to'xtadi: 687-xona. Goblin oltin kalitni qulfga yaqinlashtirdi.",
             ru: "Тележка резко остановилась: сейф 687. Гоблин поднёс золотой ключ к замку.",
             en: "The cart stopped sharply: vault 687. The goblin raised the golden key to the lock." },
+    trBoard: { uz: "Poyezdga chiqish", ru: "Сесть в поезд", en: "Board the train" },
+    trOn: { uz: "Bekatgacha borish", ru: "Ехать до станции", en: "Ride to the station" },
+    trIn: { uz: "Qasrga kirish", ru: "Войти в замок", en: "Enter the castle" },
+    lntCh: { uz: "Javobni o'zgartirish", ru: "Изменить ответ", en: "Change answer" },
     olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     olTake: { uz: "Tayoqchani qo'lga olish", ru: "Взять палочку в руку", en: "Take the wand" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
@@ -1071,9 +1075,41 @@
     if (trTimer) { clearTimeout(trTimer); trTimer = null; }
   }
 
+  // Komiks kabi: sahnalar odam bosganda birin-ketin ochiladi (rasmlar img/yol/pl1..5.jpg)
+  var TR_IMG = ["img/yol/pl1.jpg", "img/yol/pl2.jpg", "img/yol/pl3.jpg", "img/yol/pl4.jpg", "img/yol/pl5.jpg"];
+
+  function trPanel(i, text) {
+    var st = $("tr-stage");
+    var f = kmPanel(TR_IMG[i], i + 1, text, i % 2);
+    st.appendChild(f);
+    if (i > 0) {
+      setTimeout(function () {
+        try { f.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+      }, 60);
+    }
+  }
+
+  // Sahna ostidagi tugma (ixtiyoriy izoh bilan); keyingi sahna ochilganda ikkalasi ham yo'qoladi
+  function trBtn(text, fn, izoh) {
+    var st = $("tr-stage");
+    if (izoh) { st.appendChild(jrEl("p", "tr-note grk-note", izoh)); }
+    var b = jrEl("button", "tr-go grk-go", text);
+    b.type = "button";
+    b.onclick = function () {
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+      fn(b);
+    };
+    st.appendChild(b);
+  }
+
+  function trClear() {
+    var st = $("tr-stage");
+    var eski = st.querySelectorAll(".grk-go, .grk-note");
+    for (var i = 0; i < eski.length; i++) { st.removeChild(eski[i]); }
+  }
+
   function openTrain() {
-    // Biletsiz platformaga chiqib bo'lmaydi (eski foydalanuvchilarda bilet
-    // belgisi yo'q, lekin ular allaqachon saralangan - bu yerga tushmaydi).
+    // Tayoqchasiz platformaga chiqib bo'lmaydi
     if (!jrWandNow()) { jrHome(); return; }
     trStop();
     jrHideAll();
@@ -1084,101 +1120,55 @@
     $("tr-kick").textContent = al("s2p");
     $("tr-title").textContent = al("s2t");
     var stage = $("tr-stage");
+    stage.className = "grk";
     stage.innerHTML = "";
-    var wrap = jrEl("div", "tr-center");
-    var sign = jrEl("div", "tr-sign");
-    sign.appendChild(jrEl("small", "", al("trSign")));
-    sign.appendChild(jrEl("b", "", "9¾"));
-    sign.appendChild(jrEl("span", "", al("trSignSub")));
-    var go = jrEl("button", "tr-go", al("trGo"));
-    go.type = "button";
-    if (walHas("ticket")) {
-      wrap.appendChild(sign);
-      wrap.appendChild(jrEl("p", "tr-p", al("trP1")));
-      wrap.appendChild(jrEl("p", "tr-note", al("trP2")));
-      go.onclick = trRun;
-    } else {
-      // Bilet alohida ekran emas: Xagrid uni shu yerda, platformada beradi (5 qadam -> 4)
-      wrap.appendChild(jrEl("p", "tk-say", al("tkSay")));
-      var card = jrEl("div", "tk-card");
-      card.appendChild(jrEl("div", "tk-top", al("tkTop")));
-      card.appendChild(jrEl("div", "tk-big", "9¾"));
-      card.appendChild(jrEl("div", "tk-sub", al("tkSub")));
-      wrap.appendChild(card);
-      var izoh = jrEl("p", "tr-note", al("trP1"));
-      izoh.style.marginTop = "20px";
-      wrap.appendChild(izoh);
-      go.textContent = al("trTake");
-      go.onclick = function () {
-        go.disabled = true;
-        walApi("ticket", null, function (res) {
-          go.disabled = false;
-          if (!(res && res.ok)) { return; }
-          onbStep("ticket");
-          renderWorldBtn();
-          trRun();
-        });
-      };
-    }
-    wrap.appendChild(go);
-    stage.appendChild(wrap);
-  }
-
-  // Devorga yurish: ekranni bug' qoplaydi, ortidan poyezd yo'li
-  function trRun() {
-    trStop();
-    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("medium"); } } catch (e) {}
-    var fog = $("tr-fog");
-    fog.classList.add("on");
-    trTimer = setTimeout(function () {
-      $("tr-kick").textContent = al("trSignSub");
-      $("tr-title").textContent = al("trRideT");
-      trRide(0);
-      setTimeout(function () { fog.classList.remove("on"); }, 150);
-    }, 480);
-  }
-
-  function trRide(i) {
-    trStop();
-    if ($("scr-train").classList.contains("hidden")) { return; }
+    TR_IMG.forEach(function (u) { try { (new Image()).src = u; } catch (e) {} });
     var lines = TR_LINES[lang] || TR_LINES.uz;
-    if (i >= lines.length) { jrSet(TRAIN_KEY); onbStep("train"); trEnd(); return; }
-    var stage = $("tr-stage");
-    stage.innerHTML = "";
-    var ride = jrEl("div", "tr-ride");
-    for (var p = 0; p < 5; p++) {
-      var puff = jrEl("i", "tr-puff");
-      puff.style.left = (12 + p * 19) + "%";
-      puff.style.animationDelay = (-p * 1.4 - i * 0.7) + "s";
-      ride.appendChild(puff);
-    }
-    ride.appendChild(jrEl("p", "tr-line", lines[i]));
-    var dots = jrEl("div", "tr-dots");
-    for (var k = 0; k < lines.length; k++) { dots.appendChild(jrEl("i", k <= i ? "on" : "")); }
-    ride.appendChild(dots);
-    ride.appendChild(jrEl("span", "tr-hint", al("trHint")));
-    ride.onclick = function () { trRide(i + 1); };
-    stage.appendChild(ride);
-    trTimer = setTimeout(function () { trRide(i + 1); }, readMs(lines[i]) + 1200);
-  }
+    var bilet = walHas("ticket");
 
-  function trEnd() {
-    $("tr-kick").textContent = al("s3p");
-    $("tr-title").textContent = al("s3t");
-    var stage = $("tr-stage");
-    stage.innerHTML = "";
-    var end = jrEl("div", "tr-end");
-    var hat = jrEl("div", "tr-hat");
-    paintHatSmall(hat);
-    end.appendChild(hat);
-    end.appendChild(jrEl("h2", "tr-h", al("arrT")));
-    end.appendChild(jrEl("p", "tr-note", al("arrS")));
-    var go = jrEl("button", "tr-go", al("ltBack"));
-    go.type = "button";
-    go.onclick = jrHome;
-    end.appendChild(go);
-    stage.appendChild(end);
-    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+    // 1) Kings Kross: bilet alohida ekran emas - Xagrid uni shu yerda beradi
+    trPanel(0, bilet ? al("trP1") : al("tkSay"));
+    trBtn(bilet ? al("trGo") : al("trTake"), function (b) {
+      if (bilet) { poyezd(); return; }
+      b.disabled = true;
+      walApi("ticket", null, function (res) {
+        b.disabled = false;
+        if (!(res && res.ok)) { return; }
+        onbStep("ticket");
+        renderWorldBtn();
+        poyezd();
+      });
+    }, bilet ? al("trP2") : al("trP1"));
+
+    // 2) Devor ortida - qirmizi paravoz
+    function poyezd() {
+      trClear();
+      trPanel(1, lines[0] + " " + lines[1]);
+      trBtn(al("trBoard"), kupe);
+    }
+    // 3) Kupe: deraza ortida tog'lar, shirinlik aravachasi
+    function kupe() {
+      trClear();
+      trPanel(2, lines[2]);
+      trBtn(al("trOn"), kol);
+    }
+    // 4) Qora ko'l va qayiqlar
+    function kol() {
+      trClear();
+      trPanel(3, lines[3] + " " + lines[4]);
+      trBtn(al("trIn"), zal);
+    }
+    // 5) Katta zal: yo'l shu yerda tugaydi, saralanish - maktubdagi keyingi qadam
+    function zal() {
+      trClear();
+      jrSet(TRAIN_KEY);
+      onbStep("train");
+      $("tr-kick").textContent = al("s3p");
+      $("tr-title").textContent = al("s3t");
+      trPanel(4, lines[5]);
+      trBtn(al("ltBack"), jrHome, al("arrS"));
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+    }
   }
 
   // ---------------------------------------------------------------- 9¾ eshigi
