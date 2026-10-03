@@ -12,7 +12,7 @@
       colors: ["#ae0001", "#d3a625"],
       uz: {
         traits: "Jasorat · matonat · olijanoblik", symbol: "Sher", element: "Olov", colors: "Qizil va oltin",
-        founder: ["Godrik Grifindor", "Jasur duelchi. Uning qilichi haqiqiy grifindorlikka kerak bo'lganda Saralovchi shlyapadan chiqadi."],
+        founder: ["Godrik Grifindor", "Jasur duelchi. Uning qilichi haqiqiy grifindorlikka kerak bo'lganda Saralovchi qalpoqdan chiqadi."],
         head: ["Minerva Makgonagall", "Transfiguratsiya ustozi, maktab direktorining o'rinbosari."],
         ghost: ["Deyarli Boshsiz Nik", "Ser Nikolas de Mimsi-Porpington — boshi oxirigacha kesilmay qolgan."],
         captain: ["Oliver Vud", "1–3-kitoblarda. Keyin Anjelina Jonson (5) va Garri Potter (6)."],

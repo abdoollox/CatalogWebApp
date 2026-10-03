@@ -461,7 +461,7 @@
                "Wait — it will work when it is time"] } }
   ];
 
-  // Saralovchi shlyapa nutqi. Har joyda bir nechta variant — tasodifiy tanlanadi.
+  // Saralovchi qalpoq nutqi. Har joyda bir nechta variant — tasodifiy tanlanadi.
   var HAT = {
     uz: {
       introTop: "Meni boshingizga qo'ying.",
@@ -579,8 +579,8 @@
           profKicker:"Profil", profTitle:"Sehrgar", back:"Ortga",
           stats:"Tillar bo'yicha", total:"Jami ko'rilgan",
           houseLbl:"Fakultet", houseNote:"Saralanish testidan o'ting va fakultetingizni biling",
-          cardTitle:"Saralovchi shlyapa sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi shlyapa qaroriga ko'ra",
-          sortCta:"Saralanish", resort:"Qayta saralanish", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi shlyapa qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
+          cardTitle:"Saralovchi qalpoq sizni kutmoqda", cardSub:"8 ta savol — va fakultetingizni bilib olasiz", houseSet:"Saralovchi qalpoq qaroriga ko'ra",
+          sortCta:"Saralanish", resort:"Qayta saralanish", step:function(a,b){return a+" / "+b;}, rvKicker:"Saralovchi qalpoq qaror qildi", rvDone:"Profilga o'tish", sortExit:"Chiqish",
           wandLbl:"Tayoqcha", wandNone:"Hali tanlanmagan", wandNote:"Ollivander do'koni sizni kutmoqda", wandCta:"Tayoqcha tanlash", wandAgain:"Qayta tanlash", wandAskAgain:"Tayoqchangiz o'zgarishi mumkin. Davom etasizmi?", wandKicker:"Ollivander tanladi", inch:"dyuym",
           ckHouse:"Fakultet", ckWand:"Tayoqcha", ckPatronus:"Patronus", wandMore:"Batafsil", detKicker:"Sizning tayoqchangiz", hWood:"Yog'och nima deydi", hCore:"O'zak nima deydi", hRare:"Kamyoblik", rareCore:"Shunday o'zak", rarePair:"Shunday tayoqcha", famousLbl:"Xuddi shunday tayoqcha",
           cupKicker:"Haftalik musobaqa", cupTitle:"Xogvarts kubogi", cupBack:"Ortga",

@@ -891,22 +891,22 @@ function mapCols(header){
 }
 
 /* ───────── Sehrli yo'l (onboarding) ─────────
-   Ilovadagi tartib bilan bir xil: xat -> Diagon xiyoboni -> Gringotts ->
-   Olivander -> Xagrid bileti -> 9¾ platforma -> Katta zal. Xiyobon, Gringotts,
-   bilet va poyezd "onb_*" bo'lib yoziladi (23-sentabrdan), tayoqcha, saralash
-   boshlanishi va fakultet esa avvaldan bor yozuvlar. */
+   Ilovadagi tartib bilan bir xil (2026-10-03 dan komiks yo'l): xat -> Gringotts
+   (alley = bankka kirdi, gringotts = xonani ochib galleon oldi) -> Olivander (wand) ->
+   9¾ platforma (ticket = biletni oldi, train = Katta zalga yetdi) -> saralash (sortst = umrbod
+   tasdig'ini bosdi, house = qalpoq qarorini eshitdi). Yozuv nomlari o'zgarmagan - faqat ma'nosi. */
 var YOL = [
   {k:"letter",    n:"Xatni ochdi",          ic:"✉️", c:"#3987e5"},
-  {k:"alley",     n:"Xiyobonga kirdi",      ic:"🧱", c:"#3987e5"},
-  {k:"gringotts", n:"Gringottsda xona",     ic:"🏦", c:"#3987e5"},
+  {k:"alley",     n:"Gringottsga kirdi",    ic:"🏦", c:"#3987e5"},
+  {k:"gringotts", n:"Galleon oldi",         ic:"🪙", c:"#3987e5"},
   {k:"wand",      n:"Tayoqcha oldi",        ic:"🪄", c:"#c98500"},
-  {k:"ticket",    n:"Bilet oldi",           ic:"🎫", c:"#c98500"},
-  {k:"train",     n:"Poyezdga chiqdi",      ic:"🚂", c:"#c98500"},
+  {k:"ticket",    n:"Platformada bilet",    ic:"🎫", c:"#c98500"},
+  {k:"train",     n:"Katta zalga yetdi",    ic:"🚂", c:"#c98500"},
   {k:"sortst",    n:"Saralanish boshlandi", ic:"🎩", c:"#199e70"},
   {k:"house",     n:"Fakultetga tushdi",    ic:"🏰", c:"#199e70"}
 ];
-var YOL_LAB = {letter:"Xatni ochdi", alley:"Diagon xiyoboniga kirdi", gringotts:"Gringottsda xona ochdi",
-               ticket:"Xagriddan bilet oldi", train:"Poyezdda Xogvartsga yetdi"};
+var YOL_LAB = {letter:"Xatni ochdi", alley:"Gringottsga kirdi", gringotts:"Gringottsda galleon oldi",
+               ticket:"9¾ platformada bilet oldi", train:"Poyezdda Katta zalga yetdi"};
 
 // Hodisa yo'lning qaysi qadami (yo'q bo'lsa null)
 function yolQadam(e){
@@ -2798,7 +2798,7 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
-  "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Diagon xiyoboni, Gringotts, Olivander, Xagrid bileti, 9¾ platforma va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
+  "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Gringotts (kirish va galleon olish), Olivander, 9¾ platforma (bilet va poyezd) va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
   "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
   "Qayerda to'xtab qolishdi": "Shu davrda xatni ochib, hali fakultetga tushmaganlar — oxirgi bajargan qadami bo'yicha. Eng uzun chiziq — eng ko'p odam yo'qolayotgan joy. Yaqinda boshlaganlar hali davom etishi mumkin.",
   "Yo'lda qolganlar": "Yo'lni tugatmaganlar ro'yxati: qaysi qadamda to'xtagani, oxirgi qadamni qachon qilgani va shundan beri qancha vaqt o'tgani. Eng yangisi yuqorida. Ismni bosib, odamning butun tarixini ochasiz.",

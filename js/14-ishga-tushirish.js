@@ -119,7 +119,7 @@
     $("hat-go").addEventListener("click", confirmSorting);
     $("sort-back").addEventListener("click", sortBack);
     $("rv-done").addEventListener("click", closeReveal);
-    // Ogohlantirish shlyapa ekranidagi confirmSorting() da beriladi.
+    // Ogohlantirish qalpoq ekranidagi confirmSorting() da beriladi.
     // Bu yerda ikkinchi oyna ko'rsatilmaydi - u lockAsk ga zid edi.
     $("resort-btn").addEventListener("click", startSorting);
 
