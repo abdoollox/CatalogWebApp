@@ -16,6 +16,7 @@
 
   // Ekran ustida ochiladigan panellar - avval ular yopiladi.
   var BACK_PANELS = [
+    ["hpask", "hpask-no"],
     ["chess-promo", function () { closePromo(); }],
     ["lt", "lt-later"],
     ["chat-people", "chat-people-back"],

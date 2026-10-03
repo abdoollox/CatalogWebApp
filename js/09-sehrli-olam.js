@@ -478,15 +478,28 @@
                en: "Wipe the test student completely? It starts again as a newcomer." }
   };
 
+  // Tasdiqlash oynasi - o'zimizning uslubda (egasi Telegram oynasini yoqtirmadi, 2026-10-03).
+  // Matnning birinchi xatboshisi - sarlavha, qolgani - izoh.
+  var ASK_TX = { uz: ["Ha", "Yo'q"], ru: ["Да", "Нет"], en: ["Yes", "No"] };
   function testAsk(msg, done) {
-    // Eski Telegram'da showConfirm xato tashlaydi - o'shanda oddiy confirm
-    if (tg && tg.showConfirm) {
-      try {
-        tg.showConfirm(msg, function (ok) { if (ok) { done(); } });
-        return;
-      } catch (e) {}
-    }
-    if (!window.confirm || window.confirm(msg)) { done(); }
+    var box = $("hpask");
+    if (!box) { if (!window.confirm || window.confirm(msg)) { done(); } return; }
+    var bolak = String(msg || "").split("\n\n"), t = ASK_TX[lang] || ASK_TX.uz;
+    // Bitta xatboshi bo'lsa - birinchi savol sarlavha, davomi izoh
+    var sv = bolak[0].indexOf("? ");
+    if (bolak.length === 1 && sv > 0) { bolak = [bolak[0].slice(0, sv + 1), bolak[0].slice(sv + 2)]; }
+    $("hpask-ic").innerHTML = hubSvg("M12 8.2v5.1 M12 16.6v.2 M12 3.2l9.3 16.3H2.7z");
+    $("hpask-t").textContent = bolak[0];
+    $("hpask-p").textContent = bolak.slice(1).join("\n\n");
+    $("hpask-p").classList.toggle("hidden", bolak.length < 2);
+    $("hpask-ok").textContent = t[0];
+    $("hpask-no").textContent = t[1];
+    function yop() { box.classList.add("hidden"); }
+    $("hpask-ok").onclick = function () { yop(); done(); };
+    $("hpask-no").onclick = yop;
+    box.onclick = function (ev) { if (ev.target === box) { yop(); } };
+    box.classList.remove("hidden");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
   }
 
   function testTx(k) { return (TEST_TX[k] && (TEST_TX[k][lang] || TEST_TX[k].uz)) || ""; }

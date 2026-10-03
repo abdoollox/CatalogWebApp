@@ -1476,6 +1476,28 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:rgba(255,255,255,.06);
   color:var(--text);font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer;
 }
+/* --- Tasdiqlash oynasi (Telegram oynasi o'rniga) --- */
+.hpask{position:fixed;inset:0;z-index:2500;display:grid;place-items:center;padding:24px;background:rgba(6,8,11,.72);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:hpaskFon .18s ease both}
+@keyframes hpaskFon{from{opacity:0}to{opacity:1}}
+.hpask-box{
+  width:100%;max-width:340px;box-sizing:border-box;padding:24px 20px 18px;border-radius:22px;text-align:center;
+  border:1px solid rgba(var(--gold-rgb),.38);
+  background:radial-gradient(120% 90% at 50% 0%,rgba(var(--gold-rgb),.12),transparent 65%),#12161d;
+  box-shadow:0 30px 70px rgba(0,0,0,.6);animation:hpaskKir .22s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes hpaskKir{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.hpask-ic{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 12px;border-radius:50%;
+  color:var(--gold);background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.3)}
+.hpask-ic svg{width:22px;height:22px}
+.hpask-t{display:block;font:400 23px/1.2 'Cormorant Garamond',serif;color:var(--text)}
+.hpask-p{margin:9px 0 0;font:500 13px/1.5 'Manrope',sans-serif;color:var(--dim);white-space:pre-line}
+.hpask-act{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.hpask-act button{height:46px;border-radius:23px;cursor:pointer;font:700 13.5px/1 'Manrope',sans-serif;letter-spacing:.03em}
+.hpask-no{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text)}
+.hpask-ok{border:0;background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink)}
+.hpask-act button:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){.hpask,.hpask-box{animation:none}}
 /* --- DIAGON XIYOBONI: saralanmagan o'quvchining Xogvartsga yo'li --- */
 #scr-alley,#scr-train{position:relative}
 .al-glow{margin:-22px -18px 0;padding:22px 18px 2px;background:radial-gradient(120% 75% at 50% 0%,rgba(214,120,60,.17),transparent 70%)}
