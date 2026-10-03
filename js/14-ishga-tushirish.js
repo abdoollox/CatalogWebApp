@@ -182,6 +182,8 @@
       $("hall-back-txt").textContent = T[lang].cupBack;
       $("feed-back-txt").textContent = T[lang].cupBack;
       jrRecheck();
+      // Kubok kelgach ball ma'lum bo'ladi - xat kartasi shunga qarab chiqadi (filmOlgan)
+      try { renderWorldBtn(); } catch (e) {}
       fetchTasks(function() {
         renderTasksStrip();
       });

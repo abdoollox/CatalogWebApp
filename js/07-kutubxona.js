@@ -106,12 +106,9 @@
     $("srl-done").textContent = x.done;
     $("srl-mk").textContent = x.date;
     if (srlMini === null) {
-      // Birinchi kirish: katta karta. Belgi darhol qo'yiladi — shu seansda karta
-      // katta qoladi, keyingi kirishda esa ixcham qator bo'lib chiqadi.
-      var seen = false;
-      try { seen = window.localStorage.getItem(TK("hp_srl_seen")) === "1"; } catch (e) {}
-      try { window.localStorage.setItem(TK("hp_srl_seen"), "1"); } catch (e) {}
-      srlSetMini(seen);
+      // Har doim ixcham qator bo'lib ochiladi (egasi, 2026-10-03: yangi odamga katta karta
+      // shovqin). Qiziqqan odam bosib o'zi ochadi.
+      srlSetMini(true);
       box.addEventListener("click", function () { srlSetMini(!srlMini); });
     }
     box.classList.remove("hidden");
@@ -171,10 +168,17 @@
     try { return window.localStorage.getItem(TK("hp_hogc_off")) === "1"; } catch (e) { return false; }
   }
 
+  // Kamida bitta film olganmi: ilovadagi belgi yoki botdan film ochib to'plangan ball.
+  // Hali film olmagan yangi odamga Xogvarts xati ko'rsatilmaydi (avval kutubxona bilan tanishsin).
+  function filmOlgan() {
+    for (var k in watched) { if (watched[k]) { return true; } }
+    try { return (cupMe().points || 0) > 0; } catch (e) { return false; }
+  }
+
   function renderHogCard(stage) {
     var c = $("hogc");
     if (!c) { return; }
-    var yoq = stage === "world" || hogcYopiq();
+    var yoq = stage === "world" || hogcYopiq() || (stage === "new" && !filmOlgan());
     c.classList.toggle("hidden", yoq);
     if (yoq) { return; }
     var t = HOGC_TX[stage][lang] || HOGC_TX[stage].uz;

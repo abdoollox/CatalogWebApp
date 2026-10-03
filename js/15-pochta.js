@@ -228,7 +228,8 @@
       var b = $(id);
       if (!b) { return; }
       // Xogvarts maktubi ochilmagan bo'lsa - u ham o'qilmagan xat (faqat kutubxonadagi belgida)
-      var n = n0 + (id === "owl-cat" && hog === "new" ? 1 : 0) + (owlEsdYangi() ? 1 : 0);
+      // Hali film olmagan odamda maktub belgisi ham chiqmaydi (maktub pochta ichida turadi)
+      var n = n0 + (id === "owl-cat" && hog === "new" && filmOlgan() ? 1 : 0) + (owlEsdYangi() ? 1 : 0);
       b.classList.toggle("owl-yol", id === "owl-cat" && hog === "letter");
       var dot = b.querySelector(".owl-n");
       // Ilova ishga tushayotganda (owlInit hali belgini chizmagan) - o'tkazib yuboramiz.
@@ -447,7 +448,7 @@
     $("owl-back").innerHTML = hubSvg("M15 18l-6-6 6-6");
     $("owl-cat").addEventListener("click", function () {
       // Birinchi marta: boyo'g'li Xogvarts maktubini to'g'ridan-to'g'ri olib keladi
-      if (owlHog() === "new" && !(owlData && owlData.unread)) { goWorld(); return; }
+      if (owlHog() === "new" && filmOlgan() && !(owlData && owlData.unread)) { goWorld(); return; }
       openOwl();
     });
     $("hub-owl").addEventListener("click", openOwl);
