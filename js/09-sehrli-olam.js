@@ -320,18 +320,15 @@
             ru: "Гоблин осмотрел ваш ключ и кивнул: «Тележка подана».",
             en: "The goblin examined your key and nodded: \u201cThe cart is ready.\u201d" },
     grGo: { uz: "Aravachaga o'tirish", ru: "Сесть в тележку", en: "Get into the cart" },
-    grRide: { uz: ["Aravacha zulmatga sho'ng'idi.",
-                   "Tosh yo'laklar, stalaktitlar va yer ostidagi ko'l yonidan o'tdingiz.",
-                   "Qayerdadir olovli nafas eshitildi — pastda ajdaho qo'riqlaydi.",
-                   "Aravacha keskin to'xtadi: 687-xona."],
-              ru: ["Тележка нырнула во тьму.",
-                   "Каменные тоннели, сталактиты и подземное озеро промелькнули мимо.",
-                   "Где-то внизу послышалось огненное дыхание — там сторожит дракон.",
-                   "Тележка резко остановилась: сейф 687."],
-              en: ["The cart plunged into the dark.",
-                   "Stone tunnels, stalactites and an underground lake rushed past.",
-                   "Somewhere below came a fiery breath \u2014 a dragon stands guard.",
-                   "The cart stopped sharply: vault 687."] },
+    grP2: { uz: "Aravacha zulmatga sho'ng'idi. Tosh ko'priklar, stalaktitlar, yer ostidagi ko'l… Eng pastda esa ajdaho qo'riqlaydi.",
+            ru: "Тележка нырнула во тьму. Каменные мосты, сталактиты, подземное озеро… А в самой глубине сторожит дракон.",
+            en: "The cart plunged into the dark. Stone bridges, stalactites, an underground lake\u2026 And far below, a dragon stands guard." },
+    grGo2: { uz: "687-xonagacha tushish", ru: "Спуститься к сейфу 687", en: "Ride down to vault 687" },
+    grP3: { uz: "Aravacha keskin to'xtadi: 687-xona. Goblin oltin kalitni qulfga yaqinlashtirdi.",
+            ru: "Тележка резко остановилась: сейф 687. Гоблин поднёс золотой ключ к замку.",
+            en: "The cart stopped sharply: vault 687. The goblin raised the golden key to the lock." },
+    grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
+              en: "A wand at Ollivanders costs {n} Galleons." },
     grOpen: { uz: "Xonani ochish", ru: "Открыть сейф", en: "Open the vault" },
     grGot: { uz: "galleon", ru: "галлеонов", en: "Galleons" },
     grDone: { uz: "Xogvarts sizga ajratgan galleonlar. Xaridlarga yetadi.",
@@ -960,10 +957,13 @@
 
   function walLoad(done) { walApi("get", null, function () { done && done(); }); }
 
-  /* ---------- Gringotts: aravachada yer ostiga ---------- */
+  /* ---------- Gringotts: komiks kabi - rasmli sahnalar birin-ketin ochiladi ---------- */
+  // Har sahna odam tugmani bosganda ochiladi, oldingilari tepada qoladi (egasi, 2026-10-03:
+  // "komiks o'qigandek mazza qilsin"). Rasmlar img/yol/gr1..4.jpg - dizayn tizimidagi uslubda.
   var grTimer = null;
+  var GR_IMG = ["img/yol/gr1.jpg", "img/yol/gr2.jpg", "img/yol/gr3.jpg", "img/yol/gr4.jpg"];
 
-  function grStop() { if (grTimer) { clearTimeout(grTimer); grTimer = null; } }
+  function grStop() { if (grTimer) { clearInterval(grTimer); grTimer = null; } }
 
   function openVault() {
     grStop();
@@ -973,103 +973,91 @@
     $("gr-kick").textContent = al("grKick");
     $("gr-title").textContent = al("grTitle");
     try { window.scrollTo(0, 0); } catch (e) {}
+    var st = $("gr-stage");
+    st.className = "grk";
+    st.innerHTML = "";
     if (walHas("vault")) { grVault(false); return; }
-    grIntro();
+    GR_IMG.forEach(function (u) { var im = new Image(); im.src = u; });
+    grPanel(0, al("grP1"));
+    grBtn(al("grGo"), function () {
+      grPanel(1, al("grP2"));
+      grBtn(al("grGo2"), function () {
+        grPanel(2, al("grP3"));
+        grBtn(al("grOpen"), function (b) {
+          b.disabled = true;
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+          walApi("vault", null, function () {
+            onbStep("gringotts");
+            grVault(true);
+          });
+        }, true);
+      });
+    });
   }
 
-  function grIntro() {
+  // Bitta sahna: rasm + ostidagi hikoya yozuvi
+  function grPanel(i, text) {
     var st = $("gr-stage");
-    st.className = "gr-center";
-    st.innerHTML = "";
-    st.appendChild(jrEl("p", "tr-p", al("grP1")));
-    var b = jrEl("button", "tr-go", al("grGo"));
-    b.type = "button";
-    b.onclick = grRide;
-    st.appendChild(b);
-  }
-
-  // Tunnel: yorug'liklar yuqoridan pastga uchadi (rAF emas - CSS animatsiya)
-  function grSparks(box) {
-    var t = jrEl("div", "gr-tunnel");
-    for (var i = 0; i < 26; i++) {
-      var sp = jrEl("span", "gr-spark");
-      sp.style.left = Math.round(Math.random() * 100) + "%";
-      sp.style.animationDuration = (0.5 + Math.random() * 0.7).toFixed(2) + "s";
-      sp.style.animationDelay = (Math.random() * 0.9).toFixed(2) + "s";
-      t.appendChild(sp);
+    var f = jrEl("figure", "grk-p" + (i % 2 ? " grk-r" : ""));
+    var im = document.createElement("img");
+    im.src = GR_IMG[i];
+    im.alt = "";
+    f.appendChild(im);
+    f.appendChild(jrEl("span", "grk-n", String(i + 1)));
+    var c = jrEl("figcaption", "grk-c", text);
+    f.appendChild(c);
+    st.appendChild(f);
+    if (st.children.length > 1) {
+      setTimeout(function () {
+        try { f.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+      }, 60);
     }
-    box.appendChild(t);
-    setTimeout(function () { t.classList.add("on"); }, 20);
-    return t;
+    return c;
   }
 
-  function grRide() {
+  // Sahna ostidagi tugma: bosilganda o'zi yo'qoladi va keyingi sahna ochiladi
+  function grBtn(text, fn, qolsin) {
     var st = $("gr-stage");
-    st.className = "gr-ride";
-    st.innerHTML = "";
-    grSparks(st);
-    var lines = al("grRide") || [];
-    var line = jrEl("p", "gr-line", lines[0] || "");
-    st.appendChild(line);
-    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("medium"); } } catch (e) {}
-
-    var i = 0;
-    function next() {
-      i++;
-      if (i >= lines.length) { grDoor(); return; }
-      line.textContent = lines[i];
-      line.style.animation = "none";
-      try { void line.offsetWidth; } catch (e) {}
-      line.style.animation = "";
-      grTimer = setTimeout(next, 1700);
-    }
-    grTimer = setTimeout(next, 1700);
-    st.onclick = function () { grStop(); next(); };
-  }
-
-  function grDoor() {
-    grStop();
-    var st = $("gr-stage");
-    st.onclick = null;
-    st.className = "gr-center";
-    st.innerHTML = "";
-    var door = jrEl("div", "gr-door");
-    door.innerHTML = alIcon("bank");
-    var coins = jrEl("div", "gr-coins");
-    for (var i = 0; i < 14; i++) {
-      var c = jrEl("span", "gr-coin");
-      c.style.left = (12 + Math.random() * 70) + "%";
-      c.style.top = (18 + Math.random() * 62) + "%";
-      coins.appendChild(c);
-    }
-    door.appendChild(coins);
-    st.appendChild(door);
-    var b = jrEl("button", "tr-go", al("grOpen"));
+    var b = jrEl("button", "tr-go grk-go", text);
     b.type = "button";
     b.onclick = function () {
-      b.disabled = true;
-      door.classList.add("open");
-      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
-      walApi("vault", null, function () {
-        onbStep("gringotts");
-        setTimeout(function () { grVault(true); }, 700);
-      });
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+      if (!qolsin) { st.removeChild(b); }
+      fn(b);
     };
     st.appendChild(b);
+    return b;
   }
 
-  // Xona ochilgandan keyingi ko'rinish (qayta kirganda ham shu)
+  // Oxirgi sahna: ochiq xona va galleonlar (qayta kirganda faqat shu ko'rinadi)
   function grVault(yangi) {
+    grStop();
     var st = $("gr-stage");
-    st.className = "gr-center";
-    st.innerHTML = "";
-    var sum = jrEl("div", "gr-sum", String(walSum()));
+    var eski = st.querySelector(".grk-go");
+    if (eski) { st.removeChild(eski); }
+    var c = grPanel(3, "");
+    var jami = walSum();
+    var sum = jrEl("div", "gr-sum", yangi ? "0" : String(jami));
+    var num = sum.firstChild;
     sum.appendChild(jrEl("small", "", al("grGot")));
-    st.appendChild(sum);
-    st.appendChild(jrEl("p", "tr-note", al("grDone")));
+    c.appendChild(sum);
+    c.appendChild(jrEl("span", "grk-t", al("grDone")));
+    if (yangi && jami > 0) {
+      // Tangalar sanaladi: 0 dan jamigacha
+      var n = 0;
+      grTimer = setInterval(function () {
+        n++;
+        num.nodeValue = String(n);
+        if (n >= jami) { grStop(); }
+      }, Math.max(30, Math.round(1300 / jami)));
+    }
+    var narx = wal && wal.prices && wal.prices.wand;
+    if (narx && !jrWandNow()) {
+      st.appendChild(jrEl("p", "tr-note grk-note", al("grWand").replace("{n}", narx)));
+    }
     // Ish bitdi - maktubdagi ro'yxatga qaytiladi, odam u yerdan o'zi davom etadi
     // (egasi, 2026-10-03: uzluksiz o'tish shoshirib qo'ydi).
-    var b = jrEl("button", "tr-go", al("ltBack"));
+    var b = jrEl("button", "tr-go grk-go", al("ltBack"));
     b.type = "button";
     b.onclick = jrHome;
     st.appendChild(b);

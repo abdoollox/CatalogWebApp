@@ -1636,32 +1636,22 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;
 }
 
-/* --- Gringotts: aravachada tushish --- */
-.gr-ride{position:relative;display:grid;place-items:center;min-height:62vh;padding:0 16px 40px;text-align:center;overflow:hidden}
-.gr-tunnel{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s}
-.gr-tunnel.on{opacity:1}
-.gr-spark{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.85;
-  animation:grFly linear infinite}
-@keyframes grFly{from{transform:translate3d(0,-20vh,0) scale(.6);opacity:0}
-  12%{opacity:.9}to{transform:translate3d(0,110vh,0) scale(1.6);opacity:0}}
-.gr-line{max-width:330px;margin:0;font:italic 500 24px/1.4 'Cormorant Garamond',serif;color:var(--text);animation:riseIn .6s ease both}
-.gr-center{text-align:center;padding-top:4px}
-.gr-door{
-  width:190px;height:190px;margin:10px auto 22px;border-radius:14px;position:relative;
-  background:linear-gradient(160deg,#2a2d36,#15171d);border:2px solid rgba(var(--gold-rgb),.6);
-  box-shadow:0 20px 44px rgba(0,0,0,.55),inset 0 0 40px rgba(0,0,0,.6);
-  display:grid;place-items:center;overflow:hidden;
-}
-.gr-door svg{width:88px;height:88px;color:var(--gold);opacity:.92}
-.gr-door.open svg{animation:grOpen .9s cubic-bezier(.2,.8,.2,1) both}
-@keyframes grOpen{to{transform:scale(1.35);opacity:0}}
-.gr-coins{position:absolute;inset:0;display:none;place-items:center}
-.gr-door.open .gr-coins{display:grid;animation:riseIn .7s .35s ease both}
-.gr-coin{
-  position:absolute;width:20px;height:20px;border-radius:50%;
-  background:radial-gradient(circle at 34% 30%,#f8dd92,#b9862a 74%);
-  box-shadow:0 2px 5px rgba(0,0,0,.5);
-}
+/* --- Gringotts: komiks sahnalari (grk-) --- */
+.grk{padding:2px 16px 44px;text-align:center}
+.grk-p{position:relative;margin:0 auto 26px;max-width:460px;animation:riseIn .5s ease both}
+.grk-p img{display:block;width:100%;aspect-ratio:1024/572;object-fit:cover;border-radius:14px;background:#15171d;
+  border:2px solid #0b0c10;box-shadow:0 0 0 1px rgba(var(--gold-rgb),.45),0 16px 34px rgba(0,0,0,.55)}
+.grk-n{position:absolute;left:-6px;top:-8px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--gold);color:var(--gold-ink);font:800 12px/1 'Manrope',sans-serif;border:2px solid #0b0c10}
+.grk-c{position:relative;margin:-18px 14px 0 26px;padding:11px 14px 12px;text-align:left;border-radius:4px 12px 12px 12px;
+  background:#15171d;border:1px solid rgba(var(--gold-rgb),.35);box-shadow:0 8px 20px rgba(0,0,0,.5);
+  font:italic 500 17px/1.4 'Cormorant Garamond',serif;color:var(--text)}
+.grk-r .grk-c{margin:-18px 26px 0 14px;border-radius:12px 4px 12px 12px}
+.grk-r .grk-n{left:auto;right:-6px}
+.grk-c .gr-sum{text-align:center;margin:2px 0 8px}
+.grk-t{display:block;text-align:center}
+.grk-go{margin-top:2px}
+.grk-note{margin:0 auto 18px}
 .gr-sum{font:700 46px/1 'Cormorant Garamond',serif;color:var(--gold);text-shadow:0 2px 14px rgba(var(--gold-rgb),.45)}
 .gr-sum small{display:block;margin-top:6px;font:700 11px/1 'Manrope',sans-serif;letter-spacing:.2em;color:var(--dim)}
 
