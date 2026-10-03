@@ -26,6 +26,8 @@
       empty: "Hozircha xat yo'q. Boyo'g'lilar yangi xat bilan qaytadi.",
       hogT: "Xogvartsdan maktub", hogS: "Siz Xogvarts sehrgarlik maktabiga qabul qilindingiz. Yo'l Diagon xiyobonidan boshlanadi.",
       hogNew: "Xatni ochish",
+      hogOldS: "Sizni Xogvartsga chaqirgan o'sha maktub. Uni saqlab qo'ydik — do'stlaringizga ham ko'rsating.",
+      hogOld: "Maktubni ochish",
       cta: "Yo'lni davom ettirish", done: "Bajarildi", again: "Xogvarts sizni unutgani yo'q.",
       setT: "Telegram'da ham eslatilsin", setS: "Ilovaga kirmasangiz, boyo'g'li bot orqali xabar beradi",
       today: "bugun", yest: "kecha", ago: "%s kun oldin",
@@ -53,6 +55,8 @@
       empty: "Писем пока нет. Совы вернутся с новыми.",
       hogT: "Письмо из Хогвартса", hogS: "Вы приняты в Школу чародейства и волшебства Хогвартс. Путь начинается в Косом переулке.",
       hogNew: "Открыть письмо",
+      hogOldS: "То самое письмо, которое позвало вас в Хогвартс. Мы его сохранили — покажите друзьям.",
+      hogOld: "Открыть письмо",
       cta: "Продолжить путь", done: "Выполнено", again: "Хогвартс вас не забыл.",
       setT: "Напоминать и в Telegram", setS: "Если вы не заходите в приложение, сова напишет через бота",
       today: "сегодня", yest: "вчера", ago: "%s дн. назад",
@@ -80,6 +84,8 @@
       empty: "No letters yet. The owls will be back with new ones.",
       hogT: "A letter from Hogwarts", hogS: "You have been accepted to Hogwarts School of Witchcraft and Wizardry. The journey starts in Diagon Alley.",
       hogNew: "Open the letter",
+      hogOldS: "The very letter that called you to Hogwarts. We kept it for you — show it to your friends.",
+      hogOld: "Open the letter",
       cta: "Continue the journey", done: "Done", again: "Hogwarts hasn't forgotten you.",
       setT: "Also remind me in Telegram", setS: "If you don't open the app, an owl will write through the bot",
       today: "today", yest: "yesterday", ago: "%s days ago",
@@ -244,6 +250,25 @@
     return c;
   }
 
+  // Fakultetga tushgan odamda ham maktub pochtada turadi - esdalik, ochib ulashsa bo'ladi
+  // (egasi so'radi, 2026-10-03). Eng birinchi xat bo'lgani uchun ro'yxat oxirida.
+  function owlHogOld(t) {
+    if (owlHog() || !hasHouse()) { return null; }
+    var c = owlEl("div", "owl-card owl-hog");
+    var top = owlEl("div", "owl-top");
+    var ic = owlEl("span", "owl-ic"); ic.innerHTML = OWL_SVG;
+    top.appendChild(ic);
+    top.appendChild(owlEl("span", "owl-when", t.kick));
+    c.appendChild(top);
+    c.appendChild(owlEl("b", "owl-h", t.hogT));
+    c.appendChild(owlEl("p", "owl-p", t.hogOldS));
+    var b = owlEl("button", "owl-cta", t.hogOld);
+    b.type = "button";
+    b.addEventListener("click", function () { openLetter(true); });
+    c.appendChild(b);
+    return c;
+  }
+
   function owlRender() {
     var t = owlTx();
     $("owl-kick").textContent = t.kick;
@@ -256,9 +281,9 @@
     var box = $("owl-list");
     box.innerHTML = "";
     var items = (owlData && owlData.items) || [];
-    var hogC = owlHogCard(t);
+    var hogC = owlHogCard(t), hogO = owlHogOld(t);
     if (hogC) { box.appendChild(hogC); }
-    if (!items.length && !hogC) {
+    if (!items.length && !hogC && !hogO) {
       var em = owlEl("div", "owl-empty");
       em.innerHTML = OWL_SVG;
       em.appendChild(owlEl("p", "", t.empty));
@@ -312,6 +337,7 @@
       }
       box.appendChild(c);
     });
+    if (hogO) { box.appendChild(hogO); }
   }
 
   function openOwl() {

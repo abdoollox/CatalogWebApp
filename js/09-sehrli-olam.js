@@ -297,6 +297,7 @@
            "In the Great Hall, the Sorting Hat will name your house"]
     },
     share: { uz: "Ulashish", ru: "Поделиться", en: "Share" },
+    shareBig: { uz: "Do'stlarga ulashish", ru: "Поделиться с друзьями", en: "Share with friends" },
     shareWait: { uz: "Xat tayyorlanmoqda…", ru: "Письмо готовится…", en: "Preparing the letter…" },
     shareErr: { uz: "Xat tayyorlanmadi, birozdan keyin urinib ko'ring",
                 ru: "Письмо не подготовилось, попробуйте позже",
@@ -781,6 +782,8 @@
     $("lt-body").textContent = al("body");
     ltPath(readOnly);
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
+    // Saralangan odam uchun maktub - esdalik: asosiy tugmaning o'zi "ulashish", pastda faqat "Yopish"
+    $("lt-share").classList.toggle("hidden", !!readOnly && hasHouse());
     $("lt-sign").textContent = al("sign");
     // Qayta o'qiyotganda pastdagi tugma "Yopish" bo'ladi
     $("lt-later").textContent = readOnly ? al("close") : al("later");
@@ -872,6 +875,10 @@
     var box = $("lt-list");
     box.innerHTML = "";
     var steps = jrSteps(), next = jrNext(steps), done = 0;
+    // Esdalik: fakultetga tushgan odam maktubni qayta ochsa, yo'l bosib o'tilgan bo'ladi
+    // (yo'l paydo bo'lishidan oldin saralanganlarda ham) va tugma ulashadi.
+    var esdalik = !!readOnly && hasHouse();
+    if (esdalik) { steps.forEach(function (st) { st.done = true; st.sub = ""; }); next = null; }
 
     steps.forEach(function (st) {
       if (st.done) { done++; }
@@ -884,7 +891,7 @@
       var tx = jrEl("span", "lt-st");
       tx.appendChild(jrEl("span", "lt-st-t", st.title));
       // Qulflangan qadamlarda izoh yozilmaydi: kundalik bitta ekranga sig'sin
-      if (on || st.done) { tx.appendChild(jrEl("span", "lt-st-s", st.sub)); }
+      if ((on || st.done) && st.sub) { tx.appendChild(jrEl("span", "lt-st-s", st.sub)); }
       el.appendChild(tx);
       el.onclick = function () {
         if (on) { jrSet(LETTER_KEY); st.go(); return; }
@@ -901,7 +908,10 @@
 
     // Asosiy tugma har doim navbatdagi ishni bajaradi
     var go = $("lt-go");
-    if (!next) {
+    if (esdalik) {
+      go.textContent = al("shareBig");
+      go.onclick = ltShare;
+    } else if (!next) {
       go.textContent = al("close");
       go.onclick = closeLetter;
     } else {
