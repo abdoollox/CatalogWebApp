@@ -38,7 +38,7 @@
       cupLost: "🏆 Hafta g'olibi — %s", cupPlace: "%s %d-o'rinda: %s ball.",
       cupNone: "🏆 Hafta yakunlandi", cupNoneB: "Bu hafta g'olib aniqlanmadi.",
       cupMe: "Siz %s ball qo'shdingiz.", cupZero: "Siz bu hafta ball to'plamadingiz — yangi haftada fakultetingizga yordam bering.",
-      cupBadge: "Yangi nishon: %s", cupGo: "Kubokni ko'rish",
+      cupBadge: "Yangi nishon: %s", cupGo: "Kubokni ko'rish", cupGal: "Mukofot: +%s galleon hamyoningizga tushdi.",
       houses: { gryffindor: "Grifindor", slytherin: "Sliterin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
       badges: { all_films: "Sakkiz qism", flawless_exam: "Benuqson imtihon", perfect_week: "Mukammal hafta", streak_7: "Yetti kun ketma-ket" },
       steps: {
@@ -68,7 +68,7 @@
       cupLost: "🏆 Победитель недели — %s", cupPlace: "%s на %d-м месте: %s очков.",
       cupNone: "🏆 Неделя завершена", cupNoneB: "На этой неделе победитель не определён.",
       cupMe: "Вы принесли %s очков.", cupZero: "На этой неделе у вас нет очков — помогите факультету в новой неделе.",
-      cupBadge: "Новый значок: %s", cupGo: "Открыть кубок",
+      cupBadge: "Новый значок: %s", cupGo: "Открыть кубок", cupGal: "Награда: +%s галлеонов в ваш кошелёк.",
       houses: { gryffindor: "Гриффиндор", slytherin: "Слизерин", ravenclaw: "Когтевран", hufflepuff: "Пуффендуй" },
       badges: { all_films: "Восемь частей", flawless_exam: "Безупречный экзамен", perfect_week: "Идеальная неделя", streak_7: "Семь дней подряд" },
       steps: {
@@ -98,7 +98,7 @@
       cupLost: "🏆 House of the week — %s", cupPlace: "%s is in place %d: %s points.",
       cupNone: "🏆 The week is over", cupNoneB: "No winner this week.",
       cupMe: "You earned %s points.", cupZero: "You earned no points this week — help your house in the new one.",
-      cupBadge: "New badge: %s", cupGo: "Open the Cup",
+      cupBadge: "New badge: %s", cupGo: "Open the Cup", cupGal: "Reward: +%s Galleons added to your wallet.",
       houses: { gryffindor: "Gryffindor", slytherin: "Slytherin", ravenclaw: "Ravenclaw", hufflepuff: "Hufflepuff" },
       badges: { all_films: "All eight parts", flawless_exam: "Flawless exam", perfect_week: "Perfect week", streak_7: "Seven days in a row" },
       steps: {
@@ -128,6 +128,7 @@
     }
     q.push(d.ball ? t.cupMe.replace("%s", owlSon(d.ball)) : t.cupZero);
     (d.nish || []).forEach(function (b) { q.push("🎖 " + t.cupBadge.replace("%s", t.badges[b] || b)); });
+    if (d.gal) { q.push("🪙 " + t.cupGal.replace("%s", owlSon(d.gal))); }
     return [sar, q.join("\n")];
   }
 

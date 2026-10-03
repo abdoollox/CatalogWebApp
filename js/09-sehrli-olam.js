@@ -1630,7 +1630,7 @@
           go: function () { worldFrom = "castle"; leaveWorld(true); openTasks(); } },
         { dot: [50, 73], side: "r", top: 70, icon: "hall",
           name: { uz: "Katta zal", ru: "Большой зал", en: "Great Hall" },
-          sub: { uz: "Kubok · imtihon", ru: "Кубок · экзамен", en: "Cup · exam" },
+          sub: { uz: "Xogvarts kubogi", ru: "Кубок Хогвартса", en: "The House Cup" },
           go: function () { worldFrom = "castle"; leaveWorld(true); openCup(); } },
         { dot: [50, 89], side: "l", top: 86, icon: "chess",
           name: { uz: "Shaxmat kamerasi", ru: "Шахматный зал", en: "Chess Chamber" },

@@ -154,7 +154,7 @@
   };
   var CUP_SRC = [
     { key: "film",    color: "#3987e5" },
-    { key: "exam",    color: "#d95926" },
+    // "exam" (kino imtihoni) 2026-10-04 da olib tashlandi - kubok muvozanatini buzardi
     { key: "daily",   color: "#199e70" },
     { key: "chess",   color: "#9085e9" },
     { key: "friends", color: "#c98500" }
@@ -198,7 +198,7 @@
       srcKick: "Ballar qayerdan keldi", srcNote: "Faqat hisobga kirgan sehrgarlar (mavsumda 30+ ball) ballari.",
       tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
       prevWin: "O'tgan hafta kubogi: %s", place: "%d-o'rin", total: "Jami", none: "Bu hafta hali ball yo'q",
-      tasksT: "Vazifalar", tasksS: "Imtihon va kunlik savol", tasksNew: "%d ta yangi", tasksDone: "Bajarildi",
+      tasksT: "Vazifalar", tasksS: "Kunlik savol", tasksNew: "%d ta yangi", tasksDone: "Bajarildi",
       chatT: "Umumiy xona", chatS: "Fakultetdoshlar bilan suhbat",
       chessT: "Sehrgar shaxmati", chessS: "Botlar va do'stlar bilan jang",
       refsS: "Taklif qiling — darajangiz oshadi",
@@ -213,7 +213,7 @@
       rules: ["Mavsum — bir hafta: dushanba 00:00 dan yakshanba 23:59 gacha (Toshkent vaqti).",
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
-              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 400 ball.",
+              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 160 ball.",
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
@@ -229,7 +229,7 @@
       srcKick: "Откуда очки", srcNote: "Только очки учитываемых волшебников (30+ очков за сезон).",
       tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
       prevWin: "Кубок прошлой недели: %s", place: "%d место", total: "Всего", none: "На этой неделе очков пока нет",
-      tasksT: "Задания", tasksS: "Экзамены и вопрос дня", tasksNew: "%d новых", tasksDone: "Готово",
+      tasksT: "Задания", tasksS: "Вопрос дня", tasksNew: "%d новых", tasksDone: "Готово",
       chatT: "Гостиная", chatS: "Беседа с однокурсниками",
       chessT: "Волшебные шахматы", chessS: "Бои с ботами и друзьями",
       refsS: "Приглашайте — растёт уровень",
@@ -244,7 +244,7 @@
       rules: ["Сезон длится неделю: с понедельника 00:00 до воскресенья 23:59 (по Ташкенту).",
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
-              "У всех источников, кроме приглашений, есть лимит за сезон — всего 400 очков.",
+              "У всех источников, кроме приглашений, есть лимит за сезон — всего 160 очков.",
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
@@ -260,7 +260,7 @@
       srcKick: "Where the points come from", srcNote: "Only wizards who count (30+ points this season).",
       tapHint: "Tap a house — its founder, head, ghost and members",
       prevWin: "Last week's cup: %s", place: "#%d", total: "Total", none: "No points yet this week",
-      tasksT: "Tasks", tasksS: "Exams and daily question", tasksNew: "%d new", tasksDone: "Done",
+      tasksT: "Tasks", tasksS: "Daily question", tasksNew: "%d new", tasksDone: "Done",
       chatT: "Common room", chatS: "Chat with your housemates",
       chessT: "Wizard chess", chessS: "Duel bots and friends",
       refsS: "Invite friends and rank up",
@@ -275,7 +275,7 @@
       rules: ["A season is one week: Monday 00:00 to Sunday 23:59 (Tashkent time).",
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
-              "Every source except inviting friends has a season cap — 400 points in total.",
+              "Every source except inviting friends has a season cap — 160 points in total.",
               "Chess against a bot gives no points — only live games do."]
     }
   };
@@ -681,13 +681,13 @@
     var top = cupEl("div", "you-top");
     top.appendChild(cupEl("span", "you-lbl", t.cupYourPts));
     var val = cupEl("span", "you-val", String(me.points || 0));
-    val.appendChild(cupEl("s", "", " / " + (me.max_points || 400)));
+    val.appendChild(cupEl("s", "", " / " + (me.max_points || 160)));
     top.appendChild(val);
     box.appendChild(top);
 
-    // Chiziq manbalar bo'yicha bo'lingan (do'st bali 400 dan oshirib yuborishi mumkin)
+    // Chiziq manbalar bo'yicha bo'lingan (do'st bali chegaradan oshirib yuborishi mumkin)
     var by = me.by || {};
-    var pct = (me.points || 0) / (me.max_points || 400) * 100;
+    var pct = (me.points || 0) / (me.max_points || 160) * 100;
     box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
 
     if (!me.is_active) {
