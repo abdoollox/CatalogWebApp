@@ -61,6 +61,7 @@
   };
 
   var MS_ICON = {
+    lock: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 9V7A5 5 0 0 0 7 7v2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3M9 7a3 3 0 0 1 6 0v2H9zm4 9.7V18a1 1 0 0 1-2 0v-1.3a2 2 0 1 1 2 0"/></svg>',
     play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.8l10.3-6.8a1 1 0 0 0 0-1.6L9.6 4.4C8.9 3.9 8 4.4 8 5.2z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4.5" width="4.2" height="15" rx="1.3"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.3"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 6.2v11.6c0 .8.9 1.2 1.5.8l8.6-5.8a1 1 0 0 0 0-1.6L6.5 5.4C5.9 5 5 5.4 5 6.2z"/><rect x="16.6" y="5" width="2.6" height="14" rx="1.1"/></svg>',
@@ -125,6 +126,8 @@
         var before = JSON.stringify(msData || {});
         msData = res.albums || {};
         msKey = res.key || "";
+        if (typeof res.price === "number" && res.price > 0) { msPrice = res.price; }
+        if (typeof res.gal === "number") { msGal = res.gal; }
         try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
         if (JSON.stringify(msData) !== before) {
           var cat = $("scr-cat");
@@ -174,6 +177,15 @@
       var sum = msSum(id), pill = card.querySelector(".ms-lk");
       pill.innerHTML = sum ? MS_ICON.heart + "<span>" + msLikeNum(sum) + "</span>" : "";
       pill.classList.toggle("hidden", !sum);
+      if (msLocked(id)) {
+        // Yopiq albom: muqova ustida qulf va narx
+        card.classList.add("lock");
+        var qulf = document.createElement("span");
+        qulf.className = "ms-lock";
+        qulf.innerHTML = MS_ICON.lock + "<span></span>";
+        qulf.querySelector("span").textContent = (MS_BUY[lang] || MS_BUY.uz).chip(msPrice);
+        card.querySelector(".ms-cover").appendChild(qulf);
+      }
       card.addEventListener("click", function () { msOpenAlbum(id); });
       row.appendChild(card);
     });
@@ -217,6 +229,15 @@
     $("ms-dl").querySelector("span").textContent = x.dl;
     $("ms-dl").setAttribute("aria-label", x.dlAria);
     $("ms-hint").textContent = x.hint;
+    var yopiq = msLocked(id), bx = MS_BUY[lang] || MS_BUY.uz;
+    $("scr-album").classList.toggle("ms-yopiq", yopiq);
+    $("ms-buy").classList.toggle("hidden", !yopiq);
+    if (yopiq) {
+      $("ms-buy-b").innerHTML = MS_ICON.lock + "<span></span>";
+      $("ms-buy-b").querySelector("span").textContent = bx.bar(msPrice);
+      $("ms-buy-s").textContent = bx.have(msGal);
+      $("ms-buy-b").onclick = function () { msBuyAsk(id); };
+    }
 
     var box = $("ms-list");
     box.innerHTML = "";
@@ -267,11 +288,74 @@
     return msAudio;
   }
 
+  /* --- albomni galleonga ochish (egasi, 2026-10-04) ---
+     Birinchi albom bepul, qolganlari bir marta galleonga ochiladi (server: /api/music/buy).
+     Yopiq albomning treklar ro'yxati ko'rinadi, lekin tinglash va yuklab olish - ochilgach. */
+  var MS_BUY = {
+    uz: { chip: function (n) { return n + " galleon"; }, bar: function (n) { return "Albomni ochish · " + n + " galleon"; },
+          have: function (n) { return "Hamyoningizda " + n + " galleon"; },
+          ask: function (nom, n, bor) { return "Albom ochilsinmi?\n\n«" + nom + "» — " + n + " galleon. Sizda " + bor + " galleon bor. Albom doim ochiq qoladi."; },
+          yes: "Ochish", no: "Hozir emas", done: "Albom ochildi",
+          poor: function (n, bor) { return "Galleon yetmaydi\n\nAlbom " + n + " galleon turadi, sizda " + bor + " galleon bor. Galleon har hafta yakunida Xogvarts kubogidagi ballaringiz uchun beriladi: har 10 ballga 1 galleon, g'olib fakultetga ikki baravar."; },
+          cup: "Kubokni ko'rish", close: "Yopish" },
+    ru: { chip: function (n) { return n + " галлеонов"; }, bar: function (n) { return "Открыть альбом · " + n + " галлеонов"; },
+          have: function (n) { return "В кошельке " + n + " галлеонов"; },
+          ask: function (nom, n, bor) { return "Открыть альбом?\n\n«" + nom + "» — " + n + " галлеонов. У вас " + bor + ". Альбом останется открытым навсегда."; },
+          yes: "Открыть", no: "Не сейчас", done: "Альбом открыт",
+          poor: function (n, bor) { return "Не хватает галлеонов\n\nАльбом стоит " + n + ", у вас " + bor + ". Галлеоны выдаются в конце каждой недели за очки в Кубке Хогвартса: 1 галлеон за каждые 10 очков, факультету-победителю — вдвое больше."; },
+          cup: "Открыть кубок", close: "Закрыть" },
+    en: { chip: function (n) { return n + " Galleons"; }, bar: function (n) { return "Unlock album · " + n + " Galleons"; },
+          have: function (n) { return n + " Galleons in your wallet"; },
+          ask: function (nom, n, bor) { return "Unlock this album?\n\n\u201c" + nom + "\u201d \u2014 " + n + " Galleons. You have " + bor + ". It stays unlocked forever."; },
+          yes: "Unlock", no: "Not now", done: "Album unlocked",
+          poor: function (n, bor) { return "Not enough Galleons\n\nThe album costs " + n + ", you have " + bor + ". Galleons are paid at the end of each week for your House Cup points: 1 Galleon per 10 points, doubled for the winning house."; },
+          cup: "Open the Cup", close: "Close" }
+  };
+  var msPrice = 30, msGal = 0, msBuying = false;
+
+  function msLocked(id) { return !!(msData && msData[id] && msData[id].open === false); }
+
+  function msBuyAsk(id) {
+    if (msBuying) { return; }
+    var x = MS_BUY[lang] || MS_BUY.uz;
+    if (!msInitData()) { showToast(MS_TX[lang].fail, "err"); return; }
+    if (msGal < msPrice) {
+      testAsk(x.poor(msPrice, msGal), function () { try { openCup(); } catch (e) {} }, { ok: x.cup, no: x.close });
+      return;
+    }
+    testAsk(x.ask(msName(id), msPrice, msGal), function () { msBuy(id); }, { ok: x.yes, no: x.no });
+  }
+
+  function msBuy(id) {
+    var x = MS_BUY[lang] || MS_BUY.uz;
+    msBuying = true;
+    window.fetch(API_MUSIC + "/buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": msInitData() },
+      body: JSON.stringify({ album: id })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      msBuying = false;
+      if (res && typeof res.gal === "number") { msGal = res.gal; }
+      if (res && res.ok) {
+        msData[id].open = true;
+        try { window.localStorage.setItem("hp_music", JSON.stringify(msData)); } catch (e) {}
+        try { if (wal) { wal.galleons = msGal; } } catch (e) {}
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+        showToast(x.done);
+        if (msOpen) { msRenderAlbum(); }
+        return;
+      }
+      if (res && res.error === "pul") { msBuyAsk(id); return; }
+      showToast(MS_TX[lang].fail, "err");
+    })["catch"](function () { msBuying = false; showToast(MS_TX[lang].fail, "err"); });
+  }
+
   function msUrl(id, i) {
     return API_MUSIC + "/a/" + id + "/" + (i + 1) + "?k=" + encodeURIComponent(msKey);
   }
 
   function msPlay(id, i) {
+    if (msLocked(id)) { msBuyAsk(id); return; }
     var list = msTracks(id);
     while (i < list.length && list[i].big) { i++; }
     if (i >= list.length) { return; }
@@ -513,6 +597,7 @@
 
   /* --- Telegramga yuborish --- */
   function msSend(id, n) {
+    if (msLocked(id)) { msBuyAsk(id); return; }
     if (msSending) { return; }
     var x = MS_TX[lang], t = T[lang];
     var init = msInitData();

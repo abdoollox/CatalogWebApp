@@ -1871,3 +1871,18 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .owl-sw:checked{background:var(--gold-2)}
 .owl-sw:checked::after{transform:translateX(18px)}
 .owl-new .owl-ic .owl-wax{fill:#d9524a}
+
+/* --- Soundtrack: galleonga ochiladigan albom (ms-lock, ms-buy) --- */
+.ms-card.lock .ms-cover img{filter:brightness(.55) saturate(.8)}
+.ms-lock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;display:inline-flex;align-items:center;gap:6px;
+  padding:7px 10px;border-radius:99px;background:rgba(12,15,20,.82);border:1px solid rgba(var(--gold-rgb),.55);color:var(--gold);
+  font:800 11px/1 'Manrope',sans-serif;white-space:nowrap}
+.ms-lock svg{width:13px;height:13px;flex:none}
+.ms-yopiq .ms-acts{display:none}
+.ms-buy{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:16px}
+.ms-buy-b{display:inline-flex;align-items:center;gap:9px;padding:15px 22px;border:none;border-radius:99px;cursor:pointer;
+  background:var(--gold);color:var(--gold-ink);font:800 13.5px/1 'Manrope',sans-serif}
+.ms-buy-b:active{transform:scale(.97)}
+.ms-buy-b svg{width:16px;height:16px;flex:none}
+.ms-buy small{font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.ms-yopiq .ms-tr{opacity:.6}
