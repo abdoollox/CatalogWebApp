@@ -116,6 +116,233 @@
     if (!srlTimer && SRL_AT > Date.now()) { srlTimer = setInterval(srlTick, 1000); }
   }
 
+  /* ---------- SERIAL QISMLARI ----------
+     Qismlar ro'yxati kodda EMAS: bot uni baza guruhidan o'zi yig'adi (hpserial.py) va
+     /api/serial orqali beradi. Qism chiqsa - guruhga fayl tashlash yetarli, ilova o'zi ko'rsatadi.
+     Sinov rejimida ro'yxat faqat adminlarga keladi (boshqalarda sanoq bloki turaveradi). */
+  var API_SERIAL = "https://bot.tizimshunos.uz/api/serial";
+  var SR_TOTAL = { 1: 8 };          // faslda nechta qism kutilmoqda (chiqmaganlari xira ko'rinadi)
+  var SR_NEW_MS = 7 * 864e5;        // shuncha vaqt "YANGI" belgisi turadi
+  var SR_TX = {
+    uz: { chipNew: "Yangi qism", chip: "Serial", chipTest: "Sinov", go: "Tomosha qilish",
+          out: function (s, e) { return s + "-fasl · " + e + "-qism chiqdi"; },
+          cnt: function (n, all) { return all ? n + " / " + all + " qism" : n + " qism"; },
+          kick: "HBO · 2026", season: function (s) { return s + "-fasl"; }, ep: function (e) { return e + "-qism"; },
+          soon: "Tez orada", isNew: "YANGI", min: "daq", only: "faqat", sent: "Qism chatga yuborildi", slow: "Biroz kuting…",
+          mon: ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"],
+          date: function (d, m) { return d + "-" + m; } },
+    ru: { chipNew: "Новая серия", chip: "Сериал", chipTest: "Тест", go: "Смотреть",
+          out: function (s, e) { return "Сезон " + s + " · вышла " + e + " серия"; },
+          cnt: function (n, all) { return all ? n + " / " + all + " серий" : "серий: " + n; },
+          kick: "HBO · 2026", season: function (s) { return "Сезон " + s; }, ep: function (e) { return "Серия " + e; },
+          soon: "Скоро", isNew: "НОВАЯ", min: "мин", only: "только", sent: "Серия отправлена в чат", slow: "Подождите немного…",
+          mon: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+          date: function (d, m) { return d + " " + m; } },
+    en: { chipNew: "New episode", chip: "Series", chipTest: "Test", go: "Watch",
+          out: function (s, e) { return "Season " + s + " · Episode " + e + " is out"; },
+          cnt: function (n, all) { return all ? n + " / " + all + " episodes" : n + " episodes"; },
+          kick: "HBO · 2026", season: function (s) { return "Season " + s; }, ep: function (e) { return "Episode " + e; },
+          soon: "Coming soon", isNew: "NEW", min: "min", only: "only", sent: "Episode sent to your chat", slow: "One moment…",
+          mon: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          date: function (d, m) { return m + " " + d; } }
+  };
+  var SR_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
+  var srData = null;       // {eps:[{s,e,lang,dur,at}], test, covers:{s1e3: versiya}}
+  var srAsked = false, srSeason = null, srBusy = false, srScroll = 0, srPending = false;
+  try { srPending = /(^|[?&#])tgWebAppStartParam=serial\b/.test(window.location.href) ||
+        ((window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe || {}).start_param === "serial"); } catch (e) {}
+
+  function srInit() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
+
+  function srLoad() {
+    if (srAsked || !window.fetch) { return; }
+    srAsked = true;
+    try { srData = JSON.parse(window.localStorage.getItem("hp_serial") || "null"); } catch (e) { srData = null; }
+    window.fetch(API_SERIAL, { headers: { "X-Telegram-Init-Data": srInit() } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) { return; }
+        srData = { eps: res.eps || [], test: !!res.test, covers: res.covers || {} };
+        try { window.localStorage.setItem("hp_serial", JSON.stringify(srData)); } catch (e) {}
+        srBlock();
+        if (!$("scr-serial").classList.contains("hidden")) { srRender(); }
+        srMaybeOpen();
+      })["catch"](function () {});
+  }
+
+  // Qismlar: {fasl: {qism: {til: yozuv}}}
+  function srTree() {
+    var t = {};
+    ((srData && srData.eps) || []).forEach(function (x) {
+      t[x.s] = t[x.s] || {};
+      t[x.s][x.e] = t[x.s][x.e] || {};
+      t[x.s][x.e][x.lang] = x;
+    });
+    return t;
+  }
+
+  // Qismning shu odamga beriladigan nusxasi: o'z tilida bo'lsa o'sha, bo'lmasa bori
+  function srPick(langs) {
+    if (!langs) { return null; }
+    return langs[lang] || langs.uz || langs.ru || langs.en || null;
+  }
+
+  function srArt(key) {
+    var v = srData && srData.covers && srData.covers[key];
+    return v ? API_SERIAL + "/cover/" + key + ".jpg?v=" + v : IMG_DIR + "serial/bg.jpg";
+  }
+
+  // Kutubxonadagi blok: qism bo'lsa sanoq o'rnida shu turadi
+  function srBlock() {
+    var b = $("srb");
+    if (!b) { return; }
+    var tree = srTree(), ss = Object.keys(tree).map(Number).sort(function (a, c) { return a - c; });
+    if (!ss.length) { b.classList.add("hidden"); return; }
+    var x = SR_TX[lang] || SR_TX.uz;
+    var s = ss[ss.length - 1];
+    var es = Object.keys(tree[s]).map(Number).sort(function (a, c) { return a - c; });
+    var e = es[es.length - 1], it = srPick(tree[s][e]);
+    var yangi = it && it.at && (Date.now() - it.at * 1000 < SR_NEW_MS);
+    $("srb-chip").textContent = srData.test ? x.chipTest : yangi ? x.chipNew : x.chip;
+    $("srb-t").textContent = x.out(s, e);
+    $("srb-s").textContent = x.cnt(es.length, SR_TOTAL[s]);
+    $("srb-go").textContent = x.go;
+    $("srb-art").style.backgroundImage = "url('" + srArt("s" + s + "e" + e) + "')";
+    b.classList.remove("hidden");
+    $("srl").classList.add("hidden");        // sanoq bloki endi kerak emas
+    if (!b.onclick) { b.onclick = srOpen; }
+  }
+
+  function srOpen() {
+    srScroll = window.scrollY || 0;
+    srSeason = null;
+    srRender();
+    $("scr-cat").classList.add("hidden");
+    $("scr-serial").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  function srClose() {
+    $("scr-serial").classList.add("hidden");
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    try { window.scrollTo(0, srScroll); } catch (e) {}
+  }
+
+  // Havoladan (startapp=serial) kelgan bo'lsa serial sahifasi o'zi ochiladi
+  function srMaybeOpen() {
+    if (!srPending || !srData || !srData.eps || !srData.eps.length) { return; }
+    var cat = $("scr-cat");
+    if (!cat || cat.classList.contains("hidden")) { return; }
+    srPending = false;
+    srOpen();
+  }
+
+  function srEl(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) { el.className = cls; }
+    if (text != null) { el.textContent = text; }
+    return el;
+  }
+
+  function srRender() {
+    var x = SR_TX[lang] || SR_TX.uz;
+    var tree = srTree(), ss = Object.keys(tree).map(Number).sort(function (a, c) { return a - c; });
+    if (srSeason === null || !tree[srSeason]) { srSeason = ss.length ? ss[ss.length - 1] : 1; }
+    $("sr-top").style.backgroundImage = "url('" + IMG_DIR + "serial/bg.jpg')";
+    if (!$("sr-top").querySelector(".sr-logo")) {
+      var logo = document.createElement("img");
+      logo.className = "sr-logo";
+      logo.alt = "Harry Potter";
+      logo.src = IMG_DIR + "serial/logo.png";
+      $("sr-top").insertBefore(logo, $("sr-kick"));
+      $("sr-back").addEventListener("click", srClose);
+    }
+    $("sr-kick").textContent = x.kick + (srData && srData.test ? " · " + x.chipTest : "");
+
+    var tabs = $("sr-tabs");
+    tabs.innerHTML = "";
+    tabs.classList.toggle("hidden", ss.length < 2);
+    ss.forEach(function (s) {
+      var b = srEl("button", "sr-tab" + (s === srSeason ? " on" : ""), x.season(s));
+      b.type = "button";
+      b.onclick = function () { srSeason = s; srRender(); };
+      tabs.appendChild(b);
+    });
+
+    var list = $("sr-list");
+    list.innerHTML = "";
+    var eps = tree[srSeason] || {};
+    var bor = Object.keys(eps).map(Number);
+    var jami = Math.max(SR_TOTAL[srSeason] || 0, bor.length ? Math.max.apply(null, bor) : 0);
+    for (var e = 1; e <= jami; e++) { list.appendChild(srRow(x, srSeason, e, srPick(eps[e]))); }
+  }
+
+  function srRow(x, s, e, it) {
+    var row = srEl("div", "sr-li" + (it ? "" : " soon"));
+    var th = srEl("span", "sr-th");
+    th.style.backgroundImage = "url('" + srArt("s" + s + "e" + e) + "')";
+    if (it && it.dur) { th.appendChild(srEl("u", "", Math.round(it.dur / 60) + " " + x.min)); }
+    row.appendChild(th);
+    var tx = srEl("span", "sr-tx");
+    var b = srEl("b", "", x.ep(e));
+    if (it && it.at && Date.now() - it.at * 1000 < SR_NEW_MS) { b.appendChild(srEl("i", "sr-new", x.isNew)); }
+    tx.appendChild(b);
+    var sub = x.soon;
+    if (it) {
+      var d = it.at ? new Date(it.at * 1000) : null;
+      sub = (d ? x.date(d.getDate(), x.mon[d.getMonth()]) + " · " : "") +
+            (it.lang === lang ? SR_LANG[it.lang] : x.only + " " + SR_LANG[it.lang]);
+    }
+    tx.appendChild(srEl("small", "", sub));
+    row.appendChild(tx);
+    if (it) {
+      var dl = srEl("button", "sr-dl");
+      dl.type = "button";
+      dl.setAttribute("aria-label", x.go);
+      dl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg>';
+      row.appendChild(dl);
+      row.onclick = function () { srSend(it); };
+    }
+    return row;
+  }
+
+  // Qismni bot chatiga yuboradi (filmlar kabi)
+  function srSend(it) {
+    if (srBusy) { return; }
+    var t = T[lang], x = SR_TX[lang] || SR_TX.uz;
+    var init = srInit();
+    if (!init || !window.fetch) { showToast(t.notReadyMsg, "err"); return; }
+    srBusy = true;
+    var pending = showToast(t.sending);
+    window.fetch(API_SERIAL + "/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+      body: JSON.stringify({ s: it.s, e: it.e, lang: it.lang, ui: lang })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      srBusy = false;
+      dismissNote(pending);
+      if (res && res.ok) {
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+        showToast(x.sent);
+        return;
+      }
+      var err = res && res.error;
+      if (err === "slow") { showToast(x.slow); return; }
+      if (err === "film_missing") { showToast(t.filmMissing, "err"); return; }
+      if (err === "not_subscribed") {
+        showToast(t.notSubscribed, "err");
+        try { if (tg && tg.openTelegramLink) { tg.openTelegramLink("https://t.me/" + BOT); } } catch (e) {}
+        return;
+      }
+      showToast(t.notReadyMsg, "err");
+    })["catch"](function () {
+      srBusy = false;
+      dismissNote(pending);
+      showToast(t.notReadyMsg, "err");
+    });
+  }
+
   function renderCatalog() {
     var t = T[lang];
     $("cat-kicker").textContent = t.title;
@@ -124,6 +351,8 @@
     $("back-btn").setAttribute("aria-label", lang.toUpperCase());
     renderHero(t);
     renderSerial();
+    srLoad();
+    srBlock();
     renderCards(t);
     renderWorldBtn();
   }
@@ -238,6 +467,7 @@
     maybeChessLink();
     maybeWorldLink();
     msMaybeOst();
+    srMaybeOpen();
   }
 
   // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda

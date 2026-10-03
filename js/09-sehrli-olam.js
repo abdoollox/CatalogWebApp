@@ -665,7 +665,7 @@
 
   function jrHideAll() {
     ["scr-cat", "scr-hub", "scr-world", "scr-prof", "scr-detail", "scr-lang", "scr-train",
-     "scr-vault",
+     "scr-vault", "scr-serial",
      "scr-hat", "scr-think", "scr-sort", "scr-reveal"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }

@@ -28,6 +28,7 @@
   // Ro'yxatda yo'q ekranda (kutubxona, til, "o'ylanish") tugma ko'rinmaydi.
   var BACK_OF = {
     "scr-album": "ms-back",
+    "scr-serial": "sr-back",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",
     "scr-vault": "gr-back",

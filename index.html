@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=8a8f0448">
+<link rel="stylesheet" href="css/app.css?v=694861a4">
 </head>
 <body>
 <div class="shell">
@@ -64,6 +64,12 @@
       </div>
     </div>
 
+    <!-- Serial qismlari chiqqach sanoq bloki o'rnida shu blok turadi (js/07, sr*) -->
+    <button class="srb hidden" id="srb" type="button">
+      <span class="srb-art" id="srb-art"><span class="srb-chip" id="srb-chip"></span></span>
+      <span class="srb-bd"><span class="srb-tx"><b id="srb-t"></b><small id="srb-s"></small></span><span class="srb-go" id="srb-go"></span></span>
+    </button>
+
     <button class="hero hidden" id="hero" type="button">
       <span class="hero-art" id="hero-art"><span class="hero-kick" id="hero-kick"></span></span>
       <span class="hero-body">
@@ -77,6 +83,16 @@
     </button>
 
     <div id="rows"></div>
+  </div>
+
+  <!-- Serial sahifasi: fasllar va qismlar ro'yxati (qismlar botdan, /api/serial) -->
+  <div id="scr-serial" class="screen hidden">
+    <div class="sr-top" id="sr-top">
+      <button class="sr-back" id="sr-back" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <span class="sr-kick" id="sr-kick"></span>
+    </div>
+    <div class="sr-tabs" id="sr-tabs"></div>
+    <div id="sr-list"></div>
   </div>
 
   <!-- ==MS== -->
@@ -1084,13 +1100,13 @@
 <script src="js/04-kubok-oyna.js?v=3a42ee0f"></script>
 <script src="js/05-umumiy.js?v=2519fff0"></script>
 <script src="js/06-soundtrack.js?v=a71d5c47"></script>
-<script src="js/07-kutubxona.js?v=603bc68f"></script>
+<script src="js/07-kutubxona.js?v=6c9fdf0d"></script>
 <script src="js/08-saralash.js?v=b01a080f"></script>
-<script src="js/09-sehrli-olam.js?v=8d0653fb"></script>
+<script src="js/09-sehrli-olam.js?v=e474c8fb"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=e922ac9f"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>
-<script src="js/13-orqaga.js?v=41d83c7e"></script>
+<script src="js/13-orqaga.js?v=0b866ee7"></script>
 <script src="js/14-ishga-tushirish.js?v=f7e507c2"></script>
 <script src="js/15-pochta.js?v=9390f819"></script>
 
