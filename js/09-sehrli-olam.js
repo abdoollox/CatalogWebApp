@@ -338,6 +338,13 @@
               ru: "Галлеоны, которые выделил вам Хогвартс. На покупки хватит.",
               en: "The galleons Hogwarts set aside for you. Enough for your shopping." },
     grNext: { uz: "Xiyobonga qaytish", ru: "Вернуться в переулок", en: "Back to the alley" },
+    // Uzluksiz yo'l: har qadam tugagach tugma to'g'ri keyingi joyga olib boradi
+    nxWand: { uz: "Olivander do'koniga", ru: "В лавку Олливандера", en: "To Ollivanders" },
+    nxTrain: { uz: "9¾ platformaga", ru: "На платформу 9¾", en: "To Platform 9¾" },
+    nxSort: { uz: "Katta zalga", ru: "В Большой зал", en: "To the Great Hall" },
+    trTake: { uz: "Biletni olib, devorga yurish", ru: "Взять билет и шагнуть в стену", en: "Take the ticket and walk into the wall" },
+    mins: { uz: "Bu bor-yo'g'i 5 daqiqa oladi.", ru: "Это займёт всего 5 минут.", en: "It only takes 5 minutes." },
+    progN: { uz: "%a-qadam · jami %b", ru: "Шаг %a из %b", en: "Step %a of %b" },
 
     tkKick: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
     tkTitle: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
@@ -371,7 +378,7 @@
             en: "The Sorting Hat is waiting. The house it names is yours for life." },
     endGo: { uz: "Shlyapa oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
-    rvWand: { uz: "Diagon xiyoboniga qaytish", ru: "Вернуться в Косой переулок", en: "Back to Diagon Alley" },
+    rvWand: { uz: "9¾ platformaga yo'l olish", ru: "Отправиться на платформу 9¾", en: "Head to Platform 9¾" },
 
     pvBtn: { uz: "Sinov o'quvchisi bo'lib kirish", ru: "Войти как тестовый ученик", en: "Enter as a test student" },
     pvNote: { uz: "Faqat adminlar uchun: ilova noldan boshlanadi - fakultet, tayoqcha, ball, chat. Asl profilingizga tegilmaydi.",
@@ -622,7 +629,8 @@
   }
 
   // 9¾ ortiga: saralangan - Xogvarts (hub), saralanmagan - Diagon xiyoboni.
-  function enterWorld() { if (hasHouse()) { openHub(); } else { openAlley(); } }
+  // Saralanmagan odam ro'yxatda to'xtamaydi: to'g'ri navbatdagi qadamga (uzluksiz yo'l).
+  function enterWorld() { if (hasHouse()) { openHub(); } else { jrNextGo(); } }
 
   function alleyVisible() {
     var el = $("scr-alley");
@@ -711,6 +719,15 @@
       path.appendChild(el);
     });
 
+    // Xiyobondagi ishlar bitgan bo'lsa - yo'l shu yerda tugab qolmasin: keyingi joyga tugma
+    if (!next) {
+      var dav = jrEl("button", "tr-go", jrNextLabel());
+      dav.type = "button";
+      dav.style.cssText = "display:block;margin:22px auto 0";
+      dav.onclick = jrNextGo;
+      path.appendChild(dav);
+    }
+
     // Kundalik xatda; bu yerda bitta do'kon qolsa yo'lakcha ortiqcha
     var prog = document.querySelector(".al-prog");
     if (prog) { prog.classList.toggle("hidden", steps.length < 2); }
@@ -738,12 +755,9 @@
       { icon: "wand", alley: true, done: !!w, place: al("s1p"), title: al("s1t"),
         sub: !vault ? al("s1l") : ((w && wandLabel(w, lang)) || al("s1s")), cta: al("s1c"), lock: !vault,
         go: alleyGo(jrWand) },
-      { icon: "ticket", done: walHas("ticket"), place: al("sTp"), title: al("sTt"),
-        sub: !w ? al("sTl") : (walHas("ticket") ? al("sTd") : al("sTs")), cta: al("sTc"), lock: !w,
-        go: function () { closeLetter(); openTicket(); } },
       { icon: "train", done: !!w && rode, place: al("s2p"), title: al("s2t"),
-        sub: !walHas("ticket") ? al("s2n") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
-        lock: !walHas("ticket"),
+        sub: !w ? al("s2l") : (rode ? al("s2d") : al("s2s")), cta: al("s2c"),
+        lock: !w,
         go: function () { closeLetter(); openTrain(); } },
       { icon: "castle", done: sorted, place: al("s3p"), title: al("s3t"),
         sub: (w && rode) || sorted ? al("s3s") : al("s3l"), cta: al("s3c"),
@@ -756,9 +770,56 @@
   function alleyGo(fn) {
     return function () {
       if (alleyVisible()) { closeLetter(); fn(); return; }
-      jrToAlley();
+      // Uzluksiz yo'l (2026-10-03): devor ochilgach xiyobon ro'yxatida to'xtamay,
+      // to'g'ri navbatdagi joyga kiriladi. "alley" qadami baribir yoziladi.
+      var birinchi = false;
+      try { birinchi = window.localStorage.getItem(TK("hp_onb_alley")) !== "1"; } catch (e) {}
+      function kir() { closeLetter(); jrHideAll(); onbStep("alley"); fn(); }
+      if (birinchi) { playGate(kir); } else { kir(); }
     };
   }
+
+  // Navbatdagi bajarilmagan qadamga to'g'ridan-to'g'ri o'tish (ro'yxatga qaytmasdan)
+  function jrNextLabel() {
+    if (!walHas("vault")) { return al("s0c"); }
+    if (!jrWandNow()) { return al("nxWand"); }
+    if (!jrGet(TRAIN_KEY)) { return al("nxTrain"); }
+    return al("nxSort");
+  }
+  function jrNextGo() {
+    jrHideAll();
+    onbStep("alley");
+    if (!walHas("vault")) { openVault(); return; }
+    if (!jrWandNow()) { jrWand(); return; }
+    if (!jrGet(TRAIN_KEY)) { openTrain(); return; }
+    jrSort();
+  }
+
+  /* Yo'l chizig'i: "2-qadam · jami 4" - odam yo'l qisqa ekanini ko'radi.
+     Ekranning tepasiga (sarlavha ostiga) qo'yiladi; n=0 - olib tashlash. */
+  var JR_JAMI = 4;
+  function jrProg(ids, n) {
+    ids.forEach(function (id) {
+      var scr = $(id);
+      if (!scr) { return; }
+      var el = scr.querySelector(".jr-prog");
+      if (!n) { if (el) { el.parentNode.removeChild(el); } return; }
+      if (!el) {
+        el = jrEl("div", "jr-prog");
+        var bosh = scr.querySelector(".hub-head");
+        if (bosh && bosh.nextSibling) { scr.insertBefore(el, bosh.nextSibling); }
+        else { scr.insertBefore(el, scr.firstChild); }
+      }
+      el.innerHTML = "";
+      var qator = jrEl("div", "jr-prog-b");
+      for (var i = 1; i <= JR_JAMI; i++) { qator.appendChild(jrEl("i", i < n ? "done" : i === n ? "on" : "")); }
+      el.appendChild(qator);
+      el.appendChild(jrEl("span", "jr-prog-t", al("progN").replace("%a", n).replace("%b", JR_JAMI)));
+    });
+  }
+  // Savollar ekranida (scr-sort) o'zining "1 / 5" chizig'i bor - u yerda ko'rsatilmaydi
+  var JR_QUIZ = ["scr-hat", "scr-think", "scr-reveal"];
+  function jrProgClear() { jrProg(JR_QUIZ, 0); }
 
   // Birinchi bajarilmagan qadam - hozir qilinishi kerak bo'lgani
   function jrNext(steps) {
@@ -772,17 +833,18 @@
   }
 
   function jrWand() {
-    $("scr-alley").classList.add("hidden");
+    jrHideAll();
     startWand();
     journey = "wand";
+    jrProg(JR_QUIZ, 2);
   }
 
   function jrSort() {
     trStop();
-    $("scr-train").classList.add("hidden");
-    $("scr-alley").classList.add("hidden");
+    jrHideAll();
     startSorting();
     journey = "house";
+    jrProg(JR_QUIZ, 4);
   }
 
   // ---------------------------------------------------------------- maktub
@@ -795,7 +857,7 @@
     $("lt-seal").textContent = al("seal");
     $("lt-school").textContent = al("school");
     $("lt-hi").textContent = al("hi").replace("%s", name);
-    $("lt-body").textContent = al("body");
+    $("lt-body").textContent = al("body") + (readOnly && hasHouse() ? "" : "\n" + al("mins"));
     ltPath(readOnly);
     $("lt-share").innerHTML = hubSvg(AL_ICONS.share) + "<span>" + al("share") + "</span>";
     // Saralangan odam uchun maktub - esdalik: asosiy tugmaning o'zi "ulashish", pastda faqat "Yopish"
@@ -1018,6 +1080,7 @@
     $("gr-kick").textContent = al("grKick");
     $("gr-title").textContent = al("grTitle");
     try { window.scrollTo(0, 0); } catch (e) {}
+    jrProg(["scr-vault"], hasHouse() ? 0 : 1);
     if (walHas("vault")) { grVault(false); return; }
     grIntro();
   }
@@ -1112,9 +1175,10 @@
     sum.appendChild(jrEl("small", "", al("grGot")));
     st.appendChild(sum);
     st.appendChild(jrEl("p", "tr-note", al("grDone")));
-    var b = jrEl("button", "tr-go", al("grNext"));
+    // To'g'ri keyingi joyga (ilgari xiyobon ro'yxatiga qaytarardi)
+    var b = jrEl("button", "tr-go", jrNextLabel());
     b.type = "button";
-    b.onclick = openAlley;
+    b.onclick = jrNextGo;
     st.appendChild(b);
     if (yangi) { renderWorldBtn(); }
   }
@@ -1178,10 +1242,10 @@
     // Biletsiz platformaga chiqib bo'lmaydi (eski foydalanuvchilarda bilet
     // belgisi yo'q, lekin ular allaqachon saralangan - bu yerga tushmaydi).
     if (!jrWandNow()) { openAlley(); return; }
-    if (!walHas("ticket")) { openTicket(); return; }
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");
+    jrProg(["scr-train"], hasHouse() ? 0 : 3);
     try { window.scrollTo(0, 0); } catch (e) {}
     $("tr-back").innerHTML = hubSvg(AL_ICONS.back);
     $("tr-back").setAttribute("aria-label", al("title"));
@@ -1194,12 +1258,36 @@
     sign.appendChild(jrEl("small", "", al("trSign")));
     sign.appendChild(jrEl("b", "", "9¾"));
     sign.appendChild(jrEl("span", "", al("trSignSub")));
-    wrap.appendChild(sign);
-    wrap.appendChild(jrEl("p", "tr-p", al("trP1")));
-    wrap.appendChild(jrEl("p", "tr-note", al("trP2")));
     var go = jrEl("button", "tr-go", al("trGo"));
     go.type = "button";
-    go.onclick = trRun;
+    if (walHas("ticket")) {
+      wrap.appendChild(sign);
+      wrap.appendChild(jrEl("p", "tr-p", al("trP1")));
+      wrap.appendChild(jrEl("p", "tr-note", al("trP2")));
+      go.onclick = trRun;
+    } else {
+      // Bilet alohida ekran emas: Xagrid uni shu yerda, platformada beradi (5 qadam -> 4)
+      wrap.appendChild(jrEl("p", "tk-say", al("tkSay")));
+      var card = jrEl("div", "tk-card");
+      card.appendChild(jrEl("div", "tk-top", al("tkTop")));
+      card.appendChild(jrEl("div", "tk-big", "9¾"));
+      card.appendChild(jrEl("div", "tk-sub", al("tkSub")));
+      wrap.appendChild(card);
+      var izoh = jrEl("p", "tr-note", al("trP1"));
+      izoh.style.marginTop = "20px";
+      wrap.appendChild(izoh);
+      go.textContent = al("trTake");
+      go.onclick = function () {
+        go.disabled = true;
+        walApi("ticket", null, function (res) {
+          go.disabled = false;
+          if (!(res && res.ok)) { return; }
+          onbStep("ticket");
+          renderWorldBtn();
+          trRun();
+        });
+      };
+    }
     wrap.appendChild(go);
     stage.appendChild(wrap);
   }

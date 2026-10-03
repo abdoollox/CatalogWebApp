@@ -34,6 +34,7 @@
   // 1-bosqich: tanishuv
   function startQuest(cfg) {
     QUEST = cfg;
+    if (!journey) { jrProgClear(); }      // yo'ldan tashqarida (profildan) chiziq ko'rinmaydi
     var v = cfg.voice[lang];
     stopSortTimer();
     hideSortScreens();
@@ -330,13 +331,7 @@
       if (was === "house" && endPreview()) { return; }
       // Tayoqcha olingach xat ochiladi: kundalikda belgi qo'yilgani ko'rinadi
       // va keyingi ish ajralib turadi. Saralangach - Xogvartsga.
-      if (was === "wand" && !hasHouse()) {
-        jrHideAll();
-        $("scr-cat").classList.remove("hidden");
-        renderCatalog();
-        openLetter(false);
-        return;
-      }
+      if (was === "wand" && !hasHouse()) { jrNextGo(); return; }
       enterWorld();
       return;
     }
