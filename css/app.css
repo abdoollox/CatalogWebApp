@@ -1476,14 +1476,6 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   width:100%;margin-top:14px;padding:13px;border:none;border-radius:12px;background:rgba(255,255,255,.06);
   color:var(--text);font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer;
 }
-/* --- Yo'l chizig'i: "2-qadam · jami 4" (Gringotts, Olivander, platforma, Katta zal) --- */
-.jr-prog{display:flex;flex-direction:column;align-items:center;gap:7px;margin:-6px 0 16px}
-.jr-prog-b{display:flex;gap:5px;width:min(220px,62%)}
-.jr-prog-b i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.12)}
-.jr-prog-b i.done{background:var(--gold-2)}
-.jr-prog-b i.on{background:var(--gold-hi);box-shadow:0 0 8px rgba(var(--gold-rgb),.55)}
-.jr-prog-t{font:600 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-#scr-hat .jr-prog,#scr-think .jr-prog,#scr-reveal .jr-prog{margin:4px 0 14px}
 /* --- Tasdiqlash oynasi (Telegram oynasi o'rniga) --- */
 .hpask{position:fixed;inset:0;z-index:2500;display:grid;place-items:center;padding:24px;background:rgba(6,8,11,.72);
   -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:hpaskFon .18s ease both}
@@ -1570,10 +1562,10 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .lt-step.lock{opacity:.48;cursor:default}
 .lt-step.done{cursor:default}
 .lt-mk{
-  width:22px;height:22px;flex:none;border-radius:50%;box-sizing:border-box;display:grid;place-items:center;
+  width:26px;height:26px;flex:none;border-radius:50%;box-sizing:border-box;display:grid;place-items:center;
   border:1px solid rgba(59,42,26,.45);font:700 11px/1 'Manrope',sans-serif;color:#6b4e2e;
 }
-.lt-mk svg{width:13px;height:13px}
+.lt-mk svg{width:16px;height:16px}
 .lt-step.done .lt-mk{background:#1d6a4a;border-color:#1d6a4a;color:#f6eed9}
 .lt-st{display:flex;flex-direction:column;gap:1px;min-width:0}
 .lt-st-t{font:500 16px/1.3 'Cormorant Garamond',serif}

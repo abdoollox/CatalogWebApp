@@ -34,7 +34,6 @@
   // 1-bosqich: tanishuv
   function startQuest(cfg) {
     QUEST = cfg;
-    if (!journey) { jrProgClear(); }      // yo'ldan tashqarida (profildan) chiziq ko'rinmaydi
     var v = cfg.voice[lang];
     stopSortTimer();
     hideSortScreens();

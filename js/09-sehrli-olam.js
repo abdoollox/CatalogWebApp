@@ -23,7 +23,7 @@
     chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
     chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
     refs: "M9 5.5a3 3 0 1 1 0 6a3 3 0 1 1 0-6z M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5",
-    wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2"
+    wand: "M6 21L21 6l-3-3L3 18z M15 6l3 3 M9 3a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2 M19 13a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2"
   };
 
   var hubChess = null;     // {rating, title, games} - shaxmat serveridan
@@ -349,7 +349,6 @@
     nxSort: { uz: "Katta zalga", ru: "В Большой зал", en: "To the Great Hall" },
     trTake: { uz: "Biletni olib, devorga yurish", ru: "Взять билет и шагнуть в стену", en: "Take the ticket and walk into the wall" },
     mins: { uz: "Bu bor-yo'g'i 5 daqiqa oladi.", ru: "Это займёт всего 5 минут.", en: "It only takes 5 minutes." },
-    progN: { uz: "%a-qadam · jami %b", ru: "Шаг %a из %b", en: "Step %a of %b" },
 
     tkKick: { uz: "Qovoqxona", ru: "«Дырявый котёл»", en: "The Leaky Cauldron" },
     tkTitle: { uz: "Xagriddan bilet", ru: "Билет от Хагрида", en: "Hagrid's ticket" },
@@ -414,14 +413,15 @@
          "The doors swing open. Thousands of candles float above the Great Hall."]
   };
 
+  // bank, wand, train, castle - tayyor belgilar: Tabler Icons (MIT litsenziyasi)
   var AL_ICONS = {
     book: "M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13",
     letter: "M3.5 6h17v12h-17z M3.5 6.5l8.5 6.5 8.5-6.5",
     back: "M15 6l-6 6 6 6",
     wand: "M4 20L15.5 8.5 M15.5 8.5l2-2 M18.5 2.5v3 M21.5 5.5h-3 M20.5 2.5l-1 1 M13 11l-2-2",
-    train: "M7 3.5h10a2.5 2.5 0 0 1 2.5 2.5v9a2.5 2.5 0 0 1-2.5 2.5H7A2.5 2.5 0 0 1 4.5 15V6A2.5 2.5 0 0 1 7 3.5z M4.5 10.5h15 M8.5 14.2h.01 M15.5 14.2h.01 M8 17.5l-2 3.5 M16 17.5l2 3.5",
-    castle: "M4 20.5h16 M5 20.5V8h3v2h2V8h4v2h2V8h3v12.5 M10 20.5v-4.5a2 2 0 0 1 4 0v4.5",
-    bank: "M3.5 9.5L12 4.5l8.5 5 M5 10v7 M9.7 10v7 M14.3 10v7 M19 10v7 M3.5 20h17",
+    train: "M21 13c0-3.87-3.37-7-10-7H3 M3 15h16a2 2 0 0 0 2-2 M3 6v5h17.5 M3 11v4 M8 11V6 M13 11V6.5 M3 19h18",
+    castle: "M15 19v-2a3 3 0 0 0-6 0v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5h4v3h3V5h4v3h3V5h4v14a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1 M3 11h18",
+    bank: "M3 21h18 M3 10h18 M5 6l7-3l7 3 M4 10v11 M20 10v11 M8 14v3 M12 14v3 M16 14v3",
     check: "M5 12.5l4.5 4.5L19 7.5",
     arrow: "M9 6l6 6-6 6",
     share: "M12 15.5V3.5 M8 7l4-3.5L16 7 M4.5 13v6.5a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V13",
@@ -717,32 +717,6 @@
     return al("nxSort");
   }
 
-  /* Yo'l chizig'i: "2-qadam · jami 4" - odam yo'l qisqa ekanini ko'radi.
-     Ekranning tepasiga (sarlavha ostiga) qo'yiladi; n=0 - olib tashlash. */
-  var JR_JAMI = 4;
-  function jrProg(ids, n) {
-    ids.forEach(function (id) {
-      var scr = $(id);
-      if (!scr) { return; }
-      var el = scr.querySelector(".jr-prog");
-      if (!n) { if (el) { el.parentNode.removeChild(el); } return; }
-      if (!el) {
-        el = jrEl("div", "jr-prog");
-        var bosh = scr.querySelector(".hub-head");
-        if (bosh && bosh.nextSibling) { scr.insertBefore(el, bosh.nextSibling); }
-        else { scr.insertBefore(el, scr.firstChild); }
-      }
-      el.innerHTML = "";
-      var qator = jrEl("div", "jr-prog-b");
-      for (var i = 1; i <= JR_JAMI; i++) { qator.appendChild(jrEl("i", i < n ? "done" : i === n ? "on" : "")); }
-      el.appendChild(qator);
-      el.appendChild(jrEl("span", "jr-prog-t", al("progN").replace("%a", n).replace("%b", JR_JAMI)));
-    });
-  }
-  // Savollar ekranida (scr-sort) o'zining "1 / 5" chizig'i bor - u yerda ko'rsatilmaydi
-  var JR_QUIZ = ["scr-hat", "scr-think", "scr-reveal"];
-  function jrProgClear() { jrProg(JR_QUIZ, 0); }
-
   // Birinchi bajarilmagan qadam - hozir qilinishi kerak bo'lgani
   function jrNext(steps) {
     for (var i = 0; i < steps.length; i++) { if (!steps[i].done) { return steps[i]; } }
@@ -753,7 +727,6 @@
     jrHideAll();
     startWand();
     journey = "wand";
-    jrProg(JR_QUIZ, 2);
   }
 
   function jrSort() {
@@ -761,7 +734,6 @@
     jrHideAll();
     startSorting();
     journey = "house";
-    jrProg(JR_QUIZ, 4);
   }
 
   // ---------------------------------------------------------------- maktub
@@ -990,7 +962,6 @@
     $("gr-kick").textContent = al("grKick");
     $("gr-title").textContent = al("grTitle");
     try { window.scrollTo(0, 0); } catch (e) {}
-    jrProg(["scr-vault"], hasHouse() ? 0 : 1);
     if (walHas("vault")) { grVault(false); return; }
     grIntro();
   }
@@ -1106,7 +1077,6 @@
     trStop();
     jrHideAll();
     $("scr-train").classList.remove("hidden");
-    jrProg(["scr-train"], hasHouse() ? 0 : 3);
     try { window.scrollTo(0, 0); } catch (e) {}
     $("tr-back").innerHTML = hubSvg(AL_ICONS.back);
     $("tr-back").setAttribute("aria-label", al("title"));
