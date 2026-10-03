@@ -61,18 +61,21 @@
     go.classList.remove("hidden");
     if (!pics) { return; }
     [cfg.pics.intro[1], cfg.pics.think, cfg.pics.reveal].forEach(function (u) {
-      if (u) { try { (new Image()).src = u; } catch (e) {} }
+      if (u && typeof u === "string") { try { (new Image()).src = u; } catch (e) {} }
     });
-    km.appendChild(kmPanel(pics[0], 1, v.introTop));
+    // 1-sahna yozuvi: sayohat o'zinikini bersa (cap1) o'sha, bo'lmasa ovozning birinchi gapi
+    var cap1 = cfg.cap1 ? al(cfg.cap1) : v.introTop;
+    var cap2 = (cfg.cap1 ? v.introTop + " " : "") + v.introMid + " " + v.introBot;
+    km.appendChild(kmPanel(pics[0], 1, cap1));
     go.classList.add("hidden");
     var b = document.createElement("button");
     b.type = "button";
     b.className = "tr-go grk-go";
-    b.textContent = al("olIn");
+    b.textContent = al(cfg.inKey);
     b.onclick = function () {
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
       km.removeChild(b);
-      var f = kmPanel(pics[1], 2, v.introMid + " " + v.introBot, true);
+      var f = kmPanel(pics[1], 2, cap2, true);
       km.appendChild(f);
       go.classList.remove("hidden");
       setTimeout(function () {
@@ -191,11 +194,17 @@
     lentaQ();
   }
 
+  // Natija e'lon qilindi - endi javoblar o'zgarmaydi
+  function lentaLock() {
+    var chs = $("hat-km").querySelectorAll(".lnt-ch");
+    for (var k = 0; k < chs.length; k++) { chs[k].parentNode.removeChild(chs[k]); }
+  }
+
   // O'ylanish: ochiq quti sahnasi, tayoqchani odamning o'zi qo'lga oladi
   function lentaThink() {
     var f = kmPanel(QUEST.pics.think, 3, QUEST.voice[lang].think.join(" "));
     lentaShow(f);
-    var b = lentaEl("button", "tr-go grk-go", al("olTake"));
+    var b = lentaEl("button", "tr-go grk-go", al(QUEST.takeKey));
     b.type = "button";
     b.onclick = function () {
       b.parentNode.removeChild(b);
@@ -350,7 +359,13 @@
     q: SORTING,
     voice: HAT,
     lastWeight: true,
+    // Komiks rasmlari: zal va navbat, qalpoq, o'ylanish; natija - fakultetga qarab
+    pics: { intro: ["img/yol/gz1.jpg", "img/yol/gz2.jpg"], think: "img/yol/gz3.jpg",
+            reveal: { gryffindor: "img/yol/gz-g.jpg", slytherin: "img/yol/gz-s.jpg",
+                      ravenclaw: "img/yol/gz-r.jpg", hufflepuff: "img/yol/gz-h.jpg" } },
+    cap1: "endS", inKey: "endGo", takeKey: "gzHear",
     mark: paintHat,
+    lenta: lentaHouse,
     finish: finishSorting
   };
 
@@ -379,6 +394,39 @@
     var tie = null;
     for (var k in lastW) { if (lastW[k] === 3) { tie = k; } }
     return topOf(HOUSE_IDS, tie);
+  }
+
+  // Lentadagi natija: fakultet bayrami sahnasi, gerb va fakultet nomi
+  function lentaHouse() {
+    var id = pickHouse();
+    if (jrPreview) { applyHouse(id); } else {
+      setHouse(id);
+      reportHouse(id);
+    }
+    var t = T[lang];
+    var h = HOUSES[id];
+    lentaLock();
+    lentaShow(kmPanel(QUEST_HOUSE.pics.reveal[id], 4, ""));
+    var r = lentaEl("div", "lnt-rv lnt-house");
+    var cr = lentaEl("div", "reveal-crest");
+    paintCrest(cr, id, h.crest);
+    r.appendChild(cr);
+    r.appendChild(lentaEl("span", "reveal-kicker", t.rvKicker));
+    r.appendChild(lentaEl("span", "rv-place", HAT[lang].place));
+    r.appendChild(lentaEl("span", "reveal-name", h[lang]));
+    r.appendChild(lentaEl("span", "reveal-note", ((h["note_" + lang] || "") + " " + t.lockFinal).trim()));
+    var b = lentaEl("button", "tr-go grk-go", journey ? al("rvHouse") : t.rvDone);
+    b.type = "button";
+    b.onclick = function () {
+      $("scr-hat").classList.add("hidden");
+      $("hat-km").innerHTML = "";
+      closeReveal();
+    };
+    r.appendChild(b);
+    $("hat-km").appendChild(r);
+    try {
+      if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
+    } catch (e) {}
   }
 
   function finishSorting() {
@@ -422,6 +470,7 @@
     lastWeight: false,
     // Komiks rasmlari (dizayn tizimidagi uslubda): ko'cha, do'kon ichi, quti, uchqun
     pics: { intro: ["img/yol/ol1.jpg", "img/yol/ol2.jpg"], think: "img/yol/ol3.jpg", reveal: "img/yol/ol4.jpg" },
+    inKey: "olIn", takeKey: "olTake",
     mark: paintWandMark,
     lenta: lentaWand,
     finish: finishWand
@@ -454,9 +503,7 @@
     var w = wandPick();
     var t = T[lang];
     var wd = WOODS[w.wood], cr = CORES[w.core], fl = FLEX[w.flex];
-    // Tayoqcha olindi - endi javoblar o'zgarmaydi
-    var chs = $("hat-km").querySelectorAll(".lnt-ch");
-    for (var k = 0; k < chs.length; k++) { chs[k].parentNode.removeChild(chs[k]); }
+    lentaLock();
     lentaShow(kmPanel(QUEST_WAND.pics.reveal, 4, ""));
     var r = lentaEl("div", "lnt-rv");
     r.appendChild(lentaEl("span", "reveal-kicker", t.wandKicker));

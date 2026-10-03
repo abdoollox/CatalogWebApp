@@ -331,6 +331,7 @@
     trOn: { uz: "Bekatgacha borish", ru: "Ехать до станции", en: "Ride to the station" },
     trIn: { uz: "Qasrga kirish", ru: "Войти в замок", en: "Enter the castle" },
     lntCh: { uz: "Javobni o'zgartirish", ru: "Изменить ответ", en: "Change answer" },
+    gzHear: { uz: "Qalpoq qarorini eshitish", ru: "Услышать решение шляпы", en: "Hear the Hat's decision" },
     olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
     olTake: { uz: "Tayoqchani qo'lga olish", ru: "Взять палочку в руку", en: "Take the wand" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",

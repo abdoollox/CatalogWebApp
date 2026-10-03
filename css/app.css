@@ -1673,6 +1673,8 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
   font:600 11.5px/1 'Manrope',sans-serif;text-decoration:underline;text-underline-offset:3px}
 .lnt-rv{max-width:460px;margin:0 auto;padding:0 6px 30px;text-align:center;animation:riseIn .5s .15s ease both}
 .lnt-rv .reveal-name{color:var(--gold)}
+.lnt-house .reveal-name{color:var(--accent)}
+.lnt-house .grk-go{background:var(--accent);color:var(--accent-ink)}
 #hat-km .grk-p{scroll-margin-top:14px}
 #hat-km .grk-go{margin-bottom:26px}
 .gr-sum{font:700 46px/1 'Cormorant Garamond',serif;color:var(--gold);text-shadow:0 2px 14px rgba(var(--gold-rgb),.45)}
