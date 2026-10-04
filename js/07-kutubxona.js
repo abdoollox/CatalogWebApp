@@ -843,7 +843,7 @@
   };
 
   var SQ_TX = {
-    uz: { kick: "Kunlik topshiriqlar", title: "Shokolad qurbaqa", today: "Bugungi kartochka", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
+    uz: { kick: "Kunlik topshiriqlar", title: "Shokolad qurbaqa", today: "Bugungi kartochka", sir: "Sirli kartochka", sirS: "Kim chiqishini quti ochilganda bilasiz", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
           ready: "Quti tayyor — oching!", openedC: "Bugungi kartochka sizda", days: function (n) { return n + " kun ketma-ket"; },
           tasksL: "Bugungi topshiriqlar", open: "Qutini ochish", need: function (n) { return "Yana " + n + " ta topshiriq"; },
           opened: "Kartochka olindi. Ertaga yangi sehrgar keladi.", prize: "Mukofot",
@@ -856,7 +856,7 @@
                music: ["Bitta trek tinglang", "Kutubxonadagi soundtreklar"], chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"],
                owl: ["Boyo'g'li pochtasini oching", "Xatlaringizni ko'ring"], cup: ["Kubok sahifasiga kiring", "Fakultetingiz nechanchi o'rinda"],
                share: ["Do'stingizga ulashing", "Taklif havolasi, fakultet yoki Patronus"], house: ["Fakultet sahifasini oching", "Asoschisi, mudiri, a'zolari"] } },
-    ru: { kick: "Задания дня", title: "Шоколадная лягушка", today: "Карточка дня", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
+    ru: { kick: "Задания дня", title: "Шоколадная лягушка", today: "Карточка дня", sir: "Тайная карточка", sirS: "Кто внутри — узнаете, когда откроете коробку", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
           ready: "Коробка готова — откройте!", openedC: "Сегодняшняя карточка у вас", days: function (n) { return "Дней подряд: " + n; },
           tasksL: "Задания на сегодня", open: "Открыть коробку", need: function (n) { return "Осталось заданий: " + n; },
           opened: "Карточка получена. Завтра придёт новый волшебник.", prize: "Награда",
@@ -869,7 +869,7 @@
                music: ["Послушайте один трек", "Саундтреки в библиотеке"], chess: ["Сыграйте партию в шахматы", "Можно и с ботом"],
                owl: ["Откройте совиную почту", "Посмотрите свои письма"], cup: ["Загляните на страницу Кубка", "На каком месте ваш факультет"],
                share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], house: ["Откройте страницу факультета", "Основатель, декан, участники"] } },
-    en: { kick: "Daily tasks", title: "Chocolate Frog", today: "Today's card", cardS: function (n, t) { return n + " / " + t + " tasks"; },
+    en: { kick: "Daily tasks", title: "Chocolate Frog", today: "Today's card", sir: "Mystery card", sirS: "You find out who it is when you open the box", cardS: function (n, t) { return n + " / " + t + " tasks"; },
           ready: "The box is ready — open it!", openedC: "You have today's card", days: function (n) { return n + " days in a row"; },
           tasksL: "Today's tasks", open: "Open the box", need: function (n) { return n + " more tasks"; },
           opened: "Card collected. A new wizard arrives tomorrow.", prize: "Reward",
@@ -895,7 +895,7 @@
   var sqDemo = null;
   function sqSample(body) {
     if (!sqDemo) {
-      sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false, card: "merlin",
+      sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false, card: null,
                  cards: { dumbledore: 1, flamel: 2, hufflepuff: 1, scamander: 1, uric: 1 }, cards_total: 24,
                  tasks: ["daily", "chat", "music", "owl", "cup", "house"].map(function (c, i) { return { code: c, done: i < 3 }; }),
                  prizes: { ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
@@ -905,7 +905,7 @@
     if (body && body.task) { d.tasks.forEach(function (t) { if (t.code === body.task) { t.done = true; } }); }
     d.n = d.tasks.filter(function (t) { return t.done; }).length;
     if (body && body.open && d.n >= 6 && !d.opened) {
-      d.opened = true; d.streak++; d.cards[d.card] = (d.cards[d.card] || 0) + 1;
+      d.card = "merlin"; d.opened = true; d.streak++; d.cards[d.card] = (d.cards[d.card] || 0) + 1;
       d.reward = { ball: 10, gal: 1, big: false, streak: d.streak, opened: true, card: d.card, card_new: d.cards[d.card] === 1 };
     }
     d.can_open = d.n >= 6 && !d.opened;
@@ -967,15 +967,19 @@
       card.type = "button";
       card.id = "hub-sq";
       card.className = "hub-sq";
-      card.innerHTML = '<img alt=""><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
+      card.innerHTML = '<span class="qb-sir">?</span><img alt=""><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
       card.onclick = sqOpen;
       grid.parentNode.insertBefore(card, grid);
     }
     card.classList.remove("hidden");
     card.classList.toggle("ready", !!d.can_open);
     card.classList.toggle("done", !!d.opened);
-    card.querySelector("img").src = qbImg(d.card);
-    card.querySelector("b").textContent = x.title + " · " + qbTx(d.card)[0];
+    // Bugungi kartochka quti ochilmaguncha SIR (server ham aytmaydi)
+    var ochiq = !!(d.opened && d.card);
+    card.querySelector(".qb-sir").classList.toggle("hidden", ochiq);
+    card.querySelector("img").classList.toggle("hidden", !ochiq);
+    if (ochiq) { card.querySelector("img").src = qbImg(d.card); }
+    card.querySelector("b").textContent = x.title + (ochiq ? " · " + qbTx(d.card)[0] : "");
     card.querySelector("small").textContent = d.opened ? x.openedC : d.can_open ? x.ready : x.cardS(d.n, d.total);
     var dots = card.querySelector(".hub-sq-dots");
     dots.innerHTML = "";
@@ -1020,14 +1024,17 @@
     var x = sqX(), d = sqData;
     if (!d) { return; }
     var pz = d.prizes || { ball: 10, gal: 1, big_every: 7, big_gal: 3 };
-    var kt = qbTx(d.card), bor = (d.cards || {})[d.card] || 0;
+    var ochiq = !!(d.opened && d.card);
+    var kt = ochiq ? qbTx(d.card) : [x.sir, ""], bor = ochiq ? ((d.cards || {})[d.card] || 0) : 0;
     $("sq-kick").textContent = x.kick;
     $("sq-title").textContent = x.title;
-    $("sq-img").src = qbImg(d.card);
+    $("sq-img").classList.toggle("hidden", !ochiq);
+    $("sq-sir").classList.toggle("hidden", ochiq);
+    if (ochiq) { $("sq-img").src = qbImg(d.card); }
     $("sq-card").className = "sq-card" + (d.can_open ? " ready" : "") + (d.opened ? " done" : "");
     $("sq-card-k").textContent = x.today;
     $("sq-card-n").textContent = kt[0];
-    $("sq-card-s").textContent = bor ? x.have(bor) : x.miss;
+    $("sq-card-s").textContent = ochiq ? x.have(bor || 1) : x.sirS;
     $("sq-card-s").classList.toggle("on", !!bor);
     $("sq-n").textContent = d.n + " / " + d.total;
 
@@ -1133,7 +1140,7 @@
       var kt = qbTx(code), soni = bor[code] || 0;
       var el = document.createElement("button");
       el.type = "button";
-      el.className = "qb-it" + (soni ? "" : " off") + (code === d.card ? " today" : "");
+      el.className = "qb-it" + (soni ? "" : " off");
       var im = document.createElement("img");
       im.alt = ""; im.loading = "lazy"; im.src = qbImg(code);
       el.appendChild(im);
@@ -1143,7 +1150,7 @@
       if (soni > 1) { var k = document.createElement("i"); k.textContent = "×" + soni; el.appendChild(k); }
       el.onclick = function () {
         if (soni) { nshBox({ codes: ["x"], srcs: [qbImg(code)], card: true, kick: x.have(soni), title: kt[0], text: kt[1] }); }
-        else { nshBox({ codes: [], kick: code === d.card ? x.today : x.unknown, title: code === d.card ? kt[0] : "?", text: code === d.card ? x.miss : "" }); }
+        else { nshBox({ codes: [], kick: x.unknown, title: "?", text: x.sirS }); }
       };
       g.appendChild(el);
     });
@@ -1503,7 +1510,8 @@
       $("wand-l3").textContent = FLEX[wand.flex][lang];
       $("wand-more").classList.remove("hidden");
       $("wand-cta").classList.add("hidden");
-      $("wand-again").classList.remove("hidden");
+      // Tayoqcha ham bir marta tanlanadi (egasi, 2026-10-05) - "Qayta tanlash" tugmasi yo'q
+      $("wand-again").classList.add("hidden");
     } else {
       icon.innerHTML = SVG_WAND;
       $("wand-wood").textContent = t.wandNone;

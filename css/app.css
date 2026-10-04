@@ -2286,3 +2286,32 @@ div.pm-row{cursor:default}
 .hist-top-r em{font:600 15px/1 'Cormorant Garamond',serif;font-style:normal;color:var(--text);white-space:nowrap}
 .hist-card.focus{box-shadow:0 0 0 2px rgba(var(--gold-rgb),.55),0 0 30px rgba(var(--gold-rgb),.18);scroll-margin-top:14px}
 .sq-coll .pm-chev{margin-left:auto}
+
+/* Sirli kartochka: quti ochilmaguncha kim ekani ko'rinmaydi */
+.qb-sir{flex:none;display:grid;place-items:center;width:54px;height:54px;border-radius:12px;font:600 30px/1 'Cormorant Garamond',serif;color:var(--gold-hi);
+  border:1px solid rgba(var(--gold-rgb),.55);
+  background:repeating-linear-gradient(45deg,rgba(var(--gold-rgb),.07) 0 6px,transparent 6px 12px),radial-gradient(circle at 50% 40%,#27345a,#141b33 75%)}
+.qb-sir.big{width:128px;height:128px;border-radius:16px;font-size:72px;border-width:2px;box-shadow:0 8px 26px rgba(0,0,0,.45)}
+.sq-card.ready .qb-sir,.hub-sq.ready .qb-sir{animation:sqSilk 2.4s ease-in-out infinite;box-shadow:0 0 26px rgba(var(--gold-rgb),.3)}
+.qb-it.off img{filter:brightness(.1) saturate(0) blur(1.5px)}
+
+/* ---------- PROFIL: fakultet, tayoqcha va Patronus panellari bir xil ko'rinishda (egasi, 2026-10-05) ---------- */
+#pm .house-empty,#pm .wand-face,#pm .pat-face{display:flex;align-items:center;gap:14px}
+#pm .house-crest,#pm .wand-icon,#pm .pat-img{flex:none;width:72px;height:72px;border-radius:50%;margin:0;box-sizing:border-box}
+#pm .house-crest{display:grid;place-items:center;border:1px solid rgba(var(--accent-rgb),.45);background:rgba(var(--accent-rgb),.1)}
+#pm .house-crest img{width:46px;height:46px}
+#pm .wand-icon{display:grid;place-items:center;padding:12px;color:var(--gold);border:1px solid rgba(var(--gold-rgb),.4);background:rgba(var(--gold-rgb),.08)}
+#pm .wand-icon svg{width:100%;height:100%}
+#pm .pat-img{box-shadow:0 0 0 1px rgba(150,200,255,.4),0 0 18px rgba(120,180,255,.22)}
+#pm .house-txt,#pm .wand-lines,#pm .pat-lines{display:block;min-width:0}
+#pm .house-txt b,#pm .wand-wood,#pm .pat-lines b{display:block;margin-bottom:5px;font:400 23px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+#pm .house-empty .house-crest.filled + .house-txt b{color:var(--accent)}
+#pm .house-txt small,#pm .wand-line,#pm .pat-lines span{font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
+#pm .house-txt small,#pm .pat-lines span{display:block}
+#pm .wand-line{display:inline}
+#pm .wand-line:not(:empty) + .wand-line:not(:empty)::before{content:" · "}
+#pm .pat-lines small{display:block;margin-top:4px}
+#pm .panel .sort-cta,#pm .panel .wand-more,#pm .panel .resort{margin-top:14px;height:42px;padding:0 12px;border-radius:12px;
+  font:700 12px/1 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase}
+#pm .panel .wand-more,#pm .panel .resort{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.04)}
+#pm .panel .resort{color:var(--dim)}
