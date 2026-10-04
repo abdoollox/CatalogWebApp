@@ -387,11 +387,16 @@
   function pmRender() {
     var b = $("pm-btn");
     if (!b) { return; }
-    pmAvatar($("pm-av"), true);
     var n = pmGal();
-    $("pm-gal").classList.toggle("hidden", !n);
-    $("pm-gal-n").textContent = n;
-    if (!b.onclick) { b.onclick = pmOpen; }
+    // Ikki joyda bir xil tugma: kutubxona tepasida va Xogvarts sahifasida
+    [["pm-btn", "pm-av", "pm-gal", "pm-gal-n"], ["pm-btn2", "pm-av3", "pm-gal2", "pm-gal2-n"]].forEach(function (x) {
+      var el = $(x[0]);
+      if (!el) { return; }
+      pmAvatar($(x[1]), true);
+      $(x[2]).classList.toggle("hidden", !n);
+      $(x[3]).textContent = n;
+      if (!el.onclick) { el.onclick = pmOpen; }
+    });
     if (!$("pm").classList.contains("hidden")) { pmFill(); }
   }
 
@@ -420,12 +425,16 @@
       b.lastChild.textContent = { uz: "O'zbekcha", ru: "Русский", en: "English" }[code];
       b.onclick = function () {
         if (code === lang) { return; }
+        var xogvartsda = !$("scr-hub").classList.contains("hidden");
         openCatalog(code, true);          // tilni saqlaydi va kutubxonani qayta chizadi
+        if (xogvartsda) { try { openHub(); } catch (e) {} }   // Xogvartsdan ochilgan bo'lsa o'sha yerda qoladi
         pmFill();
       };
       box.appendChild(b);
     });
     try { $("pm-bot").checked = !owlData || owlData.bot; } catch (e) { $("pm-bot").checked = true; }
+    // "Ilova ochilganda" tanlovi va (admin uchun) sinov o'quvchisi - shu menyuning pastida
+    try { renderHubSettings(); } catch (e) {}
   }
 
   function pmOpen() {
@@ -437,6 +446,7 @@
       $("pm-close").onclick = pmClose;
       el.addEventListener("click", function (e) { if (e.target === el) { pmClose(); } });
       $("pm-prof").onclick = function () { pmClose(); openProfile(); };
+      $("hub-set-pv").addEventListener("click", pmClose);     // sinov o'quvchisi boshlanganda menyu yopilsin
       $("pm-wal").onclick = function () { pmClose(); try { openCup(); } catch (e) {} };
       $("pm-bot").addEventListener("change", function () {
         try { owlApi("bot", { on: $("pm-bot").checked }); } catch (e) {}

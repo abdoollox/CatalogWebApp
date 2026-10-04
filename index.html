@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=2f3742c4">
+<link rel="stylesheet" href="css/app.css?v=a8a2439e">
 </head>
 <body>
 <div class="shell">
@@ -116,6 +116,17 @@
       <span class="pm-lbl" id="pm-lang-l"></span>
       <div class="hub-seg pm-seg" id="pm-langs"></div>
       <label class="pm-sw"><span class="hub-row-tx"><b id="pm-bot-t"></b><span id="pm-bot-s"></span></span><input type="checkbox" id="pm-bot" class="owl-sw"></label>
+      <!-- Ilova qayerdan ochilsin (ilgari Xogvarts sahifasidagi sozlama oynasida edi) -->
+      <span class="pm-lbl" id="hub-set-title"></span>
+      <div class="hub-seg pm-start">
+        <button type="button" id="hub-set-lib"></button>
+        <button type="button" id="hub-set-hub"></button>
+      </div>
+      <p class="pm-note" id="hub-set-note"></p>
+      <button class="hub-row hub-pv hidden" type="button" id="hub-set-pv">
+        <span class="hub-row-ic" id="hub-pv-ic"></span>
+        <span class="hub-row-tx"><b id="hub-pv-t"></b><span id="hub-pv-s"></span></span>
+      </button>
       <button class="hub-sheet-close" type="button" id="pm-close"></button>
     </div>
   </div>
@@ -181,7 +192,8 @@
       </div>
       <div class="hub-tools">
         <button class="hub-ic owl-btn" id="hub-owl" type="button" aria-label="Boyo'g'li pochtasi"></button>
-        <button class="hub-ic" id="hub-gear" type="button" aria-label="Sozlamalar"></button>
+        <button class="hub-ic hidden" id="hub-gear" type="button" aria-label="Sozlamalar"></button>
+        <button class="pm-btn" id="pm-btn2" type="button" aria-label="Profil"><span class="pm-av" id="pm-av3"></span><span class="pm-gal hidden" id="pm-gal2"><i></i><b id="pm-gal2-n"></b></span></button>
       </div>
     </div>
 
@@ -211,16 +223,7 @@
 
     <div id="hub-set" class="hub-sheet hidden">
       <div class="hub-sheet-box">
-        <h3 id="hub-set-title"></h3>
-        <p id="hub-set-note"></p>
-        <div class="hub-seg">
-          <button type="button" id="hub-set-lib"></button>
-          <button type="button" id="hub-set-hub"></button>
-        </div>
-        <button class="hub-row hub-pv hidden" type="button" id="hub-set-pv">
-          <span class="hub-row-ic" id="hub-pv-ic"></span>
-          <span class="hub-row-tx"><b id="hub-pv-t"></b><span id="hub-pv-s"></span></span>
-        </button>
+        <!-- Sozlamalar profil menyusiga (#pm) ko'chdi (egasi, 2026-10-04) -->
         <button class="hub-sheet-close" type="button" id="hub-set-close"></button>
       </div>
     </div>
@@ -1127,9 +1130,9 @@
 <script src="js/04-kubok-oyna.js?v=6ddc0630"></script>
 <script src="js/05-umumiy.js?v=469f5640"></script>
 <script src="js/06-soundtrack.js?v=af49646f"></script>
-<script src="js/07-kutubxona.js?v=f2942e7e"></script>
+<script src="js/07-kutubxona.js?v=fdf845af"></script>
 <script src="js/08-saralash.js?v=fd3df35b"></script>
-<script src="js/09-sehrli-olam.js?v=dfd3b003"></script>
+<script src="js/09-sehrli-olam.js?v=8e159615"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=e922ac9f"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>

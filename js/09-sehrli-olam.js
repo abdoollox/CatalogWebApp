@@ -10,7 +10,7 @@
   var QASR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.89 23.19A7.6 7.6 0 0 1 22 18.5a.5.5 0 0 0-.5-.5h-19a.5.5 0 0 0-.5.5a7.6 7.6 0 0 1-1.89 4.69a.51.51 0 0 0-.06.53a.5.5 0 0 0 .45.28h9a.5.5 0 0 0 .5-.5V22a2 2 0 0 1 4 0v1.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .45-.28a.51.51 0 0 0-.06-.53M2.5 16.5h19a.5.5 0 0 0 .5-.5v-4.39a1 1 0 0 0-.09-.41l-1.57-3.55a1 1 0 0 1-.09-.41v-.53a.5.5 0 0 1 .24-.43L22 5.4a1 1 0 0 0-.14-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v3.74a1 1 0 0 1-.09.41l-1.65 3.55a1 1 0 0 0-.09.41V14a.5.5 0 0 1-.5.5H16a.5.5 0 0 1-.5-.5V9.65a1 1 0 0 0-.17-.55l-2.41-3.62a1 1 0 0 1-.17-.56V4a.5.5 0 0 1 .25-.47l1.46-.88a1 1 0 0 0-.15-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v4.17a1 1 0 0 1-.17.56L8.67 9.1a1 1 0 0 0-.17.55V14a.5.5 0 0 1-.5.5h-.5A.5.5 0 0 1 7 14v-2.39a1 1 0 0 0-.09-.41L5.34 7.65a1 1 0 0 1-.09-.41v-.53a.5.5 0 0 1 .24-.43L7 5.4a1 1 0 0 0-.14-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v3.74a1 1 0 0 1-.09.41L2.09 11.2a1 1 0 0 0-.09.41V16a.5.5 0 0 0 .5.5m9.5-6a1 1 0 1 1-1 1a1 1 0 0 1 1-1"/></svg>';
   var HUB_TX = {
     // Bo'lim nomi "Xogvarts" (egasi, 2026-10-04): tugma qasrga olib kiradi, "9¾ / Sehrli olam" emas.
-    kick: { uz: "Sehrgarlik maktabi", ru: "Школа волшебства", en: "School of Wizardry" },
+    kick: { uz: "Sehr maktabi", ru: "Школа магии", en: "School of magic" },      // qisqa: bir qatorga sig'sin
     title: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
     pts: { uz: "ball", ru: "очков", en: "points" },
     wandT: { uz: "Tayoqcha", ru: "Волшебная палочка", en: "Wand" },
@@ -63,6 +63,7 @@
 
     $("hub-back").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13");
     $("hub-gear").innerHTML = worldIcon("gear");
+    try { pmRender(); } catch (e) {}       // sozlama o'rnida profil tugmasi (galleon bilan)
     $("hub-kick").textContent = HUB_TX.kick[lang];
     $("hub-title").textContent = HUB_TX.title[lang];
 
