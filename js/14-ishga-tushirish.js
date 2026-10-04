@@ -87,7 +87,8 @@
     });
     $("feed-back").addEventListener("click", function() {
       $("scr-feed-full").classList.add("hidden");
-      $("scr-cup").classList.remove("hidden");
+      // Tasma endi Xogvarts bosh sahifasida turadi - o'sha yerga qaytamiz
+      try { openHub(); } catch (e) { $("scr-cup").classList.remove("hidden"); }
     });
     $("cup-cta").addEventListener("click", function () {
       // Fakultetsizga - saralanish, chegaradan o'tmaganga - a'zo taklifi

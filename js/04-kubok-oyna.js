@@ -661,15 +661,83 @@
       var more = cupEl("button", "cup-more",
         lang === "uz" ? "Barcha tasmani ko'rish" : lang === "ru" ? "Показать всю ленту" : "Show the whole feed");
       more.type = "button";
-      more.addEventListener("click", function () {
-        var rows = list.querySelectorAll(".feed-row.hidden");
-        for (var i = 0; i < rows.length; i++) { rows[i].classList.remove("hidden"); }
-        more.remove();
-      });
+      more.addEventListener("click", openFeedFull);
       list.appendChild(more);
     }
 
     box.classList.remove("hidden");
+  }
+
+  /* ---------- TO'LIQ TASMA: alohida sahifa, fakultet bo'yicha saralash (egasi, 2026-10-04) ---------- */
+
+  var API_CUP_FEED = "https://bot.tizimshunos.uz/api/cup/feed";
+  var FF_TX = {
+    uz: { kick: "Xogvarts", title: "Saralanganlar", all: "Hammasi", wait: "Yuklanmoqda…", none: "Bu fakultetga hali hech kim tushmagan" },
+    ru: { kick: "Хогвартс", title: "Распределение", all: "Все", wait: "Загрузка…", none: "На этот факультет пока никто не попал" },
+    en: { kick: "Hogwarts", title: "The Sorting", all: "All", wait: "Loading…", none: "No one has been sorted into this house yet" }
+  };
+  var ffAll = null, ffHouse = "", ffBusy = false;
+
+  function ffList() { return ffAll || (cupData && cupData.feed) || []; }
+
+  function ffRender() {
+    var x = FF_TX[lang] || FF_TX.uz, t = T[lang], all = ffList();
+    $("feed-full-kick").textContent = x.kick;
+    $("feed-full-title").textContent = x.title;
+    var soni = {};
+    all.forEach(function (ev) { soni[ev.house] = (soni[ev.house] || 0) + 1; });
+
+    var chips = $("ff-chips");
+    chips.innerHTML = "";
+    [""].concat(HOUSE_ORDER).forEach(function (h) {
+      var hh = HOUSES[h] || {};
+      var b = cupEl("button", "ff-chip" + (h === ffHouse ? " on" : ""));
+      b.type = "button";
+      if (h) {
+        b.style.setProperty("--hc", hh.accent || "#97a1ae");
+        b.style.setProperty("--hc-rgb", hh.rgb || "151,161,174");
+        var im = cupCrestImg(h, 18);
+        if (im) { b.appendChild(im); }
+      }
+      b.appendChild(cupEl("span", "", h ? cupHouseName(h) : x.all));
+      b.appendChild(cupEl("em", "", String(h ? (soni[h] || 0) : all.length)));
+      b.addEventListener("click", function () { ffHouse = h; ffRender(); });
+      chips.appendChild(b);
+    });
+
+    var list = $("feed-full-list");
+    list.innerHTML = "";
+    var rows = ffHouse ? all.filter(function (ev) { return ev.house === ffHouse; }) : all;
+    if (!rows.length) {
+      list.appendChild(cupEl("p", "cc-note hist-wait", ffBusy ? x.wait : x.none));
+      return;
+    }
+    var frag = document.createDocumentFragment();
+    rows.forEach(function (ev) { frag.appendChild(feedRow(ev, t)); });
+    list.appendChild(frag);
+  }
+
+  function ffFetch() {
+    var initData = "";
+    try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    if (!initData || !window.fetch || ffBusy) { return; }
+    ffBusy = true;
+    window.fetch(API_CUP_FEED, { headers: { "X-Telegram-Init-Data": initData } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        ffBusy = false;
+        if (d && d.ok && d.feed) { ffAll = d.feed; }
+        if (!$("scr-feed-full").classList.contains("hidden")) { ffRender(); }
+      })["catch"](function () { ffBusy = false; });
+  }
+
+  function openFeedFull() {
+    ["scr-hub", "scr-cup"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ffHouse = "";
+    $("scr-feed-full").classList.remove("hidden");
+    ffRender();          // avval bor narsa (so'nggi 50 ta), keyin to'liq ro'yxat keladi
+    ffFetch();
+    try { window.scrollTo(0, 0); } catch (e) {}
   }
 
   /* ---------- shaxsiy blok ---------- */

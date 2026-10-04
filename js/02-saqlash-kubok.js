@@ -121,7 +121,15 @@
           {name: "Luna", house: "ravenclaw", ago_minutes: 15},
           {name: "Cedric", house: "hufflepuff", ago_minutes: 20},
           {name: "Cho", house: "ravenclaw", ago_minutes: 25},
-          {name: "Ginny", house: "gryffindor", ago_minutes: 30}
+          {name: "Ginny", house: "gryffindor", ago_minutes: 30},
+          {name: "Pansy", house: "slytherin", ago_minutes: 95},
+          {name: "Neville", house: "gryffindor", ago_minutes: 180},
+          {name: "Tonks", house: "hufflepuff", ago_minutes: 400},
+          {name: "Padma", house: "ravenclaw", ago_minutes: 1500},
+          {name: "Blaise", house: "slytherin", ago_minutes: 3000},
+          {name: "Hannah", house: "hufflepuff", ago_minutes: 4400},
+          {name: "Seamus", house: "gryffindor", ago_minutes: 7300},
+          {name: "Ernie", house: "hufflepuff", ago_minutes: 10100}
         ]
       };
       if (cb) { cb(cupData); }

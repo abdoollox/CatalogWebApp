@@ -2072,10 +2072,10 @@ div.pm-row{cursor:default}
 
 /* ---------- KUBOK SAHIFASI: ko'rinish yangilandi (2026-10-04) ---------- */
 /* Sarlavha boshqa sahifalardagidek: markazda, tugma chetda */
-#scr-cup .kb-hdr,#scr-cup-hist .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-cup .kb-ttl,#scr-cup-hist .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-cup .kb-ttl .cup-kick,#scr-cup-hist .kb-ttl .cup-kick{color:var(--gold)}
-#scr-cup .kb-ttl .cup-title,#scr-cup-hist .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-cup .kb-hdr,#scr-feed-full .kb-hdr,#scr-cup-hist .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-cup .kb-ttl,#scr-feed-full .kb-ttl,#scr-cup-hist .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-cup .kb-ttl .cup-kick,#scr-feed-full .kb-ttl .cup-kick,#scr-cup-hist .kb-ttl .cup-kick{color:var(--gold)}
+#scr-cup .kb-ttl .cup-title,#scr-feed-full .kb-ttl .cup-title,#scr-cup-hist .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 #scr-cup .kb-chips{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-bottom:18px}
 #scr-cup .kb-chips .cup-prev{margin-top:0}
 /* Qum soatlar: shisha naycha, ichida qimmatbaho toshlar */
@@ -2114,3 +2114,15 @@ div.pm-row{cursor:default}
 .you-gal-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
 .you-gal-tx b{font:700 13px/1.25 'Manrope',sans-serif;color:var(--gold-hi)}
 .you-gal-tx small{font:500 11px/1.35 'Manrope',sans-serif;color:var(--dim)}
+
+/* ---------- TO'LIQ TASMA sahifasi ---------- */
+.ff-chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 12px;padding:2px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ff-chips::-webkit-scrollbar{display:none}
+.ff-chip{flex:none;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 13px;border-radius:19px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--dim);font:700 12.5px/1 'Manrope',sans-serif}
+.ff-chip img{display:block;object-fit:contain}
+.ff-chip em{font-style:normal;font-weight:600;font-size:11px;opacity:.75}
+.ff-chip.on{color:var(--gold);border-color:rgba(var(--gold-rgb),.6);background:rgba(var(--gold-rgb),.1)}
+.ff-chip.on[style]{color:var(--hc);border-color:rgba(var(--hc-rgb),.65);background:rgba(var(--hc-rgb),.13)}
+.ff-chip:active{transform:scale(.97)}
+#scr-feed-full .ff-box{margin-top:0;margin-bottom:30px;padding-top:6px;padding-bottom:6px}
