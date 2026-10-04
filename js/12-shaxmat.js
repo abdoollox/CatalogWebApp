@@ -679,6 +679,7 @@
     }
     if (chessState.gameOver && !chessNet.ended) {
       chessNet.ended = true;
+      try { if (!chessNet.review) { sqDone("chess"); } } catch (e) {}
       pvpStopPoll();
       if (!chessNet.review) { pvpShowEnd(g); }
     }
@@ -1577,6 +1578,7 @@
   // Bot bilan o'yin natijasi (jonli o'yinda natijani server aytadi - pvpShowEnd).
   function finishChessGame(result, reason) {
     chessState.gameOver = true;
+    try { sqDone("chess"); } catch (e) {}       // kunlik sandiq: bot bilan o'yin ham sanaladi
     stopBotClock();
     closePromo();
     showChessOverlay(result, reason, "");

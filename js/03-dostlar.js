@@ -294,6 +294,7 @@
   // Karta ichidagi havola ulashgan odamning id sini olib yuradi.
   // query: "" - film qidiruvi, "taklif" - kolleksiyaning reklama kartasi.
   function shareRefs(query) {
+    try { sqDone("share"); } catch (e) {}
     try {
       if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) {
         tg.switchInlineQuery(typeof query === "string" ? query : "", ["users", "groups", "channels"]);

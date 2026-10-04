@@ -897,6 +897,7 @@
       .then(function(res) {
         m.tries = 0;
         if (res && res.ok && (res.message || res.messages)) {
+          try { sqDone("chat"); } catch (e) {}
           R.msgs = R.msgs.filter(function(x) { return x !== m; });
           if (res.message) {
             res.message.cid = m.cid;
@@ -956,6 +957,7 @@
   // Ekranda darhol ko'rinadi, server rad etsa - qaytariladi.
   function chatReact(m, emoji) {
     if (m.tmp) return;
+    try { sqDone("chat"); } catch (e) {}
     var room = chatRoom, R = chatRooms[room], saved = JSON.stringify(m.reactions || []);
     var list = JSON.parse(saved), had = null;
     list.forEach(function(r) { if (r.me) { had = r.e; r.n--; r.me = false; } });

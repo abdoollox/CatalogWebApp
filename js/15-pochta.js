@@ -381,6 +381,7 @@
 
   function openOwl() {
     if (owlBusy) { return; }
+    try { sqDone("owl"); } catch (e) {}
     owlFrom = hubVisible() ? "hub" : "cat";
     $("scr-hub").classList.add("hidden");
     $("scr-cat").classList.add("hidden");

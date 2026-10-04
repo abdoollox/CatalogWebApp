@@ -43,6 +43,7 @@
 
   function openCup() {
     if (!cupData) { return; }
+    try { sqDone("cup"); } catch (e) {}
     renderCupScreen();
     stopSortTimer();
     $("scr-cat").classList.add("hidden");

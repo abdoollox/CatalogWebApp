@@ -86,6 +86,7 @@
     $("hub-gear").innerHTML = worldIcon("gear");
     try { pmRender(); } catch (e) {}       // sozlama o'rnida profil tugmasi (galleon bilan)
     try { patPaint(); patLoad(); } catch (e) {}   // Patronus testi taklifi (saralangan, hali olmagan bo'lsa)
+    try { sqLoad(true); } catch (e) {}            // kunlik sandiq (har ochilganda yangilanadi - kunlik savol serverda ko'rinadi)
     $("hub-kick").textContent = HUB_TX.kick[lang];
     $("hub-title").textContent = HUB_TX.title[lang];
 
@@ -909,6 +910,7 @@
 
   // Tayyor rasmni ulashadi: Stories -> chatga tayyor xabar -> oddiy havola (eski Telegram)
   function rasmUlash(res, matn, tugma) {
+    try { sqDone("share"); } catch (e) {}
     var story = false, chat = false;
     try { story = !!(tg && tg.shareToStory && tg.isVersionAtLeast && tg.isVersionAtLeast("7.8")); } catch (e) {}
     try { chat = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}

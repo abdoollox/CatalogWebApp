@@ -495,7 +495,7 @@
      Boshqa odamning nishonlari chatdan ochiladi (nshPeer). Galleon berilmaydi. */
   var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
   var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "streak_7",
-                   "perfect_week", "kubok_golib", "top_3", "dost_1", "dost_5", "shaxmat", "albom", "serial_1"];
+                   "perfect_week", "kubok_golib", "top_3", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1"];
   var NSH_TX = {
     uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
           freshN: function (n) { return n + " ta yangi nishon"; }, freshP: "Hammasi profilingizda turadi.",
@@ -509,6 +509,8 @@
                tayoqcha: ["Tayoqcha egasi", "Olivander do'konidan tayoqcha oling"],
                patronus: ["Patronus egasi", "Professor Lyupin darsida Patronusingizni chaqiring"],
                ball_1: ["Birinchi ball", "Fakultetingizga birinchi ballni keltiring"],
+               sandiq_1: ["Birinchi sandiq", "Kunlik sandiqni bir marta oching"],
+               sandiq_7: ["Yetti sandiq", "Kunlik sandiqni 7 kun ketma-ket oching"],
                streak_7: ["Yetti sham", "Bir haftaning 7 kunida ham ball to'plang"],
                perfect_week: ["Bexato hafta", "Haftaning hamma kunlik savoliga to'g'ri javob bering"],
                kubok_golib: ["Kubok g'olibi", "Fakultetingiz haftalik kubokni yutsin, siz ham ball qo'shgan bo'ling"],
@@ -530,6 +532,8 @@
                tayoqcha: ["Владелец палочки", "Получите палочку в лавке Олливандера"],
                patronus: ["Обладатель Патронуса", "Вызовите своего Патронуса на уроке профессора Люпина"],
                ball_1: ["Первое очко", "Принесите факультету первые очки"],
+               sandiq_1: ["Первый сундук", "Откройте сундук дня один раз"],
+               sandiq_7: ["Семь сундуков", "Открывайте сундук дня 7 дней подряд"],
                streak_7: ["Семь свечей", "Набирайте очки все 7 дней одной недели"],
                perfect_week: ["Неделя без ошибок", "Ответьте верно на все вопросы дня за неделю"],
                kubok_golib: ["Обладатель Кубка", "Ваш факультет выиграл Кубок недели, и вы принесли очки"],
@@ -551,6 +555,8 @@
                tayoqcha: ["Wand Owner", "Get a wand at Ollivander's"],
                patronus: ["Patronus Caster", "Summon your Patronus in Professor Lupin's lesson"],
                ball_1: ["First Point", "Earn your first points for your house"],
+               sandiq_1: ["First Chest", "Open the daily chest once"],
+               sandiq_7: ["Seven Chests", "Open the daily chest 7 days in a row"],
                streak_7: ["Seven Candles", "Earn points on all 7 days of one week"],
                perfect_week: ["Flawless Week", "Answer every daily question of a week correctly"],
                kubok_golib: ["Cup Winner", "Your house wins the weekly Cup and you earned points for it"],
@@ -565,7 +571,7 @@
   var NSH_GROUPS = [
     ["kino", ["film_1", "film_8", "fb_3", "poliglot", "serial_1"], { uz: "Kino", ru: "Кино", en: "Films" }],
     ["xogvarts", ["oquvchi", "tayoqcha", "patronus"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
-    ["kubok", ["ball_1", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
+    ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
     ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }]
@@ -696,7 +702,7 @@
     row.className = "nsh-row" + (o.codes.length > 1 ? " many" : "") + (o.off ? " off" : "");
     o.codes.forEach(function (c) {
       var im = document.createElement("img");
-      im.alt = ""; im.src = nshImg(c);
+      im.alt = ""; im.src = o.srcs ? o.srcs[row.children.length] : nshImg(c);
       if (o.names) {
         var w = document.createElement("span"), s = document.createElement("small");
         s.textContent = (nshX().n[c] || [""])[0];
@@ -741,6 +747,266 @@
       nshBox({ codes: codes, names: true, kick: x.of + (codes.length ? " · " + codes.length + " / " + (res.total || NSH_ORDER.length) : ""),
                title: name || "", text: codes.length ? "" : x.none });
     });
+  }
+
+  /* ---------- KUNLIK SANDIQ (egasi, 2026-10-05) ----------
+     Har kuni 6 ta topshiriq (server tanlaydi, hammaga bir xil). 2 ta va 4 ta bajarilganda +5 ball
+     o'zi beriladi, 6 ta bo'lganda odam sandiqni o'zi ochadi: +10 ball va 1 galleon. 7 kun ketma-ket -
+     katta sandiq (+3 galleon). Hisob serverda (hpsandiq.py, /api/sandiq). Faqat saralanganlarga.
+     Topshiriq bajarilganini aytish: sqDone("chat") - kerakli joylarga ilgak qilib qo'yilgan. */
+  var API_SANDIQ = "https://bot.tizimshunos.uz/api/sandiq";
+  // Olov belgisi: MDI "fire" (Apache 2.0) - ketma-ketlik
+  var SQ_FIRE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82c-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32c-2.59 2.08-3.61 5.75-2.39 8.9c.04.1.08.2.08.33c0 .22-.15.42-.35.5c-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5c.14.6.41 1.2.71 1.73c1.08 1.73 2.95 2.97 4.96 3.22c2.14.27 4.43-.12 6.07-1.6c1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26m-3.16 6.3c-.28.24-.74.5-1.1.6c-1.12.4-2.24-.16-2.9-.82c1.19-.28 1.9-1.16 2.11-2.05c.17-.8-.15-1.46-.28-2.23c-.12-.74-.1-1.37.17-2.06c.19.38.39.76.63 1.06c.77 1 1.98 1.44 2.24 2.8c.04.14.06.28.06.43c.03.82-.33 1.72-.93 2.27"/></svg>';
+  var SQ_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
+  var SQ_TX = {
+    uz: { kick: "Har kuni yangilanadi", title: "Kunlik sandiq", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
+          ready: "Sandiq tayyor — oching!", openedC: "Bugungi sandiq ochildi", days: function (n) { return n + " kun ketma-ket"; },
+          tasksL: "Bugungi topshiriqlar", open: "Sandiqni ochish", openBig: "Katta sandiqni ochish", need: function (n) { return "Yana " + n + " ta topshiriq"; },
+          opened: "Sandiq ochildi. Ertaga yangi topshiriqlar keladi.", step: function (b) { return "+" + b + " ball"; }, chest: "Sandiq",
+          chestS: function (b, g) { return "+" + b + " ball · " + g + " galleon"; },
+          toast: function (b, n, t) { return "+" + b + " ball · sandiq " + n + " / " + t; },
+          rwK: "Sandiq ochildi", rwKBig: "Katta sandiq ochildi", rwT: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
+          rwP: function (n) { return n + " kun ketma-ket. Ertaga ham keling — sanoq uzilmasin."; },
+          rwPBig: "7 kun ketma-ket! Qo'shimcha 3 galleon sizniki.",
+          strL: "Ketma-ketlik", strS: function (k, g) { return "Har " + k + "-kun — katta sandiq: yana +" + g + " galleon. Bir kun o'tkazib yuborsangiz, sanoq noldan boshlanadi."; },
+          t: { daily: ["Kunlik savolga javob bering", "Bugungi savol"], chat: ["Chatga yozing yoki reaksiya qo'ying", "Fakultet xonasi"],
+               music: ["Bitta trek tinglang", "Kutubxonadagi soundtreklar"], chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"],
+               owl: ["Boyo'g'li pochtasini oching", "Xatlaringizni ko'ring"], cup: ["Kubok sahifasiga kiring", "Fakultetingiz nechanchi o'rinda"],
+               share: ["Do'stingizga ulashing", "Taklif havolasi, fakultet yoki Patronus"], house: ["Fakultet sahifasini oching", "Asoschisi, mudiri, a'zolari"] } },
+    ru: { kick: "Обновляется каждый день", title: "Сундук дня", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
+          ready: "Сундук готов — откройте!", openedC: "Сегодняшний сундук открыт", days: function (n) { return "Дней подряд: " + n; },
+          tasksL: "Задания на сегодня", open: "Открыть сундук", openBig: "Открыть большой сундук", need: function (n) { return "Осталось заданий: " + n; },
+          opened: "Сундук открыт. Завтра будут новые задания.", step: function (b) { return "+" + b + " очков"; }, chest: "Сундук",
+          chestS: function (b, g) { return "+" + b + " очков · галлеонов: " + g; },
+          toast: function (b, n, t) { return "+" + b + " очков · сундук " + n + " / " + t; },
+          rwK: "Сундук открыт", rwKBig: "Большой сундук открыт", rwT: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
+          rwP: function (n) { return "Дней подряд: " + n + ". Приходите и завтра, чтобы счёт не прервался."; },
+          rwPBig: "7 дней подряд! Ещё 3 галлеона ваши.",
+          strL: "Серия", strS: function (k, g) { return "Каждый " + k + "-й день — большой сундук: ещё +" + g + " галлеона. Пропустите день — счёт начнётся заново."; },
+          t: { daily: ["Ответьте на вопрос дня", "Сегодняшний вопрос"], chat: ["Напишите в чат или поставьте реакцию", "Комната факультета"],
+               music: ["Послушайте один трек", "Саундтреки в библиотеке"], chess: ["Сыграйте партию в шахматы", "Можно и с ботом"],
+               owl: ["Откройте совиную почту", "Посмотрите свои письма"], cup: ["Загляните на страницу Кубка", "На каком месте ваш факультет"],
+               share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], house: ["Откройте страницу факультета", "Основатель, декан, участники"] } },
+    en: { kick: "Refreshes every day", title: "Daily Chest", cardS: function (n, t) { return n + " / " + t + " tasks"; },
+          ready: "The chest is ready — open it!", openedC: "Today's chest is opened", days: function (n) { return n + " days in a row"; },
+          tasksL: "Today's tasks", open: "Open the chest", openBig: "Open the big chest", need: function (n) { return n + " more tasks"; },
+          opened: "Chest opened. New tasks arrive tomorrow.", step: function (b) { return "+" + b + " points"; }, chest: "Chest",
+          chestS: function (b, g) { return "+" + b + " points · " + g + " Galleon"; },
+          toast: function (b, n, t) { return "+" + b + " points · chest " + n + " / " + t; },
+          rwK: "Chest opened", rwKBig: "Big chest opened", rwT: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
+          rwP: function (n) { return n + " days in a row. Come back tomorrow to keep the streak."; },
+          rwPBig: "7 days in a row! 3 extra Galleons are yours.",
+          strL: "Streak", strS: function (k, g) { return "Every " + k + "th day is a big chest: +" + g + " more Galleons. Miss a day and the count starts over."; },
+          t: { daily: ["Answer the daily question", "Today's question"], chat: ["Write or react in the chat", "Your house room"],
+               music: ["Listen to one track", "Soundtracks in the library"], chess: ["Play a game of chess", "A bot counts too"],
+               owl: ["Open the owl post", "Check your letters"], cup: ["Visit the Cup page", "See where your house stands"],
+               share: ["Share with a friend", "Invite link, house or Patronus"], house: ["Open a house page", "Founder, head, members"] } }
+  };
+  var sqData = null, sqAsked = false, sqBusy = false;
+
+  function sqX() { return SQ_TX[lang] || SQ_TX.uz; }
+  function sqImg(nom) { return IMG_DIR + "sandiq/" + nom + ".webp"; }
+  function sqLocal() { return /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname); }
+
+  // Mahalliy ko'rikda server yo'q - namuna (faqat localhost); topshiriqlar shu yerning o'zida belgilanadi
+  var sqDemo = null;
+  function sqSample(body) {
+    if (!sqDemo) {
+      sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false,
+                 tasks: ["daily", "chat", "music", "owl", "cup", "house"].map(function (c, i) { return { code: c, done: i < 3 }; }),
+                 prizes: { steps: [[2, 5], [4, 5]], ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
+    }
+    var d = sqDemo, eski = d.tasks.filter(function (t) { return t.done; }).length;
+    d.reward = null;
+    if (body && body.task) { d.tasks.forEach(function (t) { if (t.code === body.task) { t.done = true; } }); }
+    d.n = d.tasks.filter(function (t) { return t.done; }).length;
+    if ((eski < 2 && d.n >= 2) || (eski < 4 && d.n >= 4)) { d.reward = { ball: 5 }; }
+    if (body && body.open && d.n >= 6 && !d.opened) { d.opened = true; d.streak++; d.reward = { ball: 10, gal: 1, big: false, streak: d.streak, opened: true }; }
+    d.can_open = d.n >= 6 && !d.opened;
+    return JSON.parse(JSON.stringify(d));
+  }
+
+  function sqPost(body, done) {
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init) { if (sqLocal()) { done(sqSample(body)); } return; }
+    if (!window.fetch) { return; }
+    window.fetch(API_SANDIQ, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
+                               body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { if (res && res.ok) { done(res); } })["catch"](function () {});
+  }
+
+  function sqApply(res) {
+    sqData = res;
+    sqCard();
+    if ($("scr-sq") && !$("scr-sq").classList.contains("hidden")) { sqRender(); }
+  }
+
+  function sqLoad(force) {
+    if (sqAsked && !force) { sqCard(); return; }
+    var ichkarida = false;
+    try { ichkarida = hasHouse(); } catch (e) {}
+    if (!ichkarida) { return; }
+    sqAsked = true;
+    sqPost({}, sqApply);
+  }
+
+  // Topshiriq bajarildi: bugungi ro'yxatda bo'lsa va hali belgilanmagan bo'lsa - serverga
+  function sqDone(code) {
+    if (!sqData || !sqData.tasks) { return; }
+    var bor = sqData.tasks.filter(function (t) { return t.code === code && !t.done; })[0];
+    if (!bor) { return; }
+    bor.done = true;                      // ikki marta yubormaslik uchun
+    sqPost({ task: code }, function (res) {
+      var x = sqX();
+      sqApply(res);
+      if (res.reward && res.reward.ball && !res.reward.opened) {
+        try { showToast(x.toast(res.reward.ball, res.n, res.total), "ok"); } catch (e) {}
+        try { fetchCup(function () {}); } catch (e) {}
+      }
+    });
+  }
+
+  // Xogvarts bosh sahifasidagi karta (kubok blokidan keyin)
+  function sqCard() {
+    var grid = $("hub-grid");
+    if (!grid) { return; }
+    var card = $("hub-sq");
+    if (!sqData) { if (card) { card.classList.add("hidden"); } return; }
+    var x = sqX(), d = sqData;
+    if (!card) {
+      card = document.createElement("button");
+      card.type = "button";
+      card.id = "hub-sq";
+      card.className = "hub-sq";
+      card.innerHTML = '<img alt=""><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
+      card.onclick = sqOpen;
+      grid.parentNode.insertBefore(card, grid);
+    }
+    card.classList.remove("hidden");
+    card.classList.toggle("ready", !!d.can_open);
+    card.classList.toggle("done", !!d.opened);
+    card.querySelector("img").src = sqImg(d.opened ? (d.bigDone ? "katta-ochiq" : "ochiq") : (d.big ? "katta" : "yopiq"));
+    card.querySelector("b").textContent = x.title;
+    card.querySelector("small").textContent = d.opened ? x.openedC : d.can_open ? x.ready : x.cardS(d.n, d.total);
+    var dots = card.querySelector(".hub-sq-dots");
+    dots.innerHTML = "";
+    d.tasks.forEach(function (t) { var i = document.createElement("i"); if (t.done) { i.className = "on"; } dots.appendChild(i); });
+    var em = card.querySelector("em");
+    em.innerHTML = d.streak > 0 ? SQ_FIRE + "<span>" + d.streak + "</span>" : "";
+    em.classList.toggle("hidden", !(d.streak > 0));
+  }
+
+  function sqGo(code) {
+    var h = null;
+    try { h = validHouse(cupMe().house || house); } catch (e) {}
+    $("scr-sq").classList.add("hidden");
+    try {
+      if (code === "daily") { openDaily(); }
+      else if (code === "chat") { openChat(); }
+      else if (code === "chess") { openChessHub(); }
+      else if (code === "owl") { openOwl(); }
+      else if (code === "cup") { openCup(); }
+      else if (code === "house" && h) { openHouse(h); }
+      else if (code === "share") { openRefs(); }
+      else if (code === "music") {
+        $("scr-cat").classList.remove("hidden");
+        renderCatalog();
+        setTimeout(function () { try { $("ms-row").scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {} }, 120);
+      }
+      else { openHub(); }
+    } catch (e) { try { openHub(); } catch (e2) {} }
+  }
+
+  function sqRender() {
+    var x = sqX(), d = sqData;
+    if (!d) { return; }
+    var pz = d.prizes || { steps: [[2, 5], [4, 5]], ball: 10, gal: 1, big_every: 7, big_gal: 3 };
+    $("sq-kick").textContent = x.kick;
+    $("sq-title").textContent = x.title;
+    $("sq-img").src = sqImg(d.opened ? (d.bigDone ? "katta-ochiq" : "ochiq") : (d.big ? "katta" : "yopiq"));
+    $("sq-img").classList.toggle("ready", !!d.can_open);
+    $("sq-n").textContent = d.n + " / " + d.total;
+
+    // Mukofot zinapoyasi: 2 -> +5, 4 -> +5, 6 -> sandiq
+    var lad = $("sq-ladder");
+    lad.innerHTML = "";
+    pz.steps.concat([[d.total, 0]]).forEach(function (s) {
+      var c = document.createElement("span");
+      c.className = "sq-st" + (d.n >= s[0] ? " on" : "") + (s[1] ? "" : " chest");
+      c.innerHTML = "<b>" + s[0] + "</b><small></small>";
+      c.querySelector("small").textContent = s[1] ? x.step(s[1]) : x.chestS(pz.ball, pz.gal + (d.big ? pz.big_gal : 0));
+      lad.appendChild(c);
+    });
+    $("sq-fill").style.width = Math.round(d.n * 100 / d.total) + "%";
+
+    $("sq-tasks-l").textContent = x.tasksL;
+    var list = $("sq-tasks");
+    list.innerHTML = "";
+    d.tasks.forEach(function (t) {
+      var tx = x.t[t.code];
+      if (!tx) { return; }
+      var row = document.createElement("button");
+      row.type = "button";
+      row.className = "sq-task" + (t.done ? " done" : "");
+      row.innerHTML = '<span class="sq-ck">' + (t.done ? SQ_CHECK : "") + '</span><span class="sq-task-tx"><b></b><small></small></span><i>›</i>';
+      row.querySelector("b").textContent = tx[0];
+      row.querySelector("small").textContent = tx[1];
+      if (!t.done) { row.onclick = function () { sqGo(t.code); }; }
+      list.appendChild(row);
+    });
+
+    var btn = $("sq-open");
+    btn.textContent = d.opened ? x.opened : d.can_open ? (d.big ? x.openBig : x.open) : x.need(d.total - d.n);
+    btn.disabled = !d.can_open;
+    btn.classList.toggle("off", !d.can_open);
+    btn.onclick = sqChest;
+
+    // Ketma-ketlik: 7 ta nuqta, bugungacha yoqilgan
+    $("sq-str-l").textContent = x.strL;
+    $("sq-str-n").innerHTML = SQ_FIRE + "<span></span>";
+    $("sq-str-n").querySelector("span").textContent = x.days(d.streak);
+    var dots = $("sq-str-dots"), k = pz.big_every, joy = d.streak % k;
+    if (d.opened && joy === 0 && d.streak > 0) { joy = k; }
+    dots.innerHTML = "";
+    for (var i = 1; i <= k; i++) {
+      var o = document.createElement("i");
+      o.className = (i <= joy ? "on" : "") + (i === k ? " big" : "");
+      o.textContent = i;
+      dots.appendChild(o);
+    }
+    $("sq-str-s").textContent = x.strS(k, pz.big_gal);
+  }
+
+  function sqOpen() {
+    if (!sqData) { return; }
+    ["scr-hub", "scr-cat", "scr-cup"].forEach(function (id) { $(id).classList.add("hidden"); });
+    $("scr-sq").classList.remove("hidden");
+    $("sq-back").onclick = function () { $("scr-sq").classList.add("hidden"); try { openHub(); } catch (e) {} };
+    sqRender();
+    sqPost({}, sqApply);                 // kunlik savol boshqa joyda bajarilgan bo'lishi mumkin
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  // Sandiqni ochish: mukofot oynasi (nishon oynasidan foydalanadi)
+  function sqChest() {
+    if (sqBusy || !sqData || !sqData.can_open) { return; }
+    sqBusy = true;
+    sqPost({ open: true }, function (res) {
+      sqBusy = false;
+      var x = sqX(), r = res.reward;
+      if (r && r.opened) { res.bigDone = !!r.big; }
+      sqApply(res);
+      if (!r || !r.opened) { return; }
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+      nshBox({ codes: ["x"], srcs: [sqImg(r.big ? "katta-ochiq" : "ochiq")], kick: r.big ? x.rwKBig : x.rwK,
+               title: x.rwT(r.ball, r.gal), text: r.big ? x.rwPBig : x.rwP(r.streak),
+               done: function () { try { nshLoad(true); } catch (e) {} } });
+      try { walLoad(function () { pmRender(); }); } catch (e) {}
+      try { fetchCup(function () {}); } catch (e) {}
+    });
+    setTimeout(function () { sqBusy = false; }, 6000);
   }
 
   function renderCatalog() {

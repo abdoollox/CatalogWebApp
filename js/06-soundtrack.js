@@ -380,6 +380,7 @@
     var list = msTracks(id);
     while (i < list.length && list[i].big) { i++; }
     if (i >= list.length) { return; }
+    try { sqDone("music"); } catch (e) {}
     if (!msKey) {
       // Kalit hali kelmagan (yoki eskirgan) — olib, keyin chalamiz
       msFetch(function () {

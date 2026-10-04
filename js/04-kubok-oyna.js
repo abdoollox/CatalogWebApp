@@ -149,6 +149,7 @@
     film: '<path d="M4 5h16v14H4z M8 5v14 M16 5v14 M4 9.5h4 M4 14.5h4 M16 9.5h4 M16 14.5h4"/>',
     exam: '<path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/>',
     daily: '<path d="M4.5 6h15v14h-15z M4.5 10h15 M8.5 3.5v4 M15.5 3.5v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/>',
+    chest: '<path d="M4 10V8.5a4.5 4.5 0 0 1 4.5-4.5h7A4.5 4.5 0 0 1 20 8.5V10 M3.5 10h17v9.5h-17z M10.2 13h3.6v3.2h-3.6z"/>',
     chess: '<path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/>',
     friends: '<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/>'
   };
@@ -157,6 +158,7 @@
     // "exam" (kino imtihoni) 2026-10-04 da olib tashlandi - kubok muvozanatini buzardi
     { key: "daily",   color: "#199e70" },
     { key: "chess",   color: "#9085e9" },
+    { key: "chest",   color: "#d9568c" },      // kunlik sandiq (2026-10-05)
     { key: "friends", color: "#c98500" }
   ];
 
@@ -186,9 +188,10 @@
 
   var CUP_T = {
     uz: {
-      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", friends: "Do'stlar" },
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", chest: "Sandiq", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
+              chest: "Kuniga 6 ta topshiriq · +20 gacha",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
       histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
@@ -216,13 +219,14 @@
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
               "Hafta yakunida har 10 ball uchun 1 galleon beriladi. G'olib fakultet a'zolariga ikki baravar, eng ko'p ball to'plagan uch o'quvchiga yana +15, +10 va +5.",
-              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 160 ball.",
+              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 300 ball.",
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
-      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", friends: "Друзья" },
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", chest: "Сундук", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
+              chest: "6 заданий в день · до +20",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
       histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
@@ -250,13 +254,14 @@
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
               "В конце недели за каждые 10 очков выдаётся 1 галлеон. Участникам факультета-победителя — вдвое больше, трём лучшим ученикам ещё +15, +10 и +5.",
-              "У всех источников, кроме приглашений, есть лимит за сезон — всего 160 очков.",
+              "У всех источников, кроме приглашений, есть лимит за сезон — всего 300 очков.",
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
-      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", friends: "Friends" },
+      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", chest: "Chest", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
+              chest: "6 tasks a day · up to +20",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
       histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
@@ -284,7 +289,7 @@
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
               "At the end of the week you get 1 Galleon for every 10 points. Members of the winning house get double, and the top three students get +15, +10 and +5 more.",
-              "Every source except inviting friends has a season cap — 160 points in total.",
+              "Every source except inviting friends has a season cap — 300 points in total.",
               "Chess against a bot gives no points — only live games do."]
     }
   };
@@ -747,6 +752,7 @@
     if (key === "exam" || key === "daily") { openDaily(); }
     else if (key === "chess") { openChessHub(); }
     else if (key === "friends") { openRefs(); }
+    else if (key === "chest") { sqOpen(); }
     else { closeCup(); }
   }
 
@@ -763,13 +769,13 @@
     var top = cupEl("div", "you-top");
     top.appendChild(cupEl("span", "you-lbl", t.cupYourPts));
     var val = cupEl("span", "you-val", String(me.points || 0));
-    val.appendChild(cupEl("s", "", " / " + (me.max_points || 160)));
+    val.appendChild(cupEl("s", "", " / " + (me.max_points || 300)));
     top.appendChild(val);
     box.appendChild(top);
 
     // Chiziq manbalar bo'yicha bo'lingan (do'st bali chegaradan oshirib yuborishi mumkin)
     var by = me.by || {};
-    var pct = (me.points || 0) / (me.max_points || 160) * 100;
+    var pct = (me.points || 0) / (me.max_points || 300) * 100;
     box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
 
     if (!me.is_active) {
@@ -1136,6 +1142,7 @@
     if (!HOUSE_LORE[id]) { return; }
     houseOpen = id;
     houseFromHist = false;
+    try { sqDone("house"); } catch (e) {}
     renderHousePage(id);
     $("scr-cup").classList.add("hidden");
     $("scr-house").classList.remove("hidden");
