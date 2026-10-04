@@ -702,7 +702,8 @@
     row.innerHTML = "";
     row.className = "nsh-row" + (o.codes.length > 1 ? " many" : "") + (o.off ? " off" : "");
     if (o.icon) { row.className = "nsh-row nsh-ic"; row.innerHTML = o.icon; }
-    if (o.card) { row.className = "nsh-row nsh-card"; }          // sehrgar kartochkasi: doira emas, karta shaklida
+    if (o.card) { row.className = "nsh-row nsh-card"; }
+    if (o.crest) { row.className = "nsh-row nsh-crest"; }        // fakultet gerbi: doiraga kesilmaydi          // sehrgar kartochkasi: doira emas, karta shaklida
     o.codes.forEach(function (c) {
       var im = document.createElement("img");
       im.alt = ""; im.src = o.srcs ? o.srcs[row.children.length] : nshImg(c);
@@ -715,6 +716,10 @@
     });
     $("nsh-ok").textContent = o.ok || nshX().close;
     function yop() { box.classList.add("hidden"); if (o.done) { o.done(); } }
+    // Ikkinchi tugma (masalan "Batafsil"): oyna yopiladi va o'sha joyga o'tiladi
+    var more = $("nsh-more");
+    more.classList.toggle("hidden", !o.more);
+    if (o.more) { more.textContent = o.more.label; more.onclick = function () { box.classList.add("hidden"); o.more.fn(); }; }
     $("nsh-ok").onclick = yop;
     box.onclick = function (ev) { if (ev.target === box) { yop(); } };
     box.classList.remove("hidden");
@@ -1431,7 +1436,13 @@
     // Kichik "i" tugmasi: fakultet sahifasi (asoschisi, mudiri, a'zolari) - qaytganda yana profil
     var hi = $("house-info");
     hi.classList.toggle("hidden", house === "none");
-    hi.onclick = function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } };
+    // Avval qisqa oyna: shu fakultet odamining xarakteri; "Batafsil" - fakultet sahifasi (egasi, 2026-10-05)
+    hi.onclick = function () {
+      var hx = UY_XAR[lang] || UY_XAR.uz, hh = HOUSES[house] || {};
+      nshBox({ codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "",
+               text: hx[house] || "",
+               more: { label: hx.more, fn: function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } } } });
+    };
 
     var cta = $("sort-cta");
     var again = $("resort-btn");
@@ -1564,6 +1575,24 @@
   /* ---------- TAYOQCHA: BATAFSIL ---------- */
 
   /* Tayoqchani ulashish: ismi va tayoqchasi yozilgan rasm (Stories yoki chatga) - fakultet va Patronus kabi */
+  // Fakultet odamining xarakteri (profildagi "i" oynasi uchun)
+  var UY_XAR = {
+    uz: { more: "Fakultet haqida batafsil",
+          gryffindor: "Grifindorliklar jasur, dadil va olijanob. Qo'rquvga qaramay oldinga chiqadi, do'stlari uchun o'zini xavfga qo'yadi va adolatsizlikka jim qarab turolmaydi.",
+          slytherin: "Sliterinliklar maqsadli, zukko va topqir. Nima istashini aniq biladi, unga yetish yo'lini topadi va o'z odamlariga sodiq qoladi.",
+          ravenclaw: "Reyvenkloliklar aqlli, qiziquvchan va ijodkor. Bilimni hamma narsadan ustun qo'yadi, savol berishdan charchamaydi va har narsaga o'zgacha nazar bilan qaraydi.",
+          hufflepuff: "Xaffelpaffliklar sodiq, mehnatkash va adolatli. Sabr bilan ishlaydi, hech kimni ajratmaydi va qiyin kunda birinchi bo'lib yordamga keladi." },
+    ru: { more: "Подробнее о факультете",
+          gryffindor: "Гриффиндорцы храбры, решительны и благородны. Они идут вперёд, несмотря на страх, рискуют собой ради друзей и не молчат при виде несправедливости.",
+          slytherin: "Слизеринцы целеустремлённы, хитры и находчивы. Они точно знают, чего хотят, находят путь к цели и верны своим.",
+          ravenclaw: "Когтевранцы умны, любознательны и изобретательны. Знания для них превыше всего, они не устают задавать вопросы и на всё смотрят по-своему.",
+          hufflepuff: "Пуффендуйцы верны, трудолюбивы и справедливы. Они работают терпеливо, никого не делят на своих и чужих и первыми приходят на помощь." },
+    en: { more: "More about the house",
+          gryffindor: "Gryffindors are brave, daring and chivalrous. They step forward despite fear, risk themselves for their friends and cannot stay silent in the face of injustice.",
+          slytherin: "Slytherins are ambitious, cunning and resourceful. They know exactly what they want, find a way to get it and stay loyal to their own.",
+          ravenclaw: "Ravenclaws are clever, curious and inventive. They value knowledge above all, never tire of asking questions and see everything in their own way.",
+          hufflepuff: "Hufflepuffs are loyal, hard-working and fair. They work patiently, treat everyone equally and are the first to help on a hard day." }
+  };
   var API_TAYOQ = "https://bot.tizimshunos.uz/api/tayoqcha/share";
   var TQ_TX = { uz: "Tayoqchamni ulashish", ru: "Поделиться палочкой", en: "Share my wand" };
   var TQ_ST = { uz: "Tayoqcha sehrgarni tanlaydi", ru: "Палочка выбирает волшебника", en: "The wand chooses the wizard" };
