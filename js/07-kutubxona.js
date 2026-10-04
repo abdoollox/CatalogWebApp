@@ -362,9 +362,9 @@
           prof: "Profile", profS: "House, wand and badges", lang: "Language",
           bot: "Bot messages", botS: "Also send owl letters in Telegram", close: "Close" }
   };
-  // Profil belgisi: MDI "account" (Apache 2.0) - hoshiyali tugma ichida, boyo'g'li va qasr bilan bir vaznda.
-  // ("account-circle" og'ir chiqdi - egasi rad etdi, 2026-10-04.) Gerb menyu ichida qoladi.
-  var PM_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>';
+  // Profil belgisi: Phosphor "user-bold" (MIT) - egasi tanladi (2026-10-04, 55-variant), hoshiyali tugma ichida.
+  // Gerb menyu ichida qoladi.
+  var PM_ICON = '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M234.38 210a123.36 123.36 0 0 0-60.78-53.23a76 76 0 1 0-91.2 0A123.36 123.36 0 0 0 21.62 210a12 12 0 1 0 20.77 12c18.12-31.32 50.12-50 85.61-50s67.49 18.69 85.61 50a12 12 0 0 0 20.77-12M76 96a52 52 0 1 1 52 52a52.06 52.06 0 0 1-52-52"/></svg>';
 
   function pmGal() {
     try { if (wal) { return wal.galleons || 0; } } catch (e) {}
