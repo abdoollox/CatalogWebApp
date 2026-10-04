@@ -410,7 +410,85 @@
 
   var sending = false;
 
+  /* ---------- SIFAT TANLASH (egasi, 2026-10-04) ----------
+     Har film bosilganda "Full HD / HD" so'raladi - har safar, eslab qolinmaydi. Bizda yo'q
+     sifat qulflangan ko'rinadi. Qaysi sifat borligi botdan olinadi (/api/films, hajmi bilan);
+     javob kelmagan bo'lsa Full HD bor deb hisoblanadi (avvalgi holat). */
+  var API_FILMS = "https://bot.tizimshunos.uz/api/films";
+  var QS_LIST = [["fhd", "Full HD", "1080p"], ["hd", "HD", "720p"]];
+  var QS_TX = {
+    uz: { ask: "Sifatni tanlang", soon: "Tez orada", close: "Yopish", note: "Film bot chatiga yuboriladi." },
+    ru: { ask: "Выберите качество", soon: "Скоро", close: "Закрыть", note: "Фильм придёт в чат с ботом." },
+    en: { ask: "Choose the quality", soon: "Coming soon", close: "Close", note: "The film is sent to your bot chat." }
+  };
+  var qsData = null, qsAsked = false;
+
+  function qsLoad() {
+    if (qsAsked || !window.fetch) { return; }
+    qsAsked = true;
+    try { qsData = JSON.parse(window.localStorage.getItem("hp_films") || "null"); } catch (e) { qsData = null; }
+    window.fetch(API_FILMS).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res || !res.ok || !res.films) { return; }
+      qsData = res.films;
+      try { window.localStorage.setItem("hp_films", JSON.stringify(qsData)); } catch (e) {}
+    })["catch"](function () {});
+  }
+
+  function qsSize(b) {
+    if (!b) { return ""; }
+    var gb = b / 1073741824;
+    var s = gb >= 1 ? gb.toFixed(1) + " GB" : Math.round(b / 1048576) + " MB";
+    return lang === "en" ? s : s.replace(".", ",");
+  }
+
+  function qsFilmName(id) {
+    var all = MOVIES.concat(MOVIES_FB);
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].id === id) { return all[i][lang] || all[i].uz || ""; }
+    }
+    return "";
+  }
+
+  function qsClose() { $("qs").classList.add("hidden"); }
+
   function play(id) {
+    if (sending) { return; }
+    var el = $("qs"), x = QS_TX[lang] || QS_TX.uz;
+    // .screen ichida position:fixed siljiydi - oyna body ning o'zida turishi kerak
+    if (el.parentNode !== document.body) { document.body.appendChild(el); }
+    if (!el.getAttribute("data-on")) {
+      el.setAttribute("data-on", "1");
+      $("qs-close").onclick = qsClose;
+      el.addEventListener("click", function (e) { if (e.target === el) { qsClose(); } });
+    }
+    var bor = qsData ? (qsData[id + "_" + lang] || {}) : { fhd: 0 };
+    $("qs-kick").textContent = x.ask;
+    $("qs-title").textContent = qsFilmName(id);
+    $("qs-note").textContent = x.note;
+    $("qs-close").textContent = x.close;
+    var box = $("qs-list");
+    box.innerHTML = "";
+    QS_LIST.forEach(function (q) {
+      var ok = Object.prototype.hasOwnProperty.call(bor, q[0]);
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "qs-row" + (ok ? "" : " lock");
+      b.disabled = !ok;
+      b.innerHTML = '<span class="qs-tx"><b></b><small></small></span><span class="qs-ic"></span>';
+      b.querySelector("b").textContent = q[1];
+      var hajm = ok ? qsSize(bor[q[0]]) : "";
+      b.querySelector("small").textContent = ok ? q[2] + (hajm ? " · " + hajm : "") : x.soon;
+      b.querySelector(".qs-ic").innerHTML = ok
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 9V7A5 5 0 0 0 7 7v2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3M9 7a3 3 0 0 1 6 0v2H9z"/></svg>';
+      if (ok) { b.onclick = function () { qsClose(); playSend(id, q[0]); }; }
+      box.appendChild(b);
+    });
+    el.classList.remove("hidden");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+  }
+
+  function playSend(id, q) {
     if (sending) { return; }
     var t = T[lang];
     var init = "";
@@ -423,7 +501,7 @@
     window.fetch(API_SEND, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
-      body: JSON.stringify({ movie_id: id, lang: lang })
+      body: JSON.stringify({ movie_id: id, lang: lang, q: q })
     }).then(function (r) { return r.json(); }).then(function (res) {
       sending = false;
       dismissNote(pending);

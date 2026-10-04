@@ -456,6 +456,7 @@
     $("back-btn").setAttribute("aria-label", lang.toUpperCase());
     renderHero(t);
     pmRender();
+    qsLoad();
     renderSerial();
     srLoad();
     srBlock();

@@ -1924,3 +1924,17 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .pm-flag{font-size:20px;line-height:1}
 .pm-sw{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding:12px 14px;border-radius:14px;
   border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer}
+
+/* --- Film sifatini tanlash (qs-) --- */
+.qs-list{display:flex;flex-direction:column;gap:8px;margin:14px 0 12px}
+.qs-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:15px 16px;text-align:left;cursor:pointer;
+  border-radius:14px;background:#15171d;border:1px solid rgba(var(--gold-rgb),.4);color:var(--text)}
+.qs-row:active{transform:scale(.985)}
+.qs-tx{display:flex;flex-direction:column;gap:5px;min-width:0}
+.qs-tx b{font:600 22px/1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.qs-tx small{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
+.qs-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(var(--gold-rgb),.5);color:var(--gold)}
+.qs-ic svg{width:17px;height:17px}
+.qs-row.lock{cursor:default;border-color:var(--line);background:rgba(255,255,255,.03);opacity:.55}
+.qs-row.lock .qs-tx b{color:var(--dim)}
+.qs-row.lock .qs-ic{border-color:var(--line);color:var(--dim)}

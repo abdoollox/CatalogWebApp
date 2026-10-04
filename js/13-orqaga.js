@@ -22,6 +22,7 @@
     ["chat-people", "chat-people-back"],
     ["hub-set", "hub-set-close"],
     ["pm", "pm-close"],
+    ["qs", "qs-close"],
     ["w-set", "w-set-close"]
   ];
 
