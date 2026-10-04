@@ -3372,23 +3372,7 @@ function render(){
   } else c4.appendChild(emptyNote("Bu davrda hech kim saralanmagan."));
   put("odamlar", c4);
 
-  /* — Patronuslar — */
-  // Test bir marta topshiriladi: har odam bitta yozuv (patronus_<kod>, 2026-10-04 dan)
-  var cPt = card("Patronuslar", "test natijalari", "third");
-  var ptSon = {}, ptKim = {}, ptJami = 0;
-  rows.forEach(function(r){
-    if(r.ev.t !== "patronus" || ptKim[r.uid]) return;
-    ptKim[r.uid] = 1; ptSon[r.ev.pat] = (ptSon[r.ev.pat] || 0) + 1; ptJami++;
-  });
-  if(ptJami){
-    var saralangan = Object.keys(s.houses).reduce(function(a,h){ return a + s.houses[h]; }, 0);
-    cPt.appendChild(emptyNote("Shu davrda " + ptJami + " kishi Patronusini chaqirdi" +
-      (saralangan ? " (shu davrda saralanganlar: " + saralangan + ")." : ".")));
-    addTable(cPt, ["Patronus","Soni","Ulushi"], Object.keys(ptSon).sort(function(a,b){ return ptSon[b]-ptSon[a]; }).map(function(k){
-      return [PATRONUS_N[k] || k, ptSon[k], (ptSon[k]/ptJami*100).toFixed(1)+"%"];
-    }));
-  } else cPt.appendChild(emptyNote("Bu davrda hech kim Patronus testidan o'tmagan."));
-  put("odamlar", cPt);
+
 
   /* — Fakultetlar poygasi — */
   // Har odam bir marta: davr ichidagi BIRINCHI saralanishi kuni "qo'shildi",
@@ -3864,6 +3848,45 @@ function render(){
     tchiz();
   } else c9.appendChild(emptyNote("Bu davrda hech kim ulashmagan va taklif havolasi orqali kelmagan."));
   put("odamlar", c9);
+
+  /* — Patronuslar — */
+  // Test bir marta topshiriladi: har odam bitta yozuv (patronus_<kod>, 2026-10-04 dan).
+  // To'liq kenglikdagi karta: gorizontal chiziqlar (15 xil - doira chizmaga sig'maydi).
+  var cPt = card("Patronuslar", "test natijalari · har odam bir marta", "");
+  var ptSon = {}, ptKim = {}, ptJami = 0;
+  rows.forEach(function(r){
+    if(r.ev.t !== "patronus" || ptKim[r.uid]) return;
+    ptKim[r.uid] = 1; ptSon[r.ev.pat] = (ptSon[r.ev.pat] || 0) + 1; ptJami++;
+  });
+  if(ptJami){
+    var ptSar = Object.keys(s.houses).reduce(function(a,h){ return a + s.houses[h]; }, 0);
+    var ptIzoh = emptyNote("Shu davrda " + ptJami + " kishi Patronusini chaqirdi" +
+      (ptSar ? " · shu davrda saralanganlar: " + ptSar : "") + ".");
+    ptIzoh.style.textAlign = "left"; ptIzoh.style.padding = "0 0 10px";
+    cPt.appendChild(ptIzoh);
+    var ptTop = 0, ptKeys = Object.keys(PATRONUS_N).sort(function(a,b){ return (ptSon[b]||0) - (ptSon[a]||0); });
+    ptKeys.forEach(function(k){ if((ptSon[k]||0) > ptTop) ptTop = ptSon[k]; });
+    var ptBox = document.createElement("div");
+    ptBox.style.cssText = "display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px 28px";
+    ptKeys.forEach(function(k){
+      var n = ptSon[k] || 0;
+      var q = document.createElement("div");
+      q.style.cssText = "display:grid;grid-template-columns:96px 1fr 34px 48px;align-items:center;gap:10px;font-size:13px;opacity:" + (n ? 1 : .45);
+      var nm = document.createElement("span"); nm.textContent = PATRONUS_N[k];
+      var bar = document.createElement("span");
+      bar.style.cssText = "height:8px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden";
+      var fi = document.createElement("i");
+      fi.style.cssText = "display:block;height:100%;border-radius:99px;background:" + (k === "phoenix" ? "#c98500" : "#7fb2ee") + ";width:" + (ptTop ? Math.max(n ? 3 : 0, n/ptTop*100) : 0) + "%";
+      bar.appendChild(fi);
+      var son = document.createElement("b"); son.textContent = n; son.style.textAlign = "right";
+      var ul = document.createElement("span"); ul.textContent = (n/ptJami*100).toFixed(1) + "%";
+      ul.style.cssText = "text-align:right;opacity:.6;font-size:12px";
+      q.appendChild(nm); q.appendChild(bar); q.appendChild(son); q.appendChild(ul);
+      ptBox.appendChild(q);
+    });
+    cPt.appendChild(ptBox);
+  } else cPt.appendChild(emptyNote("Bu davrda hech kim Patronus testidan o'tmagan."));
+  put("odamlar", cPt);
 
   /* — Chiqib ketish sabablari — */
   if(!ST.leave && !ST.demo){
