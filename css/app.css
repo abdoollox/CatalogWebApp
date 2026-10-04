@@ -1939,10 +1939,31 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .qs-row.lock .qs-tx b{color:var(--dim)}
 .qs-row.lock .qs-ic{border-color:var(--line);color:var(--dim)}
 
-/* Kutubxona tepasidagi tugmalar tartibi (egasi, 2026-10-04): boyo'g'li, Xogvarts (qasr), profil */
-.cat-head .head-tools #owl-cat{order:1}
-.cat-head .head-tools #world-btn{order:2}
-.cat-head .head-tools #pm-btn{order:3}
-/* Xogvarts tugmasi: qasr belgisi, boshqa tugmalar bilan bir xil doira (ilgari "9¾" yozuvli edi) */
-.cat-head .coin{width:46px;padding:0;justify-content:center;border-radius:50%}
-.coin-934 svg{width:23px;height:23px;display:block}
+/* --- Sarlavha tartibi: YAGONA QOIDA (egasi, 2026-10-04) ---
+   Hamma ekranda sarlavha MARKAZDA, tugmalar ikki chetda, hammasi bir xil 42px doira (--btn).
+   Kutubxona: chapda Xogvarts (qasr), o'ngda boyo'g'li va profil - Xogvarts sahifasining aksi
+   (u yerda chapda kutubxona, o'ngda boyo'g'li va sozlama). */
+:root{--btn:42px}
+/* Oddiy ekran (profil, tayoqcha tafsiloti): chapda "ortga", markazda sarlavha */
+.cat-head{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:8px}
+.cat-head > .back-btn{grid-column:1;grid-row:1}
+.cat-head > div:first-child{grid-column:2;grid-row:1;align-items:center!important;text-align:center;min-width:0}
+/* Kutubxona: chapda bitta, o'ngda ikkita tugma - sarlavha baribir aniq markazda */
+#scr-cat .cat-head{grid-template-columns:var(--btn) var(--btn) 1fr var(--btn) var(--btn)}
+.cat-head .head-tools{display:contents}
+#scr-cat .cat-head .cat-head-tx{grid-column:3;grid-row:1;align-items:center;text-align:center}
+.cat-head #world-btn{grid-column:1;grid-row:1}
+.cat-head #owl-cat{grid-column:4;grid-row:1}
+.cat-head #pm-btn{grid-column:5;grid-row:1}
+.cat-head h1{font-size:clamp(22px,6.6vw,30px);white-space:nowrap}
+.cat-head .coin,.cat-head .owl-btn,.cat-head .pm-btn{width:var(--btn);height:var(--btn);padding:0;justify-content:center;border-radius:50%}
+.cat-head .owl-btn svg{width:22px;height:22px}
+.coin-934 svg{width:21px;height:21px;display:block}
+.pm-btn .pm-av{width:var(--btn);height:var(--btn);background:none;color:var(--text)}
+.pm-btn .pm-av svg{width:24px;height:24px}
+/* "Ortga" tugmalari: yozuvli uzun tugma emas, tepadagi tugmalar bilan bir xil doira va ‹ belgisi */
+.back-btn{width:var(--btn);height:var(--btn);padding:0;justify-content:center;border-radius:50%;flex:none}
+.back-btn span:first-child{font-size:22px!important;line-height:1;margin-top:-2px}
+.back-btn span + span{display:none}
+#back-btn{width:var(--btn)}
+.sr-back{width:var(--btn);height:var(--btn)}
