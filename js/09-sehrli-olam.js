@@ -85,6 +85,7 @@
     $("hub-back").innerHTML = KITOB_SVG;
     $("hub-gear").innerHTML = worldIcon("gear");
     try { pmRender(); } catch (e) {}       // sozlama o'rnida profil tugmasi (galleon bilan)
+    try { patPaint(); patLoad(); } catch (e) {}   // Patronus testi taklifi (saralangan, hali olmagan bo'lsa)
     $("hub-kick").textContent = HUB_TX.kick[lang];
     $("hub-title").textContent = HUB_TX.title[lang];
 
@@ -394,6 +395,8 @@
     uyStory: { uz: "Saralovchi qalpoq qaror qildi", ru: "Распределяющая шляпа решила", en: "The Sorting Hat has decided" },
     uyBtn: { uz: "Saralanish", ru: "Распределение", en: "Get sorted" },
     olIn: { uz: "Do'konga kirish", ru: "Войти в лавку", en: "Step inside" },
+    ptIn: { uz: "Darsni boshlash", ru: "Начать урок", en: "Begin the lesson" },
+    ptTake: { uz: "Ekspekto Patronum!", ru: "Экспекто Патронум!", en: "Expecto Patronum!" },
     olTake: { uz: "Tayoqchani qo'lga olish", ru: "Взять палочку в руку", en: "Take the wand" },
     grWand: { uz: "Olivanderda tayoqcha {n} galleon turadi.", ru: "Палочка у Олливандера стоит {n} галлеонов.",
               en: "A wand at Ollivanders costs {n} Galleons." },

@@ -415,6 +415,7 @@
     $("pm-sec2").textContent = x.sec2;
     // Fakultet va tayoqcha panellari (ilgari "Sehrgar" sahifasida edi)
     try { renderProfile(); } catch (e) {}
+    try { patPaint(); patLoad(); } catch (e) {}
     $("pm-lang-l").textContent = x.lang;
     $("pm-bot-t").textContent = x.bot;
     $("pm-bot-s").textContent = x.botS;
@@ -485,7 +486,7 @@
      foydalanuvchilar ham oladi. Rasmlar img/nishon/<kod>.webp (dizayn tizimi uslubida).
      Boshqa odamning nishonlari chatdan ochiladi (nshPeer). Galleon berilmaydi. */
   var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
-  var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "ball_1", "streak_7",
+  var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "streak_7",
                    "perfect_week", "kubok_golib", "top_3", "dost_1", "dost_5", "shaxmat", "albom", "serial_1"];
   var NSH_TX = {
     uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
@@ -498,6 +499,7 @@
                poliglot: ["Uch tilli sehrgar", "Filmlarni uch tilda oling: o'zbek, rus va ingliz"],
                oquvchi: ["Xogvarts o'quvchisi", "Saralovchi qalpoq fakultetingizni aytsin"],
                tayoqcha: ["Tayoqcha egasi", "Olivander do'konidan tayoqcha oling"],
+               patronus: ["Patronus egasi", "Professor Lyupin darsida Patronusingizni chaqiring"],
                ball_1: ["Birinchi ball", "Fakultetingizga birinchi ballni keltiring"],
                streak_7: ["Yetti sham", "Bir haftaning 7 kunida ham ball to'plang"],
                perfect_week: ["Bexato hafta", "Haftaning hamma kunlik savoliga to'g'ri javob bering"],
@@ -518,6 +520,7 @@
                poliglot: ["Волшебник на трёх языках", "Получите фильмы на трёх языках: узбекском, русском и английском"],
                oquvchi: ["Ученик Хогвартса", "Пусть Распределяющая шляпа назовёт ваш факультет"],
                tayoqcha: ["Владелец палочки", "Получите палочку в лавке Олливандера"],
+               patronus: ["Обладатель Патронуса", "Вызовите своего Патронуса на уроке профессора Люпина"],
                ball_1: ["Первое очко", "Принесите факультету первые очки"],
                streak_7: ["Семь свечей", "Набирайте очки все 7 дней одной недели"],
                perfect_week: ["Неделя без ошибок", "Ответьте верно на все вопросы дня за неделю"],
@@ -538,6 +541,7 @@
                poliglot: ["Three-Language Wizard", "Get films in three languages: Uzbek, Russian and English"],
                oquvchi: ["Hogwarts Student", "Let the Sorting Hat name your house"],
                tayoqcha: ["Wand Owner", "Get a wand at Ollivander's"],
+               patronus: ["Patronus Caster", "Summon your Patronus in Professor Lupin's lesson"],
                ball_1: ["First Point", "Earn your first points for your house"],
                streak_7: ["Seven Candles", "Earn points on all 7 days of one week"],
                perfect_week: ["Flawless Week", "Answer every daily question of a week correctly"],
@@ -552,7 +556,7 @@
   // Toifalar (egasi: nishonlar ko'payadi, guruhlarga bo'linsin). Yangi nishon -> shu ro'yxatga.
   var NSH_GROUPS = [
     ["kino", ["film_1", "film_8", "fb_3", "poliglot", "serial_1"], { uz: "Kino", ru: "Кино", en: "Films" }],
-    ["xogvarts", ["oquvchi", "tayoqcha"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
+    ["xogvarts", ["oquvchi", "tayoqcha", "patronus"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
     ["kubok", ["ball_1", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
@@ -568,6 +572,7 @@
   // Mahalliy ko'rikda server yo'q - namuna ro'yxat (faqat localhost)
   function nshSample() {
     var bor = { film_1: 1, film_8: 1, oquvchi: 1, tayoqcha: 1, ball_1: 1, dost_1: 1 };
+    if (patronus) { bor.patronus = 1; }
     var yol = { fb_3: [1, 3], poliglot: [2, 3], streak_7: [3, 7], dost_5: [2, 5] };
     var yangi = nshSampleSeen ? [] : ["tayoqcha", "ball_1"];
     nshSampleSeen = true;
@@ -1070,7 +1075,7 @@
     var items = [
       { label: t.ckHouse,    state: house !== "none" ? "done" : "todo" },
       { label: t.ckWand,     state: wand ? "done" : (house !== "none" ? "todo" : "soon") },
-      { label: t.ckPatronus, state: "soon" }
+      { label: t.ckPatronus, state: patronus ? "done" : (house !== "none" ? "todo" : "soon") }
     ];
 
     items.forEach(function (it) {
