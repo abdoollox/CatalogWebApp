@@ -325,7 +325,7 @@
           inT: "Not enough Galleons",
           ich: function (n, bor) { return "The album costs " + n + " Galleons, you have " + bor + ".\n\nHow to save up:\n1. Earn points: +5 per film, +10 for the daily question, +10 for a chess win, +20 for a friend you invite.\n2. At the end of the week (Sunday night) you get 1 Galleon per 10 points.\n3. If your house wins the Cup you get double, and the top three students get +15, +10 and +5 more."; } }
   };
-  var msPrice = 30, msGal = 0, msBuying = false;
+  var msPrice = 3, msGal = 0, msBuying = false;      // narx serverdan keladi (hpmusic.ALBUM_PRICE)
 
   function msLocked(id) { return !!(msData && msData[id] && msData[id].open === false); }
 
