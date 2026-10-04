@@ -1964,7 +1964,7 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .cat-head .owl-btn svg{width:22px;height:22px}
 .coin-934 svg{width:21px;height:21px;display:block}
 .pm-btn .pm-av{width:var(--btn);height:var(--btn);background:none;color:var(--text)}
-.pm-btn .pm-av svg{width:24px;height:24px}
+.pm-btn .pm-av svg{width:28px;height:28px}
 /* "Ortga" tugmalari: yozuvli uzun tugma emas, tepadagi tugmalar bilan bir xil doira va ‹ belgisi */
 .back-btn{width:var(--btn);height:var(--btn);padding:0;justify-content:center;border-radius:50%;flex:none}
 .back-btn span:first-child{font-size:22px!important;line-height:1;margin-top:-2px}
