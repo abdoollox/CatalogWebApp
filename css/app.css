@@ -2069,3 +2069,48 @@ div.pm-row{cursor:default}
 .nsh-row:empty{display:none}
 .nsh-ok{width:100%;height:46px;margin-top:20px;border-radius:23px;cursor:pointer;font:700 13.5px/1 'Manrope',sans-serif;letter-spacing:.03em}
 .nsh-ok:active{transform:scale(.97)}
+
+/* ---------- KUBOK SAHIFASI: ko'rinish yangilandi (2026-10-04) ---------- */
+/* Sarlavha boshqa sahifalardagidek: markazda, tugma chetda */
+#scr-cup .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-cup .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-cup .kb-ttl .cup-kick{color:var(--gold)}
+#scr-cup .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-cup .kb-chips{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-bottom:18px}
+#scr-cup .kb-chips .cup-prev{margin-top:0}
+/* Qum soatlar: shisha naycha, ichida qimmatbaho toshlar */
+#scr-cup .glasses{gap:8px;padding:18px 10px 14px;border-radius:20px;border:1px solid var(--line);
+  background:radial-gradient(120% 80% at 50% 0%,rgba(var(--gold-rgb),.09),transparent 62%),var(--card)}
+#scr-cup .tube{width:62px;max-width:100%;height:176px;margin:0 auto;border-radius:31px;
+  background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(255,255,255,.02) 38%,rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 0 14px rgba(0,0,0,.45)}
+#scr-cup .tube::after{content:"";position:absolute;left:9px;top:14px;bottom:52px;width:5px;border-radius:5px;
+  background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0));pointer-events:none}
+#scr-cup .tube-fill{background-color:transparent;
+  background-image:radial-gradient(circle at 50% 50%,rgba(255,255,255,.34) 1px,transparent 1.7px),
+    linear-gradient(180deg,rgba(var(--hc-rgb),.95),rgba(var(--hc-rgb),.5));
+  background-size:8px 8px,100% 100%;box-shadow:0 -6px 18px rgba(var(--hc-rgb),.35)}
+#scr-cup .tube-fill::before{height:3px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent)}
+#scr-cup .tube-crest{bottom:8px;width:38px;height:38px;border-radius:50%;background:rgba(12,15,20,.82);border-color:rgba(var(--hc-rgb),.65)}
+#scr-cup .g-place{top:9px}
+#scr-cup .glass.mine .tube{border-color:rgba(var(--hc-rgb),.8);box-shadow:inset 0 0 14px rgba(0,0,0,.45),0 0 0 3px rgba(var(--hc-rgb),.16)}
+#scr-cup .glass.lead .tube{box-shadow:inset 0 0 14px rgba(0,0,0,.45),0 0 26px rgba(var(--hc-rgb),.32)}
+#scr-cup .g-name{margin-top:10px}
+#scr-cup .glass.mine .g-name{color:var(--hc);font-weight:800}
+#scr-cup .g-val{font-size:23px;font-weight:600;line-height:1.1;margin-top:3px}
+#scr-cup .g-need{opacity:.85}
+/* Ballar qayerdan keldi: rangli nuqtalar */
+#cup-src .src-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 0 2px;padding:0 0 12px;border-top:0}
+#cup-src .src-leg{flex-direction:row;gap:6px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
+#cup-src .src-leg i,#cup-src .src-nums i{flex:none;width:8px;height:8px;border-radius:50%;display:inline-block}
+#cup-src .src-nums{display:flex;flex-wrap:wrap;gap:4px 14px;text-align:left;margin-top:9px;font:700 12px/1 'Manrope',sans-serif}
+#cup-src .src-nums span{display:inline-flex;align-items:center;gap:5px}
+#cup-src .src-row{padding:13px 0}
+#cup-src .src-crest{border-radius:50%}
+/* Galleon bashorati */
+.you-gal{display:flex;align-items:center;gap:11px;margin-top:14px;padding:11px 12px;border-radius:13px;
+  background:rgba(var(--gold-rgb),.08);border:1px solid rgba(var(--gold-rgb),.26)}
+.you-gal .pm-coin{width:24px;height:24px}
+.you-gal-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.you-gal-tx b{font:700 13px/1.25 'Manrope',sans-serif;color:var(--gold-hi)}
+.you-gal-tx small{font:500 11px/1.35 'Manrope',sans-serif;color:var(--dim)}

@@ -210,9 +210,12 @@
       showAll: "Hammasini ko'rish (%d)", loading: "Yuklanmoqda…", empty: "Bu hafta hali hech kim ball to'plamagan.",
       lore: "Ma'lumotlar J. K. Rouling kitoblari va uning rasmiy yozuvlari asosida.",
       rulesKick: "Kubok qoidalari",
+      galGet: "Hafta yakunida %d galleon olasiz", galNone: "Birinchi galleongacha yana %d ball",
+      galNote: "10 ballga 1 galleon · g'olib fakultetga ikki baravar",
       rules: ["Mavsum — bir hafta: dushanba 00:00 dan yakshanba 23:59 gacha (Toshkent vaqti).",
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
+              "Hafta yakunida har 10 ball uchun 1 galleon beriladi. G'olib fakultet a'zolariga ikki baravar, eng ko'p ball to'plagan uch o'quvchiga yana +15, +10 va +5.",
               "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 160 ball.",
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
@@ -241,9 +244,12 @@
       showAll: "Показать всех (%d)", loading: "Загрузка…", empty: "На этой неделе очков пока ни у кого нет.",
       lore: "По книгам Дж. К. Роулинг и её официальным материалам.",
       rulesKick: "Правила кубка",
+      galGet: "В конце недели вы получите %d галлеонов", galNone: "До первого галлеона ещё %d очков",
+      galNote: "1 галлеон за 10 очков · победителям вдвое больше",
       rules: ["Сезон длится неделю: с понедельника 00:00 до воскресенья 23:59 (по Ташкенту).",
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
+              "В конце недели за каждые 10 очков выдаётся 1 галлеон. Участникам факультета-победителя — вдвое больше, трём лучшим ученикам ещё +15, +10 и +5.",
               "У всех источников, кроме приглашений, есть лимит за сезон — всего 160 очков.",
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
@@ -272,9 +278,12 @@
       showAll: "Show all (%d)", loading: "Loading…", empty: "Nobody has scored yet this week.",
       lore: "Based on J.K. Rowling's books and her official writing.",
       rulesKick: "Cup rules",
+      galGet: "You get %d Galleons at the end of the week", galNone: "%d more points to your first Galleon",
+      galNote: "1 Galleon per 10 points · double for the winning house",
       rules: ["A season is one week: Monday 00:00 to Sunday 23:59 (Tashkent time).",
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
+              "At the end of the week you get 1 Galleon for every 10 points. Members of the winning house get double, and the top three students get +15, +10 and +5 more.",
               "Every source except inviting friends has a season cap — 160 points in total.",
               "Chess against a bot gives no points — only live games do."]
     }
@@ -344,8 +353,9 @@
     var c = cupT();
     CUP_SRC.forEach(function (x) {
       var cell = cupEl("span", "src-leg");
-      cell.innerHTML = svgIcon(SRC_ICON[x.key]);
-      cell.firstChild.style.color = x.color;
+      var dot = cupEl("i");
+      dot.style.background = x.color;
+      cell.appendChild(dot);
       cell.appendChild(cupEl("span", "", c.src[x.key]));
       row.appendChild(cell);
     });
@@ -460,7 +470,11 @@
         var nums = cupEl("span", "src-nums");
         CUP_SRC.forEach(function (x) {
           var v = by[x.key] || 0;
-          var n = cupEl("span", v ? "" : "zero", v ? String(v) : "—");
+          if (!v) { return; }
+          var n = cupEl("span", "", String(v));
+          var dot = cupEl("i");
+          dot.style.background = x.color;
+          n.insertBefore(dot, n.firstChild);
           nums.appendChild(n);
         });
         row.appendChild(nums);
@@ -702,6 +716,16 @@
       box.appendChild(foot);
     }
 
+    // Hafta yakunidagi galleon: 10 ballga 1 ta, g'olib fakultetga ikki baravar (hpcup._galleon_hisob)
+    var g = Math.floor((me.points || 0) / 10);
+    var gal = cupEl("div", "you-gal");
+    gal.appendChild(cupEl("i", "pm-coin"));
+    var gt = cupEl("span", "you-gal-tx");
+    gt.appendChild(cupEl("b", "", g ? c.galGet.replace("%d", g) : c.galNone.replace("%d", 10 - (me.points || 0) % 10)));
+    gt.appendChild(cupEl("small", "", c.galNote));
+    gal.appendChild(gt);
+    box.appendChild(gal);
+
     // Har manba: qancha oldingiz, chegarasi, qanday olinadi - bosilsa o'sha joyga
     var caps = me.caps || {};
     var rows = cupEl("div", "you-src");
@@ -764,7 +788,6 @@
     $("cup-timer-txt").textContent = cupTimer(t);
     $("cup-kick").textContent = t.cupKicker;
     $("cup-title").textContent = t.cupTitle;
-    $("cup-emblem").innerHTML = CUP_TROPHY;
     $("cup-back-txt").textContent = t.cupBack;
     $("hall-back-txt").textContent = t.cupBack;
     $("feed-back-txt").textContent = t.cupBack;
