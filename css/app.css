@@ -1939,7 +1939,10 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .qs-row.lock .qs-tx b{color:var(--dim)}
 .qs-row.lock .qs-ic{border-color:var(--line);color:var(--dim)}
 
-/* Kutubxona tepasidagi tugmalar tartibi (egasi, 2026-10-04): profil, 9¾, boyo'g'li */
-.cat-head .head-tools #pm-btn{order:1}
+/* Kutubxona tepasidagi tugmalar tartibi (egasi, 2026-10-04): boyo'g'li, Xogvarts (qasr), profil */
+.cat-head .head-tools #owl-cat{order:1}
 .cat-head .head-tools #world-btn{order:2}
-.cat-head .head-tools #owl-cat{order:3}
+.cat-head .head-tools #pm-btn{order:3}
+/* Xogvarts tugmasi: qasr belgisi, boshqa tugmalar bilan bir xil doira (ilgari "9¾" yozuvli edi) */
+.cat-head .coin{width:46px;padding:0;justify-content:center;border-radius:50%}
+.coin-934 svg{width:23px;height:23px;display:block}

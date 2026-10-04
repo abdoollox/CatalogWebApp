@@ -546,7 +546,7 @@
     $("coin-934").classList.remove("hidden");
     $("coin-lt").classList.add("hidden");
     btn.classList.remove("yangi");
-    btn.setAttribute("aria-label", "9¾");
+    btn.setAttribute("aria-label", "Xogvarts");
     renderHogCard(stage);
     try { if (typeof owlBadge === "function") { owlBadge(); } } catch (e) {}
   }
