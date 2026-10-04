@@ -2072,10 +2072,10 @@ div.pm-row{cursor:default}
 
 /* ---------- KUBOK SAHIFASI: ko'rinish yangilandi (2026-10-04) ---------- */
 /* Sarlavha boshqa sahifalardagidek: markazda, tugma chetda */
-#scr-cup .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-cup .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-cup .kb-ttl .cup-kick{color:var(--gold)}
-#scr-cup .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-cup .kb-hdr,#scr-cup-hist .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-cup .kb-ttl,#scr-cup-hist .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-cup .kb-ttl .cup-kick,#scr-cup-hist .kb-ttl .cup-kick{color:var(--gold)}
+#scr-cup .kb-ttl .cup-title,#scr-cup-hist .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 #scr-cup .kb-chips{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-bottom:18px}
 #scr-cup .kb-chips .cup-prev{margin-top:0}
 /* Qum soatlar: shisha naycha, ichida qimmatbaho toshlar */

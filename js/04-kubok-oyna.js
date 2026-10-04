@@ -874,6 +874,26 @@
   function fetchCupHistory(cb) {
     var initData = "";
     try { initData = (tg && tg.initData) || ""; } catch (e) {}
+    // Mahalliy ko'rikda server yo'q - namuna (raqamlar haqiqiy haftalarnikiga yaqin, ismlar to'qima)
+    if (!initData && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)) {
+      var W = function (n, a, b, st, win, pts, best) {
+        var hs = ["hufflepuff", "gryffindor", "slytherin", "ravenclaw"].map(function (h, i) {
+          return { house: h, total_points: pts[i], active_members: 10 };
+        }).sort(function (x, y) { return y.total_points - x.total_points; });
+        return { id: n, number: n, starts_at: a, ends_at: b, status: st, winner: win, houses: hs, best: best };
+      };
+      cupHistory = { wins: { gryffindor: 2, slytherin: 0, ravenclaw: 0, hufflepuff: 4 }, seasons: [
+        W(7, "2026-09-27T19:00:00Z", "2026-10-04T18:59:00Z", "active", null, [895, 675, 500, 270], { name: "Draco", house: "slytherin", points: 250 }),
+        W(6, "2026-09-20T19:00:00Z", "2026-09-27T18:59:00Z", "closed", "hufflepuff", [580, 385, 200, 270], { name: "Cedric", house: "hufflepuff", points: 130 }),
+        W(5, "2026-09-13T19:00:00Z", "2026-09-20T18:59:00Z", "closed", "hufflepuff", [790, 605, 405, 200], { name: "Cedric", house: "hufflepuff", points: 180 }),
+        W(4, "2026-09-06T19:00:00Z", "2026-09-13T18:59:00Z", "closed", "hufflepuff", [1085, 615, 875, 230], { name: "Pansy", house: "slytherin", points: 210 }),
+        W(3, "2026-08-30T19:00:00Z", "2026-09-06T18:59:00Z", "closed", "gryffindor", [760, 790, 340, 225], { name: "Hermione", house: "gryffindor", points: 110 }),
+        W(2, "2026-08-23T19:00:00Z", "2026-08-30T18:59:00Z", "closed", "gryffindor", [1575, 2715, 1185, 280], { name: "Harry", house: "gryffindor", points: 280 }),
+        W(1, "2026-08-16T19:00:00Z", "2026-08-23T18:59:00Z", "closed", "hufflepuff", [135, 5, 10, 55], { name: "Tonks", house: "hufflepuff", points: 40 })
+      ] };
+      cb(cupHistory);
+      return;
+    }
     if (!initData || !window.fetch) { cb(null); return; }
     try {
       window.fetch(API_CUP_HISTORY, { headers: { "X-Telegram-Init-Data": initData } })
@@ -886,7 +906,6 @@
   function openCupHistory() {
     var c = cupT();
     $("hist-back-txt").textContent = T[lang].cupBack;
-    $("hist-emblem").innerHTML = CUP_TROPHY;
     $("hist-kick").textContent = c.histKick;
     $("hist-title").textContent = c.histTitle;
     $("scr-cup").classList.add("hidden");
