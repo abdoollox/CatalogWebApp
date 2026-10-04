@@ -1984,3 +1984,35 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .hub-ttl h1{font-size:clamp(19px,5.9vw,26px)}
 #w-title{text-transform:uppercase;letter-spacing:.05em}
 .cup-title{font-size:clamp(24px,7.6vw,32px)!important;line-height:1.15!important}
+
+/* --- Profil SAHIFASI (modal emas): guruhlangan ro'yxat --- */
+#pm .pm-head{margin:4px 0 16px}
+#pm .pm-wal{margin-bottom:22px}
+.pm-chev{margin-left:auto;flex:none;font:400 22px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
+#pm .pm-lbl{margin:0 4px 8px}
+.pm-card{margin:0 0 22px;border-radius:16px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+.pm-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:58px;padding:12px 14px;
+  background:none;border:none;border-top:1px solid var(--line);color:var(--text);text-align:left;cursor:pointer;font:inherit}
+.pm-card > .pm-row:first-child{border-top:none}
+div.pm-row{cursor:default}
+.pm-row .hub-row-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pm-row .hub-row-tx b,.pm-row-t{font:700 13.5px/1.2 'Manrope',sans-serif}
+.pm-row .hub-row-tx span{font:500 11.5px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.pm-chips{display:flex;gap:6px;flex:none}
+.pm-chips button{display:inline-flex;align-items:center;gap:5px;padding:8px 10px;border-radius:99px;cursor:pointer;
+  background:none;border:1px solid var(--line);color:var(--dim);font:700 11.5px/1 'Manrope',sans-serif;white-space:nowrap}
+.pm-chips button svg{width:14px;height:14px;flex:none}
+.pm-chips button.on{border-color:rgba(var(--gold-rgb),.6);background:rgba(var(--gold-rgb),.1);color:var(--gold)}
+#pm .hub-pv{margin-top:0}
+/* Tugmalar joyi (egasi, 2026-10-04): PROFIL chapda; o'ngda boyo'g'li va narigi bo'limga o'tish
+   (kutubxonada - Xogvarts qasri, Xogvartsda - kutubxona kitobi). Ikkala sahifada bir xil. */
+.cat-head #pm-btn{grid-column:1}
+.cat-head #owl-cat{grid-column:4}
+.cat-head #world-btn{grid-column:5}
+#scr-hub .hub-head{grid-template-columns:var(--btn) var(--btn) 1fr var(--btn) var(--btn);gap:8px}
+#scr-hub .hub-tools{display:contents}
+#scr-hub .hub-head > *,#scr-hub .hub-tools > *{grid-row:1}
+#scr-hub #pm-btn2{grid-column:1}
+#scr-hub .hub-ttl{grid-column:3}
+#scr-hub #hub-owl{grid-column:4}
+#scr-hub #hub-back{grid-column:5;justify-self:auto}

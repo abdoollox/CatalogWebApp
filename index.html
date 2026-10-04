@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=81910437">
+<link rel="stylesheet" href="css/app.css?v=1e016c9d">
 </head>
 <body>
 <div class="shell">
@@ -107,28 +107,32 @@
     </div>
   </div>
 
-  <!-- Profil menyusi (o'ng tepadagi tugma): hamyon, profil, til, bot xabarlari. js/07 pm* -->
-  <div id="pm" class="hub-sheet hidden">
-    <div class="hub-sheet-box">
-      <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
-      <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span></button>
-      <button class="hub-row" id="pm-prof" type="button"><span class="hub-row-tx"><b id="pm-prof-t"></b><span id="pm-prof-s"></span></span></button>
-      <span class="pm-lbl" id="pm-lang-l"></span>
-      <div class="hub-seg pm-seg" id="pm-langs"></div>
-      <label class="pm-sw"><span class="hub-row-tx"><b id="pm-bot-t"></b><span id="pm-bot-s"></span></span><input type="checkbox" id="pm-bot" class="owl-sw"></label>
-      <!-- Ilova qayerdan ochilsin (ilgari Xogvarts sahifasidagi sozlama oynasida edi) -->
-      <span class="pm-lbl" id="hub-set-title"></span>
-      <div class="hub-seg pm-start">
-        <button type="button" id="hub-set-lib"></button>
-        <button type="button" id="hub-set-hub"></button>
-      </div>
-      <p class="pm-note" id="hub-set-note"></p>
-      <button class="hub-row hub-pv hidden" type="button" id="hub-set-pv">
-        <span class="hub-row-ic" id="hub-pv-ic"></span>
-        <span class="hub-row-tx"><b id="hub-pv-t"></b><span id="hub-pv-s"></span></span>
-      </button>
-      <button class="hub-sheet-close" type="button" id="pm-close"></button>
+  <!-- Profil sahifasi (o'ng tepadagi tugma): hamyon, sehrgar, sozlamalar. Alohida sahifa, modal emas. js/07 pm* -->
+  <div id="pm" class="screen hidden">
+    <div class="cat-head">
+      <div style="display:flex;flex-direction:column;gap:2px"><h1 id="pm-title"></h1></div>
+      <button class="back-btn" id="pm-close" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
     </div>
+    <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
+    <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span><i class="pm-chev">›</i></button>
+
+    <span class="pm-lbl" id="pm-sec1"></span>
+    <div class="pm-card">
+      <button class="pm-row" id="pm-prof" type="button"><span class="hub-row-tx"><b id="pm-prof-t"></b><span id="pm-prof-s"></span></span><i class="pm-chev">›</i></button>
+    </div>
+
+    <span class="pm-lbl" id="pm-sec2"></span>
+    <div class="pm-card">
+      <div class="pm-row"><b class="pm-row-t" id="pm-lang-l"></b><div class="pm-chips" id="pm-langs"></div></div>
+      <div class="pm-row"><b class="pm-row-t" id="hub-set-title"></b><div class="pm-chips"><button type="button" id="hub-set-lib"></button><button type="button" id="hub-set-hub"></button></div></div>
+      <label class="pm-row"><span class="hub-row-tx"><b id="pm-bot-t"></b><span id="pm-bot-s"></span></span><input type="checkbox" id="pm-bot" class="owl-sw"></label>
+    </div>
+    <p class="hidden" id="hub-set-note"></p>
+
+    <button class="hub-row hub-pv hidden" type="button" id="hub-set-pv">
+      <span class="hub-row-ic" id="hub-pv-ic"></span>
+      <span class="hub-row-tx"><b id="hub-pv-t"></b><span id="hub-pv-s"></span></span>
+    </button>
   </div>
 
   <!-- ==MS== -->
@@ -1130,13 +1134,13 @@
 <script src="js/04-kubok-oyna.js?v=6ddc0630"></script>
 <script src="js/05-umumiy.js?v=469f5640"></script>
 <script src="js/06-soundtrack.js?v=af49646f"></script>
-<script src="js/07-kutubxona.js?v=35f39a4e"></script>
+<script src="js/07-kutubxona.js?v=d90c7302"></script>
 <script src="js/08-saralash.js?v=fd3df35b"></script>
-<script src="js/09-sehrli-olam.js?v=8e159615"></script>
+<script src="js/09-sehrli-olam.js?v=acb79864"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=e922ac9f"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>
-<script src="js/13-orqaga.js?v=340267f4"></script>
+<script src="js/13-orqaga.js?v=3e658424"></script>
 <script src="js/14-ishga-tushirish.js?v=2ac83192"></script>
 <script src="js/15-pochta.js?v=f369cb0a"></script>
 

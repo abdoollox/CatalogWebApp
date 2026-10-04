@@ -352,14 +352,17 @@
     uz: { guest: "Sehrgar", noHouse: "Hali saralanmagan", gal: function (n) { return n + " galleon"; },
           walS: "Har hafta yakunida kubok ballaringiz uchun beriladi: 10 ballga 1 galleon.",
           prof: "Profil", profS: "Fakultet, tayoqcha va nishonlar", lang: "Til",
+          sec1: "Sehrgar", sec2: "Sozlamalar", me: "Mening sehrgarim",
           bot: "Bot xabarlari", botS: "Boyo'g'li xatlari Telegram'da ham kelsin", close: "Yopish" },
     ru: { guest: "Волшебник", noHouse: "Ещё не распределён", gal: function (n) { return n + " галлеонов"; },
           walS: "Выдаются в конце каждой недели за очки Кубка: 1 галлеон за 10 очков.",
           prof: "Профиль", profS: "Факультет, палочка и значки", lang: "Язык",
+          sec1: "Волшебник", sec2: "Настройки", me: "Мой волшебник",
           bot: "Сообщения бота", botS: "Присылать письма совы и в Telegram", close: "Закрыть" },
     en: { guest: "Wizard", noHouse: "Not sorted yet", gal: function (n) { return n + " Galleons"; },
           walS: "Paid at the end of each week for your Cup points: 1 Galleon per 10 points.",
           prof: "Profile", profS: "House, wand and badges", lang: "Language",
+          sec1: "Wizard", sec2: "Settings", me: "My wizard",
           bot: "Bot messages", botS: "Also send owl letters in Telegram", close: "Close" }
   };
   // Profil belgisi: Phosphor "user-bold" (MIT) - egasi tanladi (2026-10-04, 55-variant), hoshiyali tugma ichida.
@@ -404,61 +407,76 @@
     var x = PM_TX[lang] || PM_TX.uz;
     var u = tgUser(), h = validHouse(cupMe().house || house);
     pmAvatar($("pm-av2"));
+    $("pm-title").textContent = x.prof;
     $("pm-name").textContent = (u && (u.first_name || fullName(u))) || x.guest;
     $("pm-house").textContent = h ? HOUSES[h][lang] : x.noHouse;
     $("pm-wal-n").textContent = x.gal(pmGal());
     $("pm-wal-s").textContent = x.walS;
-    $("pm-prof-t").textContent = x.prof;
+    $("pm-sec1").textContent = x.sec1;
+    $("pm-sec2").textContent = x.sec2;
+    $("pm-prof-t").textContent = x.me;
     $("pm-prof-s").textContent = x.profS;
     $("pm-lang-l").textContent = x.lang;
     $("pm-bot-t").textContent = x.bot;
     $("pm-bot-s").textContent = x.botS;
-    $("pm-close").textContent = x.close;
     var box = $("pm-langs");
     box.innerHTML = "";
     ["uz", "ru", "en"].forEach(function (code) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = code === lang ? "on" : "";
-      b.innerHTML = '<span class="pm-flag"></span><span></span>';
-      b.firstChild.textContent = flagOf(code);
-      b.lastChild.textContent = { uz: "O'zbekcha", ru: "Русский", en: "English" }[code];
+      b.textContent = flagOf(code) + " " + code.toUpperCase();
       b.onclick = function () {
         if (code === lang) { return; }
-        var xogvartsda = !$("scr-hub").classList.contains("hidden");
-        openCatalog(code, true);          // tilni saqlaydi va kutubxonani qayta chizadi
-        if (xogvartsda) { try { openHub(); } catch (e) {} }   // Xogvartsdan ochilgan bo'lsa o'sha yerda qoladi
-        pmFill();
+        openCatalog(code, true);          // tilni saqlaydi va hamma matnni yangilaydi
+        pmShow();                         // ... lekin odam shu sahifada qoladi
       };
       box.appendChild(b);
     });
     try { $("pm-bot").checked = !owlData || owlData.bot; } catch (e) { $("pm-bot").checked = true; }
-    // "Ilova ochilganda" tanlovi va (admin uchun) sinov o'quvchisi - shu menyuning pastida
+    // "Ilova ochilganda" tanlovi va (admin uchun) sinov o'quvchisi
     try { renderHubSettings(); } catch (e) {}
+  }
+
+  /* Profil ALOHIDA SAHIFA (egasi, 2026-10-04: modal emas). Qayerdan ochilgani eslab qolinadi -
+     "ortga" o'sha yerga qaytaradi (kutubxona yoki Xogvarts). */
+  var pmFrom = "cat";
+
+  function pmShow() {
+    ["scr-cat", "scr-hub", "scr-prof"].forEach(function (id) { $(id).classList.add("hidden"); });
+    pmFill();
+    $("pm").classList.remove("hidden");
   }
 
   function pmOpen() {
     var el = $("pm");
-    // .screen ichida position:fixed siljiydi - oyna body ning o'zida turishi kerak
-    if (el.parentNode !== document.body) { document.body.appendChild(el); }
+    pmFrom = $("scr-hub").classList.contains("hidden") ? "cat" : "hub";
     if (!el.getAttribute("data-on")) {
       el.setAttribute("data-on", "1");
       $("pm-close").onclick = pmClose;
-      el.addEventListener("click", function (e) { if (e.target === el) { pmClose(); } });
-      $("pm-prof").onclick = function () { pmClose(); openProfile(); };
-      $("hub-set-pv").addEventListener("click", pmClose);     // sinov o'quvchisi boshlanganda menyu yopilsin
-      $("pm-wal").onclick = function () { pmClose(); try { openCup(); } catch (e) {} };
+      $("pm-prof").onclick = function () { pmHide(); openProfile(); };
+      $("hub-set-pv").addEventListener("click", pmHide);     // sinov o'quvchisi boshlanganda sahifa yopilsin
+      $("pm-wal").onclick = function () { pmHide(); try { openCup(); } catch (e) {} };
       $("pm-bot").addEventListener("change", function () {
         try { owlApi("bot", { on: $("pm-bot").checked }); } catch (e) {}
       });
     }
-    pmFill();
-    el.classList.remove("hidden");
+    pmShow();
+    try { window.scrollTo(0, 0); } catch (e) {}
     // Qoldiq eskirgan bo'lishi mumkin (hafta yakunidagi mukofot) - yangilab olamiz
     try { walLoad(function () { pmRender(); }); } catch (e) {}
   }
 
-  function pmClose() { $("pm").classList.add("hidden"); }
+  function pmHide() { $("pm").classList.add("hidden"); }
+
+  // "Ortga": qayerdan ochilgan bo'lsa o'sha yerga
+  function pmClose() {
+    pmHide();
+    if (pmFrom === "hub") { try { openHub(); return; } catch (e) {} }
+    $("scr-cat").classList.remove("hidden");
+    renderCatalog();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
 
   function renderCatalog() {
     var t = T[lang];

@@ -21,7 +21,6 @@
     ["lt", "lt-later"],
     ["chat-people", "chat-people-back"],
     ["hub-set", "hub-set-close"],
-    ["pm", "pm-close"],
     ["qs", "qs-close"],
     ["w-set", "w-set-close"]
   ];
@@ -31,6 +30,7 @@
   var BACK_OF = {
     "scr-album": "ms-back",
     "scr-serial": "sr-back",
+    "pm": "pm-close",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",
     "scr-vault": "gr-back",
