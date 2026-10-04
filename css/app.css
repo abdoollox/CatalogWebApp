@@ -2136,7 +2136,7 @@ div.pm-row{cursor:default}
 .pat-lines b{font:400 23px/1.1 'Cormorant Garamond',serif;color:var(--text)}
 .pat-lines span{font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
 .pat-lines small{font:600 11px/1.3 'Manrope',sans-serif;color:#9cc4f2}
-#pat-panel .sort-cta{margin-top:14px}
+#pat-panel .sort-cta,#pat-panel .wand-more{margin-top:14px}
 .pat-rv .pat-big{display:block;width:210px;height:210px;margin:6px auto 18px;border-radius:50%;object-fit:cover;
   box-shadow:0 0 0 1px rgba(170,210,255,.5),0 0 50px rgba(120,180,255,.45);animation:patNur 3.2s ease-in-out infinite}
 @keyframes patNur{0%,100%{box-shadow:0 0 0 1px rgba(170,210,255,.5),0 0 38px rgba(120,180,255,.35)}50%{box-shadow:0 0 0 1px rgba(190,225,255,.7),0 0 64px rgba(140,195,255,.6)}}

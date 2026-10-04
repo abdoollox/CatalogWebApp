@@ -741,15 +741,15 @@
     uz: { lbl: "Patronus", kick: "Ekspekto Patronum", cta: "Patronus testidan o'tish", none: "Hali chaqirilmagan",
           noneS: "Professor Lyupin sizga eng qiyin afsunni o'rgatadi", hubT: "Patronusingizni chaqiring", hubS: "7 ta savol · faqat bir marta",
           askT: "Patronus bir marta chaqiriladi", ask: "Natijani keyin o'zgartirib bo'lmaydi. Savollarga shoshilmasdan, o'zingiz haqingizda rostini ayting.",
-          yes: "Boshlash", no: "Keyinroq", done: "Profilga o'tish", once: "Patronus o'zgarmaydi — u endi doim siz bilan." },
+          yes: "Boshlash", no: "Keyinroq", done: "Profilga o'tish", share: "Patronusimni ulashish", once: "Patronus o'zgarmaydi — u endi doim siz bilan." },
     ru: { lbl: "Патронус", kick: "Экспекто Патронум", cta: "Пройти тест на Патронуса", none: "Ещё не вызван",
           noneS: "Профессор Люпин научит вас самому трудному заклинанию", hubT: "Вызовите своего Патронуса", hubS: "7 вопросов · только один раз",
           askT: "Патронуса вызывают один раз", ask: "Результат потом нельзя изменить. Отвечайте не спеша и честно.",
-          yes: "Начать", no: "Позже", done: "Перейти в профиль", once: "Патронус не меняется — теперь он всегда с вами." },
+          yes: "Начать", no: "Позже", done: "Перейти в профиль", share: "Поделиться Патронусом", once: "Патронус не меняется — теперь он всегда с вами." },
     en: { lbl: "Patronus", kick: "Expecto Patronum", cta: "Take the Patronus test", none: "Not summoned yet",
           noneS: "Professor Lupin will teach you the hardest charm of all", hubT: "Summon your Patronus", hubS: "7 questions · only once",
           askT: "A Patronus is summoned once", ask: "The result cannot be changed later. Take your time and answer honestly.",
-          yes: "Begin", no: "Later", done: "Go to profile", once: "A Patronus never changes — it is with you for good now." }
+          yes: "Begin", no: "Later", done: "Go to profile", share: "Share my Patronus", once: "A Patronus never changes — it is with you for good now." }
   };
 
   var patronus = null;
@@ -840,8 +840,37 @@
       pmOpen();
     };
     r.appendChild(b);
+    var ul = lentaEl("button", "lnt-ul", x.share);
+    ul.type = "button";
+    ul.onclick = patShare;
+    r.appendChild(ul);
     $("hat-km").appendChild(r);
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+  }
+
+  // Ulashish: ismi va Patronusi yozilgan rasm (Stories yoki chatga) - fakultet ulashish kabi
+  var patBand = false, patBor = null;
+  function patShare() {
+    if (patBand) { return; }
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch (e) {}
+    if (!d || !window.fetch) { showToast(al("shareErr"), "err"); return; }
+    if (patBor && patBor.lang === lang) { rasmUlash(patBor, al("ptTake"), patX().lbl); return; }
+    patBand = true;
+    var kut = showToast(al("uyWait"));
+    window.fetch(API_PATRONUS + "/share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ lang: lang })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        patBand = false;
+        dismissNote(kut);
+        if (!(res && res.ok && res.url)) { showToast(al("shareErr"), "err"); return; }
+        res.lang = lang;
+        patBor = res;
+        rasmUlash(res, al("ptTake"), patX().lbl);
+      })["catch"](function () { patBand = false; dismissNote(kut); showToast(al("shareErr"), "err"); });
   }
 
   // Profildagi panel va Xogvarts bosh sahifasidagi taklif kartasi
@@ -861,6 +890,9 @@
       $("pat-cta").textContent = x.cta;
       $("pat-cta").classList.toggle("hidden", !!p);
       $("pat-cta").onclick = startPatronus;
+      $("pat-share").textContent = x.share;
+      $("pat-share").classList.toggle("hidden", !p);
+      $("pat-share").onclick = patShare;
     }
     var grid = $("hub-grid");
     if (!grid) { return; }
