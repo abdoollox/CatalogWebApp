@@ -741,15 +741,18 @@
     uz: { lbl: "Patronus", kick: "Ekspekto Patronum", cta: "Patronus testidan o'tish", none: "Hali chaqirilmagan",
           noneS: "Professor Lyupin sizga eng qiyin afsunni o'rgatadi", hubT: "Patronusingizni chaqiring", hubS: "7 ta savol · faqat bir marta",
           askT: "Patronus bir marta chaqiriladi", ask: "Natijani keyin o'zgartirib bo'lmaydi. Savollarga shoshilmasdan, o'zingiz haqingizda rostini ayting.",
-          yes: "Boshlash", no: "Keyinroq", done: "Profilga o'tish", share: "Patronusimni ulashish", once: "Patronus o'zgarmaydi — u endi doim siz bilan." },
+          yes: "Boshlash", no: "Keyinroq", done: "Profilga o'tish", share: "Patronusimni ulashish", once: "Patronus o'zgarmaydi — u endi doim siz bilan.",
+          what: "Patronus — dementorlardan himoya qiluvchi kumush qo'riqchi. U eng baxtli xotiradan tug'iladi va har sehrgarda o'ziga xos qiyofada bo'ladi." },
     ru: { lbl: "Патронус", kick: "Экспекто Патронум", cta: "Пройти тест на Патронуса", none: "Ещё не вызван",
           noneS: "Профессор Люпин научит вас самому трудному заклинанию", hubT: "Вызовите своего Патронуса", hubS: "7 вопросов · только один раз",
           askT: "Патронуса вызывают один раз", ask: "Результат потом нельзя изменить. Отвечайте не спеша и честно.",
-          yes: "Начать", no: "Позже", done: "Перейти в профиль", share: "Поделиться Патронусом", once: "Патронус не меняется — теперь он всегда с вами." },
+          yes: "Начать", no: "Позже", done: "Перейти в профиль", share: "Поделиться Патронусом", once: "Патронус не меняется — теперь он всегда с вами.",
+          what: "Патронус — серебряный защитник от дементоров. Он рождается из самого счастливого воспоминания и у каждого волшебника принимает свой облик." },
     en: { lbl: "Patronus", kick: "Expecto Patronum", cta: "Take the Patronus test", none: "Not summoned yet",
           noneS: "Professor Lupin will teach you the hardest charm of all", hubT: "Summon your Patronus", hubS: "7 questions · only once",
           askT: "A Patronus is summoned once", ask: "The result cannot be changed later. Take your time and answer honestly.",
-          yes: "Begin", no: "Later", done: "Go to profile", share: "Share my Patronus", once: "A Patronus never changes — it is with you for good now." }
+          yes: "Begin", no: "Later", done: "Go to profile", share: "Share my Patronus", once: "A Patronus never changes — it is with you for good now.",
+          what: "A Patronus is a silver guardian against Dementors. It is born from your happiest memory and takes a different shape for every wizard." }
   };
 
   var patronus = null;
@@ -890,6 +893,11 @@
       $("pat-cta").textContent = x.cta;
       $("pat-cta").classList.toggle("hidden", !!p);
       $("pat-cta").onclick = startPatronus;
+      $("pat-info").classList.toggle("hidden", !p);
+      $("pat-info").onclick = function () {
+        nshBox({ codes: ["x"], srcs: [patImg(patronus)], kick: x.lbl, title: p[lang],
+                 text: p["n_" + lang] + "\n\n" + p["w_" + lang] + ".\n\n" + x.what });
+      };
       $("pat-share").textContent = x.share;
       $("pat-share").classList.toggle("hidden", !p);
       $("pat-share").onclick = patShare;

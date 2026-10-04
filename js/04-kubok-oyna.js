@@ -1182,6 +1182,8 @@
     houseOpen = null;
     $("scr-house").classList.add("hidden");
     try { if (sqBack()) { houseFromHist = false; return; } } catch (e) {}
+    // Profildagi "i" tugmasidan ochilgan bo'lsa - profilga qaytadi
+    try { if (pmUy) { pmUy = false; houseFromHist = false; pmShow(); return; } } catch (e) {}
     $(houseFromHist ? "scr-cup-hist" : "scr-cup").classList.remove("hidden");
     houseFromHist = false;
   }

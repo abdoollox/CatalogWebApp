@@ -1428,6 +1428,10 @@
     ush.textContent = al("uyShare");
     ush.classList.toggle("hidden", house === "none");
     if (!ush.onclick) { ush.onclick = function () { uyShare(); }; }
+    // Kichik "i" tugmasi: fakultet sahifasi (asoschisi, mudiri, a'zolari) - qaytganda yana profil
+    var hi = $("house-info");
+    hi.classList.toggle("hidden", house === "none");
+    hi.onclick = function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } };
 
     var cta = $("sort-cta");
     var again = $("resort-btn");
@@ -1502,13 +1506,20 @@
 
     var icon = $("wand-icon");
 
+    $("wand-info").classList.toggle("hidden", !wand);
+    $("wand-info").onclick = openWandDetail;
+    $("wand-share").textContent = TQ_TX[lang] || TQ_TX.uz;
+    $("wand-share").classList.toggle("hidden", !wand);
+    $("wand-share").onclick = tqShare;
+    icon.classList.toggle("rasm", !!wand);
     if (wand) {
-      icon.innerHTML = SVG_WAND;
+      // Tayoqcha rasmi yog'ochiga qarab (img/tayoqcha/<yog'och>.webp, dizayn tizimi uslubida)
+      icon.innerHTML = '<img alt="" src="' + IMG_DIR + "tayoqcha/" + wand.wood + '.webp">';
       $("wand-wood").textContent = WOODS[wand.wood][lang];
       $("wand-l1").textContent = CORES[wand.core][lang];
       $("wand-l2").textContent = FLEX[wand.flex].len + " " + t.inch;
       $("wand-l3").textContent = FLEX[wand.flex][lang];
-      $("wand-more").classList.remove("hidden");
+      $("wand-more").classList.add("hidden");       // "Batafsil" o'rnida endi kichik "i" tugmasi
       $("wand-cta").classList.add("hidden");
       // Tayoqcha ham bir marta tanlanadi (egasi, 2026-10-05) - "Qayta tanlash" tugmasi yo'q
       $("wand-again").classList.add("hidden");
@@ -1552,6 +1563,37 @@
 
   /* ---------- TAYOQCHA: BATAFSIL ---------- */
 
+  /* Tayoqchani ulashish: ismi va tayoqchasi yozilgan rasm (Stories yoki chatga) - fakultet va Patronus kabi */
+  var API_TAYOQ = "https://bot.tizimshunos.uz/api/tayoqcha/share";
+  var TQ_TX = { uz: "Tayoqchamni ulashish", ru: "Поделиться палочкой", en: "Share my wand" };
+  var TQ_ST = { uz: "Tayoqcha sehrgarni tanlaydi", ru: "Палочка выбирает волшебника", en: "The wand chooses the wizard" };
+  var tqBand = false, tqBor = null;
+  var pmUy = false;            // fakultet sahifasi profildan ochilgan - "ortga" profilga qaytaradi
+
+  function tqShare() {
+    if (tqBand || !wand) { return; }
+    var d = "";
+    try { d = (tg && tg.initData) || ""; } catch (e) {}
+    if (!d || !window.fetch) { showToast(al("shareErr"), "err"); return; }
+    var kalit = lang + wand.wood + wand.core + wand.flex;
+    if (tqBor && tqBor.kalit === kalit) { rasmUlash(tqBor, TQ_ST[lang] || TQ_ST.uz, T[lang].wandLbl); return; }
+    tqBand = true;
+    var kut = showToast(al("uyWait"));
+    window.fetch(API_TAYOQ, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ lang: lang, wood: wand.wood, core: wand.core, flex: wand.flex })
+    }).then(function (r) { return r.json(); })
+      .then(function (res) {
+        tqBand = false;
+        dismissNote(kut);
+        if (!(res && res.ok && res.url)) { showToast(al("shareErr"), "err"); return; }
+        res.kalit = kalit;
+        tqBor = res;
+        rasmUlash(res, TQ_ST[lang] || TQ_ST.uz, T[lang].wandLbl);
+      })["catch"](function () { tqBand = false; dismissNote(kut); showToast(al("shareErr"), "err"); });
+  }
+
   function openWandDetail() {
     if (!wand) { return; }
     var t = T[lang];
@@ -1560,7 +1602,7 @@
     $("det-kicker").textContent = t.detKicker;
     $("det-back-txt").textContent = t.back;
 
-    $("det-art").innerHTML = SVG_WAND;
+    $("det-art").innerHTML = '<img class="det-rasm" alt="" src="' + IMG_DIR + "tayoqcha/" + wand.wood + '.webp">';
     $("det-title").textContent = wd[lang];
     $("det-spec").textContent = cr[lang] + " \u00b7 " + fl.len + " " + t.inch + " \u00b7 " + fl[lang];
 
