@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=ac0cb825">
+<link rel="stylesheet" href="css/app.css?v=575d3793">
 </head>
 <body>
 <div class="shell">
@@ -119,6 +119,8 @@
     <!-- Nishonlar: to'r js/07 da to'ldiriladi (nshRender) -->
     <button class="nsh-go hidden" id="nsh-sec" type="button"><span class="nsh-go-tx"><b id="nsh-lbl"></b><small id="nsh-cnt"></small></span><span class="nsh-go-im" id="nsh-mini"></span><i class="pm-chev">›</i></button>
 
+    <button class="nsh-go hidden" id="qb-row" type="button"><span class="nsh-go-tx"><b id="qb-row-t"></b><small id="qb-row-s"></small></span><span class="nsh-go-im qb-row-im" id="qb-row-im"></span><i class="pm-chev">›</i></button>
+
     <!-- Fakultet va tayoqcha: ilgari alohida "Sehrgar" sahifasida edi (scr-prof) -->
     <div class="panel">
       <span class="panel-label" id="house-label">Fakultet</span>
@@ -181,16 +183,31 @@
       <div class="kb-ttl"><span class="cup-kick" id="sq-kick"></span><span class="cup-title" id="sq-title"></span></div>
       <span class="kb-sp" aria-hidden="true"></span>
     </div>
-    <div class="sq-hero"><span class="sq-img" id="sq-img"></span><b class="sq-n" id="sq-n"></b></div>
+    <div class="sq-card" id="sq-card">
+      <img class="sq-img" id="sq-img" alt="">
+      <span class="sq-card-tx"><small id="sq-card-k"></small><b id="sq-card-n"></b><span id="sq-card-s"></span><em id="sq-n"></em></span>
+    </div>
     <div class="sq-prog"><span class="sq-bar"><i id="sq-fill"></i></span><div class="sq-ladder" id="sq-ladder"></div></div>
     <button class="sq-open off" id="sq-open" type="button" disabled></button>
     <span class="pm-lbl" id="sq-tasks-l"></span>
     <div class="sq-tasks" id="sq-tasks"></div>
+    <button class="nsh-go sq-coll" id="sq-coll" type="button"><span class="nsh-go-tx"><b id="sq-coll-t"></b><small id="sq-coll-s"></small></span><i class="pm-chev">›</i></button>
     <div class="sq-str">
       <div class="sq-str-top"><span class="pm-lbl" id="sq-str-l"></span><span class="sq-str-n" id="sq-str-n"></span></div>
       <div class="sq-str-dots" id="sq-str-dots"></div>
       <p id="sq-str-s"></p>
     </div>
+  </div>
+
+  <!-- Sehrgarlar kartochkalari kolleksiyasi (shokolad qurbaqa; js/07 qb*) -->
+  <div id="scr-qb" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="qb-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="qb-kick"></span><span class="cup-title" id="qb-title"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <div class="nsh-sum"><b id="qb-sum-n"></b><small></small><span class="nsh-bar"><i id="qb-bar"></i></span></div>
+    <div class="qb-grid" id="qb-grid"></div>
   </div>
 
   <!-- Nishonlar sahifasi: toifalar bo'yicha (js/07 nshRender) -->
@@ -1178,18 +1195,18 @@
 <script src="js/01-asos.js?v=eead61f0"></script>
 <script src="js/02-saqlash-kubok.js?v=9780491e"></script>
 <script src="js/03-dostlar.js?v=6966ee26"></script>
-<script src="js/04-kubok-oyna.js?v=fd6c51fb"></script>
-<script src="js/05-umumiy.js?v=81250240"></script>
+<script src="js/04-kubok-oyna.js?v=97959cdf"></script>
+<script src="js/05-umumiy.js?v=d3234d79"></script>
 <script src="js/06-soundtrack.js?v=d4ffa64d"></script>
-<script src="js/07-kutubxona.js?v=0d5fc60b"></script>
+<script src="js/07-kutubxona.js?v=c3036719"></script>
 <script src="js/08-saralash.js?v=cc1a9393"></script>
-<script src="js/09-sehrli-olam.js?v=e96872d6"></script>
+<script src="js/09-sehrli-olam.js?v=bca91ca4"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=2c6e08a0"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=84ac4d2d"></script>
+<script src="js/13-orqaga.js?v=e6e29ef6"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
-<script src="js/15-pochta.js?v=7f69f82d"></script>
+<script src="js/15-pochta.js?v=6168e801"></script>
 
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">
     <defs>

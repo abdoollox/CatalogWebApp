@@ -222,6 +222,8 @@
 
   function openHub() {
     if (!hasHouse()) { jrHome(); return; }
+    // Shokolad qurbaqa topshirig'idan qaytish: "ortga" topshiriqlar ro'yxatiga olib boradi (egasi, 2026-10-05)
+    try { if (sqBack()) { return; } } catch (e) {}
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",

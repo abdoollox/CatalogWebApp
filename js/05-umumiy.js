@@ -57,6 +57,7 @@
 
   function closeCup() {
     $("scr-cup").classList.add("hidden");
+    try { if (sqBack()) { return; } } catch (e) {}
     openCatalog(lang, false);
   }
 

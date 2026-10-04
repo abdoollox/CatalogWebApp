@@ -436,6 +436,8 @@
       ["scr-owl", "scr-hub"].forEach(function (id) { $(id).classList.add("hidden"); });
       worldFrom = "hub";
       openCup();
+      // Xat YAKUNLANGAN hafta haqida - joriy hafta emas, tarixdagi o'sha hafta ochiladi (egasi, 2026-10-05)
+      try { histFocus = true; openCupHistory(); } catch (e) {}
     }
     if (cupData) { och(); } else { fetchCup(och); }
   }

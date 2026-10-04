@@ -416,6 +416,7 @@
     // Fakultet va tayoqcha panellari (ilgari "Sehrgar" sahifasida edi)
     try { renderProfile(); } catch (e) {}
     try { patPaint(); patLoad(); } catch (e) {}
+    try { sqLoad(); qbRow(); } catch (e) {}
     $("pm-lang-l").textContent = x.lang;
     $("pm-bot-t").textContent = x.bot;
     $("pm-bot-s").textContent = x.botS;
@@ -444,7 +445,7 @@
     $("pm-wal").classList.toggle("hidden", !ichkarida);
     $("house-label").parentNode.classList.toggle("hidden", !ichkarida);
     $("hub-set-title").parentNode.classList.toggle("hidden", !ichkarida);
-    if (!ichkarida) { $("nsh-sec").classList.add("hidden"); }
+    if (!ichkarida) { $("nsh-sec").classList.add("hidden"); $("qb-row").classList.add("hidden"); }
   }
 
   /* Profil ALOHIDA SAHIFA (egasi, 2026-10-04: modal emas). Qayerdan ochilgani eslab qolinadi -
@@ -509,8 +510,8 @@
                tayoqcha: ["Tayoqcha egasi", "Olivander do'konidan tayoqcha oling"],
                patronus: ["Patronus egasi", "Professor Lyupin darsida Patronusingizni chaqiring"],
                ball_1: ["Birinchi ball", "Fakultetingizga birinchi ballni keltiring"],
-               sandiq_1: ["Birinchi sandiq", "Kunlik sandiqni bir marta oching"],
-               sandiq_7: ["Yetti sandiq", "Kunlik sandiqni 7 kun ketma-ket oching"],
+               sandiq_1: ["Birinchi qurbaqa", "Shokolad qurbaqa qutisini bir marta oching"],
+               sandiq_7: ["Yetti qurbaqa", "Qutini 7 kun ketma-ket oching"],
                streak_7: ["Yetti sham", "Bir haftaning 7 kunida ham ball to'plang"],
                perfect_week: ["Bexato hafta", "Haftaning hamma kunlik savoliga to'g'ri javob bering"],
                kubok_golib: ["Kubok g'olibi", "Fakultetingiz haftalik kubokni yutsin, siz ham ball qo'shgan bo'ling"],
@@ -532,8 +533,8 @@
                tayoqcha: ["Владелец палочки", "Получите палочку в лавке Олливандера"],
                patronus: ["Обладатель Патронуса", "Вызовите своего Патронуса на уроке профессора Люпина"],
                ball_1: ["Первое очко", "Принесите факультету первые очки"],
-               sandiq_1: ["Первый сундук", "Откройте сундук дня один раз"],
-               sandiq_7: ["Семь сундуков", "Открывайте сундук дня 7 дней подряд"],
+               sandiq_1: ["Первая лягушка", "Откройте коробку с шоколадной лягушкой один раз"],
+               sandiq_7: ["Семь лягушек", "Открывайте коробку 7 дней подряд"],
                streak_7: ["Семь свечей", "Набирайте очки все 7 дней одной недели"],
                perfect_week: ["Неделя без ошибок", "Ответьте верно на все вопросы дня за неделю"],
                kubok_golib: ["Обладатель Кубка", "Ваш факультет выиграл Кубок недели, и вы принесли очки"],
@@ -555,8 +556,8 @@
                tayoqcha: ["Wand Owner", "Get a wand at Ollivander's"],
                patronus: ["Patronus Caster", "Summon your Patronus in Professor Lupin's lesson"],
                ball_1: ["First Point", "Earn your first points for your house"],
-               sandiq_1: ["First Chest", "Open the daily chest once"],
-               sandiq_7: ["Seven Chests", "Open the daily chest 7 days in a row"],
+               sandiq_1: ["First Frog", "Open a Chocolate Frog box once"],
+               sandiq_7: ["Seven Frogs", "Open the box 7 days in a row"],
                streak_7: ["Seven Candles", "Earn points on all 7 days of one week"],
                perfect_week: ["Flawless Week", "Answer every daily question of a week correctly"],
                kubok_golib: ["Cup Winner", "Your house wins the weekly Cup and you earned points for it"],
@@ -701,6 +702,7 @@
     row.innerHTML = "";
     row.className = "nsh-row" + (o.codes.length > 1 ? " many" : "") + (o.off ? " off" : "");
     if (o.icon) { row.className = "nsh-row nsh-ic"; row.innerHTML = o.icon; }
+    if (o.card) { row.className = "nsh-row nsh-card"; }          // sehrgar kartochkasi: doira emas, karta shaklida
     o.codes.forEach(function (c) {
       var im = document.createElement("img");
       im.alt = ""; im.src = o.srcs ? o.srcs[row.children.length] : nshImg(c);
@@ -750,78 +752,162 @@
     });
   }
 
-  /* ---------- KUNLIK SANDIQ (egasi, 2026-10-05) ----------
-     Har kuni 6 ta topshiriq (server tanlaydi, hammaga bir xil). 2 ta va 4 ta bajarilganda +5 ball
-     o'zi beriladi, 6 ta bo'lganda odam sandiqni o'zi ochadi: +10 ball va 1 galleon. 7 kun ketma-ket -
-     katta sandiq (+3 galleon). Hisob serverda (hpsandiq.py, /api/sandiq). Faqat saralanganlarga.
+  /* ---------- SHOKOLAD QURBAQA: kunlik topshiriqlar va sehrgarlar kartochkalari (egasi, 2026-10-05) ----------
+     Har kuni 6 ta topshiriq (server tanlaydi, hammaga bir xil). HAMMASI bajarilganda odam qutini o'zi ochadi:
+     +10 ball, 1 galleon va SHU KUNNING sehrgar kartochkasi (kolleksiyaga). Oraliq mukofot yo'q.
+     7 kun ketma-ket - qo'shimcha +3 galleon. Hisob serverda (hpsandiq.py, /api/sandiq). Faqat saralanganlarga.
+     Kodda nomlar "sq"/"sandiq" bo'lib qolgan (birinchi nusxa sandiq edi).
      Topshiriq bajarilganini aytish: sqDone("chat") - kerakli joylarga ilgak qilib qo'yilgan. */
   var API_SANDIQ = "https://bot.tizimshunos.uz/api/sandiq";
   // Olov belgisi: MDI "fire" (Apache 2.0) - ketma-ketlik
   var SQ_FIRE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82c-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32c-2.59 2.08-3.61 5.75-2.39 8.9c.04.1.08.2.08.33c0 .22-.15.42-.35.5c-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5c.14.6.41 1.2.71 1.73c1.08 1.73 2.95 2.97 4.96 3.22c2.14.27 4.43-.12 6.07-1.6c1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26m-3.16 6.3c-.28.24-.74.5-1.1.6c-1.12.4-2.24-.16-2.9-.82c1.19-.28 1.9-1.16 2.11-2.05c.17-.8-.15-1.46-.28-2.23c-.12-.74-.1-1.37.17-2.06c.19.38.39.76.63 1.06c.77 1 1.98 1.44 2.24 2.8c.04.14.06.28.06.43c.03.82-.33 1.72-.93 2.27"/></svg>';
-  // Sandiq belgilari: Game-icons "locked-chest" va "open-treasure-chest" (CC BY 3.0) - VAQTINCHA,
-  // egasi dizayn-tizimi/sandiq-belgilar.png dan tanlaydi. Rasm ishlatilmaydi (egasi, 2026-10-05).
-  var SQ_YOPIQ = '<svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M146.857 20.842c-12.535-.036-24.268 2.86-37.285 9.424h.004C61.356 54.6 19.966 120.734 17.982 175.91l41.848 14.236c4.33-61.89 47.057-128.37 101.527-155.86h.002a134 134 0 0 1 13.185-5.8l-22.26-7.45a84 84 0 0 0-5.428-.194zm59.34 20.19c-10.478-.09-22.832 3.093-36.424 9.943l.004-.004c-48.23 24.34-89.625 90.513-91.548 145.436l156.485 53.24c3.865-62.22 46.797-129.372 101.613-157.035h.002l.002-.003a134 134 0 0 1 12.832-5.666l-134.54-45.036a44 44 0 0 0-8.427-.873zm174.97 58.323c-10.476-.09-22.83 3.092-36.42 9.94l-.005.002c-48.577 24.518-90.225 91.473-91.586 146.623l46.205 15.72c3.914-62.188 46.825-129.274 101.607-156.92a129 129 0 0 1 13.53-5.91l-26.544-8.884a45 45 0 0 0-6.785-.57zm63.554 22.014c-10.267.093-22.094 3.353-35.333 10.034c-47.158 23.8-87.777 87.587-91.362 141.75l174.55-73.726c-.404-39.01-10.754-61.304-24.415-71.082a36 36 0 0 0-7.55-4.137l-.01.034l-4.735-1.584c-3.48-.887-7.195-1.327-11.144-1.29zM17.9 195.622l-.035 187.484L59.46 397.58V209.764l-41.56-14.14zm60.25 20.498v187.962l156.282 54.37V269.288l-29.053-9.886v119.43L104.325 344.75V225.025zm414.22 3.683L318.433 293.27v189.236l173.935-73.504v-189.2zm-369.354 11.582v99.947l63.675 21.477v-99.763l-63.674-21.662zm31.306 28.797c9.705 0 17.573 7.867 17.573 17.572c0 6.34-3.37 11.88-8.407 14.97v28.53h-18.69v-28.746c-4.838-3.13-8.048-8.562-8.048-14.754c0-9.705 7.867-17.572 17.572-17.572m98.797 15.464v189.307l46.626 16.22V291.51l-46.627-15.864z"/></svg>';
-  var SQ_OCHIQ = '<svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M410.365 101.005c8.21-22.26 16.21-31.12 20.33-34.45c3.06-2.48 5.73-3.42 7.92-2.81c4 1.13 8.49 7.45 11.88 16.89c10.89 30.34 10 84.28-.93 129.51zm-286 72.92c7.52-31 10.28-66.13 7.77-94.92l-43.6-4.86zm289.46-113l-301.2-33.53c-2.5-.28-5.24 1.46-7.11 3c-3.67 3-10.42 10.32-17.66 27.64l308.68 34.34c5.16-13.25 11.02-23.89 17.31-31.43zm-228.78 298.71v-70.72l10.76 1.19l42.24 5.18v70.51zm16-40.34a13 13 0 0 0 5.34 10.29l-2.34 24.42l17 1.74l-4-25a9.54 9.54 0 0 0 5-9.15a13.64 13.64 0 0 0-11.06-12.59s.17.1.13.1c-5.95-.68-11.07 3.9-10.07 10.1zm53 64.45l-85-9.84v-86.72l-1.05-.09a8.14 8.14 0 0 1-7.27 6.71a8 8 0 0 1 5.23 8.9a8 8 0 0 1-8 6.66c8.453 4.004 4.341 16.778-4.86 15.1a8 8 0 0 1-8 13.8a8.01 8.01 0 0 1-12.28 10.29v.09a8 8 0 0 1-3.86 8.37l9.13 5.35v14.25l-12 7.13l-12-7.12v-14.26l8.15-4.82a8.21 8.21 0 0 1-5.07-5.92a.4.4 0 0 1 0-.1a8 8 0 0 1-15.18-5c-6.851 7.214-18.094-2.065-12.31-10.16c-8.346 4.519-16.217-6.676-9.14-13c-9.17 2.661-14.453-10.083-6.09-14.69a8 8 0 0 1-3.21-15.67c-9.294-1.047-9.548-14.463-.3-15.86c-.669-.164-1.264-.473-1.83-.76l-17.24-1.86l.6 167.11l309.18 34.49l-.6-165.83l-107-13.05zm140.06-164l4.72 1.91l.91.58l38.72 4.31l-23.26-64.77l-12.82 37c-.16.46-3.41 9.8-8.27 20.99zm-208.54-39.74l5 5.49l12.75-11.15l21.45-2.28l16.61 15.35l10.51 8.73l18.54-9.29l3.44.5c.12-.67.25-1.34.38-2c3.08-16.1 7.35-30.16 7.53-30.75l13.39-43.91l16.88 42.71l8.42 21.42l10.66-12.39l22.14-25.73l5.78 33.45l3.29 19.1l17.1-9.64l35.09-19.79l-18.48-51.4l-247.86-27.61c2.51 34.94-1.85 77.32-12.39 112h2.32l7-12.86h40.46zm-111.29 97.39c7.6 2.1 7.9 12.766.43 15.29c7.737.867 9.802 11.153 3 14.94c7.653-.548 11.614 8.947 5.84 14c7.313-2.115 13.168 6.216 8.7 12.38c6.288-3.518 13.657 2.417 11.56 9.31c4.53-4.723 12.506-2.304 13.65 4.14c2.057-5.713 9.48-7.141 13.51-2.6c-1.285-6.404 5.23-11.566 11.17-8.85c-4.564-5.77.425-14.123 7.67-12.84c-6.419-4.541-3.122-14.648 4.74-14.53c-7.316-3.503-5.375-14.415 2.7-15.18a8 8 0 0 1-5.38-8l-76.43-8.26c-.41.19-.746.15-1.16.2m367.54 139.08l-.59-163.86l-8.67 7l-55.51 46.79l.58 162zm-26.23-165.2l-24.11-15.27l-4.18-1.69c-5.91 11.52-13.39 23-22.66 27.88c-5.44 2.88-12.22 4.34-20.16 4.34c-11.13 0-24.75-2.91-37.35-8c-10-4-23.3-11-30.26-21.34c-4.9-7.29-6.64-17.77-5.31-32.92l-21.78 10.93l-19-15.8l-11.42-10.53l-9.16 1l-20.45 17.83l-11-11.7h-24.21l-17.61 32l-5.7-7.2l-4.42 4.85l-10.76 16.35l-12.29 4.91L97.611 256h-12.2l-2.776 6.005l76.9 8.21a8.15 8.15 0 0 1 2-2.9a8 8 0 0 1 10.31-.46a2 2 0 0 1-.14-.24c-4.955-8.368 6.459-16.62 12.87-9.375c6.412 7.245-3.167 17.571-10.87 11.635a8 8 0 0 1 1.12 2.89l22.62 2.44l168.54 20.57l51.49-43.38zm-28.34-57.73l-36.88 20.79l-7.14-41.47l-28 32.51l-18.13-46.11s-16.65 54.58-7 69c7.69 11.45 35.42 22.25 54.33 22.25c5 0 9.43-.76 12.67-2.48c13.8-7.31 30.15-54.49 30.15-54.49m-317.08 270.8v-.2c0-3.77-8.21-6.83-18.33-6.83s-18.33 3.06-18.33 6.83c0 3.21 6 5.9 14 6.63v.2c0 3.77 8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83c-.01-3.21-5.98-5.9-14-6.63m350 6.63c-10.13 0-18.33 3.06-18.33 6.83s8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83s-8.25-6.8-18.38-6.8zm40-16.28c-10.13 0-18.33 3.06-18.33 6.83s8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83s-8.22-6.83-18.34-6.83z"/></svg>';
   var SQ_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
+
+  // Kartochkalar: asardagi "Mashhur sehrgarlar" to'plamidan 24 tasi. [ism, bir qatorlik ta'rif]
+  var QB_ORDER = ["dumbledore", "merlin", "morgana", "flamel", "gryffindor", "slytherin", "ravenclaw", "hufflepuff",
+                  "circe", "paracelsus", "agrippa", "ptolemy", "cliodna", "hengist", "grunnion", "scamander",
+                  "bott", "wright", "gregory", "uric", "gwenog", "wildsmith", "whitehorn", "potter"];
+  var QB = {
+    uz: { dumbledore: ["Albus Dambldor", "Xogvarts direktori. Zamonamizning eng buyuk sehrgari, feniks patining egasi."],
+          merlin: ["Merlin", "Barcha zamonlarning eng mashhur sehrgari. Qirol Artur saroyida xizmat qilgan."],
+          morgana: ["Morgana", "Qirol Arturning o'gay singlisi, qudratli sehrgar ayol va Merlinning raqibi."],
+          flamel: ["Nikolas Flamel", "Hikmatlar toshini yaratgan yagona alkimyogar. 665 yil yashagan."],
+          gryffindor: ["Godrik Grifindor", "Xogvartsning to'rt asoschisidan biri. Jasorati va qilichi bilan mashhur."],
+          slytherin: ["Salazar Sliterin", "Xogvarts asoschisi. Ilonlar tilida gapira olgan va Sirlar xonasini qurgan."],
+          ravenclaw: ["Rovena Reyvenklo", "Xogvarts asoschisi. O'z davrining eng aqlli sehrgar ayoli, diademasi mashhur."],
+          hufflepuff: ["Xelga Xaffelpaff", "Xogvarts asoschisi. Mehribonligi va oshxona afsunlari bilan tanilgan."],
+          circe: ["Sirseya", "Qadimgi yunon sehrgar ayoli. Adashgan dengizchilarni cho'chqaga aylantirgan."],
+          paracelsus: ["Paratsels", "Alkimyogar va tabib. Sehrgarlar tibbiyotining asoschilaridan biri."],
+          agrippa: ["Agrippa", "Mashhur sehrgar-olim. Sehr haqidagi kitoblari uchun magllar uni qamoqqa tashlagan."],
+          ptolemy: ["Ptolemey", "Qadimgi astronom sehrgar. Eng noyob kartochkalardan biri — Ron uni uzoq qidirgan."],
+          cliodna: ["Kliodna", "Irland druid ayoli. Uchta sehrli qushining qo'shig'i kasallarni davolagan."],
+          hengist: ["Vudkroftlik Xengist", "Xogsmid qishlog'iga asos solgan. Magllar ta'qibidan qochib kelgan."],
+          grunnion: ["Alberik Grannion", "Tezak bombasini ixtiro qilgan. Xogvarts hazilkashlari undan minnatdor."],
+          scamander: ["Nyut Skamander", "Sehrli maxluqlar bilimdoni. «Fantastik maxluqlar va ularning makoni» muallifi."],
+          bott: ["Berti Bott", "Har xil ta'mli konfetlarni tasodifan — iflos paypoq tufayli ixtiro qilgan."],
+          wright: ["Bouman Rayt", "Temirchi sehrgar. Kviddich uchun Oltin snitchni yasagan."],
+          gregory: ["Xushomadgo'y Gregori", "O'zi yasagan malham bilan qirol Richardning ishonchiga kirib, boyib ketgan."],
+          uric: ["G'alati Urik", "Boshiga meduzani shlyapa qilib kiyib yurgan g'aroyib sehrgar."],
+          gwenog: ["Gvenog Jons", "«Xolixed Garpiyalari» kviddich jamoasining sardori va zarbachisi."],
+          wildsmith: ["Ignatiya Uayldsmit", "Uchar kukunni ixtiro qilgan — kaminlar orqali sayohat uning sharofati."],
+          whitehorn: ["Devlin Uaytxorn", "«Nimbus» poyga supurgilari kompaniyasining asoschisi."],
+          potter: ["Garri Potter", "Tirik qolgan bola. Yuz yil ichidagi eng yosh Izlovchi."] },
+    ru: { dumbledore: ["Альбус Дамблдор", "Директор Хогвартса. Величайший волшебник нашего времени."],
+          merlin: ["Мерлин", "Самый знаменитый волшебник всех времён. Служил при дворе короля Артура."],
+          morgana: ["Моргана", "Сводная сестра короля Артура, могущественная чародейка и соперница Мерлина."],
+          flamel: ["Николас Фламель", "Единственный создатель философского камня. Прожил 665 лет."],
+          gryffindor: ["Годрик Гриффиндор", "Один из четырёх основателей Хогвартса. Славился храбростью и мечом."],
+          slytherin: ["Салазар Слизерин", "Основатель Хогвартса. Говорил на языке змей и построил Тайную комнату."],
+          ravenclaw: ["Кандида Когтевран", "Основательница Хогвартса. Умнейшая волшебница своего времени."],
+          hufflepuff: ["Пенелопа Пуффендуй", "Основательница Хогвартса. Известна добротой и кулинарными чарами."],
+          circe: ["Цирцея", "Древнегреческая волшебница. Превращала заблудших моряков в свиней."],
+          paracelsus: ["Парацельс", "Алхимик и целитель. Один из основателей волшебной медицины."],
+          agrippa: ["Агриппа", "Знаменитый учёный-волшебник. Маглы посадили его в тюрьму за книги о магии."],
+          ptolemy: ["Птолемей", "Древний волшебник-астроном. Одна из самых редких карточек — Рон долго её искал."],
+          cliodna: ["Клиодна", "Ирландская друидесса. Пение трёх её волшебных птиц исцеляло больных."],
+          hengist: ["Хенгист из Вудкрофта", "Основал деревню Хогсмид, спасаясь от преследования маглов."],
+          grunnion: ["Альберик Граннион", "Изобрёл навозную бомбу. Шутники Хогвартса ему благодарны."],
+          scamander: ["Ньют Саламандер", "Знаток волшебных существ. Автор «Фантастических тварей и мест их обитания»."],
+          bott: ["Берти Ботт", "Случайно изобрёл драже со всеми вкусами — из-за грязных носков."],
+          wright: ["Боумен Райт", "Кузнец-волшебник. Создал Золотой снитч для квиддича."],
+          gregory: ["Грегори Льстивый", "Втёрся в доверие к королю Ричарду с помощью своей мази и разбогател."],
+          uric: ["Урик Странный", "Чудаковатый волшебник, носивший медузу вместо шляпы."],
+          gwenog: ["Гвеног Джонс", "Капитан и загонщица квиддичной команды «Холихедские гарпии»."],
+          wildsmith: ["Игнатия Уилдсмит", "Изобрела летучий порох — путешествия через камины появились благодаря ей."],
+          whitehorn: ["Девлин Уайтхорн", "Основатель компании гоночных мётел «Нимбус»."],
+          potter: ["Гарри Поттер", "Мальчик, который выжил. Самый молодой ловец за сто лет."] },
+    en: { dumbledore: ["Albus Dumbledore", "Headmaster of Hogwarts. The greatest wizard of modern times."],
+          merlin: ["Merlin", "The most famous wizard of all time. Served at King Arthur's court."],
+          morgana: ["Morgana", "King Arthur's half-sister, a powerful sorceress and Merlin's rival."],
+          flamel: ["Nicolas Flamel", "The only known maker of the Philosopher's Stone. Lived for 665 years."],
+          gryffindor: ["Godric Gryffindor", "One of the four founders of Hogwarts. Famed for his courage and his sword."],
+          slytherin: ["Salazar Slytherin", "A founder of Hogwarts. Spoke to snakes and built the Chamber of Secrets."],
+          ravenclaw: ["Rowena Ravenclaw", "A founder of Hogwarts. The cleverest witch of her age."],
+          hufflepuff: ["Helga Hufflepuff", "A founder of Hogwarts. Known for her kindness and her food charms."],
+          circe: ["Circe", "Ancient Greek sorceress. Turned lost sailors into pigs."],
+          paracelsus: ["Paracelsus", "Alchemist and healer. One of the founders of wizarding medicine."],
+          agrippa: ["Agrippa", "A celebrated scholar wizard. Muggles imprisoned him for his books on magic."],
+          ptolemy: ["Ptolemy", "Ancient astronomer wizard. One of the rarest cards — Ron searched for it for ages."],
+          cliodna: ["Cliodna", "Irish druidess. The song of her three magical birds cured the sick."],
+          hengist: ["Hengist of Woodcroft", "Founded the village of Hogsmeade after fleeing Muggle persecution."],
+          grunnion: ["Alberic Grunnion", "Inventor of the Dungbomb. Hogwarts pranksters are grateful."],
+          scamander: ["Newt Scamander", "Expert on magical creatures. Author of Fantastic Beasts and Where to Find Them."],
+          bott: ["Bertie Bott", "Invented Every Flavour Beans by accident — thanks to a dirty sock."],
+          wright: ["Bowman Wright", "Metal-charmer. Created the Golden Snitch for Quidditch."],
+          gregory: ["Gregory the Smarmy", "Won King Richard's trust with his own unction and grew rich."],
+          uric: ["Uric the Oddball", "An eccentric wizard who wore a jellyfish for a hat."],
+          gwenog: ["Gwenog Jones", "Captain and Beater of the Holyhead Harpies Quidditch team."],
+          wildsmith: ["Ignatia Wildsmith", "Invented Floo powder — travel by fireplace is her doing."],
+          whitehorn: ["Devlin Whitehorn", "Founder of the Nimbus Racing Broom Company."],
+          potter: ["Harry Potter", "The Boy Who Lived. The youngest Seeker in a century."] }
+  };
+
   var SQ_TX = {
-    uz: { kick: "Har kuni yangilanadi", title: "Kunlik sandiq", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
-          ready: "Sandiq tayyor — oching!", openedC: "Bugungi sandiq ochildi", days: function (n) { return n + " kun ketma-ket"; },
-          tasksL: "Bugungi topshiriqlar", open: "Sandiqni ochish", openBig: "Katta sandiqni ochish", need: function (n) { return "Yana " + n + " ta topshiriq"; },
-          opened: "Sandiq ochildi. Ertaga yangi topshiriqlar keladi.", prize: "Mukofot", prizeBig: "Katta sandiq mukofoti",
-          chestS: function (b, g) { return "+" + b + " ball · " + g + " galleon"; },
-                    rwK: "Sandiq ochildi", rwKBig: "Katta sandiq ochildi", rwT: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
-          rwP: function (n) { return n + " kun ketma-ket. Ertaga ham keling — sanoq uzilmasin."; },
-          rwPBig: "7 kun ketma-ket! Qo'shimcha 3 galleon sizniki.",
-          strL: "Ketma-ketlik", strS: function (k, g) { return "Har " + k + "-kun — katta sandiq: yana +" + g + " galleon. Bir kun o'tkazib yuborsangiz, sanoq noldan boshlanadi."; },
+    uz: { kick: "Kunlik topshiriqlar", title: "Shokolad qurbaqa", today: "Bugungi kartochka", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
+          ready: "Quti tayyor — oching!", openedC: "Bugungi kartochka sizda", days: function (n) { return n + " kun ketma-ket"; },
+          tasksL: "Bugungi topshiriqlar", open: "Qutini ochish", need: function (n) { return "Yana " + n + " ta topshiriq"; },
+          opened: "Kartochka olindi. Ertaga yangi sehrgar keladi.", prize: "Mukofot",
+          prizeS: function (b, g) { return "kartochka · +" + b + " ball · " + g + " galleon"; },
+          have: function (n) { return "Sizda bor" + (n > 1 ? " ×" + n : ""); }, miss: "Sizda hali yo'q",
+          rwK: "Yangi kartochka", rwKDup: "Kartochka (takror)", rwP: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
+          coll: "Kolleksiyam", collK: "Mashhur sehrgarlar", collS: function (n, t) { return n + " / " + t + " kartochka"; }, unknown: "Hali ochilmagan",
+          strL: "Ketma-ketlik", strS: function (k, g) { return "Har " + k + "-kun — qo'shimcha +" + g + " galleon. Bir kun o'tkazib yuborsangiz, sanoq noldan boshlanadi."; },
           t: { daily: ["Kunlik savolga javob bering", "Bugungi savol"], chat: ["Chatga yozing yoki reaksiya qo'ying", "Fakultet xonasi"],
                music: ["Bitta trek tinglang", "Kutubxonadagi soundtreklar"], chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"],
                owl: ["Boyo'g'li pochtasini oching", "Xatlaringizni ko'ring"], cup: ["Kubok sahifasiga kiring", "Fakultetingiz nechanchi o'rinda"],
                share: ["Do'stingizga ulashing", "Taklif havolasi, fakultet yoki Patronus"], house: ["Fakultet sahifasini oching", "Asoschisi, mudiri, a'zolari"] } },
-    ru: { kick: "Обновляется каждый день", title: "Сундук дня", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
-          ready: "Сундук готов — откройте!", openedC: "Сегодняшний сундук открыт", days: function (n) { return "Дней подряд: " + n; },
-          tasksL: "Задания на сегодня", open: "Открыть сундук", openBig: "Открыть большой сундук", need: function (n) { return "Осталось заданий: " + n; },
-          opened: "Сундук открыт. Завтра будут новые задания.", prize: "Награда", prizeBig: "Награда большого сундука",
-          chestS: function (b, g) { return "+" + b + " очков · галлеонов: " + g; },
-                    rwK: "Сундук открыт", rwKBig: "Большой сундук открыт", rwT: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
-          rwP: function (n) { return "Дней подряд: " + n + ". Приходите и завтра, чтобы счёт не прервался."; },
-          rwPBig: "7 дней подряд! Ещё 3 галлеона ваши.",
-          strL: "Серия", strS: function (k, g) { return "Каждый " + k + "-й день — большой сундук: ещё +" + g + " галлеона. Пропустите день — счёт начнётся заново."; },
+    ru: { kick: "Задания дня", title: "Шоколадная лягушка", today: "Карточка дня", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
+          ready: "Коробка готова — откройте!", openedC: "Сегодняшняя карточка у вас", days: function (n) { return "Дней подряд: " + n; },
+          tasksL: "Задания на сегодня", open: "Открыть коробку", need: function (n) { return "Осталось заданий: " + n; },
+          opened: "Карточка получена. Завтра придёт новый волшебник.", prize: "Награда",
+          prizeS: function (b, g) { return "карточка · +" + b + " очков · галлеонов: " + g; },
+          have: function (n) { return "У вас есть" + (n > 1 ? " ×" + n : ""); }, miss: "У вас пока нет",
+          rwK: "Новая карточка", rwKDup: "Карточка (повтор)", rwP: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
+          coll: "Моя коллекция", collK: "Знаменитые волшебники", collS: function (n, t) { return "Карточек: " + n + " / " + t; }, unknown: "Ещё не открыта",
+          strL: "Серия", strS: function (k, g) { return "Каждый " + k + "-й день — ещё +" + g + " галлеона. Пропустите день — счёт начнётся заново."; },
           t: { daily: ["Ответьте на вопрос дня", "Сегодняшний вопрос"], chat: ["Напишите в чат или поставьте реакцию", "Комната факультета"],
                music: ["Послушайте один трек", "Саундтреки в библиотеке"], chess: ["Сыграйте партию в шахматы", "Можно и с ботом"],
                owl: ["Откройте совиную почту", "Посмотрите свои письма"], cup: ["Загляните на страницу Кубка", "На каком месте ваш факультет"],
                share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], house: ["Откройте страницу факультета", "Основатель, декан, участники"] } },
-    en: { kick: "Refreshes every day", title: "Daily Chest", cardS: function (n, t) { return n + " / " + t + " tasks"; },
-          ready: "The chest is ready — open it!", openedC: "Today's chest is opened", days: function (n) { return n + " days in a row"; },
-          tasksL: "Today's tasks", open: "Open the chest", openBig: "Open the big chest", need: function (n) { return n + " more tasks"; },
-          opened: "Chest opened. New tasks arrive tomorrow.", prize: "Reward", prizeBig: "Big chest reward",
-          chestS: function (b, g) { return "+" + b + " points · " + g + " Galleon"; },
-                    rwK: "Chest opened", rwKBig: "Big chest opened", rwT: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
-          rwP: function (n) { return n + " days in a row. Come back tomorrow to keep the streak."; },
-          rwPBig: "7 days in a row! 3 extra Galleons are yours.",
-          strL: "Streak", strS: function (k, g) { return "Every " + k + "th day is a big chest: +" + g + " more Galleons. Miss a day and the count starts over."; },
+    en: { kick: "Daily tasks", title: "Chocolate Frog", today: "Today's card", cardS: function (n, t) { return n + " / " + t + " tasks"; },
+          ready: "The box is ready — open it!", openedC: "You have today's card", days: function (n) { return n + " days in a row"; },
+          tasksL: "Today's tasks", open: "Open the box", need: function (n) { return n + " more tasks"; },
+          opened: "Card collected. A new wizard arrives tomorrow.", prize: "Reward",
+          prizeS: function (b, g) { return "card · +" + b + " points · " + g + " Galleon"; },
+          have: function (n) { return "You have it" + (n > 1 ? " ×" + n : ""); }, miss: "Not in your collection yet",
+          rwK: "New card", rwKDup: "Card (duplicate)", rwP: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
+          coll: "My collection", collK: "Famous wizards", collS: function (n, t) { return n + " / " + t + " cards"; }, unknown: "Not opened yet",
+          strL: "Streak", strS: function (k, g) { return "Every " + k + "th day brings +" + g + " extra Galleons. Miss a day and the count starts over."; },
           t: { daily: ["Answer the daily question", "Today's question"], chat: ["Write or react in the chat", "Your house room"],
                music: ["Listen to one track", "Soundtracks in the library"], chess: ["Play a game of chess", "A bot counts too"],
                owl: ["Open the owl post", "Check your letters"], cup: ["Visit the Cup page", "See where your house stands"],
                share: ["Share with a friend", "Invite link, house or Patronus"], house: ["Open a house page", "Founder, head, members"] } }
   };
   var sqData = null, sqAsked = false, sqBusy = false;
+  var sqQayt = false;          // topshiriqqa sandiq sahifasidan ketilgan: "ortga" shu ro'yxatga qaytaradi
 
   function sqX() { return SQ_TX[lang] || SQ_TX.uz; }
+  function qbImg(code) { return IMG_DIR + "qurbaqa/" + code + ".webp"; }
+  function qbTx(code) { return ((QB[lang] || QB.uz)[code]) || [code, ""]; }
   function sqLocal() { return /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname); }
 
   // Mahalliy ko'rikda server yo'q - namuna (faqat localhost); topshiriqlar shu yerning o'zida belgilanadi
   var sqDemo = null;
   function sqSample(body) {
     if (!sqDemo) {
-      sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false,
+      sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false, card: "merlin",
+                 cards: { dumbledore: 1, flamel: 2, hufflepuff: 1, scamander: 1, uric: 1 }, cards_total: 24,
                  tasks: ["daily", "chat", "music", "owl", "cup", "house"].map(function (c, i) { return { code: c, done: i < 3 }; }),
-                 prizes: { steps: [], ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
+                 prizes: { ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
     }
     var d = sqDemo;
     d.reward = null;
     if (body && body.task) { d.tasks.forEach(function (t) { if (t.code === body.task) { t.done = true; } }); }
     d.n = d.tasks.filter(function (t) { return t.done; }).length;
-    if (body && body.open && d.n >= 6 && !d.opened) { d.opened = true; d.streak++; d.reward = { ball: 10, gal: 1, big: false, streak: d.streak, opened: true }; }
+    if (body && body.open && d.n >= 6 && !d.opened) {
+      d.opened = true; d.streak++; d.cards[d.card] = (d.cards[d.card] || 0) + 1;
+      d.reward = { ball: 10, gal: 1, big: false, streak: d.streak, opened: true, card: d.card, card_new: d.cards[d.card] === 1 };
+    }
     d.can_open = d.n >= 6 && !d.opened;
     return JSON.parse(JSON.stringify(d));
   }
@@ -841,6 +927,8 @@
     sqData = res;
     sqCard();
     if ($("scr-sq") && !$("scr-sq").classList.contains("hidden")) { sqRender(); }
+    if ($("scr-qb") && !$("scr-qb").classList.contains("hidden")) { qbRender(); }
+    try { qbRow(); } catch (e) {}
   }
 
   function sqLoad(force) {
@@ -861,7 +949,13 @@
     sqPost({ task: code }, sqApply);
   }
 
-  // Xogvarts bosh sahifasidagi karta (kubok blokidan keyin)
+  function qbCount() {
+    var n = 0, c = (sqData && sqData.cards) || {};
+    QB_ORDER.forEach(function (k) { if (c[k]) { n++; } });
+    return n;
+  }
+
+  // Xogvarts bosh sahifasidagi karta (kubok blokidan keyin): bugungi kartochka va nechta topshiriq
   function sqCard() {
     var grid = $("hub-grid");
     if (!grid) { return; }
@@ -873,16 +967,15 @@
       card.type = "button";
       card.id = "hub-sq";
       card.className = "hub-sq";
-      card.innerHTML = '<span class="hub-sq-ic"></span><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
+      card.innerHTML = '<img alt=""><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
       card.onclick = sqOpen;
       grid.parentNode.insertBefore(card, grid);
     }
     card.classList.remove("hidden");
     card.classList.toggle("ready", !!d.can_open);
     card.classList.toggle("done", !!d.opened);
-    card.querySelector(".hub-sq-ic").innerHTML = d.opened ? SQ_OCHIQ : SQ_YOPIQ;
-    card.classList.toggle("big", !!d.big);
-    card.querySelector("b").textContent = x.title;
+    card.querySelector("img").src = qbImg(d.card);
+    card.querySelector("b").textContent = x.title + " · " + qbTx(d.card)[0];
     card.querySelector("small").textContent = d.opened ? x.openedC : d.can_open ? x.ready : x.cardS(d.n, d.total);
     var dots = card.querySelector(".hub-sq-dots");
     dots.innerHTML = "";
@@ -896,11 +989,13 @@
     var h = null;
     try { h = validHouse(cupMe().house || house); } catch (e) {}
     $("scr-sq").classList.add("hidden");
+    sqQayt = true;
+    try { worldFrom = "hub"; } catch (e) {}          // "ortga" -> openHub() -> yana shu ro'yxat
     try {
       if (code === "daily") { openDaily(); }
       else if (code === "chat") { openChat(); }
       else if (code === "chess") { openChessHub(); }
-      else if (code === "owl") { openOwl(); }
+      else if (code === "owl") { openOwl(); owlFrom = "hub"; }
       else if (code === "cup") { openCup(); }
       else if (code === "house" && h) { openHouse(h); }
       else if (code === "share") { openRefs(); }
@@ -909,18 +1004,31 @@
         renderCatalog();
         setTimeout(function () { try { $("ms-row").scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {} }, 120);
       }
-      else { openHub(); }
-    } catch (e) { try { openHub(); } catch (e2) {} }
+      else { sqQayt = false; openHub(); }
+    } catch (e) { sqQayt = false; try { openHub(); } catch (e2) {} }
+  }
+
+  // Topshiriqdan qaytish: sqGo dan keyin birinchi "ortga" (openHub, closeCup, closeHouse) shu yerga keladi
+  function sqBack() {
+    if (!sqQayt) { return false; }
+    sqQayt = false;
+    sqOpen();
+    return true;
   }
 
   function sqRender() {
     var x = sqX(), d = sqData;
     if (!d) { return; }
     var pz = d.prizes || { ball: 10, gal: 1, big_every: 7, big_gal: 3 };
+    var kt = qbTx(d.card), bor = (d.cards || {})[d.card] || 0;
     $("sq-kick").textContent = x.kick;
     $("sq-title").textContent = x.title;
-    $("sq-img").innerHTML = d.opened ? SQ_OCHIQ : SQ_YOPIQ;
-    $("sq-img").className = "sq-img" + (d.can_open ? " ready" : "") + (d.opened ? " done" : "") + (d.big ? " big" : "");
+    $("sq-img").src = qbImg(d.card);
+    $("sq-card").className = "sq-card" + (d.can_open ? " ready" : "") + (d.opened ? " done" : "");
+    $("sq-card-k").textContent = x.today;
+    $("sq-card-n").textContent = kt[0];
+    $("sq-card-s").textContent = bor ? x.have(bor) : x.miss;
+    $("sq-card-s").classList.toggle("on", !!bor);
     $("sq-n").textContent = d.n + " / " + d.total;
 
     // Mukofot faqat 6 ta topshiriqning hammasi bajarilganda (oraliq mukofot yo'q)
@@ -929,8 +1037,8 @@
     var pr = document.createElement("span");
     pr.className = "sq-prize" + (d.n >= d.total ? " on" : "");
     pr.innerHTML = "<small></small><b></b>";
-    pr.querySelector("small").textContent = d.big ? x.prizeBig : x.prize;
-    pr.querySelector("b").textContent = x.chestS(pz.ball, pz.gal + (d.big ? pz.big_gal : 0));
+    pr.querySelector("small").textContent = x.prize;
+    pr.querySelector("b").textContent = x.prizeS(pz.ball, pz.gal + (d.big ? pz.big_gal : 0));
     lad.appendChild(pr);
     $("sq-fill").style.width = Math.round(d.n * 100 / d.total) + "%";
 
@@ -951,12 +1059,17 @@
     });
 
     var btn = $("sq-open");
-    btn.textContent = d.opened ? x.opened : d.can_open ? (d.big ? x.openBig : x.open) : x.need(d.total - d.n);
+    btn.textContent = d.opened ? x.opened : d.can_open ? x.open : x.need(d.total - d.n);
     btn.disabled = !d.can_open;
     btn.classList.toggle("off", !d.can_open);
     btn.onclick = sqChest;
 
-    // Ketma-ketlik: 7 ta nuqta, bugungacha yoqilgan
+    // Kolleksiyaga yo'l
+    $("sq-coll-t").textContent = x.coll;
+    $("sq-coll-s").textContent = x.collS(qbCount(), d.cards_total || QB_ORDER.length);
+    $("sq-coll").onclick = function () { qbOpen("sq"); };
+
+    // Ketma-ketlik: 7 ta katak, bugungacha yoqilgan
     $("sq-str-l").textContent = x.strL;
     $("sq-str-n").innerHTML = SQ_FIRE + "<span></span>";
     $("sq-str-n").querySelector("span").textContent = x.days(d.streak);
@@ -974,32 +1087,98 @@
 
   function sqOpen() {
     if (!sqData) { return; }
-    ["scr-hub", "scr-cat", "scr-cup"].forEach(function (id) { $(id).classList.add("hidden"); });
+    sqQayt = false;
+    ["scr-hub", "scr-cat", "scr-cup", "scr-house", "scr-owl", "scr-refs", "scr-chat", "scr-chess-hub", "scr-tasks", "scr-quiz", "scr-qb", "pm"]
+      .forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-sq").classList.remove("hidden");
-    $("sq-back").onclick = function () { $("scr-sq").classList.add("hidden"); try { openHub(); } catch (e) {} };
+    $("sq-back").onclick = function () { $("scr-sq").classList.add("hidden"); sqQayt = false; try { openHub(); } catch (e) {} };
     sqRender();
     sqPost({}, sqApply);                 // kunlik savol boshqa joyda bajarilgan bo'lishi mumkin
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
-  // Sandiqni ochish: mukofot oynasi (nishon oynasidan foydalanadi)
+  // Qutini ochish: kartochka va mukofot oynasi (nishon oynasidan foydalanadi)
   function sqChest() {
     if (sqBusy || !sqData || !sqData.can_open) { return; }
     sqBusy = true;
     sqPost({ open: true }, function (res) {
       sqBusy = false;
       var x = sqX(), r = res.reward;
-      if (r && r.opened) { res.bigDone = !!r.big; }
       sqApply(res);
       if (!r || !r.opened) { return; }
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
-      nshBox({ codes: [], icon: SQ_OCHIQ, kick: r.big ? x.rwKBig : x.rwK,
-               title: x.rwT(r.ball, r.gal), text: r.big ? x.rwPBig : x.rwP(r.streak),
+      var kt = qbTx(r.card);
+      nshBox({ codes: ["x"], srcs: [qbImg(r.card)], card: true, kick: r.card_new === false ? x.rwKDup : x.rwK,
+               title: kt[0], text: kt[1] + "\n\n" + x.rwP(r.ball, r.gal),
                done: function () { try { nshLoad(true); } catch (e) {} } });
       try { walLoad(function () { pmRender(); }); } catch (e) {}
       try { fetchCup(function () {}); } catch (e) {}
     });
     setTimeout(function () { sqBusy = false; }, 6000);
+  }
+
+  /* --- Kolleksiya sahifasi: 24 ta kartochka, borlari rangli, yo'qlari qorong'i --- */
+  var qbFrom = "sq";
+
+  function qbRender() {
+    var x = sqX(), d = sqData || {}, bor = d.cards || {};
+    $("qb-kick").textContent = x.collK;
+    $("qb-title").textContent = x.coll;
+    var n = qbCount(), t = d.cards_total || QB_ORDER.length;
+    $("qb-sum-n").textContent = n + " / " + t;
+    $("qb-bar").style.width = Math.round(n * 100 / t) + "%";
+    var g = $("qb-grid");
+    g.innerHTML = "";
+    QB_ORDER.forEach(function (code) {
+      var kt = qbTx(code), soni = bor[code] || 0;
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "qb-it" + (soni ? "" : " off") + (code === d.card ? " today" : "");
+      var im = document.createElement("img");
+      im.alt = ""; im.loading = "lazy"; im.src = qbImg(code);
+      el.appendChild(im);
+      var nm = document.createElement("span");
+      nm.textContent = soni ? kt[0] : "?";
+      el.appendChild(nm);
+      if (soni > 1) { var k = document.createElement("i"); k.textContent = "×" + soni; el.appendChild(k); }
+      el.onclick = function () {
+        if (soni) { nshBox({ codes: ["x"], srcs: [qbImg(code)], card: true, kick: x.have(soni), title: kt[0], text: kt[1] }); }
+        else { nshBox({ codes: [], kick: code === d.card ? x.today : x.unknown, title: code === d.card ? kt[0] : "?", text: code === d.card ? x.miss : "" }); }
+      };
+      g.appendChild(el);
+    });
+  }
+
+  function qbOpen(from) {
+    if (!sqData) { return; }
+    qbFrom = from || "sq";
+    ["scr-sq", "scr-hub", "pm"].forEach(function (id) { $(id).classList.add("hidden"); });
+    $("scr-qb").classList.remove("hidden");
+    $("qb-back").onclick = function () {
+      $("scr-qb").classList.add("hidden");
+      if (qbFrom === "pm") { try { pmShow(); } catch (e) {} } else { sqOpen(); }
+    };
+    qbRender();
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  // Profildagi qator: "Kartochkalar 5 / 24"
+  function qbRow() {
+    var row = $("qb-row");
+    if (!row) { return; }
+    var ichkarida = false;
+    try { ichkarida = hasHouse(); } catch (e) {}
+    row.classList.toggle("hidden", !(ichkarida && sqData));
+    if (!sqData) { return; }
+    var x = sqX(), bor = sqData.cards || {};
+    $("qb-row-t").textContent = x.coll;
+    $("qb-row-s").textContent = qbCount() + " / " + (sqData.cards_total || QB_ORDER.length);
+    var mini = $("qb-row-im");
+    mini.innerHTML = "";
+    QB_ORDER.filter(function (c) { return bor[c]; }).slice(-4).forEach(function (c) {
+      var im = document.createElement("img"); im.alt = ""; im.src = qbImg(c); mini.appendChild(im);
+    });
+    row.onclick = function () { qbOpen("pm"); };
   }
 
   function renderCatalog() {

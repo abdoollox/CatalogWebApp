@@ -188,15 +188,15 @@
 
   var CUP_T = {
     uz: {
-      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", chest: "Sandiq", friends: "Do'stlar" },
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
-              chest: "Kuniga 6 ta topshiriq · sandiq +10",
+              chest: "Kuniga 6 ta topshiriq · quti +10",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
       histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
       winner: "G'olib", leading: "Hozir oldinda", noWinner: "G'olib yo'q", noWinnerZero: "Bu hafta hech bir fakultet ball to'plamadi.", noWinnerSet: "Bu hafta g'olib e'lon qilinmagan.",
-      best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball",
+      best: "Haftaning sehrgari", bestLive: "Hozircha eng ko'p ball", top3: "Haftaning eng yaxshi uch sehrgari",
       months: ["yan", "fev", "mar", "apr", "may", "iyun", "iyul", "avg", "sen", "okt", "noy", "dek"],
       srcKick: "Ballar qayerdan keldi", srcNote: "Shu hafta ball to'plagan har bir sehrgarning ballari.",
       tapHint: "Fakultetni bosing — asoschisi, mudiri, arvohi va a'zolari",
@@ -223,15 +223,15 @@
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
-      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", chest: "Сундук", friends: "Друзья" },
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
-              chest: "6 заданий в день · сундук +10",
+              chest: "6 заданий в день · коробка +10",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
       histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
       winner: "Победитель", leading: "Сейчас впереди", noWinner: "Без победителя", noWinnerZero: "На этой неделе ни один факультет не набрал очков.", noWinnerSet: "Победитель этой недели не объявлялся.",
-      best: "Волшебник недели", bestLive: "Пока больше всех",
+      best: "Волшебник недели", bestLive: "Пока больше всех", top3: "Три лучших волшебника недели",
       months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
       srcKick: "Откуда очки", srcNote: "Очки всех волшебников, набравших баллы на этой неделе.",
       tapHint: "Нажмите на факультет — основатель, декан, привидение и участники",
@@ -258,15 +258,15 @@
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
-      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", chest: "Chest", friends: "Friends" },
+      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", chest: "Frog", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
-              chest: "6 tasks a day · chest +10",
+              chest: "6 tasks a day · box +10",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
       histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
       winner: "Winner", leading: "Leading now", noWinner: "No winner", noWinnerZero: "No house scored any points this week.", noWinnerSet: "No winner was announced this week.",
-      best: "Wizard of the week", bestLive: "Top scorer so far",
+      best: "Wizard of the week", bestLive: "Top scorers so far", top3: "Top three wizards of the week",
       months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
       srcKick: "Where the points come from", srcNote: "Points of every wizard who scored this week.",
       tapHint: "Tap a house — its founder, head, ghost and members",
@@ -954,7 +954,9 @@
         var hs = ["hufflepuff", "gryffindor", "slytherin", "ravenclaw"].map(function (h, i) {
           return { house: h, total_points: pts[i], active_members: 10 };
         }).sort(function (x, y) { return y.total_points - x.total_points; });
-        return { id: n, number: n, starts_at: a, ends_at: b, status: st, winner: win, houses: hs, best: best };
+        var top = [best, { name: "Luna", house: "ravenclaw", points: Math.round(best.points * .8) },
+                   { name: "Neville", house: "gryffindor", points: Math.round(best.points * .6) }];
+        return { id: n, number: n, starts_at: a, ends_at: b, status: st, winner: win, houses: hs, best: best, top: top };
       };
       cupHistory = { wins: { gryffindor: 2, slytherin: 0, ravenclaw: 0, hufflepuff: 4 }, seasons: [
         W(7, "2026-09-27T19:00:00Z", "2026-10-04T18:59:00Z", "active", null, [895, 675, 500, 270], { name: "Draco", house: "slytherin", points: 250 }),
@@ -999,7 +1001,9 @@
     $("scr-cup").classList.remove("hidden");
   }
 
+  var histFocus = false;        // true bo'lsa tarix ochilganda oxirgi yakunlangan haftaga suriladi
   function renderCupHistory() {
+    var histClosed = null;
     var c = cupT();
     var t = T[lang];
     var d = cupHistory;
@@ -1101,22 +1105,38 @@
         card.appendChild(rows);
       }
 
-      if (s.best && s.best.points > 0) {
-        var bh = HOUSES[s.best.house] || {};
-        var best = cupEl("div", "hist-best");
-        best.appendChild(svgNode(svgIcon(ROLE_ICON.prefects)));
-        var bt = cupEl("span", "");
-        bt.appendChild(cupEl("em", "", (live ? c.bestLive : c.best) + ": "));
-        bt.appendChild(cupEl("b", "", s.best.name));
-        var bn = cupEl("span", "", " · " + cupHouseName(s.best.house));
-        bn.style.color = bh.accent || "inherit";
-        bt.appendChild(bn);
-        bt.appendChild(document.createTextNode(" · " + s.best.points + " " + t.cupPts));
-        best.appendChild(bt);
+      // Haftaning eng yaxshi uch sehrgari (server "top" bermasa - eski "best" bittasi)
+      var uch = (s.top && s.top.length ? s.top : (s.best ? [s.best] : [])).filter(function (p) { return p && p.points > 0; });
+      if (uch.length) {
+        var best = cupEl("div", "hist-top");
+        best.appendChild(cupEl("span", "hist-top-l", live ? c.bestLive : (uch.length > 1 ? c.top3 : c.best)));
+        uch.forEach(function (p, k) {
+          var bh = HOUSES[p.house] || {};
+          var r = cupEl("div", "hist-top-r");
+          r.appendChild(cupEl("i", "o" + (k + 1), String(k + 1)));
+          var cr2 = cupEl("span", "hist-rc");
+          var im3 = cupCrestImg(p.house, 16);
+          if (im3) { cr2.appendChild(im3); }
+          r.appendChild(cr2);
+          var nm2 = cupEl("b", "", p.name);
+          r.appendChild(nm2);
+          var hn = cupEl("span", "hist-top-h", cupHouseName(p.house));
+          hn.style.color = bh.accent || "inherit";
+          r.appendChild(hn);
+          r.appendChild(cupEl("em", "", p.points + " " + t.cupPts));
+          best.appendChild(r);
+        });
         card.appendChild(best);
       }
+      if (!live && !histClosed) { histClosed = card; }
       list.appendChild(card);
     });
+    // Boyo'g'li xatidan kelganda: oxirgi YAKUNLANGAN hafta kartasiga suriladi va ajratib ko'rsatiladi
+    if (histFocus && histClosed) {
+      histFocus = false;
+      histClosed.classList.add("focus");
+      setTimeout(function () { try { histClosed.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {} }, 150);
+    }
   }
 
   /* ---------- FAKULTET SAHIFASI ---------- */
@@ -1161,6 +1181,7 @@
   function closeHouse() {
     houseOpen = null;
     $("scr-house").classList.add("hidden");
+    try { if (sqBack()) { houseFromHist = false; return; } } catch (e) {}
     $(houseFromHist ? "scr-cup-hist" : "scr-cup").classList.remove("hidden");
     houseFromHist = false;
   }

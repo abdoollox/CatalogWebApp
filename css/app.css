@@ -2072,10 +2072,10 @@ div.pm-row{cursor:default}
 
 /* ---------- KUBOK SAHIFASI: ko'rinish yangilandi (2026-10-04) ---------- */
 /* Sarlavha boshqa sahifalardagidek: markazda, tugma chetda */
-#scr-cup .kb-hdr,#scr-sq .kb-hdr,#scr-feed-full .kb-hdr,#scr-cup-hist .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-cup .kb-ttl,#scr-sq .kb-ttl,#scr-feed-full .kb-ttl,#scr-cup-hist .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-cup .kb-ttl .cup-kick,#scr-sq .kb-ttl .cup-kick,#scr-feed-full .kb-ttl .cup-kick,#scr-cup-hist .kb-ttl .cup-kick{color:var(--gold)}
-#scr-cup .kb-ttl .cup-title,#scr-sq .kb-ttl .cup-title,#scr-feed-full .kb-ttl .cup-title,#scr-cup-hist .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-cup .kb-hdr,#scr-qb .kb-hdr,#scr-sq .kb-hdr,#scr-feed-full .kb-hdr,#scr-cup-hist .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-cup .kb-ttl,#scr-qb .kb-ttl,#scr-sq .kb-ttl,#scr-feed-full .kb-ttl,#scr-cup-hist .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-cup .kb-ttl .cup-kick,#scr-qb .kb-ttl .cup-kick,#scr-sq .kb-ttl .cup-kick,#scr-feed-full .kb-ttl .cup-kick,#scr-cup-hist .kb-ttl .cup-kick{color:var(--gold)}
+#scr-cup .kb-ttl .cup-title,#scr-qb .kb-ttl .cup-title,#scr-sq .kb-ttl .cup-title,#scr-feed-full .kb-ttl .cup-title,#scr-cup-hist .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 #scr-cup .kb-chips{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin-bottom:18px}
 #scr-cup .kb-chips .cup-prev{margin-top:0}
 /* Qum soatlar: shisha naycha, ichida qimmatbaho toshlar */
@@ -2245,3 +2245,44 @@ div.pm-row{cursor:default}
 .nsh-row.nsh-ic{display:grid;place-items:center;width:112px;height:112px;margin:0 auto 14px;border-radius:50%;color:var(--gold-ink);
   background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));box-shadow:0 0 44px rgba(var(--gold-rgb),.35)}
 .nsh-row.nsh-ic svg{width:62px;height:62px;display:block}
+
+/* ---------- SHOKOLAD QURBAQA: kartochka va kolleksiya ---------- */
+.hub-sq img{width:54px;height:54px;border-radius:12px;border:1px solid rgba(var(--gold-rgb),.45)}
+.hub-sq.done img{border-color:var(--line)}
+.sq-card{display:flex;align-items:center;gap:16px;margin:2px 0 14px;padding:12px;border-radius:20px;border:1px solid rgba(var(--gold-rgb),.3);
+  background:radial-gradient(130% 120% at 0% 0%,rgba(var(--gold-rgb),.13),transparent 60%),var(--card)}
+.sq-card .sq-img{flex:none;display:block;width:128px;height:128px;border-radius:16px;object-fit:cover;background:none;
+  border:2px solid rgba(var(--gold-rgb),.55);box-shadow:0 8px 26px rgba(0,0,0,.45)}
+.sq-card.ready{border-color:rgba(var(--gold-rgb),.75);box-shadow:0 0 26px rgba(var(--gold-rgb),.2)}
+.sq-card.ready .sq-img{animation:sqSilk 2.4s ease-in-out infinite}
+.sq-card-tx{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sq-card-tx small{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.sq-card-tx b{font:400 25px/1.08 'Cormorant Garamond',serif;color:var(--text)}
+.sq-card-tx span{font:600 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.sq-card-tx span.on{color:var(--gold-hi)}
+.sq-card-tx em{margin-top:4px;font:600 22px/1 'Cormorant Garamond',serif;font-style:normal;color:var(--gold-hi)}
+#scr-sq .sq-coll{margin:0 0 22px}
+.qb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 10px;margin-bottom:30px}
+.qb-it{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;padding:0;border:0;background:none;cursor:pointer;color:var(--text);min-width:0}
+.qb-it img{width:100%;aspect-ratio:1;display:block;border-radius:14px;object-fit:cover;border:1.5px solid rgba(var(--gold-rgb),.5);box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.qb-it span{font:600 11px/1.25 'Manrope',sans-serif;text-align:center;overflow-wrap:anywhere}
+.qb-it i{position:absolute;top:6px;right:6px;padding:3px 7px;border-radius:99px;font:800 10.5px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-ink);background:var(--gold)}
+.qb-it.off img{filter:brightness(.16) saturate(0);border-color:var(--line);box-shadow:none}
+.qb-it.off span{color:var(--dim)}
+.qb-it.today.off img{filter:brightness(.4) saturate(.4);border-color:rgba(var(--gold-rgb),.6)}
+.qb-it:active{transform:scale(.97)}
+.nsh-row.nsh-card img{width:190px;height:190px;border-radius:20px;border:2px solid rgba(var(--gold-rgb),.6);box-shadow:0 12px 40px rgba(var(--gold-rgb),.25)}
+.qb-row-im img{border-radius:9px}
+#qb-row{margin-top:-10px}
+
+/* Kubok tarixi: haftaning eng yaxshi uch sehrgari */
+.hist-top{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.hist-top-l{display:block;margin-bottom:6px;font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.hist-top-r{display:grid;grid-template-columns:20px 20px auto 1fr auto;gap:8px;align-items:center;padding:5px 0;font:600 12.5px/1.2 'Manrope',sans-serif}
+.hist-top-r i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;font:800 10.5px/1 'Manrope',sans-serif;font-style:normal;color:#1d1206}
+.hist-top-r i.o1{background:#e7c170}.hist-top-r i.o2{background:#c3cbd6}.hist-top-r i.o3{background:#c98a5a}
+.hist-top-r b{color:var(--text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-top-h{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-top-r em{font:600 15px/1 'Cormorant Garamond',serif;font-style:normal;color:var(--text);white-space:nowrap}
+.hist-card.focus{box-shadow:0 0 0 2px rgba(var(--gold-rgb),.55),0 0 30px rgba(var(--gold-rgb),.18);scroll-margin-top:14px}
+.sq-coll .pm-chev{margin-left:auto}
