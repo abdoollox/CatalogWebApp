@@ -13,6 +13,7 @@
     kick: { uz: "Sehr maktabi", ru: "Школа магии", en: "School of magic" },      // qisqa: bir qatorga sig'sin
     title: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
     pts: { uz: "ball", ru: "очков", en: "points" },
+    mine: { uz: "Bu hafta siz: %d ball", ru: "Ваши очки за неделю: %d", en: "Your points this week: %d" },
     dailyT: { uz: "Kunlik savol", ru: "Вопрос дня", en: "Daily question" },
     dailyNew: { uz: "Bugungi savol · +10 ball", ru: "Сегодняшний вопрос · +10", en: "Today's question · +10" },
     dailyDone: { uz: "Bugun bajarildi", ru: "На сегодня готово", en: "Done for today" },
@@ -153,6 +154,17 @@
         cell.appendChild(p);
         tubes.appendChild(cell);
       });
+      // "Men" kartasi olib tashlandi (profil tugmasi bilan bir joyga olib borardi) - haftalik
+      // ball endi kubok blokining pastida bir qator bo'lib turadi.
+      var mine = $("hub-mine");
+      if (!mine) {
+        mine = document.createElement("span");
+        mine.id = "hub-mine";
+        mine.className = "hub-mine";
+        cup.appendChild(mine);
+      }
+      mine.textContent = hid === "none" ? "" : HUB_TX.mine[lang].replace("%d", String(me.points || 0));
+      mine.classList.toggle("hidden", hid === "none");
     }
 
     // Bo'limlar
