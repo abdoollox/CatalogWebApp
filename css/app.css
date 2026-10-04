@@ -1974,3 +1974,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
 .hub-ttl .kicker{white-space:nowrap}
 .pm-sw{margin-bottom:14px}
+/* Profil belgisi o'zi doira (odam doirada) - tugmaning hoshiyasi ikkinchi halqa bo'lib qolmasin:
+   hoshiya olib tashlanadi, belgi tugma o'lchamigacha kattalashadi. */
+.pm-btn,.hub-tools .pm-btn{border:none;background:none}
+.pm-btn .pm-av{overflow:visible;color:var(--dim)}
+.pm-btn .pm-av svg{width:50px;height:50px;flex:none}
