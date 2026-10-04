@@ -1938,3 +1938,8 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .qs-row.lock{cursor:default;border-color:var(--line);background:rgba(255,255,255,.03);opacity:.55}
 .qs-row.lock .qs-tx b{color:var(--dim)}
 .qs-row.lock .qs-ic{border-color:var(--line);color:var(--dim)}
+
+/* Kutubxona tepasidagi tugmalar tartibi (egasi, 2026-10-04): profil, 9¾, boyo'g'li */
+.cat-head .head-tools #pm-btn{order:1}
+.cat-head .head-tools #world-btn{order:2}
+.cat-head .head-tools #owl-cat{order:3}
