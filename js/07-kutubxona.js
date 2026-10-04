@@ -435,6 +435,7 @@
     try { $("pm-bot").checked = !owlData || owlData.bot; } catch (e) { $("pm-bot").checked = true; }
     // "Ilova ochilganda" tanlovi va (admin uchun) sinov o'quvchisi
     try { renderHubSettings(); } catch (e) {}
+    nshRender();
   }
 
   /* Profil ALOHIDA SAHIFA (egasi, 2026-10-04: modal emas). Qayerdan ochilgani eslab qolinadi -
@@ -465,6 +466,7 @@
     try { window.scrollTo(0, 0); } catch (e) {}
     // Qoldiq eskirgan bo'lishi mumkin (hafta yakunidagi mukofot) - yangilab olamiz
     try { walLoad(function () { pmRender(); }); } catch (e) {}
+    nshLoad(true);
   }
 
   function pmHide() { $("pm").classList.add("hidden"); }
@@ -478,6 +480,206 @@
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
+  /* ---------- NISHONLAR (egasi, 2026-10-04) ----------
+     Profil sahifasidagi yutuqlar. Hisob serverda (hpnishon.py): bazadagi izlardan, eski
+     foydalanuvchilar ham oladi. Rasmlar img/nishon/<kod>.webp (dizayn tizimi uslubida).
+     Boshqa odamning nishonlari chatdan ochiladi (nshPeer). Galleon berilmaydi. */
+  var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
+  var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "ball_1", "streak_7",
+                   "perfect_week", "kubok_golib", "top_3", "dost_1", "dost_5", "shaxmat", "albom", "serial_1"];
+  var NSH_TX = {
+    uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
+          freshN: function (n) { return n + " ta yangi nishon"; }, freshP: "Hammasi profilingizda turadi.",
+          prog: function (a, b) { return a + " / " + b; }, of: "Nishonlari", none: "Hali nishon yo'q",
+          peer: "Nishonlarini ko'rish",
+          n: { film_1: ["Birinchi seans", "Kutubxonadan birinchi filmni oling"],
+               film_8: ["To'liq kolleksiya", "Garri Potterning 8 ta filmini ham oling"],
+               fb_3: ["Sehrli maxluqlar", "«Fantastik maxluqlar»ning 3 ta filmini oling"],
+               poliglot: ["Uch tilli sehrgar", "Filmlarni uch tilda oling: o'zbek, rus va ingliz"],
+               oquvchi: ["Xogvarts o'quvchisi", "Saralovchi qalpoq fakultetingizni aytsin"],
+               tayoqcha: ["Tayoqcha egasi", "Olivander do'konidan tayoqcha oling"],
+               ball_1: ["Birinchi ball", "Fakultetingizga birinchi ballni keltiring"],
+               streak_7: ["Yetti sham", "Bir haftaning 7 kunida ham ball to'plang"],
+               perfect_week: ["Bexato hafta", "Haftaning hamma kunlik savoliga to'g'ri javob bering"],
+               kubok_golib: ["Kubok g'olibi", "Fakultetingiz haftalik kubokni yutsin, siz ham ball qo'shgan bo'ling"],
+               top_3: ["Eng yaxshi uchlik", "Hafta yakunida eng ko'p ball to'plagan 3 o'quvchidan biri bo'ling"],
+               dost_1: ["Birinchi do'st", "Taklifingiz bilan 1 do'st qo'shilsin"],
+               dost_5: ["Do'stlar davrasi", "Taklifingiz bilan 5 do'st qo'shilsin"],
+               shaxmat: ["Sehrgarlar shaxmati", "Shaxmatda bir o'quvchini yuting"],
+               albom: ["Musiqa ixlosmandi", "Galleonga bitta albom oching"],
+               serial_1: ["Birinchi qism", "Serialning bitta qismini oling"] } },
+    ru: { sec: "Значки", got: "Получен", lock: "Ещё не получен", close: "Закрыть", fresh: "Новый значок",
+          freshN: function (n) { return "Новых значков: " + n; }, freshP: "Все они хранятся в вашем профиле.",
+          prog: function (a, b) { return a + " / " + b; }, of: "Значки", none: "Значков пока нет",
+          peer: "Посмотреть значки",
+          n: { film_1: ["Первый сеанс", "Получите первый фильм из библиотеки"],
+               film_8: ["Полная коллекция", "Получите все 8 фильмов о Гарри Поттере"],
+               fb_3: ["Волшебные существа", "Получите 3 фильма «Фантастические твари»"],
+               poliglot: ["Волшебник на трёх языках", "Получите фильмы на трёх языках: узбекском, русском и английском"],
+               oquvchi: ["Ученик Хогвартса", "Пусть Распределяющая шляпа назовёт ваш факультет"],
+               tayoqcha: ["Владелец палочки", "Получите палочку в лавке Олливандера"],
+               ball_1: ["Первое очко", "Принесите факультету первые очки"],
+               streak_7: ["Семь свечей", "Набирайте очки все 7 дней одной недели"],
+               perfect_week: ["Неделя без ошибок", "Ответьте верно на все вопросы дня за неделю"],
+               kubok_golib: ["Обладатель Кубка", "Ваш факультет выиграл Кубок недели, и вы принесли очки"],
+               top_3: ["Лучшая тройка", "Войдите в тройку учеников с наибольшим числом очков за неделю"],
+               dost_1: ["Первый друг", "По вашему приглашению пришёл 1 друг"],
+               dost_5: ["Круг друзей", "По вашему приглашению пришли 5 друзей"],
+               shaxmat: ["Волшебные шахматы", "Победите ученика в шахматах"],
+               albom: ["Ценитель музыки", "Откройте один альбом за галлеоны"],
+               serial_1: ["Первая серия", "Получите одну серию сериала"] } },
+    en: { sec: "Badges", got: "Earned", lock: "Not earned yet", close: "Close", fresh: "New badge",
+          freshN: function (n) { return n + " new badges"; }, freshP: "They are all kept in your profile.",
+          prog: function (a, b) { return a + " / " + b; }, of: "Badges", none: "No badges yet",
+          peer: "View badges",
+          n: { film_1: ["First Screening", "Get your first film from the library"],
+               film_8: ["Full Collection", "Get all 8 Harry Potter films"],
+               fb_3: ["Magical Creatures", "Get all 3 Fantastic Beasts films"],
+               poliglot: ["Three-Language Wizard", "Get films in three languages: Uzbek, Russian and English"],
+               oquvchi: ["Hogwarts Student", "Let the Sorting Hat name your house"],
+               tayoqcha: ["Wand Owner", "Get a wand at Ollivander's"],
+               ball_1: ["First Point", "Earn your first points for your house"],
+               streak_7: ["Seven Candles", "Earn points on all 7 days of one week"],
+               perfect_week: ["Flawless Week", "Answer every daily question of a week correctly"],
+               kubok_golib: ["Cup Winner", "Your house wins the weekly Cup and you earned points for it"],
+               top_3: ["Top Three", "Be one of the 3 students with the most points in a week"],
+               dost_1: ["First Friend", "1 friend joins by your invitation"],
+               dost_5: ["Circle of Friends", "5 friends join by your invitation"],
+               shaxmat: ["Wizard's Chess", "Beat a student at chess"],
+               albom: ["Music Lover", "Unlock one album with Galleons"],
+               serial_1: ["First Episode", "Get one episode of the series"] } }
+  };
+  var nshData = null, nshAsked = false;
+
+  function nshX() { return NSH_TX[lang] || NSH_TX.uz; }
+  function nshImg(code) { return IMG_DIR + "nishon/" + code + ".webp"; }
+  function nshLocal() { return /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname); }
+
+  // Mahalliy ko'rikda server yo'q - namuna ro'yxat (faqat localhost)
+  function nshSample() {
+    var bor = { film_1: 1, film_8: 1, oquvchi: 1, tayoqcha: 1, ball_1: 1, dost_1: 1 };
+    var yol = { fb_3: [1, 3], poliglot: [2, 3], streak_7: [3, 7], dost_5: [2, 5] };
+    return { ok: true, total: NSH_ORDER.length, "new": ["tayoqcha", "ball_1"], list: NSH_ORDER.map(function (c) {
+      return { code: c, got: !!bor[c], at: bor[c] ? "2026-10-04T10:00:00Z" : null,
+               have: bor[c] ? 1 : (yol[c] ? yol[c][0] : 0), need: yol[c] ? yol[c][1] : 1 };
+    }) };
+  }
+
+  function nshPost(body, done) {
+    if (!window.fetch) { return; }
+    window.fetch(API_NISHON, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": srInit() },
+                               body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { if (res && res.ok) { done(res); } else if (nshLocal()) { done(nshSample()); } })
+      ["catch"](function () { if (nshLocal()) { done(nshSample()); } });
+  }
+
+  function nshLoad(force) {
+    if (nshAsked && !force) { return; }
+    nshAsked = true;
+    nshPost({}, function (res) {
+      nshData = res;
+      nshRender();
+      nshFresh();
+    });
+  }
+
+  // Profil sahifasidagi to'r
+  function nshRender() {
+    var box = $("nsh-grid");
+    if (!box) { return; }
+    var x = nshX(), lst = (nshData && nshData.list) || [];
+    var n = lst.filter(function (b) { return b.got; }).length;
+    $("nsh-lbl").textContent = x.sec + (lst.length ? " · " + n + " / " + lst.length : "");
+    $("nsh-sec").classList.toggle("hidden", !lst.length);
+    box.innerHTML = "";
+    lst.forEach(function (b) {
+      var t = x.n[b.code];
+      if (!t) { return; }
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "nsh-it" + (b.got ? "" : " off");
+      var im = document.createElement("img");
+      im.alt = ""; im.src = nshImg(b.code);
+      var nm = document.createElement("span");
+      nm.textContent = t[0];
+      el.appendChild(im);
+      el.appendChild(nm);
+      if (!b.got && b.need > 1) {
+        var pr = document.createElement("i");
+        pr.textContent = x.prog(b.have, b.need);
+        el.appendChild(pr);
+      }
+      el.onclick = function () { nshOne(b); };
+      box.appendChild(el);
+    });
+  }
+
+  function nshDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) { return ""; }
+    return ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "." + d.getFullYear();
+  }
+
+  // Oyna: bitta nishon, bir nechta yangi nishon yoki boshqa odamning nishonlari
+  function nshBox(o) {
+    var box = $("nsh");
+    if (!box) { return; }
+    $("nsh-kick").textContent = o.kick || "";
+    $("nsh-kick").classList.toggle("hidden", !o.kick);
+    $("nsh-t").textContent = o.title || "";
+    $("nsh-p").textContent = o.text || "";
+    $("nsh-p").classList.toggle("hidden", !o.text);
+    var row = $("nsh-row");
+    row.innerHTML = "";
+    row.className = "nsh-row" + (o.codes.length > 1 ? " many" : "") + (o.off ? " off" : "");
+    o.codes.forEach(function (c) {
+      var im = document.createElement("img");
+      im.alt = ""; im.src = nshImg(c);
+      if (o.names) {
+        var w = document.createElement("span"), s = document.createElement("small");
+        s.textContent = (nshX().n[c] || [""])[0];
+        w.appendChild(im); w.appendChild(s);
+        row.appendChild(w);
+      } else { row.appendChild(im); }
+    });
+    $("nsh-ok").textContent = o.ok || nshX().close;
+    function yop() { box.classList.add("hidden"); if (o.done) { o.done(); } }
+    $("nsh-ok").onclick = yop;
+    box.onclick = function (ev) { if (ev.target === box) { yop(); } };
+    box.classList.remove("hidden");
+  }
+
+  function nshOne(b) {
+    var x = nshX(), t = x.n[b.code];
+    nshBox({ codes: [b.code], off: !b.got, title: t[0], text: t[1],
+             kick: b.got ? x.got + (b.at ? " · " + nshDate(b.at) : "") : x.lock + (b.need > 1 ? " · " + x.prog(b.have, b.need) : "") });
+  }
+
+  // Yangi nishonlar tabrigi: faqat kutubxona, Xogvarts yoki profil ochiq turganda
+  function nshFresh() {
+    var yangi = (nshData && nshData["new"]) || [];
+    if (!yangi.length || !$("nsh") || !$("nsh").classList.contains("hidden")) { return; }
+    var ochiq = ["scr-cat", "scr-hub", "pm"].some(function (id) { return $(id) && !$(id).classList.contains("hidden"); });
+    if (!ochiq || ($("hpask") && !$("hpask").classList.contains("hidden"))) { return; }
+    var x = nshX(), bitta = yangi.length === 1, t = x.n[yangi[0]] || ["", ""];
+    nshData["new"] = [];
+    nshBox({ codes: yangi, names: !bitta, kick: x.fresh,
+             title: bitta ? t[0] : x.freshN(yangi.length), text: bitta ? t[1] : x.freshP,
+             done: function () { nshPost({ seen: true }, function () {}); } });
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+  }
+
+  // Boshqa odamning nishonlari (chatdan)
+  function nshPeer(uid, name) {
+    var x = nshX();
+    nshPost({ uid: uid }, function (res) {
+      var codes = (res.list || []).filter(function (b) { return b.got; }).map(function (b) { return b.code; });
+      nshBox({ codes: codes, names: true, kick: x.of + (codes.length ? " · " + codes.length + " / " + (res.total || NSH_ORDER.length) : ""),
+               title: name || "", text: codes.length ? "" : x.none });
+    });
+  }
+
   function renderCatalog() {
     var t = T[lang];
     $("cat-kicker").textContent = t.title;
@@ -487,6 +689,7 @@
     renderHero(t);
     pmRender();
     qsLoad();
+    nshLoad();
     renderSerial();
     srLoad();
     srBlock();

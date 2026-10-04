@@ -2031,3 +2031,26 @@ div.pm-row{cursor:default}
 #hub-me{display:none!important}
 .hub-mine{display:block;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);text-align:center;
   font:600 12.5px/1 'Manrope',sans-serif;color:var(--dim)}
+
+/* ---------- NISHONLAR (profil) ---------- */
+.nsh-sec{margin:0 0 22px}
+.nsh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px;padding:16px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.nsh-it{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;cursor:pointer;color:var(--text);min-width:0}
+.nsh-it img{width:100%;max-width:68px;aspect-ratio:1;display:block;border-radius:50%;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+.nsh-it span{font:600 10.5px/1.25 'Manrope',sans-serif;text-align:center;color:var(--text);overflow-wrap:anywhere}
+.nsh-it i{font:700 10px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
+.nsh-it.off img{filter:grayscale(1) brightness(.5);box-shadow:none}
+.nsh-it.off span{color:var(--dim)}
+.nsh-it:active{transform:scale(.95)}
+.nsh .hpask-box{padding-top:22px}
+.nsh-kick{display:block;margin-bottom:14px;font:700 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.nsh-row{display:flex;justify-content:center;margin-bottom:14px}
+.nsh-row img{width:132px;height:132px;border-radius:50%;display:block;box-shadow:0 0 0 1px rgba(var(--gold-rgb),.25),0 10px 34px rgba(var(--gold-rgb),.22)}
+.nsh-row.off img{filter:grayscale(1) brightness(.5);box-shadow:none}
+.nsh-row.many{flex-wrap:wrap;gap:12px 0;max-height:46vh;overflow-y:auto}
+.nsh-row.many img{width:100%;max-width:60px;height:auto;aspect-ratio:1;margin:0 auto;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+.nsh-row.many span{width:25%;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.nsh-row.many small{font:600 9.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center;overflow-wrap:anywhere}
+.nsh-row:empty{display:none}
+.nsh-ok{width:100%;height:46px;margin-top:20px;border-radius:23px;cursor:pointer;font:700 13.5px/1 'Manrope',sans-serif;letter-spacing:.03em}
+.nsh-ok:active{transform:scale(.97)}

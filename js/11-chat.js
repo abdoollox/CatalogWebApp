@@ -51,6 +51,7 @@
       'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
   }
   var CHAT_SVG = {
+    nishon: chatSvg('<circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/>'),
     reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
     copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
     edit: chatSvg('<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
@@ -731,6 +732,7 @@
   function chatPeerSheet() {
     var p = chatPeerOf(chatRoom), blocked = chatDmState === "blocked_by_me";
     chatSheet(p.name || "Sehrgar", null, [
+      { icon: CHAT_SVG.nishon, label: nshX().peer, fn: function() { nshPeer(p.uid, p.name); } },
       { icon: CHESS_IC.swords, label: L("chatChess"), fn: function() { chessAnnounce(chatRoom); } },
       blocked ?
       { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
@@ -1123,6 +1125,7 @@
     if (!own && !m.tmp && !chatIsDm(chatRoom)) {
       item(CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
     }
+    if (!own && !m.tmp) item(CHAT_SVG.nishon, nshX().peer, function() { nshPeer(m.uid, m.name); });
     if (!m.kind) item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
     if (own && chatCanEdit(m) && !m.chess && !m.kind) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
     if (own || (chatAdmin && !m.tmp)) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=818f4ec6">
+<link rel="stylesheet" href="css/app.css?v=e4a11f37">
 </head>
 <body>
 <div class="shell">
@@ -115,6 +115,12 @@
     </div>
     <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
     <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span><i class="pm-chev">›</i></button>
+
+    <!-- Nishonlar: to'r js/07 da to'ldiriladi (nshRender) -->
+    <div class="nsh-sec hidden" id="nsh-sec">
+      <span class="pm-lbl" id="nsh-lbl"></span>
+      <div class="nsh-grid" id="nsh-grid"></div>
+    </div>
 
     <!-- Fakultet va tayoqcha: ilgari alohida "Sehrgar" sahifasida edi (scr-prof) -->
     <div class="panel">
@@ -321,6 +327,17 @@
   </div>
 
   <!-- O'zimizning tasdiqlash oynasi (Telegram oynasi o'rniga): js/09-sehrli-olam.js testAsk -->
+  <!-- Nishon oynasi: tafsilot, yangi nishon tabrigi, boshqa odamning nishonlari -->
+  <div id="nsh" class="hpask nsh hidden" role="dialog" aria-modal="true">
+    <div class="hpask-box">
+      <span class="nsh-kick" id="nsh-kick"></span>
+      <div class="nsh-row" id="nsh-row"></div>
+      <b class="hpask-t" id="nsh-t"></b>
+      <p class="hpask-p" id="nsh-p"></p>
+      <button class="hpask-ok nsh-ok" id="nsh-ok" type="button"></button>
+    </div>
+  </div>
+
   <div id="hpask" class="hpask hidden" role="dialog" aria-modal="true">
     <div class="hpask-box">
       <span class="hpask-ic" id="hpask-ic" aria-hidden="true"></span>
@@ -1130,13 +1147,13 @@
 <script src="js/04-kubok-oyna.js?v=4c99d1cd"></script>
 <script src="js/05-umumiy.js?v=469f5640"></script>
 <script src="js/06-soundtrack.js?v=af49646f"></script>
-<script src="js/07-kutubxona.js?v=2097393e"></script>
+<script src="js/07-kutubxona.js?v=094e1a0b"></script>
 <script src="js/08-saralash.js?v=c4f71ccd"></script>
 <script src="js/09-sehrli-olam.js?v=83ca7223"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
-<script src="js/11-chat.js?v=e922ac9f"></script>
+<script src="js/11-chat.js?v=b3c78850"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>
-<script src="js/13-orqaga.js?v=3e658424"></script>
+<script src="js/13-orqaga.js?v=7c37459a"></script>
 <script src="js/14-ishga-tushirish.js?v=2f7a729f"></script>
 <script src="js/15-pochta.js?v=f369cb0a"></script>
 
