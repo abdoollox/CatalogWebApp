@@ -434,12 +434,9 @@
     })["catch"](function () {});
   }
 
+  // Fayl hajmi doim MB da (egasi, 2026-10-04) - bot tugmalari bilan bir xil
   function qsSize(b) {
-    if (!b) { return ""; }
-    var gb = b / 1073741824;
-    // Hamma film bir xil o'lchovda (GB): "2,7 GB" yonida "1014 MB" chalkashtiradi
-    var s = gb >= 0.1 ? gb.toFixed(1) + " GB" : Math.round(b / 1048576) + " MB";
-    return lang === "en" ? s : s.replace(".", ",");
+    return b ? Math.round(b / 1048576) + " MB" : "";
   }
 
   function qsFilmName(id) {
