@@ -932,6 +932,7 @@ function yolVaqt(ms){
 }
 
 /* ───────── Hodisani tushunish ───────── */
+var PATRONUS_N = {stag:"Bug'u", doe:"Ohu", otter:"Suvsar", dog:"Teryer it", horse:"Ot", hare:"Quyon", swan:"Oqqush", phoenix:"Feniks", cat:"Mushuk", lynx:"Silovsin", weasel:"Latcha", wolf:"Bo'ri", goat:"Echki", fox:"Tulki", boar:"To'ng'iz"};
 function classify(p){
   p = String(p||"").trim();
   var m;
@@ -950,6 +951,7 @@ function classify(p){
   }
   if((m = p.match(/^house_([a-z]+)$/)))   return {t:"house", house:m[1], lab:"Fakultetga tushdi", ic:"🏰"};
   if((m = p.match(/^wand_/)))             return {t:"wand",  lab:"Asosini tanladi", ic:"🪄"};
+  if((m = p.match(/^patronus_([a-z]+)$/))) return {t:"patronus", pat:m[1], lab:"Patronusini chaqirdi: " + (PATRONUS_N[m[1]] || m[1]), ic:"🦌"};
   if((m = p.match(/^src_(.+)$/)))         return {t:"src",   src:m[1], lab:"Reklamadan keldi", ic:"📣"};
   if((m = p.match(/^invited_(\d+)$/)))    return {t:"invited", by:m[1], lab:"Do'st taklifi bilan keldi", ic:"🤝"};
   if((m = p.match(/^share_(.+)$/)))       return {t:"share", lab:"Ulashdi", ic:"🔗"};
@@ -2826,6 +2828,7 @@ var KARTA_INFO = {
   "Sutka davomida": "Tanlangan kun soatlar bo'yicha: start, subscribed, movie, left, blocked hodisalari. Odamlar emas, yozuvlar sanaladi. Nomini bosib chiziqni olib turasiz.",
   "Voronka": "Odamlar botdan fakultetgacha qaysi qadamda to'xtab qolishi. Har qadam oldingi qadamdan o'tganlar ichidan sanaladi. «Kanalga a'zo» — loglarda qo'shilgani yozilganlar va film olganlar (bot film berishdan oldin a'zolikni tekshiradi). «Boshdan» — birinchi qadamga, «Oldingidan» — oldingi qadamga nisbatan. Qadamni bosib olib tursangiz, zanjir qayta hisoblanadi.",
   "Qachon jonli": "Hafta kuni va soat bo'yicha barcha hodisalar (Toshkent vaqti). Katak qanchalik issiq rangda bo'lsa, o'sha payt shunchalik gavjum. O'ngda — har kunning, pastda — har soatning o'rtacha qiymati.",
+  "Patronuslar": "Shu davrda Patronus testidan o'tganlar, qaysi Patronus nechta odamga tushgani. Test bir marta topshiriladi, shuning uchun har odam bir marta sanaladi. Feniks eng noyobi bo'lishi kerak (taxminan 100 kishidan 1 tasi). Yozuvlar 2026-yil 4-oktabrdan boshlanadi.",
   "Fakultetlar": "Shu davrda saralangan odamlar fakultetlar bo'yicha. Har odam bir marta, OXIRGI tanlagan fakulteti bo'yicha sanaladi (ilgari fakultetni almashtirish mumkin edi). Qatorni bosib bo'lakni olib turasiz.",
   "Fakultetlar poygasi": "Har fakultetga kun sayin jami nechta a'zo yig'ilgani. «Soni» — a'zolar soni, «Ulushi» — fakultetlar nisbati (100% ga to'ldirilgan). Odam birinchi saralangan kuni qo'shilgan hisoblanadi, fakulteti — oxirgi tanlovi.",
   "Qaysi fakultet faolroq": "Shu davrda saralanganlar fakultetlar bo'yicha. Olib kelgan — fakultet a'zolari taklif qilgan va kanalga qo'shilgan yangi odamlar (bot ball bergan). Film / odam — bir a'zoga o'rtacha film. Kanaldan chiqqan va botni bloklagan — a'zolarning necha foizi. Eng yaxshi qiymat yashil.",
@@ -3368,6 +3371,24 @@ function render(){
     }));
   } else c4.appendChild(emptyNote("Bu davrda hech kim saralanmagan."));
   put("odamlar", c4);
+
+  /* — Patronuslar — */
+  // Test bir marta topshiriladi: har odam bitta yozuv (patronus_<kod>, 2026-10-04 dan)
+  var cPt = card("Patronuslar", "test natijalari", "third");
+  var ptSon = {}, ptKim = {}, ptJami = 0;
+  rows.forEach(function(r){
+    if(r.ev.t !== "patronus" || ptKim[r.uid]) return;
+    ptKim[r.uid] = 1; ptSon[r.ev.pat] = (ptSon[r.ev.pat] || 0) + 1; ptJami++;
+  });
+  if(ptJami){
+    var saralangan = Object.keys(s.houses).reduce(function(a,h){ return a + s.houses[h]; }, 0);
+    cPt.appendChild(emptyNote("Shu davrda " + ptJami + " kishi Patronusini chaqirdi" +
+      (saralangan ? " (shu davrda saralanganlar: " + saralangan + ")." : ".")));
+    addTable(cPt, ["Patronus","Soni","Ulushi"], Object.keys(ptSon).sort(function(a,b){ return ptSon[b]-ptSon[a]; }).map(function(k){
+      return [PATRONUS_N[k] || k, ptSon[k], (ptSon[k]/ptJami*100).toFixed(1)+"%"];
+    }));
+  } else cPt.appendChild(emptyNote("Bu davrda hech kim Patronus testidan o'tmagan."));
+  put("odamlar", cPt);
 
   /* — Fakultetlar poygasi — */
   // Har odam bir marta: davr ichidagi BIRINCHI saralanishi kuni "qo'shildi",
@@ -5589,6 +5610,7 @@ function demoRows(){
       else if(roll < .63) p = "sort_start";
       else if(roll < .68) p = "house_" + pick(["gryffindor","slytherin","ravenclaw","hufflepuff"]);
       else if(roll < .72) p = "wand_holly_phoenix_supple";
+      else if(roll < .74) p = "patronus_" + pick(["stag","cat","otter","doe","hare","dog","swan","wolf","fox","phoenix"]);
       else if(roll < .76) p = "share_hp3_uz";
       else if(roll < .80) p = "src_" + pick(["kanal","marvel","kino","instagram"]);
       else if(roll < .84) p = "invited_7100000123";

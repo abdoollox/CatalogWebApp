@@ -437,6 +437,14 @@
     // "Ilova ochilganda" tanlovi va (admin uchun) sinov o'quvchisi
     try { renderHubSettings(); } catch (e) {}
     nshRender();
+    // Xogvartsga hali kirmagan (saralanmagan) odamga faqat til va bot xabarlari ko'rinadi (egasi, 2026-10-04):
+    // hamyon, nishonlar, fakultet va "Ilova ochilganda" fakultetga tushgach ochiladi.
+    var ichkarida = false;
+    try { ichkarida = hasHouse(); } catch (e) {}
+    $("pm-wal").classList.toggle("hidden", !ichkarida);
+    $("house-label").parentNode.classList.toggle("hidden", !ichkarida);
+    $("hub-set-title").parentNode.classList.toggle("hidden", !ichkarida);
+    if (!ichkarida) { $("nsh-sec").classList.add("hidden"); }
   }
 
   /* Profil ALOHIDA SAHIFA (egasi, 2026-10-04: modal emas). Qayerdan ochilgani eslab qolinadi -
@@ -713,6 +721,8 @@
   function nshFresh() {
     var yangi = (nshData && nshData["new"]) || [];
     if (!yangi.length || !$("nsh") || !$("nsh").classList.contains("hidden")) { return; }
+    // Saralanmagan odamga nishonlar hali ko'rinmaydi - tabrik fakultetga tushgach chiqadi
+    try { if (!hasHouse()) { return; } } catch (e) { return; }
     var ochiq = ["scr-cat", "scr-hub", "pm", "scr-nsh"].some(function (id) { return $(id) && !$(id).classList.contains("hidden"); });
     if (!ochiq || ($("hpask") && !$("hpask").classList.contains("hidden"))) { return; }
     var x = nshX(), bitta = yangi.length === 1, t = x.n[yangi[0]] || ["", ""];
@@ -829,6 +839,8 @@
     var isLetter = stage !== "world";
     // Yo'ldagi odamda 9¾ tugmasi yo'q: Xogvarts maktubi boyo'g'li pochtasida (js/15-pochta.js owlHog)
     btn.classList.toggle("hidden", isLetter);
+    // Qasr tugmasi yo'q bo'lsa boyo'g'li eng o'ngga suriladi (egasi, 2026-10-04)
+    try { btn.parentNode.parentNode.classList.toggle("no-world", isLetter); } catch (e) {}
     $("coin-934").classList.remove("hidden");
     $("coin-lt").classList.add("hidden");
     btn.classList.remove("yangi");

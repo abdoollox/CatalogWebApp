@@ -2153,3 +2153,7 @@ div.pm-row{cursor:default}
 .hub-pat i{margin-left:auto;font:400 22px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
 .hub-pat:active{transform:scale(.99)}
 @media (prefers-reduced-motion:reduce){.pat-rv .pat-big{animation:none}}
+
+/* Kutubxona: qasr tugmasi yo'q (saralanmagan odam) - boyo'g'li eng o'ngda */
+#scr-cat .cat-head.no-world #owl-cat{grid-column:5!important}
+#pm #pm-sec2{margin-top:10px}
