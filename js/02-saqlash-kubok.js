@@ -87,13 +87,17 @@
     if (!initData && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")) {
       cupData = {
         houses: [
-          {house: "gryffindor", total_points: 1500, active_members: 12, qualified: true},
-          {house: "slytherin", total_points: 1200, active_members: 10, qualified: true},
-          {house: "ravenclaw", total_points: 900, active_members: 8, qualified: true},
-          {house: "hufflepuff", total_points: 500, active_members: 4, qualified: true}
+          {house: "hufflepuff", total_points: 895, active_members: 15, qualified: true, by: {film: 365, daily: 290, chess: 200, friends: 40}},
+          {house: "gryffindor", total_points: 675, active_members: 16, qualified: true, by: {film: 285, daily: 290, chess: 0, friends: 100}},
+          {house: "slytherin", total_points: 500, active_members: 14, qualified: true, by: {film: 130, daily: 170, chess: 0, friends: 200}},
+          {house: "ravenclaw", total_points: 270, active_members: 8, qualified: true, by: {film: 150, daily: 100, chess: 0, friends: 20}}
         ],
+        // Mahalliy namuna: raqamlar 2026-10-04 dagi haqiqiy haftaga yaqin
+        season: {prev_winner: "hufflepuff", ends_at: new Date(Date.now() + 3 * 864e5 + 5 * 36e5).toISOString()},
         // Sinov rejimida mahalliy sinov ham saralanmagan odamdan boshlanadi
-        me: {house: HP_TEST ? null : "gryffindor", can_resort: true},
+        me: HP_TEST ? {house: null, can_resort: true} :
+            {house: "gryffindor", can_resort: true, points: 75, max_points: 160, is_active: true, house_rank: 4,
+             by: {film: 25, daily: 30, chess: 0, friends: 20}, caps: {film: 40, daily: 70, chess: 50}},
         hall: {
           total: 15, active: 12,
           members: [
