@@ -191,7 +191,7 @@
       src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", chest: "Sandiq", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
-              chest: "Kuniga 6 ta topshiriq · +20 gacha",
+              chest: "Kuniga 6 ta topshiriq · sandiq +10",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
       histWins: "Kim nechta kubok olgan", cups: "kubok", week: "%d-hafta", live: "Davom etmoqda",
@@ -219,14 +219,14 @@
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
               "Hafta yakunida har 10 ball uchun 1 galleon beriladi. G'olib fakultet a'zolariga ikki baravar, eng ko'p ball to'plagan uch o'quvchiga yana +15, +10 va +5.",
-              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 300 ball.",
+              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 230 ball.",
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
       src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", chest: "Сундук", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
-              chest: "6 заданий в день · до +20",
+              chest: "6 заданий в день · сундук +10",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
       histWins: "Сколько кубков у факультетов", cups: "кубк.", week: "Неделя %d", live: "Идёт сейчас",
@@ -254,14 +254,14 @@
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
               "В конце недели за каждые 10 очков выдаётся 1 галлеон. Участникам факультета-победителя — вдвое больше, трём лучшим ученикам ещё +15, +10 и +5.",
-              "У всех источников, кроме приглашений, есть лимит за сезон — всего 300 очков.",
+              "У всех источников, кроме приглашений, есть лимит за сезон — всего 230 очков.",
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
       src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", chest: "Chest", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
-              chest: "6 tasks a day · up to +20",
+              chest: "6 tasks a day · chest +10",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
       histWins: "Cups won by each house", cups: "cups", week: "Week %d", live: "In progress",
@@ -289,7 +289,7 @@
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
               "At the end of the week you get 1 Galleon for every 10 points. Members of the winning house get double, and the top three students get +15, +10 and +5 more.",
-              "Every source except inviting friends has a season cap — 300 points in total.",
+              "Every source except inviting friends has a season cap — 230 points in total.",
               "Chess against a bot gives no points — only live games do."]
     }
   };
@@ -769,13 +769,13 @@
     var top = cupEl("div", "you-top");
     top.appendChild(cupEl("span", "you-lbl", t.cupYourPts));
     var val = cupEl("span", "you-val", String(me.points || 0));
-    val.appendChild(cupEl("s", "", " / " + (me.max_points || 300)));
+    val.appendChild(cupEl("s", "", " / " + (me.max_points || 230)));
     top.appendChild(val);
     box.appendChild(top);
 
     // Chiziq manbalar bo'yicha bo'lingan (do'st bali chegaradan oshirib yuborishi mumkin)
     var by = me.by || {};
-    var pct = (me.points || 0) / (me.max_points || 300) * 100;
+    var pct = (me.points || 0) / (me.max_points || 230) * 100;
     box.appendChild(srcBar(by, Math.max(srcSum(by) ? 2 : 0, pct), "you"));
 
     if (!me.is_active) {

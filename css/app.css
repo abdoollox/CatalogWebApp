@@ -2225,3 +2225,23 @@ div.pm-row{cursor:default}
 .nsh-row img[src*="/sandiq/"]{border-radius:26px;box-shadow:0 10px 40px rgba(var(--gold-rgb),.3)}
 @media (prefers-reduced-motion:reduce){.hub-sq.ready img,.sq-img.ready{animation:none}}
 .hub-sq + .hub-grid{margin-top:12px}
+
+/* Sandiq: rasm o'rniga belgi (egasi, 2026-10-05) */
+.hub-sq-ic{flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:16px;color:var(--gold);
+  background:rgba(var(--gold-rgb),.1);border:1px solid rgba(var(--gold-rgb),.35)}
+.hub-sq-ic svg{width:30px;height:30px;display:block}
+.hub-sq.ready .hub-sq-ic{color:var(--gold-ink);background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));border-color:var(--gold);animation:sqSilk 2.4s ease-in-out infinite}
+.hub-sq.done .hub-sq-ic{color:var(--dim);background:rgba(255,255,255,.05);border-color:var(--line)}
+.sq-img{display:grid;place-items:center;width:128px;height:128px;border-radius:50%;color:var(--gold);
+  background:radial-gradient(circle at 50% 35%,rgba(var(--gold-rgb),.2),rgba(var(--gold-rgb),.05) 70%);border:1px solid rgba(var(--gold-rgb),.4)}
+.sq-img svg{width:70px;height:70px;display:block}
+.sq-img.ready{color:var(--gold-ink);background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));border-color:var(--gold);box-shadow:0 0 44px rgba(var(--gold-rgb),.35)}
+.sq-img.done{color:var(--gold-hi);box-shadow:0 0 30px rgba(var(--gold-rgb),.18)}
+.sq-ladder{height:auto;margin-top:12px}
+.sq-prize{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-radius:13px;background:rgba(var(--gold-rgb),.07);border:1px solid rgba(var(--gold-rgb),.24)}
+.sq-prize small{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.sq-prize b{font:700 13.5px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.sq-prize.on{border-color:rgba(var(--gold-rgb),.6);background:rgba(var(--gold-rgb),.13)}
+.nsh-row.nsh-ic{display:grid;place-items:center;width:112px;height:112px;margin:0 auto 14px;border-radius:50%;color:var(--gold-ink);
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));box-shadow:0 0 44px rgba(var(--gold-rgb),.35)}
+.nsh-row.nsh-ic svg{width:62px;height:62px;display:block}

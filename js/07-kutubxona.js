@@ -700,6 +700,7 @@
     var row = $("nsh-row");
     row.innerHTML = "";
     row.className = "nsh-row" + (o.codes.length > 1 ? " many" : "") + (o.off ? " off" : "");
+    if (o.icon) { row.className = "nsh-row nsh-ic"; row.innerHTML = o.icon; }
     o.codes.forEach(function (c) {
       var im = document.createElement("img");
       im.alt = ""; im.src = o.srcs ? o.srcs[row.children.length] : nshImg(c);
@@ -757,15 +758,18 @@
   var API_SANDIQ = "https://bot.tizimshunos.uz/api/sandiq";
   // Olov belgisi: MDI "fire" (Apache 2.0) - ketma-ketlik
   var SQ_FIRE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82c-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32c-2.59 2.08-3.61 5.75-2.39 8.9c.04.1.08.2.08.33c0 .22-.15.42-.35.5c-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5c.14.6.41 1.2.71 1.73c1.08 1.73 2.95 2.97 4.96 3.22c2.14.27 4.43-.12 6.07-1.6c1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26m-3.16 6.3c-.28.24-.74.5-1.1.6c-1.12.4-2.24-.16-2.9-.82c1.19-.28 1.9-1.16 2.11-2.05c.17-.8-.15-1.46-.28-2.23c-.12-.74-.1-1.37.17-2.06c.19.38.39.76.63 1.06c.77 1 1.98 1.44 2.24 2.8c.04.14.06.28.06.43c.03.82-.33 1.72-.93 2.27"/></svg>';
+  // Sandiq belgilari: Game-icons "locked-chest" va "open-treasure-chest" (CC BY 3.0) - VAQTINCHA,
+  // egasi dizayn-tizimi/sandiq-belgilar.png dan tanlaydi. Rasm ishlatilmaydi (egasi, 2026-10-05).
+  var SQ_YOPIQ = '<svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M146.857 20.842c-12.535-.036-24.268 2.86-37.285 9.424h.004C61.356 54.6 19.966 120.734 17.982 175.91l41.848 14.236c4.33-61.89 47.057-128.37 101.527-155.86h.002a134 134 0 0 1 13.185-5.8l-22.26-7.45a84 84 0 0 0-5.428-.194zm59.34 20.19c-10.478-.09-22.832 3.093-36.424 9.943l.004-.004c-48.23 24.34-89.625 90.513-91.548 145.436l156.485 53.24c3.865-62.22 46.797-129.372 101.613-157.035h.002l.002-.003a134 134 0 0 1 12.832-5.666l-134.54-45.036a44 44 0 0 0-8.427-.873zm174.97 58.323c-10.476-.09-22.83 3.092-36.42 9.94l-.005.002c-48.577 24.518-90.225 91.473-91.586 146.623l46.205 15.72c3.914-62.188 46.825-129.274 101.607-156.92a129 129 0 0 1 13.53-5.91l-26.544-8.884a45 45 0 0 0-6.785-.57zm63.554 22.014c-10.267.093-22.094 3.353-35.333 10.034c-47.158 23.8-87.777 87.587-91.362 141.75l174.55-73.726c-.404-39.01-10.754-61.304-24.415-71.082a36 36 0 0 0-7.55-4.137l-.01.034l-4.735-1.584c-3.48-.887-7.195-1.327-11.144-1.29zM17.9 195.622l-.035 187.484L59.46 397.58V209.764l-41.56-14.14zm60.25 20.498v187.962l156.282 54.37V269.288l-29.053-9.886v119.43L104.325 344.75V225.025zm414.22 3.683L318.433 293.27v189.236l173.935-73.504v-189.2zm-369.354 11.582v99.947l63.675 21.477v-99.763l-63.674-21.662zm31.306 28.797c9.705 0 17.573 7.867 17.573 17.572c0 6.34-3.37 11.88-8.407 14.97v28.53h-18.69v-28.746c-4.838-3.13-8.048-8.562-8.048-14.754c0-9.705 7.867-17.572 17.572-17.572m98.797 15.464v189.307l46.626 16.22V291.51l-46.627-15.864z"/></svg>';
+  var SQ_OCHIQ = '<svg viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path fill="currentColor" d="M410.365 101.005c8.21-22.26 16.21-31.12 20.33-34.45c3.06-2.48 5.73-3.42 7.92-2.81c4 1.13 8.49 7.45 11.88 16.89c10.89 30.34 10 84.28-.93 129.51zm-286 72.92c7.52-31 10.28-66.13 7.77-94.92l-43.6-4.86zm289.46-113l-301.2-33.53c-2.5-.28-5.24 1.46-7.11 3c-3.67 3-10.42 10.32-17.66 27.64l308.68 34.34c5.16-13.25 11.02-23.89 17.31-31.43zm-228.78 298.71v-70.72l10.76 1.19l42.24 5.18v70.51zm16-40.34a13 13 0 0 0 5.34 10.29l-2.34 24.42l17 1.74l-4-25a9.54 9.54 0 0 0 5-9.15a13.64 13.64 0 0 0-11.06-12.59s.17.1.13.1c-5.95-.68-11.07 3.9-10.07 10.1zm53 64.45l-85-9.84v-86.72l-1.05-.09a8.14 8.14 0 0 1-7.27 6.71a8 8 0 0 1 5.23 8.9a8 8 0 0 1-8 6.66c8.453 4.004 4.341 16.778-4.86 15.1a8 8 0 0 1-8 13.8a8.01 8.01 0 0 1-12.28 10.29v.09a8 8 0 0 1-3.86 8.37l9.13 5.35v14.25l-12 7.13l-12-7.12v-14.26l8.15-4.82a8.21 8.21 0 0 1-5.07-5.92a.4.4 0 0 1 0-.1a8 8 0 0 1-15.18-5c-6.851 7.214-18.094-2.065-12.31-10.16c-8.346 4.519-16.217-6.676-9.14-13c-9.17 2.661-14.453-10.083-6.09-14.69a8 8 0 0 1-3.21-15.67c-9.294-1.047-9.548-14.463-.3-15.86c-.669-.164-1.264-.473-1.83-.76l-17.24-1.86l.6 167.11l309.18 34.49l-.6-165.83l-107-13.05zm140.06-164l4.72 1.91l.91.58l38.72 4.31l-23.26-64.77l-12.82 37c-.16.46-3.41 9.8-8.27 20.99zm-208.54-39.74l5 5.49l12.75-11.15l21.45-2.28l16.61 15.35l10.51 8.73l18.54-9.29l3.44.5c.12-.67.25-1.34.38-2c3.08-16.1 7.35-30.16 7.53-30.75l13.39-43.91l16.88 42.71l8.42 21.42l10.66-12.39l22.14-25.73l5.78 33.45l3.29 19.1l17.1-9.64l35.09-19.79l-18.48-51.4l-247.86-27.61c2.51 34.94-1.85 77.32-12.39 112h2.32l7-12.86h40.46zm-111.29 97.39c7.6 2.1 7.9 12.766.43 15.29c7.737.867 9.802 11.153 3 14.94c7.653-.548 11.614 8.947 5.84 14c7.313-2.115 13.168 6.216 8.7 12.38c6.288-3.518 13.657 2.417 11.56 9.31c4.53-4.723 12.506-2.304 13.65 4.14c2.057-5.713 9.48-7.141 13.51-2.6c-1.285-6.404 5.23-11.566 11.17-8.85c-4.564-5.77.425-14.123 7.67-12.84c-6.419-4.541-3.122-14.648 4.74-14.53c-7.316-3.503-5.375-14.415 2.7-15.18a8 8 0 0 1-5.38-8l-76.43-8.26c-.41.19-.746.15-1.16.2m367.54 139.08l-.59-163.86l-8.67 7l-55.51 46.79l.58 162zm-26.23-165.2l-24.11-15.27l-4.18-1.69c-5.91 11.52-13.39 23-22.66 27.88c-5.44 2.88-12.22 4.34-20.16 4.34c-11.13 0-24.75-2.91-37.35-8c-10-4-23.3-11-30.26-21.34c-4.9-7.29-6.64-17.77-5.31-32.92l-21.78 10.93l-19-15.8l-11.42-10.53l-9.16 1l-20.45 17.83l-11-11.7h-24.21l-17.61 32l-5.7-7.2l-4.42 4.85l-10.76 16.35l-12.29 4.91L97.611 256h-12.2l-2.776 6.005l76.9 8.21a8.15 8.15 0 0 1 2-2.9a8 8 0 0 1 10.31-.46a2 2 0 0 1-.14-.24c-4.955-8.368 6.459-16.62 12.87-9.375c6.412 7.245-3.167 17.571-10.87 11.635a8 8 0 0 1 1.12 2.89l22.62 2.44l168.54 20.57l51.49-43.38zm-28.34-57.73l-36.88 20.79l-7.14-41.47l-28 32.51l-18.13-46.11s-16.65 54.58-7 69c7.69 11.45 35.42 22.25 54.33 22.25c5 0 9.43-.76 12.67-2.48c13.8-7.31 30.15-54.49 30.15-54.49m-317.08 270.8v-.2c0-3.77-8.21-6.83-18.33-6.83s-18.33 3.06-18.33 6.83c0 3.21 6 5.9 14 6.63v.2c0 3.77 8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83c-.01-3.21-5.98-5.9-14-6.63m350 6.63c-10.13 0-18.33 3.06-18.33 6.83s8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83s-8.25-6.8-18.38-6.8zm40-16.28c-10.13 0-18.33 3.06-18.33 6.83s8.21 6.83 18.33 6.83s18.33-3.06 18.33-6.83s-8.22-6.83-18.34-6.83z"/></svg>';
   var SQ_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
   var SQ_TX = {
     uz: { kick: "Har kuni yangilanadi", title: "Kunlik sandiq", cardS: function (n, t) { return n + " / " + t + " topshiriq"; },
           ready: "Sandiq tayyor — oching!", openedC: "Bugungi sandiq ochildi", days: function (n) { return n + " kun ketma-ket"; },
           tasksL: "Bugungi topshiriqlar", open: "Sandiqni ochish", openBig: "Katta sandiqni ochish", need: function (n) { return "Yana " + n + " ta topshiriq"; },
-          opened: "Sandiq ochildi. Ertaga yangi topshiriqlar keladi.", step: function (b) { return "+" + b + " ball"; }, chest: "Sandiq",
+          opened: "Sandiq ochildi. Ertaga yangi topshiriqlar keladi.", prize: "Mukofot", prizeBig: "Katta sandiq mukofoti",
           chestS: function (b, g) { return "+" + b + " ball · " + g + " galleon"; },
-          toast: function (b, n, t) { return "+" + b + " ball · sandiq " + n + " / " + t; },
-          rwK: "Sandiq ochildi", rwKBig: "Katta sandiq ochildi", rwT: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
+                    rwK: "Sandiq ochildi", rwKBig: "Katta sandiq ochildi", rwT: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
           rwP: function (n) { return n + " kun ketma-ket. Ertaga ham keling — sanoq uzilmasin."; },
           rwPBig: "7 kun ketma-ket! Qo'shimcha 3 galleon sizniki.",
           strL: "Ketma-ketlik", strS: function (k, g) { return "Har " + k + "-kun — katta sandiq: yana +" + g + " galleon. Bir kun o'tkazib yuborsangiz, sanoq noldan boshlanadi."; },
@@ -776,10 +780,9 @@
     ru: { kick: "Обновляется каждый день", title: "Сундук дня", cardS: function (n, t) { return "Заданий: " + n + " / " + t; },
           ready: "Сундук готов — откройте!", openedC: "Сегодняшний сундук открыт", days: function (n) { return "Дней подряд: " + n; },
           tasksL: "Задания на сегодня", open: "Открыть сундук", openBig: "Открыть большой сундук", need: function (n) { return "Осталось заданий: " + n; },
-          opened: "Сундук открыт. Завтра будут новые задания.", step: function (b) { return "+" + b + " очков"; }, chest: "Сундук",
+          opened: "Сундук открыт. Завтра будут новые задания.", prize: "Награда", prizeBig: "Награда большого сундука",
           chestS: function (b, g) { return "+" + b + " очков · галлеонов: " + g; },
-          toast: function (b, n, t) { return "+" + b + " очков · сундук " + n + " / " + t; },
-          rwK: "Сундук открыт", rwKBig: "Большой сундук открыт", rwT: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
+                    rwK: "Сундук открыт", rwKBig: "Большой сундук открыт", rwT: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
           rwP: function (n) { return "Дней подряд: " + n + ". Приходите и завтра, чтобы счёт не прервался."; },
           rwPBig: "7 дней подряд! Ещё 3 галлеона ваши.",
           strL: "Серия", strS: function (k, g) { return "Каждый " + k + "-й день — большой сундук: ещё +" + g + " галлеона. Пропустите день — счёт начнётся заново."; },
@@ -790,10 +793,9 @@
     en: { kick: "Refreshes every day", title: "Daily Chest", cardS: function (n, t) { return n + " / " + t + " tasks"; },
           ready: "The chest is ready — open it!", openedC: "Today's chest is opened", days: function (n) { return n + " days in a row"; },
           tasksL: "Today's tasks", open: "Open the chest", openBig: "Open the big chest", need: function (n) { return n + " more tasks"; },
-          opened: "Chest opened. New tasks arrive tomorrow.", step: function (b) { return "+" + b + " points"; }, chest: "Chest",
+          opened: "Chest opened. New tasks arrive tomorrow.", prize: "Reward", prizeBig: "Big chest reward",
           chestS: function (b, g) { return "+" + b + " points · " + g + " Galleon"; },
-          toast: function (b, n, t) { return "+" + b + " points · chest " + n + " / " + t; },
-          rwK: "Chest opened", rwKBig: "Big chest opened", rwT: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
+                    rwK: "Chest opened", rwKBig: "Big chest opened", rwT: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
           rwP: function (n) { return n + " days in a row. Come back tomorrow to keep the streak."; },
           rwPBig: "7 days in a row! 3 extra Galleons are yours.",
           strL: "Streak", strS: function (k, g) { return "Every " + k + "th day is a big chest: +" + g + " more Galleons. Miss a day and the count starts over."; },
@@ -805,7 +807,6 @@
   var sqData = null, sqAsked = false, sqBusy = false;
 
   function sqX() { return SQ_TX[lang] || SQ_TX.uz; }
-  function sqImg(nom) { return IMG_DIR + "sandiq/" + nom + ".webp"; }
   function sqLocal() { return /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname); }
 
   // Mahalliy ko'rikda server yo'q - namuna (faqat localhost); topshiriqlar shu yerning o'zida belgilanadi
@@ -814,13 +815,12 @@
     if (!sqDemo) {
       sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false,
                  tasks: ["daily", "chat", "music", "owl", "cup", "house"].map(function (c, i) { return { code: c, done: i < 3 }; }),
-                 prizes: { steps: [[2, 5], [4, 5]], ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
+                 prizes: { steps: [], ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
     }
-    var d = sqDemo, eski = d.tasks.filter(function (t) { return t.done; }).length;
+    var d = sqDemo;
     d.reward = null;
     if (body && body.task) { d.tasks.forEach(function (t) { if (t.code === body.task) { t.done = true; } }); }
     d.n = d.tasks.filter(function (t) { return t.done; }).length;
-    if ((eski < 2 && d.n >= 2) || (eski < 4 && d.n >= 4)) { d.reward = { ball: 5 }; }
     if (body && body.open && d.n >= 6 && !d.opened) { d.opened = true; d.streak++; d.reward = { ball: 10, gal: 1, big: false, streak: d.streak, opened: true }; }
     d.can_open = d.n >= 6 && !d.opened;
     return JSON.parse(JSON.stringify(d));
@@ -858,14 +858,7 @@
     var bor = sqData.tasks.filter(function (t) { return t.code === code && !t.done; })[0];
     if (!bor) { return; }
     bor.done = true;                      // ikki marta yubormaslik uchun
-    sqPost({ task: code }, function (res) {
-      var x = sqX();
-      sqApply(res);
-      if (res.reward && res.reward.ball && !res.reward.opened) {
-        try { showToast(x.toast(res.reward.ball, res.n, res.total), "ok"); } catch (e) {}
-        try { fetchCup(function () {}); } catch (e) {}
-      }
-    });
+    sqPost({ task: code }, sqApply);
   }
 
   // Xogvarts bosh sahifasidagi karta (kubok blokidan keyin)
@@ -880,14 +873,15 @@
       card.type = "button";
       card.id = "hub-sq";
       card.className = "hub-sq";
-      card.innerHTML = '<img alt=""><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
+      card.innerHTML = '<span class="hub-sq-ic"></span><span class="hub-sq-tx"><b></b><small></small><span class="hub-sq-dots"></span></span><em></em>';
       card.onclick = sqOpen;
       grid.parentNode.insertBefore(card, grid);
     }
     card.classList.remove("hidden");
     card.classList.toggle("ready", !!d.can_open);
     card.classList.toggle("done", !!d.opened);
-    card.querySelector("img").src = sqImg(d.opened ? (d.bigDone ? "katta-ochiq" : "ochiq") : (d.big ? "katta" : "yopiq"));
+    card.querySelector(".hub-sq-ic").innerHTML = d.opened ? SQ_OCHIQ : SQ_YOPIQ;
+    card.classList.toggle("big", !!d.big);
     card.querySelector("b").textContent = x.title;
     card.querySelector("small").textContent = d.opened ? x.openedC : d.can_open ? x.ready : x.cardS(d.n, d.total);
     var dots = card.querySelector(".hub-sq-dots");
@@ -922,23 +916,22 @@
   function sqRender() {
     var x = sqX(), d = sqData;
     if (!d) { return; }
-    var pz = d.prizes || { steps: [[2, 5], [4, 5]], ball: 10, gal: 1, big_every: 7, big_gal: 3 };
+    var pz = d.prizes || { ball: 10, gal: 1, big_every: 7, big_gal: 3 };
     $("sq-kick").textContent = x.kick;
     $("sq-title").textContent = x.title;
-    $("sq-img").src = sqImg(d.opened ? (d.bigDone ? "katta-ochiq" : "ochiq") : (d.big ? "katta" : "yopiq"));
-    $("sq-img").classList.toggle("ready", !!d.can_open);
+    $("sq-img").innerHTML = d.opened ? SQ_OCHIQ : SQ_YOPIQ;
+    $("sq-img").className = "sq-img" + (d.can_open ? " ready" : "") + (d.opened ? " done" : "") + (d.big ? " big" : "");
     $("sq-n").textContent = d.n + " / " + d.total;
 
-    // Mukofot zinapoyasi: 2 -> +5, 4 -> +5, 6 -> sandiq
+    // Mukofot faqat 6 ta topshiriqning hammasi bajarilganda (oraliq mukofot yo'q)
     var lad = $("sq-ladder");
     lad.innerHTML = "";
-    pz.steps.concat([[d.total, 0]]).forEach(function (s) {
-      var c = document.createElement("span");
-      c.className = "sq-st" + (d.n >= s[0] ? " on" : "") + (s[1] ? "" : " chest");
-      c.innerHTML = "<b>" + s[0] + "</b><small></small>";
-      c.querySelector("small").textContent = s[1] ? x.step(s[1]) : x.chestS(pz.ball, pz.gal + (d.big ? pz.big_gal : 0));
-      lad.appendChild(c);
-    });
+    var pr = document.createElement("span");
+    pr.className = "sq-prize" + (d.n >= d.total ? " on" : "");
+    pr.innerHTML = "<small></small><b></b>";
+    pr.querySelector("small").textContent = d.big ? x.prizeBig : x.prize;
+    pr.querySelector("b").textContent = x.chestS(pz.ball, pz.gal + (d.big ? pz.big_gal : 0));
+    lad.appendChild(pr);
     $("sq-fill").style.width = Math.round(d.n * 100 / d.total) + "%";
 
     $("sq-tasks-l").textContent = x.tasksL;
@@ -1000,7 +993,7 @@
       sqApply(res);
       if (!r || !r.opened) { return; }
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
-      nshBox({ codes: ["x"], srcs: [sqImg(r.big ? "katta-ochiq" : "ochiq")], kick: r.big ? x.rwKBig : x.rwK,
+      nshBox({ codes: [], icon: SQ_OCHIQ, kick: r.big ? x.rwKBig : x.rwK,
                title: x.rwT(r.ball, r.gal), text: r.big ? x.rwPBig : x.rwP(r.streak),
                done: function () { try { nshLoad(true); } catch (e) {} } });
       try { walLoad(function () { pmRender(); }); } catch (e) {}
