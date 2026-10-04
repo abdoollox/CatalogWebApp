@@ -425,8 +425,9 @@
       var idx = tasksData.tasks.indexOf(currentTask);
       if (idx > -1) { tasksData.tasks.splice(idx, 1); }
       currentTask = null;
-      openTasks();
       $("scr-quiz").classList.add("hidden");
+      // Xogvarts bosh sahifasidan kelgan bo'lsa - o'sha yerga; aks holda vazifalar ro'yxatiga
+      if (!worldReturnTo()) { openTasks(); }
       renderTasksStrip();
       if (window.tg && window.tg.HapticFeedback) {
         window.tg.HapticFeedback.notificationOccurred("success");

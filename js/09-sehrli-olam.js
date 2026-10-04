@@ -13,6 +13,12 @@
     kick: { uz: "Sehr maktabi", ru: "Школа магии", en: "School of magic" },      // qisqa: bir qatorga sig'sin
     title: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
     pts: { uz: "ball", ru: "очков", en: "points" },
+    dailyT: { uz: "Kunlik savol", ru: "Вопрос дня", en: "Daily question" },
+    dailyNew: { uz: "Bugungi savol · +10 ball", ru: "Сегодняшний вопрос · +10", en: "Today's question · +10" },
+    dailyDone: { uz: "Bugun bajarildi", ru: "На сегодня готово", en: "Done for today" },
+    dailyWait: { uz: "Bugungi savolga javob bergansiz. Ertaga yangisi bo'ladi.",
+                 ru: "Вы уже ответили на сегодняшний вопрос. Завтра будет новый.",
+                 en: "You've answered today's question. A new one comes tomorrow." },
     wandT: { uz: "Tayoqcha", ru: "Волшебная палочка", en: "Wand" },
     wandNone: { uz: "Olivander do'koni: tayoqcha sizni tanlaydi",
                 ru: "Лавка Олливандера: палочка выбирает волшебника",
@@ -43,6 +49,18 @@
   }
 
   // Bo'limga o'tish: "Ortga" bosilganda shu sahifaga qaytadi.
+  // Kunlik savol - to'g'ridan-to'g'ri. Savol yo'q (javob berilgan) bo'lsa - qisqa xabar.
+  function openDaily() {
+    var task = null;
+    try {
+      (tasksData.tasks || []).forEach(function (x) { if (!task && x.type === "daily") { task = x; } });
+    } catch (e) {}
+    if (!task) { showToast(HUB_TX.dailyWait[lang]); return; }
+    worldFrom = hubVisible() ? "hub" : worldFrom;
+    ["scr-hub", "scr-cup", "scr-tasks"].forEach(function (id) { $(id).classList.add("hidden"); });
+    startTask(task);
+  }
+
   function hubGo(fn) {
     return function () {
       worldFrom = "hub";
@@ -70,8 +88,18 @@
     // Profil kartasi
     var u = tgUser();
     $("hub-name").textContent = u ? (u.first_name || fullName(u)) : t.guest;
-    var rank = refsData && refsData.me && refsData.me.rank_name;
-    $("hub-house").textContent = hid === "none" ? t.houseNote : (cupHouseName(hid) + (rank ? " · " + rank : ""));
+    // Do'st taklifi darajasi ("Maggl" va h.k.) bu yerda ko'rsatilmaydi - u faqat Do'stlar sahifasida
+    // (fakultet yonida izohsiz turib chalg'itardi). O'rniga galleon qoldig'i.
+    $("hub-house").textContent = hid === "none" ? t.houseNote : cupHouseName(hid);
+    var gal = 0;
+    try { gal = pmGal(); } catch (e) {}
+    if (gal > 0) {
+      var gl = document.createElement("span");
+      gl.className = "hub-gal";
+      gl.innerHTML = "<i></i>";
+      gl.appendChild(document.createTextNode(String(gal)));
+      $("hub-house").appendChild(gl);
+    }
     paintCrest($("hub-crest"), hid, hh.crest);
     $("hub-pts").textContent = String(me.points || 0);
     $("hub-pts-l").textContent = HUB_TX.pts[lang];
@@ -130,11 +158,15 @@
     // Bo'limlar
     var grid = $("hub-grid");
     grid.innerHTML = "";
-    var tasksN = worldTasksN();
+    var tasksN = 0;                       // faqat kunlik savol sanaladi
+    try { (tasksData.tasks || []).forEach(function (x) { if (x.type === "daily") { tasksN++; } }); } catch (e) {}
     var chatN = worldChatN();
     var refsN = (refsData && refsData.me && refsData.me.refs) || 0;
     var tiles = [
-      { key: "tasks", rgb: "232,132,60", title: c.tasksT, sub: c.tasksS, badge: tasksN, go: openTasks },
+      // Kunlik savol: ro'yxat sahifasisiz, to'g'ridan-to'g'ri savolning o'zi (imtihon olib tashlangach
+      // "Vazifalar" ichida faqat shu qolgan edi)
+      { key: "tasks", rgb: "232,132,60", title: HUB_TX.dailyT[lang],
+        sub: tasksN > 0 ? HUB_TX.dailyNew[lang] : HUB_TX.dailyDone[lang], badge: tasksN, go: openDaily, self: true },
       { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
       { key: "chess", rgb: "165,127,224", title: c.chessT,
         sub: hubChess && hubChess.rating ? HUB_TX.rating[lang].replace("%d", hubChess.rating) : HUB_TX.chessNone[lang],
@@ -159,9 +191,12 @@
       var sp = document.createElement("span");
       sp.textContent = tile.sub;
       el.appendChild(sp);
-      el.onclick = hubGo(tile.go);
+      el.onclick = tile.self ? tile.go : hubGo(tile.go);
       grid.appendChild(el);
     });
+
+    // Jonli tasma (so'nggi saralanishlar) endi shu sahifaning pastida - ilgari kubok sahifasida edi
+    try { renderFeed(); } catch (e) {}
 
     // Tayoqcha
     $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
@@ -1785,17 +1820,11 @@
     }
   }
 
+  // "Sehrgar" sahifasi Profil sahifasiga qo'shildi (2026-10-04): hamma eski chaqiruvlar o'sha yerga boradi
   function openProfile() {
     stopSortTimer();
-    $("scr-detail").classList.add("hidden");
-    $("scr-cat").classList.add("hidden");
-    $("scr-lang").classList.add("hidden");
-    $("scr-sort").classList.add("hidden");
-    $("scr-reveal").classList.add("hidden");
-    $("scr-hat").classList.add("hidden");
-    $("scr-think").classList.add("hidden");
-    $("scr-prof").classList.remove("hidden");
-    renderProfile();
+    hideSortScreens();
+    pmOpen();
   }
 
   function closeProfile() {

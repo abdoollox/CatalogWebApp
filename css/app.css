@@ -2016,3 +2016,13 @@ div.pm-row{cursor:default}
 #scr-hub .hub-ttl{grid-column:3}
 #scr-hub #hub-owl{grid-column:4}
 #scr-hub #hub-back{grid-column:5;justify-self:auto}
+
+/* --- Xogvarts tartibi (2026-10-04): takrorlar olib tashlandi --- */
+/* Kubok sahifasi - faqat kubok: bo'limlarga kirish va a'zolar ro'yxati bu yerda emas */
+#scr-cup .cup-tiles,#cup-hall{display:none!important}
+/* Bosh sahifa: tayoqcha qatori Profilga ko'chdi */
+#hub-wand{display:none!important}
+.hub-gal{display:inline-flex;align-items:center;gap:4px;margin-left:10px;font:800 12px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.hub-gal i{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#f8dd92,#b9862a 74%)}
+#scr-hub .feed{margin-top:14px}
+#pm .panel{margin-bottom:22px}

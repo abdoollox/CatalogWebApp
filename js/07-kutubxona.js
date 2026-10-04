@@ -412,10 +412,9 @@
     $("pm-house").textContent = h ? HOUSES[h][lang] : x.noHouse;
     $("pm-wal-n").textContent = x.gal(pmGal());
     $("pm-wal-s").textContent = x.walS;
-    $("pm-sec1").textContent = x.sec1;
     $("pm-sec2").textContent = x.sec2;
-    $("pm-prof-t").textContent = x.me;
-    $("pm-prof-s").textContent = x.profS;
+    // Fakultet va tayoqcha panellari (ilgari "Sehrgar" sahifasida edi)
+    try { renderProfile(); } catch (e) {}
     $("pm-lang-l").textContent = x.lang;
     $("pm-bot-t").textContent = x.bot;
     $("pm-bot-s").textContent = x.botS;
@@ -443,18 +442,19 @@
   var pmFrom = "cat";
 
   function pmShow() {
-    ["scr-cat", "scr-hub", "scr-prof"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-cat", "scr-hub", "scr-prof", "scr-detail"].forEach(function (id) { $(id).classList.add("hidden"); });
     pmFill();
     $("pm").classList.remove("hidden");
   }
 
   function pmOpen() {
     var el = $("pm");
-    pmFrom = $("scr-hub").classList.contains("hidden") ? "cat" : "hub";
+    // Tayoqcha tafsiloti yoki saralashdan qaytganda (ikkalasi ham yashirin) eski qiymat saqlanadi
+    if (!$("scr-hub").classList.contains("hidden")) { pmFrom = "hub"; }
+    else if (!$("scr-cat").classList.contains("hidden")) { pmFrom = "cat"; }
     if (!el.getAttribute("data-on")) {
       el.setAttribute("data-on", "1");
       $("pm-close").onclick = pmClose;
-      $("pm-prof").onclick = function () { pmHide(); openProfile(); };
       $("hub-set-pv").addEventListener("click", pmHide);     // sinov o'quvchisi boshlanganda sahifa yopilsin
       $("pm-wal").onclick = function () { pmHide(); try { openCup(); } catch (e) {} };
       $("pm-bot").addEventListener("change", function () {

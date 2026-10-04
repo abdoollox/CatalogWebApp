@@ -22,7 +22,7 @@
     $("gr-back").addEventListener("click", jrHome);
     setTimeout(gatePreload, 1500);
     $("hub-back").addEventListener("click", leaveHub);
-    $("hub-me").addEventListener("click", hubGo(openProfile));
+    $("hub-me").addEventListener("click", function () { pmOpen(); });
     $("hub-cup").addEventListener("click", hubGo(openCup));
     $("hub-sort").addEventListener("click", hubGo(startSorting));
     $("hub-wand").addEventListener("click", hubGo(function () { if (wand) { openProfile(); } else { startWand(); } }));
@@ -62,7 +62,7 @@
     $("quiz-back").addEventListener("click", function() {
       // confirm exit?
       $("scr-quiz").classList.add("hidden");
-      openTasks();
+      if (!worldReturnTo()) { openTasks(); }
     });
     
     initChatUI();

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=1e016c9d">
+<link rel="stylesheet" href="css/app.css?v=e5a21e3f">
 </head>
 <body>
 <div class="shell">
@@ -116,9 +116,35 @@
     <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
     <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span><i class="pm-chev">›</i></button>
 
-    <span class="pm-lbl" id="pm-sec1"></span>
-    <div class="pm-card">
-      <button class="pm-row" id="pm-prof" type="button"><span class="hub-row-tx"><b id="pm-prof-t"></b><span id="pm-prof-s"></span></span><i class="pm-chev">›</i></button>
+    <!-- Fakultet va tayoqcha: ilgari alohida "Sehrgar" sahifasida edi (scr-prof) -->
+    <div class="panel">
+      <span class="panel-label" id="house-label">Fakultet</span>
+      <div class="house-empty">
+        <span class="house-crest" id="house-crest">?</span>
+        <span class="house-txt">
+          <b id="house-name"></b>
+          <small id="house-note"></small>
+        </span>
+      </div>
+      <button class="sort-cta hidden" id="sort-cta"></button>
+      <button class="resort hidden" id="resort-btn"></button>
+      <button class="wand-more hidden" id="house-share" type="button"></button>
+    </div>
+
+    <div class="panel hidden" id="wand-panel">
+      <span class="panel-label" id="wand-label">Tayoqcha</span>
+      <div class="wand-face">
+        <span class="wand-icon" id="wand-icon"></span>
+        <span class="wand-lines">
+          <span class="wand-wood" id="wand-wood"></span>
+          <span class="wand-line" id="wand-l1"></span>
+          <span class="wand-line" id="wand-l2"></span>
+          <span class="wand-line" id="wand-l3"></span>
+        </span>
+      </div>
+      <button class="wand-more hidden" id="wand-more"></button>
+      <button class="sort-cta hidden" id="wand-cta"></button>
+      <button class="resort hidden" id="wand-again"></button>
     </div>
 
     <span class="pm-lbl" id="pm-sec2"></span>
@@ -224,6 +250,12 @@
       <span class="hub-row-tx"><b id="hub-wand-t"></b><span id="hub-wand-s"></span></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
     </button>
+
+    <!-- Jonli tasma: butun Xogvartsda so'nggi saralanishlar. -->
+    <div class="feed hidden" id="cup-feed">
+      <div class="feed-kick" id="feed-kick"></div>
+      <div id="feed-list"></div>
+    </div>
 
     <div id="hub-set" class="hub-sheet hidden">
       <div class="hub-sheet-box">
@@ -350,36 +382,6 @@
         <span class="total-label" id="total-label">Jami</span>
         <span class="total-val" id="total-val">0</span>
       </div>
-    </div>
-
-    <div class="panel">
-      <span class="panel-label" id="house-label">Fakultet</span>
-      <div class="house-empty">
-        <span class="house-crest" id="house-crest">?</span>
-        <span class="house-txt">
-          <b id="house-name"></b>
-          <small id="house-note"></small>
-        </span>
-      </div>
-      <button class="sort-cta hidden" id="sort-cta"></button>
-      <button class="resort hidden" id="resort-btn"></button>
-      <button class="wand-more hidden" id="house-share" type="button"></button>
-    </div>
-
-    <div class="panel hidden" id="wand-panel">
-      <span class="panel-label" id="wand-label">Tayoqcha</span>
-      <div class="wand-face">
-        <span class="wand-icon" id="wand-icon"></span>
-        <span class="wand-lines">
-          <span class="wand-wood" id="wand-wood"></span>
-          <span class="wand-line" id="wand-l1"></span>
-          <span class="wand-line" id="wand-l2"></span>
-          <span class="wand-line" id="wand-l3"></span>
-        </span>
-      </div>
-      <button class="wand-more hidden" id="wand-more"></button>
-      <button class="sort-cta hidden" id="wand-cta"></button>
-      <button class="resort hidden" id="wand-again"></button>
     </div>
   </div>
 
@@ -540,12 +542,6 @@
       <button class="hall-about" id="hall-about" type="button"></button>
       <div id="hall-list"></div>
       <div class="hall-wait hidden" id="hall-wait"></div>
-    </div>
-
-    <!-- Jonli tasma: butun Xogvartsda so'nggi saralanishlar. -->
-    <div class="feed hidden" id="cup-feed">
-      <div class="feed-kick" id="feed-kick"></div>
-      <div id="feed-list"></div>
     </div>
 
     <div class="cup-card cup-rules">
@@ -1130,18 +1126,18 @@
 
 <script src="js/01-asos.js?v=eead61f0"></script>
 <script src="js/02-saqlash-kubok.js?v=53d13f4e"></script>
-<script src="js/03-dostlar.js?v=62f28892"></script>
-<script src="js/04-kubok-oyna.js?v=6ddc0630"></script>
+<script src="js/03-dostlar.js?v=037af100"></script>
+<script src="js/04-kubok-oyna.js?v=4c99d1cd"></script>
 <script src="js/05-umumiy.js?v=469f5640"></script>
 <script src="js/06-soundtrack.js?v=af49646f"></script>
-<script src="js/07-kutubxona.js?v=d90c7302"></script>
-<script src="js/08-saralash.js?v=fd3df35b"></script>
-<script src="js/09-sehrli-olam.js?v=acb79864"></script>
+<script src="js/07-kutubxona.js?v=2097393e"></script>
+<script src="js/08-saralash.js?v=c4f71ccd"></script>
+<script src="js/09-sehrli-olam.js?v=c2cdcd35"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=e922ac9f"></script>
 <script src="js/12-shaxmat.js?v=a07e8b28"></script>
 <script src="js/13-orqaga.js?v=3e658424"></script>
-<script src="js/14-ishga-tushirish.js?v=2ac83192"></script>
+<script src="js/14-ishga-tushirish.js?v=2f7a729f"></script>
 <script src="js/15-pochta.js?v=f369cb0a"></script>
 
   <svg aria-hidden="true" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">

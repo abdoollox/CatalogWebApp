@@ -662,7 +662,7 @@
 
   // Manba qatorini bosganda - o'sha ballni olish joyiga
   function srcGo(key) {
-    if (key === "exam" || key === "daily") { openTasks(); }
+    if (key === "exam" || key === "daily") { openDaily(); }
     else if (key === "chess") { openChessHub(); }
     else if (key === "friends") { openRefs(); }
     else { closeCup(); }

@@ -27,6 +27,7 @@
   function hideSortScreens() {
     $("scr-detail").classList.add("hidden");
     $("scr-prof").classList.add("hidden");
+    $("pm").classList.add("hidden");           // profil sahifasidan boshlangan saralash/tayoqcha
     $("scr-cat").classList.add("hidden");
     $("scr-reveal").classList.add("hidden");
     $("scr-hat").classList.add("hidden");
