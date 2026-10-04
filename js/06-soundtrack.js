@@ -311,6 +311,20 @@
           poor: function (n, bor) { return "Not enough Galleons\n\nThe album costs " + n + ", you have " + bor + ". Galleons are paid at the end of each week for your House Cup points: 1 Galleon per 10 points, doubled for the winning house."; },
           cup: "Open the Cup", close: "Close" }
   };
+  var MS_GUIDE = {
+    uz: { outT: "Albom galleonga ochiladi", outGo: "Maktubni ochish",
+          out: function (n) { return "Galleon — Xogvarts puli. Uni shunday olasiz:\n\n1. Boyo'g'li keltirgan Xogvarts maktubini oching va fakultetga tushing (5 daqiqa).\n2. Fakultetingizga ball to'plang: har film +5, kunlik savol +10, taklif qilgan do'stingiz +20.\n3. Har hafta yakunida 10 ball uchun 1 galleon beriladi.\n\nBitta albom " + n + " galleon turadi va doim ochiq qoladi. Birinchi albom bepul."; },
+          inT: "Galleon yetmaydi",
+          ich: function (n, bor) { return "Albom " + n + " galleon turadi, sizda " + bor + " galleon bor.\n\nGalleon shunday yig'iladi:\n1. Ball to'plang: har film +5, kunlik savol +10, shaxmatda g'alaba +10, taklif qilgan do'stingiz +20.\n2. Hafta yakunida (yakshanba kechasi) har 10 ball uchun 1 galleon beriladi.\n3. Fakultetingiz kubokni yutsa — ikki baravar, eng yaxshi uch o'quvchiga yana +15, +10, +5."; } },
+    ru: { outT: "Альбом открывается за галлеоны", outGo: "Открыть письмо",
+          out: function (n) { return "Галлеоны — деньги Хогвартса. Получить их можно так:\n\n1. Откройте письмо из Хогвартса, которое принесла сова, и пройдите распределение (5 минут).\n2. Набирайте очки для факультета: каждый фильм +5, вопрос дня +10, приглашённый друг +20.\n3. В конце каждой недели за 10 очков выдаётся 1 галлеон.\n\nОдин альбом стоит " + n + " галлеонов и остаётся открытым навсегда. Первый альбом бесплатный."; },
+          inT: "Не хватает галлеонов",
+          ich: function (n, bor) { return "Альбом стоит " + n + " галлеонов, у вас " + bor + ".\n\nКак накопить:\n1. Набирайте очки: каждый фильм +5, вопрос дня +10, победа в шахматах +10, приглашённый друг +20.\n2. В конце недели (в ночь на понедельник) за каждые 10 очков выдаётся 1 галлеон.\n3. Если ваш факультет выиграет Кубок — вдвое больше, трём лучшим ученикам ещё +15, +10, +5."; } },
+    en: { outT: "Albums are unlocked with Galleons", outGo: "Open the letter",
+          out: function (n) { return "Galleons are Hogwarts money. Here is how to get them:\n\n1. Open the Hogwarts letter the owl brought and get sorted into a house (5 minutes).\n2. Earn points for your house: +5 per film, +10 for the daily question, +20 for a friend you invite.\n3. At the end of every week you get 1 Galleon per 10 points.\n\nOne album costs " + n + " Galleons and stays unlocked forever. The first album is free."; },
+          inT: "Not enough Galleons",
+          ich: function (n, bor) { return "The album costs " + n + " Galleons, you have " + bor + ".\n\nHow to save up:\n1. Earn points: +5 per film, +10 for the daily question, +10 for a chess win, +20 for a friend you invite.\n2. At the end of the week (Sunday night) you get 1 Galleon per 10 points.\n3. If your house wins the Cup you get double, and the top three students get +15, +10 and +5 more."; } }
+  };
   var msPrice = 30, msGal = 0, msBuying = false;
 
   function msLocked(id) { return !!(msData && msData[id] && msData[id].open === false); }
@@ -320,7 +334,14 @@
     var x = MS_BUY[lang] || MS_BUY.uz;
     if (!msInitData()) { showToast(MS_TX[lang].fail, "err"); return; }
     if (msGal < msPrice) {
-      testAsk(x.poor(msPrice, msGal), function () { try { openCup(); } catch (e) {} }, { ok: x.cup, no: x.close });
+      // Yo'l-yo'riq noldan (egasi, 2026-10-04): saralanmagan odamga - maktubdan boshlab, saralanganga - ball yo'llari
+      var g = MS_GUIDE[lang] || MS_GUIDE.uz, ichkarida = false;
+      try { ichkarida = hasHouse(); } catch (e) {}
+      if (ichkarida) {
+        testAsk(g.ich(msPrice, msGal), function () { try { openCup(); } catch (e) {} }, { title: g.inT, ok: x.cup, no: x.close, left: true });
+      } else {
+        testAsk(g.out(msPrice), function () { try { goWorld(); } catch (e) {} }, { title: g.outT, ok: g.outGo, no: x.close, left: true });
+      }
       return;
     }
     testAsk(x.ask(msName(id), msPrice, msGal), function () { msBuy(id); }, { ok: x.yes, no: x.no });

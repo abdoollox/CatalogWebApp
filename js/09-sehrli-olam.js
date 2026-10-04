@@ -586,6 +586,7 @@
     $("hpask-t").textContent = bolak[0];
     $("hpask-p").textContent = bolak.slice(1).join("\n\n");
     $("hpask-p").classList.toggle("hidden", bolak.length < 2);
+    $("hpask-p").style.textAlign = opt.left ? "left" : "";      // ro'yxatli yo'l-yo'riq chapdan o'qiladi
     $("hpask-ok").textContent = opt.ok || t[0];
     $("hpask-no").textContent = opt.no || t[1];
     function yop() { box.classList.add("hidden"); }
