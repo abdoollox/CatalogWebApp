@@ -1974,8 +1974,13 @@ body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 
 .hub-ttl .kicker{white-space:nowrap}
 .pm-sw{margin-bottom:14px}
-/* Profil belgisi o'zi doira (odam doirada) - tugmaning hoshiyasi ikkinchi halqa bo'lib qolmasin:
-   hoshiya olib tashlanadi, belgi tugma o'lchamigacha kattalashadi. */
-.pm-btn,.hub-tools .pm-btn{border:none;background:none}
-.pm-btn .pm-av{overflow:visible;color:var(--dim)}
-.pm-btn .pm-av svg{width:50px;height:50px;flex:none}
+/* Profil tugmasi: boshqa tugmalar kabi ingichka hoshiya, ichida yengil belgi */
+.pm-btn,.hub-tools .pm-btn{background:transparent;border:1px solid rgba(255,255,255,.12)}
+.pm-btn .pm-av{color:var(--dim)}
+.pm-btn .pm-av svg{width:24px;height:24px}
+/* Sahifa sarlavhalari - hammasi KATTA HARF bilan (egasi, 2026-10-04) */
+.cat-head h1,.hub-ttl h1,.cup-title,#tasks-header,.chat-title{text-transform:uppercase;letter-spacing:.05em}
+.cat-head h1{font-size:clamp(17px,5.1vw,23px)}
+.hub-ttl h1{font-size:clamp(19px,5.9vw,26px)}
+#w-title{text-transform:uppercase;letter-spacing:.05em}
+.cup-title{font-size:clamp(24px,7.6vw,32px)!important;line-height:1.15!important}
