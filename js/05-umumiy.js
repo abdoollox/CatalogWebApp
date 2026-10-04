@@ -437,7 +437,8 @@
   function qsSize(b) {
     if (!b) { return ""; }
     var gb = b / 1073741824;
-    var s = gb >= 1 ? gb.toFixed(1) + " GB" : Math.round(b / 1048576) + " MB";
+    // Hamma film bir xil o'lchovda (GB): "2,7 GB" yonida "1014 MB" chalkashtiradi
+    var s = gb >= 0.1 ? gb.toFixed(1) + " GB" : Math.round(b / 1048576) + " MB";
     return lang === "en" ? s : s.replace(".", ",");
   }
 
