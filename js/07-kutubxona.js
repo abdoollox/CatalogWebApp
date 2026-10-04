@@ -443,7 +443,7 @@
   var pmFrom = "cat";
 
   function pmShow() {
-    ["scr-cat", "scr-hub", "scr-prof", "scr-detail"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-cat", "scr-hub", "scr-prof", "scr-detail", "scr-nsh"].forEach(function (id) { $(id).classList.add("hidden"); });
     pmFill();
     $("pm").classList.remove("hidden");
   }
@@ -549,7 +549,17 @@
                albom: ["Music Lover", "Unlock one album with Galleons"],
                serial_1: ["First Episode", "Get one episode of the series"] } }
   };
-  var nshData = null, nshAsked = false;
+  // Toifalar (egasi: nishonlar ko'payadi, guruhlarga bo'linsin). Yangi nishon -> shu ro'yxatga.
+  var NSH_GROUPS = [
+    ["kino", ["film_1", "film_8", "fb_3", "poliglot", "serial_1"], { uz: "Kino", ru: "Кино", en: "Films" }],
+    ["xogvarts", ["oquvchi", "tayoqcha"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
+    ["kubok", ["ball_1", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
+    ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
+    ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
+    ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }]
+  ];
+  var NSH_SUM = { uz: "nishon olingan", ru: "значков получено", en: "badges earned" };
+  var nshData = null, nshAsked = false, nshSampleSeen = false;
 
   function nshX() { return NSH_TX[lang] || NSH_TX.uz; }
   function nshImg(code) { return IMG_DIR + "nishon/" + code + ".webp"; }
@@ -559,7 +569,9 @@
   function nshSample() {
     var bor = { film_1: 1, film_8: 1, oquvchi: 1, tayoqcha: 1, ball_1: 1, dost_1: 1 };
     var yol = { fb_3: [1, 3], poliglot: [2, 3], streak_7: [3, 7], dost_5: [2, 5] };
-    return { ok: true, total: NSH_ORDER.length, "new": ["tayoqcha", "ball_1"], list: NSH_ORDER.map(function (c) {
+    var yangi = nshSampleSeen ? [] : ["tayoqcha", "ball_1"];
+    nshSampleSeen = true;
+    return { ok: true, total: NSH_ORDER.length, "new": yangi, list: NSH_ORDER.map(function (c) {
       return { code: c, got: !!bor[c], at: bor[c] ? "2026-10-04T10:00:00Z" : null,
                have: bor[c] ? 1 : (yol[c] ? yol[c][0] : 0), need: yol[c] ? yol[c][1] : 1 };
     }) };
@@ -584,35 +596,71 @@
     });
   }
 
-  // Profil sahifasidagi to'r
+  // Profildagi qator (nechta olingan + oxirgilari) va nishonlar sahifasi (toifalar bo'yicha)
   function nshRender() {
-    var box = $("nsh-grid");
-    if (!box) { return; }
-    var x = nshX(), lst = (nshData && nshData.list) || [];
-    var n = lst.filter(function (b) { return b.got; }).length;
-    $("nsh-lbl").textContent = x.sec + (lst.length ? " · " + n + " / " + lst.length : "");
-    $("nsh-sec").classList.toggle("hidden", !lst.length);
-    box.innerHTML = "";
-    lst.forEach(function (b) {
-      var t = x.n[b.code];
-      if (!t) { return; }
-      var el = document.createElement("button");
-      el.type = "button";
-      el.className = "nsh-it" + (b.got ? "" : " off");
+    var go = $("nsh-sec"), box = $("nsh-grid");
+    if (!go || !box) { return; }
+    var x = nshX(), lst = (nshData && nshData.list) || [], by = {};
+    lst.forEach(function (b) { by[b.code] = b; });
+    var olingan = lst.filter(function (b) { return b.got; });
+    go.classList.toggle("hidden", !lst.length);
+    go.onclick = nshOpen;
+    $("nsh-lbl").textContent = x.sec;
+    $("nsh-cnt").textContent = olingan.length + " / " + lst.length;
+    var mini = $("nsh-mini");
+    mini.innerHTML = "";
+    olingan.slice().sort(function (a, c) { return String(c.at).localeCompare(String(a.at)); }).slice(0, 4).forEach(function (b) {
       var im = document.createElement("img");
       im.alt = ""; im.src = nshImg(b.code);
-      var nm = document.createElement("span");
-      nm.textContent = t[0];
-      el.appendChild(im);
-      el.appendChild(nm);
-      if (!b.got && b.need > 1) {
-        var pr = document.createElement("i");
-        pr.textContent = x.prog(b.have, b.need);
-        el.appendChild(pr);
-      }
-      el.onclick = function () { nshOne(b); };
-      box.appendChild(el);
+      mini.appendChild(im);
     });
+
+    $("nsh-title").textContent = x.sec;
+    $("nsh-sum-n").textContent = olingan.length + " / " + lst.length;
+    $("nsh-sum-s").textContent = NSH_SUM[lang] || NSH_SUM.uz;
+    $("nsh-bar").style.width = (lst.length ? Math.round(olingan.length * 100 / lst.length) : 0) + "%";
+    box.innerHTML = "";
+    var korildi = {};
+    function guruh(nom, kodlar) {
+      var bs = kodlar.map(function (c) { return by[c]; }).filter(function (b) { return b && x.n[b.code]; });
+      if (!bs.length) { return; }
+      var lb = document.createElement("span");
+      lb.className = "pm-lbl";
+      lb.textContent = nom + " · " + bs.filter(function (b) { return b.got; }).length + " / " + bs.length;
+      var g = document.createElement("div");
+      g.className = "nsh-grid";
+      bs.forEach(function (b) {
+        korildi[b.code] = 1;
+        var t = x.n[b.code];
+        var el = document.createElement("button");
+        el.type = "button";
+        el.className = "nsh-it" + (b.got ? "" : " off");
+        var im = document.createElement("img");
+        im.alt = ""; im.src = nshImg(b.code);
+        var nm = document.createElement("span");
+        nm.textContent = t[0];
+        el.appendChild(im);
+        el.appendChild(nm);
+        if (!b.got && b.need > 1) {
+          var pr = document.createElement("i");
+          pr.textContent = x.prog(b.have, b.need);
+          el.appendChild(pr);
+        }
+        el.onclick = function () { nshOne(b); };
+        g.appendChild(el);
+      });
+      box.appendChild(lb);
+      box.appendChild(g);
+    }
+    NSH_GROUPS.forEach(function (gr) { guruh(gr[2][lang] || gr[2].uz, gr[1]); });
+  }
+
+  function nshOpen() {
+    $("pm").classList.add("hidden");
+    nshRender();
+    $("scr-nsh").classList.remove("hidden");
+    $("nsh-back").onclick = function () { $("scr-nsh").classList.add("hidden"); pmShow(); try { window.scrollTo(0, 0); } catch (e) {} };
+    try { window.scrollTo(0, 0); } catch (e) {}
   }
 
   function nshDate(iso) {
@@ -660,7 +708,7 @@
   function nshFresh() {
     var yangi = (nshData && nshData["new"]) || [];
     if (!yangi.length || !$("nsh") || !$("nsh").classList.contains("hidden")) { return; }
-    var ochiq = ["scr-cat", "scr-hub", "pm"].some(function (id) { return $(id) && !$(id).classList.contains("hidden"); });
+    var ochiq = ["scr-cat", "scr-hub", "pm", "scr-nsh"].some(function (id) { return $(id) && !$(id).classList.contains("hidden"); });
     if (!ochiq || ($("hpask") && !$("hpask").classList.contains("hidden"))) { return; }
     var x = nshX(), bitta = yangi.length === 1, t = x.n[yangi[0]] || ["", ""];
     nshData["new"] = [];

@@ -7,6 +7,8 @@
   // 9¾ ortidagi bosh sahifa: profil, kubok, bo'limlar. Xarita (WORLD_MAPS) keyinroq
   // ikkinchi ko'rinish bo'lib qaytadi, hozircha 9¾ shu yerga olib keladi.
   // Qasr belgisi: Streamline Ultimate "amusement-park-castle-bold" (CC BY 4.0, streamlinehq.com) - egasi tanladi
+  // Kutubxona belgisi: Phosphor "book-open-fill" (MIT) - vaqtincha; egasi dizayn-tizimi/kutubxona-belgilar.png dan tanlaydi
+  var KITOB_SVG = '<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M240 56v144a8 8 0 0 1-8 8h-72a24 24 0 0 0-24 23.94a7.9 7.9 0 0 1-5.12 7.55A8 8 0 0 1 120 232a24 24 0 0 0-24-24H24a8 8 0 0 1-8-8V56a8 8 0 0 1 8-8h64a32 32 0 0 1 32 32v87.73a8.17 8.17 0 0 0 7.47 8.25a8 8 0 0 0 8.53-8V80a32 32 0 0 1 32-32h64a8 8 0 0 1 8 8"/></svg>';
   var QASR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.89 23.19A7.6 7.6 0 0 1 22 18.5a.5.5 0 0 0-.5-.5h-19a.5.5 0 0 0-.5.5a7.6 7.6 0 0 1-1.89 4.69a.51.51 0 0 0-.06.53a.5.5 0 0 0 .45.28h9a.5.5 0 0 0 .5-.5V22a2 2 0 0 1 4 0v1.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .45-.28a.51.51 0 0 0-.06-.53M2.5 16.5h19a.5.5 0 0 0 .5-.5v-4.39a1 1 0 0 0-.09-.41l-1.57-3.55a1 1 0 0 1-.09-.41v-.53a.5.5 0 0 1 .24-.43L22 5.4a1 1 0 0 0-.14-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v3.74a1 1 0 0 1-.09.41l-1.65 3.55a1 1 0 0 0-.09.41V14a.5.5 0 0 1-.5.5H16a.5.5 0 0 1-.5-.5V9.65a1 1 0 0 0-.17-.55l-2.41-3.62a1 1 0 0 1-.17-.56V4a.5.5 0 0 1 .25-.47l1.46-.88a1 1 0 0 0-.15-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v4.17a1 1 0 0 1-.17.56L8.67 9.1a1 1 0 0 0-.17.55V14a.5.5 0 0 1-.5.5h-.5A.5.5 0 0 1 7 14v-2.39a1 1 0 0 0-.09-.41L5.34 7.65a1 1 0 0 1-.09-.41v-.53a.5.5 0 0 1 .24-.43L7 5.4a1 1 0 0 0-.14-1.78l-2-.82a.76.76 0 0 0-.7.08a.74.74 0 0 0-.33.62v3.74a1 1 0 0 1-.09.41L2.09 11.2a1 1 0 0 0-.09.41V16a.5.5 0 0 0 .5.5m9.5-6a1 1 0 1 1-1 1a1 1 0 0 1 1-1"/></svg>';
   var HUB_TX = {
     // Bo'lim nomi "Xogvarts" (egasi, 2026-10-04): tugma qasrga olib kiradi, "9¾ / Sehrli olam" emas.
@@ -80,7 +82,7 @@
     root.style.setProperty("--hub-rgb", hh.rgb);
     root.style.setProperty("--hub-accent", hh.accent);
 
-    $("hub-back").innerHTML = hubSvg("M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13");
+    $("hub-back").innerHTML = KITOB_SVG;
     $("hub-gear").innerHTML = worldIcon("gear");
     try { pmRender(); } catch (e) {}       // sozlama o'rnida profil tugmasi (galleon bilan)
     $("hub-kick").textContent = HUB_TX.kick[lang];

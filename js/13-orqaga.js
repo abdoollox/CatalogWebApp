@@ -32,6 +32,7 @@
     "scr-album": "ms-back",
     "scr-serial": "sr-back",
     "pm": "pm-close",
+    "scr-nsh": "nsh-back",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",
     "scr-vault": "gr-back",

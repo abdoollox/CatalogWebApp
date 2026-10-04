@@ -2033,7 +2033,22 @@ div.pm-row{cursor:default}
   font:600 12.5px/1 'Manrope',sans-serif;color:var(--dim)}
 
 /* ---------- NISHONLAR (profil) ---------- */
-.nsh-sec{margin:0 0 22px}
+.nsh-go{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 22px;padding:14px;text-align:left;cursor:pointer;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--text)}
+.nsh-go:active{transform:scale(.99)}
+.nsh-go-tx{display:flex;flex-direction:column;gap:5px;min-width:0}
+.nsh-go-tx b{font:700 13.5px/1.2 'Manrope',sans-serif}
+.nsh-go-tx small{font:600 12px/1 'Manrope',sans-serif;color:var(--gold)}
+.nsh-go-im{display:flex;margin-left:auto;padding-left:8px}
+.nsh-go-im img{width:34px;height:34px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px var(--card)}
+.nsh-go .pm-chev{margin-left:4px}
+.nsh-sum{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:6px 10px;margin:4px 2px 22px}
+.nsh-sum b{font:600 34px/1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.nsh-sum small{font:600 12px/1 'Manrope',sans-serif;color:var(--dim)}
+.nsh-bar{grid-column:1/-1;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.nsh-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-2),var(--gold-hi))}
+#scr-nsh .pm-lbl{display:block;margin:0 4px 8px}
+#scr-nsh .nsh-grid{margin-bottom:22px}
+#hub-back svg{width:22px;height:22px}
 .nsh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 8px;padding:16px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
 .nsh-it{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0;border:0;background:none;cursor:pointer;color:var(--text);min-width:0}
 .nsh-it img{width:100%;max-width:68px;aspect-ratio:1;display:block;border-radius:50%;box-shadow:0 4px 14px rgba(0,0,0,.45)}
