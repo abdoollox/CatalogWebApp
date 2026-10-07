@@ -686,6 +686,9 @@ var CHAT_XONA = [
   {k:"dm",         n:"Shaxsiy",    c:"#6d7f99", ic:"✉"}
 ];
 var TIL_RANG = {uz:"#199e70", ru:"#d03b3b", en:"#3987e5"};
+var KITOB_N = ["Afsonaviy tosh", "Maxfiy xona", "Azkaban mahbusi", "Olov kubogi", "Feniks ordeni", "Chala qonli shahzoda", "Ajal tuhfalari"];
+var KITOB_NARX = 3;          // galleon (bot: hpkitob.BOOK_PRICE); 1-kitob bepul
+var DARS_N = {afsun:"Afsunlar", iksir:"Iksirlar"};
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -743,6 +746,8 @@ var BOLIMLAR = [
   {id:"musiqa",  nom:"Musiqa",
    ic:'<path d="M9 18V5.5l11-2V16"></path><circle cx="6.5" cy="18" r="2.5"></circle>' +
       '<circle cx="17.5" cy="16" r="2.5"></circle>'},
+  {id:"kitob",   nom:"Kitoblar",
+   ic:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"></path><path d="M12 6.5v13"></path>'},
   {id:"chat",    nom:"Chat",
    ic:'<path d="M4 5.5h16v10.5H10l-6 4z"></path><path d="M8 9.5h8"></path><path d="M8 12.5h5"></path>'},
   {id:"pochta",  nom:"Pochta",
@@ -798,7 +803,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, oynaY:{a:0, b:1}, chat:null};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaKt:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, oynaY:{a:0, b:1}, chat:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -956,6 +961,13 @@ function classify(p){
   if((m = p.match(/^invited_(\d+)$/)))    return {t:"invited", by:m[1], lab:"Do'st taklifi bilan keldi", ic:"🤝"};
   if((m = p.match(/^share_(.+)$/)))       return {t:"share", lab:"Ulashdi", ic:"🔗"};
   if((m = p.match(/^bekor_(\w+)$/)))      return {t:"undo",  film:m[1], lab:"Bekor qildi", ic:"↩️"};
+  // Kitoblar (2026-10-07): ilovada o'qish, faylni yuklab olish, galleonga ochish
+  if((m = p.match(/^read_kt([1-7])_(uz|ru|en)$/)))            return {t:"kread", book:+m[1], lang:m[2], lab:"Kitobni ilovada o'qidi", ic:"📖"};
+  if((m = p.match(/^book_kt([1-7])_(uz|ru|en)_([a-z0-9]+)$/))) return {t:"kdl", book:+m[1], lang:m[2], fmt:m[3], lab:"Kitobni yuklab oldi", ic:"📥"};
+  if((m = p.match(/^buy_book_kt([1-7])$/)))                   return {t:"kbuy", book:+m[1], lab:"Kitobni galleonga ochdi", ic:"🪙"};
+  // Darslar: dars bajarildi (dars_afsun_14 - 14-dars) va bellashuvda qatnashdi
+  if((m = p.match(/^dars_([a-z]+)_(\w+)$/)))                  return {t:"dars", fan:m[1], n:m[2], lab:"Darsni bajardi", ic:"🎓"};
+  if((m = p.match(/^bellashuv_([a-z]+)$/)))                   return {t:"bell", fan:m[1], lab:"Bellashuvda qatnashdi", ic:"🏆"};
   // Soundtrack: albom/trek yuklab olish (bot chatiga) va ilovada albomni tinglash
   if((m = p.match(/^music_play_([a-z]{2}\d+)$/)))  return {t:"mplay", album:m[1], lab:"Albomni ilovada tingladi", ic:"🎧"};
   if((m = p.match(/^music_([a-z]{2}\d+)_(\d+)$/))) return {t:"mdl", album:m[1], n:+m[2], lab:"Trekni yuklab oldi", ic:"🎵"};
@@ -2569,6 +2581,11 @@ function hodisaMatni(r){
     return "do'st taklifi bilan keldi · <b>" + esc(p ? p.name : "ID " + e.by) + "</b>";
   }
   if(e.t === "undo") return "bekor qildi · <b>" + esc(filmName(e.film)) + "</b>";
+  if(e.t === "kread") return "kitobni ilovada o'qidi · <b>" + esc(KITOB_N[e.book - 1]) + "</b> " + (LANGS[e.lang] ? LANGS[e.lang].f : "");
+  if(e.t === "kdl") return "kitobni yuklab oldi · <b>" + esc(KITOB_N[e.book - 1]) + "</b> · " + esc(String(e.fmt).toUpperCase());
+  if(e.t === "kbuy") return "kitobni galleonga ochdi · <b>" + esc(KITOB_N[e.book - 1]) + "</b>";
+  if(e.t === "dars") return "darsni bajardi · <b>" + esc(DARS_N[e.fan] || e.fan) + "</b>" + (/^\d+$/.test(e.n) ? " · " + e.n + "-dars" : "");
+  if(e.t === "bell") return "bellashuvda qatnashdi · <b>" + esc(DARS_N[e.fan] || e.fan) + "</b>";
   if(e.t === "mplay") return "<b>" + esc(filmName(e.album)) + "</b> albomini ilovada tingladi";
   if(e.t === "mdl"){
     if(!e.n) return "<b>" + esc(filmName(e.album)) + "</b> albomini yuklab oldi";
@@ -2823,6 +2840,8 @@ var KARTA_INFO = {
   "Eng faol suhbatdoshlar": "Shu davrda eng ko'p yozgan 20 kishi: xabarlari, shulardan javoblar, ularning xabarlariga qo'yilgan reaksiyalar, qaysi xonalarda yozgani va oxirgi xabari. Ismni bosing — odam tarixi ochiladi.",
   "Onlayn": "Bot har 5 daqiqada o'lchaydi: so'nggi 5 daqiqada ilovani ochganlar va shulardan chatni ochib turganlar. Chizmada har kunning (soatning) eng gavjum 5 daqiqasi. O'lchov 30-sentabrdan boshlangan.",
   "Chat lentasi": "Katta zal va fakultet xonalaridagi xabarlar matni bilan, javob qaysi xabarga ekani va reaksiyalar soni. Shaxsiy yozishmalarning faqat vaqti va kimligi ko'rinadi, matni ko'rsatilmaydi. O'chirilgan xabar matni ham ko'rsatilmaydi.",
+  "Kitoblar faolligi": "Kitoblar bo'limi kun sayin (2026-yil 7-oktabrdan). O'qidi — odam kitobni ilova ichida ochgan (bir odam bitta kitobni bir kunda necha marta ochsa ham bitta sanaladi). Yukladi — kitob fayli bot chatiga yuborilgan. Sotib oldi — kitob galleonga ochilgan (har biri 3 galleon; 1-kitob bepul). Nomini bosib chiziqni yoqib-o'chirsa bo'ladi.",
+  "Kitoblar bo'yicha": "Har kitob alohida: nechta odam ilovada o'qigan, jami necha marta ochilgan, nechta odam faylini yuklab olgan va nechta odam galleonga sotib olgan. Chiziq — o'qigan odamlar soni (eng ko'pi to'liq). 1-kitob bepul, shuning uchun u sotilmaydi.",
   "Musiqa faolligi": "Soundtrack bo'limi kun sayin. Tingladi — ilovada trek boshidan boshlangan (bir odam bitta trekni yarim soat ichida qayta boshlasa ham bitta sanaladi; o'rtasiga o'tkazish sanalmaydi). Yukladi — albom yoki trek bot chatiga yuborildi (albom bitta hodisa). Like — shu kuni qo'yilgan like'lar (keyin olib tashlanganlari bu yerda yo'q). Tinglashlar 27-sentabrdan, yuklab olishlar 26-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
   "Albomlar": "Har albom shu davrda: Tinglash — ilovada boshlangan treklar, Tinglovchi — nechta turli odam tingladi, Yuklab olish — albom butunligicha + alohida treklar, Like — shu davrda qo'yilgan like'lar. Ustun nomini bosib saralang.",
   "Eng mashhur treklar": "Shu davrda eng ko'p tinglangan (yoki tanlangan ustun bo'yicha) 20 ta trek. Yuklab olish — faqat alohida yuklangan trek (butun albom bu yerda sanalmaydi). Ustun nomini bosib saralang, qayta bosish — teskari tartib.",
@@ -3602,7 +3621,7 @@ function render(){
     var fK2 = document.createElement("figure");
     var kBal = null;
     var kSl = kList.length > 14;
-    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
     var kChiz = function(){
       fK2.innerHTML = "";
@@ -4264,6 +4283,84 @@ function render(){
     }));
   }
 
+  /* — Kitoblar (2026-10-07): o'qish, yuklab olish, galleonga ochish — */
+  var ktO = rows.filter(function(r){ return r.ev.t === "kread"; });
+  var ktY = rows.filter(function(r){ return r.ev.t === "kdl"; });
+  var ktS = rows.filter(function(r){ return r.ev.t === "kbuy"; });
+  if(!ktO.length && !ktY.length && !ktS.length){
+    var kt0 = card("Kitoblar faolligi", "", "");
+    kt0.appendChild(emptyNote("Bu davrda kitoblar bo'yicha hech narsa yo'q. Kitoblar 2026-yil 7-oktabrda qo'shilgan."));
+    put("kitob", kt0);
+  } else {
+    var ktKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };
+    var ktKun = {};
+    var ktQ = function(k){ return ktKun[k] = ktKun[k] || {oq:0, yuk:0, sot:0}; };
+    // O'qish: bir odam bir kitobni bir kunda (soatda) necha marta ochsa ham - bitta
+    var ktKorgan = {};
+    ktO.forEach(function(r){
+      var kk = ktKey(r.t), iz = kk + "|" + r.uid + "|" + r.ev.book;
+      if(ktKorgan[iz]) return;
+      ktKorgan[iz] = 1; ktQ(kk).oq++;
+    });
+    ktY.forEach(function(r){ ktQ(ktKey(r.t)).yuk++; });
+    ktS.forEach(function(r){ ktQ(ktKey(r.t)).sot++; });
+    var ktList = dayList.map(function(d){
+      var q = ktKun[d.k] || {oq:0, yuk:0, sot:0};
+      return {k:d.k, lab:d.lab, tip:d.tip, oq:q.oq, yuk:q.yuk, sot:q.sot};
+    });
+    var ktC1 = poygaKarta({
+      nom:"Kitoblar faolligi", kls:"", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin · nomini bosib olib turing",
+      list:ktList, dayList:dayList, birKun:birKun, oyna:"oynaKt", ls:"hp_dash_kitob",
+      ser:[{k:"oq", n:"O'qidi", t:"O'qidi", c:"#199e70"},
+           {k:"yuk", n:"Yukladi", t:"Yukladi", c:"#3987e5"},
+           {k:"sot", n:"Sotib oldi", t:"Sotib oldi", c:"#c98500"}]
+    });
+    var ktOdam = {}, ktYodam = {}, ktSodam = {};
+    ktO.forEach(function(r){ ktOdam[r.uid] = 1; });
+    ktY.forEach(function(r){ ktYodam[r.uid] = 1; });
+    ktS.forEach(function(r){ ktSodam[r.uid] = 1; });
+    var ktK = document.createElement("div");
+    ktK.className = "tarq-kpi";
+    [["O'quvchilar", fmtNum(Object.keys(ktOdam).length), "ilovada kitob ochgan odam"],
+     ["O'qishlar", fmtNum(Object.keys(ktKorgan).length), "odam · kitob · kun bo'yicha"],
+     ["Yuklab olishlar", fmtNum(ktY.length), fmtNum(Object.keys(ktYodam).length) + " kishi"],
+     ["Sotib olingan", fmtNum(ktS.length), fmtNum(Object.keys(ktSodam).length) + " kishi · " + fmtNum(ktS.length * KITOB_NARX) + " galleon"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      ktK.appendChild(d);
+    });
+    ktC1.insertBefore(ktK, ktC1.children[1]);
+    put("kitob", ktC1);
+
+    // Har kitob bo'yicha
+    var ktB = KITOB_N.map(function(n, i){ return {i:i + 1, n:n, oq:{}, ochish:0, yuk:0, yukO:{}, sot:0, til:{}}; });
+    ktO.forEach(function(r){ var b = ktB[r.ev.book - 1]; if(b){ b.oq[r.uid] = 1; b.ochish++; b.til[r.ev.lang] = 1; } });
+    ktY.forEach(function(r){ var b = ktB[r.ev.book - 1]; if(b){ b.yuk++; b.yukO[r.uid] = 1; b.til[r.ev.lang] = 1; } });
+    ktS.forEach(function(r){ var b = ktB[r.ev.book - 1]; if(b) b.sot++; });
+    var ktC2 = card("Kitoblar bo'yicha", "qaysi kitob ko'proq o'qilyapti", "");
+    var ktMax = Math.max.apply(null, ktB.map(function(b){ return Object.keys(b.oq).length; }).concat([1]));
+    var ktH = "<table><thead><tr><th>#</th><th>Kitob</th><th class='num'>O'qigan odam</th><th></th>" +
+      "<th class='num'>Ochishlar</th><th class='num'>Yuklab olgan</th><th class='num'>Sotib olgan</th></tr></thead><tbody>";
+    ktB.forEach(function(b){
+      var od = Object.keys(b.oq).length;
+      ktH += "<tr><td>" + b.i + "</td><td><b>" + esc(b.n) + "</b>" + (b.i === 1 ? " <span class='uname'>bepul</span>" : "") + "</td>" +
+        "<td class='num'>" + fmtNum(od) + "</td>" +
+        "<td style='width:34%'><span style='display:block;height:8px;border-radius:4px;background:#199e70;opacity:.85;width:" +
+        Math.round(od / ktMax * 100) + "%;min-width:" + (od ? 4 : 0) + "px'></span></td>" +
+        "<td class='num'>" + fmtNum(b.ochish) + "</td><td class='num'>" + fmtNum(Object.keys(b.yukO).length) + "</td>" +
+        "<td class='num'>" + (b.i === 1 ? "—" : fmtNum(b.sot)) + "</td></tr>";
+    });
+    var ktW = document.createElement("div");
+    ktW.className = "tbl-wrap";
+    ktW.innerHTML = ktH + "</tbody></table>";
+    ktC2.appendChild(ktW);
+    put("kitob", ktC2);
+  }
+
   /* — Chat — */
   // Hammasi bot bazasidan (/api/chatpanel, ST.chat). Umumiy xonalar matni bilan;
   // shaxsiy yozishmalarning faqat soni (matni serverdan kelmaydi).
@@ -4882,6 +4979,8 @@ function render(){
     {k:"fak",    n:"🏰 Fakultet", t:{sortst:1, house:1, wand:1}},
     {k:"taklif", n:"🤝 Taklif",   t:{invited:1, refwin:1, share:1, src:1}},
     {k:"musiqa", n:"🎵 Musiqa",   t:{mdl:1, mplay:1}},
+    {k:"kitob",  n:"📖 Kitob",    t:{kread:1, kdl:1, kbuy:1}},
+    {k:"dars",   n:"🎓 Dars",     t:{dars:1, bell:1}},
     {k:"yol",    n:"🧭 Yo'l",     t:{onb:1}}
   ];
   var lHolat = {tur:"all", q:""}, lSoni = 150;
@@ -4992,6 +5091,7 @@ function render(){
     kino: s.films,
     kanal: s.left + s.blocked,
     musiqa: mzSon,
+    kitob: ktO.length + ktY.length + ktS.length,
     chat: chSon,
     lenta: rows.length
   });
@@ -5648,7 +5748,7 @@ function demoRows(){
       else if(roll < .68) p = "house_" + pick(["gryffindor","slytherin","ravenclaw","hufflepuff"]);
       else if(roll < .72) p = "wand_holly_phoenix_supple";
       else if(roll < .74) p = "patronus_" + pick(["stag","cat","otter","doe","hare","dog","swan","wolf","fox","phoenix"]);
-      else if(roll < .76) p = "share_hp3_uz";
+      else if(roll < .76) p = d > 6 ? "share_hp3_uz" : pick(["read_kt1_en","read_kt1_en","read_kt2_en","book_kt1_en_pdf","buy_book_kt2","read_kt3_en","dars_afsun_3","bellashuv_iksir"]);
       else if(roll < .80) p = "src_" + pick(["kanal","marvel","kino","instagram"]);
       else if(roll < .84) p = "invited_7100000123";
       else if(roll < .87) p = "ref_awarded";
@@ -5738,7 +5838,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -5755,7 +5855,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -5795,11 +5895,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
