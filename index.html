@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=4473abfa">
+<link rel="stylesheet" href="css/app.css?v=4ca65ca7">
 </head>
 <body>
 <div class="shell">
@@ -106,6 +106,34 @@
       <div class="qs-list" id="qs-list"></div>
       <p id="qs-note"></p>
       <button class="hub-sheet-close" type="button" id="qs-close"></button>
+    </div>
+  </div>
+
+  <!-- Kitob o'qish: sozlamalar va mundarija/xatcho'p/qidiruv oynalari (js/07-kitob-matn.js) -->
+  <div id="km-set" class="hub-sheet hidden">
+    <div class="hub-sheet-box km-box">
+      <h3 id="km-set-ttl"></h3>
+      <span class="pm-lbl" id="km-l-mode"></span>
+      <div class="km-seg"><button type="button" id="km-m-text"></button><button type="button" id="km-m-flip"></button><button type="button" id="km-m-scroll"></button></div>
+      <div id="km-only-text">
+        <span class="pm-lbl" id="km-l-size"></span>
+        <div class="km-size"><button type="button" id="km-size-m">A−</button><b id="km-size-n"></b><button type="button" id="km-size-p">A+</button></div>
+        <span class="pm-lbl" id="km-l-theme"></span>
+        <div class="km-ths"><button type="button" id="km-th-tun" class="km-th t-tun"><i>Aa</i><span></span></button><button type="button" id="km-th-sepia" class="km-th t-sepia"><i>Aa</i><span></span></button><button type="button" id="km-th-kun" class="km-th t-kun"><i>Aa</i><span></span></button></div>
+        <span class="pm-lbl" id="km-l-font"></span>
+        <div class="km-seg"><button type="button" id="km-ff-serif" class="f-serif"></button><button type="button" id="km-ff-sans"></button></div>
+        <span class="pm-lbl" id="km-l-gap"></span>
+        <div class="km-seg km-lh"><button type="button" id="km-lh-0"><i></i><i></i><i></i></button><button type="button" id="km-lh-1"><i></i><i></i><i></i></button><button type="button" id="km-lh-2"><i></i><i></i><i></i></button></div>
+      </div>
+      <button class="hub-sheet-close" type="button" id="km-set-close"></button>
+    </div>
+  </div>
+  <div id="km-nav" class="hub-sheet hidden">
+    <div class="hub-sheet-box km-box">
+      <div class="km-seg km-tabs"><button type="button" id="km-tab-toc"></button><button type="button" id="km-tab-marks"></button><button type="button" id="km-tab-find"></button></div>
+      <div class="km-find hidden" id="km-find"><input type="search" id="km-find-in" autocomplete="off" enterkeyhint="search"><button type="button" id="km-find-go"></button></div>
+      <div class="km-list" id="km-nav-list"></div>
+      <button class="hub-sheet-close" type="button" id="km-nav-close"></button>
     </div>
   </div>
 
@@ -250,10 +278,11 @@
     <div class="kr-top">
       <button class="back-btn" id="kr-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
       <span class="kr-t" id="kr-t"></span>
-      <span class="kr-zoom"><button type="button" id="kr-minus" aria-label="−">−</button><button type="button" id="kr-plus" aria-label="+">+</button><button type="button" id="kr-mode" aria-label="mode"></button></span>
+      <span class="kr-zoom"><button type="button" id="kr-minus" aria-label="−">−</button><button type="button" id="kr-plus" aria-label="+">+</button><button type="button" id="kr-mark" aria-label="bookmark"></button><button type="button" id="kr-nav" aria-label="contents"></button><button type="button" id="kr-aa" aria-label="settings"></button></span>
     </div>
     <div class="kr-load hidden" id="kr-load"></div>
     <div class="kr-flip" id="kr-flip"></div>
+    <div class="kr-text" id="kr-text"><div class="km-flow" id="km-flow"></div></div>
     <div class="kr-wrap"><div class="kr-pages" id="kr-pages"></div></div>
     <div class="kr-bar hidden" id="kr-bar"><input type="range" id="kr-range" min="1" max="1" value="1" step="1"><b id="kr-pg"></b></div>
   </div>
@@ -1238,13 +1267,14 @@
 <script src="js/05-umumiy.js?v=f5f0a218"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
 <script src="js/07-kutubxona.js?v=1b9c00fa"></script>
-<script src="js/07-kitoblar.js?v=b8d68660"></script>
+<script src="js/07-kitoblar.js?v=507bd34d"></script>
+<script src="js/07-kitob-matn.js?v=499be9d0"></script>
 <script src="js/08-saralash.js?v=d754a902"></script>
 <script src="js/09-sehrli-olam.js?v=816ed57a"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=2c6e08a0"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=44e74cf1"></script>
+<script src="js/13-orqaga.js?v=3ee0f33c"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
 

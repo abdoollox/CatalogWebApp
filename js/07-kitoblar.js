@@ -555,6 +555,7 @@
     Object.keys(krFp).forEach(krFlipDrop);
     krAnim = false;
     krDrag = null;
+    kmReset();
   }
 
   function krStart() {
@@ -583,7 +584,9 @@
             var v1 = p1.getViewport({ scale: 1 });
             // Ba'zi fayllarda 1-bet - jildning yon tomoni (tor tasma): o'qishda ko'rsatilmaydi
             krFirst = (krN > 2 && v1.width / v1.height < krRatio * 0.6) ? 2 : 1;
-            krReady();
+            // Mundarija va matn bor-yo'qligi (js/07-kitob-matn.js); xato bo'lsa ham kitob ochiladi
+            return kmPrep().then(function () { if (gen === krGen) { krReady(); } },
+                                 function () { if (gen === krGen) { krReady(); } });
           });
         });
       })["catch"](function () { if (gen === krGen) { krMsg(x.rfail, true); } });
@@ -597,9 +600,10 @@
     rng.max = krN;
     $("kr-bar").classList.remove("hidden");
     krSet(Math.min(Math.max(ktBet(krId, krLang) || krFirst, krFirst), krN));
+    if (krMode === "text" && !kmHasText) { krMode = "flip"; }       // skaner fayl: matn rejimi yo'q
     krModeApply();
     try {
-      if (krMode === "flip" && !window.localStorage.getItem("hp_kt_hint")) {
+      if (krMode !== "scroll" && !window.localStorage.getItem("hp_kt_hint")) {
         window.localStorage.setItem("hp_kt_hint", "1");
         showToast(ktX().swipe);
       }
@@ -607,11 +611,9 @@
   }
 
   /* --- varaqlash: bitta bet ekranda, barmoq bilan surilsa bet buriladi --- */
-  var KR_ICON = {
-    scroll: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l4.5 5.5h-3v8h3L12 21.5 7.5 16h3V8h-3z"/></svg>'
-  };
-  var krMode = "flip", krFirst = 1, krRatio = 0.65, krFp = {}, krAnim = false, krDrag = null;
-  try { if (window.localStorage.getItem("hp_kt_mode") === "scroll") { krMode = "scroll"; } } catch (e) {}
+  // Rejimlar: "text" - qayta terilgan matn (asosiy), "flip" - asl sahifa varaqlab, "scroll" - asl sahifa pastga surib
+  var krMode = "text", krFirst = 1, krRatio = 0.65, krFp = {}, krAnim = false, krDrag = null;
+  try { var krSaqlangan = window.localStorage.getItem("hp_kt_rejim"); if (/^(text|flip|scroll)$/.test(krSaqlangan || "")) { krMode = krSaqlangan; } } catch (e) {}
 
   function krFlipBox(el, ratio) {
     var st = $("kr-flip"), W = st.clientWidth || 320, H = st.clientHeight || 480;
@@ -746,29 +748,34 @@
   }
 
   function krModeApply() {
-    var flip = krMode === "flip";
-    $("scr-oqish").classList.toggle("kr-flipm", flip);
-    $("kr-mode").innerHTML = flip ? KR_ICON.scroll : KT_ICON.book;
+    var scr = $("scr-oqish");
+    scr.classList.toggle("kr-flipm", krMode === "flip");
+    scr.classList.toggle("kr-textm", krMode === "text");
     try { if (krIO) { krIO.disconnect(); } } catch (e) {}
     krIO = null;
     krQueue = [];
     krNear = {};
     $("kr-pages").innerHTML = "";
+    $("km-flow").innerHTML = "";
     Object.keys(krFp).forEach(krFlipDrop);
     if (!krDoc) { return; }
-    if (flip) {
-      try { window.scrollTo(0, 0); } catch (e) {}
+    $("kr-t").textContent = ktName(krId);
+    if (krMode !== "scroll") { try { window.scrollTo(0, 0); } catch (e) {} }
+    if (krMode === "flip") {
       krFlipSize();
       krFlipLay();
+    } else if (krMode === "text") {
+      kmShow();
     } else {
       krBuild();
     }
   }
 
-  function krModeToggle() {
-    if (krAnim) { return; }
-    krMode = krMode === "flip" ? "scroll" : "flip";
-    try { window.localStorage.setItem("hp_kt_mode", krMode); } catch (e) {}
+  function krModeSet(m) {
+    if (krAnim || m === krMode || !krDoc) { return; }
+    if (m === "text" && !kmHasText) { return; }
+    krMode = m;
+    try { window.localStorage.setItem("hp_kt_rejim", krMode); } catch (e) {}
     krModeApply();
   }
 
@@ -777,7 +784,7 @@
     n = Math.min(Math.max(n, krFirst), krN);
     krSet(n);
     ktBet(krId, krLang, n);
-    if (krMode === "flip") { krFlipLay(); } else { krJump(n); }
+    if (krMode === "flip") { krFlipLay(); } else if (krMode === "text") { kmGoPage(n); } else { krJump(n); }
   }
 
   /* --- pastga surib o'qish (ikkinchi rejim) --- */
@@ -823,6 +830,7 @@
     krCur = n;
     $("kr-pg").textContent = ktX().pg(n, krN);
     $("kr-range").value = n;
+    kmMarkIcon();
   }
 
   // Hozir o'qilayotgan sahifa: ekran tepasidan biroz pastdagi chiziqni kesib turgani
@@ -914,7 +922,6 @@
     $("kr-range").addEventListener("change", function () {
       krGo(parseInt(this.value, 10) || 1);
     });
-    $("kr-mode").addEventListener("click", krModeToggle);
     var st = $("kr-flip");
     if (window.PointerEvent) {
       st.addEventListener("pointerdown", krFlipDown);

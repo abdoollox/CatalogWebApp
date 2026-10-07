@@ -23,6 +23,8 @@
     ["chat-people", "chat-people-back"],
     ["hub-set", "hub-set-close"],
     ["qs", "qs-close"],
+    ["km-set", "km-set-close"],
+    ["km-nav", "km-nav-close"],
     ["w-set", "w-set-close"]
   ];
 
