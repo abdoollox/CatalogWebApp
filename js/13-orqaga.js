@@ -18,6 +18,7 @@
   var BACK_PANELS = [
     ["hpask", "hpask-no"],
     ["nsh", "nsh-ok"],
+    ["odam", "odam-close"],
     ["chess-promo", function () { closePromo(); }],
     ["lt", "lt-later"],
     ["chat-people", "chat-people-back"],
