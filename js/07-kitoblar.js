@@ -56,7 +56,7 @@
           poorT: "Galleon yetmaydi", outT: "Kitob galleonga ochiladi",
           poor: function (n, bor) { return "Kitob " + n + " galleon turadi, sizda " + bor + " galleon bor.\n\nGalleon shunday yig'iladi:\n1. Fakultetingizga ball to'plang: kunlik savol, filmlar, shokolad qurbaqa, shaxmat.\n2. Hafta yakunida har 10 ball uchun 1 galleon beriladi.\n3. Fakultetingiz kubokni yutsa — ikki baravar."; },
           out: function (n) { return "Galleon — Xogvarts puli. Uni shunday olasiz:\n\n1. Boyo'g'li keltirgan Xogvarts maktubini oching va fakultetga tushing (5 daqiqa).\n2. Fakultetingizga ball to'plang.\n3. Har hafta yakunida 10 ball uchun 1 galleon beriladi.\n\nBitta kitob " + n + " galleon turadi va doim ochiq qoladi. Birinchi kitob bepul."; },
-          loading: "Kitob ochilmoqda…", rfail: "Kitob ochilmadi. Internetni tekshirib, qayta urinib ko'ring.", retry: "Qayta urinish",
+          swipe: "Varaqlash uchun betni suring yoki chetini bosing", loading: "Kitob ochilmoqda…", rfail: "Kitob ochilmadi. Internetni tekshirib, qayta urinib ko'ring.", retry: "Qayta urinish",
           pg: function (a, b) { return a + " / " + b; } },
     ru: { shelf: "Книги", cnt: function (n) { return n + " книг"; }, kick: "Библиотека", ttl: "Книга",
           num: function (n) { return "Книга " + n; }, soon: "Скоро", test: "Тест", open: "Открыть",
@@ -72,7 +72,7 @@
           poorT: "Не хватает галлеонов", outT: "Книга открывается за галлеоны",
           poor: function (n, bor) { return "Книга стоит " + n + " галлеонов, у вас " + bor + ".\n\nКак накопить:\n1. Набирайте очки для факультета: вопрос дня, фильмы, шоколадная лягушка, шахматы.\n2. В конце недели за каждые 10 очков выдаётся 1 галлеон.\n3. Если ваш факультет выиграет Кубок — вдвое больше."; },
           out: function (n) { return "Галлеоны — деньги Хогвартса. Получить их можно так:\n\n1. Откройте письмо из Хогвартса, которое принесла сова, и пройдите распределение (5 минут).\n2. Набирайте очки для факультета.\n3. В конце каждой недели за 10 очков выдаётся 1 галлеон.\n\nОдна книга стоит " + n + " галлеонов и остаётся открытой навсегда. Первая книга бесплатная."; },
-          loading: "Книга открывается…", rfail: "Книга не открылась. Проверьте интернет и попробуйте ещё раз.", retry: "Повторить",
+          swipe: "Листайте: проведите по странице или нажмите на её край", loading: "Книга открывается…", rfail: "Книга не открылась. Проверьте интернет и попробуйте ещё раз.", retry: "Повторить",
           pg: function (a, b) { return a + " / " + b; } },
     en: { shelf: "Books", cnt: function (n) { return n + " books"; }, kick: "Library", ttl: "Book",
           num: function (n) { return "Book " + n; }, soon: "Coming soon", test: "Test", open: "Open",
@@ -88,7 +88,7 @@
           poorT: "Not enough Galleons", outT: "Books are unlocked with Galleons",
           poor: function (n, bor) { return "The book costs " + n + " Galleons, you have " + bor + ".\n\nHow to save up:\n1. Earn points for your house: the daily question, films, the Chocolate Frog, chess.\n2. At the end of the week you get 1 Galleon per 10 points.\n3. If your house wins the Cup you get double."; },
           out: function (n) { return "Galleons are Hogwarts money. Here is how to get them:\n\n1. Open the Hogwarts letter the owl brought and get sorted into a house (5 minutes).\n2. Earn points for your house.\n3. At the end of every week you get 1 Galleon per 10 points.\n\nOne book costs " + n + " Galleons and stays unlocked forever. The first book is free."; },
-          loading: "Opening the book…", rfail: "The book didn't open. Check your connection and try again.", retry: "Try again",
+          swipe: "Swipe the page or tap its edge to turn it", loading: "Opening the book…", rfail: "The book didn't open. Check your connection and try again.", retry: "Try again",
           pg: function (a, b) { return a + " / " + b; } }
   };
   var KT_ICON = {
@@ -124,11 +124,9 @@
 
   // Mahalliy ko'rikda server yo'q - namuna (bitta ochiq, ikkita qulflangan kitob)
   function ktSample() {
-    return { ok: true, price: 3, gal: 2, key: "", test: true, books: [
-      { id: "kt1", year: 1997, free: true, open: true, files: { en: { pdf: { size: 2516582, read: true } } } },
-      { id: "kt2", year: 1998, free: false, open: false, files: { en: { pdf: { size: 3460300, read: true }, epub: { size: 912000, read: false } } } },
-      { id: "kt3", year: 1999, free: false, open: false, files: { en: { pdf: { size: 28311552, read: false } }, ru: { pdf: { size: 4100000, read: true } } } }
-    ] };
+    return { ok: true, price: 3, gal: 2, key: "", test: true, books: KT_ORDER.map(function (id, i) {
+      return { id: id, year: KT_YEAR[id], free: i === 0, open: i === 0, files: { en: { pdf: { size: 1100000 + i * 300000, read: true } } } };
+    }) };
   }
 
   function ktLoad() {
@@ -159,22 +157,19 @@
   function ktCover(id, big) {
     var c = document.createElement("span");
     c.className = "kt-cov" + (big ? " big" : "");
-    c.innerHTML = '<i class="kt-spine"></i><b class="kt-n"></b><span class="kt-plate"><img alt="" loading="lazy" decoding="async"></span><i class="kt-orn"></i>';
-    c.querySelector(".kt-n").textContent = NUMERALS[ktNum(id) - 1];
-    var im = c.querySelector("img");
-    // Rasm hali chizilmagan bo'lsa - o'rnida oltin kitob belgisi
-    im.onerror = function () { var pl = im.parentNode; if (pl) { pl.classList.add("bosh"); pl.innerHTML = KT_ICON.book; } };
+    var im = document.createElement("img");
+    im.alt = "";
+    im.decoding = "async";
     im.src = ktArt(id);
+    c.appendChild(im);
     return c;
   }
 
   /* --- kutubxona javoni ---
      Kitoblar javonda TIK turadi (yon tomoni ko'rinadi). Bosilgan kitob javondan chiqib, muqovasi bilan
      buriladi (3D), ostida nomi va tugma chiqadi; yana bosilsa yoki tugma bosilsa - kitob sahifasi. */
-  var KT_LOOK = {            // har kitobning jild rangi va bo'yi (px)
-    kt1: ["#5a1d22", "#2c0d10", 148], kt2: ["#1f4a34", "#0e2419", 158], kt3: ["#27365f", "#111a33", 144],
-    kt4: ["#6b4a1c", "#33220b", 162], kt5: ["#1f4650", "#0d2228", 168], kt6: ["#40285a", "#1d1230", 154],
-    kt7: ["#3a3a3f", "#17171b", 164]
+  var KT_LOOK = {            // jild yonining eni (bo'yiga nisbatan) - kitob qalinligi, rasmning o'zidan
+    kt1: 0.1107, kt2: 0.1268, kt3: 0.1357, kt4: 0.2536, kt5: 0.2536, kt6: 0.2446, kt7: 0.2054
   };
   var ktSel = null;
 
@@ -228,20 +223,17 @@
     var row = document.createElement("div");
     row.className = "kt-books";
     KT_ORDER.forEach(function (id) {
-      var st = ktState(id), look = KT_LOOK[id];
+      var st = ktState(id);
       var bk = document.createElement("button");
       bk.type = "button";
       bk.className = "kt-bk" + (st ? " " + st : "");
       bk.setAttribute("data-id", id);
       bk.setAttribute("aria-label", ktName(id));
-      bk.style.setProperty("--h", look[2] + "px");
-      bk.style.setProperty("--c1", look[0]);
-      bk.style.setProperty("--c2", look[1]);
+      bk.style.setProperty("--r", String(KT_LOOK[id]));
       var sp = document.createElement("span");
       sp.className = "kt-sp";
-      sp.innerHTML = '<b class="kt-sp-n"></b><span class="kt-sp-t"></span><i class="kt-sp-f"></i>';
-      sp.querySelector(".kt-sp-n").textContent = NUMERALS[ktNum(id) - 1];
-      sp.querySelector(".kt-sp-t").textContent = ktName(id).replace(/^The /, "");
+      sp.innerHTML = '<img alt="" decoding="async"><i class="kt-sp-f"></i>';
+      sp.querySelector("img").src = IMG_DIR + "kitob/" + id + "-yon.webp";
       if (st === "lock") { sp.querySelector(".kt-sp-f").innerHTML = MS_ICON.lock; }
       var fc = document.createElement("span");
       fc.className = "kt-fc";
@@ -281,13 +273,6 @@
 
     // Boshida: oxirgi tanlangan, bo'lmasa fayli bor birinchi kitob
     ktPick(ktSel && KT_LOOK[ktSel] ? ktSel : list[0].id, sec, true);
-    // Uzun nom jild yoniga sig'masa - harfi kichrayadi (javon sahifaga qo'yilgach o'lchanadi)
-    setTimeout(function () {
-      Array.prototype.forEach.call(sec.querySelectorAll(".kt-sp-t"), function (el) {
-        var fs = 13;
-        while (fs > 8.5 && el.scrollHeight > el.clientHeight + 1) { fs -= 0.5; el.style.fontSize = fs + "px"; }
-      });
-    }, 0);
     return sec;
   }
 
@@ -567,6 +552,9 @@
     krBusy = false;
     krNear = {};
     $("kr-pages").innerHTML = "";
+    Object.keys(krFp).forEach(krFlipDrop);
+    krAnim = false;
+    krDrag = null;
   }
 
   function krStart() {
@@ -586,16 +574,215 @@
         if (gen !== krGen) { try { doc.destroy(); } catch (e) {} return; }
         krDoc = doc;
         krN = doc.numPages;
-        return doc.getPage(1).then(function (pg) {
+        return doc.getPage(Math.min(4, krN)).then(function (pg) {
           if (gen !== krGen) { return; }
           var vp = pg.getViewport({ scale: 1 });
-          krBuild(vp.width / vp.height);
+          krRatio = vp.width / vp.height;
+          return doc.getPage(1).then(function (p1) {
+            if (gen !== krGen) { return; }
+            var v1 = p1.getViewport({ scale: 1 });
+            // Ba'zi fayllarda 1-bet - jildning yon tomoni (tor tasma): o'qishda ko'rsatilmaydi
+            krFirst = (krN > 2 && v1.width / v1.height < krRatio * 0.6) ? 2 : 1;
+            krReady();
+          });
         });
       })["catch"](function () { if (gen === krGen) { krMsg(x.rfail, true); } });
     });
   }
 
-  function krBuild(ratio) {
+  function krReady() {
+    krMsg("", false);
+    var rng = $("kr-range");
+    rng.min = krFirst;
+    rng.max = krN;
+    $("kr-bar").classList.remove("hidden");
+    krSet(Math.min(Math.max(ktBet(krId, krLang) || krFirst, krFirst), krN));
+    krModeApply();
+    try {
+      if (krMode === "flip" && !window.localStorage.getItem("hp_kt_hint")) {
+        window.localStorage.setItem("hp_kt_hint", "1");
+        showToast(ktX().swipe);
+      }
+    } catch (e) {}
+  }
+
+  /* --- varaqlash: bitta bet ekranda, barmoq bilan surilsa bet buriladi --- */
+  var KR_ICON = {
+    scroll: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l4.5 5.5h-3v8h3L12 21.5 7.5 16h3V8h-3z"/></svg>'
+  };
+  var krMode = "flip", krFirst = 1, krRatio = 0.65, krFp = {}, krAnim = false, krDrag = null;
+  try { if (window.localStorage.getItem("hp_kt_mode") === "scroll") { krMode = "scroll"; } } catch (e) {}
+
+  function krFlipBox(el, ratio) {
+    var st = $("kr-flip"), W = st.clientWidth || 320, H = st.clientHeight || 480;
+    var w = Math.min(W, H * ratio), h = w / ratio;
+    el.style.width = w + "px";
+    el.style.height = h + "px";
+    el.style.left = ((W - w) / 2) + "px";
+    el.style.top = ((H - h) / 2) + "px";
+  }
+
+  function krFlipEl(n) {
+    if (n < krFirst || n > krN || !krDoc) { return null; }
+    if (krFp[n]) { return krFp[n]; }
+    var el = document.createElement("div");
+    el.className = "kr-fp";
+    el.innerHTML = '<i class="kr-fsh"></i>';
+    krFlipBox(el, krRatio);
+    $("kr-flip").appendChild(el);
+    krFp[n] = el;
+    var gen = krGen;
+    krDoc.getPage(n).then(function (pg) {
+      if (gen !== krGen || krFp[n] !== el) { return; }
+      var base = pg.getViewport({ scale: 1 });
+      krFlipBox(el, base.width / base.height);
+      var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      var scale = ((parseFloat(el.style.width) || 320) * dpr) / base.width;
+      var px = base.width * scale * base.height * scale;
+      if (px > 5200000) { scale *= Math.sqrt(5200000 / px); }
+      var vp = pg.getViewport({ scale: scale });
+      var c = document.createElement("canvas");
+      c.width = Math.floor(vp.width);
+      c.height = Math.floor(vp.height);
+      return pg.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise.then(function () {
+        try { pg.cleanup(); } catch (e) {}
+        if (gen !== krGen || krFp[n] !== el) { c.width = 0; c.height = 0; return; }
+        el.insertBefore(c, el.firstChild);
+      });
+    })["catch"](function () {});
+    return el;
+  }
+
+  // p: 0 - bet tekis yotibdi, 1 - to'liq burilib ketgan
+  function krTurn(el, p, anim) {
+    if (!el) { return; }
+    el.style.transition = anim ? "transform .42s cubic-bezier(.3,.7,.3,1),opacity .42s" : "none";
+    el.style.transform = "rotateY(" + (-118 * p) + "deg)";
+    el.style.opacity = p > 0.82 ? String(Math.max(0, (1 - p) / 0.18)) : "1";
+    var sh = el.querySelector(".kr-fsh");
+    if (sh) { sh.style.transition = anim ? "opacity .42s" : "none"; sh.style.opacity = String(Math.min(0.55, p * 0.9)); }
+  }
+
+  function krFlipDrop(k) {
+    var el = krFp[k];
+    if (!el) { return; }
+    var c = el.querySelector("canvas");
+    if (c) { c.width = 0; c.height = 0; }
+    if (el.parentNode) { el.parentNode.removeChild(el); }
+    delete krFp[k];
+  }
+
+  function krFlipLay() {
+    Object.keys(krFp).forEach(function (k) { if (Math.abs(parseInt(k, 10) - krCur) > 2) { krFlipDrop(k); } });
+    [0, 1, -1, 2].forEach(function (d) {
+      var n = krCur + d, el = krFlipEl(n);
+      if (!el) { return; }
+      el.style.zIndex = d < 0 ? "4" : String(3 - d);
+      krTurn(el, d < 0 ? 1 : 0, false);
+    });
+  }
+
+  function krFlipGo(dir) {
+    if (krAnim || !krDoc) { return; }
+    var n = krCur + dir;
+    if (n < krFirst || n > krN) { return; }
+    var el = dir > 0 ? krFp[krCur] : krFlipEl(n);
+    if (!el) { return; }
+    krAnim = true;
+    var gen = krGen;
+    // bitta kadr kutamiz: bet hozirgi holatidan silliq harakatlansin
+    setTimeout(function () { krTurn(el, dir > 0 ? 1 : 0, true); }, 20);
+    setTimeout(function () {
+      krAnim = false;
+      if (gen !== krGen) { return; }
+      krSet(n);
+      ktBet(krId, krLang, n);
+      krFlipLay();
+    }, 470);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+  }
+
+  function krFlipDown(ev) {
+    if (krAnim || !krDoc || krMode !== "flip") { return; }
+    krDrag = { x: ev.clientX, y: ev.clientY, dir: 0, p: 0 };
+  }
+
+  function krFlipMove(ev) {
+    var d = krDrag;
+    if (!d || krAnim) { return; }
+    var dx = ev.clientX - d.x, W = $("kr-flip").clientWidth || 320;
+    if (!d.dir) {
+      if (Math.abs(dx) < 10) { return; }
+      d.dir = dx < 0 ? 1 : -1;
+      var n = krCur + d.dir;
+      if (n < krFirst || n > krN) { d.dir = 2; }                 // chetda - burilmaydi
+      d.el = d.dir === 1 ? krFp[krCur] : d.dir === -1 ? krFlipEl(krCur - 1) : null;
+    }
+    if (!d.el) { return; }
+    var f = Math.min(1, Math.max(0, Math.abs(dx) / W * 1.25));
+    if ((d.dir === 1 && dx > 0) || (d.dir === -1 && dx < 0)) { f = 0; }
+    d.p = d.dir === 1 ? f : 1 - f;
+    krTurn(d.el, d.p, false);
+  }
+
+  function krFlipUp(ev) {
+    var d = krDrag;
+    krDrag = null;
+    if (!d || krAnim) { return; }
+    if (!d.dir) {                                                // bosish: o'ng tomon - keyingi, chap - oldingi
+      var st = $("kr-flip").getBoundingClientRect(), fx = (ev.clientX - st.left) / (st.width || 1);
+      if (Math.abs(ev.clientY - d.y) > 12) { return; }
+      if (fx > 0.6) { krFlipGo(1); } else if (fx < 0.4) { krFlipGo(-1); }
+      return;
+    }
+    if (!d.el) { return; }
+    if (d.dir === 1) { if (d.p > 0.2) { krFlipGo(1); } else { krTurn(d.el, 0, true); } }
+    else { if (d.p < 0.8) { krFlipGo(-1); } else { krTurn(d.el, 1, true); } }
+  }
+
+  function krFlipSize() {
+    var st = $("kr-flip");
+    st.style.height = Math.max(260, (window.innerHeight || 640) - 156) + "px";
+  }
+
+  function krModeApply() {
+    var flip = krMode === "flip";
+    $("scr-oqish").classList.toggle("kr-flipm", flip);
+    $("kr-mode").innerHTML = flip ? KR_ICON.scroll : KT_ICON.book;
+    try { if (krIO) { krIO.disconnect(); } } catch (e) {}
+    krIO = null;
+    krQueue = [];
+    krNear = {};
+    $("kr-pages").innerHTML = "";
+    Object.keys(krFp).forEach(krFlipDrop);
+    if (!krDoc) { return; }
+    if (flip) {
+      try { window.scrollTo(0, 0); } catch (e) {}
+      krFlipSize();
+      krFlipLay();
+    } else {
+      krBuild();
+    }
+  }
+
+  function krModeToggle() {
+    if (krAnim) { return; }
+    krMode = krMode === "flip" ? "scroll" : "flip";
+    try { window.localStorage.setItem("hp_kt_mode", krMode); } catch (e) {}
+    krModeApply();
+  }
+
+  // Betga o'tish (surgich): ikkala rejimda
+  function krGo(n) {
+    n = Math.min(Math.max(n, krFirst), krN);
+    krSet(n);
+    ktBet(krId, krLang, n);
+    if (krMode === "flip") { krFlipLay(); } else { krJump(n); }
+  }
+
+  /* --- pastga surib o'qish (ikkinchi rejim) --- */
+  function krBuild() {
+    var ratio = krRatio;
     var box = $("kr-pages"), frag = document.createDocumentFragment(), i;
     box.innerHTML = "";
     box.style.width = (KR_ZOOMS[krZoom] * 100) + "%";
@@ -604,14 +791,10 @@
       p.className = "kr-p";
       p.setAttribute("data-n", i);
       p.style.paddingTop = (100 / ratio) + "%";       // aspect-ratio eski iPhone'da yo'q
+      if (i < krFirst) { p.style.display = "none"; }
       frag.appendChild(p);
     }
     box.appendChild(frag);
-    krMsg("", false);
-    var rng = $("kr-range");
-    rng.min = 1;
-    rng.max = krN;
-    $("kr-bar").classList.remove("hidden");
     krNear = {};
     if (window.IntersectionObserver) {
       krIO = new IntersectionObserver(function (list) {
@@ -624,9 +807,7 @@
       }, { rootMargin: "120% 0px 120% 0px" });
       Array.prototype.forEach.call(box.children, function (el) { krIO.observe(el); });
     }
-    var start = Math.min(Math.max(ktBet(krId, krLang) || 1, 1), krN);
-    krSet(start);
-    if (start > 1) { krJump(start); }
+    if (krCur > krFirst) { krJump(krCur); } else { try { window.scrollTo(0, 0); } catch (e) {} }
   }
 
   function krPage(n) { return $("kr-pages").children[n - 1] || null; }
@@ -646,7 +827,7 @@
 
   // Hozir o'qilayotgan sahifa: ekran tepasidan biroz pastdagi chiziqni kesib turgani
   function krPos() {
-    if (!krDoc) { return; }
+    if (!krDoc || krMode !== "scroll") { return; }
     var chiziq = (window.innerHeight || 600) * 0.35, best = null, k;
     for (k in krNear) {
       if (!Object.prototype.hasOwnProperty.call(krNear, k)) { continue; }
@@ -706,7 +887,7 @@
 
   function krZoomTo(d) {
     var z = Math.min(Math.max(krZoom + d, 0), KR_ZOOMS.length - 1);
-    if (z === krZoom || !krDoc) { return; }
+    if (z === krZoom || !krDoc || krMode !== "scroll") { return; }
     var n = krCur;
     krZoom = z;
     $("kr-pages").style.width = (KR_ZOOMS[z] * 100) + "%";
@@ -731,10 +912,26 @@
     $("kr-plus").addEventListener("click", function () { krZoomTo(1); });
     $("kr-range").addEventListener("input", function () { $("kr-pg").textContent = ktX().pg(this.value, krN); });
     $("kr-range").addEventListener("change", function () {
-      var n = parseInt(this.value, 10) || 1;
-      krSet(n);
-      ktBet(krId, krLang, n);
-      krJump(n);
+      krGo(parseInt(this.value, 10) || 1);
+    });
+    $("kr-mode").addEventListener("click", krModeToggle);
+    var st = $("kr-flip");
+    if (window.PointerEvent) {
+      st.addEventListener("pointerdown", krFlipDown);
+      st.addEventListener("pointermove", krFlipMove);
+      st.addEventListener("pointerup", krFlipUp);
+      st.addEventListener("pointercancel", function () { var d = krDrag; krDrag = null; if (d && d.el) { krTurn(d.el, d.dir === 1 ? 0 : 1, true); } });
+    } else {
+      st.addEventListener("click", function (ev) {
+        var r = st.getBoundingClientRect(), fx = (ev.clientX - r.left) / (r.width || 1);
+        if (fx > 0.6) { krFlipGo(1); } else if (fx < 0.4) { krFlipGo(-1); }
+      });
+    }
+    window.addEventListener("resize", function () {
+      if (!krDoc || krMode !== "flip" || krAnim) { return; }
+      krFlipSize();
+      Object.keys(krFp).forEach(krFlipDrop);
+      krFlipLay();
     });
     window.addEventListener("scroll", function () {
       if (!krDoc || krTick) { return; }
