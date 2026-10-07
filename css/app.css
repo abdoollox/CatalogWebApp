@@ -2561,3 +2561,80 @@ body.kr-on .mp{display:none!important}
 .od-seen.on{color:var(--ok)}
 .od-go{cursor:pointer}
 .od-go:active{opacity:.7}
+
+/* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+.dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
+  border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
+  background:radial-gradient(120% 200% at 0% 0%,rgba(var(--dr-rgb),.16),transparent 60%),#11151c;transition:transform .14s}
+.dr-card:active{transform:scale(.985)}
+.dr-im{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;overflow:hidden;background:rgba(var(--dr-rgb),.16);
+  box-shadow:0 0 0 1px rgba(var(--dr-rgb),.55);font:600 28px/1 'Cormorant Garamond',serif;color:rgb(var(--dr-rgb))}
+.dr-im img{width:100%;height:100%;object-fit:cover}
+.dr-im.bosh img{display:none}
+.dr-tx{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px}
+.dr-tx b{font:600 19px/1.15 'Cormorant Garamond',serif}
+.dr-ust{font:700 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:rgb(var(--dr-rgb))}
+.dr-izoh{font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.dr-chip{flex:none;align-self:flex-start;padding:6px 9px;border-radius:99px;background:rgba(var(--dr-rgb),.18);color:rgb(var(--dr-rgb));
+  font:800 10.5px/1 'Manrope',sans-serif;white-space:nowrap}
+.dr-card.done{border-color:var(--line);background:#11151c}
+.dr-card.done .dr-chip{background:rgba(95,158,122,.18);color:var(--ok)}
+.dr-card.soon{border-color:var(--line);background:#0f1217}
+.dr-card.soon .dr-im,.dr-card.soon .dr-tx{opacity:.5}
+.dr-card.soon .dr-im img{filter:grayscale(.9)}
+.dr-card.soon .dr-chip{background:none;border:1px solid var(--line);color:var(--dim)}
+.dr-head{display:flex;flex-direction:column;align-items:center;text-align:center;margin-top:4px}
+.dr-desc{margin:10px 0 0;padding:0 10px;font:400 13.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.dr-step{display:block;margin:16px 0 8px;text-align:center;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.dr-hint{margin:12px 0 0;min-height:20px;text-align:center;font:600 13.5px/1.45 'Manrope',sans-serif;color:var(--text)}
+.dr-hint.bad{color:#f08c83}
+.dr-link{display:block;margin:10px auto 0;padding:8px 12px;border:0;background:none;color:var(--gold);cursor:pointer;font:700 12px/1 'Manrope',sans-serif;text-decoration:underline}
+.dr-btn{display:block;width:100%;margin-top:16px;padding:16px;border:0;border-radius:99px;cursor:pointer;
+  background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink);font:800 13.5px/1 'Manrope',sans-serif}
+.dr-btn:active{transform:scale(.98)}
+.dr-res{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:22px;padding:22px 18px;border-radius:20px;text-align:center;
+  border:1px solid rgba(var(--gold-rgb),.35);background:radial-gradient(120% 160% at 50% 0%,rgba(var(--gold-rgb),.14),transparent 65%),#11151c}
+.dr-res-t{margin:0;font:500 21px/1.3 'Cormorant Garamond',serif;color:var(--text)}
+.dr-res-p{font:800 16px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.dr-res-s{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.dr-res .dr-btn{margin-top:4px}
+/* Afsunlar: chizish maydoni */
+.af-box{display:flex;justify-content:center}
+#af-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
+  border:1px solid rgba(120,170,240,.35);
+  background:radial-gradient(circle at 50% 45%,rgba(120,170,240,.16),rgba(12,15,20,.2) 70%),#0d1118}
+/* Iksirlar: qozon */
+.ik-pot{--ik:#7fb86a;--ik-h:18%;position:relative;width:170px;height:150px;margin:18px auto 4px}
+.ik-rim{position:absolute;left:4px;right:4px;top:26px;height:22px;border-radius:50%;background:#2a2f3a;box-shadow:inset 0 3px 0 rgba(255,255,255,.12),0 2px 0 #0b0d12;z-index:3}
+.ik-liq{position:absolute;left:10px;right:10px;top:36px;bottom:0;border-radius:14px 14px 80px 80px / 14px 14px 90px 90px;overflow:hidden;
+  background:linear-gradient(180deg,#232833,#12151c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 14px 24px rgba(0,0,0,.5)}
+.ik-liq::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--ik-h);background:linear-gradient(180deg,var(--ik),rgba(0,0,0,.35));
+  box-shadow:0 0 22px var(--ik);transition:height .5s cubic-bezier(.3,.8,.3,1),background .5s;opacity:.9}
+.ik-bub{position:absolute;z-index:4;bottom:52%;width:9px;height:9px;border-radius:50%;background:var(--ik);opacity:0}
+.ik-bub.b1{left:34%}.ik-bub.b2{left:52%;width:6px;height:6px}.ik-bub.b3{left:64%;width:11px;height:11px}
+.ik-pot.qayna .ik-bub{animation:ikBub .8s ease-out}
+.ik-pot.qayna .ik-bub.b2{animation-delay:.12s}.ik-pot.qayna .ik-bub.b3{animation-delay:.22s}
+.ik-pot.tayyor .ik-bub{animation:ikBub 1.4s ease-out infinite}
+.ik-pot.tayyor .ik-bub.b2{animation-delay:.4s}.ik-pot.tayyor .ik-bub.b3{animation-delay:.8s}
+@keyframes ikBub{0%{transform:translateY(0) scale(.6);opacity:.9}100%{transform:translateY(-74px) scale(1.2);opacity:0}}
+.ik-smoke{position:absolute;left:50%;top:0;z-index:5;width:70px;height:70px;margin-left:-35px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,rgba(90,90,100,.85),rgba(60,60,70,0) 70%)}
+.ik-pot.tutun .ik-smoke{animation:ikSmoke .9s ease-out}
+.ik-pot.tutun{animation:ikShake .4s}
+@keyframes ikSmoke{0%{transform:translateY(30px) scale(.5);opacity:.95}100%{transform:translateY(-40px) scale(1.7);opacity:0}}
+@keyframes ikShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ik-rec ol{margin:6px 0 0;padding:14px 16px 14px 40px;border-radius:16px;border:1px solid rgba(110,190,130,.35);background:rgba(110,190,130,.07);
+  font:500 19px/1.6 'Cormorant Garamond',serif;color:var(--text)}
+.ik-rec ol li::marker{font:700 13px 'Manrope',sans-serif;color:#7fc594}
+.ik-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px}
+.ik-chip{padding:14px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;
+  font:600 13px/1.25 'Manrope',sans-serif;text-align:center;transition:transform .12s}
+.ik-chip:active{transform:scale(.97)}
+.ik-chip.in{opacity:.3;border-style:dashed;cursor:default}
+.ik-chip.xato{border-color:#f08c83;color:#f08c83;animation:ikShake .35s}
+#scr-dars .nsh-sum b{font-size:22px}

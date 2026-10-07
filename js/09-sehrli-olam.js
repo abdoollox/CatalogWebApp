@@ -86,6 +86,7 @@
     $("hub-gear").innerHTML = worldIcon("gear");
     try { pmRender(); } catch (e) {}       // sozlama o'rnida profil tugmasi (galleon bilan)
     try { patPaint(); patLoad(); } catch (e) {}   // Patronus testi taklifi (saralangan, hali olmagan bo'lsa)
+    try { drLoad(true); } catch (e) {}            // darslar holati (bosh sahifadagi karta soni)
     try { sqLoad(true); } catch (e) {}            // kunlik sandiq (har ochilganda yangilanadi - kunlik savol serverda ko'rinadi)
     $("hub-kick").textContent = HUB_TX.kick[lang];
     $("hub-title").textContent = HUB_TX.title[lang];
@@ -181,8 +182,14 @@
     var tiles = [
       // Kunlik savol: ro'yxat sahifasisiz, to'g'ridan-to'g'ri savolning o'zi (imtihon olib tashlangach
       // "Vazifalar" ichida faqat shu qolgan edi)
+      // Darslar (egasi, 2026-10-07): kunlik savol o'rnida. Kunlik savol endi "Sehrgarlik tarixi" darsi ichida
+      // (js/09-darslar.js). Saralanmagan odamga - eski kunlik savol.
+      hid === "none" ?
       { key: "tasks", rgb: "232,132,60", title: HUB_TX.dailyT[lang],
-        sub: tasksN > 0 ? HUB_TX.dailyNew[lang] : HUB_TX.dailyDone[lang], badge: tasksN, go: openDaily, self: true },
+        sub: tasksN > 0 ? HUB_TX.dailyNew[lang] : HUB_TX.dailyDone[lang], badge: tasksN, go: openDaily, self: true } :
+      { key: "tasks", rgb: "232,132,60", title: drX().tile,
+        sub: drPending() < 0 ? (tasksN > 0 ? drX().tileNew(tasksN) : drX().tileDone) : (drPending() > 0 ? drX().tileNew(drPending()) : drX().tileDone),
+        badge: drPending() < 0 ? tasksN : drPending(), go: drOpen },
       { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
       { key: "chess", rgb: "165,127,224", title: c.chessT,
         sub: hubChess && hubChess.rating ? HUB_TX.rating[lang].replace("%d", hubChess.rating) : HUB_TX.chessNone[lang],
@@ -224,10 +231,11 @@
     if (!hasHouse()) { jrHome(); return; }
     // Shokolad qurbaqa topshirig'idan qaytish: "ortga" topshiriqlar ro'yxatiga olib boradi (egasi, 2026-10-05)
     try { if (sqBack()) { return; } } catch (e) {}
+    try { if (drBack()) { return; } } catch (e) {}      // darsdan (kunlik savol) qaytish - darslar ro'yxatiga
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
