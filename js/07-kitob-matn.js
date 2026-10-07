@@ -141,9 +141,19 @@
     var doc = krDoc;
     return doc.getPage(n).then(function (pg) {
       var vp = pg.getViewport({ scale: 1 }), H = vp.height;
-      var shrift = function () { return pg.getTextContent(); };
-      // getOperatorList shriftlarning haqiqiy nomini yuklaydi (kursivni bilish uchun)
-      return pg.getOperatorList().then(shrift, shrift).then(function (tc) {
+      var rasmBor = false;
+      var shrift = function (ol) {
+        // Betda rasm bormi (muqova) yoki u shunchaki bo'sh oq betmi - bo'sh bet matn rejimida ko'rsatilmaydi
+        try {
+          var OPS = (window.pdfjsLib || window["pdfjs-dist/build/pdf"] || {}).OPS || {};
+          var rasm = [OPS.paintImageXObject || 85, OPS.paintJpegXObject || 82, OPS.paintInlineImageXObject || 86,
+                      OPS.paintImageXObjectRepeat || 88, OPS.paintImageMaskXObject || 83];
+          rasmBor = !!(ol && ol.fnArray) && Array.prototype.some.call(ol.fnArray, function (f) { return rasm.indexOf(f) >= 0; });
+        } catch (e) { rasmBor = false; }
+        return pg.getTextContent();
+      };
+      // getOperatorList shriftlarning haqiqiy nomini ham yuklaydi (kursivni bilish uchun)
+      return pg.getOperatorList().then(shrift, function () { return shrift(null); }).then(function (tc) {
         var rows = [], ital = {};
         (tc.items || []).forEach(function (it) {
           if (!it.str) { return; }
@@ -186,7 +196,7 @@
           r.text = parts.map(function (p) { return p.s; }).join("").replace(/\s+/g, " ").trim();
           delete r.segs;
         });
-        var res = { rows: rows, img: rows.length === 0, ratio: vp.width / vp.height };
+        var res = { rows: rows, img: rows.length === 0 && rasmBor, ratio: vp.width / vp.height };
         if (!xom) { kmCache[n] = res; }
         return res;
       });
@@ -202,6 +212,7 @@
     ps.forEach(function (pn) {
       chain = chain.then(function () { return kmLines(pn); }).then(function (pg) {
         if (pg.img) { blocks.push({ k: "img", p: pn, ratio: pg.ratio }); cur = null; return; }
+        if (!pg.rows.length) { return; }                        // bo'sh oq bet - tashlab ketiladi
         var birinchi = true;
         pg.rows.forEach(function (r) {
           var chap = r.x - kmL, ong = kmR - r.r;
@@ -358,6 +369,11 @@
       clearTimeout(kut);
       kmBusy = false;
       if (gen !== krGen || my !== kmGenLocal || krMode !== "text") { return; }
+      if (!blocks.length) {
+        // Bo'lim butunlay bo'sh betlardan iborat: yo'nalish bo'yicha keyingisiga o'tamiz
+        var qoshni = (qayer && qayer.oxir) ? i - 1 : i + 1;
+        if (kmToc[qoshni]) { kmOpenSec(qoshni, (qayer && qayer.oxir) ? { oxir: true } : null); return; }
+      }
       krMsg("", false);
       kmSec = i;
       kmRender(blocks);
