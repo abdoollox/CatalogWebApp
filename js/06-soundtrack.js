@@ -920,6 +920,10 @@
     var msSec = msShelf();
     if (msSec) { rows.appendChild(msSec); }
 
+    // Kitoblar javoni (fayllar serverda bo'lsa; js/07-kitoblar.js)
+    var ktSec = ktShelf();
+    if (ktSec) { rows.appendChild(ktSec); }
+
     // Kutubxonaning bo'sh javonlari: seriallar, musiqa, kitoblar.
     var soon = document.createElement("div");
     soon.className = "rowsec";
@@ -932,7 +936,7 @@
 
     var tiles = document.createElement("div");
     tiles.className = "soonrow";
-    var soonItems = SOON_TILES.filter(function (item) { return !(item.key === "music" && msSec); });
+    var soonItems = SOON_TILES.filter(function (item) { return !(item.key === "music" && msSec) && !(item.key === "books" && ktSec); });
     tiles.style.gridTemplateColumns = "repeat(" + soonItems.length + ",minmax(0,1fr))";
     soonItems.forEach(function (item) {
       var tile = document.createElement("div");

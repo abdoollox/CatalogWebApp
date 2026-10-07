@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=bc358b0a">
+<link rel="stylesheet" href="css/app.css?v=355fec3a">
 </head>
 <body>
 <div class="shell">
@@ -225,6 +225,36 @@
     </div>
     <div class="nsh-sum"><b id="nsh-sum-n"></b><small id="nsh-sum-s"></small><span class="nsh-bar"><i id="nsh-bar"></i></span></div>
     <div id="nsh-grid"></div>
+  </div>
+
+  <!-- Kitob sahifasi va o'qish oynasi (js/07-kitoblar.js) -->
+  <div id="scr-kitob" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="kt-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="kt-kick"></span><span class="cup-title" id="kt-ttl"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <div class="kt-hero">
+      <span id="kt-cov"></span>
+      <span class="ms-kick" id="kt-num"></span>
+      <h2 class="ms-title" id="kt-name"></h2>
+      <p class="kt-desc" id="kt-desc"></p>
+    </div>
+    <div class="kt-langs" id="kt-langs"></div>
+    <p class="kt-nolang hidden" id="kt-nolang"></p>
+    <div class="kt-acts" id="kt-acts"></div>
+    <div class="ms-buy hidden" id="kt-buy"><button class="ms-buy-b" id="kt-buy-b" type="button"></button><small id="kt-buy-s"></small></div>
+    <p class="ms-hint" id="kt-hint"></p>
+  </div>
+  <div id="scr-oqish" class="screen hidden">
+    <div class="kr-top">
+      <button class="back-btn" id="kr-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <span class="kr-t" id="kr-t"></span>
+      <span class="kr-zoom"><button type="button" id="kr-minus" aria-label="−">−</button><button type="button" id="kr-plus" aria-label="+">+</button></span>
+    </div>
+    <div class="kr-load hidden" id="kr-load"></div>
+    <div class="kr-wrap"><div class="kr-pages" id="kr-pages"></div></div>
+    <div class="kr-bar hidden" id="kr-bar"><input type="range" id="kr-range" min="1" max="1" value="1" step="1"><b id="kr-pg"></b></div>
   </div>
 
   <!-- ==MS== -->
@@ -1205,14 +1235,15 @@
 <script src="js/03-dostlar.js?v=6966ee26"></script>
 <script src="js/04-kubok-oyna.js?v=0bfbb5e1"></script>
 <script src="js/05-umumiy.js?v=f5f0a218"></script>
-<script src="js/06-soundtrack.js?v=d4ffa64d"></script>
-<script src="js/07-kutubxona.js?v=3328617e"></script>
+<script src="js/06-soundtrack.js?v=2f23168c"></script>
+<script src="js/07-kutubxona.js?v=1b9c00fa"></script>
+<script src="js/07-kitoblar.js?v=207bec94"></script>
 <script src="js/08-saralash.js?v=d754a902"></script>
-<script src="js/09-sehrli-olam.js?v=bca91ca4"></script>
+<script src="js/09-sehrli-olam.js?v=816ed57a"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=2c6e08a0"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=e6e29ef6"></script>
+<script src="js/13-orqaga.js?v=44e74cf1"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
 

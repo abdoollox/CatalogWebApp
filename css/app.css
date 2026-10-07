@@ -2347,3 +2347,78 @@ div.pm-row{cursor:default}
 .qs-dubs + .qs-list{margin-top:10px}
 .qs-dubs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
 .qs-dubs button small{font:600 9.5px/1 'Manrope',sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+
+/* ===== KITOBLAR: javon, kitob sahifasi, o'qish oynasi (js/07-kitoblar.js) ===== */
+.kt-card{flex:0 0 33%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;
+  color:var(--text);text-align:left;cursor:pointer;font-family:'Manrope',sans-serif}
+@media (min-width:600px){.kt-card{flex-basis:24%}}
+.kt-card .ms-name{margin-top:2px}
+.kt-cov{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;aspect-ratio:2/3;
+  padding:9% 9% 8% 15%;border-radius:4px 9px 9px 4px;overflow:hidden;transition:transform .14s;
+  background:linear-gradient(100deg,#120a0c 0,#2b1519 9%,#1d0e11 12%,#31181c 55%,#1f0f12 100%);
+  box-shadow:0 8px 18px rgba(0,0,0,.55),inset 0 0 0 1px rgba(var(--gold-rgb),.28),inset -3px 0 0 rgba(0,0,0,.35)}
+.kt-card:active .kt-cov{transform:scale(.97)}
+.kt-spine{position:absolute;left:8.5%;top:0;bottom:0;width:1px;background:rgba(var(--gold-rgb),.35)}
+.kt-n{font:600 15px/1 'Cormorant Garamond',serif;letter-spacing:.14em;color:var(--gold)}
+.kt-plate{display:block;width:100%;aspect-ratio:1/1;border-radius:3px;overflow:hidden;background:#0d0a0c;
+  box-shadow:0 0 0 1px rgba(var(--gold-rgb),.55),0 0 0 3px rgba(0,0,0,.35)}
+.kt-plate img{display:block;width:100%;height:100%;object-fit:cover}
+.kt-orn{display:block;width:34%;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.75),transparent)}
+.kt-card.lock .kt-plate img{filter:brightness(.42) saturate(.7)}
+.kt-card.soon .kt-cov{opacity:.5}
+.kt-card.soon .kt-plate img{filter:grayscale(1) brightness(.5)}
+.kt-card.soon .ms-name,.kt-card.soon .ms-sub{opacity:.55}
+.kt-chip{position:absolute;left:53%;top:50%;transform:translate(-50%,-50%);z-index:3;display:inline-flex;align-items:center;gap:5px;
+  padding:7px 10px;border-radius:99px;background:rgba(8,10,14,.82);border:1px solid rgba(var(--gold-rgb),.5);
+  color:var(--gold-hi);font:800 10.5px/1 'Manrope',sans-serif;white-space:nowrap}
+.kt-chip svg{width:12px;height:12px;flex:none}
+.kt-card.soon .kt-chip{border-color:var(--line);color:var(--dim)}
+
+#scr-kitob .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-kitob .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-kitob .kb-ttl .cup-kick{color:var(--gold)}
+#scr-kitob .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+.kt-hero{display:flex;flex-direction:column;align-items:center;text-align:center}
+#kt-cov{display:block;width:46%;max-width:190px;margin:4px 0 18px}
+.kt-cov.big{border-radius:5px 12px 12px 5px;box-shadow:0 18px 34px rgba(0,0,0,.6),inset 0 0 0 1px rgba(var(--gold-rgb),.34),inset -4px 0 0 rgba(0,0,0,.35)}
+.kt-cov.big .kt-n{font-size:22px}
+.kt-desc{margin:12px 0 0;padding:0 6px;font:400 14px/1.55 'Manrope',sans-serif;color:var(--dim)}
+.kt-langs{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:16px}
+.kt-langs:empty{display:none}
+.kt-lang{padding:9px 14px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--dim);cursor:pointer;
+  font:700 12px/1 'Manrope',sans-serif}
+.kt-lang.on{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.kt-nolang{margin:12px 0 0;text-align:center;font:600 12px/1.4 'Manrope',sans-serif;color:var(--gold)}
+.kt-acts{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.kt-acts:empty{display:none}
+.kt-read,.kt-dl{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:16px 18px;border-radius:99px;cursor:pointer;
+  font:800 13.5px/1 'Manrope',sans-serif;transition:transform .14s}
+.kt-read{border:none;background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink)}
+.kt-dl{border:1px solid rgba(var(--gold-rgb),.45);background:none;color:var(--gold)}
+.kt-read:active,.kt-dl:active{transform:scale(.98)}
+.kt-read svg,.kt-dl svg{width:17px;height:17px;flex:none}
+
+body.kr-on .mp{display:none!important}
+.kr-top{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:var(--btn) 1fr auto;align-items:center;gap:10px;
+  margin:-10px -18px 0;padding:10px 18px;background:rgba(12,15,20,.94);border-bottom:1px solid var(--line)}
+.kr-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font:600 18px/1.2 'Cormorant Garamond',serif}
+.kr-zoom{display:flex;gap:6px}
+.kr-zoom button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--text);cursor:pointer;
+  font:600 19px/1 'Manrope',sans-serif}
+.kr-zoom button:active{transform:scale(.94)}
+.kr-load{display:flex;flex-direction:column;align-items:center;gap:14px;padding:90px 20px;text-align:center}
+.kr-load p{margin:0;font:500 14px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.kr-load .kt-dl{width:auto;padding:13px 22px}
+.kr-spin{width:30px;height:30px;border-radius:50%;border:2px solid rgba(var(--gold-rgb),.25);border-top-color:var(--gold);animation:krSpin 1s linear infinite}
+@keyframes krSpin{to{transform:rotate(360deg)}}
+.kr-wrap{margin:0 -18px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:74px}
+.kr-pages{display:flex;flex-direction:column;gap:6px;min-width:100%}
+.kr-p{position:relative;width:100%;height:0;background:#efe9dc}
+.kr-p canvas{position:absolute;left:0;top:0;display:block;width:100%;height:100%}
+.kr-bar{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;display:flex;align-items:center;gap:12px;
+  margin-top:-62px;padding:12px 16px;border-radius:99px;background:rgba(16,19,26,.95);border:1px solid rgba(var(--gold-rgb),.3);
+  box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.kr-bar input{flex:1 1 auto;min-width:0;accent-color:var(--gold)}
+.kr-bar b{flex:none;font:700 12px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.kt-plate.bosh{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,rgba(var(--gold-rgb),.2),#0d0a0c 72%);color:var(--gold)}
+.kt-plate.bosh svg{width:46%;height:46%}

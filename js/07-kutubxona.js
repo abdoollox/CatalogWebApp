@@ -1206,6 +1206,7 @@
     renderSerial();
     srLoad();
     srBlock();
+    ktLoad();
     renderCards(t);
     renderWorldBtn();
   }
