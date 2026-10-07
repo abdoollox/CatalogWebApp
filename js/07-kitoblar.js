@@ -12,19 +12,20 @@
   var KT_ORDER = ["kt1", "kt2", "kt3", "kt4", "kt5", "kt6", "kt7"];
   var KT_YEAR = { kt1: 1997, kt2: 1998, kt3: 1999, kt4: 2000, kt5: 2003, kt6: 2005, kt7: 2007 };
   var KT_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
+  // Nomlar FILMLAR bilan bir xil (CatalogBot/catalog.py) - egasi, 2026-10-07. Film nomi o'zgarsa shu yerda ham.
   var KT_NOM = {
-    uz: ["Afsonaviy tosh", "Maxfiy xona", "Azkaban mahbusi", "Olov kubogi", "Feniks ordeni", "Chala qonli shahzoda", "Ajal tuhfalari"],
-    ru: ["Философский камень", "Тайная комната", "Узник Азкабана", "Кубок огня", "Орден Феникса", "Принц-полукровка", "Дары Смерти"],
-    en: ["The Philosopher's Stone", "The Chamber of Secrets", "The Prisoner of Azkaban", "The Goblet of Fire",
-         "The Order of the Phoenix", "The Half-Blood Prince", "The Deathly Hallows"]
+    uz: ["Hikmatlar Toshi", "Maxfiy Hujra", "Azkaban Mahbusi", "Alanga Kubogi", "Feniks Jamiyati", "Tilsim Shaxzodasi", "Ajal Tuhfasi"],
+    ru: ["Философский Камень", "Тайная Комната", "Узник Азкабана", "Кубок Огня", "Орден Феникса", "Принц Полукровка", "Дары Смерти"],
+    en: ["Philosopher's Stone", "Chamber of Secrets", "Prisoner of Azkaban", "Goblet of Fire",
+         "Order of the Phoenix", "Half-Blood Prince", "Deathly Hallows"]
   };
   var KT_DESC = {
-    uz: ["O'n bir yoshli Garri o'zining sehrgar ekanini bilib oladi va Xogvartsga yo'l oladi. Maktab yerto'lasida esa kimdir afsonaviy toshni qidirmoqda.",
-         "Xogvartsda devorlarga qonli yozuvlar paydo bo'ladi, o'quvchilar toshga aylanadi. Maxfiy xona yana ochilgan.",
+    uz: ["O'n bir yoshli Garri o'zining sehrgar ekanini bilib oladi va Xogvartsga yo'l oladi. Maktab yerto'lasida esa kimdir Hikmatlar toshini qidirmoqda.",
+         "Xogvartsda devorlarga qonli yozuvlar paydo bo'ladi, o'quvchilar toshga aylanadi. Maxfiy hujra yana ochilgan.",
          "Azkabandan xavfli mahbus qochadi va u Garrini izlayotgani aytiladi. Maktabni esa dementorlar qo'riqlaydi.",
-         "Xogvartsda Uch sehrgar musobaqasi o'tadi. Olov kubogi kutilmaganda to'rtinchi ismni — Garrini chiqaradi.",
+         "Xogvartsda Uch sehrgar musobaqasi o'tadi. Alanga kubogi kutilmaganda to'rtinchi ismni — Garrini chiqaradi.",
          "Hech kim Garriga ishonmaydi, maktabni Vazirlik egallaydi. O'quvchilar yashirincha Dambldor qo'shinini tuzadi.",
-         "Garri eski darslikdan sirli Shahzodaning yozuvlarini topadi. Dambldor esa unga Volan-de-Mortning o'tmishini ochadi.",
+         "Garri eski darslikdan sirli Shaxzodaning yozuvlarini topadi. Dambldor esa unga Volan-de-Mortning o'tmishini ochadi.",
          "Garri, Ron va Germiona maktabga qaytmaydi — ular krestraj qidiradi. Hammasi Xogvarts uchun jangda hal bo'ladi."],
     ru: ["Одиннадцатилетний Гарри узнаёт, что он волшебник, и отправляется в Хогвартс. А в подземельях школы кто-то ищет философский камень.",
          "На стенах Хогвартса появляются кровавые надписи, ученики превращаются в камень. Тайная комната снова открыта.",
