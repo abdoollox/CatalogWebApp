@@ -63,6 +63,7 @@
           rule: "Vaqt «Boshlash» bosilgandan hisoblanadi. Har xato +3 soniya. Eng yaxshi urinishingiz hisobga olinadi.",
           topT: "Bugungi jadval", topNone: "Hali hech kim qatnashmadi — birinchi bo'ling!", yest: "Kechagi g'oliblar",
           yestMe: function (n, p) { return "Siz kecha " + n + "-o'rin" + (p ? " · +" + p + " ball" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
+          leftT: function (h, m) { return "Tugashiga " + (h ? h + " soat " : "") + m + " daqiqa qoldi"; }, ptsW: "ball", meK: "Sizning natijangiz", meBest: "Eng yaxshi natijangiz",
           you: "siz", resT: function (t) { return "Natijangiz: " + t; }, resBest: function (t) { return "Eng yaxshi natijangiz: " + t; },
           bellBack: "Jadvalga qaytish", timer: "Vaqt ketyapti",
           today: "Bugungi mavzu", back: "Darslarga qaytish", got: function (n) { return "Fakultetingizga +" + n + " ball"; },
@@ -98,6 +99,7 @@
           rule: "Время идёт с нажатия «Начать». Каждая ошибка +3 секунды. Засчитывается лучшая попытка.",
           topT: "Таблица дня", topNone: "Пока никто не участвовал — будьте первым!", yest: "Вчерашние победители",
           yestMe: function (n, p) { return "Вчера вы на " + n + "-м месте" + (p ? " · +" + p + " очков" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " с"; },
+          leftT: function (h, m) { return "До конца " + (h ? h + " ч " : "") + m + " мин"; }, ptsW: "очков", meK: "Ваш результат", meBest: "Ваш лучший результат",
           you: "вы", resT: function (t) { return "Ваш результат: " + t; }, resBest: function (t) { return "Лучший результат: " + t; },
           bellBack: "К таблице", timer: "Время идёт",
           today: "Тема дня", back: "К урокам", got: function (n) { return "+" + n + " очков вашему факультету"; },
@@ -131,6 +133,7 @@
           rule: "The clock starts when you press Start. Each mistake adds 3 seconds. Your best attempt counts.",
           topT: "Today's table", topNone: "Nobody has taken part yet — be the first!", yest: "Yesterday's winners",
           yestMe: function (n, p) { return "Yesterday you were " + n + (p ? " · +" + p + " points" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
+          leftT: function (h, m) { return "Ends in " + (h ? h + " h " : "") + m + " min"; }, ptsW: "points", meK: "Your result", meBest: "Your best result",
           you: "you", resT: function (t) { return "Your result: " + t; }, resBest: function (t) { return "Your best: " + t; },
           bellBack: "Back to the table", timer: "The clock is running",
           today: "Today's topic", back: "Back to classes", got: function (n) { return "+" + n + " points for your house"; },
@@ -418,30 +421,84 @@
     var im = cupCrestImg(p.house, 18);
     if (im) { cr.appendChild(im); }
     r.appendChild(cr);
-    r.appendChild(drEl("b", "", p.name + (p.me ? " (" + x.you + ")" : "")));
+    r.appendChild(drEl("b", "", p.name + (p.me && !p.nom ? " (" + x.you + ")" : "")));
     r.appendChild(drEl("em", "", x.sec(p.ms)));
     return odamLink(r, p);
+  }
+
+  // Kun tugashiga qancha qoldi (Toshkent vaqti, UTC+5) - bellashuv yarim tunda yakunlanadi
+  function blLeft() {
+    var tk = Date.now() + 5 * 3600000, ms = 86400000 - (tk % 86400000);
+    return [Math.floor(ms / 3600000), Math.floor((ms % 3600000) / 60000)];
+  }
+
+  // Shohsupa ustuni (birinchi uchlik)
+  function blPod(p, orin, x) {
+    var c = drEl("div", "bl-pd p" + orin + (p && p.me ? " me" : "") + (p ? "" : " bosh"));
+    c.appendChild(drEl("i", "bl-pd-n", String(orin)));
+    var cr = drEl("span", "bl-pd-cr");
+    var im = p ? cupCrestImg(p.house, 0) : null;
+    if (im) { cr.appendChild(im); }
+    c.appendChild(cr);
+    c.appendChild(drEl("b", "", p ? p.name : "—"));
+    c.appendChild(drEl("em", "", p ? x.sec(p.ms) : ""));
+    c.appendChild(drEl("span", "bl-pd-st"));
+    return p ? odamLink(c, p) : c;
   }
 
   function blRender() {
     var x = drX(), f = drFan(blFan), st = drData && drData[blFan], c = st && st.contest;
     if (!f || !c) { return; }
+    $("scr-bell").style.setProperty("--dr-rgb", f.rgb);
     $("bl-kick").textContent = x.bell;
     $("bl-ttl").textContent = f.nom[lang];
+    $("bl-im").src = drImg(f.id);
     $("bl-today").textContent = x.today;
     $("bl-name").textContent = drItemName(blFan, c.item);
-    $("bl-prizes").textContent = x.prizes(c.prizes.top[0], c.prizes.top[1], c.prizes.top[2], c.prizes.ten);
-    $("bl-rule").textContent = x.rule;
-    $("bl-mine").textContent = c.ms ? x.resBest(x.sec(c.ms)) + " · " + x.place(c.place, c.n) : x.bellNone;
+    var lf = blLeft();
+    $("bl-left").textContent = x.leftT(lf[0], lf[1]);
+
+    // Sovrinlar: to'rtta medal
+    var pz = $("bl-prizes");
+    pz.innerHTML = "";
+    [["1", c.prizes.top[0], "o1"], ["2", c.prizes.top[1], "o2"], ["3", c.prizes.top[2], "o3"], ["4–10", c.prizes.ten, "o4"]].forEach(function (q) {
+      var d = drEl("span", "bl-pz " + q[2]);
+      d.appendChild(drEl("i", "", q[0]));
+      d.appendChild(drEl("b", "", "+" + q[1]));
+      d.appendChild(drEl("small", "", x.ptsW));
+      pz.appendChild(d);
+    });
+
+    // O'z natijasi va urinishlar
     var qoldi = Math.max(0, (c.max || 3) - (c.tries || 0));
+    $("bl-me").classList.toggle("bor", !!c.ms);
+    $("bl-me-k").textContent = c.ms ? x.meBest : x.meK;
+    $("bl-me-t").textContent = c.ms ? x.sec(c.ms) : x.bellNone;
+    $("bl-me-p").textContent = c.ms ? x.place(c.place, c.n) : "";
+    var dots = $("bl-dots");
+    dots.innerHTML = "";
+    for (var k = 0; k < (c.max || 3); k++) { dots.appendChild(drEl("i", k < (c.tries || 0) ? "on" : "")); }
+    $("bl-dots-l").textContent = qoldi > 0 ? x.tries(qoldi) : x.bellNo;
     var go = $("bl-go");
-    go.textContent = qoldi > 0 ? x.bellGo + " · " + x.tries(qoldi) : x.bellNo;
+    go.textContent = qoldi > 0 ? x.bellGo : x.bellNo;
     go.disabled = qoldi < 1;
-    $("bl-top-t").textContent = x.topT;
-    var top = $("bl-top");
+    $("bl-rule").textContent = x.rule;
+
+    // Jadval: birinchi uchlik shohsupada, qolganlari ro'yxatda
+    $("bl-top-t").textContent = x.topT + (c.n ? " · " + c.n : "");
+    var pod = $("bl-pod"), top = $("bl-top");
+    pod.innerHTML = "";
     top.innerHTML = "";
+    pod.classList.toggle("hidden", !c.top.length);
     if (!c.top.length) { top.appendChild(drEl("p", "bl-none", x.topNone)); }
-    c.top.forEach(function (p, i) { top.appendChild(blRow(p, i, x)); });
+    else {
+      [2, 1, 3].forEach(function (o) { pod.appendChild(blPod(c.top[o - 1] || null, o, x)); });
+      c.top.slice(3).forEach(function (p, i) { top.appendChild(blRow(p, i + 3, x)); });
+      // O'zi o'ntalikdan pastda bo'lsa - alohida qator
+      if (c.ms && c.place > c.top.length) {
+        top.appendChild(blRow({ name: x.you, house: (cupMe() || {}).house, ms: c.ms, me: true, nom: true }, c.place - 1, x));
+      }
+    }
     var y = c.yesterday || { top: [] };
     $("bl-yest-h").classList.toggle("hidden", !y.top.length);
     $("bl-yest-t").textContent = x.yest;

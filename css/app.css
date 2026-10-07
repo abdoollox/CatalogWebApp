@@ -2684,3 +2684,49 @@ body.kr-on .mp{display:none!important}
 .tr-o.tanlandi{border-color:var(--gold);background:rgba(var(--gold-rgb),.14)}
 
 .blh-note{text-align:center;margin:0 0 4px}
+
+/* --- bellashuv sahifasi: yangi ko'rinish (egasi, 2026-10-07: quruq edi) --- */
+.bl-hero{display:flex;align-items:center;gap:16px;padding:16px;border-radius:22px;border:1px solid rgba(var(--dr-rgb),.4);
+  background:radial-gradient(130% 180% at 0% 0%,rgba(var(--dr-rgb),.24),transparent 62%),#11151c}
+.bl-im{flex:none;width:88px;height:88px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(var(--dr-rgb),.6),0 0 28px rgba(var(--dr-rgb),.3)}
+.bl-hero-tx{display:flex;flex-direction:column;gap:7px;min-width:0}
+.bl-hero-tx .ms-kick{color:rgb(var(--dr-rgb))}
+.bl-hero-tx b{font:500 27px/1.08 'Cormorant Garamond',serif;color:var(--text)}
+.bl-hero-tx small{font:600 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.bl-przs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.bl-pz{display:flex;flex-direction:column;align-items:center;gap:5px;padding:11px 4px 10px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.bl-pz i{display:grid;place-items:center;min-width:26px;height:26px;padding:0 6px;border-radius:13px;font:800 11px/1 'Manrope',sans-serif;font-style:normal;color:#1b1f26;background:#8f98a6}
+.bl-pz.o1 i{background:#e7c170}.bl-pz.o2 i{background:#c9ced6}.bl-pz.o3 i{background:#c08a55}
+.bl-pz.o1{border-color:rgba(231,193,112,.5);background:rgba(231,193,112,.08)}
+.bl-pz b{font:700 19px/1 'Manrope',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.bl-pz small{font:600 10px/1 'Manrope',sans-serif;color:var(--dim)}
+.bl-me{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:14px 16px;border-radius:18px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.bl-me.bor{border-color:rgba(var(--dr-rgb),.5);background:rgba(var(--dr-rgb),.08)}
+.bl-me-l{display:flex;flex-direction:column;gap:5px;min-width:0}
+.bl-me-l small,.bl-me-r small{font:700 10px/1.2 'Manrope',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.bl-me-l b{font:600 26px/1 'Cormorant Garamond',serif;color:var(--text)}
+.bl-me.bor .bl-me-l b{font:700 26px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums}
+.bl-me-l em{font:600 12px/1.2 'Manrope',sans-serif;font-style:normal;color:rgb(var(--dr-rgb))}
+.bl-me-l em:empty{display:none}
+.bl-me-r{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.bl-dots{display:flex;gap:6px}
+.bl-dots i{width:12px;height:12px;border-radius:50%;border:1.5px solid rgb(var(--dr-rgb));background:rgb(var(--dr-rgb))}
+.bl-dots i.on{background:none;border-color:var(--line)}
+#scr-bell .dr-btn{margin-top:12px}
+.bl-rule{margin:10px 6px 0;text-align:center;font:500 11.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.bl-pod{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:end;margin-bottom:8px}
+.bl-pd{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:0 4px;text-align:center}
+.bl-pd-n{order:1;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;font:800 12px/1 'Manrope',sans-serif;font-style:normal;color:#1b1f26;background:#c9ced6}
+.bl-pd.p1 .bl-pd-n{background:#e7c170;width:30px;height:30px;font-size:13px}.bl-pd.p3 .bl-pd-n{background:#c08a55}
+.bl-pd-cr{order:2;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.bl-pd.p1 .bl-pd-cr{width:58px;height:58px;border-color:rgba(231,193,112,.6);box-shadow:0 0 22px rgba(231,193,112,.25)}
+.bl-pd-cr img{width:64%!important;height:64%!important;object-fit:contain}
+.bl-pd b{order:3;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.bl-pd em{order:4;font:700 12px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.bl-pd-st{order:5;display:block;width:100%;margin-top:6px;border-radius:12px 12px 0 0;border:1px solid var(--line);border-bottom:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.02));height:34px}
+.bl-pd.p1 .bl-pd-st{height:58px;border-color:rgba(231,193,112,.45);background:linear-gradient(180deg,rgba(231,193,112,.22),rgba(231,193,112,.03))}
+.bl-pd.p3 .bl-pd-st{height:22px}
+.bl-pd.me b{color:rgb(var(--dr-rgb))}
+.bl-pd.bosh{opacity:.35}
