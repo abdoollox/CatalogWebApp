@@ -52,7 +52,7 @@
           locked: "Avval oldingi darsni o'ting", passed: function (n) { return n + "-dars o'tildi"; }, again2: "Bu dars oldin o'tilgan — mashq qildingiz.",
           next: "Keyingi dars", toList: "Darslar ro'yxati", allDone: "Hamma dars o'tilgan",
           dailyT: "Kunlik savol", dailyNew: "Bugungi savol kutmoqda", dailyDone: "Bugungi savolga javob berilgan",
-          bellCard: "Bugungi bellashuv", bellIn: "Bellashuvga kirish", tarixItem: "5 ta savol",
+          bellCard: "Bugungi bellashuv", bellIn: "Bellashuvga kirish", tarixItem: function (n) { return n + " ta savol"; },
           trQ: function (a, b) { return "Savol " + a + " / " + b; }, trRes: function (a, b) { return b + " tadan " + a + " tasi to'g'ri"; },
           trFail: function (n) { return "Dars o'tishi uchun kamida " + n + " ta to'g'ri javob kerak."; }, retry: "Qayta urinish", loadQ: "Savollar ochilmoqda…",
           lvl: function (n) { return n + "-dars"; }, lvlDone: function (n) { return n + " ta dars o'tilgan"; },
@@ -88,7 +88,7 @@
           locked: "Сначала пройдите предыдущий урок", passed: function (n) { return "Урок " + n + " пройден"; }, again2: "Этот урок уже был пройден — вы потренировались.",
           next: "Следующий урок", toList: "К списку уроков", allDone: "Все уроки пройдены",
           dailyT: "Вопрос дня", dailyNew: "Ждёт сегодняшний вопрос", dailyDone: "На сегодняшний вопрос вы ответили",
-          bellCard: "Состязание дня", bellIn: "К состязанию", tarixItem: "5 вопросов",
+          bellCard: "Состязание дня", bellIn: "К состязанию", tarixItem: function (n) { return n + " вопросов"; },
           trQ: function (a, b) { return "Вопрос " + a + " / " + b; }, trRes: function (a, b) { return "Верно " + a + " из " + b; },
           trFail: function (n) { return "Чтобы пройти урок, нужно минимум " + n + " верных ответа."; }, retry: "Ещё раз", loadQ: "Вопросы открываются…",
           lvl: function (n) { return "Урок " + n; }, lvlDone: function (n) { return "Пройдено уроков: " + n; },
@@ -122,7 +122,7 @@
           locked: "Finish the previous lesson first", passed: function (n) { return "Lesson " + n + " completed"; }, again2: "You had completed this lesson before — good practice.",
           next: "Next lesson", toList: "Lesson list", allDone: "All lessons completed",
           dailyT: "Daily question", dailyNew: "Today's question is waiting", dailyDone: "You answered today's question",
-          bellCard: "Today's contest", bellIn: "Enter the contest", tarixItem: "5 questions",
+          bellCard: "Today's contest", bellIn: "Enter the contest", tarixItem: function (n) { return n + " questions"; },
           trQ: function (a, b) { return "Question " + a + " / " + b; }, trRes: function (a, b) { return a + " of " + b + " correct"; },
           trFail: function (n) { return "You need at least " + n + " correct answers to pass."; }, retry: "Try again", loadQ: "Opening the questions…",
           lvl: function (n) { return "Lesson " + n; }, lvlDone: function (n) { return n + " lessons completed"; },
@@ -179,7 +179,7 @@
       res.pts = 0;
     }
     if (body.start === "tarix") {
-      res.questions = [1, 2, 3, 4, 5].map(function (i) { return { q: "Bellashuv savoli " + i + ": Garrining boyo'g'lisi nomi?", a: ["Errol", "Xedvig", "Skabbers", "Bakbik"] }; });
+      res.questions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (i) { return { q: "Bellashuv savoli " + i + ": Garrining boyo'g'lisi nomi?", a: ["Errol", "Xedvig", "Skabbers", "Bakbik"] }; });
     }
     if (body.finish) {
       res.ms = 5200 + Math.round(Math.random() * 3000) + (body.xato || 0) * 3000;
@@ -199,7 +199,7 @@
                yesterday: { top: top.slice(0, 3), n: 9, place: 4, pts: 3 } };
     };
     res.lessons = {
-      tarix: { level: drLocalLvl.tarix, total: 24, contest: bell("tarix", "savol") },
+      tarix: { level: drLocalLvl.tarix, total: 24, contest: bell("tarix", "10") },
       afsun: { level: drLocalLvl.afsun, total: 24, contest: bell("afsun", "lumos") },
       iksir: { level: drLocalLvl.iksir, total: 24, contest: bell("iksir", "boils") } };
     return res;
@@ -397,7 +397,7 @@
   function drItemName(fan, item) {
     if (fan === "afsun") { return ((AF[item] || {})[lang] || (AF[item] || {}).uz || [item])[0]; }
     if (fan === "iksir") { return (IK[item] || {})[lang] || (IK[item] || {}).uz || item; }
-    if (fan === "tarix") { return drX().tarixItem; }
+    if (fan === "tarix") { return drX().tarixItem(parseInt(item, 10) || 10); }
     return item;
   }
 
@@ -647,7 +647,7 @@
 
   /* ================= SEHRGARLIK TARIXI: savol-javob =================
      Dars: 4 savol, javob darhol tekshiriladi (to'g'risi yashil), 3 tasi to'g'ri bo'lsa dars o'tadi.
-     Bellashuv: 5 savol, to'g'ri javob ko'rsatilmaydi - javoblar serverga ketadi, u tekshiradi. */
+     Bellashuv: 10 savol, to'g'ri javob ko'rsatilmaydi - javoblar serverga ketadi, u tekshiradi. */
   var tr = null;      // {qs, i, ok, bell, level, need, lock}
 
   function trOpen(n) {
