@@ -11,17 +11,17 @@
           week: "Shu hafta", all: "Jami ball", films: "Filmlar", wand: "Tayoqcha", pat: "Patronus", badges: "Nishonlar",
           noWand: "Hali tayoqchasi yo'q", noPat: "Patronusini hali chaqirmagan", noBadges: "Hali nishoni yo'q",
           inch: "dyuym", cards: "Sehrgar kartochkalari", chess: "Shaxmat reytingi", games: function (n, w) { return n + " o'yin · " + w + " g'alaba"; },
-          peer: "Profilni ko'rish", write: "Xabar yozish", close: "Yopish", you: "Bu siz", fail: "Profil ochilmadi", anon: "Sehrgar" },
+          online: "hozir ilovada", peer: "Profilni ko'rish", write: "Xabar yozish", close: "Yopish", you: "Bu siz", fail: "Profil ochilmadi", anon: "Sehrgar" },
     ru: { kick: "Волшебник", noHouse: "Ещё не распределён", since: function (d) { return "В Хогвартсе с " + d; },
           week: "За неделю", all: "Всего очков", films: "Фильмы", wand: "Палочка", pat: "Патронус", badges: "Значки",
           noWand: "Палочки пока нет", noPat: "Патронус ещё не вызван", noBadges: "Значков пока нет",
           inch: "дюймов", cards: "Карточки волшебников", chess: "Шахматный рейтинг", games: function (n, w) { return "Игр: " + n + " · побед: " + w; },
-          peer: "Открыть профиль", write: "Написать", close: "Закрыть", you: "Это вы", fail: "Профиль не открылся", anon: "Волшебник" },
+          online: "сейчас в приложении", peer: "Открыть профиль", write: "Написать", close: "Закрыть", you: "Это вы", fail: "Профиль не открылся", anon: "Волшебник" },
     en: { kick: "Wizard", noHouse: "Not sorted yet", since: function (d) { return "At Hogwarts since " + d; },
           week: "This week", all: "Total points", films: "Films", wand: "Wand", pat: "Patronus", badges: "Badges",
           noWand: "No wand yet", noPat: "Has not cast a Patronus yet", noBadges: "No badges yet",
           inch: "inches", cards: "Wizard cards", chess: "Chess rating", games: function (n, w) { return n + " games · " + w + " wins"; },
-          peer: "View profile", write: "Send a message", close: "Close", you: "This is you", fail: "Could not open the profile", anon: "Wizard" }
+          online: "in the app now", peer: "View profile", write: "Send a message", close: "Close", you: "This is you", fail: "Could not open the profile", anon: "Wizard" }
   };
   var odamBusy = false, odamCur = null;
 
@@ -41,7 +41,7 @@
   // Mahalliy ko'rikda server yo'q - namuna
   function odamSample(uid, hint) {
     return { ok: true, uid: uid, me: false, name: (hint && hint.name) || "Germiona", house: (hint && hint.house) || "gryffindor",
-             since: "2026-09-14", wand: { wood: "holly", core: "phoenix", flex: "rigid" }, patronus: "otter",
+             since: "2026-09-14", online: false, seen: new Date(Date.now() - 47 * 60000).toISOString(), wand: { wood: "holly", core: "phoenix", flex: "rigid" }, patronus: "otter",
              points: { week: 45, all: 310 }, films: 9, cards: 6, chess: { rating: 1284, games: 14, wins: 9 },
              badges: ["film_1", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "sandiq_1", "dost_1"], badges_total: 19 };
   }
@@ -62,6 +62,23 @@
       .then(function (r) { return r.json(); })
       .then(function (res) { done(res && res.ok ? res : (MS_LOCAL ? odamSample(uid, hint) : res)); })
       ["catch"](function () { done(MS_LOCAL ? odamSample(uid, hint) : null); });
+  }
+
+  // Ro'yxat qatorini (kubok a'zolari, eng yaxshi uchlik, tasma, do'st taklifi) profilga ulaydi
+  function odamLink(el, m, houseId) {
+    if (!el || !m || !m.uid) { return el; }
+    el.classList.add("od-go");
+    el.addEventListener("click", function () { odamOpen(m.uid, { name: m.name, house: m.house || houseId }); });
+    return el;
+  }
+
+  // "hozir ilovada" yoki "oxirgi marta ..." (chatdagi kabi yoziladi)
+  function odamSeen(d) {
+    var x = odamX();
+    if (d.online) { return x.online; }
+    var t = "";
+    try { t = chatSeenText(d.seen); } catch (e) { t = ""; }
+    return t;
   }
 
   function odamClose() { $("odam").classList.add("hidden"); odamCur = null; }
@@ -100,6 +117,8 @@
     head.appendChild(odamEl("h3", "od-name", d.name || x.anon));
     head.appendChild(odamEl("span", "od-house", h ? hh[lang] : x.noHouse));
     if (h && odamSana(d.since)) { head.appendChild(odamEl("small", "od-since", x.since(odamSana(d.since)))); }
+    var korildi = d.me ? "" : odamSeen(d);
+    if (korildi) { head.appendChild(odamEl("small", "od-seen" + (d.online ? " on" : ""), korildi)); }
     box.appendChild(head);
 
     var st = odamEl("div", "od-stats");

@@ -187,7 +187,7 @@
     }
     row.appendChild(who);
     row.appendChild(refsEl("div", "hall-pts", String(m.refs || 0)));
-    return row;
+    return odamLink(row, m);
   }
 
   function renderRefs() {

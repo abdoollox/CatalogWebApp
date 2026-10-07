@@ -550,7 +550,7 @@
     var pts = cupEl("div", "hall-pts", String(m.points || 0));
     pts.style.color = hh.accent || "var(--accent)";
     row.appendChild(pts);
-    return row;
+    return odamLink(row, m, houseId);
   }
 
   // Ro'yxat: dastlab `shown` ta, qolgani "Hammasini ko'rish" tugmasi ortida
@@ -640,7 +640,7 @@
     row.appendChild(txt);
 
     row.appendChild(cupEl("div", "feed-time", agoText(ev.ago_minutes, t)));
-    return row;
+    return odamLink(row, ev);
   }
 
   function renderFeed() {
@@ -1124,7 +1124,7 @@
           hn.style.color = bh.accent || "inherit";
           r.appendChild(hn);
           r.appendChild(cupEl("em", "", p.points + " " + t.cupPts));
-          best.appendChild(r);
+          best.appendChild(odamLink(r, p));
         });
         card.appendChild(best);
       }
