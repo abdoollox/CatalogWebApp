@@ -190,10 +190,10 @@
 
   var CUP_T = {
     uz: {
-      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", lesson: "Darslar", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", lesson: "Bellashuv", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
-              lesson: "Har dars kuniga +5",
+              lesson: "Kunlik bellashuv: 1–10-o'rinlar",
               chest: "Kuniga 6 ta topshiriq · quti +10",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
@@ -226,10 +226,10 @@
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
-      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", lesson: "Уроки", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", lesson: "Состязания", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
-              lesson: "Каждый урок +5 в день",
+              lesson: "Состязание дня: 1–10-е места",
               chest: "6 заданий в день · коробка +10",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
@@ -262,10 +262,10 @@
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
-      src: { film: "Films", exam: "Exams", daily: "Daily", lesson: "Classes", chess: "Chess", chest: "Frog", friends: "Friends" },
+      src: { film: "Films", exam: "Exams", daily: "Daily", lesson: "Contests", chess: "Chess", chest: "Frog", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
-              lesson: "+5 per class a day",
+              lesson: "Daily contest: places 1–10",
               chest: "6 tasks a day · box +10",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
@@ -754,11 +754,10 @@
 
   // Manba qatorini bosganda - o'sha ballni olish joyiga
   function srcGo(key) {
-    if (key === "exam" || key === "daily") { openDaily(); }
+    if (key === "exam" || key === "daily" || key === "lesson") { blHomeOpen(); }     // ball endi «Bellashuv» bo'limida
     else if (key === "chess") { openChessHub(); }
     else if (key === "friends") { openRefs(); }
     else if (key === "chest") { sqOpen(); }
-    else if (key === "lesson") { drOpen(); }
     else { closeCup(); }
   }
 

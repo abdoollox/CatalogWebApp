@@ -857,7 +857,7 @@
           rwK: "Yangi kartochka", rwKDup: "Kartochka (takror)", rwP: function (b, g) { return "+" + b + " ball va " + g + " galleon"; },
           coll: "Kolleksiyam", collK: "Mashhur sehrgarlar", collS: function (n, t) { return n + " / " + t + " kartochka"; }, unknown: "Hali ochilmagan",
           strL: "Ketma-ketlik", strS: function (k, g) { return "Har " + k + "-kun — qo'shimcha +" + g + " galleon. Bir kun o'tkazib yuborsangiz, sanoq noldan boshlanadi."; },
-          t: { daily: ["Kunlik savolga javob bering", "Bugungi savol"], chat: ["Chatga yozing yoki reaksiya qo'ying", "Fakultet xonasi"],
+          t: { daily: ["Sehrgarlik tarixi bellashuvida qatnashing", "Bugungi 5 ta savol"], chat: ["Chatga yozing yoki reaksiya qo'ying", "Fakultet xonasi"],
                music: ["Bitta trek tinglang", "Kutubxonadagi soundtreklar"], chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"],
                owl: ["Boyo'g'li pochtasini oching", "Xatlaringizni ko'ring"], cup: ["Kubok sahifasiga kiring", "Fakultetingiz nechanchi o'rinda"],
                share: ["Do'stingizga ulashing", "Taklif havolasi, fakultet yoki Patronus"], house: ["Fakultet sahifasini oching", "Asoschisi, mudiri, a'zolari"] } },
@@ -870,7 +870,7 @@
           rwK: "Новая карточка", rwKDup: "Карточка (повтор)", rwP: function (b, g) { return "+" + b + " очков и галлеонов: " + g; },
           coll: "Моя коллекция", collK: "Знаменитые волшебники", collS: function (n, t) { return "Карточек: " + n + " / " + t; }, unknown: "Ещё не открыта",
           strL: "Серия", strS: function (k, g) { return "Каждый " + k + "-й день — ещё +" + g + " галлеона. Пропустите день — счёт начнётся заново."; },
-          t: { daily: ["Ответьте на вопрос дня", "Сегодняшний вопрос"], chat: ["Напишите в чат или поставьте реакцию", "Комната факультета"],
+          t: { daily: ["Примите участие в состязании по истории магии", "5 вопросов дня"], chat: ["Напишите в чат или поставьте реакцию", "Комната факультета"],
                music: ["Послушайте один трек", "Саундтреки в библиотеке"], chess: ["Сыграйте партию в шахматы", "Можно и с ботом"],
                owl: ["Откройте совиную почту", "Посмотрите свои письма"], cup: ["Загляните на страницу Кубка", "На каком месте ваш факультет"],
                share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], house: ["Откройте страницу факультета", "Основатель, декан, участники"] } },
@@ -883,7 +883,7 @@
           rwK: "New card", rwKDup: "Card (duplicate)", rwP: function (b, g) { return "+" + b + " points and " + g + " Galleons"; },
           coll: "My collection", collK: "Famous wizards", collS: function (n, t) { return n + " / " + t + " cards"; }, unknown: "Not opened yet",
           strL: "Streak", strS: function (k, g) { return "Every " + k + "th day brings +" + g + " extra Galleons. Miss a day and the count starts over."; },
-          t: { daily: ["Answer the daily question", "Today's question"], chat: ["Write or react in the chat", "Your house room"],
+          t: { daily: ["Take part in the History of Magic contest", "Today's 5 questions"], chat: ["Write or react in the chat", "Your house room"],
                music: ["Listen to one track", "Soundtracks in the library"], chess: ["Play a game of chess", "A bot counts too"],
                owl: ["Open the owl post", "Check your letters"], cup: ["Visit the Cup page", "See where your house stands"],
                share: ["Share with a friend", "Invite link, house or Patronus"], house: ["Open a house page", "Founder, head, members"] } }
@@ -1001,7 +1001,7 @@
     sqQayt = true;
     try { worldFrom = "hub"; } catch (e) {}          // "ortga" -> openHub() -> yana shu ro'yxat
     try {
-      if (code === "daily") { openDaily(); }
+      if (code === "daily") { blOpen("tarix"); }            // kunlik savol o'rnida: Sehrgarlik tarixi bellashuvi
       else if (code === "chat") { openChat(); }
       else if (code === "chess") { openChessHub(); }
       else if (code === "owl") { openOwl(); owlFrom = "hub"; }

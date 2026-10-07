@@ -43,6 +43,7 @@
     "scr-afsun": "af-back",
     "scr-iksir": "ik-back",
     "scr-bell": "bl-back",
+    "scr-blh": "blh-back",
     "scr-fan": "fn-back",
     "scr-tarix": "tr-back",
     "scr-qb": "qb-back",
