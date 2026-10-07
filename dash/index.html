@@ -961,7 +961,7 @@ function classify(p){
   if((m = p.match(/^music_([a-z]{2}\d+)_(\d+)$/))) return {t:"mdl", album:m[1], n:+m[2], lab:"Trekni yuklab oldi", ic:"🎵"};
   if((m = p.match(/^music_([a-z]{2}\d+)$/)))       return {t:"mdl", album:m[1], n:0, lab:"Albomni yuklab oldi", ic:"💿"};
   // Sifat 2026-10-04 dan yoziladi: web_hp1_uz@hd / @fhd. Undan oldingi yozuvlarda yo'q ("?").
-  if((m = p.match(/^(web|bot)_([a-z]{2}\d+)_(uz|ru|en)(?:@(fhd|hd))?$/)))
+  if((m = p.match(/^(web|bot)_([a-z]{2}\d+)_(uz|ru|en)(?:@(fhd|hd|sd))?$/)))
     return {t:"film", origin:m[1], film:m[2], lang:m[3], q:m[4] || "?", lab:"Filmni oldi", ic:"🎬"};
   if((m = p.match(/^([a-z]{2}\d+)_(uz|ru|en)$/)))
     return {t:"film", origin:"?", film:m[1], lang:m[2], q:"?", lab:"Filmni oldi", ic:"🎬"};
@@ -1097,7 +1097,7 @@ function stats(rows, first, w){
       for(var i=0; i<24; i++) a.push({h:i, ev:0, u:{}, movie:0, start:0, sub:0, left:0, blocked:0});
       return a;
     })(),
-    houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0}, sifat:{fhd:0,hd:0,"?":0},
+    houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0}, sifat:{fhd:0,hd:0,sd:0,"?":0},
     perUser:{}, byFilmLang:{}, seriya:{hp:0, fb:0},
     set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}, "new":{}}
   };
@@ -2559,7 +2559,7 @@ function hodisaMatni(r){
   var e = r.ev;
   if(e.t === "film") return "<b>" + esc(filmName(e.film)) + "</b> " + LANGS[e.lang].f +
     (e.origin === "web" ? " · WebApp" : e.origin === "bot" ? " · bot" : "") +
-    (e.q === "hd" ? " · HD" : e.q === "fhd" ? " · Full HD" : "");
+    (e.q === "hd" ? " · HD" : e.q === "fhd" ? " · Full HD" : e.q === "sd" ? " · SD" : "");
   if(e.t === "house") return "<b>" + esc((HOUSES[e.house]||{n:e.house}).n) + "</b> fakultetiga tushdi";
   if(e.t === "src") return "reklamadan keldi · <b>" + esc(e.src) + "</b>";
   if(e.t === "invited"){
@@ -2803,7 +2803,7 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
-  "Qaysi sifatda": "Odamlar filmni qaysi sifatda olgani: Full HD (1080p) yoki HD (720p). Sifat 2026-yil 4-oktabrdan yoziladi — undan oldingi yuborishlar «Eski ma'lumot» bo'lib ko'rinadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
+  "Qaysi sifatda": "Odamlar filmni qaysi sifatda olgani: Full HD (1080p), HD (720p) yoki SD (480p, 2026-yil 7-oktabrdan). Sifat 2026-yil 4-oktabrdan yoziladi — undan oldingi yuborishlar «Eski ma'lumot» bo'lib ko'rinadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
   "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Gringotts (kirish va galleon olish), Olivander, 9¾ platforma (bilet va poyezd) va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
   "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
   "Qayerda to'xtab qolishdi": "Shu davrda xatni ochib, hali fakultetga tushmaganlar — oxirgi bajargan qadami bo'yicha. Eng uzun chiziq — eng ko'p odam yo'qolayotgan joy. Yaqinda boshlaganlar hali davom etishi mumkin.",
@@ -3300,11 +3300,12 @@ function render(){
   put("kino", c7);
 
   // Sifat tanlovi (2026-10-04 dan): odamlar Full HD yoki HD ni tanlayapti
-  var cSif = card("Qaysi sifatda", "Full HD yoki HD", "third");
+  var cSif = card("Qaysi sifatda", "Full HD, HD yoki SD", "third");
   var sItems = [
     {k:"eski", lab:"Eski ma'lumot", n:"Eski ma'lumot", val:s.sifat["?"] || 0, hex:"#6d7f99"},
     {k:"fhd",  lab:"Full HD",       n:"Full HD",       val:s.sifat.fhd || 0,  hex:"#c98500"},
-    {k:"hd",   lab:"HD",            n:"HD",            val:s.sifat.hd || 0,   hex:"#3987e5"}
+    {k:"hd",   lab:"HD",            n:"HD",            val:s.sifat.hd || 0,   hex:"#3987e5"},
+    {k:"sd",   lab:"SD",            n:"SD",            val:s.sifat.sd || 0,   hex:"#199e70"}
   ];
   if(s.films) cSif.appendChild(donut(sItems, "hp_dash_sifdonut", "film"));
   else cSif.appendChild(emptyNote("Bu davrda film yuborilmagan."));

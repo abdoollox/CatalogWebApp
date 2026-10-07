@@ -417,7 +417,7 @@
      sifat qulflangan ko'rinadi. Qaysi sifat borligi botdan olinadi (/api/films, hajmi bilan);
      javob kelmagan bo'lsa Full HD bor deb hisoblanadi (avvalgi holat). */
   var API_FILMS = "https://bot.tizimshunos.uz/api/films";
-  var QS_LIST = [["fhd", "Full HD", "1080p"], ["hd", "HD", "720p"]];
+  var QS_LIST = [["fhd", "Full HD", "1080p"], ["hd", "HD", "720p"], ["sd", "SD", "480p"]];     // SD - 2026-10-07 (egasi)
   var QS_TX = {
     uz: { ask: "Sifatni tanlang", soon: "Tez orada", close: "Yopish", note: "Film bot chatiga yuboriladi." },
     ru: { ask: "Выберите качество", soon: "Скоро", close: "Закрыть", note: "Фильм придёт в чат с ботом." },
