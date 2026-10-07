@@ -149,6 +149,7 @@
     film: '<path d="M4 5h16v14H4z M8 5v14 M16 5v14 M4 9.5h4 M4 14.5h4 M16 9.5h4 M16 14.5h4"/>',
     exam: '<path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/>',
     daily: '<path d="M4.5 6h15v14h-15z M4.5 10h15 M8.5 3.5v4 M15.5 3.5v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/>',
+    lesson: '<path d="M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13"/>',
     chest: '<path d="M4 10V8.5a4.5 4.5 0 0 1 4.5-4.5h7A4.5 4.5 0 0 1 20 8.5V10 M3.5 10h17v9.5h-17z M10.2 13h3.6v3.2h-3.6z"/>',
     chess: '<path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/>',
     friends: '<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/>'
@@ -157,6 +158,7 @@
     { key: "film",    color: "#3987e5" },
     // "exam" (kino imtihoni) 2026-10-04 da olib tashlandi - kubok muvozanatini buzardi
     { key: "daily",   color: "#199e70" },
+    { key: "lesson",  color: "#5fb3d9" },      // darslar: afsunlar, iksirlar... (2026-10-07)
     { key: "chess",   color: "#9085e9" },
     { key: "chest",   color: "#d9568c" },      // kunlik sandiq (2026-10-05)
     { key: "friends", color: "#c98500" }
@@ -188,9 +190,10 @@
 
   var CUP_T = {
     uz: {
-      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", lesson: "Darslar", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
+              lesson: "Har dars kuniga +5",
               chest: "Kuniga 6 ta topshiriq · quti +10",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
@@ -223,9 +226,10 @@
               "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
     },
     ru: {
-      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", lesson: "Уроки", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
+              lesson: "Каждый урок +5 в день",
               chest: "6 заданий в день · коробка +10",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
@@ -258,9 +262,10 @@
               "Игра с ботом очков не даёт — только партии с живым соперником."]
     },
     en: {
-      src: { film: "Films", exam: "Exams", daily: "Daily", chess: "Chess", chest: "Frog", friends: "Friends" },
+      src: { film: "Films", exam: "Exams", daily: "Daily", lesson: "Classes", chess: "Chess", chest: "Frog", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
+              lesson: "+5 per class a day",
               chest: "6 tasks a day · box +10",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
@@ -753,6 +758,7 @@
     else if (key === "chess") { openChessHub(); }
     else if (key === "friends") { openRefs(); }
     else if (key === "chest") { sqOpen(); }
+    else if (key === "lesson") { drOpen(); }
     else { closeCup(); }
   }
 
