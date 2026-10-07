@@ -688,7 +688,9 @@ var CHAT_XONA = [
 var TIL_RANG = {uz:"#199e70", ru:"#d03b3b", en:"#3987e5"};
 var KITOB_N = ["Hikmatlar Toshi", "Maxfiy Hujra", "Azkaban Mahbusi", "Alanga Kubogi", "Feniks Jamiyati", "Tilsim Shaxzodasi", "Ajal Tuhfasi"];   // filmlar bilan bir xil
 var KITOB_NARX = 3;          // galleon (bot: hpkitob.BOOK_PRICE); 1-kitob bepul
-var DARS_N = {afsun:"Afsunlar", iksir:"Iksirlar"};
+var DARS_N = {tarix:"Sehrgarlik tarixi", afsun:"Afsunlar", iksir:"Iksirlar"};
+var DARS_RANG = {tarix:"#e8843c", afsun:"#78aaf0", iksir:"#6ebe82"};
+var DARS_SONI = 24;          // har fanda nechta dars (bot: hpdars.DARS_SONI)
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -748,6 +750,8 @@ var BOLIMLAR = [
       '<circle cx="17.5" cy="16" r="2.5"></circle>'},
   {id:"kitob",   nom:"Kitoblar",
    ic:'<path d="M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"></path><path d="M12 6.5v13"></path>'},
+  {id:"dars",    nom:"Darslar",
+   ic:'<path d="M3 9l9-4.5L21 9l-9 4.5z"></path><path d="M7 11.5v4.5c1.5 1.5 3.2 2.2 5 2.2s3.5-.7 5-2.2v-4.5"></path><path d="M21 9v5"></path>'},
   {id:"chat",    nom:"Chat",
    ic:'<path d="M4 5.5h16v10.5H10l-6 4z"></path><path d="M8 9.5h8"></path><path d="M8 12.5h5"></path>'},
   {id:"pochta",  nom:"Pochta",
@@ -803,7 +807,7 @@ var LEAVE = {
 
 /* ───────── Holat ───────── */
 var ST = {rows:[], demo:true, days:7, src:null, tz:0, loadedAt:null, err:null, cols:null, busy:false,
-          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaKt:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, oynaY:{a:0, b:1}, chat:null};
+          leave:null, leaveLabels:null, people:null, tab:"umumiy", oraliq:null, jim:false, oyna:{a:0, b:1}, oynaF:{a:0, b:1}, oynaK:{a:0, b:1}, oynaKt:{a:0, b:1}, oynaDr:{a:0, b:1}, oynaH:{a:0, b:1}, oynaKh:{a:0, b:1}, oynaM:{a:0, b:1}, oynaC:{a:0, b:1}, oynaO:{a:0, b:1}, oynaY:{a:0, b:1}, chat:null};
 var API_DEFAULT = "https://bot.tizimshunos.uz/api/loglar";
 var LS = "hp_dash_v1";
 
@@ -2840,6 +2844,9 @@ var KARTA_INFO = {
   "Eng faol suhbatdoshlar": "Shu davrda eng ko'p yozgan 20 kishi: xabarlari, shulardan javoblar, ularning xabarlariga qo'yilgan reaksiyalar, qaysi xonalarda yozgani va oxirgi xabari. Ismni bosing — odam tarixi ochiladi.",
   "Onlayn": "Bot har 5 daqiqada o'lchaydi: so'nggi 5 daqiqada ilovani ochganlar va shulardan chatni ochib turganlar. Chizmada har kunning (soatning) eng gavjum 5 daqiqasi. O'lchov 30-sentabrdan boshlangan.",
   "Chat lentasi": "Katta zal va fakultet xonalaridagi xabarlar matni bilan, javob qaysi xabarga ekani va reaksiyalar soni. Shaxsiy yozishmalarning faqat vaqti va kimligi ko'rinadi, matni ko'rsatilmaydi. O'chirilgan xabar matni ham ko'rsatilmaydi.",
+  "Darslar faolligi": "Darslar bo'limi kun sayin (2026-yil 7-oktabrdan). Dars o'tildi — odam navbatdagi darsni o'tib, bosqichi oshgan (o'tilgan darsni qayta o'ynash sanalmaydi; dars uchun ball berilmaydi). Bellashuv urinishi — kunlik bellashuvda bir marta qatnashish (kuniga 3 tagacha urinish). Tanlangan davr bo'yicha.",
+  "Fanlar bo'yicha": "Har fan alohida, tanlangan davr bo'yicha: nechta odam kamida bitta dars o'tgan, ularning o'rtacha va eng yuqori bosqichi, nechta odam 24 ta darsning hammasini tugatgan, bellashuvda nechta odam va necha marta qatnashgan. «24 ga yetgan» ko'payib borsa — darslar soni kamlik qilyapti.",
+  "Bosqichlar": "Har fanda 24 ta dars. Ustun — shu darsgacha yetib kelgan odamlar soni (1-ustun = boshlaganlar). Ustunlar tez pasaysa — odamlar o'sha joyda to'xtab qolyapti (qiyin yoki zerikarli); oxirgi ustunlar to'lib borsa — darslar kam, yangisini qo'shish kerak. Tanlangan davrdagi yozuvlardan hisoblanadi — to'liq manzara uchun davrni «Hammasi» qiling.",
   "Kitoblar faolligi": "Kitoblar bo'limi kun sayin (2026-yil 7-oktabrdan). O'qidi — odam kitobni ilova ichida ochgan (bir odam bitta kitobni bir kunda necha marta ochsa ham bitta sanaladi). Yukladi — kitob fayli bot chatiga yuborilgan. Sotib oldi — kitob galleonga ochilgan (har biri 3 galleon; 1-kitob bepul). Nomini bosib chiziqni yoqib-o'chirsa bo'ladi.",
   "Kitoblar bo'yicha": "Har kitob alohida: nechta odam ilovada o'qigan, jami necha marta ochilgan, nechta odam faylini yuklab olgan va nechta odam galleonga sotib olgan. Chiziq — o'qigan odamlar soni (eng ko'pi to'liq). 1-kitob bepul, shuning uchun u sotilmaydi.",
   "Musiqa faolligi": "Soundtrack bo'limi kun sayin. Tingladi — ilovada trek boshidan boshlangan (bir odam bitta trekni yarim soat ichida qayta boshlasa ham bitta sanaladi; o'rtasiga o'tkazish sanalmaydi). Yukladi — albom yoki trek bot chatiga yuborildi (albom bitta hodisa). Like — shu kuni qo'yilgan like'lar (keyin olib tashlanganlari bu yerda yo'q). Tinglashlar 27-sentabrdan, yuklab olishlar 26-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
@@ -3621,7 +3628,7 @@ function render(){
     var fK2 = document.createElement("figure");
     var kBal = null;
     var kSl = kList.length > 14;
-    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+    if(!kSl) ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaDr = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     var kKor = kSl ? oynaKesimi(kList, ST.oynaKh) : kList;
     var kChiz = function(){
       fK2.innerHTML = "";
@@ -4361,6 +4368,102 @@ function render(){
     put("kitob", ktC2);
   }
 
+  /* — Darslar (2026-10-07): har fanda 24 dars (mashq, ballsiz) va kunlik bellashuv — */
+  var drO = rows.filter(function(r){ return r.ev.t === "dars" && /^\d+$/.test(r.ev.n) && DARS_N[r.ev.fan]; });
+  var drB = rows.filter(function(r){ return r.ev.t === "bell" && DARS_N[r.ev.fan]; });
+  if(!drO.length && !drB.length){
+    var dr0 = card("Darslar faolligi", "", "");
+    dr0.appendChild(emptyNote("Bu davrda darslar bo'yicha hech narsa yo'q. Darslar 2026-yil 7-oktabrda qo'shilgan."));
+    put("dars", dr0);
+  } else {
+    var drKey = function(t){ return birKun ? String(t.getHours()).padStart(2, "0") : dayKey(t); };
+    var drKun = {};
+    var drQ = function(k){ return drKun[k] = drKun[k] || {dars:0, bell:0}; };
+    drO.forEach(function(r){ drQ(drKey(r.t)).dars++; });
+    drB.forEach(function(r){ drQ(drKey(r.t)).bell++; });
+    var drList = dayList.map(function(d){
+      var q = drKun[d.k] || {dars:0, bell:0};
+      return {k:d.k, lab:d.lab, tip:d.tip, dars:q.dars, bell:q.bell};
+    });
+    var drC1 = poygaKarta({
+      nom:"Darslar faolligi", kls:"", faqatSon:true,
+      hint:(birKun ? "soat" : "kun") + " sayin · nomini bosib olib turing",
+      list:drList, dayList:dayList, birKun:birKun, oyna:"oynaDr", ls:"hp_dash_dars",
+      ser:[{k:"dars", n:"Dars o'tildi", t:"Dars", c:"#78aaf0"},
+           {k:"bell", n:"Bellashuv urinishi", t:"Bellashuv", c:"#c98500"}]
+    });
+    var drOdam = {}, drBodam = {};
+    drO.forEach(function(r){ drOdam[r.uid] = 1; });
+    drB.forEach(function(r){ drBodam[r.uid] = 1; });
+    var drK = document.createElement("div");
+    drK.className = "tarq-kpi";
+    [["O'quvchilar", fmtNum(Object.keys(drOdam).length), "kamida bitta dars o'tgan odam"],
+     ["O'tilgan darslar", fmtNum(drO.length), "yangi bosqichlar (takror sanalmaydi)"],
+     ["Bellashganlar", fmtNum(Object.keys(drBodam).length), "kamida bir marta qatnashgan"],
+     ["Bellashuv urinishlari", fmtNum(drB.length), "kuniga 3 tagacha urinish"]
+    ].forEach(function(m){
+      var d = document.createElement("div");
+      d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      drK.appendChild(d);
+    });
+    drC1.insertBefore(drK, drC1.children[1]);
+    put("dars", drC1);
+
+    // Fan bo'yicha: har odamning eng yuqori bosqichi
+    var drF = {};
+    Object.keys(DARS_N).forEach(function(f){ drF[f] = {max:{}, bell:{}, urin:0}; });
+    drO.forEach(function(r){ var q = drF[r.ev.fan]; q.max[r.uid] = Math.max(q.max[r.uid] || 0, +r.ev.n); });
+    drB.forEach(function(r){ var q = drF[r.ev.fan]; q.bell[r.uid] = 1; q.urin++; });
+    var drC2 = card("Fanlar bo'yicha", "har odamning eng yuqori bosqichi", "");
+    var drH = "<table><thead><tr><th>Fan</th><th class='num'>Boshlagan</th><th class='num'>O'rtacha bosqich</th>" +
+      "<th class='num'>Eng yuqori</th><th class='num' title='Hamma darsni o&#39;tib bo&#39;lganlar'>24 ga yetgan</th>" +
+      "<th class='num'>Bellashgan</th><th class='num'>Urinishlar</th></tr></thead><tbody>";
+    Object.keys(DARS_N).forEach(function(f){
+      var q = drF[f], ms = Object.keys(q.max).map(function(u){ return q.max[u]; });
+      var jami = ms.reduce(function(a, b){ return a + b; }, 0);
+      drH += "<tr><td><span class='xdot' style='background:" + DARS_RANG[f] + "'></span> <b>" + esc(DARS_N[f]) + "</b></td>" +
+        "<td class='num'>" + fmtNum(ms.length) + "</td>" +
+        "<td class='num'>" + (ms.length ? (Math.round(jami / ms.length * 10) / 10) : "—") + "</td>" +
+        "<td class='num'>" + (ms.length ? Math.max.apply(null, ms) : "—") + "</td>" +
+        "<td class='num'>" + fmtNum(ms.filter(function(x){ return x >= DARS_SONI; }).length) + "</td>" +
+        "<td class='num'>" + fmtNum(Object.keys(q.bell).length) + "</td><td class='num'>" + fmtNum(q.urin) + "</td></tr>";
+    });
+    var drW = document.createElement("div");
+    drW.className = "tbl-wrap";
+    drW.innerHTML = drH + "</tbody></table>";
+    drC2.appendChild(drW);
+    put("dars", drC2);
+
+    // Bosqichlar: har darsga nechta odam yetib kelgan (24 ta ustun) - darslar soni yetarlimi shundan ko'rinadi
+    var drC3 = card("Bosqichlar", "har darsga yetib kelgan odamlar · ustun ustiga boring", "");
+    Object.keys(DARS_N).forEach(function(f){
+      var q = drF[f], ms = Object.keys(q.max).map(function(u){ return q.max[u]; });
+      var son = [], eng = 1;
+      for(var n = 1; n <= DARS_SONI; n++){
+        var k = ms.filter(function(x){ return x >= n; }).length;
+        son.push(k); eng = Math.max(eng, k);
+      }
+      var h = "<div style='margin:14px 0 4px;font-weight:700;font-size:13px'><span class='xdot' style='background:" + DARS_RANG[f] +
+        "'></span> " + esc(DARS_N[f]) + " <span class='uname'>" + fmtNum(ms.length) + " kishi boshlagan</span></div>" +
+        "<div style='display:grid;grid-template-columns:repeat(" + DARS_SONI + ",minmax(0,1fr));gap:3px;align-items:end;height:92px'>";
+      son.forEach(function(k, i){
+        h += "<span title='" + (i + 1) + "-dars: " + k + " kishi' style='display:block;border-radius:3px 3px 0 0;background:" + DARS_RANG[f] +
+          ";opacity:" + (k ? ".9" : ".15") + ";height:" + Math.max(k ? 6 : 2, Math.round(k / eng * 100)) + "%'></span>";
+      });
+      h += "</div><div style='display:grid;grid-template-columns:repeat(" + DARS_SONI + ",minmax(0,1fr));gap:3px;margin-top:4px'>";
+      son.forEach(function(k, i){
+        h += "<span style='text-align:center;font-size:9.5px;color:var(--ink-3)'>" + ((i + 1) % 2 ? (i + 1) : "") + "</span>";
+      });
+      h += "</div>";
+      var w = document.createElement("div");
+      w.innerHTML = h;
+      drC3.appendChild(w);
+    });
+    put("dars", drC3);
+  }
+
   /* — Chat — */
   // Hammasi bot bazasidan (/api/chatpanel, ST.chat). Umumiy xonalar matni bilan;
   // shaxsiy yozishmalarning faqat soni (matni serverdan kelmaydi).
@@ -5092,6 +5195,7 @@ function render(){
     kanal: s.left + s.blocked,
     musiqa: mzSon,
     kitob: ktO.length + ktY.length + ktS.length,
+    dars: drO.length + drB.length,
     chat: chSon,
     lenta: rows.length
   });
@@ -5748,7 +5852,7 @@ function demoRows(){
       else if(roll < .68) p = "house_" + pick(["gryffindor","slytherin","ravenclaw","hufflepuff"]);
       else if(roll < .72) p = "wand_holly_phoenix_supple";
       else if(roll < .74) p = "patronus_" + pick(["stag","cat","otter","doe","hare","dog","swan","wolf","fox","phoenix"]);
-      else if(roll < .76) p = d > 6 ? "share_hp3_uz" : pick(["read_kt1_en","read_kt1_en","read_kt2_en","book_kt1_en_pdf","buy_book_kt2","read_kt3_en","dars_afsun_3","bellashuv_iksir"]);
+      else if(roll < .76) p = d > 6 ? "share_hp3_uz" : pick(["read_kt1_en","read_kt1_en","read_kt2_en","book_kt1_en_pdf","buy_book_kt2","read_kt3_en","dars_afsun_" + (1 + Math.floor(rnd()*9)),"dars_tarix_" + (1 + Math.floor(rnd()*5)),"dars_iksir_" + (1 + Math.floor(rnd()*3)),"bellashuv_iksir","bellashuv_tarix"]);
       else if(roll < .80) p = "src_" + pick(["kanal","marvel","kino","instagram"]);
       else if(roll < .84) p = "invited_7100000123";
       else if(roll < .87) p = "ref_awarded";
@@ -5838,7 +5942,7 @@ function demoRows(){
       b.setAttribute("aria-checked", String(!ST.oraliq && ST.days === x.d));
       b.textContent = x.n;
       b.addEventListener("click", function(){
-        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+        ST.days = x.d; ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaDr = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); render();
       });
       menu.appendChild(b);
@@ -5855,7 +5959,7 @@ function demoRows(){
       b.addEventListener("click", function(){
         var p2 = x.f();
         ST.oraliq = {from: kunYoz(p2[0]), to: kunYoz(p2[1])};
-        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+        ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaDr = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
         saveCfg(); nomla(); yop(); panel.hidden = true; render();
       });
       menu.appendChild(b);
@@ -5895,11 +5999,11 @@ function demoRows(){
     if(!a || !b){ xato.hidden = false; xato.textContent = "Ikkala sanani ham tanlang."; return; }
     xato.hidden = true;
     ST.oraliq = {from: kunYoz(a > b ? b : a), to: kunYoz(a > b ? a : b)};
-    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
+    ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaDr = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1};
     saveCfg(); nomla(); panel.hidden = true; render();
   });
   document.getElementById("d-clear").addEventListener("click", function(){
-    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1}; xato.hidden = true;
+    ST.oraliq = null; ST.oyna = {a:0, b:1}; ST.oynaF = {a:0, b:1}; ST.oynaK = {a:0, b:1}; ST.oynaH = {a:0, b:1}; ST.oynaKh = {a:0, b:1}; ST.oynaM = {a:0, b:1}; ST.oynaKt = {a:0, b:1}; ST.oynaDr = {a:0, b:1}; ST.oynaC = {a:0, b:1}; ST.oynaO = {a:0, b:1}; ST.oynaY = {a:0, b:1}; xato.hidden = true;
     saveCfg(); nomla(); panel.hidden = true; render();
   });
 })();
