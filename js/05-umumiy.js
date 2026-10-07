@@ -432,11 +432,12 @@
 
   function qsKey(id, dub) { return id + "_" + lang + (dub && dub !== qsMain ? "~" + dub : ""); }
 
-  // Shu filmda (shu tilda) mavjud dublyajlar - asosiysi birinchi
+  // Dublyajlar ro'yxati - asosiysi birinchi. O'zbekcha filmda tanlov DOIM ko'rinadi (egasi, 2026-10-07):
+  // fayli hali yo'q dublyaj ham turadi ("Tez orada"), tanlansa sifatlari qulflangan chiqadi.
   function qsDubList(id) {
-    if (!qsData) { return []; }
-    return [qsMain].concat(Object.keys(qsDubs).filter(function (d) { return d !== qsMain; }))
-      .filter(function (d) { return !!qsData[qsKey(id, d)]; });
+    if (!qsData || lang !== "uz") { return []; }
+    var hammasi = [qsMain].concat(Object.keys(qsDubs).filter(function (d) { return d !== qsMain; }));
+    return hammasi.some(function (d) { return !!qsData[qsKey(id, d)]; }) ? hammasi : [];
   }
 
   function qsLoad() {
@@ -482,7 +483,8 @@
     $("qs-close").textContent = x.close;
     // Dublyaj tanlovi: filmda ikkalasi bo'lsa tepada ikki tugma
     var dl = qsDubList(id), dbox = $("qs-dubs");
-    qsDub = dl.length > 1 ? dl[0] : null;
+    // Boshida fayli bor birinchi dublyaj tanlangan bo'ladi
+    qsDub = dl.length > 1 ? (dl.filter(function (d) { return !!qsData[qsKey(id, d)]; })[0] || dl[0]) : null;
     dbox.classList.toggle("hidden", dl.length < 2);
     $("qs-dub-l").classList.toggle("hidden", dl.length < 2);
     $("qs-dub-l").textContent = QS_DUB_TX[lang] || QS_DUB_TX.uz;
@@ -493,6 +495,11 @@
         b.type = "button";
         b.className = d === qsDub ? "on" : "";
         b.textContent = qsDubs[d] || d;
+        if (!qsData[qsKey(id, d)]) {
+          var tez = document.createElement("small");
+          tez.textContent = x.soon;
+          b.appendChild(tez);
+        }
         b.onclick = function () {
           if (d === qsDub) { return; }
           qsDub = d;
