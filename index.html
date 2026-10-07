@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=eda6b78a">
+<link rel="stylesheet" href="css/app.css?v=d3b34d27">
 </head>
 <body>
 <div class="shell">
@@ -272,7 +272,23 @@
       <span class="kb-sp" aria-hidden="true"></span>
     </div>
     <div class="nsh-sum"><b id="dr-sum"></b><small id="dr-note"></small><span class="nsh-bar"><i id="dr-bar"></i></span></div>
-    <div class="dr-list" id="dr-list"></div>
+    <div class="dr-list" id="dr-list"></div>
+    <div class="dr-bell-h hidden" id="dr-bell-h"><b id="dr-bell-t"></b><small id="dr-bell-s"></small></div>
+    <div class="dr-list" id="dr-bell"></div>
+  </div>
+  <div id="scr-bell" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="bl-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="bl-kick"></span><span class="cup-title" id="bl-ttl"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <div class="dr-head"><span class="ms-kick" id="bl-today"></span><h2 class="ms-title" id="bl-name"></h2><p class="dr-desc" id="bl-rule"></p></div>
+    <p class="bl-prizes" id="bl-prizes"></p>
+    <p class="dr-hint" id="bl-mine"></p>
+    <button class="dr-btn" id="bl-go" type="button"></button>
+    <span class="dr-step" id="bl-top-t"></span>
+    <div class="bl-list" id="bl-top"></div>
+    <div class="hidden" id="bl-yest-h"><span class="dr-step" id="bl-yest-t"></span><div class="bl-list" id="bl-yest"></div></div>
   </div>
   <div id="scr-afsun" class="screen hidden">
     <div class="cup-hdr kb-hdr">
@@ -295,7 +311,7 @@
       <div class="kb-ttl"><span class="cup-kick" id="ik-kick"></span><span class="cup-title" id="ik-ttl"></span></div>
       <span class="kb-sp" aria-hidden="true"></span>
     </div>
-    <div class="dr-head"><span class="ms-kick" id="ik-today"></span><h2 class="ms-title" id="ik-name"></h2></div>
+    <div class="dr-head"><span class="ms-kick" id="ik-today"></span><h2 class="ms-title" id="ik-name"></h2><span class="dr-step hidden" id="ik-timer"></span></div>
     <div class="ik-pot" id="ik-pot"><i class="ik-bub b1"></i><i class="ik-bub b2"></i><i class="ik-bub b3"></i><span class="ik-liq"></span><span class="ik-rim"></span><i class="ik-smoke"></i></div>
     <div class="ik-rec" id="ik-rec">
       <span class="dr-step" id="ik-rec-t"></span>
@@ -1327,12 +1343,12 @@
 <script src="js/07-kitob-matn.js?v=053ca97b"></script>
 <script src="js/07-odam.js?v=a2b0b55a"></script>
 <script src="js/08-saralash.js?v=d754a902"></script>
-<script src="js/09-sehrli-olam.js?v=ef9b31e5"></script>
-<script src="js/09-darslar.js?v=2f5ad32d"></script>
+<script src="js/09-sehrli-olam.js?v=935a48c9"></script>
+<script src="js/09-darslar.js?v=5fc4b103"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=6d761044"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=4529a491"></script>
+<script src="js/13-orqaga.js?v=2a07d76b"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
 

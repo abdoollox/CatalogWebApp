@@ -44,6 +44,16 @@
     uz: { kick: "Xogvarts", ttl: "Darslar", tile: "Darslar", tileNew: function (n) { return n + " ta dars kutmoqda"; }, tileDone: "Bugungi darslar bajarildi",
           sum: function (a, b) { return "Bugun: " + a + " / " + b + " dars"; }, note: "Har dars kuniga bir marta ball beradi. Ertaga yangi mavzu.",
           pts: function (n) { return "+" + n + " ball"; }, done: "Bajarildi", soon: "Tez orada", go: "Darsga kirish", again: "Mashq qilish",
+          lvl: function (n) { return n + "-dars"; }, lvlDone: function (n) { return n + " ta dars o'tilgan"; },
+          bell: "Bellashuv", bellS: "Kuniga bitta topshiriq — hammaga bir xil. Kim tezroq va xatosiz bajarsa, ertaga qo'shimcha ball oladi.",
+          bellOf: function (f) { return f + " bellashuvi"; }, bellNone: "Hali qatnashmadingiz", bellGo: "Boshlash", bellNo: "Bugungi urinishlar tugadi",
+          tries: function (n) { return n + " ta urinish qoldi"; }, place: function (n, j) { return n + "-o'rin · " + j + " kishidan"; },
+          prizes: function (a, b, c, d) { return "1-o'rin +" + a + " · 2-o'rin +" + b + " · 3-o'rin +" + c + " · 4–10-o'rin +" + d + " ball"; },
+          rule: "Vaqt «Boshlash» bosilgandan hisoblanadi. Har xato +3 soniya. Eng yaxshi urinishingiz hisobga olinadi.",
+          topT: "Bugungi jadval", topNone: "Hali hech kim qatnashmadi — birinchi bo'ling!", yest: "Kechagi g'oliblar",
+          yestMe: function (n, p) { return "Siz kecha " + n + "-o'rin" + (p ? " · +" + p + " ball" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
+          you: "siz", resT: function (t) { return "Natijangiz: " + t; }, resBest: function (t) { return "Eng yaxshi natijangiz: " + t; },
+          bellBack: "Jadvalga qaytish", timer: "Vaqt ketyapti",
           today: "Bugungi mavzu", back: "Darslarga qaytish", got: function (n) { return "Fakultetingizga +" + n + " ball"; },
           practice: "Bu dars bugun bajarilgan — mashq uchun ball berilmaydi.", fail: "Hozir bo'lmadi, birozdan keyin urinib ko'ring",
           // afsunlar
@@ -59,6 +69,16 @@
     ru: { kick: "Хогвартс", ttl: "Уроки", tile: "Уроки", tileNew: function (n) { return "Ждут уроки: " + n; }, tileDone: "Уроки на сегодня сделаны",
           sum: function (a, b) { return "Сегодня: " + a + " / " + b; }, note: "Каждый урок даёт очки раз в день. Завтра — новая тема.",
           pts: function (n) { return "+" + n + " очков"; }, done: "Сделано", soon: "Скоро", go: "На урок", again: "Потренироваться",
+          lvl: function (n) { return "Урок " + n; }, lvlDone: function (n) { return "Пройдено уроков: " + n; },
+          bell: "Состязание", bellS: "Одно задание в день — одинаковое для всех. Кто быстрее и без ошибок, завтра получит дополнительные очки.",
+          bellOf: function (f) { return f + ": состязание"; }, bellNone: "Вы ещё не участвовали", bellGo: "Начать", bellNo: "Попытки на сегодня закончились",
+          tries: function (n) { return "Осталось попыток: " + n; }, place: function (n, j) { return n + "-е место из " + j; },
+          prizes: function (a, b, c, d) { return "1-е место +" + a + " · 2-е +" + b + " · 3-е +" + c + " · 4–10-е +" + d + " очков"; },
+          rule: "Время идёт с нажатия «Начать». Каждая ошибка +3 секунды. Засчитывается лучшая попытка.",
+          topT: "Таблица дня", topNone: "Пока никто не участвовал — будьте первым!", yest: "Вчерашние победители",
+          yestMe: function (n, p) { return "Вчера вы на " + n + "-м месте" + (p ? " · +" + p + " очков" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " с"; },
+          you: "вы", resT: function (t) { return "Ваш результат: " + t; }, resBest: function (t) { return "Лучший результат: " + t; },
+          bellBack: "К таблице", timer: "Время идёт",
           today: "Тема дня", back: "К урокам", got: function (n) { return "+" + n + " очков вашему факультету"; },
           practice: "Этот урок сегодня уже сделан — за тренировку очки не даются.", fail: "Не получилось, попробуйте чуть позже",
           afStep: function (a, b) { return "Попытка " + a + " / " + b; },
@@ -72,6 +92,16 @@
     en: { kick: "Hogwarts", ttl: "Classes", tile: "Classes", tileNew: function (n) { return n + " classes waiting"; }, tileDone: "Today's classes are done",
           sum: function (a, b) { return "Today: " + a + " / " + b + " classes"; }, note: "Each class gives points once a day. A new topic tomorrow.",
           pts: function (n) { return "+" + n + " points"; }, done: "Done", soon: "Coming soon", go: "Enter class", again: "Practise",
+          lvl: function (n) { return "Lesson " + n; }, lvlDone: function (n) { return n + " lessons completed"; },
+          bell: "Contest", bellS: "One task a day — the same for everyone. The fastest with no mistakes get bonus points tomorrow.",
+          bellOf: function (f) { return f + " contest"; }, bellNone: "You have not taken part yet", bellGo: "Start", bellNo: "No attempts left today",
+          tries: function (n) { return n + " attempts left"; }, place: function (n, j) { return "Place " + n + " of " + j; },
+          prizes: function (a, b, c, d) { return "1st +" + a + " · 2nd +" + b + " · 3rd +" + c + " · 4th–10th +" + d + " points"; },
+          rule: "The clock starts when you press Start. Each mistake adds 3 seconds. Your best attempt counts.",
+          topT: "Today's table", topNone: "Nobody has taken part yet — be the first!", yest: "Yesterday's winners",
+          yestMe: function (n, p) { return "Yesterday you were " + n + (p ? " · +" + p + " points" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
+          you: "you", resT: function (t) { return "Your result: " + t; }, resBest: function (t) { return "Your best: " + t; },
+          bellBack: "Back to the table", timer: "The clock is running",
           today: "Today's topic", back: "Back to classes", got: function (n) { return "+" + n + " points for your house"; },
           practice: "This class is already done today — practice gives no points.", fail: "That didn't work, please try again shortly",
           afStep: function (a, b) { return "Attempt " + a + " / " + b; },
@@ -98,13 +128,32 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalDone = {};
-  function drSample(done) {
-    if (done) { drLocalDone[done] = true; }
-    return { ok: true, "new": !!done, pts: done ? 5 : 0, lessons: {
+  var drLocalDone = {}, drLocalBest = {};
+  function drSample(body) {
+    body = body || {};
+    if (body.done) { drLocalDone[body.done] = true; }
+    var res = { ok: true, "new": !!body.done, pts: body.done ? 5 : 0 };
+    if (body.finish) {
+      res.ms = 5200 + Math.round(Math.random() * 3000) + (body.xato || 0) * 3000;
+      drLocalBest[body.finish] = Math.min(drLocalBest[body.finish] || 1e9, res.ms);
+      res.best = drLocalBest[body.finish];
+    }
+    var bell = function (id, item) {
+      var top = [{ uid: 11, name: "Germiona", house: "gryffindor", ms: 4300 }, { uid: 12, name: "Luna", house: "ravenclaw", ms: 5100 },
+                 { uid: 13, name: "Sedrik", house: "hufflepuff", ms: 6900 }, { uid: 14, name: "Drako", house: "slytherin", ms: 8400 }];
+      if (drLocalBest[id]) { top.push({ uid: 1, name: "Siz", house: "gryffindor", ms: drLocalBest[id], me: true }); }
+      top.sort(function (p, q) { return p.ms - q.ms; });
+      var orin = null;
+      top.forEach(function (t, i) { if (t.me) { orin = i + 1; } });
+      return { item: item, top: top, n: top.length, place: orin, ms: drLocalBest[id] || null, tries: drLocalBest[id] ? 1 : 0, max: 3,
+               prizes: { top: [15, 10, 7], ten: 3 },
+               yesterday: { top: top.slice(0, 3), n: 9, place: 4, pts: 3 } };
+    };
+    res.lessons = {
       tarix: { done: false, pts: 10 },
-      afsun: { done: !!drLocalDone.afsun, pts: 5, item: "leviosa" },
-      iksir: { done: !!drLocalDone.iksir, pts: 5, item: "boils" } } };
+      afsun: { done: !!drLocalDone.afsun, pts: 5, level: drLocalDone.afsun ? 14 : 13, n: 14, item: "leviosa", cycle: 1, contest: bell("afsun", "lumos") },
+      iksir: { done: !!drLocalDone.iksir, pts: 5, level: drLocalDone.iksir ? 3 : 2, n: 3, item: "shrink", cycle: 0, contest: bell("iksir", "boils") } };
+    return res;
   }
 
   function drPost(body, cb) {
@@ -112,8 +161,8 @@
     window.fetch(API_DARS, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": drInit() },
                              body: JSON.stringify(body || {}) })
       .then(function (r) { return r.json(); })
-      .then(function (res) { cb(res && res.ok ? res : (MS_LOCAL ? drSample(body && body.done) : res)); })
-      ["catch"](function () { cb(MS_LOCAL ? drSample(body && body.done) : null); });
+      .then(function (res) { cb(res && (res.ok || res.error === "no_tries" || res.error === "not_started") ? res : (MS_LOCAL ? drSample(body) : res)); })
+      ["catch"](function () { cb(MS_LOCAL ? drSample(body) : null); });
   }
 
   function drApply(res) {
@@ -139,7 +188,7 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -182,8 +231,8 @@
       card.appendChild(im);
       var tx = drEl("span", "dr-tx");
       tx.appendChild(drEl("b", "", f.nom[lang]));
-      tx.appendChild(drEl("small", "dr-ust", f.ust[lang]));
-      if (f.on && f.izoh) { tx.appendChild(drEl("small", "dr-izoh", f.izoh[lang])); }
+      tx.appendChild(drEl("small", "dr-ust", f.ust[lang] + (st && st.n ? " · " + x.lvl(st.done ? st.n + 1 : st.n) : "")));
+      if (f.on && f.izoh) { tx.appendChild(drEl("small", "dr-izoh", st && st.level ? x.lvlDone(st.level) : f.izoh[lang])); }
       card.appendChild(tx);
       var chip = drEl("span", "dr-chip", !f.on ? x.soon : (st && st.done ? x.done : x.pts(st ? st.pts : (f.id === "tarix" ? 10 : 5))));
       card.appendChild(chip);
@@ -193,7 +242,142 @@
       });
       box.appendChild(card);
     });
+
+    // Bellashuv: kuniga bitta umumiy topshiriq, eng yaxshilarga qo'shimcha ball
+    var bb = $("dr-bell");
+    bb.innerHTML = "";
+    var bor = DR_FANLAR.filter(function (f) { return f.on && drData && drData[f.id] && drData[f.id].contest; });
+    $("dr-bell-h").classList.toggle("hidden", !bor.length);
+    $("dr-bell-t").textContent = x.bell;
+    $("dr-bell-s").textContent = x.bellS;
+    bor.forEach(function (f) {
+      var c = drData[f.id].contest;
+      var card = drEl("button", "dr-card bell");
+      card.type = "button";
+      card.style.setProperty("--dr-rgb", "224,178,91");
+      var im = drEl("span", "dr-im kubok");
+      im.innerHTML = DR_KUBOK;
+      card.appendChild(im);
+      var tx = drEl("span", "dr-tx");
+      tx.appendChild(drEl("b", "", x.bellOf(f.nom[lang])));
+      tx.appendChild(drEl("small", "dr-ust", drItemName(f.id, c.item)));
+      tx.appendChild(drEl("small", "dr-izoh", c.ms ? x.sec(c.ms) + " · " + x.place(c.place, c.n) : x.bellNone));
+      card.appendChild(tx);
+      card.appendChild(drEl("span", "dr-chip", "+" + c.prizes.top[0]));
+      card.addEventListener("click", function () { blOpen(f.id); });
+      bb.appendChild(card);
+    });
   }
+
+  var DR_KUBOK = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-3.6 4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 7.6 12 4 4 0 0 1 4 8V5h3zm10 4v2.8A2 2 0 0 0 18 8V7zM6 7v1a2 2 0 0 0 1 1.8V7z"/></svg>';
+  function drItemName(fan, item) {
+    if (fan === "afsun") { return ((AF[item] || {})[lang] || (AF[item] || {}).uz || [item])[0]; }
+    if (fan === "iksir") { return (IK[item] || {})[lang] || (IK[item] || {}).uz || item; }
+    return item;
+  }
+
+  /* --- bellashuv sahifasi --- */
+  var blFan = null, bl = null;       // bl: ketayotgan urinish {fan, t0, xato}
+
+  function blOpen(fan) {
+    blFan = fan;
+    bl = null;
+    ["scr-dars", "scr-afsun", "scr-iksir"].forEach(function (id) { $(id).classList.add("hidden"); });
+    $("scr-bell").classList.remove("hidden");
+    blRender();
+    drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
+  function blRow(p, i, x) {
+    var r = drEl("div", "bl-row" + (p.me ? " me" : ""));
+    r.appendChild(drEl("i", "o" + (i + 1), String(i + 1)));
+    var cr = drEl("span", "bl-cr");
+    var im = cupCrestImg(p.house, 18);
+    if (im) { cr.appendChild(im); }
+    r.appendChild(cr);
+    r.appendChild(drEl("b", "", p.name + (p.me ? " (" + x.you + ")" : "")));
+    r.appendChild(drEl("em", "", x.sec(p.ms)));
+    return odamLink(r, p);
+  }
+
+  function blRender() {
+    var x = drX(), f = drFan(blFan), st = drData && drData[blFan], c = st && st.contest;
+    if (!f || !c) { return; }
+    $("bl-kick").textContent = x.bell;
+    $("bl-ttl").textContent = f.nom[lang];
+    $("bl-today").textContent = x.today;
+    $("bl-name").textContent = drItemName(blFan, c.item);
+    $("bl-prizes").textContent = x.prizes(c.prizes.top[0], c.prizes.top[1], c.prizes.top[2], c.prizes.ten);
+    $("bl-rule").textContent = x.rule;
+    $("bl-mine").textContent = c.ms ? x.resBest(x.sec(c.ms)) + " · " + x.place(c.place, c.n) : x.bellNone;
+    var qoldi = Math.max(0, (c.max || 3) - (c.tries || 0));
+    var go = $("bl-go");
+    go.textContent = qoldi > 0 ? x.bellGo + " · " + x.tries(qoldi) : x.bellNo;
+    go.disabled = qoldi < 1;
+    $("bl-top-t").textContent = x.topT;
+    var top = $("bl-top");
+    top.innerHTML = "";
+    if (!c.top.length) { top.appendChild(drEl("p", "bl-none", x.topNone)); }
+    c.top.forEach(function (p, i) { top.appendChild(blRow(p, i, x)); });
+    var y = c.yesterday || { top: [] };
+    $("bl-yest-h").classList.toggle("hidden", !y.top.length);
+    $("bl-yest-t").textContent = x.yest;
+    var yb = $("bl-yest");
+    yb.innerHTML = "";
+    y.top.forEach(function (p, i) { yb.appendChild(blRow(p, i, x)); });
+    if (y.place) { yb.appendChild(drEl("p", "bl-none", x.yestMe(y.place, y.pts))); }
+  }
+
+  // Urinishni boshlash: avval server (vaqtni u o'lchaydi), keyin o'yin
+  function blStart() {
+    if (drBusy || !blFan) { return; }
+    drBusy = true;
+    var fan = blFan;
+    drPost({ start: fan }, function (res) {
+      drBusy = false;
+      if (res && res.lessons) { drData = res.lessons; }
+      if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
+      bl = { fan: fan, t0: Date.now(), xato: 0 };
+      if (fan === "afsun") { afOpen(true); } else { ikOpen(true); }
+      blTick();
+    });
+  }
+
+  function blTick() {
+    if (!bl) { return; }
+    if (bl.fan === "iksir") { $("ik-timer").textContent = drX().timer + " · " + drX().sec(Date.now() - bl.t0 + bl.xato * 3000); }
+    else if (af && !af.done) { afPaint(); }
+    bl.tm = setTimeout(blTick, 100);
+  }
+
+  // Urinish tugadi: natija serverda hisoblanadi
+  function blFinish(box) {
+    var x = drX(), b = bl;
+    if (!b) { return; }
+    bl = null;
+    clearTimeout(b.tm);
+    drPost({ finish: b.fan, xato: b.xato }, function (res) {
+      if (res && res.lessons) { drData = res.lessons; }
+      box.innerHTML = "";
+      if (!res || !res.ok) { box.appendChild(drEl("p", "dr-res-t", x.fail)); }
+      else {
+        var c = drData[b.fan].contest;
+        box.appendChild(drEl("p", "dr-res-t", x.resT(x.sec(res.ms))));
+        box.appendChild(drEl("b", "dr-res-p", x.place(c.place, c.n)));
+        if (res.best < res.ms) { box.appendChild(drEl("small", "dr-res-s", x.resBest(x.sec(res.best)))); }
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+      }
+      var bt = drEl("button", "dr-btn", x.bellBack);
+      bt.type = "button";
+      bt.addEventListener("click", function () { blOpen(b.fan); });
+      box.appendChild(bt);
+      box.classList.remove("hidden");
+    });
+  }
+
+  // Bellashuv paytida o'yindan chiqib ketilsa urinish yonadi (server vaqti o'tib ketadi)
+  function blAbort() { if (bl) { clearTimeout(bl.tm); bl = null; } }
 
   function drOpenFan(id) {
     if (id === "tarix") {
@@ -226,7 +410,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -300,15 +484,25 @@
     return out;
   }
 
-  function afOpen() {
+  // Qiyinlik aylanaga qarab: chiziq ko'rinishi (1 - aniq, .3 - xira, 0 - yoddan) va ruxsat etilgan chetlanish
+  var AF_BOSQ = [
+    { r: [1, 0.3, 0], tol: 0.13 },
+    { r: [0.3, 0, 0], tol: 0.118 },
+    { r: [0, 0, 0], tol: 0.105 },
+    { r: [0, 0, 0], tol: 0.095 }
+  ];
+  function afOpen(bell) {
     var st = drData && drData.afsun;
-    var id = st && AF[st.item] ? st.item : "lumos";
-    af = { id: id, round: 0, idx: 0, drawing: false, trail: [], done: false, msg: "", ok: false, bajar: !!(st && st.done), show: false };
+    var item = bell === true ? (st && st.contest && st.contest.item) : (st && st.item);
+    var id = AF[item] ? item : "lumos";
+    var bq = bell === true ? AF_BOSQ[0] : AF_BOSQ[Math.min((st && st.cycle) || 0, AF_BOSQ.length - 1)];
+    af = { id: id, round: 0, idx: 0, drawing: false, trail: [], done: false, msg: "", ok: false, bajar: !!(st && st.done), show: false,
+           bq: bq, bell: bell === true, n: st && st.n };
     drShowGame("scr-afsun");
     var x = drX(), f = drFan("afsun"), a = AF[id][lang] || AF[id].uz;
     $("af-kick").textContent = f.nom[lang];
     $("af-ttl").textContent = f.ust[lang];
-    $("af-today").textContent = x.today;
+    $("af-today").textContent = af.bell ? x.bell : (af.n ? x.lvl(af.n) : x.today);
     $("af-name").textContent = a[0];
     $("af-desc").textContent = a[1];
     $("af-res").classList.add("hidden");
@@ -335,7 +529,7 @@
     var x = drX(), c = $("af-canvas"), g = c.getContext("2d"), w = af.w, i;
     g.setTransform(af.dpr, 0, 0, af.dpr, 0, 0);
     g.clearRect(0, 0, w, w);
-    var ochiq = af.round === 0 || af.show ? 0.85 : af.round === 1 ? 0.28 : 0;
+    var ochiq = af.show ? 0.85 : af.bq.r[Math.min(af.round, 2)] * 0.85;
     if (ochiq > 0) {
       g.lineCap = "round"; g.lineJoin = "round";
       g.strokeStyle = "rgba(160,190,240," + ochiq + ")";
@@ -369,10 +563,11 @@
       g.stroke();
       g.shadowBlur = 0;
     }
-    $("af-step").textContent = x.afStep(Math.min(af.round + 1, 3), 3);
-    $("af-hint").textContent = af.msg || x.afR[Math.min(af.round, 2)];
+    var ko = af.bq.r[Math.min(af.round, 2)];
+    $("af-step").textContent = x.afStep(Math.min(af.round + 1, 3), 3) + (bl && af.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("af-hint").textContent = af.msg || x.afR[ko >= 1 ? 0 : ko > 0 ? 1 : 2];
     $("af-hint").classList.toggle("bad", !!af.bad);
-    $("af-show").classList.toggle("hidden", af.round < 2 || af.show || af.done);
+    $("af-show").classList.toggle("hidden", af.bell || af.bq.r[Math.min(af.round, 2)] > 0 || af.show || af.done);
   }
 
   function afXY(ev) {
@@ -392,6 +587,7 @@
   }
 
   function afFail(matn) {
+    if (bl && af.bell) { bl.xato++; }
     af.drawing = false;
     af.msg = matn;
     af.bad = true;
@@ -416,7 +612,7 @@
 
   function afMove(ev) {
     if (!af || !af.drawing) { return; }
-    var p = afXY(ev), tol = af.w * (af.round >= 2 ? 0.15 : 0.13);
+    var p = afXY(ev), tol = af.w * (af.bq.tol + (af.bq.r[Math.min(af.round, 2)] === 0 ? 0.02 : 0));
     af.trail.push(p);
     if (afDist(p) > tol * 1.9) { afFail(drX().afOff); return; }
     while (af.idx < af.pts.length - 1 && Math.hypot(p[0] - af.pts[af.idx + 1][0], p[1] - af.pts[af.idx + 1][1]) < tol) { af.idx++; }
@@ -450,6 +646,11 @@
         return;
       }
       af.done = true;
+      if (af.bell) {
+        $("af-stage").classList.add("hidden");
+        blFinish($("af-res"));
+        return;
+      }
       drDone("afsun", function (pts) {
         $("af-stage").classList.add("hidden");
         drResult($("af-res"), x.afOk[2], pts);
@@ -494,15 +695,20 @@
 
   function ikNom(m) { var i = lang === "ru" ? 1 : lang === "en" ? 2 : 0; return (IK_M[m] || [m, m, m])[i]; }
 
-  function ikOpen() {
+  // Qiyinlik aylanaga qarab: nechta masalliq orasidan tanlanadi va nechta xatoga ruxsat
+  var IK_BOSQ = [{ chips: 8, xato: 3 }, { chips: 10, xato: 3 }, { chips: 12, xato: 2 }, { chips: 14, xato: 2 }];
+  function ikOpen(bell) {
     var st = drData && drData.iksir;
-    var id = st && IK[st.item] ? st.item : "boils";
-    ik = { id: id, phase: "rec", step: 0, err: 0, chips: [], bajar: !!(st && st.done) };
+    var item = bell === true ? (st && st.contest && st.contest.item) : (st && st.item);
+    var id = IK[item] ? item : "boils";
+    var bq = bell === true ? { chips: 10, xato: 99 } : IK_BOSQ[Math.min((st && st.cycle) || 0, IK_BOSQ.length - 1)];
+    ik = { id: id, phase: "rec", step: 0, err: 0, chips: [], bajar: !!(st && st.done), bq: bq, bell: bell === true, n: st && st.n };
     drShowGame("scr-iksir");
     var x = drX(), f = drFan("iksir");
     $("ik-kick").textContent = f.nom[lang];
     $("ik-ttl").textContent = f.ust[lang];
-    $("ik-today").textContent = x.today;
+    $("ik-today").textContent = ik.bell ? x.bell : (ik.n ? x.lvl(ik.n) : x.today);
+    $("ik-timer").classList.toggle("hidden", !ik.bell);
     $("ik-name").textContent = IK[id][lang] || IK[id].uz;
     ikRender();
   }
@@ -514,7 +720,7 @@
 
   function ikStart() {
     var rec = IK[ik.id].r, boshqa = ikShuffle(Object.keys(IK_M).filter(function (m) { return rec.indexOf(m) < 0; }));
-    ik.chips = ikShuffle(rec.concat(boshqa.slice(0, 8 - rec.length)));
+    ik.chips = ikShuffle(rec.concat(boshqa.slice(0, ik.bq.chips - rec.length)));
     ik.phase = "cook";
     ik.step = 0;
     ik.err = 0;
@@ -545,7 +751,7 @@
     if (ik.phase === "cook") {
       $("ik-cook-t").textContent = ik.msg || x.ikCook;
       $("ik-cook-t").classList.toggle("bad", !!ik.msg);
-      $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + x.ikErr(ik.err, IK_XATO);
+      $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + (ik.bell ? x.ikErr(ik.err, "∞").replace(" / ∞", "") : x.ikErr(ik.err, ik.bq.xato));
       var box = $("ik-chips");
       box.innerHTML = "";
       ik.chips.forEach(function (m) {
@@ -577,6 +783,7 @@
           ik.lock = false;
           ik.phase = "done";
           ikRender();
+          if (ik.bell) { blFinish($("ik-res")); return; }
           drDone("iksir", function (pts) { drResult($("ik-res"), x.ikOk, pts); });
         }, 700);
         return;
@@ -586,12 +793,13 @@
     }
     // xato masalliq
     ik.err++;
+    if (bl && ik.bell) { bl.xato++; }
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
     btn.classList.add("xato");
     $("ik-pot").classList.remove("tutun");
     void $("ik-pot").offsetWidth;
     $("ik-pot").classList.add("tutun");
-    if (ik.err >= IK_XATO) {
+    if (ik.err >= ik.bq.xato) {
       ik.lock = true;
       setTimeout(function () {
         if (!ik) { return; }
@@ -606,13 +814,15 @@
     ik.msg = x.ikBad[Math.min(ik.err - 1, 1)];
     $("ik-cook-t").textContent = ik.msg;
     $("ik-cook-t").classList.add("bad");
-    $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + x.ikErr(ik.err, IK_XATO);
+    $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + (ik.bell ? x.ikErr(ik.err, "∞").replace(" / ∞", "") : x.ikErr(ik.err, ik.bq.xato));
   }
 
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
-    $("af-back").addEventListener("click", function () { af = null; drOpen(); });
-    $("ik-back").addEventListener("click", function () { ik = null; drOpen(); });
+    $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { drOpen(); } });
+    $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ik = null; blAbort(); if (b) { blOpen("iksir"); } else { drOpen(); } });
+    $("bl-back").addEventListener("click", function () { blAbort(); drOpen(); });
+    $("bl-go").addEventListener("click", blStart);
     $("ik-go").addEventListener("click", function () { if (ik) { ik.msg = ""; ikStart(); } });
     $("af-show").addEventListener("click", function () { if (af && !af.done) { af.show = true; af.trail = []; afPaint(); } });
     var c = $("af-canvas");

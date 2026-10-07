@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2638,3 +2638,22 @@ body.kr-on .mp{display:none!important}
 .ik-chip.in{opacity:.3;border-style:dashed;cursor:default}
 .ik-chip.xato{border-color:#f08c83;color:#f08c83;animation:ikShake .35s}
 #scr-dars .nsh-sum b{font-size:22px}
+
+/* --- darslar: bellashuv --- */
+.dr-bell-h{display:flex;flex-direction:column;gap:6px;margin:26px 0 0}
+.dr-bell-h b{font:600 22px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.dr-bell-h small{font:500 12px/1.45 'Manrope',sans-serif;color:var(--dim)}
+.dr-im.kubok{color:var(--gold)}
+.dr-im.kubok svg{width:30px;height:30px}
+.bl-prizes{margin:14px 0 0;padding:12px 14px;border-radius:14px;text-align:center;border:1px solid rgba(var(--gold-rgb),.3);background:rgba(var(--gold-rgb),.07);
+  font:700 12px/1.5 'Manrope',sans-serif;color:var(--gold-hi)}
+#bl-go:disabled{background:none;border:1px solid var(--line);color:var(--dim);cursor:default}
+.bl-list{display:flex;flex-direction:column;gap:6px}
+.bl-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.bl-row.me{border-color:rgba(var(--gold-rgb),.55);background:rgba(var(--gold-rgb),.08)}
+.bl-row i{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font:800 11px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim);background:rgba(255,255,255,.06)}
+.bl-row i.o1{background:var(--gold);color:var(--gold-ink)}.bl-row i.o2{background:#c9ced6;color:#1b1f26}.bl-row i.o3{background:#c08a55;color:#1d1206}
+.bl-cr{flex:none;display:grid;place-items:center;width:20px}
+.bl-row b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 14px/1.2 'Manrope',sans-serif}
+.bl-row em{flex:none;font:700 13px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.bl-none{margin:8px 0 0;text-align:center;font:500 12.5px/1.45 'Manrope',sans-serif;color:var(--dim)}

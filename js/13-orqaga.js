@@ -42,6 +42,7 @@
     "scr-dars": "dr-back",
     "scr-afsun": "af-back",
     "scr-iksir": "ik-back",
+    "scr-bell": "bl-back",
     "scr-qb": "qb-back",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",
