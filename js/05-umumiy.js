@@ -424,6 +424,20 @@
     en: { ask: "Choose the quality", soon: "Coming soon", close: "Close", note: "The film is sent to your bot chat." }
   };
   var qsData = null, qsAsked = false;
+  /* Dublyaj (egasi, 2026-10-07): o'zbekcha filmlar ikki xil dublyajda - MY5 TV va ZO'R TV. Sifat oynasining
+     tepasida tanlanadi; faqat filmda ikkalasi ham bo'lsa ko'rinadi. Serverda asosiy dublyaj kaliti "hp1_uz",
+     boshqasi "hp1_uz~zor" (hpfilms.py). Har safar asosiysidan boshlanadi. */
+  var qsDubs = { my5: "MY5 TV", zor: "ZO'R TV" }, qsMain = "my5", qsDub = null;
+  var QS_DUB_TX = { uz: "Dublyaj", ru: "Дубляж", en: "Dubbing" };
+
+  function qsKey(id, dub) { return id + "_" + lang + (dub && dub !== qsMain ? "~" + dub : ""); }
+
+  // Shu filmda (shu tilda) mavjud dublyajlar - asosiysi birinchi
+  function qsDubList(id) {
+    if (!qsData) { return []; }
+    return [qsMain].concat(Object.keys(qsDubs).filter(function (d) { return d !== qsMain; }))
+      .filter(function (d) { return !!qsData[qsKey(id, d)]; });
+  }
 
   function qsLoad() {
     if (qsAsked || !window.fetch) { return; }
@@ -432,6 +446,7 @@
     window.fetch(API_FILMS).then(function (r) { return r.json(); }).then(function (res) {
       if (!res || !res.ok || !res.films) { return; }
       qsData = res.films;
+      if (res.dubs) { qsDubs = res.dubs; qsMain = res.dub_main || qsMain; }
       try { window.localStorage.setItem("hp_films", JSON.stringify(qsData)); } catch (e) {}
     })["catch"](function () {});
   }
@@ -461,11 +476,35 @@
       $("qs-close").onclick = qsClose;
       el.addEventListener("click", function (e) { if (e.target === el) { qsClose(); } });
     }
-    var bor = qsData ? (qsData[id + "_" + lang] || {}) : { fhd: 0 };
     $("qs-kick").textContent = x.ask;
     $("qs-title").textContent = qsFilmName(id);
     $("qs-note").textContent = x.note;
     $("qs-close").textContent = x.close;
+    // Dublyaj tanlovi: filmda ikkalasi bo'lsa tepada ikki tugma
+    var dl = qsDubList(id), dbox = $("qs-dubs");
+    qsDub = dl.length > 1 ? dl[0] : null;
+    dbox.classList.toggle("hidden", dl.length < 2);
+    $("qs-dub-l").classList.toggle("hidden", dl.length < 2);
+    $("qs-dub-l").textContent = QS_DUB_TX[lang] || QS_DUB_TX.uz;
+    function dubChiz() {
+      dbox.innerHTML = "";
+      dl.forEach(function (d) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = d === qsDub ? "on" : "";
+        b.textContent = qsDubs[d] || d;
+        b.onclick = function () {
+          if (d === qsDub) { return; }
+          qsDub = d;
+          dubChiz();
+          qatorChiz();
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+        };
+        dbox.appendChild(b);
+      });
+    }
+    function qatorChiz() {
+    var bor = qsData ? (qsData[qsKey(id, qsDub)] || {}) : { fhd: 0 };
     var box = $("qs-list");
     box.innerHTML = "";
     QS_LIST.forEach(function (q) {
@@ -484,14 +523,17 @@
       b.querySelector(".qs-ic").innerHTML = ok
         ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg>'
         : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 9V7A5 5 0 0 0 7 7v2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3M9 7a3 3 0 0 1 6 0v2H9z"/></svg>';
-      if (ok) { b.onclick = function () { qsClose(); playSend(id, q[0]); }; }
+      if (ok) { b.onclick = function () { qsClose(); playSend(id, q[0], qsDub); }; }
       box.appendChild(b);
     });
+    }
+    if (dl.length > 1) { dubChiz(); }
+    qatorChiz();
     el.classList.remove("hidden");
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
   }
 
-  function playSend(id, q) {
+  function playSend(id, q, dub) {
     if (sending) { return; }
     var t = T[lang];
     var init = "";
@@ -504,7 +546,7 @@
     window.fetch(API_SEND, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
-      body: JSON.stringify({ movie_id: id, lang: lang, q: q })
+      body: JSON.stringify({ movie_id: id, lang: lang, q: q, dub: dub || undefined })
     }).then(function (r) { return r.json(); }).then(function (res) {
       sending = false;
       dismissNote(pending);

@@ -961,8 +961,8 @@ function classify(p){
   if((m = p.match(/^music_([a-z]{2}\d+)_(\d+)$/))) return {t:"mdl", album:m[1], n:+m[2], lab:"Trekni yuklab oldi", ic:"🎵"};
   if((m = p.match(/^music_([a-z]{2}\d+)$/)))       return {t:"mdl", album:m[1], n:0, lab:"Albomni yuklab oldi", ic:"💿"};
   // Sifat 2026-10-04 dan yoziladi: web_hp1_uz@hd / @fhd. Undan oldingi yozuvlarda yo'q ("?").
-  if((m = p.match(/^(web|bot)_([a-z]{2}\d+)_(uz|ru|en)(?:@(fhd|hd|sd))?$/)))
-    return {t:"film", origin:m[1], film:m[2], lang:m[3], q:m[4] || "?", lab:"Filmni oldi", ic:"🎬"};
+  if((m = p.match(/^(web|bot)_([a-z]{2}\d+)_(uz|ru|en)(?:~(my5|zor))?(?:@(fhd|hd|sd))?$/)))
+    return {t:"film", origin:m[1], film:m[2], lang:m[3], dub:m[4] || "", q:m[5] || "?", lab:"Filmni oldi", ic:"🎬"};
   if((m = p.match(/^([a-z]{2}\d+)_(uz|ru|en)$/)))
     return {t:"film", origin:"?", film:m[1], lang:m[2], q:"?", lab:"Filmni oldi", ic:"🎬"};
   return {t:"other", lab:p || "—", ic:"•"};
@@ -2559,7 +2559,7 @@ function hodisaMatni(r){
   var e = r.ev;
   if(e.t === "film") return "<b>" + esc(filmName(e.film)) + "</b> " + LANGS[e.lang].f +
     (e.origin === "web" ? " · WebApp" : e.origin === "bot" ? " · bot" : "") +
-    (e.q === "hd" ? " · HD" : e.q === "fhd" ? " · Full HD" : e.q === "sd" ? " · SD" : "");
+    (e.q === "hd" ? " · HD" : e.q === "fhd" ? " · Full HD" : e.q === "sd" ? " · SD" : "") + (e.dub === "zor" ? " · ZO'R TV" : e.dub === "my5" ? " · MY5 TV" : "");
   if(e.t === "house") return "<b>" + esc((HOUSES[e.house]||{n:e.house}).n) + "</b> fakultetiga tushdi";
   if(e.t === "src") return "reklamadan keldi · <b>" + esc(e.src) + "</b>";
   if(e.t === "invited"){
