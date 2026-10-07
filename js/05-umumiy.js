@@ -474,10 +474,13 @@
       b.type = "button";
       b.className = "qs-row" + (ok ? "" : " lock");
       b.disabled = !ok;
-      b.innerHTML = '<span class="qs-tx"><b></b><small></small></span><span class="qs-ic"></span>';
-      b.querySelector("b").textContent = q[1];
-      var hajm = ok ? qsSize(bor[q[0]]) : "";
-      b.querySelector("small").textContent = ok ? q[2] + (hajm ? " · " + hajm : "") : x.soon;
+      // Hajm o'rtada, katta raqam bilan (egasi, 2026-10-07: o'rtada bo'sh joy qolardi)
+      b.innerHTML = '<span class="qs-tx"><b></b><small></small></span><span class="qs-hajm"><b></b><i></i></span><span class="qs-ic"></span>';
+      b.querySelector(".qs-tx b").textContent = q[1];
+      var mb = ok && bor[q[0]] ? Math.round(bor[q[0]] / 1048576) : 0;
+      b.querySelector("small").textContent = ok ? q[2] : x.soon;
+      b.querySelector(".qs-hajm b").textContent = mb ? String(mb) : "";
+      b.querySelector(".qs-hajm i").textContent = mb ? "MB" : "";
       b.querySelector(".qs-ic").innerHTML = ok
         ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg>'
         : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 9V7A5 5 0 0 0 7 7v2a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3M9 7a3 3 0 0 1 6 0v2H9z"/></svg>';

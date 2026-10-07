@@ -2331,3 +2331,9 @@ div.pm-row{cursor:default}
 .nsh-more:active{transform:scale(.97)}
 .nsh-more:not(.hidden) + .nsh-ok{margin-top:10px}
 .nsh-row.nsh-crest img{width:120px;height:120px;border-radius:0;object-fit:contain;box-shadow:none;filter:drop-shadow(0 8px 22px rgba(0,0,0,.5))}
+
+/* Sifat oynasi: fayl hajmi o'rtada, katta */
+.qs-row .qs-tx{flex:1 1 auto}
+.qs-hajm{flex:none;display:inline-flex;align-items:baseline;gap:5px;margin-right:4px}
+.qs-hajm b{font:600 26px/1 'Cormorant Garamond',serif;color:var(--text)}
+.qs-hajm i{font:700 11px/1 'Manrope',sans-serif;font-style:normal;letter-spacing:.08em;color:var(--dim)}
