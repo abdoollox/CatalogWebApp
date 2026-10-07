@@ -1097,7 +1097,7 @@ function stats(rows, first, w){
       for(var i=0; i<24; i++) a.push({h:i, ev:0, u:{}, movie:0, start:0, sub:0, left:0, blocked:0});
       return a;
     })(),
-    houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0}, sifat:{fhd:0,hd:0,sd:0,"?":0},
+    houses:{}, srcs:{}, invited:0, refwin:0, shares:0, undo:0, sortStart:0, origin:{web:0,bot:0,"?":0}, sifat:{fhd:0,hd:0,sd:0,"?":0}, dub:{my5:0,zor:0},
     perUser:{}, byFilmLang:{}, seriya:{hp:0, fb:0},
     set:{start:{}, sub:{}, film:{}, sortst:{}, house:{}, "new":{}}
   };
@@ -1134,6 +1134,8 @@ function stats(rows, first, w){
         if(s.langs[e.lang] !== undefined) s.langs[e.lang]++;
         s.origin[e.origin] = (s.origin[e.origin]||0) + 1;
         s.sifat[e.q || "?"] = (s.sifat[e.q || "?"]||0) + 1;
+        // Dublyaj faqat o'zbekcha filmda; yozilmagan bo'lsa - asosiy dublyaj (MY5 TV)
+        if(e.lang === "uz") s.dub[e.dub === "zor" ? "zor" : "my5"]++;
         var kk = e.film + "|" + e.lang;
         s.byFilmLang[kk] = (s.byFilmLang[kk]||0) + 1;
         var tur = FILMS[e.film] && FILMS[e.film].kind;
@@ -2803,6 +2805,7 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
+  "Qaysi dublyajda": "O'zbekcha filmlar qaysi studiya dublyajida olingani: MY5 TV yoki ZO'R TV. Faqat o'zbek tilidagi yuborishlar sanaladi (rus va ingliz tilida dublyaj tanlovi yo'q). Dublyaj tanlovi 2026-yil 7-oktabrda qo'shilgan — undan oldingi hamma o'zbekcha yuborishlar MY5 TV, chunki o'shanda faqat shu dublyaj bor edi. ZO'R TV fayllari yuklanmaguncha u nol bo'lib turadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
   "Qaysi sifatda": "Odamlar filmni qaysi sifatda olgani: Full HD (1080p), HD (720p) yoki SD (480p, 2026-yil 7-oktabrdan). Sifat 2026-yil 4-oktabrdan yoziladi — undan oldingi yuborishlar «Eski ma'lumot» bo'lib ko'rinadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
   "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Gringotts (kirish va galleon olish), Olivander, 9¾ platforma (bilet va poyezd) va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
   "Yo'l kun sayin": "Har kuni (bir kunlik davrda — har soatda) nechta odam yo'lni boshladi (xatni ochdi), tayoqcha oldi va fakultetga tushdi. Har odam har qadamda bir marta, o'sha qadamni birinchi qilgan kuni sanaladi.",
@@ -3300,7 +3303,7 @@ function render(){
   put("kino", c7);
 
   // Sifat tanlovi (2026-10-04 dan): odamlar Full HD yoki HD ni tanlayapti
-  var cSif = card("Qaysi sifatda", "Full HD, HD yoki SD", "third");
+  var cSif = card("Qaysi sifatda", "Full HD, HD yoki SD", "half");
   var sItems = [
     {k:"eski", lab:"Eski ma'lumot", n:"Eski ma'lumot", val:s.sifat["?"] || 0, hex:"#6d7f99"},
     {k:"fhd",  lab:"Full HD",       n:"Full HD",       val:s.sifat.fhd || 0,  hex:"#c98500"},
@@ -3310,6 +3313,16 @@ function render(){
   if(s.films) cSif.appendChild(donut(sItems, "hp_dash_sifdonut", "film"));
   else cSif.appendChild(emptyNote("Bu davrda film yuborilmagan."));
   put("kino", cSif);
+
+  // Dublyaj tanlovi (2026-10-07 dan): o'zbekcha filmlar qaysi studiya dublyajida olinyapti
+  var cDub = card("Qaysi dublyajda", "o'zbekcha filmlar · MY5 TV yoki ZO'R TV", "half");
+  var dItems = [
+    {k:"my5", lab:"MY5 TV",  n:"MY5 TV",  val:s.dub.my5 || 0, hex:"#c98500"},
+    {k:"zor", lab:"ZO'R TV", n:"ZO'R TV", val:s.dub.zor || 0, hex:"#d1495b"}
+  ];
+  if(s.dub.my5 + s.dub.zor) cDub.appendChild(donut(dItems, "hp_dash_dubdonut", "film"));
+  else cDub.appendChild(emptyNote("Bu davrda o'zbekcha film yuborilmagan."));
+  put("kino", cDub);
 
   /* — Kundalik yuborish — */
   var kunTil = {};
