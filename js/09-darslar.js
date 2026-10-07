@@ -114,7 +114,7 @@
           ikOk: "The potion is ready. Professor Snape… said nothing. That is praise.", ikStep: function (a, b) { return a + " / " + b; } }
   };
 
-  var drData = null, drAsked = false, drQayt = false, drBusy = false;
+  var drData = null, drQayt = false, drBusy = false;
 
   function drX() { return DR_TX[lang] || DR_TX.uz; }
   function drInit() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
@@ -167,15 +167,24 @@
 
   function drApply(res) {
     if (!res || !res.ok) { return; }
+    var oldin = drPending();
     drData = res.lessons || {};
     if (!$("scr-dars").classList.contains("hidden")) { drRender(); }
-    try { if (hubVisible()) { renderHub(); } } catch (e) {}
+    // Bosh sahifa FAQAT kartadagi son o'zgargan bo'lsa qayta chiziladi. DIQQAT (2026-10-07 xatosi): renderHub
+    // drLoad ni chaqiradi - bu yerda shartsiz renderHub chaqirilsa cheksiz so'rov halqasi bo'ladi va ilova qotadi.
+    if (drPending() !== oldin) { try { if (hubVisible()) { renderHub(); } } catch (e) {} }
   }
 
-  function drLoad(force) {
-    if (drAsked && !force) { return; }
-    drAsked = true;
-    drPost({}, drApply);
+  // Bosh sahifa har chizilganda chaqiriladi: so'rov eng ko'pi bilan 20 soniyada bir marta ketadi
+  var drAt = 0, drWait = false;
+  function drLoad() {
+    if (drWait || Date.now() - drAt < 20000) { return; }
+    var ichkarida = false;
+    try { ichkarida = hasHouse(); } catch (e) {}
+    if (!ichkarida) { return; }
+    drAt = Date.now();
+    drWait = true;
+    drPost({}, function (res) { drWait = false; drApply(res); });
   }
 
   // Bugun nechta dars kutmoqda (bosh sahifadagi karta uchun). Ma'lumot hali kelmagan bo'lsa -1.
