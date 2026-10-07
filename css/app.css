@@ -2349,30 +2349,20 @@ div.pm-row{cursor:default}
 .qs-dubs button small{font:600 9.5px/1 'Manrope',sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
 
 /* ===== KITOBLAR: javon, kitob sahifasi, o'qish oynasi (js/07-kitoblar.js) ===== */
-.kt-card{flex:0 0 33%;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;padding:0;border:0;background:none;
-  color:var(--text);text-align:left;cursor:pointer;font-family:'Manrope',sans-serif}
-@media (min-width:600px){.kt-card{flex-basis:24%}}
-.kt-card .ms-name{margin-top:2px}
 .kt-cov{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:100%;aspect-ratio:2/3;
   padding:9% 9% 8% 15%;border-radius:4px 9px 9px 4px;overflow:hidden;transition:transform .14s;
   background:linear-gradient(100deg,#120a0c 0,#2b1519 9%,#1d0e11 12%,#31181c 55%,#1f0f12 100%);
   box-shadow:0 8px 18px rgba(0,0,0,.55),inset 0 0 0 1px rgba(var(--gold-rgb),.28),inset -3px 0 0 rgba(0,0,0,.35)}
-.kt-card:active .kt-cov{transform:scale(.97)}
 .kt-spine{position:absolute;left:8.5%;top:0;bottom:0;width:1px;background:rgba(var(--gold-rgb),.35)}
 .kt-n{font:600 15px/1 'Cormorant Garamond',serif;letter-spacing:.14em;color:var(--gold)}
 .kt-plate{display:block;width:100%;aspect-ratio:1/1;border-radius:3px;overflow:hidden;background:#0d0a0c;
   box-shadow:0 0 0 1px rgba(var(--gold-rgb),.55),0 0 0 3px rgba(0,0,0,.35)}
 .kt-plate img{display:block;width:100%;height:100%;object-fit:cover}
 .kt-orn{display:block;width:34%;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gold-rgb),.75),transparent)}
-.kt-card.lock .kt-plate img{filter:brightness(.42) saturate(.7)}
-.kt-card.soon .kt-cov{opacity:.5}
-.kt-card.soon .kt-plate img{filter:grayscale(1) brightness(.5)}
-.kt-card.soon .ms-name,.kt-card.soon .ms-sub{opacity:.55}
 .kt-chip{position:absolute;left:53%;top:50%;transform:translate(-50%,-50%);z-index:3;display:inline-flex;align-items:center;gap:5px;
   padding:7px 10px;border-radius:99px;background:rgba(8,10,14,.82);border:1px solid rgba(var(--gold-rgb),.5);
   color:var(--gold-hi);font:800 10.5px/1 'Manrope',sans-serif;white-space:nowrap}
 .kt-chip svg{width:12px;height:12px;flex:none}
-.kt-card.soon .kt-chip{border-color:var(--line);color:var(--dim)}
 
 #scr-kitob .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
 #scr-kitob .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
@@ -2422,3 +2412,51 @@ body.kr-on .mp{display:none!important}
 .kr-bar b{flex:none;font:700 12px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
 .kt-plate.bosh{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,rgba(var(--gold-rgb),.2),#0d0a0c 72%);color:var(--gold)}
 .kt-plate.bosh svg{width:46%;height:46%}
+
+/* --- javon: tik turgan kitoblar, bosilgani javondan chiqib muqovasi bilan buriladi --- */
+.kt-shelf{position:relative;margin:4px -18px 0;padding-top:16px;
+  background:radial-gradient(70% 90% at 50% 100%,rgba(var(--gold-rgb),.13),transparent 70%),linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.35))}
+.kt-books{display:flex;align-items:flex-end;gap:3px;overflow-x:auto;overflow-y:hidden;padding:26px 18px 0;scrollbar-width:none}
+.kt-books::-webkit-scrollbar{display:none}
+.kt-books::before,.kt-books::after{content:"";flex:1 0 0}
+.kt-bk{position:relative;flex:none;display:flex;align-items:stretch;width:34px;height:var(--h);padding:0;border:0;background:none;cursor:pointer;
+  color:var(--gold);perspective:900px;transform-style:preserve-3d;transition:width .5s cubic-bezier(.3,.8,.3,1),transform .5s cubic-bezier(.3,.8,.3,1)}
+.kt-bk.on{width:calc(34px + var(--h) * .58);transform:translateY(-10px)}
+.kt-sp{position:relative;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;width:34px;height:100%;padding:9px 0 8px;
+  border-radius:3px 2px 2px 3px;transform-origin:right;transform:rotateY(0deg);transition:transform .5s cubic-bezier(.3,.8,.3,1),filter .5s;
+  background:linear-gradient(90deg,var(--c2),var(--c1) 22%,var(--c1) 70%,var(--c2));
+  box-shadow:inset 0 0 0 1px rgba(var(--gold-rgb),.22),inset 0 12px 0 -11px rgba(var(--gold-rgb),.5),inset 0 -12px 0 -11px rgba(var(--gold-rgb),.5)}
+.kt-sp::before,.kt-sp::after{content:"";position:absolute;left:4px;right:4px;height:1px;background:rgba(var(--gold-rgb),.5)}
+.kt-sp::before{top:30px}.kt-sp::after{bottom:26px}
+.kt-bk.on .kt-sp{transform:rotateY(-62deg);filter:brightness(.7)}
+.kt-sp-n{flex:none;font:700 11px/1 'Cormorant Garamond',serif;letter-spacing:.06em;color:var(--gold-hi)}
+.kt-sp-t{flex:1 1 auto;min-height:0;margin-top:10px;overflow:hidden;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;
+  font:600 13px/34px 'Cormorant Garamond',serif;letter-spacing:.03em;color:var(--gold)}
+.kt-sp-f{flex:none;display:block;width:12px;height:12px;margin-top:8px;color:var(--gold-hi)}
+.kt-sp-f svg{display:block;width:12px;height:12px}
+.kt-fc{position:relative;flex:none;width:calc(var(--h) * .66);height:100%;transform-origin:left;transform:rotateY(88.8deg);
+  transition:transform .5s cubic-bezier(.3,.8,.3,1);backface-visibility:hidden}
+.kt-bk.on .kt-fc{transform:rotateY(28deg)}
+.kt-fc .kt-cov{width:100%;height:100%;aspect-ratio:auto;background:linear-gradient(100deg,var(--c2) 0,var(--c1) 9%,var(--c2) 12%,var(--c1) 55%,var(--c2) 100%)}
+.kt-fc .kt-n{font-size:12px}
+.kt-fc .kt-chip{font-size:9px;padding:5px 7px}
+.kt-bk.soon .kt-sp,.kt-bk.soon .kt-fc{filter:grayscale(.85) brightness(.62)}
+.kt-bk.soon.on .kt-sp{filter:grayscale(.85) brightness(.45)}
+.kt-bk.lock .kt-plate img{filter:brightness(.45) saturate(.7)}
+.kt-bk.soon .kt-chip{border-color:var(--line);color:var(--dim)}
+.kt-bk:not(.on):active .kt-sp{transform:translateY(-6px)}
+.kt-plank{display:block;height:13px;margin:0 6px;border-radius:2px;
+  background:linear-gradient(180deg,#5b3d22,#3a2613 45%,#21150a);box-shadow:0 10px 18px rgba(0,0,0,.6),inset 0 1px 0 rgba(var(--gold-rgb),.45)}
+.kt-info{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.kt-info-tx{display:flex;flex-direction:column;gap:5px;min-width:0}
+.kt-info-t{font:600 20px/1.1 'Cormorant Garamond',serif}
+.kt-info-s{font:500 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.kt-go{flex:none;padding:12px 18px;border:none;border-radius:99px;background:var(--gold);color:var(--gold-ink);cursor:pointer;font:800 12px/1 'Manrope',sans-serif}
+.kt-go:disabled{background:none;border:1px solid var(--line);color:var(--dim);cursor:default}
+.kt-go:not(:disabled):active{transform:scale(.96)}
+/* kitob sahifasi: "O'qish" bosilganda muqova ochiladi */
+#kt-cov{position:relative;perspective:1100px}
+.kt-varaq{position:absolute;inset:2% 1% 2% 3%;border-radius:3px 8px 8px 3px;
+  background:repeating-linear-gradient(180deg,#efe6d2 0 13px,#e2d7bf 13px 14px);box-shadow:inset 8px 0 14px rgba(0,0,0,.25)}
+#kt-cov .kt-cov.big{transform-origin:left center;transition:transform .6s cubic-bezier(.4,.1,.3,1);backface-visibility:hidden}
+#kt-cov.ochil .kt-cov.big{transform:rotateY(-150deg)}

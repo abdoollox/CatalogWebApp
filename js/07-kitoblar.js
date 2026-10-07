@@ -43,7 +43,7 @@
   };
   var KT_TX = {
     uz: { shelf: "Kitoblar", cnt: function (n) { return n + " ta kitob"; }, kick: "Kutubxona", ttl: "Kitob",
-          num: function (n) { return n + "-kitob"; }, soon: "Tez orada", test: "Sinov",
+          num: function (n) { return n + "-kitob"; }, soon: "Tez orada", test: "Sinov", open: "Ochish",
           read: "O'qish", cont: function (n) { return "Davom etish · " + n + "-bet"; },
           dl: function (f, s) { return "Yuklab olish · " + f + (s ? " · " + s : ""); },
           hint: "Yuklab olingan fayl bot bilan suhbatingizga tushadi.", big: "Bu nusxa hajmi katta — uni faqat yuklab olish mumkin.",
@@ -59,7 +59,7 @@
           loading: "Kitob ochilmoqda…", rfail: "Kitob ochilmadi. Internetni tekshirib, qayta urinib ko'ring.", retry: "Qayta urinish",
           pg: function (a, b) { return a + " / " + b; } },
     ru: { shelf: "Книги", cnt: function (n) { return n + " книг"; }, kick: "Библиотека", ttl: "Книга",
-          num: function (n) { return "Книга " + n; }, soon: "Скоро", test: "Тест",
+          num: function (n) { return "Книга " + n; }, soon: "Скоро", test: "Тест", open: "Открыть",
           read: "Читать", cont: function (n) { return "Продолжить · стр. " + n; },
           dl: function (f, s) { return "Скачать · " + f + (s ? " · " + s : ""); },
           hint: "Скачанный файл придёт в ваш чат с ботом.", big: "Этот файл слишком большой — его можно только скачать.",
@@ -75,7 +75,7 @@
           loading: "Книга открывается…", rfail: "Книга не открылась. Проверьте интернет и попробуйте ещё раз.", retry: "Повторить",
           pg: function (a, b) { return a + " / " + b; } },
     en: { shelf: "Books", cnt: function (n) { return n + " books"; }, kick: "Library", ttl: "Book",
-          num: function (n) { return "Book " + n; }, soon: "Coming soon", test: "Test",
+          num: function (n) { return "Book " + n; }, soon: "Coming soon", test: "Test", open: "Open",
           read: "Read", cont: function (n) { return "Continue · page " + n; },
           dl: function (f, s) { return "Download · " + f + (s ? " · " + s : ""); },
           hint: "The downloaded file arrives in your chat with the bot.", big: "This file is too large — it can only be downloaded.",
@@ -168,13 +168,51 @@
     return c;
   }
 
-  /* --- kutubxona javoni --- */
+  /* --- kutubxona javoni ---
+     Kitoblar javonda TIK turadi (yon tomoni ko'rinadi). Bosilgan kitob javondan chiqib, muqovasi bilan
+     buriladi (3D), ostida nomi va tugma chiqadi; yana bosilsa yoki tugma bosilsa - kitob sahifasi. */
+  var KT_LOOK = {            // har kitobning jild rangi va bo'yi (px)
+    kt1: ["#5a1d22", "#2c0d10", 148], kt2: ["#1f4a34", "#0e2419", 158], kt3: ["#27365f", "#111a33", 144],
+    kt4: ["#6b4a1c", "#33220b", 162], kt5: ["#1f4650", "#0d2228", 168], kt6: ["#40285a", "#1d1230", 154],
+    kt7: ["#3a3a3f", "#17171b", 164]
+  };
+  var ktSel = null;
+
+  function ktState(id) { var bk = ktBook(id); return !bk ? "soon" : (bk.open ? "" : "lock"); }
+
+  function ktPick(id, sec, jim) {
+    ktSel = id;
+    var x = ktX(), st = ktState(id);
+    Array.prototype.forEach.call(sec.querySelectorAll(".kt-bk"), function (b) {
+      var on = b.getAttribute("data-id") === id;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    sec.querySelector(".kt-info-t").textContent = ktName(id);
+    sec.querySelector(".kt-info-s").textContent = x.num(ktNum(id)) + " · " + KT_YEAR[id] +
+      (st === "soon" ? " · " + x.soon : st === "lock" ? " · " + x.chip(ktPrice) : "");
+    var go = sec.querySelector(".kt-go");
+    go.textContent = st === "soon" ? x.soon : x.open;
+    go.disabled = st === "soon";
+    if (!jim) {
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+      // Tanlangan kitob kengayadi - javon ichida ko'rinib tursin
+      var el = sec.querySelector(".kt-bk.on"), row = sec.querySelector(".kt-books");
+      setTimeout(function () {
+        if (!el || !row) { return; }
+        var chap = el.offsetLeft - 18, ong = el.offsetLeft + el.offsetWidth + 18 - row.clientWidth;
+        if (row.scrollLeft > chap) { row.scrollTo({ left: Math.max(0, chap), behavior: "smooth" }); }
+        else if (row.scrollLeft < ong) { row.scrollTo({ left: ong, behavior: "smooth" }); }
+      }, 420);
+    }
+  }
+
   function ktShelf() {
     var list = (ktData && ktData.books) || [];
     if (!list.length) { return null; }
     var x = ktX();
     var sec = document.createElement("div");
-    sec.className = "rowsec";
+    sec.className = "rowsec kt-sec";
     var head = document.createElement("div");
     head.className = "rowsec-h";
     var b = document.createElement("b");
@@ -185,18 +223,33 @@
     head.appendChild(c);
     sec.appendChild(head);
 
+    var shelf = document.createElement("div");
+    shelf.className = "kt-shelf";
     var row = document.createElement("div");
-    row.className = "ms-row kt-row";
+    row.className = "kt-books";
     KT_ORDER.forEach(function (id) {
-      var bk = ktBook(id);
-      var card = document.createElement("button");
-      card.type = "button";
-      card.className = "kt-card" + (!bk ? " soon" : (bk.open ? "" : " lock"));
+      var st = ktState(id), look = KT_LOOK[id];
+      var bk = document.createElement("button");
+      bk.type = "button";
+      bk.className = "kt-bk" + (st ? " " + st : "");
+      bk.setAttribute("data-id", id);
+      bk.setAttribute("aria-label", ktName(id));
+      bk.style.setProperty("--h", look[2] + "px");
+      bk.style.setProperty("--c1", look[0]);
+      bk.style.setProperty("--c2", look[1]);
+      var sp = document.createElement("span");
+      sp.className = "kt-sp";
+      sp.innerHTML = '<b class="kt-sp-n"></b><span class="kt-sp-t"></span><i class="kt-sp-f"></i>';
+      sp.querySelector(".kt-sp-n").textContent = NUMERALS[ktNum(id) - 1];
+      sp.querySelector(".kt-sp-t").textContent = ktName(id).replace(/^The /, "");
+      if (st === "lock") { sp.querySelector(".kt-sp-f").innerHTML = MS_ICON.lock; }
+      var fc = document.createElement("span");
+      fc.className = "kt-fc";
       var cov = ktCover(id, false);
-      if (!bk || !bk.open) {
+      if (st) {
         var chip = document.createElement("span");
         chip.className = "kt-chip";
-        if (bk) {
+        if (st === "lock") {
           chip.innerHTML = MS_ICON.lock + "<span></span>";
           chip.querySelector("span").textContent = x.chip(ktPrice);
         } else {
@@ -204,22 +257,37 @@
         }
         cov.appendChild(chip);
       }
-      card.appendChild(cov);
-      var nm = document.createElement("span");
-      nm.className = "ms-name";
-      nm.textContent = ktName(id);
-      var sub = document.createElement("span");
-      sub.className = "ms-sub";
-      sub.textContent = x.num(ktNum(id)) + " · " + KT_YEAR[id];
-      card.appendChild(nm);
-      card.appendChild(sub);
-      card.addEventListener("click", function () {
-        if (!ktBook(id)) { showToast(x.soon + ": " + ktName(id)); return; }
-        ktOpen(id);
+      fc.appendChild(cov);
+      bk.appendChild(sp);
+      bk.appendChild(fc);
+      bk.addEventListener("click", function () {
+        if (ktSel === id && ktBook(id)) { ktOpen(id); return; }
+        ktPick(id, sec, false);
       });
-      row.appendChild(card);
+      row.appendChild(bk);
     });
-    sec.appendChild(row);
+    shelf.appendChild(row);
+    var plank = document.createElement("i");
+    plank.className = "kt-plank";
+    shelf.appendChild(plank);
+    sec.appendChild(shelf);
+
+    var info = document.createElement("div");
+    info.className = "kt-info";
+    info.innerHTML = '<span class="kt-info-tx"><b class="kt-info-t"></b><small class="kt-info-s"></small></span>' +
+                     '<button class="kt-go" type="button"></button>';
+    info.querySelector(".kt-go").addEventListener("click", function () { if (ktSel && ktBook(ktSel)) { ktOpen(ktSel); } });
+    sec.appendChild(info);
+
+    // Boshida: oxirgi tanlangan, bo'lmasa fayli bor birinchi kitob
+    ktPick(ktSel && KT_LOOK[ktSel] ? ktSel : list[0].id, sec, true);
+    // Uzun nom jild yoniga sig'masa - harfi kichrayadi (javon sahifaga qo'yilgach o'lchanadi)
+    setTimeout(function () {
+      Array.prototype.forEach.call(sec.querySelectorAll(".kt-sp-t"), function (el) {
+        var fs = 13;
+        while (fs > 8.5 && el.scrollHeight > el.clientHeight + 1) { fs -= 0.5; el.style.fontSize = fs + "px"; }
+      });
+    }, 0);
     return sec;
   }
 
@@ -281,6 +349,9 @@
     $("kt-ttl").textContent = x.ttl;
     var hero = $("kt-cov");
     hero.innerHTML = "";
+    var varaq = document.createElement("i");
+    varaq.className = "kt-varaq";
+    hero.appendChild(varaq);
     hero.appendChild(ktCover(id, true));
     $("kt-num").textContent = x.num(n) + " · " + KT_YEAR[id];
     $("kt-name").textContent = ktName(id);
@@ -317,7 +388,12 @@
     }
     if (files.pdf && files.pdf.read) {
       var bet = ktBet(id, ktLang);
-      acts.appendChild(ktBtn("kt-read", KT_ICON.book, bet > 1 ? x.cont(bet) : x.read, function () { krOpen(id, ktLang); }));
+      acts.appendChild(ktBtn("kt-read", KT_ICON.book, bet > 1 ? x.cont(bet) : x.read, function () {
+        var kv = $("kt-cov");
+        if (kv.classList.contains("ochil")) { return; }
+        kv.classList.add("ochil");
+        setTimeout(function () { kv.classList.remove("ochil"); krOpen(id, ktLang); }, 620);
+      }));
     }
     ["pdf", "epub", "fb2"].forEach(function (f) {
       if (!files[f]) { return; }
