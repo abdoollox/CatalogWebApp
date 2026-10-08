@@ -1443,10 +1443,14 @@
   }
 
   // Admin uchun: tablar ostida to'rttala fakultet xonasi (o'ziniki - "house").
+  // Ko'rinish (egasi, 2026-10-08: xunuk edi): emoji va kesilgan yozuv o'rniga gerb + nom, tanlangani fakultet rangida;
+  // yuqoridagi "o'z fakulteti" tabi adminda yashiriladi - u shu qatorda bor (takror bo'lmasin).
   function chatAdmUI() {
     var bar = $("chat-adm");
     if (!bar) return;
     bar.classList.toggle("hidden", !chatAdmin);
+    var tabs = $("tab-house") && $("tab-house").parentNode;
+    if (tabs) tabs.classList.toggle("adm", !!chatAdmin);
     if (!chatAdmin) return;
     var mine = cupMe().house;
     bar.innerHTML = "";
@@ -1456,8 +1460,15 @@
       btn.type = "button";
       btn.className = chatRoom === room ? "on" : "";
       btn.style.setProperty("--adm-rgb", hh.rgb || "151,161,174");
-      if (chatRoom === room) btn.style.color = hh.accent || "";
-      btn.textContent = (hh.crest ? hh.crest + " " : "") + cupHouseName(h);
+      var cr = document.createElement("span");
+      cr.className = "chat-adm-cr";
+      var im = cupCrestImg(h, 0);
+      if (im) cr.appendChild(im);
+      btn.appendChild(cr);
+      var nm = document.createElement("span");
+      nm.className = "chat-adm-nm";
+      nm.textContent = cupHouseName(h);
+      btn.appendChild(nm);
       var n = chatCounts[room === "house" ? "house" : room] || 0;
       if (n && chatRoom !== room) {
         var b = document.createElement("b");

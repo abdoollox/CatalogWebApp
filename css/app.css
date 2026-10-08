@@ -2730,3 +2730,17 @@ body.kr-on .mp{display:none!important}
 .bl-pd.p3 .bl-pd-st{height:22px}
 .bl-pd.me b{color:rgb(var(--dr-rgb))}
 .bl-pd.bosh{opacity:.35}
+
+/* --- chat: admin uchun fakultet xonalari qatori (yangi ko'rinish, 2026-10-08) --- */
+.chat-tabs.adm #tab-house{display:none}
+.chat-adm{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0 0}
+.chat-adm button{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;padding:8px 2px 7px;border-radius:14px;
+  border:1px solid var(--line);background:var(--bg2);color:var(--dim);cursor:pointer;white-space:normal;overflow:visible;text-overflow:clip;
+  font:600 10.5px/1.1 'Manrope',sans-serif;transition:background .2s,border-color .2s,color .2s}
+.chat-adm-cr{display:grid;place-items:center;width:28px;height:28px}
+.chat-adm-cr img{width:100%!important;height:100%!important;object-fit:contain;opacity:.6;filter:saturate(.7);transition:opacity .2s,filter .2s}
+.chat-adm-nm{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-adm button.on{background:rgba(var(--adm-rgb),.16);border-color:rgba(var(--adm-rgb),.6);color:rgb(var(--adm-rgb))}
+.chat-adm button.on .chat-adm-cr img{opacity:1;filter:none}
+.chat-adm button b{position:absolute;top:-5px;right:-3px;min-width:17px;height:17px;margin:0;padding:0 4px;border-radius:9px;
+  background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:10px;line-height:17px}
