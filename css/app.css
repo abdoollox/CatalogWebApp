@@ -2613,6 +2613,9 @@ body.kr-on .mp{display:none!important}
 .af-sham.ochdi i{background:rgba(255,255,255,.18)}
 .af-sham.ochdi i::after{top:-16px;width:8px;height:16px;border-radius:50%;background:radial-gradient(circle,rgba(190,195,210,.55),rgba(190,195,210,0) 70%);filter:none;animation:none}
 @keyframes afFlame{from{transform:scale(1,1) rotate(-4deg)}to{transform:scale(.88,1.14) rotate(5deg)}}
+#af-stage .af-opts{display:none;max-width:360px;margin-left:auto;margin-right:auto}
+#af-stage.sorov .af-opts{display:flex}
+#af-stage.sorov .af-sham,#af-stage.sorov .af-box,#af-stage.sorov .dr-hint,#af-stage.sorov .dr-link{display:none}
 .af-baho{display:flex;flex-direction:column;align-items:center;gap:7px;padding-bottom:6px}
 .af-baho-k{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
 .af-baho-n{font:600 30px/1.1 'Cormorant Garamond',serif;color:#f3d58f}

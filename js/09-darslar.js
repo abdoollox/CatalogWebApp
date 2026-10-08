@@ -74,7 +74,13 @@
           afStart: "Yonib turgan nuqtadan boshlang", afOff: "Tayoqcha chetga chiqdi — qaytadan", afShort: "Harakatni oxirigacha chizing",
           afOk: ["Yaxshi! Yana bir marta.", "Ajoyib! Endi yoddan.", "Barakalla! Afsun o'zlashtirildi."], afShow: "Chiziqni ko'rsatish",
           afBaho: ["Troll", "Yomon", "Qoniqarli", "Kutilganidan yuqori", "A'lo"], afBahoT: "Baho", afAcc: function (p) { return "Aniqlik " + p + "%"; }, afVaqt: function (a, b) { return "Vaqtida " + a + " / " + b; },
-          afLow: "Keyingi darsga o'tish uchun kamida «Qoniqarli» baho kerak.", afPuf: "Afsun chiqmadi…", afKech: "sham o'chdi",
+          afLow: "Keyingi darsga o'tish uchun kamida «Qoniqarli» baho kerak.",
+          afNth: function (a, b) { return a + " / " + b + "-afsun"; }, afVazT: "Qaysi afsun kerak?", afVazK: "Vaziyat", afZanK: "Ketma-ket afsunlar", afVazNo: "Bu afsun yordam bermaydi",
+          afFlN: "Professor Flitvik",
+          afFl: { a: ["Ajoyib, juda aniq!", "Barakalla! Bilak harakati a'lo.", "Zo'r! Xuddi darslikdagidek."],
+                  b: ["Yomon emas. Bilakni yumshoqroq tuting.", "Durust, lekin chiziqdan uzoqlashmang.", "Bo'ladi. Yana bir oz diqqat!"],
+                  c: ["Tezroq — sham kutib turmaydi!", "To'g'ri, lekin juda sekin."] },
+          afFlB: ["Bunaqada tayoqcha ham xafa bo'ladi. Qaytadan!", "Hali mashq kerak. Yana bir urinib ko'ring.", "Qoniqarli. Mashq qilsangiz, bundan ham yaxshi chiqadi.", "Juda yaxshi! Yana ozgina — va a'lo bo'ladi.", "A'lo! Fakultetingiz siz bilan faxrlansa arziydi."], afPuf: "Afsun chiqmadi…", afKech: "sham o'chdi",
           // iksirlar
           ikRec: "Retsept", ikRecS: "Masalliqlar tartibini eslab qoling — keyin retsept yopiladi.", ikGo: "Tayyorman",
           ikCook: "Masalliqlarni tartib bilan qozonga soling", ikErr: function (a, b) { return "Xato: " + a + " / " + b; },
@@ -111,7 +117,13 @@
           afStart: "Начните со светящейся точки", afOff: "Палочка ушла в сторону — ещё раз", afShort: "Доведите движение до конца",
           afOk: ["Хорошо! Ещё раз.", "Отлично! Теперь по памяти.", "Браво! Заклинание освоено."], afShow: "Показать линию",
           afBaho: ["Тролль", "Слабо", "Удовлетворительно", "Выше ожидаемого", "Превосходно"], afBahoT: "Оценка", afAcc: function (p) { return "Точность " + p + "%"; }, afVaqt: function (a, b) { return "Вовремя " + a + " / " + b; },
-          afLow: "Чтобы перейти к следующему уроку, нужна оценка не ниже «Удовлетворительно».", afPuf: "Заклинание не получилось…", afKech: "свеча погасла",
+          afLow: "Чтобы перейти к следующему уроку, нужна оценка не ниже «Удовлетворительно».",
+          afNth: function (a, b) { return "Заклинание " + a + " / " + b; }, afVazT: "Какое заклинание нужно?", afVazK: "Ситуация", afZanK: "Серия заклинаний", afVazNo: "Это заклинание не поможет",
+          afFlN: "Профессор Флитвик",
+          afFl: { a: ["Превосходно, очень точно!", "Браво! Отличное движение кисти.", "Блестяще! Как в учебнике."],
+                  b: ["Неплохо. Держите кисть мягче.", "Сносно, но не уходите от линии.", "Годится. Чуть больше внимания!"],
+                  c: ["Быстрее — свеча ждать не будет!", "Верно, но слишком медленно."] },
+          afFlB: ["Так и палочка обидится. Ещё раз!", "Нужно ещё потренироваться. Попробуйте снова.", "Удовлетворительно. С практикой выйдет лучше.", "Очень хорошо! Ещё чуть-чуть — и будет «Превосходно».", "Превосходно! Ваш факультет может вами гордиться."], afPuf: "Заклинание не получилось…", afKech: "свеча погасла",
           ikRec: "Рецепт", ikRecS: "Запомните порядок ингредиентов — потом рецепт закроется.", ikGo: "Готов",
           ikCook: "Кладите ингредиенты в котёл по порядку", ikErr: function (a, b) { return "Ошибки: " + a + " / " + b; },
           ikBad: ["Неверно. Внимательнее!", "Опять ошибка. Котёл закипает…"], ikBoom: "Зелье испорчено. Прочитайте рецепт ещё раз.",
@@ -147,7 +159,13 @@
           afStart: "Start from the glowing dot", afOff: "The wand went astray — again", afShort: "Finish the whole movement",
           afOk: ["Good! Once more.", "Excellent! Now from memory.", "Bravo! The charm is learnt."], afShow: "Show the line",
           afBaho: ["Troll", "Poor", "Acceptable", "Exceeds Expectations", "Outstanding"], afBahoT: "Grade", afAcc: function (p) { return "Accuracy " + p + "%"; }, afVaqt: function (a, b) { return "In time " + a + " / " + b; },
-          afLow: "You need at least “Acceptable” to move on.", afPuf: "The spell fizzled…", afKech: "the candle went out",
+          afLow: "You need at least “Acceptable” to move on.",
+          afNth: function (a, b) { return "Spell " + a + " / " + b; }, afVazT: "Which spell do you need?", afVazK: "Situation", afZanK: "Spell chain", afVazNo: "That spell won't help",
+          afFlN: "Professor Flitwick",
+          afFl: { a: ["Splendid, very precise!", "Bravo! Lovely wrist movement.", "Excellent! Just like the textbook."],
+                  b: ["Not bad. Keep your wrist looser.", "Passable, but stay close to the line.", "That will do. A little more care!"],
+                  c: ["Quicker — the candle won't wait!", "Correct, but far too slow."] },
+          afFlB: ["Even the wand is offended. Again!", "More practice needed. Try once more.", "Acceptable. Practice will make it better.", "Very good! A little more and it's Outstanding.", "Outstanding! Your house can be proud of you."], afPuf: "The spell fizzled…", afKech: "the candle went out",
           ikRec: "Recipe", ikRecS: "Memorise the order of the ingredients — then the recipe closes.", ikGo: "Ready",
           ikCook: "Add the ingredients to the cauldron in order", ikErr: function (a, b) { return "Mistakes: " + a + " / " + b; },
           ikBad: ["Wrong. Pay attention!", "Wrong again. The cauldron is boiling over…"], ikBoom: "The potion is ruined. Read the recipe again.",
@@ -168,7 +186,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 13, iksir: 5 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 5 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -206,7 +224,7 @@
     };
     res.lessons = {
       tarix: { level: drLocalLvl.tarix, total: 46, contest: bell("tarix", "10") },
-      afsun: { level: drLocalLvl.afsun, total: 24, contest: bell("afsun", "lumos") },
+      afsun: { level: drLocalLvl.afsun, total: 48, contest: bell("afsun", "lumos") },
       iksir: { level: drLocalLvl.iksir, total: 24, contest: bell("iksir", "boils") } };
     return res;
   }
@@ -764,6 +782,11 @@
     for (var i = 0; i <= 40; i++) { var t = i / 40, a = -Math.PI / 2 + t * Math.PI * 3.5, r = 0.08 + 0.3 * t; p.push([0.5 + r * Math.cos(a), 0.5 + r * Math.sin(a)]); }
     return p;
   }
+  function afSakkiz() {
+    var p = [];
+    for (var i = 0; i <= 40; i++) { var t = i / 40 * Math.PI * 2; p.push([0.5 + 0.32 * Math.sin(t), 0.5 + 0.2 * Math.sin(2 * t)]); }
+    return p;
+  }
   var AF = {
     lumos:        { s: [[0.2, 0.8], [0.5, 0.18], [0.8, 0.8]],
                     uz: ["Lumos", "Tayoqcha uchida yorug'lik yoqadi."], ru: ["Люмос", "Зажигает свет на кончике палочки."], en: ["Lumos", "Lights the tip of the wand."] },
@@ -788,7 +811,58 @@
     nox:          { s: [[0.2, 0.2], [0.5, 0.82], [0.8, 0.2]],
                     uz: ["Noks", "Tayoqchadagi yorug'likni o'chiradi."], ru: ["Нокс", "Гасит свет на палочке."], en: ["Nox", "Puts out the wand's light."] },
     patronum:     { s: afSpiral(),
-                    uz: ["Ekspekto Patronum", "Dementorlardan himoya qiluvchi Patronusni chaqiradi."], ru: ["Экспекто Патронум", "Вызывает Патронуса — защитника от дементоров."], en: ["Expecto Patronum", "Conjures a Patronus against Dementors."] }
+                    uz: ["Ekspekto Patronum", "Dementorlardan himoya qiluvchi Patronusni chaqiradi."], ru: ["Экспекто Патронум", "Вызывает Патронуса — защитника от дементоров."], en: ["Expecto Patronum", "Conjures a Patronus against Dementors."] },
+    petrificus:   { s: [[0.25, 0.82], [0.25, 0.22], [0.75, 0.22], [0.75, 0.82]],
+                    uz: ["Petrifikus Totalus", "Raqibning butun tanasini qotirib qo'yadi."], ru: ["Петрификус Тоталус", "Полностью обездвиживает противника."], en: ["Petrificus Totalus", "Binds the whole body of an opponent."] },
+    impedimenta:  { s: [[0.15, 0.3], [0.85, 0.3], [0.85, 0.7], [0.15, 0.7]],
+                    uz: ["Impedimenta", "Yaqinlashayotgan raqibni sekinlashtiradi yoki to'xtatadi."], ru: ["Импедимента", "Замедляет или останавливает приближающегося противника."], en: ["Impedimenta", "Slows or stops an approaching attacker."] },
+    riddikulus:   { s: afArc(0.5, 0.5, 0.3, -Math.PI / 2, Math.PI * 1.5, 32),
+                    uz: ["Ridikulus", "Boggartni kulgili narsaga aylantiradi."], ru: ["Ридикулус", "Превращает боггарта во что-то смешное."], en: ["Riddikulus", "Turns a Boggart into something funny."] },
+    finite:       { s: [[0.2, 0.2], [0.8, 0.8]],
+                    uz: ["Finite Inkantatem", "Amal qilayotgan afsunlarni to'xtatadi."], ru: ["Фините Инкантатем", "Прекращает действие заклинаний."], en: ["Finite Incantatem", "Ends the effects of spells."] },
+    reducto:      { s: [[0.25, 0.2], [0.78, 0.5], [0.25, 0.8]],
+                    uz: ["Redukto", "Qattiq to'siqni parcha-parcha qiladi."], ru: ["Редукто", "Разбивает твёрдую преграду на куски."], en: ["Reducto", "Blasts a solid obstacle to pieces."] },
+    diffindo:     { s: [[0.18, 0.5], [0.4, 0.78], [0.84, 0.2]],
+                    uz: ["Diffindo", "Buyumni kesadi yoki yirtadi."], ru: ["Диффиндо", "Разрезает или разрывает предмет."], en: ["Diffindo", "Cuts or rips an object."] },
+    episkey:      { s: afArc(0.5, 0.72, 0.34, Math.PI, Math.PI * 2, 20),
+                    uz: ["Episkey", "Yengil jarohatlarni davolaydi."], ru: ["Эпискеи", "Залечивает лёгкие травмы."], en: ["Episkey", "Heals minor injuries."] },
+    silencio:     { s: [[0.82, 0.32], [0.2, 0.32], [0.2, 0.74]],
+                    uz: ["Silensio", "Ovozni o'chirib qo'yadi."], ru: ["Силенцио", "Лишает голоса."], en: ["Silencio", "Silences its target."] },
+    engorgio:     { s: [[0.25, 0.25], [0.75, 0.25], [0.75, 0.75], [0.25, 0.75], [0.25, 0.25]],
+                    uz: ["Engorgio", "Buyumni kattalashtiradi."], ru: ["Энгоргио", "Увеличивает предмет."], en: ["Engorgio", "Makes an object grow."] },
+    reducio:      { s: [[0.5, 0.15], [0.8, 0.5], [0.5, 0.85], [0.2, 0.5], [0.5, 0.15]],
+                    uz: ["Redusio", "Buyumni kichraytiradi."], ru: ["Редуцио", "Уменьшает предмет."], en: ["Reducio", "Makes an object shrink."] },
+    colloportus:  { s: afArc(0.5, 0.32, 0.17, Math.PI / 2, Math.PI * 2.5, 24).concat([[0.5, 0.88]]),
+                    uz: ["Kolloportus", "Eshikni sehr bilan qulflaydi."], ru: ["Коллопортус", "Запирает дверь волшебством."], en: ["Colloportus", "Magically locks a door."] },
+    obliviate:    { s: afSakkiz(),
+                    uz: ["Obliviate", "Xotiradan voqeani o'chirib tashlaydi."], ru: ["Обливиэйт", "Стирает событие из памяти."], en: ["Obliviate", "Erases a memory."] }
+  };
+  // Vaziyatlar (25-36-darslar): afsun nomi aytilmaydi - o'quvchi o'zi topadi
+  var AF_VAZ = {
+    lumos: ["Yo'lak zim-ziyo, hech narsa ko'rinmayapti.", "В коридоре кромешная тьма, ничего не видно.", "The corridor is pitch-dark; you can't see a thing."],
+    leviosa: ["Partadagi patni havoga ko'tarish kerak.", "Нужно поднять перо с парты в воздух.", "You need to make the feather on your desk fly."],
+    alohomora: ["Eshik qulflangan, kalit esa yo'q.", "Дверь заперта, а ключа нет.", "The door is locked and there is no key."],
+    expelliarmus: ["Raqib tayoqchasini sizga o'qtaldi — uni qurolsizlantiring.", "Противник навёл на вас палочку — обезоружьте его.", "An opponent points a wand at you — disarm them."],
+    accio: ["Supurgingiz uzoqda qolib ketdi — uni chaqirish kerak.", "Ваша метла осталась далеко — её нужно призвать.", "Your broom is far away — you need to summon it."],
+    protego: ["Sizga qarab afsun uchib kelyapti!", "В вас летит заклинание!", "A spell is flying straight at you!"],
+    incendio: ["Kamin o'chib qolgan, xona sovuq.", "Камин погас, в комнате холодно.", "The fire has gone out and the room is cold."],
+    reparo: ["Ko'zoynagingiz sinib qoldi.", "Ваши очки разбились.", "Your glasses are broken."],
+    stupefy: ["Hujum qilayotgan raqibni karaxt qilish kerak.", "Нужно оглушить нападающего противника.", "You need to stun an attacker."],
+    aguamenti: ["Parda yonib ketdi — tezda suv kerak!", "Загорелась штора — срочно нужна вода!", "The curtain is on fire — you need water, fast!"],
+    nox: ["Tayoqchangiz yonib turibdi — sizni payqab qolishlari mumkin.", "Ваша палочка светится — вас могут заметить.", "Your wand is lit — you might be spotted."],
+    patronum: ["Dementorlar yaqinlashmoqda, havo muzlab ketdi.", "Приближаются дементоры, воздух леденеет.", "Dementors are closing in and the air turns icy."],
+    petrificus: ["Kimdir yo'lingizni to'smoqda — uni qimirlamaydigan qilib qo'ying.", "Кто-то преграждает вам путь — обездвижьте его.", "Someone is blocking your way — make them unable to move."],
+    impedimenta: ["Sizni quvib kelayotganlarni sekinlashtirish kerak.", "Нужно замедлить тех, кто за вами гонится.", "You need to slow down those chasing you."],
+    riddikulus: ["Shkafdan boggart chiqdi va eng katta qo'rquvingizga aylandi.", "Из шкафа вышел боггарт и принял облик вашего главного страха.", "A Boggart leaves the wardrobe and becomes your worst fear."],
+    finite: ["Do'stingizning oyoqlari afsundan o'zi raqsga tushyapti — buni to'xtating.", "Ноги вашего друга сами пляшут от заклинания — прекратите это.", "A spell makes your friend's legs dance on their own — stop it."],
+    reducto: ["Yo'lni qalin to'siq to'sib qo'ygan — uni parchalash kerak.", "Путь преграждает толстая преграда — её нужно разбить.", "A thick barrier blocks the way — it must be blasted apart."],
+    diffindo: ["Sumkangiz bog'ichi tugilib qolgan — uni kesish kerak.", "Ремень сумки затянулся узлом — его нужно разрезать.", "Your bag strap is knotted tight — it needs cutting."],
+    episkey: ["Do'stingizning burni qonayapti.", "У вашего друга идёт кровь из носа.", "Your friend's nose is bleeding."],
+    silencio: ["Qarg'a tinmay qag'illayapti — ovozini o'chirish kerak.", "Ворон не перестаёт каркать — нужно лишить его голоса.", "A raven won't stop cawing — it must be silenced."],
+    engorgio: ["Qovoq juda kichik — uni kattalashtirish kerak.", "Тыква слишком мала — её нужно увеличить.", "The pumpkin is far too small — make it bigger."],
+    reducio: ["Sandiq eshikdan sig'mayapti — uni kichraytirish kerak.", "Сундук не проходит в дверь — его нужно уменьшить.", "The trunk won't fit through the door — make it smaller."],
+    colloportus: ["Quvg'inchilar eshikdan kirmasligi kerak — uni qulflang.", "Преследователи не должны войти в дверь — заприте её.", "Your pursuers mustn't get through the door — lock it."],
+    obliviate: ["Maggl sehrni ko'rib qoldi — u buni unutishi kerak.", "Магл увидел волшебство — он должен это забыть.", "A Muggle has seen magic — they must forget it."]
   };
   var AF_N = 30;
   var af = null;      // {id, round, pts:[...], idx, drawing, trail, done, msg, ok, bajar}
@@ -807,37 +881,97 @@
     return out;
   }
 
-  // Qiyinlik aylanaga qarab: chiziq ko'rinishi (1 - aniq, .3 - xira, 0 - yoddan) va ruxsat etilgan chetlanish
+  /* Darslar rejasi (bot: hpdars.AFSUN_DARS = 48):
+       1-24  o'rganish: bitta afsun, uch urinish - chiziq ko'rinadi -> xira -> yoddan
+       25-36 vaziyat:   ikki vaziyat - afsunni o'zi topadi (4 variant), keyin yoddan chizadi
+       37-48 ketma-ket: uch afsun birin-ketin, yoddan, bitta sham
+     Bellashuv - o'rganish darsidek. */
   var AF_TARTIB = ["lumos", "leviosa", "alohomora", "expelliarmus", "accio", "protego",
-                   "incendio", "reparo", "stupefy", "aguamenti", "nox", "patronum"];     // bot: hpdars.DARSLAR bilan bir xil
-  var AF_BOSQ = [
-    { r: [1, 0.3, 0], tol: 0.13 },        // 1-12-darslar: chiziq ko'rinadi -> xira -> yoddan
-    { r: [0, 0, 0], tol: 0.11 }           // 13-24-darslar: uchalasi ham yoddan, chetlanish torroq
-  ];
-  function afOpen(bell, n) {
-    var st = drData && drData.afsun;
-    var item = bell === true ? (st && st.contest && st.contest.item) : AF_TARTIB[((n || 1) - 1) % AF_TARTIB.length];
-    var id = AF[item] ? item : "lumos";
-    var bq = bell === true ? AF_BOSQ[0] : AF_BOSQ[Math.min(Math.floor(((n || 1) - 1) / AF_TARTIB.length), AF_BOSQ.length - 1)];
-    af = { id: id, round: 0, idx: 0, drawing: false, trail: [], done: false, msg: "", ok: false, show: false,
-           bq: bq, bell: bell === true, n: n || 1,
-           sp: [], fx: null, t0: 0, pct: 1, fails: 0, dsum: 0, dn: 0, used: false, off: false, rounds: [], raf: 0, hz: 0 };
-    // Vaqt (sham): shakl uzunligiga qarab, dars oshgani sari qisqaradi. Kechiksa urinish kuymaydi - baho pasayadi.
+                   "incendio", "reparo", "stupefy", "aguamenti", "nox", "patronum",
+                   "petrificus", "impedimenta", "riddikulus", "finite", "reducto", "diffindo",
+                   "episkey", "silencio", "engorgio", "reducio", "colloportus", "obliviate"];     // bot: hpdars.DARSLAR bilan bir xil
+  function afPlan(n) {
+    var T = AF_TARTIB, L = T.length, k;
+    if (n <= L) { return { mode: "oquv", steps: [1, 0.3, 0].map(function (r) { return { id: T[n - 1], r: r }; }) }; }
+    if (n <= L + 12) {
+      k = n - L - 1;
+      return { mode: "vaz", steps: [{ id: T[(k * 7 + 3) % L], r: 0, ask: true }, { id: T[(k * 7 + 15) % L], r: 0, ask: true }] };
+    }
+    k = (n - L - 13) % 12;
+    return { mode: "zan", steps: [0, 1, 2].map(function (j) { return { id: T[(k * 5 + 1 + j * 8) % L], r: 0 }; }) };
+  }
+  function afR() { return af.steps[Math.min(af.round, af.steps.length - 1)].r; }
+  // Vaqt (sham): shakl uzunligiga qarab, dars oshgani sari qisqaradi. Kechiksa urinish kuymaydi - baho pasayadi.
+  function afLim(id, n) {
     var uz = 0, sh = AF[id].s;
     for (var q = 1; q < sh.length; q++) { uz += Math.hypot(sh[q][0] - sh[q - 1][0], sh[q][1] - sh[q - 1][1]); }
-    af.lim = Math.round((1.6 + uz * (4.2 - 2.2 * Math.min(af.n - 1, 23) / 23)) * 1000);
+    return Math.round((1.6 + uz * (4.2 - 2.2 * Math.min(n - 1, 23) / 23)) * 1000);
+  }
+
+  function afOpen(bell, n) {
+    var st = drData && drData.afsun, plan;
+    if (bell === true) {
+      var item = st && st.contest && st.contest.item, bid = AF[item] ? item : "lumos";
+      plan = { mode: "bell", steps: [1, 0.3, 0].map(function (r) { return { id: bid, r: r }; }) };
+    } else { plan = afPlan(n || 1); }
+    af = { id: plan.steps[0].id, steps: plan.steps, mode: plan.mode, round: 0, idx: 0, drawing: false, trail: [], done: false, msg: "", ok: false, show: false,
+           bell: bell === true, n: n || 1, ask: false,
+           sp: [], fx: null, t0: 0, pct: 1, fails: 0, dsum: 0, dn: 0, used: false, off: false, rounds: [], raf: 0, hz: 0 };
     drShowGame("scr-afsun");
-    var x = drX(), f = drFan("afsun"), a = AF[id][lang] || AF[id].uz;
+    var x = drX(), f = drFan("afsun");
     $("af-kick").textContent = f.nom[lang];
     $("af-ttl").textContent = f.ust[lang];
-    $("af-today").textContent = af.bell ? x.bell : x.lvl(af.n);
-    $("af-name").textContent = a[0];
-    $("af-desc").textContent = a[1];
+    $("af-today").textContent = af.bell ? x.bell : x.lvl(af.n) + (af.mode === "vaz" ? " · " + x.afVazK : af.mode === "zan" ? " · " + x.afZanK : "");
     $("af-res").classList.add("hidden");
     $("af-stage").classList.remove("hidden");
     $("af-show").textContent = x.afShow;
+    if (af.mode === "zan") {     // bitta sham uchala afsunga (orasidagi tanaffuslar bilan)
+      af.lim = 1800 + af.steps.reduce(function (a, q) { return a + afLim(q.id, af.n); }, 0);
+    }
+    afStepSet();
+  }
+
+  // Navbatdagi qadam: afsun, sarlavha, (vaziyatda) variantlar
+  function afStepSet() {
+    var x = drX(), q = af.steps[af.round], a = AF[q.id][lang] || AF[q.id].uz;
+    af.id = q.id;
+    af.ask = !!q.ask;
+    if (af.mode !== "zan") { af.lim = afLim(q.id, af.n); }
+    $("af-stage").classList.toggle("sorov", af.ask);
+    $("af-name").textContent = af.ask ? x.afVazT : a[0];
+    $("af-desc").textContent = af.ask ? (AF_VAZ[q.id] || [a[1], a[1], a[1]])[lang === "ru" ? 1 : lang === "en" ? 2 : 0] : a[1];
+    if (af.ask) { afAsk(); }
     afSize();
     afPaint();
+  }
+  function afAsk() {
+    var x = drX(), box = $("af-opts"), togri = af.id, ids = [togri], k = 0;
+    while (ids.length < 4 && k < 200) {
+      var c = AF_TARTIB[Math.floor(afRnd(af.n * 31 + af.round * 7 + k++) * AF_TARTIB.length)];
+      if (ids.indexOf(c) < 0) { ids.push(c); }
+    }
+    ids.sort(function () { return Math.random() - 0.5; });
+    box.innerHTML = "";
+    ids.forEach(function (id) {
+      var b = drEl("button", "tr-o", (AF[id][lang] || AF[id].uz)[0]);
+      b.type = "button";
+      b.addEventListener("click", function () {
+        if (!af || !af.ask || b.classList.contains("xato")) { return; }
+        if (id !== togri) {
+          b.classList.add("xato");
+          af.fails++;
+          showToast(x.afVazNo, "err");
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+          return;
+        }
+        af.ask = false;
+        $("af-stage").classList.remove("sorov");
+        $("af-name").textContent = (AF[id][lang] || AF[id].uz)[0];
+        afSize();
+        afPaint();
+      });
+      box.appendChild(b);
+    });
   }
 
   function afSize() {
@@ -857,7 +991,7 @@
     var x = drX(), c = $("af-canvas"), g = c.getContext("2d"), w = af.w, i;
     g.setTransform(af.dpr, 0, 0, af.dpr, 0, 0);
     g.clearRect(0, 0, w, w);
-    var ochiq = af.show ? 0.85 : af.bq.r[Math.min(af.round, 2)] * 0.85;
+    var ochiq = af.show ? 0.85 : afR() * 0.85;
     if (ochiq > 0) {
       g.lineCap = "round"; g.lineJoin = "round";
       g.strokeStyle = "rgba(160,190,240," + ochiq + ")";
@@ -911,12 +1045,12 @@
         sham.classList.toggle("oz", af.pct > 0 && af.pct < 0.3);
       }
     }
-    var ko = af.bq.r[Math.min(af.round, 2)];
-    $("af-step").textContent = x.afStep(Math.min(af.round + 1, 3), 3) + (bl && af.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
+    var ko = afR(), jami = af.steps.length;
+    $("af-step").textContent = (af.mode === "vaz" || af.mode === "zan" ? x.afNth : x.afStep)(Math.min(af.round + 1, jami), jami) + (bl && af.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
       (!af.bell && af.pct <= 0 && !af.done ? " · " + x.afKech : "");
     $("af-hint").textContent = af.msg || x.afR[ko >= 1 ? 0 : ko > 0 ? 1 : 2];
     $("af-hint").classList.toggle("bad", !!af.bad);
-    $("af-show").classList.toggle("hidden", af.bell || af.bq.r[Math.min(af.round, 2)] > 0 || af.show || af.done);
+    $("af-show").classList.toggle("hidden", af.bell || af.ask || afR() > 0 || af.show || af.done);
   }
 
   function afXY(ev) {
@@ -948,7 +1082,7 @@
   }
 
   function afDown(ev) {
-    if (!af || af.done || af.lock) { return; }
+    if (!af || af.done || af.lock || af.ask) { return; }
     var p = afXY(ev), x = drX(), tol = af.w * 0.13;
     af.bad = false;
     af.ok = false;
@@ -966,7 +1100,7 @@
 
   function afMove(ev) {
     if (!af || !af.drawing) { return; }
-    var p = afXY(ev), tol = af.w * (af.bq.tol + (af.bq.r[Math.min(af.round, 2)] === 0 ? 0.02 : 0));
+    var p = afXY(ev), tol = af.w * (0.13 + (afR() === 0 ? 0.02 : 0));
     af.trail.push(p);
     var d = afDist(p), now = Date.now();
     af.dsum += d; af.dn++;
@@ -991,15 +1125,17 @@
     var otgan = af.t0 ? Date.now() - af.t0 : 0;
     af.rounds.push({ r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used,
                      late: !af.bell && otgan > af.lim ? (otgan > af.lim * 2 ? 2 : 1) : 0 });
-    af.t0 = 0;
+    var tugadi = af.round >= af.steps.length - 1, oxir = af.rounds[af.rounds.length - 1];
+    if (af.mode !== "zan" || tugadi) { af.t0 = 0; }
     af.off = false;
     af.ok = true;
-    af.msg = x.afOk[Math.min(af.round, 2)];
+    // Professor Flitvik izohi (bellashuvda - eski qisqa matn)
+    var fl = oxir.late ? x.afFl.c : (oxir.r < 0.4 && !oxir.fails && !oxir.used ? x.afFl.a : x.afFl.b);
+    af.msg = af.bell ? x.afOk[Math.min(af.round, 2)] : fl[(af.n + af.round) % fl.length];
     af.bad = false;
     af.lock = true;
     afPaint();
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
-    var tugadi = af.round >= 2;
     setTimeout(function () {
       if (!af) { return; }
       af.lock = false;
@@ -1010,8 +1146,9 @@
         af.ok = false;
         af.msg = "";
         af.show = false;
-        af.fails = 0; af.used = false; af.pct = 1;
-        afPaint();
+        af.fails = 0; af.used = false;
+        if (af.mode !== "zan") { af.pct = 1; }
+        afStepSet();
         return;
       }
       af.done = true;
@@ -1068,9 +1205,10 @@
         if (af !== me) { return; }
         var box = $("af-res");
         $("af-stage").classList.add("hidden");
-        if (otdi) { drResult(box, x.afOk[2], "afsun", daraja, yangi); }
+        if (otdi) { drResult(box, "«" + x.afFlB[sc.baho - 1] + "»", "afsun", daraja, yangi); }
         else {
           box.innerHTML = "";
+          box.appendChild(drEl("p", "dr-res-t", "«" + x.afFlB[sc.baho - 1] + "»"));
           box.appendChild(drEl("p", "dr-res-s", x.afLow));
           var r = drEl("button", "dr-btn", x.retry);
           r.type = "button";
@@ -1082,6 +1220,8 @@
           box.appendChild(b);
           box.classList.remove("hidden");
         }
+        var ft = box.querySelector(".dr-res-t");
+        if (ft) { box.insertBefore(drEl("small", "af-baho-k", x.afFlN), ft); }
         box.insertBefore(afBahoEl(sc), box.firstChild);
       };
       if (otdi) { afBahoSave(daraja, sc.baho); drDone("afsun", daraja, show); } else { show(null); }
@@ -1134,12 +1274,12 @@
       g.translate(px, py); g.rotate(-0.6 + 0.25 * Math.sin(t * 7)); g.globalAlpha = fade;
       g.fillStyle = "#f4f7ff"; g.beginPath(); g.ellipse(0, 0, 0.035 * w, 0.13 * w, 0, 0, P2); g.fill();
       g.strokeStyle = "#9fb3d6"; g.lineWidth = 2; g.beginPath(); g.moveTo(0, -0.13 * w); g.lineTo(0, 0.19 * w); g.stroke();
-    } else if (id === "alohomora") {
+    } else if (id === "alohomora" || id === "colloportus") {
       px = 0.5 * w; py = 0.52 * w;
-      afGlow(g, px, py, 0.36 * w, "243,213,143", 0.4 * e * fade);
+      afGlow(g, px, py, 0.36 * w, id === "alohomora" ? "243,213,143" : "150,200,255", 0.4 * e * fade);
       g.globalAlpha = fade;
       g.strokeStyle = "#e9eef8"; g.lineWidth = 0.035 * w;
-      g.save(); g.translate(px + 0.09 * w, py - 0.06 * w); g.rotate(0.9 * e);
+      g.save(); g.translate(px + 0.09 * w, py - 0.06 * w); g.rotate(0.9 * (id === "alohomora" ? e : 1 - Math.min(1, t * 2.2)));
       g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -0.07 * w); g.arc(-0.09 * w, -0.07 * w, 0.09 * w, 0, Math.PI, true); g.lineTo(-0.18 * w, -0.01 * w); g.stroke();
       g.restore();
       g.fillStyle = "#f3d58f"; g.fillRect(px - 0.15 * w, py - 0.06 * w, 0.3 * w, 0.24 * w);
@@ -1215,6 +1355,74 @@
         g.beginPath(); g.arc(0.5 * w, 0.5 * w, ph * 0.55 * w + 1, 0, P2); g.stroke();
       }
       afGlow(g, 0.5 * w, 0.5 * w, 0.11 * w, "255,255,255", fade);
+    } else if (id === "petrificus") {
+      afGlow(g, 0.5 * w, 0.5 * w, 0.5 * w, "200,225,255", 0.45 * (1 - t));
+      g.translate(0.5 * w, 0.8 * w); g.rotate(Math.max(0, (t - 0.35) / 0.65) * Math.max(0, (t - 0.35) / 0.65) * Math.PI / 2); g.globalAlpha = fade;
+      g.fillStyle = "#cfe0f5";
+      g.beginPath(); g.arc(0, -0.5 * w, 0.06 * w, 0, P2); g.fill();
+      g.fillRect(-0.05 * w, -0.43 * w, 0.1 * w, 0.43 * w);
+    } else if (id === "impedimenta") {
+      for (i = 0; i < 4; i++) {
+        ph = 1 - ((t * 1.1 + i / 4) % 1);
+        g.strokeStyle = "rgba(120,225,215," + 0.7 * (1 - ph) * fade + ")"; g.lineWidth = 3;
+        g.beginPath(); g.arc(0.5 * w, 0.5 * w, ph * 0.46 * w + 2, 0, P2); g.stroke();
+      }
+      afGlow(g, 0.5 * w, 0.5 * w, 0.16 * w, "120,225,215", 0.7 * e * fade);
+    } else if (id === "riddikulus") {
+      var rang = ["255,120,150", "255,210,90", "120,220,160", "130,190,255", "210,150,255"];
+      for (i = 0; i < 40; i++) {
+        a = afRnd(i) * P2; ph = 0.12 + 0.36 * afRnd(i + 20);
+        afGlow(g, (0.5 + Math.cos(a) * ph * e) * w, (0.5 + Math.sin(a) * ph * e + 0.18 * t * t) * w, (0.018 + 0.02 * afRnd(i + 60)) * w, rang[i % 5], fade);
+      }
+    } else if (id === "finite") {
+      afGlow(g, 0.5 * w, 0.5 * w, 0.42 * (1 - e) * w + 1, "255,170,160", 0.8);
+      g.strokeStyle = "rgba(240,244,255," + fade + ")"; g.lineWidth = 3; g.shadowColor = "rgba(240,244,255,.9)"; g.shadowBlur = 16;
+      g.beginPath(); g.moveTo(0.2 * w, 0.2 * w); g.lineTo((0.2 + 0.6 * Math.min(1, t * 2.5)) * w, (0.2 + 0.6 * Math.min(1, t * 2.5)) * w); g.stroke();
+    } else if (id === "reducto") {
+      afGlow(g, 0.5 * w, 0.5 * w, 0.5 * e * w, "130,180,255", 0.6 * (1 - t));
+      for (i = 0; i < 9; i++) {
+        px = (i % 3 - 1) * 0.11; py = (Math.floor(i / 3) - 1) * 0.11;
+        g.save(); g.translate((0.5 + px * (1 + e * 3.2)) * w, (0.5 + py * (1 + e * 3.2) + 0.2 * t * t) * w);
+        g.rotate(e * (afRnd(i) - 0.5) * 5); g.globalAlpha = fade;
+        g.fillStyle = i % 2 ? "#8b93a6" : "#6f778a"; g.fillRect(-0.05 * w, -0.05 * w, 0.1 * w, 0.1 * w);
+        g.restore();
+      }
+    } else if (id === "diffindo") {
+      g.globalAlpha = fade; g.strokeStyle = "#c9a36a"; g.lineWidth = 0.03 * w;
+      g.save(); g.translate(0.5 * w, 0.5 * w); g.rotate(-0.5 * e); g.beginPath(); g.moveTo(-0.01 * w, 0); g.lineTo(-0.36 * w, 0); g.stroke(); g.restore();
+      g.save(); g.translate(0.5 * w, 0.5 * w); g.rotate(0.5 * e); g.beginPath(); g.moveTo(0.01 * w, 0); g.lineTo(0.36 * w, 0); g.stroke(); g.restore();
+      g.globalAlpha = 1; afGlow(g, 0.5 * w, 0.5 * w, 0.2 * w, "255,255,255", 0.9 * (1 - t));
+    } else if (id === "episkey") {
+      afGlow(g, 0.5 * w, 0.5 * w, (0.25 + 0.2 * Math.sin(t * 9) * (1 - t) + 0.15 * e) * w, "150,230,170", 0.6 * fade);
+      g.globalAlpha = fade; g.fillStyle = "#eafff0";
+      g.fillRect(0.46 * w, 0.36 * w, 0.08 * w, 0.28 * w); g.fillRect(0.36 * w, 0.46 * w, 0.28 * w, 0.08 * w);
+    } else if (id === "silencio") {
+      for (i = 0; i < 4; i++) {
+        ph = (0.12 + i * 0.09) * (1 - e);
+        g.strokeStyle = "rgba(200,215,240," + (1 - e) + ")"; g.lineWidth = 4;
+        g.beginPath(); g.arc(0.3 * w, 0.5 * w, ph * w + 1, -0.7, 0.7); g.stroke();
+      }
+      afGlow(g, 0.3 * w, 0.5 * w, 0.07 * w, "200,215,240", fade);
+    } else if (id === "engorgio" || id === "reducio") {
+      var ol = id === "engorgio" ? 0.3 + 0.7 * e : 1 - 0.72 * e;
+      afGlow(g, 0.5 * w, 0.54 * w, 0.42 * w * ol, id === "engorgio" ? "255,160,70" : "200,160,110", 0.4 * fade);
+      g.translate(0.5 * w, 0.54 * w); g.scale(ol, ol); g.globalAlpha = fade;
+      if (id === "engorgio") {
+        g.fillStyle = "#e8843c"; g.beginPath(); g.ellipse(0, 0, 0.26 * w, 0.21 * w, 0, 0, P2); g.fill();
+        g.strokeStyle = "#b85f22"; g.lineWidth = 0.012 * w;
+        g.beginPath(); g.ellipse(0, 0, 0.11 * w, 0.21 * w, 0, 0, P2); g.stroke();
+        g.fillStyle = "#5f8a4a"; g.fillRect(-0.02 * w, -0.27 * w, 0.04 * w, 0.08 * w);
+      } else {
+        g.fillStyle = "#7a5230"; g.fillRect(-0.26 * w, -0.14 * w, 0.52 * w, 0.32 * w);
+        g.fillStyle = "#5e3d22"; g.fillRect(-0.26 * w, -0.2 * w, 0.52 * w, 0.1 * w);
+        g.fillStyle = "#f3d58f"; g.fillRect(-0.035 * w, -0.13 * w, 0.07 * w, 0.08 * w);
+      }
+    } else if (id === "obliviate") {
+      for (i = 0; i < 34; i++) {
+        a = afRnd(i) * P2 + t * 3; ph = (0.05 + 0.4 * afRnd(i + 11)) * (0.4 + 0.9 * e);
+        afGlow(g, (0.5 + Math.cos(a) * ph) * w, (0.5 + Math.sin(a) * ph * 0.7) * w, (0.03 + 0.04 * afRnd(i + 5)) * w, "225,235,250", 0.55 * (1 - t));
+      }
+      afGlow(g, 0.5 * w, 0.5 * w, 0.5 * e * w, "225,235,250", 0.4 * fade);
     } else if (id === "puf") {
       for (i = 0; i < 14; i++) {
         a = afRnd(i) * P2;
