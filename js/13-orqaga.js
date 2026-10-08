@@ -51,6 +51,7 @@
     "scr-maxluq": "mx-back",
     "scr-qoriq": "qr-back",
     "scr-astro": "yl-back",
+    "scr-osimlik": "os-back",
     "scr-qb": "qb-back",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",

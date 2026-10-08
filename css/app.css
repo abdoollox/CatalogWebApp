@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-astro .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-astro .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-astro .kb-hdr,#scr-osimlik .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-astro .kb-ttl,#scr-osimlik .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-osimlik .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-osimlik .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2749,6 +2749,35 @@ body.kr-on .mp{display:none!important}
 #yl-stage .hm-top{justify-content:center}
 #yl-intro .af-fl{margin-top:18px}
 #scr-astro .dr-desc{min-height:20px}
+/* O'simlikshunoslik: issiqxona */
+.os-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:300px;margin:8px auto 0}
+.os-grid.olti{grid-template-columns:repeat(3,minmax(0,1fr));max-width:360px;gap:8px}
+.os-p{position:relative;aspect-ratio:1/1;padding:0;border-radius:20px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border:1px solid rgba(140,180,90,.35);background:radial-gradient(circle at 50% 60%,rgba(140,180,90,.16),rgba(12,15,20,.3) 75%),#0f1410;transition:border-color .2s,box-shadow .2s}
+.os-gul{width:86%;height:86%;border-radius:50%;margin:7%;transition:filter .4s,transform .4s}
+.os-p.kerak{border-color:rgba(243,213,143,.75);box-shadow:0 0 16px rgba(243,213,143,.22)}
+.os-eh{position:absolute;left:50%;top:-6px;width:46%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;border-radius:14px;
+  background:rgba(14,17,22,.92);border:1px solid rgba(243,213,143,.6);box-shadow:0 4px 12px rgba(0,0,0,.5);animation:osChiq .25s ease-out}
+.os-eh img{width:100%;aspect-ratio:1/1;border-radius:50%}
+.os-ch{display:block;align-self:flex-start;height:4px;width:100%;border-radius:99px;background:#8be28f}
+.os-ch.oz{background:#f0786c}
+@keyframes osChiq{from{transform:translateX(-50%) scale(.4);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+.os-p.yaxshi .os-gul{animation:osYaxshi .5s}
+@keyframes osYaxshi{0%{transform:scale(1);filter:brightness(1)}40%{transform:scale(1.1);filter:brightness(1.5)}100%{transform:scale(1);filter:brightness(1)}}
+.os-p.xato{animation:ikShake .35s;border-color:#f0786c}
+.os-p.soldi{border-color:rgba(240,120,108,.6)}
+.os-p.soldi .os-gul{filter:grayscale(1) brightness(.55);transform:rotate(-10deg) scale(.92)}
+.os-tools{display:flex;justify-content:center;gap:8px;max-width:360px;margin:12px auto 0}
+.os-t{flex:1;max-width:84px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--dim);transition:transform .12s,border-color .15s,background .15s}
+.os-t img{width:46px;height:46px;border-radius:50%}
+.os-t small{font:800 10px/1.1 'Manrope',sans-serif}
+.os-t.on{border-color:var(--gold);background:rgba(var(--gold-rgb),.16);color:var(--gold-hi);transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.4)}
+#os-stage .af-fl{margin-top:10px}
+#os-stage .af-fl img{width:52px;height:52px}
+#os-intro .af-fl{margin-top:18px}
+#os-lives i{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M12 26C5 22 2.500 15.500 4 8 8 6 12 3.500 12 2c0 1.500 4 4 8 6 1.500 7.500-1 14-8 18z' fill='%23161a23' stroke='%234b5364' stroke-width='1.500' stroke-linejoin='round' stroke-dasharray='3 2.500'/%3E%3C/svg%3E")}
+#os-lives i.on{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' y1='0' x2='.8' y2='1'%3E%3Cstop offset='0' stop-color='%23c9f29a'/%3E%3Cstop offset='1' stop-color='%233f8a3a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M12 26C5 22 2.500 15.500 4 8 8 6 12 3.500 12 2c0 1.500 4 4 8 6 1.500 7.500-1 14-8 18z' fill='url(%23a)' stroke='%23f3d58f' stroke-width='1.800' stroke-linejoin='round'/%3E%3Cpath d='M12 6v17M12 12l-4-2.500M12 16l4.500-3' stroke='%23fff' stroke-opacity='.55' stroke-width='1.200' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");filter:drop-shadow(0 0 6px rgba(140,200,110,.55))}
 /* Uchish darsi */
 .uc-box{display:flex;justify-content:center}
 #uc-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;border:1px solid rgba(224,178,91,.4);background:#141829}

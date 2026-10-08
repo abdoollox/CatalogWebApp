@@ -29,9 +29,10 @@
       nom: { uz: "Qora kuchlardan himoya", ru: "Защита от Тёмных искусств", en: "Defence Against the Dark Arts" },
       ust: { uz: "Professor Lyupin", ru: "Профессор Люпин", en: "Professor Lupin" },
       izoh: { uz: "Xavf yetib kelguncha to'g'ri himoya afsunini tanlang.", ru: "Выберите верное защитное заклинание, пока опасность не настигла.", en: "Pick the right defensive spell before the danger reaches you." } },
-    { id: "osimlik", on: false, rgb: "140,180,90",
+    { id: "osimlik", on: true, rgb: "140,180,90",
       nom: { uz: "O'simlikshunoslik", ru: "Травология", en: "Herbology" },
-      ust: { uz: "Professor Sprout", ru: "Профессор Стебль", en: "Professor Sprout" } },
+      ust: { uz: "Professor Sprout", ru: "Профессор Стебль", en: "Professor Sprout" },
+      izoh: { uz: "Issiqxonadagi o'simliklarga o'z vaqtida kerakli parvarishni bering.", ru: "Вовремя давайте растениям в теплице нужный уход.", en: "Give every greenhouse plant the care it needs, in time." } },
     { id: "astro", on: true, rgb: "130,130,220",
       nom: { uz: "Astronomiya", ru: "Астрономия", en: "Astronomy" },
       ust: { uz: "Professor Sinistra", ru: "Профессор Синистра", en: "Professor Sinistra" },
@@ -117,6 +118,11 @@
           ylI: ["Bugungi turkumni avval chiziq bo'ylab, keyin yoddan ulaysiz.", "Ikki turkum. Chiziqlar bir zum ko'rinadi — eslab qoling.", "Uch turkum, chiziqlarsiz. Faqat nomi aytiladi."],
           ylBad: "Bu yulduz emas.", ylYod: function (nom) { return nom + " turkumini yoddan yig'ing"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Xato: " + m + " · Kechikish: " + k; },
           ylB: ["Osmon sizga hali notanish. Qaytadan qarab chiqing.", "Yulduzlarni chalkashtiryapsiz. Yana bir urinib ko'ring.", "Qoniqarli. Osmon xaritasi esingizda qola boshladi.", "Juda yaxshi! Ko'zingiz o'tkir.", "A'lo! Yulduzlar sizga bo'ysunadi."],
+          osStep: function (a, b) { return "Parvarish " + a + " / " + b; }, osGo: "Issiqxonaga", osHint: "Asbobni tanlang, keyin shu narsa kerak bo'lgan o'simlikni bosing",
+          osI: ["O'simlik ustida nima kerakligi ko'rinadi. Pastdan o'sha asbobni tanlab, o'simlikni bosing. Chiziq tugaguncha ulgurmasangiz, o'simlik so'liydi.", "Yangi asbob qo'shildi. Bir vaqtning o'zida bir nechta o'simlikni kuzating.", "O'simliklar ko'paydi va talabchan bo'ldi. Ko'zingiz hammasida bo'lsin."],
+          osAs: ["Suv", "Nur", "Qaychi", "O'g'it"], osOk: ["Yaxshi!", "Barakalla!", "Shunday!"], osBad: "Unga bu kerak emas!", osWilt: "O'simlik so'lidi!", osSpN: "Professor Sprout",
+          osStat: function (a, b, x2) { return "Parvarish: " + a + " / " + b + " · Xato asbob: " + x2; },
+          osB: ["Issiqxona xarob bo'ldi. Qo'lqopni kiying va qaytadan.", "O'simliklar sizdan xafa. Yana bir urinib ko'ring.", "Qoniqarli. O'simliklar tirik — bu yaxshi boshlanish.", "Juda yaxshi! Qo'lingiz yengil ekan.", "A'lo! Mandragoralar ham sizni tinglaydi."],
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -188,6 +194,11 @@
           ylI: ["Сегодняшнее созвездие вы соедините сначала по линиям, потом по памяти.", "Два созвездия. Линии покажутся на миг — запоминайте.", "Три созвездия, без линий. Названо только имя."],
           ylBad: "Это не та звезда.", ylYod: function (nom) { return "Соберите по памяти: " + nom; }, ylSnN: "Профессор Синистра", ylStat: function (m, k) { return "Ошибок: " + m + " · Опозданий: " + k; },
           ylB: ["Небо вам пока незнакомо. Посмотрите ещё раз.", "Вы путаете звёзды. Попробуйте снова.", "Удовлетворительно. Карта неба начинает запоминаться.", "Очень хорошо! У вас острый глаз.", "Превосходно! Звёзды вам послушны."],
+          osStep: function (a, b) { return "Уход " + a + " / " + b; }, osGo: "В теплицу", osHint: "Выберите инструмент, затем нажмите на растение, которому он нужен",
+          osI: ["Над растением видно, что ему нужно. Выберите внизу этот инструмент и нажмите на растение. Не успеете до конца полоски — растение завянет.", "Добавился новый инструмент. Следите сразу за несколькими растениями.", "Растений стало больше, и они требовательнее. Держите в поле зрения все."],
+          osAs: ["Вода", "Свет", "Ножницы", "Удобрение"], osOk: ["Хорошо!", "Молодец!", "Вот так!"], osBad: "Ему нужно другое!", osWilt: "Растение завяло!", osSpN: "Профессор Стебль",
+          osStat: function (a, b, x2) { return "Уход: " + a + " / " + b + " · Не тот инструмент: " + x2; },
+          osB: ["Теплица в плачевном виде. Наденьте перчатки — и заново.", "Растения на вас обижены. Попробуйте ещё раз.", "Удовлетворительно. Растения живы — хорошее начало.", "Очень хорошо! У вас лёгкая рука.", "Превосходно! Вас слушаются даже мандрагоры."],
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -260,6 +271,11 @@
           ylI: ["Today's constellation: first join it along the lines, then from memory.", "Two constellations. The lines show for a moment — remember them.", "Three constellations, no lines. Only the name is given."],
           ylBad: "That's not the star.", ylYod: function (nom) { return "Build " + nom + " from memory"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Mistakes: " + m + " · Too late: " + k; },
           ylB: ["The sky is still a stranger to you. Look again.", "You are mixing up the stars. Try once more.", "Acceptable. The sky map is starting to stick.", "Very good! You have a sharp eye.", "Outstanding! The stars obey you."],
+          osStep: function (a, b) { return "Care " + a + " / " + b; }, osGo: "To the greenhouse", osHint: "Pick a tool, then tap the plant that needs it",
+          osI: ["Each plant shows what it needs. Pick that tool below and tap the plant. If the bar runs out first, the plant wilts.", "A new tool has been added. Keep an eye on several plants at once.", "More plants now, and fussier ones. Watch them all."],
+          osAs: ["Water", "Light", "Shears", "Fertiliser"], osOk: ["Good!", "Well done!", "That's it!"], osBad: "That's not what it needs!", osWilt: "The plant has wilted!", osSpN: "Professor Sprout",
+          osStat: function (a, b, x2) { return "Care: " + a + " / " + b + " · Wrong tool: " + x2; },
+          osB: ["The greenhouse is a wreck. Gloves on, and start again.", "The plants are cross with you. Try once more.", "Acceptable. The plants are alive — a good start.", "Very good! You have green fingers.", "Outstanding! Even the Mandrakes listen to you."],
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -280,7 +296,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14, astro: 26 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14, astro: 26, osimlik: 14 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -323,7 +339,8 @@
       himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") },
       uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") },
       maxluq: { level: drLocalLvl.maxluq, total: 36, contest: bell("maxluq", "m2") },
-      astro: { level: drLocalLvl.astro, total: 36, contest: bell("astro", "a4") } };
+      astro: { level: drLocalLvl.astro, total: 36, contest: bell("astro", "a4") },
+      osimlik: { level: drLocalLvl.osimlik, total: 36, contest: bell("osimlik", "o5") } };
     return res;
   }
 
@@ -379,7 +396,7 @@
   function drOpen() {
     drQayt = false;
     qrLoad();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -451,7 +468,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -530,7 +547,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -641,7 +658,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else if (fan === "astro") { ylOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else if (fan === "astro") { ylOpen(true); } else if (fan === "osimlik") { osOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -690,7 +707,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -740,6 +757,7 @@
     else if (id === "uchish") { uchOpen(false, n); }
     else if (id === "maxluq") { mxOpen(false, n); }
     else if (id === "astro") { ylOpen(false, n); }
+    else if (id === "osimlik") { osOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -756,7 +774,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1294,7 +1312,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho", osimlik: "hp_os_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1899,7 +1917,7 @@
     var hmY = qrYordam(["testral", "mushuk"], hm.bell);
     if (hmY.testral) { hm.lives = hm.jon = 4; }
     if (hmY.mushuk) { hm.opts = Math.max(2, hm.opts - 1); }
-    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro");
+    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -2939,6 +2957,202 @@
     if (otdi) { drBahoSave("astro", daraja, baho); drDone("astro", daraja, show); } else { show(null); }
   }
 
+  /* ================= O'SIMLIKSHUNOSLIK: issiqxonada bir nechta o'simlikka o'z vaqtida parvarish =================
+     Bu DIQQATNI TAQSIMLASH mashqi (egasi, 2026-10-08: fanlar bir-biriga o'xshamasin, har biri boshqa qobiliyatni mashq
+     qildirsin - bu yerda xotira EMAS). Tuvaklardagi o'simliklar ustida ehtiyoj belgisi chiqadi (suv, nur, qaychi, o'g'it)
+     va chizig'i kamayib boradi; pastdan shu asbob tanlanib, o'simlik bosiladi. Ulgurilmasa o'simlik so'liydi - jon ketadi.
+     Darslar (bot: OSIMLIK_DARS = 36): 1-4 - 4 tuvak, 2 asbob; 5-12 - 3 asbob (9-darsdan 6 tuvak); 13-36 - 4 asbob;
+     ehtiyojlar soni 10 -> 24, ular tezroq chiqadi va qisqaroq kutadi. Bellashuv: 18 ehtiyoj, kutish cheksiz (jon yo'q),
+     tartibi hammaga bir xil; xato asbob +3 s. */
+  var OS_AS = ["suv", "nur", "qaychi", "ogit"];
+  var OS_GUL = ["mandragora", "tentakula", "geran", "bubotuber", "mimbulus", "puffapod"];
+  var os = null;      // {n, bell, pots:[{need, t0, life, el}], navbat:[{p, a}], ni, tool, served, wilt, wrong, lives, jami, tm}
+  function osImg(k) { return IMG_DIR + "osimlik/" + k + ".webp"; }
+  function osSpImg(k) { return IMG_DIR + "sprout/" + k + ".webp"; }
+  function osKayf(k) { ["os-sp-im", "os-sp-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = osSpImg(k); } }); }
+  function osStop() { if (os) { clearInterval(os.tm); os.tm = 0; } }
+  function osPlan(n, urug) {
+    var bell = urug != null, s0 = bell ? urug : n * 43, tuvak = bell || n >= 9 ? 6 : 4, asbob = bell || n >= 13 ? 4 : n >= 5 ? 3 : 2;
+    var jami = bell ? 18 : 10 + Math.floor((n - 1) * 0.4), navbat = [], oldingi = -1, g = 0;
+    while (navbat.length < jami && g < 600) {
+      var p = Math.floor(afRnd(s0 + g * 2) * tuvak), a = Math.floor(afRnd(s0 + g * 2 + 1) * asbob);
+      g++;
+      if (p !== oldingi) { navbat.push({ p: p, a: a }); oldingi = p; }
+    }
+    return { tuvak: tuvak, asbob: asbob, jami: jami, navbat: navbat,
+             oraliq: bell ? 650 : Math.round(Math.max(900, 2300 - n * 40)), kut: bell ? 0 : Math.round(Math.max(2800, 5600 - n * 80)) };
+  }
+
+  function osOpen(bell, n) {
+    var st = drData && drData.osimlik, x = drX(), f = drFan("osimlik"), urug = null, i;
+    if (bell === true) { var it = String((st && st.contest && st.contest.item) || "o1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 13); } }
+    var plan = osPlan(n || 1, urug);
+    osStop();
+    os = { n: n || 1, bell: bell === true, plan: plan, pots: [], ni: 0, tool: 0, served: 0, wilt: 0, wrong: 0, lives: 3, jami: plan.jami, keyingi: 0, tm: 0, tugadi: false };
+    drShowGame("scr-osimlik");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = osSpImg(k); });
+    OS_AS.concat(OS_GUL).forEach(function (k) { var im = new Image(); im.src = osImg(k); });
+    $("os-kick").textContent = f.nom[lang];
+    $("os-ttl").textContent = f.ust[lang];
+    $("os-today").textContent = os.bell ? x.bell : x.lvl(os.n);
+    $("os-res").classList.add("hidden");
+    $("os-stage").classList.add("hidden");
+    $("os-intro").classList.toggle("hidden", os.bell);
+    if (os.bell) { osGo(); return; }
+    $("os-intro-t").textContent = x.osI[os.n === 1 ? 0 : (os.n === 5 || os.n === 13) ? 1 : os.n === 9 ? 2 : 0];
+    $("os-go").textContent = x.osGo;
+    osKayf("maslahat");
+  }
+
+  function osGo() {
+    var x = drX(), me = os, P = os.plan, grid = $("os-grid"), bar = $("os-tools"), i;
+    $("os-intro").classList.add("hidden");
+    $("os-stage").classList.remove("hidden");
+    $("os-lives").classList.toggle("hidden", os.bell);
+    grid.innerHTML = ""; bar.innerHTML = "";
+    grid.className = "os-grid" + (P.tuvak > 4 ? " olti" : "");
+    os.pots = [];
+    for (i = 0; i < P.tuvak; i++) {
+      (function (k) {
+        var b = drEl("button", "os-p"), im = document.createElement("img"), eh = drEl("span", "os-eh hidden"), ei = document.createElement("img"), ch = drEl("i", "os-ch");
+        b.type = "button";
+        im.className = "os-gul"; im.alt = ""; im.src = osImg(OS_GUL[k % OS_GUL.length]);
+        ei.alt = "";
+        eh.appendChild(ei); eh.appendChild(ch);
+        b.appendChild(im); b.appendChild(eh);
+        b.addEventListener("click", function () { osPot(k); });
+        grid.appendChild(b);
+        os.pots.push({ need: -1, t0: 0, el: b, eh: eh, ei: ei, ch: ch });
+      })(i);
+    }
+    for (i = 0; i < P.asbob; i++) {
+      (function (k) {
+        var t = drEl("button", "os-t" + (k === 0 ? " on" : "")), im = document.createElement("img");
+        t.type = "button";
+        im.alt = ""; im.src = osImg(OS_AS[k]);
+        t.appendChild(im);
+        t.appendChild(drEl("small", "", x.osAs[k]));
+        t.addEventListener("click", function () { if (!os) { return; } os.tool = k; [].slice.call(bar.children).forEach(function (q, j) { q.classList.toggle("on", j === k); }); try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {} });
+        bar.appendChild(t);
+      })(i);
+    }
+    os.tool = 0;
+    os.keyingi = Date.now() + 700;
+    $("os-hint").textContent = x.osHint;
+    $("os-hint").classList.remove("bad");
+    osKayf("maslahat");
+    osHud();
+    clearInterval(os.tm);
+    os.tm = setInterval(function () {
+      if (os !== me || $("scr-osimlik").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      osTick();
+    }, 100);
+  }
+  function osHud() {
+    var x = drX(), el = $("os-lives");
+    el.innerHTML = "";
+    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < os.lives ? "on" : "")); }
+    $("os-step").textContent = x.osStep(os.served + os.wilt, os.jami) + (bl && os.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+  function osTick() {
+    var x = drX(), me = os, P = os.plan, now = Date.now(), ochiq = 0;
+    // yangi ehtiyoj: navbatdagi tuvak bo'sh bo'lsa
+    if (os.ni < P.navbat.length && now >= os.keyingi) {
+      var q = P.navbat[os.ni], pot = os.pots[q.p];
+      if (pot.need < 0 && !pot.sol) {
+        pot.need = q.a; pot.t0 = now;
+        pot.ei.src = osImg(OS_AS[q.a]);
+        pot.eh.classList.remove("hidden");
+        pot.el.classList.add("kerak");
+        os.ni++;
+        os.keyingi = now + P.oraliq;
+      }
+    }
+    os.pots.forEach(function (p) {
+      if (p.need < 0) { return; }
+      ochiq++;
+      if (!P.kut) { return; }
+      var qoldi = 1 - (now - p.t0) / P.kut;
+      p.ch.style.width = Math.max(0, qoldi * 100).toFixed(1) + "%";
+      p.ch.classList.toggle("oz", qoldi < 0.35);
+      if (qoldi <= 0) {       // ulgurilmadi - so'lidi
+        p.need = -1; p.sol = true;
+        p.eh.classList.add("hidden");
+        p.el.classList.remove("kerak"); p.el.classList.add("soldi");
+        os.wilt++; os.lives--;
+        $("os-hint").textContent = x.osWilt; $("os-hint").classList.add("bad");
+        osKayf("xafa");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+        setTimeout(function () { if (os === me) { p.sol = false; p.el.classList.remove("soldi"); } }, 1400);
+        osHud();
+      }
+    });
+    if (os.bell) { osHud(); }
+    if (!os.tugadi && ((os.served + os.wilt >= os.jami) || (!os.bell && os.lives <= 0))) {
+      os.tugadi = true;
+      clearInterval(os.tm);
+      setTimeout(function () { if (os === me) { osEnd(); } }, 700);
+    }
+  }
+  function osPot(k) {
+    if (!os || os.tugadi) { return; }
+    var x = drX(), p = os.pots[k];
+    if (p.need < 0) { return; }
+    if (p.need !== os.tool) {
+      os.wrong++;
+      if (bl && os.bell) { bl.xato++; }
+      p.el.classList.remove("xato"); void p.el.offsetWidth; p.el.classList.add("xato");
+      $("os-hint").textContent = x.osBad; $("os-hint").classList.add("bad");
+      osKayf("xafa");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+      return;
+    }
+    p.need = -1;
+    p.eh.classList.add("hidden");
+    p.el.classList.remove("kerak", "xato");
+    p.el.classList.remove("yaxshi"); void p.el.offsetWidth; p.el.classList.add("yaxshi");
+    os.served++;
+    $("os-hint").textContent = x.osOk[os.served % x.osOk.length]; $("os-hint").classList.remove("bad");
+    osKayf(os.served % 3 === 0 ? "zor" : "yaxshi");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    osHud();
+  }
+  function osEnd() {
+    var x = drX(), me = os, daraja = os.n, box = $("os-res");
+    osStop();
+    $("os-stage").classList.add("hidden");
+    if (os.bell) { blFinish(box); return; }
+    var s = Math.round(100 * os.served / os.jami) - os.wrong * 5, baho = s >= 90 ? 5 : s >= 78 ? 4 : s >= 60 ? 3 : s >= 40 ? 2 : 1;
+    if (os.lives <= 0) { baho = Math.min(baho, 2); }
+    var sc = { baho: baho, izoh: x.osStat(os.served, os.jami, os.wrong) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (os !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.osB[baho - 1] + "»", "osimlik", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.osB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { osOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { os = null; fanOpen("osimlik"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = osSpImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.osSpN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("osimlik", daraja, baho); drDone("osimlik", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
@@ -2952,6 +3166,8 @@
     $("qr-back").addEventListener("click", function () { fanOpen("maxluq"); });
     $("yl-back").addEventListener("click", function () { var b = yl && yl.bell; ylStop(); yl = null; blAbort(); if (b) { blOpen("astro"); } else { fanOpen("astro"); } });
     $("yl-go").addEventListener("click", function () { if (yl) { ylGo(); } });
+    $("os-back").addEventListener("click", function () { var b = os && os.bell; osStop(); os = null; blAbort(); if (b) { blOpen("osimlik"); } else { fanOpen("osimlik"); } });
+    $("os-go").addEventListener("click", function () { if (os) { osGo(); } });
     var ylc = $("yl-canvas"), ylBos = function (ev) { var r = ylc.getBoundingClientRect(); ylTap(ev.clientX - r.left, ev.clientY - r.top); try { ev.preventDefault(); } catch (e) {} };
     if (window.PointerEvent) { ylc.addEventListener("pointerdown", ylBos); }
     else { ylc.addEventListener("touchstart", function (ev) { var t = ev.touches && ev.touches[0]; if (t) { ylBos({ clientX: t.clientX, clientY: t.clientY, preventDefault: function () { ev.preventDefault(); } }); } }, { passive: false }); }
