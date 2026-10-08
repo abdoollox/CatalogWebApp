@@ -32,9 +32,10 @@
     { id: "osimlik", on: false, rgb: "140,180,90",
       nom: { uz: "O'simlikshunoslik", ru: "Травология", en: "Herbology" },
       ust: { uz: "Professor Sprout", ru: "Профессор Стебль", en: "Professor Sprout" } },
-    { id: "astro", on: false, rgb: "130,130,220",
+    { id: "astro", on: true, rgb: "130,130,220",
       nom: { uz: "Astronomiya", ru: "Астрономия", en: "Astronomy" },
-      ust: { uz: "Professor Sinistra", ru: "Профессор Синистра", en: "Professor Sinistra" } },
+      ust: { uz: "Professor Sinistra", ru: "Профессор Синистра", en: "Professor Sinistra" },
+      izoh: { uz: "Yulduzlarni tartib bilan ulab, turkumlarni yig'ing.", ru: "Соединяйте звёзды по порядку и собирайте созвездия.", en: "Join the stars in order to build the constellations." } },
     { id: "uchish", on: true, rgb: "224,178,91",
       nom: { uz: "Uchish darsi", ru: "Полёты на мётлах", en: "Flying" },
       ust: { uz: "Xuch xonim", ru: "Мадам Трюк", en: "Madam Hooch" },
@@ -104,13 +105,18 @@
           mxStat: function (m, k) { return "Xato juftlik: " + m + " · " + (k ? "Sham o'chdi" : "Vaqtida"); },
           mxXgB: ["Maxluqlar och qoldi. Hechqisi yo'q, yana urinib ko'ring.", "Hali chalkashtiryapsiz. Shoshilmang, qaytadan.", "Yomon emas! Hech kim tishlamadi — yaxshi boshlanish.", "Zo'r! Maxluqlar sizni yoqtirib qoldi.", "Qoyil! Sizdan haqiqiy maxluqshunos chiqadi."],
           qrT: "Qo'riqxona", qrSum: function (a, b) { return a + " / " + b + " maxluq"; }, qrGal: function (n) { return n + " galleon"; },
-          qrTip: "Maxluqlar darslardan keladi: har uch darsda bittasi. Har birini kuniga bir marta boqing — o'sadi. Katta maxluq har yettinchi boqishda galleon keltiradi.",
+          qrTip: "Maxluqlar darslardan keladi: har uch darsda bittasi. Har birini kuniga bir marta boqing — o'sadi. Katta bo'lgach har biri o'z foydasini beradi.",
           qrSt: ["Bola", "O'smir", "Katta"], qrNext: function (n, st) { return "Yana " + n + " marta boqilsa — " + st.toLowerCase(); }, qrGift: function (n) { return "Sovg'agacha " + n + " marta boqish"; },
           qrFood: function (nom, n) { return nom + ": " + n + " porsiya"; }, qrFeed: "Boqish", qrFed: "Bugun to'ydi", qrBuy: function (g, n) { return "Yemish · " + g + " galleon (" + n + " ta)"; },
           qrAsk: function (yem, g, n, bor) { return "Yemish olinsinmi?\n\n«" + yem + "» — " + n + " porsiya, " + g + " galleon. Sizda " + bor + " galleon bor."; },
           qrPoor: "Galleon yetmaydi. Galleon hafta yakunida kubokdagi ballaringiz uchun beriladi.", qrLock: function (n) { return n + "-darsdan keyin"; }, qrRare: "Bellashuvda birinchi uchlikka kiring",
-          qrGrew: function (nom, st) { return nom + " o'sdi — endi " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " sizga 1 galleon keltirdi!"; }, qrYum: function (nom) { return nom + " to'ydi."; },
+          qrGrew: function (nom, st) { return nom + " o'sdi — endi " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " sizga " + n + " galleon keltirdi!"; },
+          qrGotF: function (nom, n) { return nom + " boshqa maxluqlaringizga " + n + " porsiya yemish keltirdi!"; }, qrFy: "Foydasi", qrFyK: "Katta bo'lganda", qrYum: function (nom) { return nom + " to'ydi."; },
           qrOpenS: function (n) { return n ? n + " ta maxluq sizni kutmoqda" : "Birinchi maxluq 3-darsdan keyin keladi"; }, qrNew: function (nom) { return "Yangi maxluq: " + nom + "! U qo'riqxonangizda kutmoqda."; }, qrGo: "Qo'riqxonaga",
+          ylStep: function (a, b) { return "Turkum " + a + " / " + b; }, ylGo: "Boshlash", ylHint: "Halqali yulduzdan boshlab, yulduzlarni tartib bilan bosing", ylPeek: "Chiziqlarni eslab qoling…",
+          ylI: ["Bugungi turkumni avval chiziq bo'ylab, keyin yoddan ulaysiz.", "Ikki turkum. Chiziqlar bir zum ko'rinadi — eslab qoling.", "Uch turkum, chiziqlarsiz. Faqat nomi aytiladi."],
+          ylBad: "Bu yulduz emas.", ylYod: function (nom) { return nom + " turkumini yoddan yig'ing"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Xato: " + m + " · Kechikish: " + k; },
+          ylB: ["Osmon sizga hali notanish. Qaytadan qarab chiqing.", "Yulduzlarni chalkashtiryapsiz. Yana bir urinib ko'ring.", "Qoniqarli. Osmon xaritasi esingizda qola boshladi.", "Juda yaxshi! Ko'zingiz o'tkir.", "A'lo! Yulduzlar sizga bo'ysunadi."],
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -170,13 +176,18 @@
           mxStat: function (m, k) { return "Неверных пар: " + m + " · " + (k ? "Свеча погасла" : "Вовремя"); },
           mxXgB: ["Существа остались голодными. Ничего, попробуйте ещё раз.", "Пока путаете. Не спешите, давайте заново.", "Неплохо! Никто не укусил — хорошее начало.", "Здорово! Вы понравились существам.", "Вот это да! Из вас выйдет настоящий знаток существ."],
           qrT: "Питомник", qrSum: function (a, b) { return "Существ: " + a + " / " + b; }, qrGal: function (n) { return n + " галлеонов"; },
-          qrTip: "Существа приходят с уроков: одно за каждые три урока. Кормите каждого раз в день — оно растёт. Взрослое существо за каждое седьмое кормление приносит галлеон.",
+          qrTip: "Существа приходят с уроков: одно за каждые три урока. Кормите каждого раз в день — оно растёт. Когда вырастет, каждое приносит свою пользу.",
           qrSt: ["Малыш", "Подросток", "Взрослый"], qrNext: function (n, st) { return "Ещё кормлений: " + n + " — и " + st.toLowerCase(); }, qrGift: function (n) { return "До подарка кормлений: " + n; },
           qrFood: function (nom, n) { return nom + ": порций — " + n; }, qrFeed: "Покормить", qrFed: "Сегодня сыт", qrBuy: function (g, n) { return "Корм · " + g + " галлеон (" + n + " шт.)"; },
           qrAsk: function (yem, g, n, bor) { return "Купить корм?\n\n«" + yem + "» — порций: " + n + ", цена: " + g + " галлеон. У вас галлеонов: " + bor + "."; },
           qrPoor: "Не хватает галлеонов. Галлеоны выдают в конце недели за очки в кубке.", qrLock: function (n) { return "После урока " + n; }, qrRare: "Войдите в тройку лучших в состязании",
-          qrGrew: function (nom, st) { return nom + " вырос — теперь " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " принёс вам 1 галлеон!"; }, qrYum: function (nom) { return nom + " сыт."; },
+          qrGrew: function (nom, st) { return nom + " вырос — теперь " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " принёс вам галлеонов: " + n + "!"; },
+          qrGotF: function (nom, n) { return nom + " принёс другим существам порций корма: " + n + "!"; }, qrFy: "Польза", qrFyK: "Когда вырастет", qrYum: function (nom) { return nom + " сыт."; },
           qrOpenS: function (n) { return n ? "Вас ждут существа: " + n : "Первое существо появится после 3-го урока"; }, qrNew: function (nom) { return "Новое существо: " + nom + "! Оно ждёт вас в питомнике."; }, qrGo: "В питомник",
+          ylStep: function (a, b) { return "Созвездие " + a + " / " + b; }, ylGo: "Начать", ylHint: "Начните со звезды в кольце и нажимайте звёзды по порядку", ylPeek: "Запоминайте линии…",
+          ylI: ["Сегодняшнее созвездие вы соедините сначала по линиям, потом по памяти.", "Два созвездия. Линии покажутся на миг — запоминайте.", "Три созвездия, без линий. Названо только имя."],
+          ylBad: "Это не та звезда.", ylYod: function (nom) { return "Соберите по памяти: " + nom; }, ylSnN: "Профессор Синистра", ylStat: function (m, k) { return "Ошибок: " + m + " · Опозданий: " + k; },
+          ylB: ["Небо вам пока незнакомо. Посмотрите ещё раз.", "Вы путаете звёзды. Попробуйте снова.", "Удовлетворительно. Карта неба начинает запоминаться.", "Очень хорошо! У вас острый глаз.", "Превосходно! Звёзды вам послушны."],
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -237,13 +248,18 @@
           mxStat: function (m, k) { return "Wrong pairs: " + m + " · " + (k ? "The candle went out" : "In time"); },
           mxXgB: ["The creatures went hungry. Never mind, have another go.", "Still mixing them up. Take your time, try again.", "Not bad! Nobody got bitten — a good start.", "Brilliant! The creatures have taken to you.", "Blimey! You'll make a proper creature expert."],
           qrT: "Menagerie", qrSum: function (a, b) { return a + " / " + b + " creatures"; }, qrGal: function (n) { return n + " Galleons"; },
-          qrTip: "Creatures come from lessons: one for every three lessons. Feed each once a day and it grows. A grown creature brings a Galleon on every seventh feeding.",
+          qrTip: "Creatures come from lessons: one for every three lessons. Feed each once a day and it grows. Once grown, each one brings its own benefit.",
           qrSt: ["Baby", "Youngster", "Adult"], qrNext: function (n, st) { return n + " more feedings to " + st.toLowerCase(); }, qrGift: function (n) { return n + " feedings until a gift"; },
           qrFood: function (nom, n) { return nom + ": " + n + " portions"; }, qrFeed: "Feed", qrFed: "Fed today", qrBuy: function (g, n) { return "Food · " + g + " Galleon (" + n + ")"; },
           qrAsk: function (yem, g, n, bor) { return "Buy food?\n\n“" + yem + "” — " + n + " portions for " + g + " Galleon. You have " + bor + " Galleons."; },
           qrPoor: "Not enough Galleons. Galleons are paid at the end of each week for your House Cup points.", qrLock: function (n) { return "After lesson " + n; }, qrRare: "Finish in the contest top three",
-          qrGrew: function (nom, st) { return nom + " has grown — now " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " brought you 1 Galleon!"; }, qrYum: function (nom) { return nom + " is full."; },
+          qrGrew: function (nom, st) { return nom + " has grown — now " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " brought you " + n + " Galleon" + (n > 1 ? "s" : "") + "!"; },
+          qrGotF: function (nom, n) { return nom + " brought " + n + " portions of food for your other creatures!"; }, qrFy: "Benefit", qrFyK: "When grown", qrYum: function (nom) { return nom + " is full."; },
           qrOpenS: function (n) { return n ? n + " creatures are waiting for you" : "Your first creature arrives after lesson 3"; }, qrNew: function (nom) { return "A new creature: " + nom + "! It is waiting in your menagerie."; }, qrGo: "To the menagerie",
+          ylStep: function (a, b) { return "Constellation " + a + " / " + b; }, ylGo: "Begin", ylHint: "Start from the ringed star and tap the stars in order", ylPeek: "Memorise the lines…",
+          ylI: ["Today's constellation: first join it along the lines, then from memory.", "Two constellations. The lines show for a moment — remember them.", "Three constellations, no lines. Only the name is given."],
+          ylBad: "That's not the star.", ylYod: function (nom) { return "Build " + nom + " from memory"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Mistakes: " + m + " · Too late: " + k; },
+          ylB: ["The sky is still a stranger to you. Look again.", "You are mixing up the stars. Try once more.", "Acceptable. The sky map is starting to stick.", "Very good! You have a sharp eye.", "Outstanding! The stars obey you."],
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -264,7 +280,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14, astro: 26 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -306,7 +322,8 @@
       iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") },
       himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") },
       uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") },
-      maxluq: { level: drLocalLvl.maxluq, total: 36, contest: bell("maxluq", "m2") } };
+      maxluq: { level: drLocalLvl.maxluq, total: 36, contest: bell("maxluq", "m2") },
+      astro: { level: drLocalLvl.astro, total: 36, contest: bell("astro", "a4") } };
     return res;
   }
 
@@ -361,7 +378,8 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-sq", "pm"].forEach(function (id) {
+    qrLoad();
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -433,7 +451,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -512,7 +530,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -623,7 +641,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else if (fan === "astro") { ylOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -670,8 +688,9 @@
 
   function fanOpen(id) {
     fanId = id;
+    qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -720,6 +739,7 @@
     else if (id === "himoya") { hmOpen(false, n); }
     else if (id === "uchish") { uchOpen(false, n); }
     else if (id === "maxluq") { mxOpen(false, n); }
+    else if (id === "astro") { ylOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -736,7 +756,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -787,6 +807,7 @@
   function trStart(qs, bell, level, need) {
     var x = drX();
     tr = { qs: qs, i: 0, ok: 0, bell: !!bell, level: level, need: need || qs.length, lock: false };
+    if (qrYordam(["kalamush"], bell).kalamush) { tr.need = Math.max(1, tr.need - 1); }
     if (bell) {
       drShowGame("scr-tarix");
       $("tr-kick").textContent = x.bell;
@@ -1017,8 +1038,11 @@
     $("af-res").classList.add("hidden");
     $("af-stage").classList.remove("hidden");
     $("af-show").textContent = x.afShow;
+    var afY = qrYordam(["kalmar", "boutrakl"], af.bell);
+    af.kx = afY.kalmar ? 1.25 : 1;
+    af.bt = !!afY.boutrakl;
     if (af.mode === "zan") {     // bitta sham uchala afsunga (orasidagi tanaffuslar bilan)
-      af.lim = 1800 + af.steps.reduce(function (a, q) { return a + afLim(q.id, af.n); }, 0);
+      af.lim = Math.round((1800 + af.steps.reduce(function (a, q) { return a + afLim(q.id, af.n); }, 0)) * af.kx);
     }
     afStepSet();
   }
@@ -1028,7 +1052,7 @@
     var x = drX(), q = af.steps[af.round], a = AF[q.id][lang] || AF[q.id].uz;
     af.id = q.id;
     af.ask = !!q.ask;
-    if (af.mode !== "zan") { af.lim = afLim(q.id, af.n); }
+    if (af.mode !== "zan") { af.lim = Math.round(afLim(q.id, af.n) * af.kx); }
     $("af-stage").classList.toggle("sorov", af.ask);
     $("af-name").textContent = af.ask ? x.afVazT : a[0];
     $("af-desc").textContent = af.ask ? (AF_VAZ[q.id] || [a[1], a[1], a[1]])[lang === "ru" ? 1 : lang === "en" ? 2 : 0] : a[1];
@@ -1218,7 +1242,7 @@
     if (af.idx < af.pts.length - 2) { afFail(x.afShort); return; }
     // urinish o'tdi
     var otgan = af.t0 ? Date.now() - af.t0 : 0;
-    af.rounds.push({ r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used,
+    af.rounds.push({ r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used && !af.bt,
                      late: !af.bell && otgan > af.lim ? (otgan > af.lim * 2 ? 2 : 1) : 0 });
     var tugadi = af.round >= af.steps.length - 1, oxir = af.rounds[af.rounds.length - 1];
     if (af.mode !== "zan" || tugadi) { af.t0 = 0; }
@@ -1270,7 +1294,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1611,7 +1635,9 @@
     ikStop();
     ik = { id: id, phase: "rec", step: 0, err: 0, chips: [], bq: bq, bell: bell === true, n: n || 1,
            errJami: 0, boom: 0, t0: 0, pct: 1, lim: 0, kayf: "maslahat", yopT: 0, tm: 0 };
-    ik.lim = bq.sek ? (3 + IK[id].r.length * bq.sek) * 1000 : 0;
+    var ikY = qrYordam(["flobber", "salamandra"], ik.bell);
+    if (ikY.flobber) { ik.bq = { chips: bq.chips, xato: bq.xato + 1, sek: bq.sek, yop: bq.yop }; bq = ik.bq; }
+    ik.lim = bq.sek ? Math.round((3 + IK[id].r.length * bq.sek) * 1000 * (ikY.salamandra ? 1.25 : 1)) : 0;
     drShowGame("scr-iksir");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var i = new Image(); i.src = ikSnImg(k); });
     Object.keys(IK_M).forEach(function (m) { var i = new Image(); i.src = IMG_DIR + "masalliq/" + m + ".webp"; });      // tugmalar bo'sh chiqmasin
@@ -1869,8 +1895,11 @@
     var plan = bell === true ? hmBellPlan(st && st.contest && st.contest.item) : hmPlan(n || 1);
     hmStop();
     hm = { n: n || 1, bell: bell === true, waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
-           i: 0, lives: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
-    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq");
+           i: 0, lives: 3, jon: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
+    var hmY = qrYordam(["testral", "mushuk"], hm.bell);
+    if (hmY.testral) { hm.lives = hm.jon = 4; }
+    if (hmY.mushuk) { hm.opts = Math.max(2, hm.opts - 1); }
+    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -1911,7 +1940,7 @@
   function hmLives() {
     var el = $("hm-lives");
     el.innerHTML = "";
-    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < hm.lives ? "on" : "")); }
+    for (var i = 0; i < (hm.jon || 3); i++) { el.appendChild(drEl("i", i < hm.lives ? "on" : "")); }
   }
   function hmHead() {
     var x = drX();
@@ -2079,6 +2108,7 @@
     uch = { n: n || 1, bell: bell === true, objs: plan.objs, R: plan.R, len: plan.len, v0: plan.v0, rr: plan.rr,
             dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
             ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1 };
+    if (qrYordam(["gippo"], uch.bell).gippo) { uch.lives = uch.jon = 4; }
     drShowGame("scr-uchish");
     // uchuvchining kiyimi o'z fakulteti rangida (egasi, 2026-10-08)
     var uy = "gryffindor";
@@ -2118,7 +2148,7 @@
   function uchHud() {
     var x = drX(), el = $("uc-lives"), mult = 1 + Math.min(uch.combo, 6) * 0.08;
     el.innerHTML = "";
-    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
+    for (var i = 0; i < (uch.jon || 3); i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
     $("uc-step").textContent = x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R) + (mult > 1 ? " · ×" + mult.toFixed(2) : "") +
       (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
   }
@@ -2330,6 +2360,7 @@
     mxStop();
     mx = { n: n || 1, bell: bell === true, cards: plan.cards, pairs: plan.juft, yangi: plan.yangi, peek: plan.peek, lim: plan.lim,
            sel: null, lock: false, mism: 0, found: 0, t0: 0, pct: 1, tm: 0, pk: 0 };
+    if (qrYordam(["qurbaqa"], mx.bell).qurbaqa) { mx.peek = mx.peek > 0 ? mx.peek + 2000 : 1500; }
     drShowGame("scr-maxluq");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = mxXgImg(k); });
     plan.cards.forEach(function (c) { var im = new Image(); im.src = mxImg(c.k, c.f); });
@@ -2508,7 +2539,42 @@
      1 galleon keltiradi. Boqilmasa jazo yo'q. Rasmlar: img/qoriq/<kod>-<0|1|2>.webp (bola / o'smir / katta). */
   var API_QORIQ = "https://bot.tizimshunos.uz/api/qoriq";
   var QR_TARTIB = ["gippo", "boyogli", "niffler", "flobber", "testral", "qurbaqa", "kalmar", "boutrakl", "salamandra", "mushuk", "kalamush", "ajdar"];   // bot: hpqoriq.MAXLUQLAR
-  var qrData = null, qrBusy = false, qrLocal = null;
+  var qrData = null, qrBusy = false, qrLocal = null, qrAt = 0;
+  /* Har maxluqning O'Z foydasi (egasi, 2026-10-08). Uchtasi sovg'a keltiradi (server: hpqoriq.SOVGALAR), qolgan to'qqiztasi
+     KATTA bo'lgach mashq darslarida yordam beradi (bellashuvda EMAS - u yerda hamma teng): */
+  var QR_FOYDA = {
+    gippo:      ["Uchish darsida qo'shimcha jon", "Дополнительная жизнь на уроке полётов", "An extra life in Flying lessons"],
+    boyogli:    ["Har 7-boqishda boshqa maxluqlarga 3 porsiya yemish keltiradi", "Каждое 7-е кормление приносит другим существам 3 порции корма", "Every 7th feeding it brings 3 portions of food for your other creatures"],
+    niffler:    ["Har 7-boqishda 1 galleon topib keladi", "Каждое 7-е кормление находит 1 галлеон", "Every 7th feeding it finds 1 Galleon"],
+    flobber:    ["Damlamalar darsida yana bitta xatoga ruxsat", "Ещё одна допустимая ошибка на уроке зельеварения", "One more mistake allowed in Potions lessons"],
+    testral:    ["Qora kuchlardan himoya darsida qo'shimcha jon", "Дополнительная жизнь на уроке защиты", "An extra life in Defence lessons"],
+    qurbaqa:    ["Maxluqlar darsida kartalar uzoqroq ochiq turadi", "Карты на уроке о существах дольше остаются открытыми", "Cards stay face-up longer in Creatures lessons"],
+    kalmar:     ["Afsunlar darsida sham sekinroq yonadi", "Свеча на уроке заклинаний горит медленнее", "The candle burns slower in Charms lessons"],
+    boutrakl:   ["Afsunlar darsida «Chiziqni ko'rsatish» bahoni pasaytirmaydi", "«Показать линию» на уроке заклинаний не снижает оценку", "“Show the line” no longer lowers your Charms grade"],
+    salamandra: ["Damlamalar darsida sham sekinroq yonadi", "Свеча на уроке зельеварения горит медленнее", "The candle burns slower in Potions lessons"],
+    mushuk:     ["Himoya darsida bitta noto'g'ri variant olib tashlanadi", "На уроке защиты убирается один неверный вариант", "One wrong option is removed in Defence lessons"],
+    kalamush:   ["Sehrgarlik tarixi darsida bitta xato kechiriladi", "На уроке истории магии прощается одна ошибка", "One mistake is forgiven in History of Magic lessons"],
+    ajdar:      ["Har 7-boqishda 2 galleon keltiradi", "Каждое 7-е кормление приносит 2 галлеона", "Every 7th feeding it brings 2 Galleons"]
+  };
+  function qrFoyda(k) { return (QR_FOYDA[k] || ["", "", ""])[lang === "ru" ? 1 : lang === "en" ? 2 : 0]; }
+  function qrKatta(k) {
+    var q = qrData && qrData.list && qrData.list.filter(function (m) { return m.kod === k; })[0];
+    return !!(q && q.got && q.stage === 2);
+  }
+  // Darsda yordam berayotgan maxluqlar: bellashuvda yo'q. Ro'yxatdagi kattalari qaytadi va bitta xabar chiqadi.
+  function qrYordam(kodlar, bell) {
+    if (bell) { return {}; }
+    var bor = {}, nomlar = [];
+    kodlar.forEach(function (k) { if (qrKatta(k)) { bor[k] = true; nomlar.push(mxTx(k)[0] + ": " + qrFoyda(k).toLowerCase()); } });
+    if (nomlar.length) { showToast(nomlar.join(" · ")); }
+    return bor;
+  }
+  // Qo'riqxona holati darslar uchun (5 daqiqada bir marta, Darslar ochilganda)
+  function qrLoad() {
+    if (Date.now() - qrAt < 300000) { return; }
+    qrAt = Date.now();
+    qrPost({}, function (res) { if (res && res.list) { qrData = res; } });
+  }
   function qrImg(k, st) { return IMG_DIR + "qoriq/" + k + "-" + (st || 0) + ".webp"; }
   function qrSample(body) {
     if (!qrLocal) {
@@ -2523,8 +2589,8 @@
         var oldin = o.fed >= 10 ? 2 : o.fed >= 3 ? 1 : 0;
         o.fed++; o.food--; o.today = true;
         var endi = o.fed >= 10 ? 2 : o.fed >= 3 ? 1 : 0;
-        res.fed = k; res.grew = endi !== oldin ? endi : null; res.gift = o.fed > 10 && (o.fed - 10) % 7 === 0 ? 1 : 0;
-        L.gal += res.gift;
+        res.fed = k; res.grew = endi !== oldin ? endi : null; res.gift = (k === "niffler" || k === "ajdar") && o.fed > 10 && (o.fed - 10) % 7 === 0 ? { type: "gal", n: k === "ajdar" ? 2 : 1 } : 0;
+        L.gal += res.gift ? res.gift.n : 0;
       }
     }
     res.gal = L.gal;
@@ -2532,7 +2598,7 @@
     res.list = QR_TARTIB.map(function (kod, i) {
       var q = L.m[kod], b = q ? q.fed : 0, st = b >= 10 ? 2 : b >= 3 ? 1 : 0;
       return { kod: kod, got: !!q, need: kod === "ajdar" ? 0 : (i + 1) * 3, fed: b, stage: st, next: st === 0 ? 3 - b : st === 1 ? 10 - b : 0,
-               food: q ? q.food : 0, today: !!(q && q.today), gift: st === 2 ? 7 - (b - 10) % 7 : 0 };
+               food: q ? q.food : 0, today: !!(q && q.today), gift: st === 2 && (kod === "niffler" || kod === "ajdar" || kod === "boyogli") ? 7 - (b - 10) % 7 : 0 };
     });
     return res;
   }
@@ -2567,8 +2633,9 @@
       if (res.error) { return; }
       if (body.feed) {
         try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
-        qrDe(res.gift ? x.qrGot(nom) : res.grew != null ? x.qrGrew(nom, x.qrSt[res.grew]) : x.qrYum(nom), res.gift || res.grew != null ? "zor" : "yaxshi");
-        if (res.gift || res.grew != null) { showToast(res.gift ? x.qrGot(nom) : x.qrGrew(nom, x.qrSt[res.grew])); }
+        var sv = res.gift && res.gift.n ? (res.gift.type === "food" ? x.qrGotF(nom, res.gift.n) : x.qrGot(nom, res.gift.n)) : "";
+        qrDe(sv || (res.grew != null ? x.qrGrew(nom, x.qrSt[res.grew]) : x.qrYum(nom)), sv || res.grew != null ? "zor" : "yaxshi");
+        if (sv || res.grew != null) { showToast(sv || x.qrGrew(nom, x.qrSt[res.grew])); }
         var el = document.querySelector('.qr-c[data-k="' + kod + '"]');
         if (el) { el.classList.add(res.grew != null ? "osdi" : "yedi"); }
       }
@@ -2595,12 +2662,13 @@
         return;
       }
       tx.appendChild(drEl("span", "qr-st", x.qrSt[q.stage]));
-      var jami = q.stage === 0 ? 3 : 7, qilingan = q.stage === 0 ? q.fed : q.stage === 1 ? q.fed - 3 : 7 - q.gift;
+      var jami = q.stage === 0 ? 3 : 7, qilingan = q.stage === 0 ? q.fed : q.stage === 1 ? q.fed - 3 : q.gift ? 7 - q.gift : 7;
       var bar = drEl("span", "qr-bar"), bi = drEl("i");
       bi.style.width = Math.round(100 * Math.max(0, qilingan) / jami) + "%";
       bar.appendChild(bi);
       tx.appendChild(bar);
-      tx.appendChild(drEl("small", "", q.stage === 2 ? x.qrGift(q.gift) : x.qrNext(q.next, x.qrSt[q.stage + 1])));
+      tx.appendChild(drEl("small", "", q.stage === 2 ? (q.gift ? x.qrGift(q.gift) : "") : x.qrNext(q.next, x.qrSt[q.stage + 1])));
+      tx.appendChild(drEl("small", "qr-fy" + (q.stage === 2 ? " on" : ""), (q.stage === 2 ? x.qrFy : x.qrFyK) + ": " + qrFoyda(q.kod).toLowerCase()));
       var fd = drEl("span", "qr-fd"), fi = document.createElement("img");
       fi.alt = ""; fi.src = mxImg(q.kod, true);
       fd.appendChild(fi);
@@ -2629,6 +2697,248 @@
     });
   }
 
+  /* ================= ASTRONOMIYA: yulduzlarni tartib bilan ulab, turkum yig'ish =================
+     Tungi osmonda yulduzlar (turkum yulduzlari + chalg'ituvchilar, ko'rinishi bir xil). Halqali yulduzdan boshlab
+     tartib bilan bosiladi - chiziq tortiladi. 12 turkum (shakllari soddalashtirilgan). Darslar (bot: ASTRO_DARS = 36):
+       1-12  bitta turkum: avval chiziqlar ko'rinib turadi, keyin 3 s ko'rsatilib yashiriladi
+       13-24 ikki turkum: chiziqlar 2,5 s ko'rinadi
+       25-36 uch turkum: chiziq ko'rsatilmaydi, faqat nomi (uch xatodan keyin chiziqlar bir zum ko'rinadi)
+     Sham = vaqt; baho: xato -8, kechikish -20. Bellashuv: uch turkum (2 s ko'rsatiladi), joylashuvi hammaga bir xil, xato +3 s. */
+  var YL = {
+    ayiq:       { p: [[0.1, 0.3], [0.26, 0.26], [0.4, 0.32], [0.52, 0.42], [0.56, 0.62], [0.8, 0.66], [0.8, 0.44]],
+                  uz: ["Katta Ayiq", "Yetti yulduzli «cho'mich» — osmondagi eng taniqli shakl."], ru: ["Большая Медведица", "«Ковш» из семи звёзд — самая узнаваемая фигура неба."], en: ["Great Bear", "The seven-star Plough — the best-known shape in the sky."] },
+    kassiopeya: { p: [[0.12, 0.35], [0.3, 0.65], [0.5, 0.42], [0.7, 0.68], [0.88, 0.38]],
+                  uz: ["Kassiopeya", "Osmondagi «W» harfi."], ru: ["Кассиопея", "Буква «W» на небе."], en: ["Cassiopeia", "The letter W in the sky."] },
+    orion:      { p: [[0.3, 0.15], [0.68, 0.2], [0.58, 0.5], [0.5, 0.5], [0.42, 0.5], [0.3, 0.82], [0.72, 0.85]],
+                  uz: ["Orion", "Ovchi turkumi. Bellatrisa — uning yelkasidagi yulduz."], ru: ["Орион", "Созвездие охотника. Беллатриса — звезда на его плече."], en: ["Orion", "The Hunter. Bellatrix is the star on his shoulder."] },
+    it:         { p: [[0.5, 0.12], [0.42, 0.36], [0.3, 0.5], [0.48, 0.62], [0.62, 0.84], [0.36, 0.86]],
+                  uz: ["Katta It", "Sirius — osmondagi eng yorqin yulduz — shu turkumda."], ru: ["Большой Пёс", "Сириус, самая яркая звезда неба, находится здесь."], en: ["Great Dog", "Sirius, the brightest star in the sky, lives here."] },
+    arslon:     { p: [[0.72, 0.3], [0.62, 0.16], [0.48, 0.2], [0.44, 0.38], [0.5, 0.56], [0.2, 0.6], [0.12, 0.42]],
+                  uz: ["Arslon", "Regulus — Arslonning yuragi."], ru: ["Лев", "Регул — сердце Льва."], en: ["Leo", "Regulus is the heart of the Lion."] },
+    chayon:     { p: [[0.8, 0.15], [0.72, 0.3], [0.62, 0.42], [0.52, 0.58], [0.42, 0.74], [0.28, 0.82], [0.16, 0.74], [0.2, 0.6]],
+                  uz: ["Chayon", "Lotincha nomi — Skorpius."], ru: ["Скорпион", "По-латыни — Скорпиус."], en: ["Scorpius", "The Scorpion — Scorpius in Latin."] },
+    ajdar:      { p: [[0.82, 0.2], [0.7, 0.3], [0.76, 0.46], [0.6, 0.56], [0.44, 0.46], [0.3, 0.56], [0.34, 0.74], [0.16, 0.84]],
+                  uz: ["Ajdar", "Lotincha nomi — Drako."], ru: ["Дракон", "По-латыни — Драко."], en: ["Draco", "The Dragon — Draco in Latin."] },
+    andromeda:  { p: [[0.12, 0.72], [0.3, 0.6], [0.5, 0.52], [0.66, 0.34], [0.88, 0.3]],
+                  uz: ["Andromeda", "Bleklar oilasida shu nomli sehrgar ayol bor."], ru: ["Андромеда", "В семье Блэков есть волшебница с этим именем."], en: ["Andromeda", "A witch of the Black family bears this name."] },
+    toj:        { p: [[0.14, 0.4], [0.24, 0.6], [0.42, 0.72], [0.6, 0.7], [0.76, 0.58], [0.86, 0.38]],
+                  uz: ["Shimoliy toj", "Yulduzlardan yasalgan yarim doira toj."], ru: ["Северная Корона", "Полукруглая корона из звёзд."], en: ["Northern Crown", "A half-circle crown of stars."] },
+    lira:       { p: [[0.5, 0.12], [0.4, 0.36], [0.3, 0.74], [0.56, 0.8], [0.64, 0.42]],
+                  uz: ["Lira", "Eng yorqin yulduzi — Vega."], ru: ["Лира", "Её самая яркая звезда — Вега."], en: ["Lyra", "Its brightest star is Vega."] },
+    bori:       { p: [[0.2, 0.2], [0.4, 0.3], [0.36, 0.52], [0.56, 0.6], [0.66, 0.42], [0.82, 0.74]],
+                  uz: ["Bo'ri", "Lotincha nomi — Lupus."], ru: ["Волк", "По-латыни — Люпус."], en: ["Lupus", "The Wolf — Lupus in Latin."] },
+    feniks:     { p: [[0.14, 0.5], [0.36, 0.34], [0.56, 0.44], [0.5, 0.68], [0.74, 0.62], [0.88, 0.3]],
+                  uz: ["Feniks", "Kuldan qayta tug'iladigan qush turkumi."], ru: ["Феникс", "Созвездие птицы, возрождающейся из пепла."], en: ["Phoenix", "The bird that rises from its ashes."] }
+  };
+  var YL_TARTIB = ["ayiq", "kassiopeya", "orion", "it", "arslon", "chayon", "ajdar", "andromeda", "toj", "lira", "bori", "feniks"];
+  var yl = null;      // {n, bell, steps:[{id, peek, dec}], round, idx, stars, show, mism, late, xatoBu, t0, lim, tm, lock}
+  function ylTx(id) { return YL[id][lang] || YL[id].uz; }
+  function ylSnImg(k) { return IMG_DIR + "sinistra/" + k + ".webp"; }
+  function ylKayf(k) { ["yl-sn-im", "yl-sn-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = ylSnImg(k); } }); }
+  function ylStop() { if (yl) { clearInterval(yl.tm); clearTimeout(yl.pk); yl.tm = 0; } }
+  function ylPlan(n, urug) {
+    var T = YL_TARTIB, L = T.length, k;
+    if (urug != null) { return [0, 1, 2].map(function (j) { return { id: T[(urug + j * 5) % L], peek: 2000, dec: 6 }; }); }
+    if (n <= L) { return [{ id: T[n - 1], peek: Infinity, dec: 3 }, { id: T[n - 1], peek: 3000, dec: 5 }]; }
+    if (n <= L * 2) { k = n - L - 1; return [{ id: T[(k * 5 + 2) % L], peek: 2500, dec: 7 }, { id: T[(k * 5 + 8) % L], peek: 2500, dec: 7 }]; }
+    k = n - L * 2 - 1;
+    return [1, 5, 9].map(function (j) { return { id: T[(k * 7 + j) % L], peek: 0, dec: 8 }; });
+  }
+
+  function ylOpen(bell, n) {
+    var st = drData && drData.astro, x = drX(), f = drFan("astro"), urug = null, i;
+    if (bell === true) { var it = String((st && st.contest && st.contest.item) || "a1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 3); } }
+    ylStop();
+    yl = { n: n || 1, bell: bell === true, steps: ylPlan(n || 1, urug), urug: urug, round: 0, idx: 0, stars: [], show: false,
+           mism: 0, late: 0, xatoBu: 0, t0: 0, lim: 0, pct: 1, tm: 0, pk: 0, lock: false, w: 320, dpr: 1 };
+    drShowGame("scr-astro");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = ylSnImg(k); });
+    $("yl-kick").textContent = f.nom[lang];
+    $("yl-ttl").textContent = f.ust[lang];
+    $("yl-today").textContent = yl.bell ? x.bell : x.lvl(yl.n);
+    $("yl-name").textContent = "";
+    $("yl-desc").textContent = "";
+    $("yl-res").classList.add("hidden");
+    $("yl-stage").classList.add("hidden");
+    $("yl-intro").classList.toggle("hidden", yl.bell);
+    if (yl.bell) { ylGo(); return; }
+    $("yl-name").textContent = yl.n <= 12 ? ylTx(yl.steps[0].id)[0] : f.nom[lang];
+    $("yl-intro-t").textContent = x.ylI[yl.n <= 12 ? 0 : yl.n <= 24 ? 1 : 2];
+    $("yl-go").textContent = x.ylGo;
+    ylKayf("maslahat");
+  }
+  function ylGo() {
+    var c = $("yl-canvas");
+    $("yl-intro").classList.add("hidden");
+    $("yl-stage").classList.remove("hidden");
+    $("yl-sham").classList.toggle("hidden", yl.bell);
+    var w = Math.min(c.parentNode.clientWidth || 320, 360), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.style.width = w + "px"; c.style.height = w + "px";
+    c.width = Math.round(w * dpr); c.height = Math.round(w * dpr);
+    yl.w = w; yl.dpr = dpr;
+    yl.round = 0;
+    ylStep();
+  }
+  // Navbatdagi turkum: yulduzlar joyi, chalg'ituvchilar, chiziqlarni ko'rsatish
+  function ylStep() {
+    var x = drX(), me = yl, q = yl.steps[yl.round], P = YL[q.id].p, w = yl.w, chet = 26, i, g = 0;
+    var s0 = yl.bell ? yl.urug + yl.round * 31 : null;
+    yl.idx = 0; yl.xatoBu = 0; yl.lock = false;
+    yl.stars = P.map(function (p, j) { return { x: chet + p[0] * (w - chet * 2), y: chet + p[1] * (w - chet * 2), r: j }; });
+    while (yl.stars.length < P.length + q.dec && g < 400) {
+      var rx = s0 == null ? Math.random() : afRnd(s0 + g * 2), ry = s0 == null ? Math.random() : afRnd(s0 + g * 2 + 1);
+      g++;
+      var cx = chet + rx * (w - chet * 2), cy = chet + ry * (w - chet * 2), yaqin = false;
+      for (i = 0; i < yl.stars.length; i++) { if (Math.hypot(yl.stars[i].x - cx, yl.stars[i].y - cy) < 44) { yaqin = true; break; } }
+      if (!yaqin) { yl.stars.push({ x: cx, y: cy, r: -1 }); }
+    }
+    yl.show = q.peek > 0;
+    yl.lim = Math.round(P.length * (yl.n <= 12 ? 3.2 : yl.n <= 24 ? 2.6 : 2.4) * 1000);
+    yl.t0 = 0; yl.pct = 1;
+    $("yl-name").textContent = ylTx(q.id)[0];
+    $("yl-desc").textContent = q.peek === 0 ? x.ylYod(ylTx(q.id)[0]) : "";
+    $("yl-hint").textContent = q.peek > 0 && q.peek !== Infinity ? x.ylPeek : x.ylHint;
+    $("yl-hint").classList.remove("bad");
+    $("yl-sham-w").style.width = "100%";
+    $("yl-sham").classList.remove("ochdi", "oz");
+    ylKayf("maslahat");
+    ylHead();
+    ylPaint();
+    var bosh = function () {
+      if (yl !== me) { return; }
+      if (q.peek !== Infinity) { yl.show = false; }
+      $("yl-hint").textContent = x.ylHint;
+      yl.t0 = Date.now();
+      ylPaint();
+    };
+    clearTimeout(yl.pk);
+    if (q.peek > 0 && q.peek !== Infinity) { yl.lock = true; yl.pk = setTimeout(function () { if (yl === me) { yl.lock = false; bosh(); } }, q.peek); } else { bosh(); }
+    clearInterval(yl.tm);
+    yl.tm = setInterval(function () {
+      if (yl !== me || $("scr-astro").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      if (yl.t0 && !yl.lock && !yl.bell) {
+        yl.pct = Math.max(0, 1 - (Date.now() - yl.t0) / yl.lim);
+        $("yl-sham-w").style.width = (yl.pct * 100).toFixed(1) + "%";
+        $("yl-sham").classList.toggle("ochdi", yl.pct <= 0);
+        $("yl-sham").classList.toggle("oz", yl.pct > 0 && yl.pct < 0.3);
+      }
+      if (yl.bell) { ylHead(); }
+      ylPaint();
+    }, 120);
+  }
+  function ylHead() {
+    var x = drX();
+    $("yl-step").textContent = x.ylStep(Math.min(yl.round + 1, yl.steps.length), yl.steps.length) + (bl && yl.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+  function ylPaint() {
+    if (!yl) { return; }
+    var c = $("yl-canvas"), g = c.getContext("2d"), w = yl.w, i, t = Date.now() / 1000;
+    var real = yl.stars.filter(function (s) { return s.r >= 0; }).sort(function (a, b) { return a.r - b.r; });
+    g.setTransform(yl.dpr, 0, 0, yl.dpr, 0, 0);
+    var gr = g.createRadialGradient(w * 0.5, w * 0.35, 10, w * 0.5, w * 0.5, w * 0.8);
+    gr.addColorStop(0, "#1c2350"); gr.addColorStop(1, "#070912");
+    g.fillStyle = gr; g.fillRect(0, 0, w, w);
+    for (i = 0; i < 70; i++) {      // mayda fon yulduzlari
+      g.fillStyle = "rgba(255,255,255," + (0.12 + 0.25 * afRnd(i + 3) * (0.6 + 0.4 * Math.sin(t * 1.5 + i))).toFixed(3) + ")";
+      g.fillRect(afRnd(i) * w, afRnd(i + 100) * w, 1.3, 1.3);
+    }
+    g.lineCap = "round"; g.lineJoin = "round";
+    if (yl.show) {       // namuna chiziqlari
+      g.strokeStyle = "rgba(150,170,255,.55)"; g.lineWidth = 2; g.setLineDash([3, 7]);
+      g.beginPath(); real.forEach(function (s, j) { if (j) { g.lineTo(s.x, s.y); } else { g.moveTo(s.x, s.y); } }); g.stroke();
+      g.setLineDash([]);
+    }
+    if (yl.idx > 1) {    // ulangan chiziqlar
+      g.shadowColor = "rgba(243,213,143,.9)"; g.shadowBlur = 12; g.strokeStyle = "#f3d58f"; g.lineWidth = 3;
+      g.beginPath(); for (i = 0; i < yl.idx; i++) { if (i) { g.lineTo(real[i].x, real[i].y); } else { g.moveTo(real[i].x, real[i].y); } } g.stroke();
+      g.shadowBlur = 0;
+    }
+    yl.stars.forEach(function (s, j) {
+      var ulangan = s.r >= 0 && s.r < yl.idx, xato = s.xatoAt && Date.now() - s.xatoAt < 450, tw = 0.75 + 0.25 * Math.sin(t * 2.2 + j * 1.7);
+      afGlow(g, s.x, s.y, ulangan ? 17 : 13, xato ? "240,110,100" : ulangan ? "243,213,143" : "200,215,255", (ulangan ? 0.8 : 0.5) * tw);
+      g.fillStyle = xato ? "#ff9d92" : ulangan ? "#ffe9b0" : "#f2f5ff";
+      g.beginPath(); g.arc(s.x, s.y, ulangan ? 4.6 : 3.6, 0, Math.PI * 2); g.fill();
+    });
+    if (yl.idx === 0 && real.length) {      // boshlanish yulduzi - halqa
+      g.strokeStyle = "rgba(243,213,143," + (0.55 + 0.35 * Math.sin(t * 4)).toFixed(3) + ")"; g.lineWidth = 2;
+      g.beginPath(); g.arc(real[0].x, real[0].y, 13 + 2 * Math.sin(t * 4), 0, Math.PI * 2); g.stroke();
+    }
+  }
+  function ylTap(px, py) {
+    if (!yl || yl.lock || !yl.t0) { return; }
+    var x = drX(), me = yl, q = yl.steps[yl.round], eng = null, d = 30, jami = YL[q.id].p.length;
+    yl.stars.forEach(function (s) { var m = Math.hypot(s.x - px, s.y - py); if (m < d) { d = m; eng = s; } });
+    if (!eng || (eng.r >= 0 && eng.r < yl.idx)) { return; }
+    if (eng.r === yl.idx) {
+      yl.idx++;
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+      if (yl.idx >= jami) {
+        yl.lock = true;
+        if (!yl.bell && Date.now() - yl.t0 > yl.lim) { yl.late++; }
+        yl.show = false;
+        $("yl-hint").textContent = ylTx(q.id)[1];
+        $("yl-hint").classList.remove("bad");
+        ylKayf(yl.xatoBu ? "yaxshi" : "zor");
+        setTimeout(function () {
+          if (yl !== me) { return; }
+          yl.round++;
+          if (yl.round >= yl.steps.length) { ylEnd(); return; }
+          ylStep();
+        }, 1300);
+      }
+      ylPaint();
+      return;
+    }
+    yl.mism++; yl.xatoBu++;
+    if (bl && yl.bell) { bl.xato++; }
+    eng.xatoAt = Date.now();
+    $("yl-hint").textContent = x.ylBad;
+    $("yl-hint").classList.add("bad");
+    ylKayf("xafa");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+    if (yl.xatoBu % 3 === 0 && !yl.show) {      // uch xatodan keyin chiziqlar bir zum ko'rinadi
+      yl.show = true;
+      setTimeout(function () { if (yl === me && yl.steps[yl.round] === q && q.peek !== Infinity) { yl.show = false; ylPaint(); } }, 1500);
+    }
+    ylPaint();
+  }
+  function ylEnd() {
+    var x = drX(), me = yl, daraja = yl.n, box = $("yl-res");
+    ylStop();
+    $("yl-stage").classList.add("hidden");
+    $("yl-name").textContent = drFan("astro").nom[lang];
+    $("yl-desc").textContent = "";
+    if (yl.bell) { blFinish(box); return; }
+    var s = Math.max(0, 100 - yl.mism * 8 - yl.late * 20), baho = s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1;
+    var sc = { baho: baho, izoh: x.ylStat(yl.mism, yl.late) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (yl !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.ylB[baho - 1] + "»", "astro", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.ylB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { ylOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { yl = null; fanOpen("astro"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = ylSnImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.ylSnN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("astro", daraja, baho); drDone("astro", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
@@ -2640,6 +2950,11 @@
     $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else { fanOpen("maxluq"); } });
     $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });
     $("qr-back").addEventListener("click", function () { fanOpen("maxluq"); });
+    $("yl-back").addEventListener("click", function () { var b = yl && yl.bell; ylStop(); yl = null; blAbort(); if (b) { blOpen("astro"); } else { fanOpen("astro"); } });
+    $("yl-go").addEventListener("click", function () { if (yl) { ylGo(); } });
+    var ylc = $("yl-canvas"), ylBos = function (ev) { var r = ylc.getBoundingClientRect(); ylTap(ev.clientX - r.left, ev.clientY - r.top); try { ev.preventDefault(); } catch (e) {} };
+    if (window.PointerEvent) { ylc.addEventListener("pointerdown", ylBos); }
+    else { ylc.addEventListener("touchstart", function (ev) { var t = ev.touches && ev.touches[0]; if (t) { ylBos({ clientX: t.clientX, clientY: t.clientY, preventDefault: function () { ev.preventDefault(); } }); } }, { passive: false }); }
     $("fn-qr").addEventListener("click", qrOpen);
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
