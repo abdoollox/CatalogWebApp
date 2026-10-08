@@ -39,9 +39,10 @@
       nom: { uz: "Uchish darsi", ru: "Полёты на мётлах", en: "Flying" },
       ust: { uz: "Xuch xonim", ru: "Мадам Трюк", en: "Madam Hooch" },
       izoh: { uz: "Supurgini barmog'ingiz bilan boshqarib, halqalardan o'ting.", ru: "Управляйте метлой пальцем и пролетайте сквозь кольца.", en: "Steer the broom with your finger and fly through the hoops." } },
-    { id: "maxluq", on: false, rgb: "170,140,110",
+    { id: "maxluq", on: true, rgb: "170,140,110",
       nom: { uz: "Sehrli maxluqlar parvarishi", ru: "Уход за магическими существами", en: "Care of Magical Creatures" },
-      ust: { uz: "Xagrid", ru: "Хагрид", en: "Hagrid" } }
+      ust: { uz: "Xagrid", ru: "Хагрид", en: "Hagrid" },
+      izoh: { uz: "Har bir maxluqni o'z yemishi bilan juftlang.", ru: "Найдите каждому существу его корм.", en: "Match every creature with its food." } }
   ];
   var DR_TX = {
     uz: { kick: "Xogvarts", ttl: "Darslar", tile: "Darslar", tileNew: function (n) { return "Bugun " + n + " ta topshiriq kutmoqda"; }, tileDone: "Darslar va bellashuv",
@@ -97,6 +98,11 @@
           ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
           ucStat: function (a, b, z, sn) { return "Halqalar: " + a + " / " + b + " · Zarba: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Supurgidan tushing. Avval yerda mashq qilamiz.", "Hali erta. Halqalarga qarang, osmonga emas!", "Qoniqarli. Supurgi sizni tinglay boshladi.", "Yaxshi uchdingiz! Qo'lingiz mustahkam.", "A'lo! Sizdan zo'r izlovchi chiqadi."],
+          mxStep: function (a, b) { return "Juftlik " + a + " / " + b; }, mxGo: "Boshlash", mxHint: "Maxluqni o'z yemishi bilan juftlang", mxPeek: "Kartalarni eslab qoling…",
+          mxNew: "Yangi maxluq. Nima yeyishini eslab qoling.", mxOld: "Yangi maxluq yo'q — endi kartalar ko'proq.", mxOk: function (c, f) { return c + " — " + f + ". Barakalla!"; },
+          mxBad: "Yo'q, bu uning yemishi emas.", mxBir: "Bular bir xil turdagi kartalar — maxluqqa yemish toping.", mxXgN: "Xagrid",
+          mxStat: function (m, k) { return "Xato juftlik: " + m + " · " + (k ? "Sham o'chdi" : "Vaqtida"); },
+          mxXgB: ["Maxluqlar och qoldi. Hechqisi yo'q, yana urinib ko'ring.", "Hali chalkashtiryapsiz. Shoshilmang, qaytadan.", "Yomon emas! Hech kim tishlamadi — yaxshi boshlanish.", "Zo'r! Maxluqlar sizni yoqtirib qoldi.", "Qoyil! Sizdan haqiqiy maxluqshunos chiqadi."],
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -150,6 +156,11 @@
           ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
           ucStat: function (a, b, z, sn) { return "Кольца: " + a + " / " + b + " · Ударов: " + z + (sn ? " · Снитч" : ""); },
           ucXcB: ["Слезайте с метлы. Сначала потренируемся на земле.", "Рано. Смотрите на кольца, а не в небо!", "Удовлетворительно. Метла начинает вас слушаться.", "Хороший полёт! Твёрдая рука.", "Превосходно! Из вас выйдет отличный ловец."],
+          mxStep: function (a, b) { return "Пара " + a + " / " + b; }, mxGo: "Начать", mxHint: "Подберите существу его корм", mxPeek: "Запоминайте карты…",
+          mxNew: "Новое существо. Запомните, чем оно питается.", mxOld: "Новых существ нет — теперь карт больше.", mxOk: function (c, f) { return c + " — " + f + ". Молодец!"; },
+          mxBad: "Нет, это не его корм.", mxBir: "Это карты одного вида — найдите существу корм.", mxXgN: "Хагрид",
+          mxStat: function (m, k) { return "Неверных пар: " + m + " · " + (k ? "Свеча погасла" : "Вовремя"); },
+          mxXgB: ["Существа остались голодными. Ничего, попробуйте ещё раз.", "Пока путаете. Не спешите, давайте заново.", "Неплохо! Никто не укусил — хорошее начало.", "Здорово! Вы понравились существам.", "Вот это да! Из вас выйдет настоящий знаток существ."],
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -204,6 +215,11 @@
           ucOk: ["Good!", "That's it!", "Splendid!"], ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
           ucStat: function (a, b, z, sn) { return "Hoops: " + a + " / " + b + " · Knocks: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Off the broom. We'll practise on the ground first.", "Too soon. Eyes on the hoops, not the sky!", "Acceptable. The broom is starting to listen to you.", "Good flying! A steady hand.", "Outstanding! You'd make a fine Seeker."],
+          mxStep: function (a, b) { return "Pair " + a + " / " + b; }, mxGo: "Begin", mxHint: "Match each creature with its food", mxPeek: "Memorise the cards…",
+          mxNew: "A new creature. Remember what it eats.", mxOld: "No new creatures — more cards now.", mxOk: function (c, f) { return c + " — " + f + ". Well done!"; },
+          mxBad: "No, that's not its food.", mxBir: "Those are the same kind of card — find the creature its food.", mxXgN: "Hagrid",
+          mxStat: function (m, k) { return "Wrong pairs: " + m + " · " + (k ? "The candle went out" : "In time"); },
+          mxXgB: ["The creatures went hungry. Never mind, have another go.", "Still mixing them up. Take your time, try again.", "Not bad! Nobody got bitten — a good start.", "Brilliant! The creatures have taken to you.", "Blimey! You'll make a proper creature expert."],
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -224,7 +240,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -265,7 +281,8 @@
       afsun: { level: drLocalLvl.afsun, total: 48, contest: bell("afsun", "lumos") },
       iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") },
       himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") },
-      uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") } };
+      uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") },
+      maxluq: { level: drLocalLvl.maxluq, total: 36, contest: bell("maxluq", "m2") } };
     return res;
   }
 
@@ -320,7 +337,7 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -392,7 +409,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -471,7 +488,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -582,7 +599,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -630,7 +647,7 @@
   function fanOpen(id) {
     fanId = id;
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -673,6 +690,7 @@
     else if (id === "tarix") { trOpen(n); }
     else if (id === "himoya") { hmOpen(false, n); }
     else if (id === "uchish") { uchOpen(false, n); }
+    else if (id === "maxluq") { mxOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -689,7 +707,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1223,7 +1241,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1823,7 +1841,7 @@
     hmStop();
     hm = { n: n || 1, bell: bell === true, waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
            i: 0, lives: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
-    drShowGame("scr-himoya", "scr-uchish");
+    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -2230,6 +2248,221 @@
     if (otdi) { drBahoSave("uchish", daraja, baho); drDone("uchish", daraja, show); } else { show(null); }
   }
 
+  /* ================= SEHRLI MAXLUQLAR PARVARISHI: maxluqni o'z yemishi bilan juftlash (xotira o'yini) =================
+     Kartalar yuzi pastga qaragan: ikkitasini ochasiz - maxluq va UNING yemishi bo'lsa juftlik topildi. 12 maxluq (asardagi
+     yemishi bilan); 1-darsda uchta, 2-10-darslarda bittadan yangisi (dars boshida Xagrid ko'rsatadi).
+     Darslar (bot: hpdars.MAXLUQ_DARS = 36): 1-4 - 3 juftlik, 5-12 - 4 juftlik (boshida kartalar 4 s ochiq turadi);
+     13-24 - 6 juftlik (2,5 s); 25-36 - 8 juftlik, oldindan ko'rsatilmaydi. Sham = vaqt. Baho: ortiqcha xato juftlik -10,
+     kechikish -20/-40. Bellashuv: 6 juftlik, joylashuvi hammaga bir xil (urug' - mavzudan), xato juftlik +3 s. */
+  var MX = {
+    gippo:      { uz: ["Gippogrif", "O'lik suvsar"], ru: ["Гиппогриф", "Дохлый хорёк"], en: ["Hippogriff", "Dead ferret"] },
+    boyogli:    { uz: ["Boyo'g'li", "Sichqon"], ru: ["Сова", "Мышь"], en: ["Owl", "Mouse"] },
+    niffler:    { uz: ["Niffler", "Yaltiroq tangalar"], ru: ["Нюхлер", "Блестящие монеты"], en: ["Niffler", "Shiny coins"] },
+    flobber:    { uz: ["Flobber-qurt", "Salat bargi"], ru: ["Флоббер-червь", "Лист салата"], en: ["Flobberworm", "Lettuce"] },
+    testral:    { uz: ["Testral", "Xom go'sht"], ru: ["Фестрал", "Сырое мясо"], en: ["Thestral", "Raw meat"] },
+    qurbaqa:    { uz: ["Qurbaqa", "Pashshalar"], ru: ["Жаба", "Мухи"], en: ["Toad", "Flies"] },
+    ajdar:      { uz: ["Ajdar bolasi", "Tovuq qoni va brendi"], ru: ["Детёныш дракона", "Куриная кровь с бренди"], en: ["Baby dragon", "Chicken blood and brandy"] },
+    kalmar:     { uz: ["Ulkan kalmar", "Tost"], ru: ["Гигантский кальмар", "Тост"], en: ["Giant squid", "Toast"] },
+    boutrakl:   { uz: ["Boutrakl", "Yog'och bitlari"], ru: ["Лукотрус", "Мокрицы"], en: ["Bowtruckle", "Woodlice"] },
+    salamandra: { uz: ["Salamandra", "Achchiq qalampir"], ru: ["Саламандра", "Острый перец"], en: ["Salamander", "Chilli pepper"] },
+    mushuk:     { uz: ["Kniazl", "Baliq"], ru: ["Жмыр", "Рыба"], en: ["Kneazle", "Fish"] },
+    kalamush:   { uz: ["Kalamush", "Pishloq"], ru: ["Крыса", "Сыр"], en: ["Rat", "Cheese"] }
+  };
+  var MX_TARTIB = ["gippo", "boyogli", "niffler", "flobber", "testral", "qurbaqa", "ajdar", "kalmar", "boutrakl", "salamandra", "mushuk", "kalamush"];
+  var mx = null;      // {n, bell, cards:[{k, f, open, done}], sel, lock, mism, found, pairs, peek, lim, t0, tm}
+  function mxTx(k) { return MX[k][lang] || MX[k].uz; }
+  function mxImg(k, f) { return IMG_DIR + "maxluq/" + (f ? "f-" : "") + k + ".webp"; }
+  function mxXgImg(k) { return IMG_DIR + "xagrid/" + k + ".webp"; }
+  function mxKayf(k) { ["mx-xg-im", "mx-xg-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = mxXgImg(k); } }); }
+  function mxStop() { if (mx) { clearInterval(mx.tm); clearTimeout(mx.pk); mx.tm = 0; } }
+  // Urug'li aralashtirish (bellashuvda joylashuv hammaga bir xil bo'lishi uchun)
+  function mxArala(a, urug) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor((urug == null ? Math.random() : afRnd(urug + i * 5)) * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function mxPlan(n, urug) {
+    var bell = urug != null, T = MX_TARTIB, juft = bell ? 6 : n <= 4 ? 3 : n <= 12 ? 4 : n <= 24 ? 6 : 8;
+    var pool = bell ? T.slice() : T.slice(0, Math.min(T.length, n + 2)), yangi = bell ? [] : n === 1 ? T.slice(0, 3) : n + 1 < T.length ? [T[n + 1]] : [];
+    var tan = yangi.slice(0, juft), g = 0, s0 = bell ? urug : n * 37;
+    while (tan.length < juft && g < 500) { var c = pool[Math.floor(afRnd(s0 + g++) * pool.length)]; if (tan.indexOf(c) < 0) { tan.push(c); } }
+    var cards = [];
+    tan.forEach(function (k) { cards.push({ k: k, f: false }); cards.push({ k: k, f: true }); });
+    mxArala(cards, bell ? urug + 99 : null);
+    return { cards: cards, juft: juft, yangi: yangi, peek: bell || n > 24 ? 0 : n > 12 ? 2500 : 4000,
+             lim: bell ? 0 : Math.round(juft * (n <= 12 ? 7 : n <= 24 ? 5.5 : 4.5) * 1000) };
+  }
+
+  function mxOpen(bell, n) {
+    var st = drData && drData.maxluq, x = drX(), f = drFan("maxluq"), urug = null, i;
+    if (bell === true) { var it = String((st && st.contest && st.contest.item) || "m1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 11); } }
+    var plan = mxPlan(n || 1, urug);
+    mxStop();
+    mx = { n: n || 1, bell: bell === true, cards: plan.cards, pairs: plan.juft, yangi: plan.yangi, peek: plan.peek, lim: plan.lim,
+           sel: null, lock: false, mism: 0, found: 0, t0: 0, pct: 1, tm: 0, pk: 0 };
+    drShowGame("scr-maxluq");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = mxXgImg(k); });
+    plan.cards.forEach(function (c) { var im = new Image(); im.src = mxImg(c.k, c.f); });
+    $("mx-kick").textContent = { uz: "Maxluqlar parvarishi", ru: "Уход за существами", en: "Magical Creatures" }[lang] || f.nom[lang];
+    $("mx-ttl").textContent = f.ust[lang];
+    $("mx-today").textContent = mx.bell ? x.bell : x.lvl(mx.n);
+    $("mx-res").classList.add("hidden");
+    $("mx-stage").classList.add("hidden");
+    $("mx-intro").classList.toggle("hidden", mx.bell);
+    if (mx.bell) { mxGo(); return; }
+    var box = $("mx-new");
+    box.innerHTML = "";
+    mx.yangi.forEach(function (k) {
+      var r = drEl("div", "hm-nw"), im = document.createElement("img"), im2 = document.createElement("img");
+      im.alt = ""; im.src = mxImg(k, false);
+      im2.alt = ""; im2.src = mxImg(k, true); im2.className = "mx-nw-f";
+      r.appendChild(im);
+      var t = drEl("span", "hm-nw-t");
+      t.appendChild(drEl("b", "", mxTx(k)[0]));
+      t.appendChild(drEl("small", "", mxTx(k)[1]));
+      r.appendChild(t);
+      r.appendChild(im2);
+      box.appendChild(r);
+    });
+    $("mx-intro-t").textContent = mx.yangi.length ? x.mxNew : x.mxOld;
+    $("mx-go").textContent = x.mxGo;
+    mxKayf("maslahat");
+  }
+
+  function mxGo() {
+    var x = drX(), me = mx;
+    $("mx-intro").classList.add("hidden");
+    $("mx-stage").classList.remove("hidden");
+    $("mx-sham").classList.toggle("hidden", mx.bell || !mx.lim);
+    $("mx-sham-w").style.width = "100%";
+    $("mx-sham").classList.remove("ochdi", "oz");
+    mxKayf("maslahat");
+    mx.lock = mx.peek > 0;
+    mx.cards.forEach(function (c) { c.open = mx.peek > 0; c.done = false; });
+    $("mx-hint").textContent = mx.peek > 0 ? x.mxPeek : x.mxHint;
+    $("mx-hint").classList.remove("bad");
+    mxRender();
+    var bosh = function () {
+      if (mx !== me) { return; }
+      mx.cards.forEach(function (c) { c.open = false; });
+      mx.lock = false;
+      $("mx-hint").textContent = x.mxHint;
+      mxRender();
+      mx.t0 = Date.now();
+      clearInterval(mx.tm);
+      mx.tm = setInterval(function () {
+        if (mx !== me || $("scr-maxluq").classList.contains("hidden")) { clearInterval(me.tm); return; }
+        if (mx.lim) {
+          mx.pct = Math.max(0, 1 - (Date.now() - mx.t0) / mx.lim);
+          $("mx-sham-w").style.width = (mx.pct * 100).toFixed(1) + "%";
+          $("mx-sham").classList.toggle("ochdi", mx.pct <= 0);
+          $("mx-sham").classList.toggle("oz", mx.pct > 0 && mx.pct < 0.3);
+        }
+        if (mx.bell) { mxHead(); }
+      }, 100);
+    };
+    if (mx.peek > 0) { mx.pk = setTimeout(bosh, mx.peek); } else { bosh(); }
+  }
+  function mxHead() {
+    var x = drX();
+    $("mx-prog").textContent = x.mxStep(mx.found, mx.pairs) + (bl && mx.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+  function mxRender() {
+    var grid = $("mx-grid");
+    grid.className = "mx-grid" + (mx.pairs <= 3 ? " uch" : "");
+    grid.innerHTML = "";
+    mx.cards.forEach(function (c, i) {
+      var b = drEl("button", "mx-c" + (c.open || c.done ? " ochiq" : "") + (c.done ? " topildi" : "")), ich = drEl("span", "mx-in");
+      b.type = "button";
+      var fr = drEl("span", "mx-fr" + (c.f ? " yem" : "")), im = document.createElement("img");
+      im.alt = ""; im.src = mxImg(c.k, c.f);
+      fr.appendChild(im);
+      fr.appendChild(drEl("small", "", mxTx(c.k)[c.f ? 1 : 0]));
+      ich.appendChild(drEl("span", "mx-bk"));
+      ich.appendChild(fr);
+      b.appendChild(ich);
+      b.addEventListener("click", function () { mxPick(i); });
+      c.el = b;
+      grid.appendChild(b);
+    });
+    mxHead();
+  }
+  function mxPick(i) {
+    if (!mx || mx.lock) { return; }
+    var x = drX(), me = mx, c = mx.cards[i];
+    if (c.open || c.done) { return; }
+    c.open = true;
+    c.el.classList.add("ochiq");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
+    if (mx.sel == null) { mx.sel = i; return; }
+    var a = mx.cards[mx.sel];
+    mx.sel = null;
+    if (a.k === c.k && a.f !== c.f) {
+      a.done = c.done = true; mx.found++;
+      a.el.classList.add("topildi"); c.el.classList.add("topildi");
+      $("mx-hint").textContent = x.mxOk(mxTx(c.k)[0], mxTx(c.k)[1]);
+      $("mx-hint").classList.remove("bad");
+      mxKayf(mx.found % 2 ? "yaxshi" : "zor");
+      mxHead();
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+      if (mx.found >= mx.pairs) { mx.lock = true; clearInterval(mx.tm); setTimeout(function () { if (mx === me) { mxEnd(); } }, 900); }
+      return;
+    }
+    mx.mism++;
+    if (bl && mx.bell) { bl.xato++; }
+    mx.lock = true;
+    a.el.classList.add("xato"); c.el.classList.add("xato");
+    $("mx-hint").textContent = a.f === c.f ? x.mxBir : x.mxBad;
+    $("mx-hint").classList.add("bad");
+    mxKayf("xafa");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+    setTimeout(function () {
+      if (mx !== me) { return; }
+      a.open = c.open = false;
+      a.el.classList.remove("ochiq", "xato"); c.el.classList.remove("ochiq", "xato");
+      mx.lock = false;
+    }, 850);
+  }
+
+  function mxEnd() {
+    var x = drX(), me = mx, daraja = mx.n, box = $("mx-res");
+    clearInterval(mx.tm);
+    $("mx-stage").classList.add("hidden");
+    if (mx.bell) { blFinish(box); return; }
+    var otgan = Date.now() - mx.t0, kech = mx.lim && otgan > mx.lim ? (otgan > mx.lim * 2 ? 2 : 1) : 0;
+    var erkin = mx.peek > 0 ? mx.pairs : mx.pairs * 2;       // shuncha xato juftlik bahoga ta'sir qilmaydi (izlash tabiiy)
+    var s = Math.max(0, 100 - Math.max(0, mx.mism - erkin) * 10 - kech * 20);
+    var baho = s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1;
+    var sc = { baho: baho, izoh: x.mxStat(mx.mism, kech) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (mx !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.mxXgB[baho - 1] + "»", "maxluq", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.mxXgB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { mxOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { mx = null; fanOpen("maxluq"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = mxXgImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.mxXgN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("maxluq", daraja, baho); drDone("maxluq", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
@@ -2238,6 +2471,8 @@
     $("hm-go").addEventListener("click", function () { if (hm) { hmGo(); } });
     $("uc-back").addEventListener("click", function () { var b = uch && uch.bell; uchStop(); uch = null; blAbort(); if (b) { blOpen("uchish"); } else { fanOpen("uchish"); } });
     $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
+    $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else { fanOpen("maxluq"); } });
+    $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
       var r = uc.getBoundingClientRect(), W = uch.w * 0.84;
