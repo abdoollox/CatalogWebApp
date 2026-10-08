@@ -2613,6 +2613,16 @@ body.kr-on .mp{display:none!important}
 .af-sham.ochdi i{background:rgba(255,255,255,.18)}
 .af-sham.ochdi i::after{top:-16px;width:8px;height:16px;border-radius:50%;background:radial-gradient(circle,rgba(190,195,210,.55),rgba(190,195,210,0) 70%);filter:none;animation:none}
 @keyframes afFlame{from{transform:scale(1,1) rotate(-4deg)}to{transform:scale(.88,1.14) rotate(5deg)}}
+.af-fl{display:flex;align-items:center;gap:12px;max-width:360px;margin:14px auto 0}
+.af-fl img{flex:none;width:64px;height:64px;border-radius:50%;box-shadow:0 0 0 1px rgba(243,213,143,.55),0 6px 18px rgba(0,0,0,.45)}
+.af-fl .dr-hint{position:relative;flex:1;margin:0;min-height:0;padding:11px 14px;border-radius:16px;text-align:left;
+  background:rgba(255,255,255,.05);border:1px solid var(--line)}
+.af-fl .dr-hint::before{content:"";position:absolute;left:-6px;top:50%;width:10px;height:10px;margin-top:-5px;transform:rotate(45deg);
+  background:#161a22;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+.af-fl .dr-hint.bad{border-color:rgba(240,140,131,.5)}
+.af-fl .dr-hint.bad::before{border-color:rgba(240,140,131,.5)}
+#af-stage.sorov .af-fl{display:none}
+.af-fl-big{width:104px;height:104px;border-radius:50%;margin-top:4px;box-shadow:0 0 0 1px rgba(243,213,143,.6),0 0 26px rgba(243,213,143,.18)}
 #af-stage .af-opts{display:none;max-width:360px;margin-left:auto;margin-right:auto}
 #af-stage.sorov .af-opts{display:flex}
 #af-stage.sorov .af-sham,#af-stage.sorov .af-box,#af-stage.sorov .dr-hint,#af-stage.sorov .dr-link{display:none}

@@ -900,6 +900,7 @@
     k = (n - L - 13) % 12;
     return { mode: "zan", steps: [0, 1, 2].map(function (j) { return { id: T[(k * 5 + 1 + j * 8) % L], r: 0 }; }) };
   }
+  function afFlImg(k) { return IMG_DIR + "flitvik/" + k + ".webp"; }
   function afR() { return af.steps[Math.min(af.round, af.steps.length - 1)].r; }
   // Vaqt (sham): shakl uzunligiga qarab, dars oshgani sari qisqaradi. Kechiksa urinish kuymaydi - baho pasayadi.
   function afLim(id, n) {
@@ -918,6 +919,7 @@
            bell: bell === true, n: n || 1, ask: false,
            sp: [], fx: null, t0: 0, pct: 1, fails: 0, dsum: 0, dn: 0, used: false, off: false, rounds: [], raf: 0, hz: 0 };
     drShowGame("scr-afsun");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var i = new Image(); i.src = afFlImg(k); });
     var x = drX(), f = drFan("afsun");
     $("af-kick").textContent = f.nom[lang];
     $("af-ttl").textContent = f.ust[lang];
@@ -1050,6 +1052,9 @@
       (!af.bell && af.pct <= 0 && !af.done ? " · " + x.afKech : "");
     $("af-hint").textContent = af.msg || x.afR[ko >= 1 ? 0 : ko > 0 ? 1 : 2];
     $("af-hint").classList.toggle("bad", !!af.bad);
+    // Professor Flitvik: holatiga qarab rasmi almashadi
+    var kayf = af.bad ? "xafa" : (af.ok && af.kayf) || "maslahat", fim = $("af-fl-im");
+    if (fim && af.kayfEl !== kayf) { af.kayfEl = kayf; fim.src = afFlImg(kayf); }
     $("af-show").classList.toggle("hidden", af.bell || af.ask || afR() > 0 || af.show || af.done);
   }
 
@@ -1132,6 +1137,7 @@
     // Professor Flitvik izohi (bellashuvda - eski qisqa matn)
     var fl = oxir.late ? x.afFl.c : (oxir.r < 0.4 && !oxir.fails && !oxir.used ? x.afFl.a : x.afFl.b);
     af.msg = af.bell ? x.afOk[Math.min(af.round, 2)] : fl[(af.n + af.round) % fl.length];
+    af.kayf = fl === x.afFl.a ? "zor" : fl === x.afFl.b ? "yaxshi" : "maslahat";
     af.bad = false;
     af.lock = true;
     afPaint();
@@ -1196,6 +1202,8 @@
     af.fx = { id: otdi ? af.id : "puf", t0: Date.now(), ms: otdi ? 1700 : 800 };
     af.msg = otdi ? (AF[af.id][lang] || AF[af.id].uz)[0] + "!" : x.afPuf;
     af.bad = !otdi;
+    af.ok = otdi;
+    af.kayf = "zor";
     if (!otdi) { af.trail = []; }
     afLoop();
     setTimeout(function () {
@@ -1221,7 +1229,14 @@
           box.classList.remove("hidden");
         }
         var ft = box.querySelector(".dr-res-t");
-        if (ft) { box.insertBefore(drEl("small", "af-baho-k", x.afFlN), ft); }
+        if (ft) {
+          var fi = document.createElement("img");
+          fi.className = "af-fl-big";
+          fi.alt = "";
+          fi.src = afFlImg(sc.baho >= 5 ? "zor" : sc.baho === 4 ? "yaxshi" : sc.baho === 3 ? "maslahat" : "xafa");
+          box.insertBefore(fi, ft);
+          box.insertBefore(drEl("small", "af-baho-k", x.afFlN), ft);
+        }
         box.insertBefore(afBahoEl(sc), box.firstChild);
       };
       if (otdi) { afBahoSave(daraja, sc.baho); drDone("afsun", daraja, show); } else { show(null); }
