@@ -2744,3 +2744,5 @@ body.kr-on .mp{display:none!important}
 .chat-adm button.on .chat-adm-cr img{opacity:1;filter:none}
 .chat-adm button b{position:absolute;top:-5px;right:-3px;min-width:17px;height:17px;margin:0;padding:0 4px;border-radius:9px;
   background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:10px;line-height:17px}
+
+#scr-fan .fn-grid{max-height:none}

@@ -690,7 +690,7 @@ var KITOB_N = ["Hikmatlar Toshi", "Maxfiy Hujra", "Azkaban Mahbusi", "Alanga Kub
 var KITOB_NARX = 3;          // galleon (bot: hpkitob.BOOK_PRICE); 1-kitob bepul
 var DARS_N = {tarix:"Sehrgarlik tarixi", afsun:"Afsunlar", iksir:"Iksirlar"};
 var DARS_RANG = {tarix:"#e8843c", afsun:"#78aaf0", iksir:"#6ebe82"};
-var DARS_SONI = 24;          // har fanda nechta dars (bot: hpdars.DARS_SONI)
+var DARS_SONI_F = {tarix:46, afsun:24, iksir:24};   // fanda nechta dars (bot: hpdars.dars_soni; tarix 2026-10-08 dan 46)
 var S1="#c98500", S2="#3987e5", S3="#199e70";
 
 /* Kunlik grafikdagi chiziqlar. Tartib tasodifiy emas: yonma-yon turgan
@@ -2845,8 +2845,8 @@ var KARTA_INFO = {
   "Onlayn": "Bot har 5 daqiqada o'lchaydi: so'nggi 5 daqiqada ilovani ochganlar va shulardan chatni ochib turganlar. Chizmada har kunning (soatning) eng gavjum 5 daqiqasi. O'lchov 30-sentabrdan boshlangan.",
   "Chat lentasi": "Katta zal va fakultet xonalaridagi xabarlar matni bilan, javob qaysi xabarga ekani va reaksiyalar soni. Shaxsiy yozishmalarning faqat vaqti va kimligi ko'rinadi, matni ko'rsatilmaydi. O'chirilgan xabar matni ham ko'rsatilmaydi.",
   "Darslar faolligi": "Darslar bo'limi kun sayin (2026-yil 7-oktabrdan). Dars o'tildi — odam navbatdagi darsni o'tib, bosqichi oshgan (o'tilgan darsni qayta o'ynash sanalmaydi; dars uchun ball berilmaydi). Bellashuv urinishi — kunlik bellashuvda bir marta qatnashish (kuniga 3 tagacha urinish). Tanlangan davr bo'yicha.",
-  "Fanlar bo'yicha": "Har fan alohida, tanlangan davr bo'yicha: nechta odam kamida bitta dars o'tgan, ularning o'rtacha va eng yuqori bosqichi, nechta odam 24 ta darsning hammasini tugatgan, bellashuvda nechta odam va necha marta qatnashgan. «24 ga yetgan» ko'payib borsa — darslar soni kamlik qilyapti.",
-  "Bosqichlar": "Har fanda 24 ta dars. Ustun — shu darsgacha yetib kelgan odamlar soni (1-ustun = boshlaganlar). Ustunlar tez pasaysa — odamlar o'sha joyda to'xtab qolyapti (qiyin yoki zerikarli); oxirgi ustunlar to'lib borsa — darslar kam, yangisini qo'shish kerak. Tanlangan davrdagi yozuvlardan hisoblanadi — to'liq manzara uchun davrni «Hammasi» qiling.",
+  "Fanlar bo'yicha": "Har fan alohida, tanlangan davr bo'yicha: nechta odam kamida bitta dars o'tgan, ularning o'rtacha va eng yuqori bosqichi, nechta odam hamma darsni tugatgan (Sehrgarlik tarixida 46 ta, qolganlarida 24 ta), bellashuvda nechta odam va necha marta qatnashgan. «Tugatgan» ko'payib borsa — darslar soni kamlik qilyapti.",
+  "Bosqichlar": "Sehrgarlik tarixida 46 ta, qolgan fanlarda 24 ta dars (2026-yil 8-oktabrda tarix darslari qayta tuzildi: eski 24-dars = yangi 16-dars, shuning uchun o'sha kungacha bo'lgan tarix ustunlari eski hisobda). Ustun — shu darsgacha yetib kelgan odamlar soni (1-ustun = boshlaganlar). Ustunlar tez pasaysa — odamlar o'sha joyda to'xtab qolyapti (qiyin yoki zerikarli); oxirgi ustunlar to'lib borsa — darslar kam, yangisini qo'shish kerak. Tanlangan davrdagi yozuvlardan hisoblanadi — to'liq manzara uchun davrni «Hammasi» qiling.",
   "Kitoblar faolligi": "Kitoblar bo'limi kun sayin (2026-yil 7-oktabrdan). O'qidi — odam kitobni ilova ichida ochgan (bir odam bitta kitobni bir kunda necha marta ochsa ham bitta sanaladi). Yukladi — kitob fayli bot chatiga yuborilgan. Sotib oldi — kitob galleonga ochilgan (har biri 3 galleon; 1-kitob bepul). Nomini bosib chiziqni yoqib-o'chirsa bo'ladi.",
   "Kitoblar bo'yicha": "Har kitob alohida: nechta odam ilovada o'qigan, jami necha marta ochilgan, nechta odam faylini yuklab olgan va nechta odam galleonga sotib olgan. Chiziq — o'qigan odamlar soni (eng ko'pi to'liq). 1-kitob bepul, shuning uchun u sotilmaydi.",
   "Musiqa faolligi": "Soundtrack bo'limi kun sayin. Tingladi — ilovada trek boshidan boshlangan (bir odam bitta trekni yarim soat ichida qayta boshlasa ham bitta sanaladi; o'rtasiga o'tkazish sanalmaydi). Yukladi — albom yoki trek bot chatiga yuborildi (albom bitta hodisa). Like — shu kuni qo'yilgan like'lar (keyin olib tashlanganlari bu yerda yo'q). Tinglashlar 27-sentabrdan, yuklab olishlar 26-sentabrdan beri yoziladi. Sinov o'quvchisi sanalmaydi.",
@@ -4418,7 +4418,7 @@ function render(){
     drB.forEach(function(r){ var q = drF[r.ev.fan]; q.bell[r.uid] = 1; q.urin++; });
     var drC2 = card("Fanlar bo'yicha", "har odamning eng yuqori bosqichi", "");
     var drH = "<table><thead><tr><th>Fan</th><th class='num'>Boshlagan</th><th class='num'>O'rtacha bosqich</th>" +
-      "<th class='num'>Eng yuqori</th><th class='num' title='Hamma darsni o&#39;tib bo&#39;lganlar'>24 ga yetgan</th>" +
+      "<th class='num'>Eng yuqori</th><th class='num' title='Hamma darsni o&#39;tib bo&#39;lganlar'>Tugatgan</th>" +
       "<th class='num'>Bellashgan</th><th class='num'>Urinishlar</th></tr></thead><tbody>";
     Object.keys(DARS_N).forEach(function(f){
       var q = drF[f], ms = Object.keys(q.max).map(function(u){ return q.max[u]; });
@@ -4427,7 +4427,7 @@ function render(){
         "<td class='num'>" + fmtNum(ms.length) + "</td>" +
         "<td class='num'>" + (ms.length ? (Math.round(jami / ms.length * 10) / 10) : "—") + "</td>" +
         "<td class='num'>" + (ms.length ? Math.max.apply(null, ms) : "—") + "</td>" +
-        "<td class='num'>" + fmtNum(ms.filter(function(x){ return x >= DARS_SONI; }).length) + "</td>" +
+        "<td class='num'>" + fmtNum(ms.filter(function(x){ return x >= DARS_SONI_F[f]; }).length) + "</td>" +
         "<td class='num'>" + fmtNum(Object.keys(q.bell).length) + "</td><td class='num'>" + fmtNum(q.urin) + "</td></tr>";
     });
     var drW = document.createElement("div");
@@ -4441,18 +4441,19 @@ function render(){
     Object.keys(DARS_N).forEach(function(f){
       var q = drF[f], ms = Object.keys(q.max).map(function(u){ return q.max[u]; });
       var son = [], eng = 1;
-      for(var n = 1; n <= DARS_SONI; n++){
+      var DS = DARS_SONI_F[f];
+      for(var n = 1; n <= DS; n++){
         var k = ms.filter(function(x){ return x >= n; }).length;
         son.push(k); eng = Math.max(eng, k);
       }
       var h = "<div style='margin:14px 0 4px;font-weight:700;font-size:13px'><span class='xdot' style='background:" + DARS_RANG[f] +
         "'></span> " + esc(DARS_N[f]) + " <span class='uname'>" + fmtNum(ms.length) + " kishi boshlagan</span></div>" +
-        "<div style='display:grid;grid-template-columns:repeat(" + DARS_SONI + ",minmax(0,1fr));gap:3px;align-items:end;height:92px'>";
+        "<div style='display:grid;grid-template-columns:repeat(" + DS + ",minmax(0,1fr));gap:3px;align-items:end;height:92px'>";
       son.forEach(function(k, i){
         h += "<span title='" + (i + 1) + "-dars: " + k + " kishi' style='display:block;border-radius:3px 3px 0 0;background:" + DARS_RANG[f] +
           ";opacity:" + (k ? ".9" : ".15") + ";height:" + Math.max(k ? 6 : 2, Math.round(k / eng * 100)) + "%'></span>";
       });
-      h += "</div><div style='display:grid;grid-template-columns:repeat(" + DARS_SONI + ",minmax(0,1fr));gap:3px;margin-top:4px'>";
+      h += "</div><div style='display:grid;grid-template-columns:repeat(" + DS + ",minmax(0,1fr));gap:3px;margin-top:4px'>";
       son.forEach(function(k, i){
         h += "<span style='text-align:center;font-size:9.5px;color:var(--ink-3)'>" + ((i + 1) % 2 ? (i + 1) : "") + "</span>";
       });

@@ -54,7 +54,7 @@
           dailyT: "Kunlik savol", dailyNew: "Bugungi savol kutmoqda", dailyDone: "Bugungi savolga javob berilgan",
           bellCard: "Bugungi bellashuv", bellIn: "Bellashuvga kirish", tarixItem: function (n) { return n + " ta savol"; },
           trQ: function (a, b) { return "Savol " + a + " / " + b; }, trRes: function (a, b) { return b + " tadan " + a + " tasi to'g'ri"; },
-          trFail: function (n) { return "Dars o'tishi uchun kamida " + n + " ta to'g'ri javob kerak."; }, retry: "Qayta urinish", loadQ: "Savollar ochilmoqda…",
+          trFail: function (n, j) { return n >= j ? "Keyingi darsga o'tish uchun hamma savolga to'g'ri javob berish kerak." : "Dars o'tishi uchun kamida " + n + " ta to'g'ri javob kerak."; }, retry: "Qayta urinish", loadQ: "Savollar ochilmoqda…",
           lvl: function (n) { return n + "-dars"; }, lvlDone: function (n) { return n + " ta dars o'tilgan"; },
           bell: "Bellashuv", bellS: "Ball shu yerda: kuniga bitta topshiriq — hammaga bir xil. Kim tezroq va xatosiz bajarsa, ertaga ball oladi.",
           bellOf: function (f) { return f + " bellashuvi"; }, bellNone: "Hali qatnashmadingiz", bellGo: "Boshlash", bellNo: "Bugungi urinishlar tugadi",
@@ -90,7 +90,7 @@
           dailyT: "Вопрос дня", dailyNew: "Ждёт сегодняшний вопрос", dailyDone: "На сегодняшний вопрос вы ответили",
           bellCard: "Состязание дня", bellIn: "К состязанию", tarixItem: function (n) { return n + " вопросов"; },
           trQ: function (a, b) { return "Вопрос " + a + " / " + b; }, trRes: function (a, b) { return "Верно " + a + " из " + b; },
-          trFail: function (n) { return "Чтобы пройти урок, нужно минимум " + n + " верных ответа."; }, retry: "Ещё раз", loadQ: "Вопросы открываются…",
+          trFail: function (n, j) { return n >= j ? "Чтобы перейти к следующему уроку, нужно ответить верно на все вопросы." : "Чтобы пройти урок, нужно минимум верных ответов: " + n + "."; }, retry: "Ещё раз", loadQ: "Вопросы открываются…",
           lvl: function (n) { return "Урок " + n; }, lvlDone: function (n) { return "Пройдено уроков: " + n; },
           bell: "Состязание", bellS: "Очки дают здесь: одно задание в день — одинаковое для всех. Кто быстрее и без ошибок, завтра получит очки.",
           bellOf: function (f) { return f + ": состязание"; }, bellNone: "Вы ещё не участвовали", bellGo: "Начать", bellNo: "Попытки на сегодня закончились",
@@ -124,7 +124,7 @@
           dailyT: "Daily question", dailyNew: "Today's question is waiting", dailyDone: "You answered today's question",
           bellCard: "Today's contest", bellIn: "Enter the contest", tarixItem: function (n) { return n + " questions"; },
           trQ: function (a, b) { return "Question " + a + " / " + b; }, trRes: function (a, b) { return a + " of " + b + " correct"; },
-          trFail: function (n) { return "You need at least " + n + " correct answers to pass."; }, retry: "Try again", loadQ: "Opening the questions…",
+          trFail: function (n, j) { return n >= j ? "To move on, you need to answer every question correctly." : "You need at least " + n + " correct answers to pass."; }, retry: "Try again", loadQ: "Opening the questions…",
           lvl: function (n) { return "Lesson " + n; }, lvlDone: function (n) { return n + " lessons completed"; },
           bell: "Contest", bellS: "Points are won here: one task a day — the same for everyone. The fastest with no mistakes get points tomorrow.",
           bellOf: function (f) { return f + " contest"; }, bellNone: "You have not taken part yet", bellGo: "Start", bellNo: "No attempts left today",
@@ -167,8 +167,8 @@
     body = body || {};
     var res = { ok: true };
     if (body.quiz) {
-      res.level = body.quiz; res.need = 3;
-      res.questions = [1, 2, 3, 4].map(function (i) {
+      res.level = body.quiz; res.need = 8;
+      res.questions = [1, 2, 3, 4, 5, 6, 7, 8].map(function (i) {
         return { q: "Namuna savol " + i + ": Xogvartsda nechta fakultet bor?", a: ["Oltita", "Uchta", "To'rtta", "Beshta"], c: 2 };
       });
       return res;
@@ -199,7 +199,7 @@
                yesterday: { top: top.slice(0, 3), n: 9, place: 4, pts: 3 } };
     };
     res.lessons = {
-      tarix: { level: drLocalLvl.tarix, total: 24, contest: bell("tarix", "10") },
+      tarix: { level: drLocalLvl.tarix, total: 46, contest: bell("tarix", "10") },
       afsun: { level: drLocalLvl.afsun, total: 24, contest: bell("afsun", "lumos") },
       iksir: { level: drLocalLvl.iksir, total: 24, contest: bell("iksir", "boils") } };
     return res;
@@ -646,7 +646,8 @@
   }
 
   /* ================= SEHRGARLIK TARIXI: savol-javob =================
-     Dars: 4 savol, javob darhol tekshiriladi (to'g'risi yashil), 3 tasi to'g'ri bo'lsa dars o'tadi.
+     Dars: 6 yangi + 2 takror savol (soni serverdan), javob darhol tekshiriladi (to'g'risi yashil); dars faqat
+     HAMMA savolga to'g'ri javob berilsa o'tadi (egasi, 2026-10-08).
      Bellashuv: 10 savol, to'g'ri javob ko'rsatilmaydi - javoblar serverga ketadi, u tekshiradi. */
   var tr = null;      // {qs, i, ok, bell, level, need, lock}
 
@@ -670,7 +671,7 @@
 
   function trStart(qs, bell, level, need) {
     var x = drX();
-    tr = { qs: qs, i: 0, ok: 0, bell: !!bell, level: level, need: need || 3, lock: false };
+    tr = { qs: qs, i: 0, ok: 0, bell: !!bell, level: level, need: need || qs.length, lock: false };
     if (bell) {
       drShowGame("scr-tarix");
       $("tr-kick").textContent = x.bell;
@@ -731,7 +732,7 @@
     }
     box.innerHTML = "";
     box.appendChild(drEl("p", "dr-res-t", natija));
-    box.appendChild(drEl("small", "dr-res-s", x.trFail(t.need)));
+    box.appendChild(drEl("small", "dr-res-s", x.trFail(t.need, t.qs.length)));
     var r = drEl("button", "dr-btn", x.retry);
     r.type = "button";
     r.addEventListener("click", function () { trOpen(t.level); });
