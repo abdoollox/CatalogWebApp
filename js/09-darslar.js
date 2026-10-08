@@ -2033,7 +2033,11 @@
             dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
             ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1 };
     drShowGame("scr-uchish");
-    ["rider", "snitch", "bludger", "fon"].forEach(uchImg);
+    // uchuvchining kiyimi o'z fakulteti rangida (egasi, 2026-10-08)
+    var uy = "gryffindor";
+    try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {}
+    uch.rider = "rider-" + uy;
+    [uch.rider, "snitch", "bludger", "fon"].forEach(uchImg);
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = uchXcImg(k); });
     $("uc-kick").textContent = f.nom[lang];
     $("uc-ttl").textContent = f.ust[lang];
@@ -2179,7 +2183,7 @@
     kor.forEach(function (o) { if (o.y < ry) { chiz(o); } });
     // supurgidagi o'quvchi
     var rxp2 = w / 2 + (uch.rx - 0.5) * W, burilish = Math.max(-0.45, Math.min(0.45, (uch.tx - uch.rx) * 2.4));
-    im = uchImg("rider");
+    im = uchImg(uch.rider);
     g.save(); g.translate(rxp2, ry); g.rotate(burilish);
     if (uchBor(im)) { var rh = 104, rw = rh * im.naturalWidth / im.naturalHeight; g.drawImage(im, -rw / 2, -rh * 0.55, rw, rh); }
     else { g.fillStyle = "#b5382e"; g.strokeStyle = "#07090d"; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -30); g.lineTo(20, 26); g.lineTo(-20, 26); g.closePath(); g.fill(); g.stroke(); }
