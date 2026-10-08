@@ -2739,6 +2739,12 @@ body.kr-on .mp{display:none!important}
 .qr-yangi{width:110px;height:110px;border-radius:50%}
 .od-mx{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .od-mx img{width:44px;height:44px;border-radius:50%}
+.od-qob{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;margin-top:8px}
+.od-qb{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:3px 6px}
+.od-qb small{font:600 11px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.od-qb b{font:600 16px/1 'Cormorant Garamond',serif;color:var(--text)}
+.od-qb i{grid-column:1 / -1;display:block;height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.od-qb u{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,rgba(var(--od-rgb,243,213,143),.6),rgb(var(--od-rgb,243,213,143)));text-decoration:none}
 .od-mx-t{display:block;margin-top:16px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 /* Astronomiya: namuna va variantlar (yulduz shakllari - SVG) */
 .yl-ref,.yl-o{border-radius:20px;border:1px solid rgba(130,130,220,.45);background:radial-gradient(circle at 50% 35%,#1c2350,#070912 85%)}

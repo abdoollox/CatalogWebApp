@@ -131,7 +131,7 @@
           tfB: ["Bu transfiguratsiya emas, tasodif. Qaytadan.", "Qoidani ko'rmayapsiz. Diqqatni jamlang va yana urining.", "Qoniqarli. Qoidani topishni boshladingiz.", "Yaxshi ish. Fikrlashingiz tartibli.", "A'lo. Bunday aniq fikrlashni kam uchrataman."],
           qobT: "Qobiliyatlar", qobK: "Mening darajam", qobS: "Har fan boshqa qobiliyatni mashq qildiradi. Daraja o'tilgan darslar va baholaringizdan hisoblanadi.",
           qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
-          qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Baholar shu qurilmada saqlanadi — boshqa telefonda daraja biroz pastroq ko'rinishi mumkin.",
+          qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Qobiliyatlaringiz profilingizda boshqa sehrgarlarga ham ko'rinadi.",
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -215,7 +215,7 @@
           tfB: ["Это не трансфигурация, а случайность. Заново.", "Вы не видите правила. Соберитесь и попробуйте ещё раз.", "Удовлетворительно. Вы начали находить правило.", "Хорошая работа. Вы мыслите последовательно.", "Превосходно. Такую ясность мысли я встречаю редко."],
           qobT: "Способности", qobK: "Мой уровень", qobS: "Каждый предмет тренирует свою способность. Уровень считается по пройденным урокам и вашим оценкам.",
           qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
-          qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Оценки хранятся на этом устройстве — на другом телефоне уровень может выглядеть чуть ниже.",
+          qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Ваши способности видны другим волшебникам в вашем профиле.",
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -300,7 +300,7 @@
           tfB: ["That is not Transfiguration, that is chance. Again.", "You are not seeing the rule. Concentrate and try once more.", "Acceptable. You are beginning to find the rule.", "Good work. Your thinking is orderly.", "Outstanding. I rarely meet such clear reasoning."],
           qobT: "Abilities", qobK: "My level", qobS: "Each subject trains a different ability. Your level comes from the lessons you have passed and your grades.",
           qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
-          qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Grades are kept on this device — on another phone your level may look a little lower.",
+          qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Other wizards can see your abilities in your profile.",
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -419,9 +419,25 @@
     return [a, b];
   }
 
+  // Shu qurilmada saqlangan eski baholarni serverga bir marta ko'chirish (2026-10-08 gacha baholar faqat qurilmada edi)
+  function drBahoSync() {
+    try {
+      if (MS_LOCAL || localStorage.getItem("hp_baho_srv")) { return; }
+      var hammasi = {}, bor = false;
+      Object.keys(DR_BAHO_K).forEach(function (f) {
+        var m = JSON.parse(localStorage.getItem(DR_BAHO_K[f]) || "{}") || {};
+        if (Object.keys(m).length) { hammasi[f] = m; bor = true; }
+      });
+      if (!bor) { localStorage.setItem("hp_baho_srv", "1"); return; }
+      drPost({ grades: hammasi }, function (res) {
+        if (res && res.ok && res.synced != null) { try { localStorage.setItem("hp_baho_srv", "1"); } catch (e) {} if (res.lessons) { drData = res.lessons; } }
+      });
+    } catch (e) {}
+  }
   function drOpen() {
     drQayt = false;
     qrLoad();
+    drBahoSync();
     ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
@@ -792,7 +808,9 @@
   function drDone(id, level, cb) {
     if (drBusy) { return; }
     drBusy = true;
-    drPost({ done: id, level: level }, function (res) {
+    var so = { done: id, level: level };
+    if (drBahoOx && drBahoOx.fan === id && drBahoOx.n === level) { so.grade = drBahoOx.b; }
+    drPost(so, function (res) {
       drBusy = false;
       if (!res || !res.ok) { showToast(drX().fail, "err"); cb(null); return; }
       drData = res.lessons || drData;
@@ -1342,7 +1360,9 @@
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
   var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho", osimlik: "hp_os_baho", trans: "hp_tf_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
+  var drBahoOx = null;      // oxirgi qo'yilgan baho - drDone uni serverga ham yuboradi (qobiliyatlar boshqalarga ko'rinishi uchun)
   function drBahoSave(fan, n, b) {
+    drBahoOx = { fan: fan, n: n, b: b };
     try {
       var m = JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {};
       if (!(m[n] >= b)) { m[n] = b; localStorage.setItem(DR_BAHO_K[fan], JSON.stringify(m)); }
@@ -3364,7 +3384,8 @@
     var st = drData && drData[fan];
     if (!st || !st.total) { return 0; }
     var ul = Math.min(1, st.level / st.total), jam = 0, son = 0, b;
-    if (DR_BAHO_K[fan]) { for (var k = 1; k <= st.level; k++) { b = drBahoGet(fan, k); if (b) { jam += b; son++; } } }
+    if (st.gn) { jam = st.gs; son = st.gn; }                        // server (boshqalar ham shuni ko'radi)
+    else if (DR_BAHO_K[fan]) { for (var k = 1; k <= st.level; k++) { b = drBahoGet(fan, k); if (b) { jam += b; son++; } } }
     return Math.round(100 * (0.7 * ul + 0.3 * (son ? ul * (jam / son - 1) / 4 : ul)));
   }
   function qobBall(q) { var j = 0; q.fan.forEach(function (f) { j += qobFanBall(f); }); return Math.round(j / q.fan.length); }
