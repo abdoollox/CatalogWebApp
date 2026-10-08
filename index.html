@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=d1a82738">
+<link rel="stylesheet" href="css/app.css?v=ada393d8">
 </head>
 <body>
 <div class="shell">
@@ -272,7 +272,8 @@
       <span class="kb-sp" aria-hidden="true"></span>
     </div>
     <div class="nsh-sum"><b id="dr-sum"></b><small id="dr-note"></small><span class="nsh-bar"><i id="dr-bar"></i></span></div>
-    <div class="dr-list" id="dr-list"></div>
+    <button class="fn-qr" id="dr-qob" type="button"><span class="qo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.500l8.500 5v9L12 21.500 3.500 16.500v-9z"/><path d="M12 7l4.200 2.600-.800 5L12 16.200 8.200 13.400 7.800 9.600z" fill="currentColor" fill-opacity=".35"/></svg></span><span><b id="dr-qob-t"></b><small id="dr-qob-s"></small></span></button>
+    <div class="dr-list" id="dr-list"></div>
   </div>
   <div id="scr-blh" class="screen hidden">
     <div class="cup-hdr kb-hdr">
@@ -485,7 +486,8 @@
     <div class="hidden" id="yl-stage">
       <div class="hm-top"><span class="dr-step" id="yl-step"></span></div>
       <div class="af-sham" id="yl-sham"><i id="yl-sham-w"></i></div>
-      <div class="yl-box"><canvas id="yl-canvas"></canvas></div>
+      <div class="yl-ref" id="yl-ref"></div>
+      <div class="yl-opts" id="yl-opts"></div>
       <div class="af-fl"><img id="yl-sn-im" alt=""><p class="dr-hint" id="yl-hint"></p></div>
     </div>
     <div class="dr-res hidden" id="yl-res"></div>
@@ -509,6 +511,40 @@
       <div class="af-fl"><img id="os-sp-im" alt=""><p class="dr-hint" id="os-hint"></p></div>
     </div>
     <div class="dr-res hidden" id="os-res"></div>
+  </div>
+
+  <div id="scr-trans" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="tf-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="tf-kick"></span><span class="cup-title" id="tf-ttl"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <div class="dr-head"><span class="ms-kick" id="tf-today"></span></div>
+    <div id="tf-intro">
+      <div class="af-fl"><img id="tf-mg-im2" alt=""><p class="dr-hint" id="tf-intro-t"></p></div>
+      <button class="dr-btn" id="tf-go" type="button"></button>
+    </div>
+    <div class="hidden" id="tf-stage">
+      <div class="hm-top"><span class="dr-step" id="tf-step"></span></div>
+      <div class="af-sham" id="tf-sham"><i id="tf-sham-w"></i></div>
+      <div class="tf-qoida" id="tf-qoida"></div>
+      <div class="tf-opts" id="tf-opts"></div>
+      <div class="af-fl"><img id="tf-mg-im" alt=""><p class="dr-hint" id="tf-hint"></p></div>
+    </div>
+    <div class="dr-res hidden" id="tf-res"></div>
+  </div>
+  <div id="scr-qob" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="qo-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="qo-kick"></span><span class="cup-title" id="qo-ttl"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <p class="qo-note" id="qo-note"></p>
+    <div class="qo-radar" id="qo-radar"></div>
+    <div class="qo-list" id="qo-list"></div>
+    <p class="qo-zaif" id="qo-zaif"></p>
+    <button class="dr-btn" id="qo-go" type="button"></button>
+    <p class="qo-esl" id="qo-esl"></p>
   </div>
 
   <!-- Kitob sahifasi va o'qish oynasi (js/07-kitoblar.js) -->
@@ -1527,12 +1563,12 @@
 <script src="js/07-kitob-matn.js?v=053ca97b"></script>
 <script src="js/07-odam.js?v=453ed247"></script>
 <script src="js/08-saralash.js?v=d754a902"></script>
-<script src="js/09-sehrli-olam.js?v=65870900"></script>
-<script src="js/09-darslar.js?v=05c41aa1"></script>
+<script src="js/09-sehrli-olam.js?v=fee8be39"></script>
+<script src="js/09-darslar.js?v=fd8bdb2d"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=769f789e"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=16965465"></script>
+<script src="js/13-orqaga.js?v=1686918a"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
 

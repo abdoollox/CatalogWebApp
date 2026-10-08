@@ -22,9 +22,10 @@
       nom: { uz: "Damlamalar", ru: "Зельеварение", en: "Potions" },
       ust: { uz: "Professor Sneyp", ru: "Профессор Снегг", en: "Professor Snape" },
       izoh: { uz: "Retseptni eslab qoling va damlamani tartib bilan tayyorlang.", ru: "Запомните рецепт и сварите зелье по порядку.", en: "Memorise the recipe and brew the potion in order." } },
-    { id: "trans", on: false, rgb: "200,150,90",
+    { id: "trans", on: true, rgb: "200,150,90",
       nom: { uz: "Transfiguratsiya", ru: "Трансфигурация", en: "Transfiguration" },
-      ust: { uz: "Professor Makgonagall", ru: "Профессор Макгонагалл", en: "Professor McGonagall" } },
+      ust: { uz: "Professor Makgonagall", ru: "Профессор Макгонагалл", en: "Professor McGonagall" },
+      izoh: { uz: "Afsun qoidasini toping va u keyingi buyumni nimaga aylantirishini ayting.", ru: "Найдите правило заклинания и скажите, во что оно превратит следующий предмет.", en: "Work out the spell's rule and say what it will do to the next object." } },
     { id: "himoya", on: true, rgb: "190,110,110",
       nom: { uz: "Qora kuchlardan himoya", ru: "Защита от Тёмных искусств", en: "Defence Against the Dark Arts" },
       ust: { uz: "Professor Lyupin", ru: "Профессор Люпин", en: "Professor Lupin" },
@@ -36,7 +37,7 @@
     { id: "astro", on: true, rgb: "130,130,220",
       nom: { uz: "Astronomiya", ru: "Астрономия", en: "Astronomy" },
       ust: { uz: "Professor Sinistra", ru: "Профессор Синистра", en: "Professor Sinistra" },
-      izoh: { uz: "Yulduzlarni tartib bilan ulab, turkumlarni yig'ing.", ru: "Соединяйте звёзды по порядку и собирайте созвездия.", en: "Join the stars in order to build the constellations." } },
+      izoh: { uz: "Burilgan turkumni boshqa shakllar orasidan tanib oling.", ru: "Узнайте повёрнутое созвездие среди других фигур.", en: "Spot the turned constellation among other shapes." } },
     { id: "uchish", on: true, rgb: "224,178,91",
       nom: { uz: "Uchish darsi", ru: "Полёты на мётлах", en: "Flying" },
       ust: { uz: "Xuch xonim", ru: "Мадам Трюк", en: "Madam Hooch" },
@@ -114,15 +115,23 @@
           qrGrew: function (nom, st) { return nom + " o'sdi — endi " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " sizga " + n + " galleon keltirdi!"; },
           qrGotF: function (nom, n) { return nom + " boshqa maxluqlaringizga " + n + " porsiya yemish keltirdi!"; }, qrFy: "Foydasi", qrFyK: "Katta bo'lganda", qrYum: function (nom) { return nom + " to'ydi."; },
           qrOpenS: function (n) { return n ? n + " ta maxluq sizni kutmoqda" : "Birinchi maxluq 3-darsdan keyin keladi"; }, qrNew: function (nom) { return "Yangi maxluq: " + nom + "! U qo'riqxonangizda kutmoqda."; }, qrGo: "Qo'riqxonaga",
-          ylStep: function (a, b) { return "Turkum " + a + " / " + b; }, ylGo: "Boshlash", ylHint: "Halqali yulduzdan boshlab, yulduzlarni tartib bilan bosing", ylPeek: "Chiziqlarni eslab qoling…",
-          ylI: ["Bugungi turkumni avval chiziq bo'ylab, keyin yoddan ulaysiz.", "Ikki turkum. Chiziqlar bir zum ko'rinadi — eslab qoling.", "Uch turkum, chiziqlarsiz. Faqat nomi aytiladi."],
-          ylBad: "Bu yulduz emas.", ylYod: function (nom) { return nom + " turkumini yoddan yig'ing"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Xato: " + m + " · Kechikish: " + k; },
+          ylStep: function (a, b) { return "Savol " + a + " / " + b; }, ylGo: "Boshlash", ylHint: "Aynan shu turkumni toping — u burilgan bo'ladi", ylNam: "Namuna",
+          ylI: ["Tepada turkum namunasi turadi. Pastdagi shakllardan aynan o'shasini toping — u boshqa tomonga burilgan.", "Endi ehtiyot bo'ling: ba'zi shakllar turkumning ko'zgudagi aksi — ular to'g'ri javob emas.", "Variantlar oltita, ba'zisida bitta yulduz joyidan siljigan. Diqqat bilan qarang."],
+          ylOk: ["To'g'ri!", "Aynan shu!", "Ko'zingiz o'tkir!"], ylBad: "Yo'q, bu boshqa shakl.", ylLate: "Vaqt tugadi.", ylSnN: "Professor Sinistra", ylStat: function (a, b) { return "To'g'ri: " + a + " / " + b; },
           ylB: ["Osmon sizga hali notanish. Qaytadan qarab chiqing.", "Yulduzlarni chalkashtiryapsiz. Yana bir urinib ko'ring.", "Qoniqarli. Osmon xaritasi esingizda qola boshladi.", "Juda yaxshi! Ko'zingiz o'tkir.", "A'lo! Yulduzlar sizga bo'ysunadi."],
           osStep: function (a, b) { return "Parvarish " + a + " / " + b; }, osGo: "Issiqxonaga", osHint: "Asbobni tanlang, keyin shu narsa kerak bo'lgan o'simlikni bosing",
           osI: ["O'simlik ustida nima kerakligi ko'rinadi. Pastdan o'sha asbobni tanlab, o'simlikni bosing. Chiziq tugaguncha ulgurmasangiz, o'simlik so'liydi.", "Yangi asbob qo'shildi. Bir vaqtning o'zida bir nechta o'simlikni kuzating.", "O'simliklar ko'paydi va talabchan bo'ldi. Ko'zingiz hammasida bo'lsin."],
           osAs: ["Suv", "Nur", "Qaychi", "O'g'it"], osOk: ["Yaxshi!", "Barakalla!", "Shunday!"], osBad: "Unga bu kerak emas!", osWilt: "O'simlik so'lidi!", osSpN: "Professor Sprout",
           osStat: function (a, b, x2) { return "Parvarish: " + a + " / " + b + " · Xato asbob: " + x2; },
           osB: ["Issiqxona xarob bo'ldi. Qo'lqopni kiying va qaytadan.", "O'simliklar sizdan xafa. Yana bir urinib ko'ring.", "Qoniqarli. O'simliklar tirik — bu yaxshi boshlanish.", "Juda yaxshi! Qo'lingiz yengil ekan.", "A'lo! Mandragoralar ham sizni tinglaydi."],
+          tfStep: function (a, b) { return "Savol " + a + " / " + b; }, tfGo: "Boshlash", tfHint: "Afsun birinchi buyumni qanday o'zgartirdi? Ikkinchisiga ham shuni qo'llang",
+          tfI: ["Tepada afsun bitta buyumni qanday o'zgartirgani ko'rinadi. Qoidani toping va xuddi shu afsun ikkinchi buyumni nimaga aylantirishini tanlang.", "Endi afsun bir vaqtda IKKI narsani o'zgartiradi — masalan, hajmini ham, sonini ham.", "Uchta o'zgarish birdan va oltita variant. Har belgini alohida tekshiring: turi, soni, hajmi, burilishi, nuri."],
+          tfOk: ["To'g'ri!", "Aynan shunday!", "Qoidani topdingiz!"], tfBad: "Yo'q. Qoidaga yana bir qarang.", tfLate: "Vaqt tugadi.", tfMgN: "Professor Makgonagall",
+          tfStat: function (a, b) { return "To'g'ri: " + a + " / " + b; },
+          tfB: ["Bu transfiguratsiya emas, tasodif. Qaytadan.", "Qoidani ko'rmayapsiz. Diqqatni jamlang va yana urining.", "Qoniqarli. Qoidani topishni boshladingiz.", "Yaxshi ish. Fikrlashingiz tartibli.", "A'lo. Bunday aniq fikrlashni kam uchrataman."],
+          qobT: "Qobiliyatlar", qobK: "Mening darajam", qobS: "Har fan boshqa qobiliyatni mashq qildiradi. Daraja o'tilgan darslar va baholaringizdan hisoblanadi.",
+          qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
+          qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Baholar shu qurilmada saqlanadi — boshqa telefonda daraja biroz pastroq ko'rinishi mumkin.",
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -190,15 +199,23 @@
           qrGrew: function (nom, st) { return nom + " вырос — теперь " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " принёс вам галлеонов: " + n + "!"; },
           qrGotF: function (nom, n) { return nom + " принёс другим существам порций корма: " + n + "!"; }, qrFy: "Польза", qrFyK: "Когда вырастет", qrYum: function (nom) { return nom + " сыт."; },
           qrOpenS: function (n) { return n ? "Вас ждут существа: " + n : "Первое существо появится после 3-го урока"; }, qrNew: function (nom) { return "Новое существо: " + nom + "! Оно ждёт вас в питомнике."; }, qrGo: "В питомник",
-          ylStep: function (a, b) { return "Созвездие " + a + " / " + b; }, ylGo: "Начать", ylHint: "Начните со звезды в кольце и нажимайте звёзды по порядку", ylPeek: "Запоминайте линии…",
-          ylI: ["Сегодняшнее созвездие вы соедините сначала по линиям, потом по памяти.", "Два созвездия. Линии покажутся на миг — запоминайте.", "Три созвездия, без линий. Названо только имя."],
-          ylBad: "Это не та звезда.", ylYod: function (nom) { return "Соберите по памяти: " + nom; }, ylSnN: "Профессор Синистра", ylStat: function (m, k) { return "Ошибок: " + m + " · Опозданий: " + k; },
+          ylStep: function (a, b) { return "Вопрос " + a + " / " + b; }, ylGo: "Начать", ylHint: "Найдите это же созвездие — оно повёрнуто", ylNam: "Образец",
+          ylI: ["Наверху образец созвездия. Найдите среди фигур внизу именно его — оно повёрнуто в другую сторону.", "Теперь осторожнее: некоторые фигуры — зеркальное отражение созвездия, это неверный ответ.", "Вариантов шесть, в некоторых одна звезда сдвинута. Смотрите внимательно."],
+          ylOk: ["Верно!", "Именно оно!", "У вас острый глаз!"], ylBad: "Нет, это другая фигура.", ylLate: "Время вышло.", ylSnN: "Профессор Синистра", ylStat: function (a, b) { return "Верно: " + a + " / " + b; },
           ylB: ["Небо вам пока незнакомо. Посмотрите ещё раз.", "Вы путаете звёзды. Попробуйте снова.", "Удовлетворительно. Карта неба начинает запоминаться.", "Очень хорошо! У вас острый глаз.", "Превосходно! Звёзды вам послушны."],
           osStep: function (a, b) { return "Уход " + a + " / " + b; }, osGo: "В теплицу", osHint: "Выберите инструмент, затем нажмите на растение, которому он нужен",
           osI: ["Над растением видно, что ему нужно. Выберите внизу этот инструмент и нажмите на растение. Не успеете до конца полоски — растение завянет.", "Добавился новый инструмент. Следите сразу за несколькими растениями.", "Растений стало больше, и они требовательнее. Держите в поле зрения все."],
           osAs: ["Вода", "Свет", "Ножницы", "Удобрение"], osOk: ["Хорошо!", "Молодец!", "Вот так!"], osBad: "Ему нужно другое!", osWilt: "Растение завяло!", osSpN: "Профессор Стебль",
           osStat: function (a, b, x2) { return "Уход: " + a + " / " + b + " · Не тот инструмент: " + x2; },
           osB: ["Теплица в плачевном виде. Наденьте перчатки — и заново.", "Растения на вас обижены. Попробуйте ещё раз.", "Удовлетворительно. Растения живы — хорошее начало.", "Очень хорошо! У вас лёгкая рука.", "Превосходно! Вас слушаются даже мандрагоры."],
+          tfStep: function (a, b) { return "Вопрос " + a + " / " + b; }, tfGo: "Начать", tfHint: "Как заклинание изменило первый предмет? Примените то же ко второму",
+          tfI: ["Наверху видно, как заклинание изменило один предмет. Найдите правило и выберите, во что то же заклинание превратит второй предмет.", "Теперь заклинание меняет сразу ДВА признака — например, и размер, и количество.", "Три изменения сразу и шесть вариантов. Проверяйте каждый признак отдельно: вид, количество, размер, поворот, сияние."],
+          tfOk: ["Верно!", "Именно так!", "Вы нашли правило!"], tfBad: "Нет. Посмотрите на правило ещё раз.", tfLate: "Время вышло.", tfMgN: "Профессор Макгонагалл",
+          tfStat: function (a, b) { return "Верно: " + a + " / " + b; },
+          tfB: ["Это не трансфигурация, а случайность. Заново.", "Вы не видите правила. Соберитесь и попробуйте ещё раз.", "Удовлетворительно. Вы начали находить правило.", "Хорошая работа. Вы мыслите последовательно.", "Превосходно. Такую ясность мысли я встречаю редко."],
+          qobT: "Способности", qobK: "Мой уровень", qobS: "Каждый предмет тренирует свою способность. Уровень считается по пройденным урокам и вашим оценкам.",
+          qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
+          qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Оценки хранятся на этом устройстве — на другом телефоне уровень может выглядеть чуть ниже.",
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -267,15 +284,23 @@
           qrGrew: function (nom, st) { return nom + " has grown — now " + st.toLowerCase() + "!"; }, qrGot: function (nom, n) { return nom + " brought you " + n + " Galleon" + (n > 1 ? "s" : "") + "!"; },
           qrGotF: function (nom, n) { return nom + " brought " + n + " portions of food for your other creatures!"; }, qrFy: "Benefit", qrFyK: "When grown", qrYum: function (nom) { return nom + " is full."; },
           qrOpenS: function (n) { return n ? n + " creatures are waiting for you" : "Your first creature arrives after lesson 3"; }, qrNew: function (nom) { return "A new creature: " + nom + "! It is waiting in your menagerie."; }, qrGo: "To the menagerie",
-          ylStep: function (a, b) { return "Constellation " + a + " / " + b; }, ylGo: "Begin", ylHint: "Start from the ringed star and tap the stars in order", ylPeek: "Memorise the lines…",
-          ylI: ["Today's constellation: first join it along the lines, then from memory.", "Two constellations. The lines show for a moment — remember them.", "Three constellations, no lines. Only the name is given."],
-          ylBad: "That's not the star.", ylYod: function (nom) { return "Build " + nom + " from memory"; }, ylSnN: "Professor Sinistra", ylStat: function (m, k) { return "Mistakes: " + m + " · Too late: " + k; },
+          ylStep: function (a, b) { return "Question " + a + " / " + b; }, ylGo: "Begin", ylHint: "Find this same constellation — it has been turned", ylNam: "Sample",
+          ylI: ["The sample constellation is at the top. Find exactly that one among the shapes below — it has been turned round.", "Careful now: some shapes are the mirror image of the constellation — those are wrong.", "Six options, and in some a single star has been moved. Look closely."],
+          ylOk: ["Correct!", "That's the one!", "A sharp eye!"], ylBad: "No, that's a different shape.", ylLate: "Time's up.", ylSnN: "Professor Sinistra", ylStat: function (a, b) { return "Correct: " + a + " / " + b; },
           ylB: ["The sky is still a stranger to you. Look again.", "You are mixing up the stars. Try once more.", "Acceptable. The sky map is starting to stick.", "Very good! You have a sharp eye.", "Outstanding! The stars obey you."],
           osStep: function (a, b) { return "Care " + a + " / " + b; }, osGo: "To the greenhouse", osHint: "Pick a tool, then tap the plant that needs it",
           osI: ["Each plant shows what it needs. Pick that tool below and tap the plant. If the bar runs out first, the plant wilts.", "A new tool has been added. Keep an eye on several plants at once.", "More plants now, and fussier ones. Watch them all."],
           osAs: ["Water", "Light", "Shears", "Fertiliser"], osOk: ["Good!", "Well done!", "That's it!"], osBad: "That's not what it needs!", osWilt: "The plant has wilted!", osSpN: "Professor Sprout",
           osStat: function (a, b, x2) { return "Care: " + a + " / " + b + " · Wrong tool: " + x2; },
           osB: ["The greenhouse is a wreck. Gloves on, and start again.", "The plants are cross with you. Try once more.", "Acceptable. The plants are alive — a good start.", "Very good! You have green fingers.", "Outstanding! Even the Mandrakes listen to you."],
+          tfStep: function (a, b) { return "Question " + a + " / " + b; }, tfGo: "Begin", tfHint: "How did the spell change the first object? Do the same to the second",
+          tfI: ["The top row shows how the spell changed one object. Work out the rule and pick what the same spell turns the second object into.", "Now the spell changes TWO things at once — size and number, for example.", "Three changes at once and six options. Check each feature separately: kind, number, size, turn, glow."],
+          tfOk: ["Correct!", "Exactly!", "You found the rule!"], tfBad: "No. Look at the rule again.", tfLate: "Time's up.", tfMgN: "Professor McGonagall",
+          tfStat: function (a, b) { return "Correct: " + a + " / " + b; },
+          tfB: ["That is not Transfiguration, that is chance. Again.", "You are not seeing the rule. Concentrate and try once more.", "Acceptable. You are beginning to find the rule.", "Good work. Your thinking is orderly.", "Outstanding. I rarely meet such clear reasoning."],
+          qobT: "Abilities", qobK: "My level", qobS: "Each subject trains a different ability. Your level comes from the lessons you have passed and your grades.",
+          qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
+          qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Grades are kept on this device — on another phone your level may look a little lower.",
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -296,7 +321,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14, astro: 26, osimlik: 14 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8, maxluq: 14, astro: 26, osimlik: 14, trans: 20 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -340,7 +365,8 @@
       uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") },
       maxluq: { level: drLocalLvl.maxluq, total: 36, contest: bell("maxluq", "m2") },
       astro: { level: drLocalLvl.astro, total: 36, contest: bell("astro", "a4") },
-      osimlik: { level: drLocalLvl.osimlik, total: 36, contest: bell("osimlik", "o5") } };
+      osimlik: { level: drLocalLvl.osimlik, total: 36, contest: bell("osimlik", "o5") },
+      trans: { level: drLocalLvl.trans, total: 36, contest: bell("trans", "t7") } };
     return res;
   }
 
@@ -396,7 +422,7 @@
   function drOpen() {
     drQayt = false;
     qrLoad();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -416,6 +442,7 @@
 
   function drRender() {
     var x = drX(), box = $("dr-list");
+    if ($("dr-qob")) { $("dr-qob-t").textContent = x.qobBtn; $("dr-qob-s").textContent = x.qobBtnS; }
     $("dr-kick").textContent = x.kick;
     $("dr-ttl").textContent = x.ttl;
     var ochiq = DR_FANLAR.filter(function (f) { return f.on; });
@@ -468,7 +495,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -547,7 +574,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -658,7 +685,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else if (fan === "astro") { ylOpen(true); } else if (fan === "osimlik") { osOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else if (fan === "maxluq") { mxOpen(true); } else if (fan === "astro") { ylOpen(true); } else if (fan === "osimlik") { osOpen(true); } else if (fan === "trans") { tfOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -707,7 +734,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -758,6 +785,7 @@
     else if (id === "maxluq") { mxOpen(false, n); }
     else if (id === "astro") { ylOpen(false, n); }
     else if (id === "osimlik") { osOpen(false, n); }
+    else if (id === "trans") { tfOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -774,7 +802,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1312,7 +1340,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho", osimlik: "hp_os_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho", maxluq: "hp_mx_baho", astro: "hp_yl_baho", osimlik: "hp_os_baho", trans: "hp_tf_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1917,7 +1945,7 @@
     var hmY = qrYordam(["testral", "mushuk"], hm.bell);
     if (hmY.testral) { hm.lives = hm.jon = 4; }
     if (hmY.mushuk) { hm.opts = Math.max(2, hm.opts - 1); }
-    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik");
+    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -2715,13 +2743,15 @@
     });
   }
 
-  /* ================= ASTRONOMIYA: yulduzlarni tartib bilan ulab, turkum yig'ish =================
-     Tungi osmonda yulduzlar (turkum yulduzlari + chalg'ituvchilar, ko'rinishi bir xil). Halqali yulduzdan boshlab
-     tartib bilan bosiladi - chiziq tortiladi. 12 turkum (shakllari soddalashtirilgan). Darslar (bot: ASTRO_DARS = 36):
-       1-12  bitta turkum: avval chiziqlar ko'rinib turadi, keyin 3 s ko'rsatilib yashiriladi
-       13-24 ikki turkum: chiziqlar 2,5 s ko'rinadi
-       25-36 uch turkum: chiziq ko'rsatilmaydi, faqat nomi (uch xatodan keyin chiziqlar bir zum ko'rinadi)
-     Sham = vaqt; baho: xato -8, kechikish -20. Bellashuv: uch turkum (2 s ko'rsatiladi), joylashuvi hammaga bir xil, xato +3 s. */
+  /* ================= ASTRONOMIYA: burilgan turkumni tanish (FAZOVIY TASAVVUR) =================
+     Egasi (2026-10-08): avvalgi «yulduzlar tartibini eslab ulash» xotira mashqi edi va Damlamalar/Maxluqlarga o'xshab
+     qolgan - mexanizm ALMASHTIRILDI. Endi: tepada turkum NAMUNASI, pastda bir nechta shakl - bittasi aynan o'sha
+     turkum, lekin BURILGAN; qolganlari chalg'ituvchi (boshqa turkum, ko'zgudagi aksi, bitta yulduzi siljigan nusxa).
+     Eslab qolish kerak emas - shaklni xayolan aylantirish kerak. 12 turkum (shakllari soddalashtirilgan).
+     Darslar (bot: ASTRO_DARS = 36): 1-12 - 4 variant, chalg'ituvchilar boshqa turkumlar, burilish 90 gradusga karrali;
+     13-24 - ixtiyoriy burilish, chalg'ituvchilar orasida ko'zgudagi aksi; 25-36 - 6 variant, aksi va bitta yulduzi
+     siljigan nusxa. Har savolga bitta urinish, sham = vaqt. Baho: to'g'ri javoblar ulushi (90 / 78 / 60).
+     Bellashuv: 8 savol, hammaga bir xil (mavzu a1..a12 dan urug'), xato +3 s. */
   var YL = {
     ayiq:       { p: [[0.1, 0.3], [0.26, 0.26], [0.4, 0.32], [0.52, 0.42], [0.56, 0.62], [0.8, 0.66], [0.8, 0.44]],
                   uz: ["Katta Ayiq", "Yetti yulduzli «cho'mich» — osmondagi eng taniqli shakl."], ru: ["Большая Медведица", "«Ковш» из семи звёзд — самая узнаваемая фигура неба."], en: ["Great Bear", "The seven-star Plough — the best-known shape in the sky."] },
@@ -2749,186 +2779,156 @@
                   uz: ["Feniks", "Kuldan qayta tug'iladigan qush turkumi."], ru: ["Феникс", "Созвездие птицы, возрождающейся из пепла."], en: ["Phoenix", "The bird that rises from its ashes."] }
   };
   var YL_TARTIB = ["ayiq", "kassiopeya", "orion", "it", "arslon", "chayon", "ajdar", "andromeda", "toj", "lira", "bori", "feniks"];
-  var yl = null;      // {n, bell, steps:[{id, peek, dec}], round, idx, stars, show, mism, late, xatoBu, t0, lim, tm, lock}
+  var YL_SIM = { kassiopeya: 1, toj: 1, andromeda: 1 };      // o'zi simmetrik - ko'zgudagi aksi chalg'ituvchi bo'la olmaydi
+  var yl = null;      // {n, bell, savol:[{id, opts:[{p, rot, ok}]}], i, ok, t0, lim, tm, lock}
   function ylTx(id) { return YL[id][lang] || YL[id].uz; }
   function ylSnImg(k) { return IMG_DIR + "sinistra/" + k + ".webp"; }
   function ylKayf(k) { ["yl-sn-im", "yl-sn-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = ylSnImg(k); } }); }
-  function ylStop() { if (yl) { clearInterval(yl.tm); clearTimeout(yl.pk); yl.tm = 0; } }
+  function ylStop() { if (yl) { clearInterval(yl.tm); yl.tm = 0; } }
+  // Shakl (nuqtalar) -> SVG: markazlab, o'lchamga sig'dirib, kerak bo'lsa aks ettirib va burib chizadi
+  function ylFig(P, rot, aks) {
+    var cx = 0, cy = 0, R = 0, i, a = rot * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a), q = [], d = "", h = "";
+    for (i = 0; i < P.length; i++) { cx += P[i][0]; cy += P[i][1]; }
+    cx /= P.length; cy /= P.length;
+    for (i = 0; i < P.length; i++) { R = Math.max(R, Math.hypot(P[i][0] - cx, P[i][1] - cy)); }
+    for (i = 0; i < P.length; i++) {
+      var x = (P[i][0] - cx) / R * (aks ? -1 : 1), y = (P[i][1] - cy) / R;
+      q.push([50 + (x * ca - y * sa) * 38, 50 + (x * sa + y * ca) * 38]);
+    }
+    for (i = 0; i < q.length; i++) { d += (i ? "L" : "M") + q[i][0].toFixed(1) + " " + q[i][1].toFixed(1); h += '<circle cx="' + q[i][0].toFixed(1) + '" cy="' + q[i][1].toFixed(1) + '" r="3.4"/>'; }
+    return '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="' + d + '"/>' + h + "</svg>";
+  }
+  // Bitta yulduzi siljigan nusxa
+  function ylSiljit(P, r1, r2) {
+    var k = 1 + Math.floor(r1 * (P.length - 2)), a = r2 * Math.PI * 2;
+    return P.map(function (p, j) { return j === k ? [p[0] + Math.cos(a) * 0.2, p[1] + Math.sin(a) * 0.2] : p; });
+  }
   function ylPlan(n, urug) {
-    var T = YL_TARTIB, L = T.length, k;
-    if (urug != null) { return [0, 1, 2].map(function (j) { return { id: T[(urug + j * 5) % L], peek: 2000, dec: 6 }; }); }
-    if (n <= L) { return [{ id: T[n - 1], peek: Infinity, dec: 3 }, { id: T[n - 1], peek: 3000, dec: 5 }]; }
-    if (n <= L * 2) { k = n - L - 1; return [{ id: T[(k * 5 + 2) % L], peek: 2500, dec: 7 }, { id: T[(k * 5 + 8) % L], peek: 2500, dec: 7 }]; }
-    k = n - L * 2 - 1;
-    return [1, 5, 9].map(function (j) { return { id: T[(k * 7 + j) % L], peek: 0, dec: 8 }; });
+    var bell = urug != null, T = YL_TARTIB, L = T.length, s0 = bell ? urug : n * 61, soni = bell ? 8 : 5 + Math.min(3, Math.floor((n - 1) / 9));
+    var bosq = bell ? 1 : n <= 12 ? 0 : n <= 24 ? 1 : 2, var_ = bosq === 2 ? 6 : 4, savol = [], i, g;
+    var rnd = function (k) { return afRnd(s0 + k * 7.31); };
+    for (i = 0; i < soni; i++) {
+      var id = (!bell && n <= L && i === 0) ? T[n - 1] : T[Math.floor(rnd(i * 13 + 1) * L)], P = YL[id].p;
+      if (i && savol[i - 1].id === id) { id = T[(T.indexOf(id) + 3) % L]; P = YL[id].p; }
+      var bur = bosq === 0 ? [90, 180, 270][Math.floor(rnd(i * 13 + 2) * 3)] : 40 + Math.floor(rnd(i * 13 + 2) * 280);
+      var opts = [{ p: P, rot: bur, aks: false, ok: true }];
+      if (bosq >= 1 && !YL_SIM[id]) { opts.push({ p: P, rot: Math.floor(rnd(i * 13 + 3) * 360), aks: true }); }
+      if (bosq === 2) { opts.push({ p: ylSiljit(P, rnd(i * 13 + 4), rnd(i * 13 + 5)), rot: Math.floor(rnd(i * 13 + 6) * 360), aks: false }); }
+      g = 0;
+      var band = [id];
+      while (opts.length < var_ && g < 60) {
+        var boshqa = T[Math.floor(rnd(i * 13 + 20 + g) * L)];
+        g++;
+        if (band.indexOf(boshqa) < 0) { band.push(boshqa); opts.push({ p: YL[boshqa].p, rot: Math.floor(rnd(i * 13 + 40 + g) * 360), aks: rnd(i * 13 + 50 + g) < 0.5 }); }
+      }
+      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor(rnd(i * 13 + 70 + g) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
+      savol.push({ id: id, opts: opts });
+    }
+    return { savol: savol, lim: bell ? 0 : Math.round(Math.max(5000, 10000 - n * 130)) };
   }
 
   function ylOpen(bell, n) {
     var st = drData && drData.astro, x = drX(), f = drFan("astro"), urug = null, i;
     if (bell === true) { var it = String((st && st.contest && st.contest.item) || "a1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 3); } }
+    var plan = ylPlan(n || 1, urug);
     ylStop();
-    yl = { n: n || 1, bell: bell === true, steps: ylPlan(n || 1, urug), urug: urug, round: 0, idx: 0, stars: [], show: false,
-           mism: 0, late: 0, xatoBu: 0, t0: 0, lim: 0, pct: 1, tm: 0, pk: 0, lock: false, w: 320, dpr: 1 };
+    yl = { n: n || 1, bell: bell === true, savol: plan.savol, lim: plan.lim, i: 0, ok: 0, t0: 0, tm: 0, lock: false };
     drShowGame("scr-astro");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = ylSnImg(k); });
     $("yl-kick").textContent = f.nom[lang];
     $("yl-ttl").textContent = f.ust[lang];
     $("yl-today").textContent = yl.bell ? x.bell : x.lvl(yl.n);
-    $("yl-name").textContent = "";
+    $("yl-name").textContent = f.nom[lang];
     $("yl-desc").textContent = "";
     $("yl-res").classList.add("hidden");
     $("yl-stage").classList.add("hidden");
     $("yl-intro").classList.toggle("hidden", yl.bell);
     if (yl.bell) { ylGo(); return; }
-    $("yl-name").textContent = yl.n <= 12 ? ylTx(yl.steps[0].id)[0] : f.nom[lang];
     $("yl-intro-t").textContent = x.ylI[yl.n <= 12 ? 0 : yl.n <= 24 ? 1 : 2];
     $("yl-go").textContent = x.ylGo;
     ylKayf("maslahat");
   }
   function ylGo() {
-    var c = $("yl-canvas");
     $("yl-intro").classList.add("hidden");
     $("yl-stage").classList.remove("hidden");
     $("yl-sham").classList.toggle("hidden", yl.bell);
-    var w = Math.min(c.parentNode.clientWidth || 320, 360), dpr = Math.min(window.devicePixelRatio || 1, 2);
-    c.style.width = w + "px"; c.style.height = w + "px";
-    c.width = Math.round(w * dpr); c.height = Math.round(w * dpr);
-    yl.w = w; yl.dpr = dpr;
-    yl.round = 0;
+    yl.i = 0;
     ylStep();
-  }
-  // Navbatdagi turkum: yulduzlar joyi, chalg'ituvchilar, chiziqlarni ko'rsatish
-  function ylStep() {
-    var x = drX(), me = yl, q = yl.steps[yl.round], P = YL[q.id].p, w = yl.w, chet = 26, i, g = 0;
-    var s0 = yl.bell ? yl.urug + yl.round * 31 : null;
-    yl.idx = 0; yl.xatoBu = 0; yl.lock = false;
-    yl.stars = P.map(function (p, j) { return { x: chet + p[0] * (w - chet * 2), y: chet + p[1] * (w - chet * 2), r: j }; });
-    while (yl.stars.length < P.length + q.dec && g < 400) {
-      var rx = s0 == null ? Math.random() : afRnd(s0 + g * 2), ry = s0 == null ? Math.random() : afRnd(s0 + g * 2 + 1);
-      g++;
-      var cx = chet + rx * (w - chet * 2), cy = chet + ry * (w - chet * 2), yaqin = false;
-      for (i = 0; i < yl.stars.length; i++) { if (Math.hypot(yl.stars[i].x - cx, yl.stars[i].y - cy) < 44) { yaqin = true; break; } }
-      if (!yaqin) { yl.stars.push({ x: cx, y: cy, r: -1 }); }
-    }
-    yl.show = q.peek > 0;
-    yl.lim = Math.round(P.length * (yl.n <= 12 ? 3.2 : yl.n <= 24 ? 2.6 : 2.4) * 1000);
-    yl.t0 = 0; yl.pct = 1;
-    $("yl-name").textContent = ylTx(q.id)[0];
-    $("yl-desc").textContent = q.peek === 0 ? x.ylYod(ylTx(q.id)[0]) : "";
-    $("yl-hint").textContent = q.peek > 0 && q.peek !== Infinity ? x.ylPeek : x.ylHint;
-    $("yl-hint").classList.remove("bad");
-    $("yl-sham-w").style.width = "100%";
-    $("yl-sham").classList.remove("ochdi", "oz");
-    ylKayf("maslahat");
-    ylHead();
-    ylPaint();
-    var bosh = function () {
-      if (yl !== me) { return; }
-      if (q.peek !== Infinity) { yl.show = false; }
-      $("yl-hint").textContent = x.ylHint;
-      yl.t0 = Date.now();
-      ylPaint();
-    };
-    clearTimeout(yl.pk);
-    if (q.peek > 0 && q.peek !== Infinity) { yl.lock = true; yl.pk = setTimeout(function () { if (yl === me) { yl.lock = false; bosh(); } }, q.peek); } else { bosh(); }
-    clearInterval(yl.tm);
-    yl.tm = setInterval(function () {
-      if (yl !== me || $("scr-astro").classList.contains("hidden")) { clearInterval(me.tm); return; }
-      if (yl.t0 && !yl.lock && !yl.bell) {
-        yl.pct = Math.max(0, 1 - (Date.now() - yl.t0) / yl.lim);
-        $("yl-sham-w").style.width = (yl.pct * 100).toFixed(1) + "%";
-        $("yl-sham").classList.toggle("ochdi", yl.pct <= 0);
-        $("yl-sham").classList.toggle("oz", yl.pct > 0 && yl.pct < 0.3);
-      }
-      if (yl.bell) { ylHead(); }
-      ylPaint();
-    }, 120);
   }
   function ylHead() {
     var x = drX();
-    $("yl-step").textContent = x.ylStep(Math.min(yl.round + 1, yl.steps.length), yl.steps.length) + (bl && yl.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("yl-step").textContent = x.ylStep(Math.min(yl.i + 1, yl.savol.length), yl.savol.length) + (bl && yl.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
   }
-  function ylPaint() {
-    if (!yl) { return; }
-    var c = $("yl-canvas"), g = c.getContext("2d"), w = yl.w, i, t = Date.now() / 1000;
-    var real = yl.stars.filter(function (s) { return s.r >= 0; }).sort(function (a, b) { return a.r - b.r; });
-    g.setTransform(yl.dpr, 0, 0, yl.dpr, 0, 0);
-    var gr = g.createRadialGradient(w * 0.5, w * 0.35, 10, w * 0.5, w * 0.5, w * 0.8);
-    gr.addColorStop(0, "#1c2350"); gr.addColorStop(1, "#070912");
-    g.fillStyle = gr; g.fillRect(0, 0, w, w);
-    for (i = 0; i < 70; i++) {      // mayda fon yulduzlari
-      g.fillStyle = "rgba(255,255,255," + (0.12 + 0.25 * afRnd(i + 3) * (0.6 + 0.4 * Math.sin(t * 1.5 + i))).toFixed(3) + ")";
-      g.fillRect(afRnd(i) * w, afRnd(i + 100) * w, 1.3, 1.3);
-    }
-    g.lineCap = "round"; g.lineJoin = "round";
-    if (yl.show) {       // namuna chiziqlari
-      g.strokeStyle = "rgba(150,170,255,.55)"; g.lineWidth = 2; g.setLineDash([3, 7]);
-      g.beginPath(); real.forEach(function (s, j) { if (j) { g.lineTo(s.x, s.y); } else { g.moveTo(s.x, s.y); } }); g.stroke();
-      g.setLineDash([]);
-    }
-    if (yl.idx > 1) {    // ulangan chiziqlar
-      g.shadowColor = "rgba(243,213,143,.9)"; g.shadowBlur = 12; g.strokeStyle = "#f3d58f"; g.lineWidth = 3;
-      g.beginPath(); for (i = 0; i < yl.idx; i++) { if (i) { g.lineTo(real[i].x, real[i].y); } else { g.moveTo(real[i].x, real[i].y); } } g.stroke();
-      g.shadowBlur = 0;
-    }
-    yl.stars.forEach(function (s, j) {
-      var ulangan = s.r >= 0 && s.r < yl.idx, xato = s.xatoAt && Date.now() - s.xatoAt < 450, tw = 0.75 + 0.25 * Math.sin(t * 2.2 + j * 1.7);
-      afGlow(g, s.x, s.y, ulangan ? 17 : 13, xato ? "240,110,100" : ulangan ? "243,213,143" : "200,215,255", (ulangan ? 0.8 : 0.5) * tw);
-      g.fillStyle = xato ? "#ff9d92" : ulangan ? "#ffe9b0" : "#f2f5ff";
-      g.beginPath(); g.arc(s.x, s.y, ulangan ? 4.6 : 3.6, 0, Math.PI * 2); g.fill();
+  // Navbatdagi savol: namuna va variantlar
+  function ylStep() {
+    var x = drX(), me = yl, q = yl.savol[yl.i], box = $("yl-opts");
+    yl.lock = false;
+    $("yl-name").textContent = ylTx(q.id)[0];
+    $("yl-desc").textContent = "";
+    $("yl-ref").innerHTML = "<small>" + x.ylNam + "</small>" + ylFig(YL[q.id].p, 0, false);
+    $("yl-hint").textContent = x.ylHint;
+    $("yl-hint").classList.remove("bad");
+    ylKayf("maslahat");
+    box.className = "yl-opts" + (q.opts.length > 4 ? " olti" : "");
+    box.innerHTML = "";
+    q.opts.forEach(function (o, k) {
+      var b = drEl("button", "yl-o");
+      b.type = "button";
+      b.innerHTML = ylFig(o.p, o.rot, o.aks);
+      b.addEventListener("click", function () { ylPick(k, b); });
+      box.appendChild(b);
     });
-    if (yl.idx === 0 && real.length) {      // boshlanish yulduzi - halqa
-      g.strokeStyle = "rgba(243,213,143," + (0.55 + 0.35 * Math.sin(t * 4)).toFixed(3) + ")"; g.lineWidth = 2;
-      g.beginPath(); g.arc(real[0].x, real[0].y, 13 + 2 * Math.sin(t * 4), 0, Math.PI * 2); g.stroke();
-    }
+    $("yl-sham-w").style.width = "100%";
+    $("yl-sham").classList.remove("ochdi", "oz");
+    ylHead();
+    yl.t0 = Date.now();
+    clearInterval(yl.tm);
+    yl.tm = setInterval(function () {
+      if (yl !== me || $("scr-astro").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      if (yl.bell) { ylHead(); return; }
+      if (yl.lock) { return; }
+      var p = Math.max(0, 1 - (Date.now() - yl.t0) / yl.lim);
+      $("yl-sham-w").style.width = (p * 100).toFixed(1) + "%";
+      $("yl-sham").classList.toggle("oz", p > 0 && p < 0.3);
+      $("yl-sham").classList.toggle("ochdi", p <= 0);
+      if (p <= 0) { ylPick(-1, null); }
+    }, 100);
   }
-  function ylTap(px, py) {
-    if (!yl || yl.lock || !yl.t0) { return; }
-    var x = drX(), me = yl, q = yl.steps[yl.round], eng = null, d = 30, jami = YL[q.id].p.length;
-    yl.stars.forEach(function (s) { var m = Math.hypot(s.x - px, s.y - py); if (m < d) { d = m; eng = s; } });
-    if (!eng || (eng.r >= 0 && eng.r < yl.idx)) { return; }
-    if (eng.r === yl.idx) {
-      yl.idx++;
+  function ylPick(k, btn) {
+    if (!yl || yl.lock) { return; }
+    var x = drX(), me = yl, q = yl.savol[yl.i], togri = k >= 0 && !!q.opts[k].ok;
+    yl.lock = true;
+    [].slice.call($("yl-opts").children).forEach(function (b, j) { if (q.opts[j].ok) { b.classList.add("togri"); } });
+    if (togri) {
+      yl.ok++;
+      $("yl-hint").textContent = x.ylOk[yl.i % x.ylOk.length] + " " + ylTx(q.id)[1];
+      $("yl-hint").classList.remove("bad");
+      ylKayf((Date.now() - yl.t0) < (yl.lim || 6000) * 0.5 ? "zor" : "yaxshi");
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
-      if (yl.idx >= jami) {
-        yl.lock = true;
-        if (!yl.bell && Date.now() - yl.t0 > yl.lim) { yl.late++; }
-        yl.show = false;
-        $("yl-hint").textContent = ylTx(q.id)[1];
-        $("yl-hint").classList.remove("bad");
-        ylKayf(yl.xatoBu ? "yaxshi" : "zor");
-        setTimeout(function () {
-          if (yl !== me) { return; }
-          yl.round++;
-          if (yl.round >= yl.steps.length) { ylEnd(); return; }
-          ylStep();
-        }, 1300);
-      }
-      ylPaint();
-      return;
+    } else {
+      if (btn) { btn.classList.add("xato"); }
+      if (bl && yl.bell) { bl.xato++; }
+      $("yl-hint").textContent = k < 0 ? x.ylLate : x.ylBad;
+      $("yl-hint").classList.add("bad");
+      ylKayf("xafa");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
     }
-    yl.mism++; yl.xatoBu++;
-    if (bl && yl.bell) { bl.xato++; }
-    eng.xatoAt = Date.now();
-    $("yl-hint").textContent = x.ylBad;
-    $("yl-hint").classList.add("bad");
-    ylKayf("xafa");
-    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
-    if (yl.xatoBu % 3 === 0 && !yl.show) {      // uch xatodan keyin chiziqlar bir zum ko'rinadi
-      yl.show = true;
-      setTimeout(function () { if (yl === me && yl.steps[yl.round] === q && q.peek !== Infinity) { yl.show = false; ylPaint(); } }, 1500);
-    }
-    ylPaint();
+    setTimeout(function () {
+      if (yl !== me) { return; }
+      yl.i++;
+      if (yl.i >= yl.savol.length) { ylEnd(); return; }
+      ylStep();
+    }, yl.bell ? 500 : togri ? 1500 : 1300);
   }
   function ylEnd() {
-    var x = drX(), me = yl, daraja = yl.n, box = $("yl-res");
+    var x = drX(), me = yl, daraja = yl.n, box = $("yl-res"), jami = yl.savol.length;
     ylStop();
     $("yl-stage").classList.add("hidden");
     $("yl-name").textContent = drFan("astro").nom[lang];
     $("yl-desc").textContent = "";
     if (yl.bell) { blFinish(box); return; }
-    var s = Math.max(0, 100 - yl.mism * 8 - yl.late * 20), baho = s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1;
-    var sc = { baho: baho, izoh: x.ylStat(yl.mism, yl.late) }, otdi = baho >= 3;
+    var s = Math.round(100 * yl.ok / jami), baho = s >= 90 ? 5 : s >= 78 ? 4 : s >= 60 ? 3 : s >= 40 ? 2 : 1;
+    var sc = { baho: baho, izoh: x.ylStat(yl.ok, jami) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (yl !== me) { return; }
       if (otdi) { drResult(box, "«" + x.ylB[baho - 1] + "»", "astro", daraja, yangi); }
@@ -3153,6 +3153,270 @@
     if (otdi) { drBahoSave("osimlik", daraja, baho); drDone("osimlik", daraja, show); } else { show(null); }
   }
 
+  /* ================= TRANSFIGURATSIYA: afsun qoidasini topish (MANTIQ) =================
+     Tepada afsun bitta buyumni qanday o'zgartirgani ko'rinadi (A -> A'); xuddi shu afsun ikkinchi buyumni (B) nimaga
+     aylantirishini variantlardan tanlash kerak. Buyumning besh belgisi: turi (olti buyum, doira bo'ylab), soni (1-3),
+     hajmi (uch xil), burilishi (90 gradusdan), nuri (uch rang). Qoida = bir nechta belgining o'zgarishi.
+     Darslar (bot: TRANS_DARS = 36): 1-12 - bitta o'zgarish, 4 variant; 13-24 - ikkita o'zgarish birdan; 25-36 - uchta
+     o'zgarish, 6 variant. Chalg'ituvchilar - qoidaning yarmi, teskarisi yoki o'zgarmagan buyum. Har savolga bitta
+     urinish, sham = vaqt. Baho: to'g'ri javoblar ulushi (90 / 78 / 60). Bellashuv: 8 savol (ikki o'zgarishli), hammaga
+     bir xil (mavzu t1..t12 dan urug'), xato +3 s. Eslab qolish yo'q - bu mantiq mashqi. */
+  var TF_OBJ = ["choynak", "qadah", "qongiz", "sichqon", "tipratikan", "pat"];
+  var TF_NUR = ["243,213,143", "120,175,255", "240,110,100"];
+  var TF_OP = [{ k: "r", d: 1 }, { k: "r", d: 2 }, { k: "s", d: 1 }, { k: "s", d: -1 }, { k: "n", d: 1 }, { k: "n", d: -1 }, { k: "c", d: 1 }, { k: "o", d: 1 }, { k: "o", d: 2 }];
+  var tf = null;      // {n, bell, savol:[{a, a2, b, opts:[item], ok}], i, ok, t0, lim, tm, lock}
+  function tfMgImg(k) { return IMG_DIR + "makgonagall/" + k + ".webp"; }
+  function tfKayf(k) { ["tf-mg-im", "tf-mg-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = tfMgImg(k); } }); }
+  function tfStop() { if (tf) { clearInterval(tf.tm); tf.tm = 0; } }
+  function tfQolla(it, qoida) {
+    var q = { o: it.o, c: it.c, s: it.s, n: it.n, r: it.r };
+    qoida.forEach(function (op) {
+      if (op.k === "o") { q.o = (q.o + op.d + 6) % 6; } else if (op.k === "c") { q.c = (q.c + op.d + 3) % 3; }
+      else if (op.k === "r") { q.r = (q.r + op.d + 4) % 4; } else if (op.k === "s") { q.s += op.d; } else { q.n += op.d; }
+    });
+    return q;
+  }
+  function tfYaroqli(q) { return q.s >= 0 && q.s <= 2 && q.n >= 1 && q.n <= 3; }
+  function tfKalit(q) { return [q.o, q.c, q.s, q.n, q.r].join("-"); }
+  function tfEl(q, cls) {
+    var d = drEl("div", "tf-it" + (cls ? " " + cls : ""));
+    d.style.setProperty("--tf", TF_NUR[q.c]);
+    for (var i = 0; i < q.n; i++) {
+      var im = document.createElement("img");
+      im.alt = ""; im.src = IMG_DIR + "trans/" + TF_OBJ[q.o] + ".webp";
+      im.style.height = [26, 38, 50][q.s] + "%";
+      im.style.transform = "rotate(" + q.r * 90 + "deg)";
+      d.appendChild(im);
+    }
+    return d;
+  }
+  function tfPlan(n, urug) {
+    var bell = urug != null, s0 = bell ? urug : n * 83, soni = bell ? 8 : 5 + Math.min(3, Math.floor((n - 1) / 9));
+    var m = bell ? 2 : n <= 12 ? 1 : n <= 24 ? 2 : 3, var_ = !bell && n > 24 ? 6 : 4, savol = [], i, g, k;
+    var rnd = function (z) { return afRnd(s0 + z * 3.17); };
+    var tasodif = function (z) { return { o: Math.floor(rnd(z) * 6), c: Math.floor(rnd(z + 1) * 3), s: Math.floor(rnd(z + 2) * 3), n: 1 + Math.floor(rnd(z + 3) * 3), r: Math.floor(rnd(z + 4) * 4) }; };
+    for (i = 0; i < soni; i++) {
+      var z = i * 97, qoida = [], band = {}, a, b;
+      g = 0;
+      while (qoida.length < m && g < 80) { var op = TF_OP[Math.floor(rnd(z + 10 + g) * TF_OP.length)]; g++; if (!band[op.k]) { band[op.k] = 1; qoida.push(op); } }
+      g = 0;
+      do { a = tasodif(z + 200 + g * 5); g++; } while (!tfYaroqli(tfQolla(a, qoida)) && g < 60);
+      g = 0;
+      do { b = tasodif(z + 600 + g * 5); g++; } while ((!tfYaroqli(tfQolla(b, qoida)) || b.o === a.o) && g < 80);
+      var togri = tfQolla(b, qoida), opts = [togri], bor = {};
+      bor[tfKalit(togri)] = 1;
+      var nomzod = [b];                                              // o'zgarmagan buyum
+      qoida.forEach(function (op2) { if (m > 1) { nomzod.push(tfQolla(b, [op2])); } nomzod.push(tfQolla(b, qoida.filter(function (x) { return x !== op2; }).concat([{ k: op2.k, d: -op2.d }]))); });
+      for (k = 0; k < 14; k++) {                                     // to'g'ri javobning bitta belgisi boshqacha
+        var bel = ["o", "c", "s", "n", "r"][Math.floor(rnd(z + 900 + k * 2) * 5)];
+        nomzod.push(tfQolla(togri, [{ k: bel, d: rnd(z + 901 + k * 2) < 0.5 ? 1 : -1 }]));
+      }
+      nomzod.forEach(function (q) { if (opts.length < var_ && tfYaroqli(q) && !bor[tfKalit(q)]) { bor[tfKalit(q)] = 1; opts.push(q); } });
+      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor(rnd(z + 1200 + g) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
+      savol.push({ a: a, a2: tfQolla(a, qoida), b: b, opts: opts, ok: opts.indexOf(togri) });
+    }
+    return { savol: savol, lim: bell ? 0 : Math.round(Math.max(7000, 15000 - n * 200)) };
+  }
+  function tfOpen(bell, n) {
+    var st = drData && drData.trans, x = drX(), f = drFan("trans"), urug = null, i;
+    if (bell === true) { var it = String((st && st.contest && st.contest.item) || "t1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 17); } }
+    var plan = tfPlan(n || 1, urug);
+    tfStop();
+    tf = { n: n || 1, bell: bell === true, savol: plan.savol, lim: plan.lim, i: 0, ok: 0, t0: 0, tm: 0, lock: false };
+    drShowGame("scr-trans");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = tfMgImg(k); });
+    TF_OBJ.forEach(function (k) { var im = new Image(); im.src = IMG_DIR + "trans/" + k + ".webp"; });
+    $("tf-kick").textContent = f.nom[lang];
+    $("tf-ttl").textContent = f.ust[lang];
+    $("tf-today").textContent = tf.bell ? x.bell : x.lvl(tf.n);
+    $("tf-res").classList.add("hidden");
+    $("tf-stage").classList.add("hidden");
+    $("tf-intro").classList.toggle("hidden", tf.bell);
+    if (tf.bell) { tfGo(); return; }
+    $("tf-intro-t").textContent = x.tfI[tf.n <= 12 ? 0 : tf.n <= 24 ? 1 : 2];
+    $("tf-go").textContent = x.tfGo;
+    tfKayf("maslahat");
+  }
+  function tfGo() {
+    $("tf-intro").classList.add("hidden");
+    $("tf-stage").classList.remove("hidden");
+    $("tf-sham").classList.toggle("hidden", tf.bell);
+    tf.i = 0;
+    tfStep();
+  }
+  function tfHead() {
+    var x = drX();
+    $("tf-step").textContent = x.tfStep(Math.min(tf.i + 1, tf.savol.length), tf.savol.length) + (bl && tf.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+  function tfStep() {
+    var x = drX(), me = tf, q = tf.savol[tf.i], qoida = $("tf-qoida"), box = $("tf-opts");
+    tf.lock = false;
+    qoida.innerHTML = "";
+    var q1 = drEl("div", "tf-qator"), q2 = drEl("div", "tf-qator");
+    q1.appendChild(tfEl(q.a)); q1.appendChild(drEl("span", "tf-ok", "→")); q1.appendChild(tfEl(q.a2));
+    q2.appendChild(tfEl(q.b)); q2.appendChild(drEl("span", "tf-ok", "→")); q2.appendChild(drEl("div", "tf-it savol", "?"));
+    qoida.appendChild(q1); qoida.appendChild(q2);
+    box.className = "tf-opts" + (q.opts.length > 4 ? " olti" : "");
+    box.innerHTML = "";
+    q.opts.forEach(function (o, k) {
+      var b = drEl("button", "tf-o");
+      b.type = "button";
+      b.appendChild(tfEl(o));
+      b.addEventListener("click", function () { tfPick(k, b); });
+      box.appendChild(b);
+    });
+    $("tf-hint").textContent = x.tfHint;
+    $("tf-hint").classList.remove("bad");
+    tfKayf("maslahat");
+    $("tf-sham-w").style.width = "100%";
+    $("tf-sham").classList.remove("ochdi", "oz");
+    tfHead();
+    tf.t0 = Date.now();
+    clearInterval(tf.tm);
+    tf.tm = setInterval(function () {
+      if (tf !== me || $("scr-trans").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      if (tf.bell) { tfHead(); return; }
+      if (tf.lock) { return; }
+      var p = Math.max(0, 1 - (Date.now() - tf.t0) / tf.lim);
+      $("tf-sham-w").style.width = (p * 100).toFixed(1) + "%";
+      $("tf-sham").classList.toggle("oz", p > 0 && p < 0.3);
+      $("tf-sham").classList.toggle("ochdi", p <= 0);
+      if (p <= 0) { tfPick(-1, null); }
+    }, 100);
+  }
+  function tfPick(k, btn) {
+    if (!tf || tf.lock) { return; }
+    var x = drX(), me = tf, q = tf.savol[tf.i], togri = k === q.ok;
+    tf.lock = true;
+    var bs = $("tf-opts").children;
+    if (bs[q.ok]) { bs[q.ok].classList.add("togri"); }
+    if (togri) {
+      tf.ok++;
+      $("tf-hint").textContent = x.tfOk[tf.i % x.tfOk.length];
+      $("tf-hint").classList.remove("bad");
+      tfKayf((Date.now() - tf.t0) < (tf.lim || 8000) * 0.5 ? "zor" : "yaxshi");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    } else {
+      if (btn) { btn.classList.add("xato"); }
+      if (bl && tf.bell) { bl.xato++; }
+      $("tf-hint").textContent = k < 0 ? x.tfLate : x.tfBad;
+      $("tf-hint").classList.add("bad");
+      tfKayf("xafa");
+      try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+    }
+    setTimeout(function () {
+      if (tf !== me) { return; }
+      tf.i++;
+      if (tf.i >= tf.savol.length) { tfEnd(); return; }
+      tfStep();
+    }, tf.bell ? 500 : togri ? 1000 : 1700);
+  }
+  function tfEnd() {
+    var x = drX(), me = tf, daraja = tf.n, box = $("tf-res"), jami = tf.savol.length;
+    tfStop();
+    $("tf-stage").classList.add("hidden");
+    if (tf.bell) { blFinish(box); return; }
+    var s = Math.round(100 * tf.ok / jami), baho = s >= 90 ? 5 : s >= 78 ? 4 : s >= 60 ? 3 : s >= 40 ? 2 : 1;
+    var sc = { baho: baho, izoh: x.tfStat(tf.ok, jami) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (tf !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.tfB[baho - 1] + "»", "trans", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.tfB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { tfOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { tf = null; fanOpen("trans"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = tfMgImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.tfMgN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("trans", daraja, baho); drDone("trans", daraja, show); } else { show(null); }
+  }
+
+  /* ================= QOBILIYATLAR: har fan boshqa qobiliyatni mashq qildiradi (egasi, 2026-10-08) =================
+     «Brain games»dagi kabi: odam qaysi sohasi kuchli, qaysisi ustida ishlash kerakligini ko'radi. Daraja (0-100) =
+     70% o'tilgan darslar ulushi + 30% shu darslardagi o'rtacha baho (baho shu qurilmada - DR_BAHO_K; bahosi yo'q fanda
+     faqat darslar). Xotira ikki fandan (Damlamalar, Maxluqlar) o'rtacha. Yangi fan qo'shilsa QOB ga yozing. */
+  var QOB = [
+    { id: "bilim", fan: ["tarix"], nom: ["Bilim", "Знания", "Knowledge"] },
+    { id: "aniqlik", fan: ["afsun"], nom: ["Qo'l aniqligi", "Точность руки", "Precision"] },
+    { id: "xotira", fan: ["iksir", "maxluq"], nom: ["Xotira", "Память", "Memory"] },
+    { id: "tezlik", fan: ["himoya"], nom: ["Tezlik", "Скорость", "Speed"] },
+    { id: "koord", fan: ["uchish"], nom: ["Koordinatsiya", "Координация", "Coordination"] },
+    { id: "fazo", fan: ["astro"], nom: ["Fazoviy tasavvur", "Пространство", "Spatial sense"] },
+    { id: "diqqat", fan: ["osimlik"], nom: ["Diqqat", "Внимание", "Attention"] },
+    { id: "mantiq", fan: ["trans"], nom: ["Mantiq", "Логика", "Logic"] }
+  ];
+  function qobFanBall(fan) {
+    var st = drData && drData[fan];
+    if (!st || !st.total) { return 0; }
+    var ul = Math.min(1, st.level / st.total), jam = 0, son = 0, b;
+    if (DR_BAHO_K[fan]) { for (var k = 1; k <= st.level; k++) { b = drBahoGet(fan, k); if (b) { jam += b; son++; } } }
+    return Math.round(100 * (0.7 * ul + 0.3 * (son ? ul * (jam / son - 1) / 4 : ul)));
+  }
+  function qobBall(q) { var j = 0; q.fan.forEach(function (f) { j += qobFanBall(f); }); return Math.round(j / q.fan.length); }
+  function qobOpen() {
+    drShowGame("scr-qob");
+    qobRender();
+  }
+  function qobRender() {
+    var x = drX(), li = lang === "ru" ? 1 : lang === "en" ? 2 : 0, N = QOB.length, i, a, nuq = "", tur = "", yoz = "", eng = null;
+    var ball = QOB.map(qobBall);
+    $("qo-kick").textContent = x.qobK;
+    $("qo-ttl").textContent = x.qobT;
+    $("qo-note").textContent = x.qobS;
+    for (var h = 1; h <= 4; h++) {       // to'r halqalari
+      var hal = "";
+      for (i = 0; i < N; i++) { a = -Math.PI / 2 + i * 2 * Math.PI / N; hal += (i ? "L" : "M") + (110 + Math.cos(a) * 70 * h / 4).toFixed(1) + " " + (110 + Math.sin(a) * 70 * h / 4).toFixed(1); }
+      tur += '<path class="qo-tur" d="' + hal + 'Z"/>';
+    }
+    for (i = 0; i < N; i++) {
+      a = -Math.PI / 2 + i * 2 * Math.PI / N;
+      var r = 70 * Math.max(4, ball[i]) / 100;
+      nuq += (i ? "L" : "M") + (110 + Math.cos(a) * r).toFixed(1) + " " + (110 + Math.sin(a) * r).toFixed(1);
+      tur += '<path class="qo-oq" d="M110 110L' + (110 + Math.cos(a) * 70).toFixed(1) + " " + (110 + Math.sin(a) * 70).toFixed(1) + '"/>';
+      var tx = 110 + Math.cos(a) * 90, ty = 110 + Math.sin(a) * 84;
+      yoz += '<text x="' + tx.toFixed(1) + '" y="' + (ty + 3).toFixed(1) + '" text-anchor="' + (Math.abs(Math.cos(a)) < 0.3 ? "middle" : Math.cos(a) > 0 ? "start" : "end") + '">' + QOB[i].nom[li] + "</text>";
+      if (eng == null || ball[i] < ball[eng]) { eng = i; }
+    }
+    $("qo-radar").innerHTML = '<svg viewBox="-34 0 288 220" aria-hidden="true">' + tur + '<path class="qo-shakl" d="' + nuq + 'Z"/>' + yoz + "</svg>";
+    var box = $("qo-list");
+    box.innerHTML = "";
+    QOB.forEach(function (q, j) {
+      var row = drEl("button", "qo-row"), fanlar = q.fan.map(function (f) { return drFan(f).nom[lang]; }).join(" · ");
+      row.type = "button";
+      var t = drEl("span", "qo-tx");
+      t.appendChild(drEl("b", "", q.nom[li]));
+      t.appendChild(drEl("small", "", fanlar + " · " + x.qobUn[ball[j] >= 90 ? 4 : ball[j] >= 65 ? 3 : ball[j] >= 35 ? 2 : ball[j] >= 10 ? 1 : 0]));
+      var bar = drEl("span", "qo-bar"), bi = drEl("i");
+      bi.style.width = ball[j] + "%";
+      bar.appendChild(bi);
+      t.appendChild(bar);
+      row.appendChild(t);
+      row.appendChild(drEl("span", "qo-n", String(ball[j])));
+      row.addEventListener("click", function () { fanOpen(q.fan[0]); });
+      box.appendChild(row);
+    });
+    var zf = QOB[eng], zfan = zf.fan.slice().sort(function (p, q2) { return qobFanBall(p) - qobFanBall(q2); })[0];
+    $("qo-zaif").textContent = x.qobZaif(zf.nom[li]);
+    $("qo-go").textContent = x.qobGo(drFan(zfan).nom[lang]);
+    $("qo-go").onclick = function () { fanOpen(zfan); };
+    $("qo-esl").textContent = x.qobEsl;
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
@@ -3168,9 +3432,10 @@
     $("yl-go").addEventListener("click", function () { if (yl) { ylGo(); } });
     $("os-back").addEventListener("click", function () { var b = os && os.bell; osStop(); os = null; blAbort(); if (b) { blOpen("osimlik"); } else { fanOpen("osimlik"); } });
     $("os-go").addEventListener("click", function () { if (os) { osGo(); } });
-    var ylc = $("yl-canvas"), ylBos = function (ev) { var r = ylc.getBoundingClientRect(); ylTap(ev.clientX - r.left, ev.clientY - r.top); try { ev.preventDefault(); } catch (e) {} };
-    if (window.PointerEvent) { ylc.addEventListener("pointerdown", ylBos); }
-    else { ylc.addEventListener("touchstart", function (ev) { var t = ev.touches && ev.touches[0]; if (t) { ylBos({ clientX: t.clientX, clientY: t.clientY, preventDefault: function () { ev.preventDefault(); } }); } }, { passive: false }); }
+    $("tf-back").addEventListener("click", function () { var b = tf && tf.bell; tfStop(); tf = null; blAbort(); if (b) { blOpen("trans"); } else { fanOpen("trans"); } });
+    $("tf-go").addEventListener("click", function () { if (tf) { tfGo(); } });
+    $("qo-back").addEventListener("click", function () { drOpen(); });
+    $("dr-qob").addEventListener("click", qobOpen);
     $("fn-qr").addEventListener("click", qrOpen);
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
