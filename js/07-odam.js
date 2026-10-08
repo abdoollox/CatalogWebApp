@@ -42,7 +42,7 @@
   function odamSample(uid, hint) {
     return { ok: true, uid: uid, me: false, name: (hint && hint.name) || "Germiona", house: (hint && hint.house) || "gryffindor",
              since: "2026-09-14", online: false, seen: new Date(Date.now() - 47 * 60000).toISOString(), wand: { wood: "holly", core: "phoenix", flex: "rigid" }, patronus: "otter",
-             points: { week: 45, all: 310 }, films: 9, cards: 6, chess: { rating: 1284, games: 14, wins: 9 },
+             points: { week: 45, all: 310 }, films: 9, cards: 6, creatures: [{ kod: "gippo", stage: 2 }, { kod: "boyogli", stage: 1 }, { kod: "niffler", stage: 0 }], chess: { rating: 1284, games: 14, wins: 9 },
              badges: ["film_1", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "sandiq_1", "dost_1"], badges_total: 19 };
   }
 
@@ -167,6 +167,14 @@
       nb.appendChild(odamEl("b", "od-yoq", x.noBadges));
     }
     box.appendChild(nb);
+
+    // Qo'riqxonasi: maxluqlari (yoshiga mos rasm bilan)
+    if (d.creatures && d.creatures.length) {
+      box.appendChild(odamEl("span", "od-mx-t", ({ uz: "Qo'riqxonasi", ru: "Питомник", en: "Menagerie" })[lang] || "Qo'riqxonasi"));
+      var mxr = odamEl("div", "od-mx");
+      d.creatures.forEach(function (c) { var mi = document.createElement("img"); mi.alt = ""; mi.src = IMG_DIR + "qoriq/" + c.kod + "-" + c.stage + ".webp"; mxr.appendChild(mi); });
+      box.appendChild(mxr);
+    }
 
     // Kartochkalar va shaxmat - bitta qatorda
     var kich = odamEl("div", "od-stats two");

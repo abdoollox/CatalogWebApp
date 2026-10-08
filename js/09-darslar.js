@@ -103,6 +103,14 @@
           mxBad: "Yo'q, bu uning yemishi emas.", mxBir: "Bular bir xil turdagi kartalar — maxluqqa yemish toping.", mxXgN: "Xagrid",
           mxStat: function (m, k) { return "Xato juftlik: " + m + " · " + (k ? "Sham o'chdi" : "Vaqtida"); },
           mxXgB: ["Maxluqlar och qoldi. Hechqisi yo'q, yana urinib ko'ring.", "Hali chalkashtiryapsiz. Shoshilmang, qaytadan.", "Yomon emas! Hech kim tishlamadi — yaxshi boshlanish.", "Zo'r! Maxluqlar sizni yoqtirib qoldi.", "Qoyil! Sizdan haqiqiy maxluqshunos chiqadi."],
+          qrT: "Qo'riqxona", qrSum: function (a, b) { return a + " / " + b + " maxluq"; }, qrGal: function (n) { return n + " galleon"; },
+          qrTip: "Maxluqlar darslardan keladi: har uch darsda bittasi. Har birini kuniga bir marta boqing — o'sadi. Katta maxluq har yettinchi boqishda galleon keltiradi.",
+          qrSt: ["Bola", "O'smir", "Katta"], qrNext: function (n, st) { return "Yana " + n + " marta boqilsa — " + st.toLowerCase(); }, qrGift: function (n) { return "Sovg'agacha " + n + " marta boqish"; },
+          qrFood: function (nom, n) { return nom + ": " + n + " porsiya"; }, qrFeed: "Boqish", qrFed: "Bugun to'ydi", qrBuy: function (g, n) { return "Yemish · " + g + " galleon (" + n + " ta)"; },
+          qrAsk: function (yem, g, n, bor) { return "Yemish olinsinmi?\n\n«" + yem + "» — " + n + " porsiya, " + g + " galleon. Sizda " + bor + " galleon bor."; },
+          qrPoor: "Galleon yetmaydi. Galleon hafta yakunida kubokdagi ballaringiz uchun beriladi.", qrLock: function (n) { return n + "-darsdan keyin"; }, qrRare: "Bellashuvda birinchi uchlikka kiring",
+          qrGrew: function (nom, st) { return nom + " o'sdi — endi " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " sizga 1 galleon keltirdi!"; }, qrYum: function (nom) { return nom + " to'ydi."; },
+          qrOpenS: function (n) { return n ? n + " ta maxluq sizni kutmoqda" : "Birinchi maxluq 3-darsdan keyin keladi"; }, qrNew: function (nom) { return "Yangi maxluq: " + nom + "! U qo'riqxonangizda kutmoqda."; }, qrGo: "Qo'riqxonaga",
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -161,6 +169,14 @@
           mxBad: "Нет, это не его корм.", mxBir: "Это карты одного вида — найдите существу корм.", mxXgN: "Хагрид",
           mxStat: function (m, k) { return "Неверных пар: " + m + " · " + (k ? "Свеча погасла" : "Вовремя"); },
           mxXgB: ["Существа остались голодными. Ничего, попробуйте ещё раз.", "Пока путаете. Не спешите, давайте заново.", "Неплохо! Никто не укусил — хорошее начало.", "Здорово! Вы понравились существам.", "Вот это да! Из вас выйдет настоящий знаток существ."],
+          qrT: "Питомник", qrSum: function (a, b) { return "Существ: " + a + " / " + b; }, qrGal: function (n) { return n + " галлеонов"; },
+          qrTip: "Существа приходят с уроков: одно за каждые три урока. Кормите каждого раз в день — оно растёт. Взрослое существо за каждое седьмое кормление приносит галлеон.",
+          qrSt: ["Малыш", "Подросток", "Взрослый"], qrNext: function (n, st) { return "Ещё кормлений: " + n + " — и " + st.toLowerCase(); }, qrGift: function (n) { return "До подарка кормлений: " + n; },
+          qrFood: function (nom, n) { return nom + ": порций — " + n; }, qrFeed: "Покормить", qrFed: "Сегодня сыт", qrBuy: function (g, n) { return "Корм · " + g + " галлеон (" + n + " шт.)"; },
+          qrAsk: function (yem, g, n, bor) { return "Купить корм?\n\n«" + yem + "» — порций: " + n + ", цена: " + g + " галлеон. У вас галлеонов: " + bor + "."; },
+          qrPoor: "Не хватает галлеонов. Галлеоны выдают в конце недели за очки в кубке.", qrLock: function (n) { return "После урока " + n; }, qrRare: "Войдите в тройку лучших в состязании",
+          qrGrew: function (nom, st) { return nom + " вырос — теперь " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " принёс вам 1 галлеон!"; }, qrYum: function (nom) { return nom + " сыт."; },
+          qrOpenS: function (n) { return n ? "Вас ждут существа: " + n : "Первое существо появится после 3-го урока"; }, qrNew: function (nom) { return "Новое существо: " + nom + "! Оно ждёт вас в питомнике."; }, qrGo: "В питомник",
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -220,6 +236,14 @@
           mxBad: "No, that's not its food.", mxBir: "Those are the same kind of card — find the creature its food.", mxXgN: "Hagrid",
           mxStat: function (m, k) { return "Wrong pairs: " + m + " · " + (k ? "The candle went out" : "In time"); },
           mxXgB: ["The creatures went hungry. Never mind, have another go.", "Still mixing them up. Take your time, try again.", "Not bad! Nobody got bitten — a good start.", "Brilliant! The creatures have taken to you.", "Blimey! You'll make a proper creature expert."],
+          qrT: "Menagerie", qrSum: function (a, b) { return a + " / " + b + " creatures"; }, qrGal: function (n) { return n + " Galleons"; },
+          qrTip: "Creatures come from lessons: one for every three lessons. Feed each once a day and it grows. A grown creature brings a Galleon on every seventh feeding.",
+          qrSt: ["Baby", "Youngster", "Adult"], qrNext: function (n, st) { return n + " more feedings to " + st.toLowerCase(); }, qrGift: function (n) { return n + " feedings until a gift"; },
+          qrFood: function (nom, n) { return nom + ": " + n + " portions"; }, qrFeed: "Feed", qrFed: "Fed today", qrBuy: function (g, n) { return "Food · " + g + " Galleon (" + n + ")"; },
+          qrAsk: function (yem, g, n, bor) { return "Buy food?\n\n“" + yem + "” — " + n + " portions for " + g + " Galleon. You have " + bor + " Galleons."; },
+          qrPoor: "Not enough Galleons. Galleons are paid at the end of each week for your House Cup points.", qrLock: function (n) { return "After lesson " + n; }, qrRare: "Finish in the contest top three",
+          qrGrew: function (nom, st) { return nom + " has grown — now " + st.toLowerCase() + "!"; }, qrGot: function (nom) { return nom + " brought you 1 Galleon!"; }, qrYum: function (nom) { return nom + " is full."; },
+          qrOpenS: function (n) { return n ? n + " creatures are waiting for you" : "Your first creature arrives after lesson 3"; }, qrNew: function (nom) { return "A new creature: " + nom + "! It is waiting in your menagerie."; }, qrGo: "To the menagerie",
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -337,7 +361,7 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -409,7 +433,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -488,7 +512,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -647,7 +671,7 @@
   function fanOpen(id) {
     fanId = id;
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -659,6 +683,11 @@
     $("fn-kick").textContent = f.ust[lang];
     $("fn-ttl").textContent = f.nom[lang];
     $("fn-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
+    var qb = $("fn-qr");
+    if (qb) {
+      qb.classList.toggle("hidden", fanId !== "maxluq");
+      if (fanId === "maxluq") { $("fn-qr-t").textContent = x.qrT; $("fn-qr-s").textContent = x.qrOpenS(Math.min(11, Math.floor((st ? st.level : 0) / 3))); }
+    }
     var im = $("fn-im");
     im.src = drImg(f.id);
     $("scr-fan").style.setProperty("--dr-rgb", f.rgb);
@@ -707,7 +736,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1841,7 +1870,7 @@
     hmStop();
     hm = { n: n || 1, bell: bell === true, waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
            i: 0, lives: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
-    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq");
+    drShowGame("scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -2438,6 +2467,16 @@
     var show = function (yangi) {
       if (mx !== me) { return; }
       if (otdi) { drResult(box, "«" + x.mxXgB[baho - 1] + "»", "maxluq", daraja, yangi); }
+      if (otdi && yangi === true && daraja % 3 === 0 && daraja / 3 <= 11) {      // har uch darsda yangi maxluq (hpqoriq)
+        var yk = QR_TARTIB[daraja / 3 - 1], qg = drEl("button", "dr-btn", x.qrGo), birinchi = box.querySelector(".dr-btn");
+        qg.type = "button";
+        qg.addEventListener("click", function () { mx = null; qrOpen(); });
+        var yim = document.createElement("img");
+        yim.className = "qr-yangi"; yim.alt = ""; yim.src = qrImg(yk, 0);
+        box.insertBefore(yim, birinchi);
+        box.insertBefore(drEl("b", "dr-res-p", x.qrNew(mxTx(yk)[0])), birinchi);
+        box.insertBefore(qg, birinchi);
+      }
       else {
         box.innerHTML = "";
         box.appendChild(drEl("p", "dr-res-t", "«" + x.mxXgB[baho - 1] + "»"));
@@ -2463,6 +2502,133 @@
     if (otdi) { drBahoSave("maxluq", daraja, baho); drDone("maxluq", daraja, show); } else { show(null); }
   }
 
+  /* ================= QO'RIQXONA: o'quvchining maxluqlari (server: hpqoriq.py, /api/qoriq) =================
+     Maxluq darslardan keladi (har uch darsda bitta; ajdar bolasi - bellashuv uchligidan), yemish galleonga olinadi
+     (1 galleon = 5 porsiya), kuniga bir marta boqiladi: 3 marta - o'smir, 10 marta - katta; katta maxluq har 7-boqishda
+     1 galleon keltiradi. Boqilmasa jazo yo'q. Rasmlar: img/qoriq/<kod>-<0|1|2>.webp (bola / o'smir / katta). */
+  var API_QORIQ = "https://bot.tizimshunos.uz/api/qoriq";
+  var QR_TARTIB = ["gippo", "boyogli", "niffler", "flobber", "testral", "qurbaqa", "kalmar", "boutrakl", "salamandra", "mushuk", "kalamush", "ajdar"];   // bot: hpqoriq.MAXLUQLAR
+  var qrData = null, qrBusy = false, qrLocal = null;
+  function qrImg(k, st) { return IMG_DIR + "qoriq/" + k + "-" + (st || 0) + ".webp"; }
+  function qrSample(body) {
+    if (!qrLocal) {
+      qrLocal = { gal: 4, m: {} };
+      QR_TARTIB.forEach(function (k, i) { if (i < 5) { qrLocal.m[k] = { fed: [0, 4, 11, 2, 9][i], food: [0, 3, 6, 0, 2][i], today: i === 1 }; } });
+    }
+    var L = qrLocal, res = { ok: true }, k = body && (body.buy || body.feed), o = k && L.m[k];
+    if (body && body.buy) { if (L.gal < 1) { res.ok = false; res.error = "pul"; } else { L.gal--; o.food += 5; } }
+    if (body && body.feed) {
+      if (o.today) { res.ok = false; res.error = "bugun"; } else if (o.food < 1) { res.ok = false; res.error = "yemish"; }
+      else {
+        var oldin = o.fed >= 10 ? 2 : o.fed >= 3 ? 1 : 0;
+        o.fed++; o.food--; o.today = true;
+        var endi = o.fed >= 10 ? 2 : o.fed >= 3 ? 1 : 0;
+        res.fed = k; res.grew = endi !== oldin ? endi : null; res.gift = o.fed > 10 && (o.fed - 10) % 7 === 0 ? 1 : 0;
+        L.gal += res.gift;
+      }
+    }
+    res.gal = L.gal;
+    res.prices = { gal: 1, n: 5, teen: 3, adult: 10, gift_every: 7, gift: 1 };
+    res.list = QR_TARTIB.map(function (kod, i) {
+      var q = L.m[kod], b = q ? q.fed : 0, st = b >= 10 ? 2 : b >= 3 ? 1 : 0;
+      return { kod: kod, got: !!q, need: kod === "ajdar" ? 0 : (i + 1) * 3, fed: b, stage: st, next: st === 0 ? 3 - b : st === 1 ? 10 - b : 0,
+               food: q ? q.food : 0, today: !!(q && q.today), gift: st === 2 ? 7 - (b - 10) % 7 : 0 };
+    });
+    return res;
+  }
+  function qrPost(body, cb) {
+    if (!window.fetch) { return; }
+    window.fetch(API_QORIQ, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": drInit() }, body: JSON.stringify(body || {}) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { cb(res && res.list ? res : (MS_LOCAL ? qrSample(body) : res)); })
+      ["catch"](function () { cb(MS_LOCAL ? qrSample(body) : null); });
+  }
+  function qrOpen() {
+    var x = drX();
+    drShowGame("scr-qoriq");
+    $("qr-kick").textContent = drFan("maxluq").ust[lang];
+    $("qr-ttl").textContent = x.qrT;
+    $("qr-tip").textContent = x.qrTip;
+    $("qr-xg").src = mxXgImg("maslahat");
+    qrRender();
+    qrPost({}, function (res) { if (res && res.list) { qrData = res; qrRender(); } else if (!qrData) { showToast(x.fail, "err"); } });
+  }
+  function qrDe(matn, kayf) { $("qr-tip").textContent = matn; $("qr-xg").src = mxXgImg(kayf || "zor"); }
+  function qrAct(body, kod) {
+    if (qrBusy) { return; }
+    var x = drX(), nom = mxTx(kod)[0];
+    qrBusy = true;
+    qrPost(body, function (res) {
+      qrBusy = false;
+      if (!res || !res.list) { showToast(x.fail, "err"); return; }
+      qrData = res;
+      qrRender();
+      if (res.error === "pul") { showToast(x.qrPoor, "err"); qrDe(x.qrPoor, "xafa"); return; }
+      if (res.error) { return; }
+      if (body.feed) {
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+        qrDe(res.gift ? x.qrGot(nom) : res.grew != null ? x.qrGrew(nom, x.qrSt[res.grew]) : x.qrYum(nom), res.gift || res.grew != null ? "zor" : "yaxshi");
+        if (res.gift || res.grew != null) { showToast(res.gift ? x.qrGot(nom) : x.qrGrew(nom, x.qrSt[res.grew])); }
+        var el = document.querySelector('.qr-c[data-k="' + kod + '"]');
+        if (el) { el.classList.add(res.grew != null ? "osdi" : "yedi"); }
+      }
+    });
+  }
+  function qrRender() {
+    var x = drX(), box = $("qr-list"), d = qrData;
+    box.innerHTML = "";
+    if (!d) { $("qr-sum").textContent = ""; $("qr-gal").textContent = ""; return; }
+    var bor = d.list.filter(function (q) { return q.got; }).length, P = d.prices || { gal: 1, n: 5 };
+    $("qr-sum").textContent = x.qrSum(bor, d.list.length);
+    $("qr-gal").textContent = x.qrGal(d.gal);
+    d.list.forEach(function (q) {
+      var t = mxTx(q.kod), c = drEl("div", "qr-c" + (q.got ? "" : " yopiq") + (q.stage === 2 ? " katta" : ""));
+      c.setAttribute("data-k", q.kod);
+      var im = document.createElement("img");
+      im.className = "qr-im"; im.alt = ""; im.src = qrImg(q.kod, q.got ? q.stage : 2);
+      c.appendChild(im);
+      var tx = drEl("div", "qr-tx");
+      tx.appendChild(drEl("b", "", q.got ? t[0] : "???"));
+      if (!q.got) {
+        tx.appendChild(drEl("small", "qr-lock", q.need ? x.qrLock(q.need) : x.qrRare));
+        c.appendChild(tx); box.appendChild(c);
+        return;
+      }
+      tx.appendChild(drEl("span", "qr-st", x.qrSt[q.stage]));
+      var jami = q.stage === 0 ? 3 : 7, qilingan = q.stage === 0 ? q.fed : q.stage === 1 ? q.fed - 3 : 7 - q.gift;
+      var bar = drEl("span", "qr-bar"), bi = drEl("i");
+      bi.style.width = Math.round(100 * Math.max(0, qilingan) / jami) + "%";
+      bar.appendChild(bi);
+      tx.appendChild(bar);
+      tx.appendChild(drEl("small", "", q.stage === 2 ? x.qrGift(q.gift) : x.qrNext(q.next, x.qrSt[q.stage + 1])));
+      var fd = drEl("span", "qr-fd"), fi = document.createElement("img");
+      fi.alt = ""; fi.src = mxImg(q.kod, true);
+      fd.appendChild(fi);
+      fd.appendChild(drEl("small", "", x.qrFood(t[1], q.food)));
+      tx.appendChild(fd);
+      var bt = drEl("div", "qr-bt");
+      if (q.today) { bt.appendChild(drEl("span", "qr-fed", x.qrFed)); }
+      else if (q.food > 0) {
+        var fb = drEl("button", "qr-b asosiy", x.qrFeed);
+        fb.type = "button";
+        fb.addEventListener("click", function () { qrAct({ feed: q.kod }, q.kod); });
+        bt.appendChild(fb);
+      }
+      if (q.food < 1) {
+        var bb = drEl("button", "qr-b", x.qrBuy(P.gal, P.n));
+        bb.type = "button";
+        bb.addEventListener("click", function () {
+          if (qrData.gal < P.gal) { showToast(x.qrPoor, "err"); qrDe(x.qrPoor, "xafa"); return; }
+          testAsk(x.qrAsk(t[1], P.gal, P.n, qrData.gal), function () { qrAct({ buy: q.kod }, q.kod); });
+        });
+        bt.appendChild(bb);
+      }
+      tx.appendChild(bt);
+      c.appendChild(tx);
+      box.appendChild(c);
+    });
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
@@ -2473,6 +2639,8 @@
     $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
     $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else { fanOpen("maxluq"); } });
     $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });
+    $("qr-back").addEventListener("click", function () { fanOpen("maxluq"); });
+    $("fn-qr").addEventListener("click", qrOpen);
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
       var r = uc.getBoundingClientRect(), W = uch.w * 0.84;

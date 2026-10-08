@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2696,6 +2696,48 @@ body.kr-on .mp{display:none!important}
 #mx-stage .af-fl{margin-top:12px}
 #mx-stage .af-fl img{width:52px;height:52px}
 #mx-stage .hm-top{justify-content:center}
+/* Qo'riqxona */
+.fn-qr{display:flex;align-items:center;gap:12px;width:100%;margin:16px 0 0;padding:10px 14px 10px 10px;border-radius:18px;cursor:pointer;text-align:left;
+  border:1px solid rgba(170,140,110,.5);background:linear-gradient(120deg,rgba(170,140,110,.18),rgba(170,140,110,.05));color:var(--text)}
+.fn-qr img{flex:none;width:52px;height:52px;border-radius:50%}
+.fn-qr span{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.fn-qr b{font:600 20px/1.1 'Cormorant Garamond',serif}
+.fn-qr small{font:600 11.5px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.fn-qr::after{content:"›";font:400 24px/1 'Manrope',sans-serif;color:var(--gold)}
+.qr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 0}
+.qr-top b{font:600 22px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.qr-top span{padding:7px 12px;border-radius:99px;border:1px solid rgba(var(--gold-rgb),.45);background:rgba(var(--gold-rgb),.1);font:800 12px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+#scr-qoriq .af-fl{max-width:none;margin:14px 0 4px}
+#scr-qoriq .af-fl .dr-hint{font-size:12.5px}
+.qr-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.qr-c{display:flex;gap:12px;padding:12px;border-radius:20px;border:1px solid rgba(170,140,110,.4);background:linear-gradient(150deg,rgba(170,140,110,.12),rgba(18,20,26,.4))}
+.qr-c.katta{border-color:rgba(243,213,143,.6);box-shadow:0 0 18px rgba(243,213,143,.12)}
+.qr-im{flex:none;width:96px;height:96px;border-radius:50%;align-self:center}
+.qr-tx{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.qr-tx b{font:600 21px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.qr-tx small{font:600 11px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.qr-st{align-self:flex-start;padding:4px 9px;border-radius:99px;background:rgba(170,140,110,.25);font:800 10px/1 'Manrope',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#e6cfae}
+.qr-c.katta .qr-st{background:rgba(243,213,143,.25);color:#f3d58f}
+.qr-bar{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.qr-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#aa8c6e,#f3d58f);transition:width .5s}
+.qr-fd{display:flex;align-items:center;gap:6px}
+.qr-fd img{width:26px;height:26px;border-radius:50%}
+.qr-bt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:2px}
+.qr-b{padding:10px 14px;border-radius:99px;border:1px solid rgba(var(--gold-rgb),.45);background:none;color:var(--gold);cursor:pointer;font:800 12px/1 'Manrope',sans-serif}
+.qr-b.asosiy{border:0;background:linear-gradient(150deg,var(--gold),var(--gold-2));color:var(--gold-ink)}
+.qr-b:active{transform:scale(.97)}
+.qr-fed{font:800 11px/1 'Manrope',sans-serif;color:#8be28f}
+.qr-c.yopiq{opacity:.55;border-style:dashed}
+.qr-c.yopiq .qr-im{width:64px;height:64px;filter:brightness(0) drop-shadow(0 0 1px rgba(255,255,255,.35));opacity:.75}
+.qr-c.yopiq .qr-tx{justify-content:center}
+.qr-c.yedi .qr-im{animation:qrYedi .6s}
+.qr-c.osdi .qr-im{animation:qrOsdi 1s}
+@keyframes qrYedi{0%,100%{transform:scale(1)}40%{transform:scale(1.12) rotate(-4deg)}70%{transform:scale(.96) rotate(3deg)}}
+@keyframes qrOsdi{0%{transform:scale(.6);filter:brightness(2.2)}60%{transform:scale(1.18);filter:brightness(1.4)}100%{transform:scale(1);filter:none}}
+.qr-yangi{width:110px;height:110px;border-radius:50%}
+.od-mx{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.od-mx img{width:44px;height:44px;border-radius:50%}
+.od-mx-t{display:block;margin-top:16px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 /* Uchish darsi */
 .uc-box{display:flex;justify-content:center}
 #uc-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;border:1px solid rgba(224,178,91,.4);background:#141829}

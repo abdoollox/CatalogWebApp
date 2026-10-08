@@ -520,7 +520,9 @@
                dost_5: ["Do'stlar davrasi", "Taklifingiz bilan 5 do'st qo'shilsin"],
                shaxmat: ["Sehrgarlar shaxmati", "Shaxmatda bir o'quvchini yuting"],
                albom: ["Musiqa ixlosmandi", "Galleonga bitta albom oching"],
-               serial_1: ["Birinchi qism", "Serialning bitta qismini oling"] } },
+               serial_1: ["Birinchi qism", "Serialning bitta qismini oling"],
+               maxluq_1: ["Birinchi maxluq", "Qo'riqxonangizga birinchi maxluqni oling"], maxluq_katta: ["Katta maxluq", "Bitta maxluqni boqib, katta qilib o'stiring"],
+               maxluq_12: ["To'liq qo'riqxona", "O'n ikki maxluqning hammasini yig'ing"] } },
     ru: { sec: "Значки", got: "Получен", lock: "Ещё не получен", close: "Закрыть", fresh: "Новый значок",
           freshN: function (n) { return "Новых значков: " + n; }, freshP: "Все они хранятся в вашем профиле.",
           prog: function (a, b) { return a + " / " + b; }, of: "Значки", none: "Значков пока нет",
@@ -543,7 +545,9 @@
                dost_5: ["Круг друзей", "По вашему приглашению пришли 5 друзей"],
                shaxmat: ["Волшебные шахматы", "Победите ученика в шахматах"],
                albom: ["Ценитель музыки", "Откройте один альбом за галлеоны"],
-               serial_1: ["Первая серия", "Получите одну серию сериала"] } },
+               serial_1: ["Первая серия", "Получите одну серию сериала"],
+               maxluq_1: ["Первое существо", "Получите первое существо в питомник"], maxluq_katta: ["Взрослое существо", "Вырастите одно существо до взрослого"],
+               maxluq_12: ["Полный питомник", "Соберите всех двенадцать существ"] } },
     en: { sec: "Badges", got: "Earned", lock: "Not earned yet", close: "Close", fresh: "New badge",
           freshN: function (n) { return n + " new badges"; }, freshP: "They are all kept in your profile.",
           prog: function (a, b) { return a + " / " + b; }, of: "Badges", none: "No badges yet",
@@ -566,7 +570,9 @@
                dost_5: ["Circle of Friends", "5 friends join by your invitation"],
                shaxmat: ["Wizard's Chess", "Beat a student at chess"],
                albom: ["Music Lover", "Unlock one album with Galleons"],
-               serial_1: ["First Episode", "Get one episode of the series"] } }
+               serial_1: ["First Episode", "Get one episode of the series"],
+               maxluq_1: ["First Creature", "Get your first creature for the menagerie"], maxluq_katta: ["Grown Creature", "Feed one creature until it is fully grown"],
+               maxluq_12: ["Full Menagerie", "Collect all twelve creatures"] } }
   };
   // Toifalar (egasi: nishonlar ko'payadi, guruhlarga bo'linsin). Yangi nishon -> shu ro'yxatga.
   var NSH_GROUPS = [
@@ -575,7 +581,8 @@
     ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
-    ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }]
+    ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }],
+    ["maxluq", ["maxluq_1", "maxluq_katta", "maxluq_12"], { uz: "Qo'riqxona", ru: "Питомник", en: "Menagerie" }]
   ];
   var NSH_SUM = { uz: "nishon olingan", ru: "значков получено", en: "badges earned" };
   var nshData = null, nshAsked = false, nshSampleSeen = false;
