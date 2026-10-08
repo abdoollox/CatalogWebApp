@@ -26,7 +26,7 @@
       nom: { uz: "Transfiguratsiya", ru: "Трансфигурация", en: "Transfiguration" },
       ust: { uz: "Professor Makgonagall", ru: "Профессор Макгонагалл", en: "Professor McGonagall" } },
     { id: "himoya", on: true, rgb: "190,110,110",
-      nom: { uz: "Qora san'atlardan himoya", ru: "Защита от Тёмных искусств", en: "Defence Against the Dark Arts" },
+      nom: { uz: "Qora kuchlardan himoya", ru: "Защита от Тёмных искусств", en: "Defence Against the Dark Arts" },
       ust: { uz: "Professor Lyupin", ru: "Профессор Люпин", en: "Professor Lupin" },
       izoh: { uz: "Xavf yetib kelguncha to'g'ri himoya afsunini tanlang.", ru: "Выберите верное защитное заклинание, пока опасность не настигла.", en: "Pick the right defensive spell before the danger reaches you." } },
     { id: "osimlik", on: false, rgb: "140,180,90",
@@ -35,9 +35,10 @@
     { id: "astro", on: false, rgb: "130,130,220",
       nom: { uz: "Astronomiya", ru: "Астрономия", en: "Astronomy" },
       ust: { uz: "Professor Sinistra", ru: "Профессор Синистра", en: "Professor Sinistra" } },
-    { id: "uchish", on: false, rgb: "224,178,91",
+    { id: "uchish", on: true, rgb: "224,178,91",
       nom: { uz: "Uchish darsi", ru: "Полёты на мётлах", en: "Flying" },
-      ust: { uz: "Xuch xonim", ru: "Мадам Трюк", en: "Madam Hooch" } },
+      ust: { uz: "Xuch xonim", ru: "Мадам Трюк", en: "Madam Hooch" },
+      izoh: { uz: "Supurgini barmog'ingiz bilan boshqarib, halqalardan o'ting.", ru: "Управляйте метлой пальцем и пролетайте сквозь кольца.", en: "Steer the broom with your finger and fly through the hoops." } },
     { id: "maxluq", on: false, rgb: "170,140,110",
       nom: { uz: "Sehrli maxluqlar parvarishi", ru: "Уход за магическими существами", en: "Care of Magical Creatures" },
       ust: { uz: "Xagrid", ru: "Хагрид", en: "Hagrid" } }
@@ -91,6 +92,11 @@
           hmOld: "Yangi xavf yo'q. Endi ular ko'proq va tezroq keladi.", hmHint: "To'g'ri himoyani tanlang", hmOk: ["Ajoyib!", "Juda yaxshi!", "Xuddi shunday!"],
           hmBad: "Bu yordam bermaydi!", hmLate: "Kech qoldingiz!", hmLpN: "Professor Lyupin", hmStat: function (w, l) { return "Xato: " + w + " · Kechikish: " + l; },
           hmLpB: ["Hechqisi yo'q. Shokolad yeng va qaytadan urinib ko'ring.", "Hali tayyor emassiz, lekin buni o'rgansa bo'ladi. Yana bir marta.", "Qoniqarli. Xavf oldida o'zingizni yo'qotmadingiz.", "Juda yaxshi! Tezligingiz oshyapti.", "A'lo! Bunday himoyani kam ko'rganman."],
+          ucStep: function (a, b) { return "Halqa " + a + " / " + b; }, ucGo: "Uchish!", ucHint: "Barmog'ingizni o'ngga-chapga suring",
+          ucIntro: ["Supurgini barmog'ingiz bilan o'ngga-chapga boshqaring va oltin halqalarning o'rtasidan o'ting. Ketma-ket o'tsangiz, tezlashasiz.", "Bugun maydonda bladjerlar bor. Ularga urilmang — uchta zarbadan keyin dars tugaydi.", "Oltin Snitch ham uchib o'tadi. Tutib olsangiz, bahoyingiz oshadi.", "Supurgiga! Halqalar torayib, tezlik oshib boradi."],
+          ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
+          ucStat: function (a, b, z, sn) { return "Halqalar: " + a + " / " + b + " · Zarba: " + z + (sn ? " · Snitch" : ""); },
+          ucXcB: ["Supurgidan tushing. Avval yerda mashq qilamiz.", "Hali erta. Halqalarga qarang, osmonga emas!", "Qoniqarli. Supurgi sizni tinglay boshladi.", "Yaxshi uchdingiz! Qo'lingiz mustahkam.", "A'lo! Sizdan zo'r izlovchi chiqadi."],
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -139,6 +145,11 @@
           hmOld: "Новых опасностей нет. Теперь их больше и они быстрее.", hmHint: "Выберите верную защиту", hmOk: ["Превосходно!", "Очень хорошо!", "Именно так!"],
           hmBad: "Это не поможет!", hmLate: "Слишком поздно!", hmLpN: "Профессор Люпин", hmStat: function (w, l) { return "Ошибок: " + w + " · Опозданий: " + l; },
           hmLpB: ["Ничего страшного. Съешьте шоколад и попробуйте снова.", "Вы пока не готовы, но этому можно научиться. Ещё раз.", "Удовлетворительно. Вы не растерялись перед опасностью.", "Очень хорошо! Вы становитесь быстрее.", "Превосходно! Такую защиту я вижу редко."],
+          ucStep: function (a, b) { return "Кольцо " + a + " / " + b; }, ucGo: "В полёт!", ucHint: "Ведите пальцем влево и вправо",
+          ucIntro: ["Управляйте метлой пальцем влево-вправо и пролетайте через центр золотых колец. Пройдёте несколько подряд — ускоритесь.", "Сегодня на поле бладжеры. Не сталкивайтесь с ними — после трёх ударов урок окончен.", "Мимо пролетит золотой снитч. Поймаете — оценка будет выше.", "На метлу! Кольца сужаются, скорость растёт."],
+          ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
+          ucStat: function (a, b, z, sn) { return "Кольца: " + a + " / " + b + " · Ударов: " + z + (sn ? " · Снитч" : ""); },
+          ucXcB: ["Слезайте с метлы. Сначала потренируемся на земле.", "Рано. Смотрите на кольца, а не в небо!", "Удовлетворительно. Метла начинает вас слушаться.", "Хороший полёт! Твёрдая рука.", "Превосходно! Из вас выйдет отличный ловец."],
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -188,6 +199,11 @@
           hmOld: "No new dangers. Now there are more of them, and they are faster.", hmHint: "Pick the right defence", hmOk: ["Excellent!", "Very good!", "Exactly!"],
           hmBad: "That won't help!", hmLate: "Too late!", hmLpN: "Professor Lupin", hmStat: function (w, l) { return "Mistakes: " + w + " · Too late: " + l; },
           hmLpB: ["Never mind. Eat some chocolate and try again.", "You are not ready yet, but this can be learnt. Once more.", "Acceptable. You kept your head in the face of danger.", "Very good! You are getting quicker.", "Outstanding! I rarely see a defence like that."],
+          ucStep: function (a, b) { return "Hoop " + a + " / " + b; }, ucGo: "Take off!", ucHint: "Slide your finger left and right",
+          ucIntro: ["Steer the broom left and right with your finger and fly through the middle of the golden hoops. String several together and you speed up.", "There are Bludgers on the pitch today. Don't hit them — three knocks and the lesson is over.", "The Golden Snitch will fly past too. Catch it and your grade goes up.", "Mount your broom! The hoops get narrower and the pace quicker."],
+          ucOk: ["Good!", "That's it!", "Splendid!"], ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
+          ucStat: function (a, b, z, sn) { return "Hoops: " + a + " / " + b + " · Knocks: " + z + (sn ? " · Snitch" : ""); },
+          ucXcB: ["Off the broom. We'll practise on the ground first.", "Too soon. Eyes on the hoops, not the sky!", "Acceptable. The broom is starting to listen to you.", "Good flying! A steady hand.", "Outstanding! You'd make a fine Seeker."],
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -208,7 +224,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26, uchish: 8 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -248,7 +264,8 @@
       tarix: { level: drLocalLvl.tarix, total: 46, contest: bell("tarix", "10") },
       afsun: { level: drLocalLvl.afsun, total: 48, contest: bell("afsun", "lumos") },
       iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") },
-      himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") } };
+      himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") },
+      uchish: { level: drLocalLvl.uchish, total: 36, contest: bell("uchish", "y3") } };
     return res;
   }
 
@@ -303,7 +320,7 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -375,7 +392,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -454,7 +471,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -565,7 +582,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else if (fan === "uchish") { uchOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -613,7 +630,7 @@
   function fanOpen(id) {
     fanId = id;
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -655,6 +672,7 @@
     else if (id === "iksir") { ikOpen(false, n); }
     else if (id === "tarix") { trOpen(n); }
     else if (id === "himoya") { hmOpen(false, n); }
+    else if (id === "uchish") { uchOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -671,7 +689,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1205,7 +1223,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho", uchish: "hp_uc_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1756,7 +1774,7 @@
     if (otdi) { drBahoSave("iksir", daraja, sc.baho); drDone("iksir", daraja, show); } else { show(null); }
   }
 
-  /* ================= QORA SAN'ATLARDAN HIMOYA: xavf yetib kelguncha to'g'ri afsunni tanlash =================
+  /* ================= QORA KUCHLARDAN HIMOYA: xavf yetib kelguncha to'g'ri afsunni tanlash =================
      Darslar rejasi (bot: hpdars.HIMOYA_DARS = 36): 1-darsda uch xavf, 2-10-darslarda bittadan yangi xavf qo'shiladi (jami 12);
      dars oshgani sari xavflar ko'payadi (5 -> 10) va tezlashadi (7 s -> 2,4 s); 25-darsdan 6 variant. Uch «jon» (qalqon):
      xato tanlov yoki kechikish bittasini oladi, tugasa dars o'tmaydi. Bellashuv: 8 xavf, jon yo'q, xato va kechikish +3 s. */
@@ -1805,7 +1823,7 @@
     hmStop();
     hm = { n: n || 1, bell: bell === true, waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
            i: 0, lives: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
-    drShowGame("scr-himoya");
+    drShowGame("scr-himoya", "scr-uchish");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
     plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
     $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
@@ -1975,12 +1993,258 @@
     if (otdi) { drBahoSave("himoya", daraja, baho); drDone("himoya", daraja, show); } else { show(null); }
   }
 
+  /* ================= UCHISH DARSI: supurgida halqalardan o'tish =================
+     Supurgi oldinga o'zi uchadi, barmoq uni o'ngga-chapga suradi. Halqalar uzoqdan kattalashib keladi: o'rtasidan o'tilsa
+     hisoblanadi va ketma-ket o'tish tezlikni oshiradi (x1,48 gacha). 4-darsdan BLADJERLAR (urilsa jon ketadi, uchta jon),
+     7-darsdan oltin SNITCH (tutilsa bahoga +8). Dars oshgani sari halqalar ko'payadi (10 -> 21), torayadi va tezlik oshadi.
+     Bot: hpdars.UCHISH_DARS = 36. Bellashuv: shu kungi yo'nalish (urug' - mavzu nomidan), o'tkazilgan halqa va zarba +3 s;
+     tez uchgan (ketma-ket halqalar) vaqtdan yutadi. */
+  var uch = null, UCH_IM = {};
+  function uchImg(k) {
+    if (!UCH_IM[k]) { var i = new Image(); i.src = IMG_DIR + "uchish/" + k + (k === "fon" ? ".jpg" : ".webp"); UCH_IM[k] = i; }
+    return UCH_IM[k];
+  }
+  function uchBor(im) { return im && im.complete && im.naturalWidth > 0; }
+  function uchXcImg(k) { return IMG_DIR + "xuch/" + k + ".webp"; }
+  function uchKayf(k) { ["uc-xc-im", "uc-xc-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = uchXcImg(k); } }); }
+  function uchPlan(n, urug) {
+    var bell = urug != null, s0 = bell ? urug : n * 71, R = bell ? 14 : 10 + Math.floor((n - 1) / 3);
+    var bld = bell ? 5 : n < 4 ? 0 : Math.min(8, 1 + Math.floor((n - 4) / 4)), qadam = bell ? 0.42 : Math.min(0.5, 0.26 + n * 0.008);
+    var objs = [], x = 0.5, i, k;
+    for (i = 0; i < R; i++) {
+      x = Math.max(0.12, Math.min(0.88, x + (afRnd(s0 + i * 3) - 0.5) * 2 * qadam));
+      objs.push({ t: "ring", d: 1.6 + i, x: x });
+    }
+    for (i = 0; i < bld; i++) {
+      k = 1 + Math.floor(afRnd(s0 + 500 + i * 7) * (R - 2));
+      objs.push({ t: "bld", d: objs[k].d + 0.5, x: Math.max(0.1, Math.min(0.9, (objs[k].x + objs[k + 1].x) / 2 + (afRnd(s0 + 600 + i) - 0.5) * 0.24)) });
+    }
+    if (bell || n >= 7) { objs.push({ t: "sn", d: 1.6 + Math.floor((0.4 + 0.35 * afRnd(s0 + 900)) * R) + 0.5, x: 0.3 + 0.4 * afRnd(s0 + 901), ph: afRnd(s0 + 902) * 6 }); }
+    return { objs: objs, R: R, len: 1.6 + R + 0.5, v0: bell ? 0.62 : 0.5 + n * 0.008, rr: bell ? 0.13 : Math.max(0.1, 0.15 - n * 0.0014) };
+  }
+  function uchStop() { if (uch) { uch.over = true; try { cancelAnimationFrame(uch.raf); } catch (e) {} } }
+
+  function uchOpen(bell, n) {
+    var st = drData && drData.uchish, x = drX(), f = drFan("uchish"), urug = null, i;
+    if (bell === true) { var it = String((st && st.contest && st.contest.item) || "y1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 7); } }
+    var plan = uchPlan(n || 1, urug);
+    uchStop();
+    uch = { n: n || 1, bell: bell === true, objs: plan.objs, R: plan.R, len: plan.len, v0: plan.v0, rr: plan.rr,
+            dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
+            ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1 };
+    drShowGame("scr-uchish");
+    ["rider", "snitch", "bludger", "fon"].forEach(uchImg);
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = uchXcImg(k); });
+    $("uc-kick").textContent = f.nom[lang];
+    $("uc-ttl").textContent = f.ust[lang];
+    $("uc-today").textContent = uch.bell ? x.bell : x.lvl(uch.n);
+    $("uc-res").classList.add("hidden");
+    $("uc-stage").classList.add("hidden");
+    $("uc-intro").classList.toggle("hidden", uch.bell);
+    if (uch.bell) { uchGo(); return; }
+    $("uc-intro-t").textContent = x.ucIntro[uch.n === 1 ? 0 : uch.n === 4 ? 1 : uch.n === 7 ? 2 : 3];
+    $("uc-go").textContent = x.ucGo;
+    uchKayf("maslahat");
+  }
+
+  function uchGo() {
+    var x = drX(), c = $("uc-canvas");
+    $("uc-intro").classList.add("hidden");
+    $("uc-stage").classList.remove("hidden");
+    $("uc-lives").classList.toggle("hidden", uch.bell);
+    var w = Math.min(c.parentNode.clientWidth || 320, 360), h = Math.round(w * 1.18), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.style.width = w + "px"; c.style.height = h + "px";
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    uch.w = w; uch.h = h; uch.dpr = dpr;
+    uch.over = false;
+    uch.ts = 0;
+    $("uc-hint").textContent = x.ucHint;
+    $("uc-hint").classList.remove("bad");
+    uchKayf("maslahat");
+    uchHud();
+    uch.raf = requestAnimationFrame(uchTick);
+  }
+  function uchHud() {
+    var x = drX(), el = $("uc-lives"), mult = 1 + Math.min(uch.combo, 6) * 0.08;
+    el.innerHTML = "";
+    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
+    $("uc-step").textContent = x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R) + (mult > 1 ? " · ×" + mult.toFixed(2) : "") +
+      (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+  function uchDe(matn, kayf, bad) {
+    $("uc-hint").textContent = matn;
+    $("uc-hint").classList.toggle("bad", !!bad);
+    uchKayf(kayf);
+  }
+
+  function uchTick(ts) {
+    if (!uch || uch.over) { return; }
+    if ($("scr-uchish").classList.contains("hidden")) { uch.over = true; return; }
+    var x = drX(), me = uch, dt = uch.ts ? Math.min(0.05, (ts - uch.ts) / 1000) : 0;
+    uch.ts = ts;
+    uch.rx += (uch.tx - uch.rx) * Math.min(1, dt * 11);
+    uch.slow -= dt;
+    uch.dist += uch.v0 * (uch.slow > 0 ? 0.6 : 1 + Math.min(uch.combo, 6) * 0.08) * dt;
+    var ozgardi = false;
+    uch.objs.forEach(function (o) {
+      o.cx = o.t === "sn" ? o.x + Math.sin(uch.dist * 5 + o.ph) * 0.22 : o.x;
+      if (o.done || o.d > uch.dist) { return; }
+      o.done = true; o.at = ts; ozgardi = true;
+      var dx = Math.abs(o.cx - uch.rx);
+      if (o.t === "ring") {
+        uch.seen++;
+        if (dx < uch.rr) {
+          o.ok = true; uch.pass++; uch.combo++;
+          uchDe(x.ucOk[uch.pass % x.ucOk.length], uch.combo >= 3 ? "zor" : "yaxshi");
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+        } else {
+          o.ok = false; uch.miss++; uch.combo = 0;
+          if (bl && uch.bell) { bl.xato++; }
+          uchDe(x.ucMiss, "maslahat", true);
+        }
+      } else if (o.t === "bld") {
+        if (dx < 0.09) {
+          o.hit = true; uch.hits++; uch.combo = 0; uch.slow = 0.8; uch.hitAt = ts;
+          if (bl && uch.bell) { bl.xato++; } else { uch.lives--; }
+          uchDe(x.ucHit, "xafa", true);
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+        }
+      } else if (dx < 0.12) {
+        o.hit = true; uch.snitch = true; uch.snAt = ts;
+        uchDe(x.ucSn, "zor");
+        try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+      }
+    });
+    if (ozgardi || uch.bell) { uchHud(); }
+    uchPaint(ts);
+    if (uch.dist > uch.len || (!uch.bell && uch.lives <= 0)) {
+      uch.over = true;
+      setTimeout(function () { if (uch === me) { uchEnd(); } }, 500);
+      return;
+    }
+    uch.raf = requestAnimationFrame(uchTick);
+  }
+
+  function uchPaint(ts) {
+    var c = $("uc-canvas"), g = c.getContext("2d"), w = uch.w, h = uch.h, ry = h * 0.8, W = w * 0.84, ppu = h * 0.62, i, im;
+    var sc = function (y) { return 0.38 + 0.62 * Math.max(0, Math.min(1.12, y / ry)); };
+    var px = function (o) { return w / 2 + (o.cx - 0.5) * W * sc(o.y); };
+    g.setTransform(uch.dpr, 0, 0, uch.dpr, 0, 0);
+    // fon (ozgina siljiydi) va tezlik chiziqlari
+    im = uchImg("fon");
+    if (uchBor(im)) {
+      var k = Math.max((w + 40) / im.naturalWidth, h / im.naturalHeight), fw = im.naturalWidth * k, fh = im.naturalHeight * k;
+      g.drawImage(im, (w - fw) / 2 + (0.5 - uch.rx) * 28, (h - fh) / 2, fw, fh);
+    } else {
+      var gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "#1b1f3a"); gr.addColorStop(0.7, "#5a3a5e"); gr.addColorStop(1, "#1a2a22");
+      g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    }
+    g.fillStyle = "rgba(8,10,16,.3)"; g.fillRect(0, 0, w, h);
+    var tez = uch.slow > 0 ? 0.6 : 1 + Math.min(uch.combo, 6) * 0.08;
+    g.lineCap = "round";
+    for (i = 0; i < 14; i++) {
+      var lx = afRnd(i) * w, ly = ((afRnd(i + 30) * h + uch.dist * ppu * (0.7 + afRnd(i + 60))) % (h + 80)) - 40;
+      g.strokeStyle = "rgba(255,255,255," + (0.07 + 0.06 * (tez - 1) * 4).toFixed(3) + ")"; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(lx, ly); g.lineTo(lx, ly + 22 * tez); g.stroke();
+    }
+    var chiz = function (o) {
+      var s = sc(o.y), ox = px(o), a;
+      if (o.t === "ring") {
+        var rxp = uch.rr * W * 1.45 * s, ryp = rxp * 0.42;
+        a = o.done ? Math.max(0, 1 - (ts - o.at) / 450) : Math.min(1, (o.y + 60) / 120);
+        if (a <= 0) { return; }
+        g.globalAlpha = a;
+        g.lineWidth = 9 * s + 2; g.strokeStyle = "#0a0c10";
+        g.beginPath(); g.ellipse(ox, o.y, rxp, ryp, 0, 0, Math.PI * 2); g.stroke();
+        g.lineWidth = 5 * s + 1;
+        g.strokeStyle = o.done ? (o.ok ? "#8be28f" : "#f0786c") : "#f3d58f";
+        g.shadowColor = o.done ? (o.ok ? "rgba(139,226,143,.9)" : "rgba(240,120,108,.8)") : "rgba(243,213,143,.7)"; g.shadowBlur = 12 * s;
+        g.beginPath(); g.ellipse(ox, o.y, rxp, ryp, 0, 0, Math.PI * 2); g.stroke();
+        g.shadowBlur = 0; g.globalAlpha = 1;
+      } else {
+        if (o.done && (o.hit || ts - o.at > 500)) { return; }
+        var sp = uchImg(o.t === "sn" ? "snitch" : "bludger"), o2 = (o.t === "sn" ? 62 : 50) * s;
+        if (o.t === "sn") { afGlow(g, ox, o.y, o2 * 0.9, "243,213,143", 0.55); }
+        if (uchBor(sp)) {
+          g.save(); g.translate(ox, o.y); if (o.t === "bld") { g.rotate(uch.dist * 4); }
+          var dw = o2 * (o.t === "sn" ? 1.7 : 1), dh = dw * sp.naturalHeight / sp.naturalWidth;
+          g.drawImage(sp, -dw / 2, -dh / 2, dw, dh); g.restore();
+        } else {
+          g.fillStyle = o.t === "sn" ? "#f3d58f" : "#1a1c22"; g.strokeStyle = "#07090d"; g.lineWidth = 3;
+          g.beginPath(); g.arc(ox, o.y, o2 * 0.3, 0, Math.PI * 2); g.fill(); g.stroke();
+        }
+      }
+    };
+    var kor = uch.objs.filter(function (o) { o.y = ry - (o.d - uch.dist) * ppu; return o.y > -70 && o.y < h + 90; }).sort(function (p, q) { return p.y - q.y; });
+    kor.forEach(function (o) { if (o.y < ry) { chiz(o); } });
+    // supurgidagi o'quvchi
+    var rxp2 = w / 2 + (uch.rx - 0.5) * W, burilish = Math.max(-0.45, Math.min(0.45, (uch.tx - uch.rx) * 2.4));
+    im = uchImg("rider");
+    g.save(); g.translate(rxp2, ry); g.rotate(burilish);
+    if (uchBor(im)) { var rh = 104, rw = rh * im.naturalWidth / im.naturalHeight; g.drawImage(im, -rw / 2, -rh * 0.55, rw, rh); }
+    else { g.fillStyle = "#b5382e"; g.strokeStyle = "#07090d"; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -30); g.lineTo(20, 26); g.lineTo(-20, 26); g.closePath(); g.fill(); g.stroke(); }
+    g.restore();
+    kor.forEach(function (o) { if (o.y >= ry) { chiz(o); } });
+    if (ts - uch.hitAt < 320) { g.fillStyle = "rgba(240,80,70," + (0.45 * (1 - (ts - uch.hitAt) / 320)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
+    if (uch.snAt && ts - uch.snAt < 500) { g.fillStyle = "rgba(243,213,143," + (0.5 * (1 - (ts - uch.snAt) / 500)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
+  }
+
+  // Dars oxiri: baho = o'tilgan halqalar ulushi - zarbalar (har biri 8) + Snitch (8); o'tish - kamida «Qoniqarli» (60)
+  function uchEnd() {
+    var x = drX(), me = uch, daraja = uch.n, box = $("uc-res");
+    $("uc-stage").classList.add("hidden");
+    if (uch.bell) { blFinish(box); return; }
+    var s = Math.round(100 * uch.pass / uch.R) - uch.hits * 8 + (uch.snitch ? 8 : 0);
+    var baho = s >= 90 ? 5 : s >= 78 ? 4 : s >= 60 ? 3 : s >= 40 ? 2 : 1;
+    if (uch.lives <= 0) { baho = Math.min(baho, 2); }
+    var sc = { baho: baho, izoh: x.ucStat(uch.pass, uch.R, uch.hits, uch.snitch) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (uch !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.ucXcB[baho - 1] + "»", "uchish", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.ucXcB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { uchOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { uch = null; fanOpen("uchish"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = uchXcImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.ucXcN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("uchish", daraja, baho); drDone("uchish", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
     $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ikStop(); ik = null; blAbort(); if (b) { blOpen("iksir"); } else { fanOpen("iksir"); } });
     $("hm-back").addEventListener("click", function () { var b = hm && hm.bell; hmStop(); hm = null; blAbort(); if (b) { blOpen("himoya"); } else { fanOpen("himoya"); } });
     $("hm-go").addEventListener("click", function () { if (hm) { hmGo(); } });
+    $("uc-back").addEventListener("click", function () { var b = uch && uch.bell; uchStop(); uch = null; blAbort(); if (b) { blOpen("uchish"); } else { fanOpen("uchish"); } });
+    $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
+    var uc = $("uc-canvas"), ucYur = function (ev) {
+      if (!uch || uch.over) { return; }
+      var r = uc.getBoundingClientRect(), W = uch.w * 0.84;
+      uch.tx = Math.max(0.05, Math.min(0.95, (ev.clientX - r.left - (uch.w - W) / 2) / W));
+      try { ev.preventDefault(); } catch (e) {}
+    };
+    if (window.PointerEvent) { uc.addEventListener("pointerdown", ucYur); uc.addEventListener("pointermove", ucYur); }
+    else {
+      var ucT = function (ev) { var t = ev.touches && ev.touches[0]; if (t) { ucYur({ clientX: t.clientX, preventDefault: function () { ev.preventDefault(); } }); } };
+      uc.addEventListener("touchstart", ucT, { passive: false }); uc.addEventListener("touchmove", ucT, { passive: false });
+    }
     $("tr-back").addEventListener("click", function () { var b = tr && tr.bell; tr = null; blAbort(); if (b) { blOpen("tarix"); } else { fanOpen("tarix"); } });
     $("bl-back").addEventListener("click", function () {
       blAbort();

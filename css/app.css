@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2642,7 +2642,7 @@ body.kr-on .mp{display:none!important}
 #af-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
   border:1px solid rgba(120,170,240,.35);
   background:radial-gradient(circle at 50% 45%,rgba(120,170,240,.16),rgba(12,15,20,.2) 70%),#0d1118}
-/* Qora san'atlardan himoya */
+/* Qora kuchlardan himoya */
 #scr-fan .kb-ttl .cup-title.uzun{font-size:clamp(13px,4vw,17px)!important;letter-spacing:.04em}
 .hm-top{display:flex;align-items:center;justify-content:space-between;max-width:360px;margin:6px auto 8px}
 .hm-top .dr-step{margin:0}
@@ -2668,6 +2668,12 @@ body.kr-on .mp{display:none!important}
 #hm-stage .af-fl{margin-top:10px}
 #hm-stage .af-fl img{width:52px;height:52px}
 #scr-himoya .dr-desc{min-height:20px}
+/* Uchish darsi */
+.uc-box{display:flex;justify-content:center}
+#uc-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;border:1px solid rgba(224,178,91,.4);background:#141829}
+#uc-stage .af-fl{margin-top:10px}
+#uc-stage .af-fl img{width:52px;height:52px}
+#uc-intro .af-fl{margin-top:18px}
 /* Damlamalar: qozon (SVG - cho'yan qozon, ostida o't, ichida damlama rangi; --ik rang, --ik-p 0..1 to'lish) */
 .ik-pot{--ik:#7fb86a;--ik-p:.1;position:relative;width:236px;height:206px;margin:10px auto 0}
 .ik-pot svg{display:block;width:100%;height:100%;overflow:visible}
