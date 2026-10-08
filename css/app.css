@@ -2604,6 +2604,27 @@ body.kr-on .mp{display:none!important}
 .dr-res-s{font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
 .dr-res .dr-btn{margin-top:4px}
 /* Afsunlar: chizish maydoni */
+.af-sham{position:relative;height:8px;max-width:360px;margin:20px auto 14px;border-radius:99px;background:rgba(255,255,255,.07)}
+.af-sham i{position:absolute;left:0;top:0;bottom:0;min-width:6px;border-radius:99px;background:linear-gradient(90deg,#8a6a2e,#f3e2b0)}
+.af-sham i::after{content:"";position:absolute;right:-6px;top:-15px;width:12px;height:18px;border-radius:50%/62% 62% 38% 38%;
+  background:radial-gradient(circle at 50% 68%,#fffbe0 0,#ffc24a 48%,rgba(255,120,30,0) 74%);filter:drop-shadow(0 0 7px rgba(255,180,70,.95));
+  transform-origin:50% 100%;animation:afFlame .45s ease-in-out infinite alternate}
+.af-sham.oz i{background:linear-gradient(90deg,#8a3b2e,#f0a089)}
+.af-sham.ochdi i{background:rgba(255,255,255,.18)}
+.af-sham.ochdi i::after{top:-16px;width:8px;height:16px;border-radius:50%;background:radial-gradient(circle,rgba(190,195,210,.55),rgba(190,195,210,0) 70%);filter:none;animation:none}
+@keyframes afFlame{from{transform:scale(1,1) rotate(-4deg)}to{transform:scale(.88,1.14) rotate(5deg)}}
+.af-baho{display:flex;flex-direction:column;align-items:center;gap:7px;padding-bottom:6px}
+.af-baho-k{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.af-baho-n{font:600 30px/1.1 'Cormorant Garamond',serif;color:#f3d58f}
+.af-baho-p{display:flex;gap:6px}
+.af-baho-p i{width:9px;height:9px;border-radius:50%;border:1px solid rgba(243,213,143,.5)}
+.af-baho-p i.on{background:#f3d58f;box-shadow:0 0 8px rgba(243,213,143,.7)}
+.af-baho-s{font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.af-baho.b4 .af-baho-n{color:#dfe6f2}
+.af-baho.b3 .af-baho-n{color:#d9a877}
+.af-baho.b2 .af-baho-n,.af-baho.b1 .af-baho-n{color:#f08c83}
+.fn-l.bh5{box-shadow:0 0 0 2px #f3d58f,0 0 12px rgba(243,213,143,.45)}
+.fn-l.bh4{box-shadow:0 0 0 2px #c9d2e0}
 .af-box{display:flex;justify-content:center}
 #af-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
   border:1px solid rgba(120,170,240,.35);
