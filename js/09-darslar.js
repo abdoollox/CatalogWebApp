@@ -25,9 +25,10 @@
     { id: "trans", on: false, rgb: "200,150,90",
       nom: { uz: "Transfiguratsiya", ru: "Трансфигурация", en: "Transfiguration" },
       ust: { uz: "Professor Makgonagall", ru: "Профессор Макгонагалл", en: "Professor McGonagall" } },
-    { id: "himoya", on: false, rgb: "190,110,110",
+    { id: "himoya", on: true, rgb: "190,110,110",
       nom: { uz: "Qora san'atlardan himoya", ru: "Защита от Тёмных искусств", en: "Defence Against the Dark Arts" },
-      ust: { uz: "Professor Lyupin", ru: "Профессор Люпин", en: "Professor Lupin" } },
+      ust: { uz: "Professor Lyupin", ru: "Профессор Люпин", en: "Professor Lupin" },
+      izoh: { uz: "Xavf yetib kelguncha to'g'ri himoya afsunini tanlang.", ru: "Выберите верное защитное заклинание, пока опасность не настигла.", en: "Pick the right defensive spell before the danger reaches you." } },
     { id: "osimlik", on: false, rgb: "140,180,90",
       nom: { uz: "O'simlikshunoslik", ru: "Травология", en: "Herbology" },
       ust: { uz: "Professor Sprout", ru: "Профессор Стебль", en: "Professor Sprout" } },
@@ -86,6 +87,10 @@
           ikCook: "Masalliqlarni tartib bilan qozonga soling", ikErr: function (a, b) { return "Xato: " + a + " / " + b; },
           ikBad: ["Noto'g'ri. Diqqat qiling!", "Yana xato. Qozon qaynab ketyapti…"], ikBoom: "Damlama buzildi. Retseptni qaytadan o'qing.",
           ikOk: "Damlama tayyor. Professor Sneyp… hech narsa demadi. Bu maqtov.",
+          hmStep: function (a, b) { return a + " / " + b + "-xavf"; }, hmGo: "Boshlash", hmNew: "Yangi xavf. Qaysi afsun yordam berishini eslab qoling.",
+          hmOld: "Yangi xavf yo'q. Endi ular ko'proq va tezroq keladi.", hmHint: "To'g'ri himoyani tanlang", hmOk: ["Ajoyib!", "Juda yaxshi!", "Xuddi shunday!"],
+          hmBad: "Bu yordam bermaydi!", hmLate: "Kech qoldingiz!", hmLpN: "Professor Lyupin", hmStat: function (w, l) { return "Xato: " + w + " · Kechikish: " + l; },
+          hmLpB: ["Hechqisi yo'q. Shokolad yeng va qaytadan urinib ko'ring.", "Hali tayyor emassiz, lekin buni o'rgansa bo'ladi. Yana bir marta.", "Qoniqarli. Xavf oldida o'zingizni yo'qotmadingiz.", "Juda yaxshi! Tezligingiz oshyapti.", "A'lo! Bunday himoyani kam ko'rganman."],
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -130,6 +135,10 @@
           ikRec: "Рецепт", ikRecS: "Запомните порядок ингредиентов — потом рецепт закроется.", ikGo: "Готов",
           ikCook: "Кладите ингредиенты в котёл по порядку", ikErr: function (a, b) { return "Ошибки: " + a + " / " + b; },
           ikBad: ["Неверно. Внимательнее!", "Опять ошибка. Котёл закипает…"], ikBoom: "Зелье испорчено. Прочитайте рецепт ещё раз.",
+          hmStep: function (a, b) { return "Опасность " + a + " / " + b; }, hmGo: "Начать", hmNew: "Новая опасность. Запомните, какое заклинание поможет.",
+          hmOld: "Новых опасностей нет. Теперь их больше и они быстрее.", hmHint: "Выберите верную защиту", hmOk: ["Превосходно!", "Очень хорошо!", "Именно так!"],
+          hmBad: "Это не поможет!", hmLate: "Слишком поздно!", hmLpN: "Профессор Люпин", hmStat: function (w, l) { return "Ошибок: " + w + " · Опозданий: " + l; },
+          hmLpB: ["Ничего страшного. Съешьте шоколад и попробуйте снова.", "Вы пока не готовы, но этому можно научиться. Ещё раз.", "Удовлетворительно. Вы не растерялись перед опасностью.", "Очень хорошо! Вы становитесь быстрее.", "Превосходно! Такую защиту я вижу редко."],
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -175,6 +184,10 @@
           ikRec: "Recipe", ikRecS: "Memorise the order of the ingredients — then the recipe closes.", ikGo: "Ready",
           ikCook: "Add the ingredients to the cauldron in order", ikErr: function (a, b) { return "Mistakes: " + a + " / " + b; },
           ikBad: ["Wrong. Pay attention!", "Wrong again. The cauldron is boiling over…"], ikBoom: "The potion is ruined. Read the recipe again.",
+          hmStep: function (a, b) { return "Danger " + a + " / " + b; }, hmGo: "Begin", hmNew: "A new danger. Remember which spell helps.",
+          hmOld: "No new dangers. Now there are more of them, and they are faster.", hmHint: "Pick the right defence", hmOk: ["Excellent!", "Very good!", "Exactly!"],
+          hmBad: "That won't help!", hmLate: "Too late!", hmLpN: "Professor Lupin", hmStat: function (w, l) { return "Mistakes: " + w + " · Too late: " + l; },
+          hmLpB: ["Never mind. Eat some chocolate and try again.", "You are not ready yet, but this can be learnt. Once more.", "Acceptable. You kept your head in the face of danger.", "Very good! You are getting quicker.", "Outstanding! I rarely see a defence like that."],
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -195,7 +208,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30, himoya: 26 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -234,7 +247,8 @@
     res.lessons = {
       tarix: { level: drLocalLvl.tarix, total: 46, contest: bell("tarix", "10") },
       afsun: { level: drLocalLvl.afsun, total: 48, contest: bell("afsun", "lumos") },
-      iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") } };
+      iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") },
+      himoya: { level: drLocalLvl.himoya, total: 36, contest: bell("himoya", "dementor") } };
     return res;
   }
 
@@ -289,7 +303,7 @@
 
   function drOpen() {
     drQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -361,7 +375,7 @@
 
   function blHomeOpen() {
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     blHomeRender();
@@ -440,7 +454,7 @@
   function blOpen(fan) {
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -551,7 +565,7 @@
       if (res && res.lessons) { drData = res.lessons; }
       if (!res || !res.ok) { showToast(res && res.error === "no_tries" ? drX().bellNo : drX().fail, res && res.error === "no_tries" ? "" : "err"); blRender(); return; }
       bl = { fan: fan, t0: Date.now(), xato: 0, answers: [] };
-      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else { trStart(res.questions || [], true, 0); }
+      if (fan === "afsun") { afOpen(true); } else if (fan === "iksir") { ikOpen(true); } else if (fan === "himoya") { hmOpen(true); } else { trStart(res.questions || [], true, 0); }
       blTick();
     });
   }
@@ -599,7 +613,7 @@
   function fanOpen(id) {
     fanId = id;
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -610,6 +624,7 @@
     if (!f) { return; }
     $("fn-kick").textContent = f.ust[lang];
     $("fn-ttl").textContent = f.nom[lang];
+    $("fn-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     var im = $("fn-im");
     im.src = drImg(f.id);
     $("scr-fan").style.setProperty("--dr-rgb", f.rgb);
@@ -639,6 +654,7 @@
     if (id === "afsun") { afOpen(false, n); }
     else if (id === "iksir") { ikOpen(false, n); }
     else if (id === "tarix") { trOpen(n); }
+    else if (id === "himoya") { hmOpen(false, n); }
   }
 
   // Dars o'tildi: bosqich serverda oshadi (faqat navbatdagi dars). Ball berilmaydi. cb(yangi: true/false/null)
@@ -655,7 +671,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -1189,7 +1205,7 @@
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
   // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
-  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho" };
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho", himoya: "hp_hm_baho" };
   function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
   function drBahoSave(fan, n, b) {
     try {
@@ -1740,10 +1756,231 @@
     if (otdi) { drBahoSave("iksir", daraja, sc.baho); drDone("iksir", daraja, show); } else { show(null); }
   }
 
+  /* ================= QORA SAN'ATLARDAN HIMOYA: xavf yetib kelguncha to'g'ri afsunni tanlash =================
+     Darslar rejasi (bot: hpdars.HIMOYA_DARS = 36): 1-darsda uch xavf, 2-10-darslarda bittadan yangi xavf qo'shiladi (jami 12);
+     dars oshgani sari xavflar ko'payadi (5 -> 10) va tezlashadi (7 s -> 2,4 s); 25-darsdan 6 variant. Uch «jon» (qalqon):
+     xato tanlov yoki kechikish bittasini oladi, tugasa dars o'tmaydi. Bellashuv: 8 xavf, jon yo'q, xato va kechikish +3 s. */
+  var HM = {
+    dementor: { s: "patronum", x: [], uz: ["Dementor", "Dementor yaqinlashmoqda — havo muzlab ketdi!"], ru: ["Дементор", "Приближается дементор — воздух леденеет!"], en: ["Dementor", "A Dementor is closing in — the air turns icy!"] },
+    boggart:  { s: "riddikulus", x: [], uz: ["Boggart", "Shkafdan boggart otilib chiqdi!"], ru: ["Боггарт", "Из шкафа вырвался боггарт!"], en: ["Boggart", "A Boggart bursts out of the wardrobe!"] },
+    curse:    { s: "protego", x: [], uz: ["La'nat", "Sizga qarab la'nat uchib kelyapti!"], ru: ["Проклятие", "В вас летит проклятие!"], en: ["Curse", "A curse is flying straight at you!"] },
+    duelist:  { s: "expelliarmus", x: ["stupefy"], uz: ["Qora sehrgar", "Qora sehrgar tayoqchasini sizga o'qtaldi!"], ru: ["Тёмный волшебник", "Тёмный волшебник навёл на вас палочку!"], en: ["Dark wizard", "A Dark wizard aims a wand at you!"] },
+    dark:     { s: "lumos", x: [], uz: ["Zulmat", "Atrof zim-ziyo — qorong'ida kimdir bor!"], ru: ["Тьма", "Кромешная тьма — в ней кто-то есть!"], en: ["Darkness", "Pitch darkness — something is in there!"] },
+    troll:    { s: "leviosa", x: ["stupefy", "reducto"], uz: ["Tog' troli", "Trol to'qmog'ini boshingiz uzra ko'tardi!"], ru: ["Горный тролль", "Тролль занёс дубину над вашей головой!"], en: ["Mountain troll", "The troll raises its club above your head!"] },
+    fire:     { s: "aguamenti", x: [], uz: ["Yong'in", "Olov pardalarga o'tib ketdi!"], ru: ["Пожар", "Огонь перекинулся на шторы!"], en: ["Fire", "The fire has caught the curtains!"] },
+    pixies:   { s: "immobulus", x: ["stupefy"], uz: ["Piksilar", "Bir gala piksi sizga tashlandi!"], ru: ["Пикси", "На вас летит стая пикси!"], en: ["Pixies", "A swarm of pixies dives at you!"] },
+    inferi:   { s: "incendio", x: [], uz: ["Inferiylar", "Ko'ldan inferiylar chiqib kelyapti!"], ru: ["Инферналы", "Из озера поднимаются инферналы!"], en: ["Inferi", "Inferi are rising from the lake!"] },
+    spider:   { s: "arania", x: ["stupefy", "incendio"], uz: ["Akromantula", "Ulkan o'rgimchak sizga yaqinlashmoqda!"], ru: ["Акромантул", "К вам ползёт гигантский паук!"], en: ["Acromantula", "A giant spider is creeping toward you!"] },
+    rock:     { s: "reducto", x: ["protego", "leviosa"], uz: ["Ko'chki", "Shiftdan toshlar qulab tushyapti!"], ru: ["Обвал", "С потолка падают камни!"], en: ["Rockfall", "Rocks are falling from the ceiling!"] },
+    attacker: { s: "stupefy", x: ["expelliarmus"], uz: ["Hujumchi", "Raqib sizga qarab yugurib kelyapti!"], ru: ["Нападающий", "Противник бежит прямо на вас!"], en: ["Attacker", "An enemy is running straight at you!"] }
+  };
+  var HM_TARTIB = ["dementor", "boggart", "curse", "duelist", "dark", "troll", "fire", "pixies", "inferi", "spider", "rock", "attacker"];     // bot: hpdars.DARSLAR bilan bir xil
+  var HM_AF = { immobulus: ["Immobilus", "Иммобулюс", "Immobulus"], arania: ["Araniya Ekzumay", "Арания Экзумай", "Arania Exumai"] };      // Afsunlar darsida yo'q afsunlar
+  var hm = null;      // {n, bell, waves, i, lives, wrong, late, tSum, lim, opts, t0, tm, lock}
+
+  function hmAf(id) { return AF[id] ? (AF[id][lang] || AF[id].uz)[0] : (HM_AF[id] || [id, id, id])[lang === "ru" ? 1 : lang === "en" ? 2 : 0]; }
+  function hmTx(id) { return HM[id][lang] || HM[id].uz; }
+  function hmImg(id) { return IMG_DIR + "himoya/" + id + ".webp"; }
+  function hmLpImg(k) { return IMG_DIR + "lyupin/" + k + ".webp"; }
+  function hmPlan(n) {
+    var T = HM_TARTIB, pool = T.slice(0, Math.min(T.length, n + 2)), soni = 5 + Math.min(5, Math.floor((n - 1) / 6)), w = [], g = 0;
+    var yangi = n === 1 ? T.slice(0, 3) : n + 1 < T.length ? [T[n + 1]] : [];
+    if (yangi.length) { w.push(yangi[yangi.length - 1]); }
+    while (w.length < soni && g < 500) { var c = pool[Math.floor(afRnd(n * 53 + g++) * pool.length)]; if (c !== w[w.length - 1]) { w.push(c); } }
+    return { waves: w, lim: Math.round(Math.max(2400, 7000 - (n - 1) * 131)), opts: n > 24 ? 6 : 4, yangi: yangi };
+  }
+  function hmBellPlan(item) {
+    var T = HM_TARTIB, urug = 0, w = [], g = 0, i;
+    for (i = 0; i < String(item).length; i++) { urug += String(item).charCodeAt(i) * (i + 3); }
+    if (HM[item]) { w.push(item); }
+    while (w.length < 8 && g < 500) { var c = T[Math.floor(afRnd(urug + g++) * T.length)]; if (c !== w[w.length - 1]) { w.push(c); } }
+    return { waves: w, lim: 6000, opts: 4, yangi: [] };
+  }
+  function hmStop() { if (hm) { clearInterval(hm.tm); hm.tm = 0; } }
+  function hmKayf(k) { ["hm-lp-im", "hm-lp-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = hmLpImg(k); } }); }
+
+  function hmOpen(bell, n) {
+    var st = drData && drData.himoya, x = drX(), f = drFan("himoya");
+    var plan = bell === true ? hmBellPlan(st && st.contest && st.contest.item) : hmPlan(n || 1);
+    hmStop();
+    hm = { n: n || 1, bell: bell === true, waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
+           i: 0, lives: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
+    drShowGame("scr-himoya");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = hmLpImg(k); });
+    plan.waves.forEach(function (id) { var im = new Image(); im.src = hmImg(id); });
+    $("hm-kick").textContent = { uz: "Himoya darsi", ru: "Урок защиты", en: "Defence class" }[lang] || f.nom[lang];
+    $("hm-ttl").textContent = f.ust[lang];
+    $("hm-today").textContent = hm.bell ? x.bell : x.lvl(hm.n);
+    $("hm-name").textContent = f.nom[lang];
+    $("hm-desc").textContent = "";
+    $("hm-res").classList.add("hidden");
+    $("hm-stage").classList.add("hidden");
+    $("hm-intro").classList.toggle("hidden", hm.bell);
+    if (hm.bell) { hmGo(); return; }
+    // kirish: yangi xavf(lar) va unga qarshi afsun
+    var box = $("hm-new");
+    box.innerHTML = "";
+    hm.yangi.forEach(function (id) {
+      var r = drEl("div", "hm-nw"), im = document.createElement("img");
+      im.alt = ""; im.src = hmImg(id);
+      r.appendChild(im);
+      var t = drEl("span", "hm-nw-t");
+      t.appendChild(drEl("b", "", hmTx(id)[0]));
+      t.appendChild(drEl("small", "", hmAf(HM[id].s)));
+      r.appendChild(t);
+      box.appendChild(r);
+    });
+    $("hm-intro-t").textContent = hm.yangi.length ? x.hmNew : x.hmOld;
+    $("hm-go").textContent = x.hmGo;
+    hmKayf("maslahat");
+  }
+
+  function hmGo() {
+    $("hm-intro").classList.add("hidden");
+    $("hm-stage").classList.remove("hidden");
+    $("hm-lives").classList.toggle("hidden", hm.bell);
+    hm.i = 0;
+    hmWave();
+  }
+
+  function hmLives() {
+    var el = $("hm-lives");
+    el.innerHTML = "";
+    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < hm.lives ? "on" : "")); }
+  }
+  function hmHead() {
+    var x = drX();
+    $("hm-step").textContent = x.hmStep(Math.min(hm.i + 1, hm.waves.length), hm.waves.length) + (bl && hm.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+  }
+
+  // Navbatdagi xavf: rasm uzoqdan yaqinlashadi, sham yonadi, variantlar chiqadi
+  function hmWave() {
+    var x = drX(), me = hm, id = hm.waves[hm.i], t = HM[id], box = $("hm-opts"), ids = [t.s], g = 0;
+    var hammasi = HM_TARTIB.map(function (k) { return HM[k].s; });
+    while (ids.length < hm.opts && g < 300) {
+      var c = hammasi[Math.floor(afRnd(hm.n * 29 + hm.i * 13 + g++ + (hm.bell ? 700 : 0)) * hammasi.length)];
+      if (ids.indexOf(c) < 0 && t.x.indexOf(c) < 0) { ids.push(c); }
+    }
+    ids.sort(function () { return Math.random() - 0.5; });
+    hm.lock = false;
+    $("hm-name").textContent = hmTx(id)[0];
+    $("hm-desc").textContent = hmTx(id)[1];
+    $("hm-box").className = "hm-box";
+    $("hm-im").src = hmImg(id);
+    $("hm-im").style.transform = "scale(.42)";
+    $("hm-hint").textContent = x.hmHint;
+    $("hm-hint").classList.remove("bad");
+    hmKayf("maslahat");
+    hmLives();
+    hmHead();
+    box.innerHTML = "";
+    ids.forEach(function (af) {
+      var b = drEl("button", "tr-o", hmAf(af));
+      b.type = "button";
+      b.addEventListener("click", function () { hmPick(af, b); });
+      box.appendChild(b);
+    });
+    hm.t0 = Date.now();
+    clearInterval(hm.tm);
+    hm.tm = setInterval(function () {
+      if (hm !== me || $("scr-himoya").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      if (hm.lock) { return; }
+      var p = Math.min(1, (Date.now() - hm.t0) / hm.lim);
+      $("hm-im").style.transform = "scale(" + (0.42 + 0.58 * p).toFixed(3) + ")";
+      $("hm-sham-w").style.width = ((1 - p) * 100).toFixed(1) + "%";
+      $("hm-sham").classList.toggle("oz", p > 0.7 && p < 1);
+      $("hm-sham").classList.toggle("ochdi", p >= 1);
+      if (hm.bell) { hmHead(); }
+      if (p >= 1) { hmMiss(true); }
+    }, 50);
+  }
+
+  // Jon ketdi (kechikish - keyingi xavfga o'tadi; xato tanlov - shu xavf davom etadi)
+  function hmMiss(kech) {
+    var x = drX(), me = hm;
+    if (kech) { hm.late++; } else { hm.wrong++; }
+    if (bl && hm.bell) { bl.xato++; } else { hm.lives--; }
+    hmLives();
+    hmKayf("xafa");
+    $("hm-hint").textContent = kech ? x.hmLate : x.hmBad;
+    $("hm-hint").classList.add("bad");
+    $("hm-box").classList.remove("zarba");
+    void $("hm-box").offsetWidth;
+    $("hm-box").classList.add("zarba");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
+    if (!hm.bell && hm.lives <= 0) { hm.lock = true; clearInterval(hm.tm); setTimeout(function () { if (hm === me) { hmEnd(); } }, 800); return; }
+    if (kech) {
+      hm.lock = true;
+      hm.tSum += 1;
+      setTimeout(function () { if (hm === me) { hmNext(); } }, 800);
+    }
+  }
+  function hmNext() {
+    hm.i++;
+    if (hm.i >= hm.waves.length) { hmEnd(); return; }
+    hmWave();
+  }
+  function hmPick(af, btn) {
+    if (!hm || hm.lock || btn.classList.contains("xato")) { return; }
+    var x = drX(), me = hm, id = hm.waves[hm.i];
+    if (af !== HM[id].s) { btn.classList.add("xato"); hmMiss(false); return; }
+    hm.lock = true;
+    hm.tSum += Math.min(1, (Date.now() - hm.t0) / hm.lim);
+    btn.classList.add("togri");
+    $("hm-box").classList.add("urildi");
+    $("hm-hint").textContent = x.hmOk[hm.i % x.hmOk.length];
+    $("hm-hint").classList.remove("bad");
+    hmKayf((Date.now() - hm.t0) / hm.lim < 0.5 ? "zor" : "yaxshi");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    setTimeout(function () { if (hm === me) { hmNext(); } }, 650);
+  }
+
+  // Dars oxiri: baho (xato -12, kechikish -15, sekin javob -10) va Professor Lyupin xulosasi
+  function hmEnd() {
+    var x = drX(), me = hm, daraja = hm.n, box = $("hm-res");
+    clearInterval(hm.tm);
+    $("hm-stage").classList.add("hidden");
+    $("hm-name").textContent = drFan("himoya").nom[lang];
+    $("hm-desc").textContent = "";
+    if (hm.bell) { blFinish(box); return; }
+    var s = Math.max(0, 100 - hm.wrong * 12 - hm.late * 15 - (hm.tSum / hm.waves.length > 0.75 ? 10 : 0));
+    var baho = s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1;
+    if (hm.lives <= 0) { baho = Math.min(baho, 2); }
+    var sc = { baho: baho, izoh: x.hmStat(hm.wrong, hm.late) }, otdi = baho >= 3;
+    var show = function (yangi) {
+      if (hm !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.hmLpB[baho - 1] + "»", "himoya", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.hmLpB[baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { hmOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { hm = null; fanOpen("himoya"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = hmLpImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.hmLpN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("himoya", daraja, baho); drDone("himoya", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
     $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ikStop(); ik = null; blAbort(); if (b) { blOpen("iksir"); } else { fanOpen("iksir"); } });
+    $("hm-back").addEventListener("click", function () { var b = hm && hm.bell; hmStop(); hm = null; blAbort(); if (b) { blOpen("himoya"); } else { fanOpen("himoya"); } });
+    $("hm-go").addEventListener("click", function () { if (hm) { hmGo(); } });
     $("tr-back").addEventListener("click", function () { var b = tr && tr.bell; tr = null; blAbort(); if (b) { blOpen("tarix"); } else { fanOpen("tarix"); } });
     $("bl-back").addEventListener("click", function () {
       blAbort();

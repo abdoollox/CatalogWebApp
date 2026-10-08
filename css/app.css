@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2642,6 +2642,32 @@ body.kr-on .mp{display:none!important}
 #af-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
   border:1px solid rgba(120,170,240,.35);
   background:radial-gradient(circle at 50% 45%,rgba(120,170,240,.16),rgba(12,15,20,.2) 70%),#0d1118}
+/* Qora san'atlardan himoya */
+#scr-fan .kb-ttl .cup-title.uzun{font-size:clamp(13px,4vw,17px)!important;letter-spacing:.04em}
+.hm-top{display:flex;align-items:center;justify-content:space-between;max-width:360px;margin:6px auto 8px}
+.hm-top .dr-step{margin:0}
+.hm-lives{display:flex;gap:6px}
+.hm-lives i{width:20px;height:23px;background:rgba(255,255,255,.14);clip-path:polygon(50% 0,100% 16%,100% 56%,50% 100%,0 56%,0 16%);transition:background .3s}
+.hm-lives i.on{background:linear-gradient(160deg,#cfe4ff,#6f9fe0)}
+.hm-box{position:relative;display:flex;align-items:center;justify-content:center;max-width:210px;aspect-ratio:1/1;margin:0 auto;border-radius:24px;overflow:hidden;
+  border:1px solid rgba(190,110,110,.4);background:radial-gradient(circle at 50% 50%,rgba(190,110,110,.2),rgba(12,15,20,.3) 72%),#0d1118}
+.hm-box img{width:100%;height:100%;border-radius:50%;transform:scale(.42);transition:transform .08s linear;will-change:transform}
+.hm-box.urildi{border-color:rgba(160,205,255,.8);box-shadow:0 0 34px rgba(150,200,255,.5),inset 0 0 60px rgba(190,225,255,.5)}
+.hm-box.urildi img{transition:transform .55s ease-in,opacity .55s ease-in,filter .2s;transform:scale(.12) rotate(18deg) !important;opacity:0;filter:brightness(2.4)}
+.hm-box.zarba{animation:hmZarba .45s}
+@keyframes hmZarba{0%,100%{transform:translateX(0);box-shadow:none}20%{transform:translateX(-7px);box-shadow:inset 0 0 70px rgba(240,90,80,.7)}60%{transform:translateX(7px);box-shadow:inset 0 0 40px rgba(240,90,80,.4)}}
+#hm-opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:360px;margin:12px auto 0}
+#hm-opts .tr-o{padding:15px 8px;text-align:center;font-weight:700}
+.hm-new{display:flex;flex-direction:column;gap:10px;max-width:360px;margin:14px auto 4px}
+.hm-nw{display:flex;align-items:center;gap:14px;padding:10px 14px 10px 10px;border-radius:18px;border:1px solid rgba(190,110,110,.35);background:rgba(190,110,110,.08)}
+.hm-nw img{flex:none;width:74px;height:74px;border-radius:50%}
+.hm-nw-t{display:flex;flex-direction:column;gap:5px;min-width:0}
+.hm-nw-t b{font:600 21px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.hm-nw-t small{font:800 12px/1.2 'Manrope',sans-serif;letter-spacing:.04em;color:#a9cbff}
+#hm-stage .af-sham{margin:16px auto 0}
+#hm-stage .af-fl{margin-top:10px}
+#hm-stage .af-fl img{width:52px;height:52px}
+#scr-himoya .dr-desc{min-height:20px}
 /* Damlamalar: qozon (SVG - cho'yan qozon, ostida o't, ichida damlama rangi; --ik rang, --ik-p 0..1 to'lish) */
 .ik-pot{--ik:#7fb86a;--ik-p:.1;position:relative;width:236px;height:206px;margin:10px auto 0}
 .ik-pot svg{display:block;width:100%;height:100%;overflow:visible}
