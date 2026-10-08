@@ -1500,6 +1500,17 @@
   var IK_XATO = 3;
   var ik = null;      // {id, phase: "rec"|"cook"|"done", step, err, chips, bajar}
 
+  // Masalliq rasmi (img/masalliq/<kod>.webp) + nomi
+  function ikMas(el, m) {
+    var im = document.createElement("img");
+    im.className = "ik-mi";
+    im.alt = "";
+    im.src = IMG_DIR + "masalliq/" + m + ".webp";
+    im.onerror = function () { im.style.display = "none"; };
+    el.appendChild(im);
+    el.appendChild(drEl("span", "", ikNom(m)));
+    return el;
+  }
   function ikNom(m) { var i = lang === "ru" ? 1 : lang === "en" ? 2 : 0; return (IK_M[m] || [m, m, m])[i]; }
 
   /* Darslar rejasi (bot: hpdars.IKSIR_DARS = 36), har bosqichda o'sha 12 damlama:
@@ -1522,6 +1533,7 @@
     ik.lim = bq.sek ? (3 + IK[id].r.length * bq.sek) * 1000 : 0;
     drShowGame("scr-iksir");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var i = new Image(); i.src = ikSnImg(k); });
+    Object.keys(IK_M).forEach(function (m) { var i = new Image(); i.src = IMG_DIR + "masalliq/" + m + ".webp"; });      // tugmalar bo'sh chiqmasin
     var x = drX(), f = drFan("iksir");
     $("ik-kick").textContent = f.nom[lang];
     $("ik-ttl").textContent = f.ust[lang];
@@ -1610,7 +1622,7 @@
       $("ik-rec-s").classList.toggle("bad", !!ik.msg);
       var ol = $("ik-rec-l");
       ol.innerHTML = "";
-      rec.forEach(function (m) { ol.appendChild(drEl("li", "", ikNom(m))); });
+      rec.forEach(function (m) { ol.appendChild(ikMas(drEl("li", ""), m)); });
       $("ik-go").textContent = x.ikGo;
       return;
     }
@@ -1622,7 +1634,7 @@
       box.innerHTML = "";
       ik.chips.forEach(function (m) {
         var solingan = rec.indexOf(m) >= 0 && rec.indexOf(m) < ik.step;
-        var b = drEl("button", "ik-chip" + (solingan ? " in" : ""), ikNom(m));
+        var b = ikMas(drEl("button", "ik-chip" + (solingan ? " in" : "")), m);
         b.type = "button";
         b.disabled = solingan;
         b.addEventListener("click", function () { ikPick(m, b); });

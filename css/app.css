@@ -2694,6 +2694,11 @@ body.kr-on .mp{display:none!important}
 .ik-chip{padding:14px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;
   font:600 13px/1.25 'Manrope',sans-serif;text-align:center;transition:transform .12s}
 .ik-chip:active{transform:scale(.97)}
+.ik-chip{display:flex;align-items:center;gap:8px;padding:7px 10px 7px 7px;text-align:left}
+.ik-chip span{flex:1;min-width:0}
+.ik-mi{flex:none;width:42px;height:42px;border-radius:50%}
+.ik-rec ol li{display:flex;align-items:center;gap:10px}
+.ik-rec ol li .ik-mi{width:38px;height:38px}
 .ik-chip.in{opacity:.3;border-style:dashed;cursor:default}
 .ik-chip.xato{border-color:#f08c83;color:#f08c83;animation:ikShake .35s}
 #scr-dars .nsh-sum b{font-size:22px}
