@@ -1593,7 +1593,14 @@
     cook.classList.toggle("hidden", ik.phase !== "cook");
     res.classList.toggle("hidden", ik.phase !== "done");
     $("ik-pot").style.setProperty("--ik", p.c);
-    $("ik-pot").style.setProperty("--ik-h", Math.round(18 + 62 * ik.step / rec.length) + "%");
+    $("ik-pot").style.setProperty("--ik-p", (0.12 + 0.88 * ik.step / rec.length).toFixed(2));
+    $("ik-pot").classList.toggle("pish", ik.phase === "cook");
+    var sl = $("ik-slots");
+    if (sl) {
+      sl.style.setProperty("--ik-c", p.c);
+      sl.innerHTML = "";
+      rec.forEach(function (m, i) { sl.appendChild(drEl("i", ik.phase !== "rec" && i < ik.step ? "on" : "")); });
+    }
     $("ik-pot").classList.toggle("tayyor", ik.phase === "done");
     ikSham();
     ikKayf(ik.kayf);

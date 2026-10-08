@@ -2642,29 +2642,54 @@ body.kr-on .mp{display:none!important}
 #af-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
   border:1px solid rgba(120,170,240,.35);
   background:radial-gradient(circle at 50% 45%,rgba(120,170,240,.16),rgba(12,15,20,.2) 70%),#0d1118}
-/* Iksirlar: qozon */
-.ik-pot{--ik:#7fb86a;--ik-h:18%;position:relative;width:170px;height:150px;margin:18px auto 4px}
-.ik-rim{position:absolute;left:4px;right:4px;top:26px;height:22px;border-radius:50%;background:#2a2f3a;box-shadow:inset 0 3px 0 rgba(255,255,255,.12),0 2px 0 #0b0d12;z-index:3}
-.ik-liq{position:absolute;left:10px;right:10px;top:36px;bottom:0;border-radius:14px 14px 80px 80px / 14px 14px 90px 90px;overflow:hidden;
-  background:linear-gradient(180deg,#232833,#12151c);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 14px 24px rgba(0,0,0,.5)}
-.ik-liq::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--ik-h);background:linear-gradient(180deg,var(--ik),rgba(0,0,0,.35));
-  box-shadow:0 0 22px var(--ik);transition:height .5s cubic-bezier(.3,.8,.3,1),background .5s;opacity:.9}
-.ik-bub{position:absolute;z-index:4;bottom:52%;width:9px;height:9px;border-radius:50%;background:var(--ik);opacity:0}
-.ik-bub.b1{left:34%}.ik-bub.b2{left:52%;width:6px;height:6px}.ik-bub.b3{left:64%;width:11px;height:11px}
+/* Damlamalar: qozon (SVG - cho'yan qozon, ostida o't, ichida damlama rangi; --ik rang, --ik-p 0..1 to'lish) */
+.ik-pot{--ik:#7fb86a;--ik-p:.1;position:relative;width:236px;height:206px;margin:10px auto 0}
+.ik-pot svg{display:block;width:100%;height:100%;overflow:visible}
+.ik-aura{fill:var(--ik);opacity:calc(.07 + var(--ik-p) * .16);filter:blur(22px);transition:opacity .5s}
+.ik-body{stroke:#07090d;stroke-width:4}
+.ik-iron{fill:#1b1f29;stroke:#07090d;stroke-width:3.5;stroke-linejoin:round}
+.ik-shine{fill:none;stroke:rgba(255,255,255,.16);stroke-width:5;stroke-linecap:round}
+.ik-ring{fill:none;stroke:#2c323f;stroke-width:5}
+.ik-rim2{fill:#2b313e;stroke:#07090d;stroke-width:4}
+.ik-in{fill:#080a0f}
+.ik-liq2{fill:var(--ik);transform:translateY(calc((1 - var(--ik-p)) * 26px));transition:transform .5s cubic-bezier(.3,1.4,.5,1),fill .4s}
+.ik-gl{fill:rgba(255,255,255,.3);transform:translateY(calc((1 - var(--ik-p)) * 26px));transition:transform .5s}
+.ik-log{fill:#4a3423;stroke:#07090d;stroke-width:3.5}
+.ik-fire path{transform-box:fill-box;transform-origin:50% 100%;animation:ikFire .5s ease-in-out infinite alternate}
+.ik-fire .f1{fill:#ff8a2b}.ik-fire .f2{fill:#ffc247;animation-duration:.42s}.ik-fire .f3{fill:#ff8a2b;animation-duration:.58s}.ik-fire .f4{fill:#fff0b0;animation-duration:.36s}
+@keyframes ikFire{from{transform:scale(1,.86) skewX(-4deg)}to{transform:scale(.92,1.1) skewX(5deg)}}
+.ik-steam{fill:none;stroke:var(--ik);stroke-width:5;stroke-linecap:round;opacity:0;stroke-dasharray:14 90;animation:ikSteam 2.6s linear infinite}
+.ik-steam.s2{animation-delay:1.1s;animation-duration:3.1s}
+.ik-pot.pish .ik-steam,.ik-pot.tayyor .ik-steam{opacity:calc(.15 + var(--ik-p) * .5)}
+@keyframes ikSteam{from{stroke-dashoffset:104}to{stroke-dashoffset:0}}
+.ik-bub{fill:var(--ik);stroke:rgba(255,255,255,.5);stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:50% 50%}
 .ik-pot.qayna .ik-bub{animation:ikBub .8s ease-out}
 .ik-pot.qayna .ik-bub.b2{animation-delay:.12s}.ik-pot.qayna .ik-bub.b3{animation-delay:.22s}
 .ik-pot.tayyor .ik-bub{animation:ikBub 1.4s ease-out infinite}
 .ik-pot.tayyor .ik-bub.b2{animation-delay:.4s}.ik-pot.tayyor .ik-bub.b3{animation-delay:.8s}
-@keyframes ikBub{0%{transform:translateY(0) scale(.6);opacity:.9}100%{transform:translateY(-74px) scale(1.2);opacity:0}}
-.ik-smoke{position:absolute;left:50%;top:0;z-index:5;width:70px;height:70px;margin-left:-35px;border-radius:50%;opacity:0;
-  background:radial-gradient(circle,rgba(90,90,100,.85),rgba(60,60,70,0) 70%)}
+@keyframes ikBub{0%{transform:translateY(0) scale(.6);opacity:.95}100%{transform:translateY(-56px) scale(1.25);opacity:0}}
+.ik-drop{position:absolute;left:50%;top:-6px;z-index:4;width:14px;height:14px;margin-left:-7px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:0;
+  background:#f3e2b0;box-shadow:0 0 12px rgba(243,226,176,.8)}
+.ik-pot.qayna .ik-drop{animation:ikDrop .45s cubic-bezier(.5,0,1,.6)}
+@keyframes ikDrop{0%{transform:translateY(-10px) scale(1);opacity:1}85%{opacity:1}100%{transform:translateY(74px) scale(.6);opacity:0}}
+.ik-pot.tayyor .ik-liq2{filter:brightness(1.25)}
+.ik-pot.tayyor .ik-aura{opacity:.45}
+.ik-smoke{position:absolute;left:50%;top:6px;z-index:5;width:90px;height:90px;margin-left:-45px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,rgba(90,90,100,.9),rgba(60,60,70,0) 70%)}
 .ik-pot.tutun .ik-smoke{animation:ikSmoke .9s ease-out}
 .ik-pot.tutun{animation:ikShake .4s}
-@keyframes ikSmoke{0%{transform:translateY(30px) scale(.5);opacity:.95}100%{transform:translateY(-40px) scale(1.7);opacity:0}}
+@keyframes ikSmoke{0%{transform:translateY(40px) scale(.5);opacity:.95}100%{transform:translateY(-40px) scale(1.8);opacity:0}}
 @keyframes ikShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ik-slots{display:flex;justify-content:center;gap:8px;margin:2px 0 6px}
+.ik-slots i{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(255,255,255,.28);transition:background .3s,box-shadow .3s,border-color .3s}
+.ik-slots i.on{background:var(--ik-c,#7fb86a);border-color:var(--ik-c,#7fb86a);box-shadow:0 0 10px var(--ik-c,#7fb86a)}
+.ik-rec ol{list-style:none;counter-reset:ikn}
+.ik-rec ol li{position:relative;counter-increment:ikn;padding:5px 0 5px 2px}
+.ik-rec ol li + li{border-top:1px dashed rgba(110,190,130,.22)}
+.ik-rec ol li::before{content:counter(ikn);position:absolute;left:-32px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;background:rgba(110,190,130,.2);color:#9fdcb1;font:800 11px/1 'Manrope',sans-serif}
 .ik-rec ol{margin:6px 0 0;padding:14px 16px 14px 40px;border-radius:16px;border:1px solid rgba(110,190,130,.35);background:rgba(110,190,130,.07);
   font:500 19px/1.6 'Cormorant Garamond',serif;color:var(--text)}
-.ik-rec ol li::marker{font:700 13px 'Manrope',sans-serif;color:#7fc594}
 .ik-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px}
 .ik-chip{padding:14px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;
   font:600 13px/1.25 'Manrope',sans-serif;text-align:center;transition:transform .12s}

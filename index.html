@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=1f488adb">
+<link rel="stylesheet" href="css/app.css?v=9c34e702">
 </head>
 <body>
 <div class="shell">
@@ -353,7 +353,35 @@
       <span class="kb-sp" aria-hidden="true"></span>
     </div>
     <div class="dr-head"><span class="ms-kick" id="ik-today"></span><h2 class="ms-title" id="ik-name"></h2><span class="dr-step hidden" id="ik-timer"></span></div>
-    <div class="ik-pot" id="ik-pot"><i class="ik-bub b1"></i><i class="ik-bub b2"></i><i class="ik-bub b3"></i><span class="ik-liq"></span><span class="ik-rim"></span><i class="ik-smoke"></i></div>
+    <div class="ik-pot" id="ik-pot">
+      <svg viewBox="0 0 240 210" aria-hidden="true">
+        <defs>
+          <radialGradient id="ikG" cx="38%" cy="30%" r="75%"><stop offset="0" stop-color="#3d4456"/><stop offset="1" stop-color="#10131a"/></radialGradient>
+          <clipPath id="ikC"><ellipse cx="120" cy="62" rx="75" ry="18"/></clipPath>
+        </defs>
+        <ellipse class="ik-aura" cx="120" cy="70" rx="112" ry="70"/>
+        <path class="ik-steam" d="M100 44 C88 30 112 22 100 6"/>
+        <path class="ik-steam s2" d="M140 44 C152 28 128 20 140 2"/>
+        <path class="ik-log" d="M58 194 h124 a7 7 0 0 1 0 14 h-124 a7 7 0 0 1 0 -14Z"/>
+        <g class="ik-fire">
+          <path class="f1" d="M64 198 C56 176 72 168 68 148 C84 162 88 180 82 198Z"/>
+          <path class="f3" d="M158 198 C152 180 168 170 166 150 C182 164 184 182 176 198Z"/>
+          <path class="f2" d="M96 200 C86 178 110 172 104 152 C126 166 132 184 124 200Z"/>
+          <path class="f2" d="M128 200 C122 182 142 176 138 158 C156 170 160 186 152 200Z"/>
+          <path class="f4" d="M108 200 C104 188 118 184 116 172 C128 182 130 192 126 200Z"/>
+        </g>
+        <path class="ik-iron" d="M70 146 l-14 46 h14 l12 -38Z M170 146 l14 46 h-14 l-12 -38Z"/>
+        <circle class="ik-ring" cx="40" cy="88" r="10"/><circle class="ik-ring" cx="200" cy="88" r="10"/>
+        <path class="ik-body" d="M44 64 C34 108 54 160 120 164 C186 160 206 108 196 64Z" fill="url(#ikG)"/>
+        <path class="ik-shine" d="M60 88 C58 116 68 138 86 150"/>
+        <ellipse class="ik-rim2" cx="120" cy="62" rx="84" ry="23"/>
+        <ellipse class="ik-in" cx="120" cy="62" rx="75" ry="18"/>
+        <g clip-path="url(#ikC)"><ellipse class="ik-liq2" cx="120" cy="64" rx="78" ry="19"/><ellipse class="ik-gl" cx="98" cy="60" rx="26" ry="4.5"/></g>
+        <circle class="ik-bub b1" cx="96" cy="58" r="6"/><circle class="ik-bub b2" cx="124" cy="62" r="4"/><circle class="ik-bub b3" cx="146" cy="58" r="7"/>
+      </svg>
+      <i class="ik-drop"></i><i class="ik-smoke"></i>
+    </div>
+    <div class="ik-slots" id="ik-slots"></div>
     <div class="ik-rec" id="ik-rec">
       <span class="dr-step" id="ik-rec-t"></span>
       <ol id="ik-rec-l"></ol>
@@ -1386,7 +1414,7 @@
 <script src="js/07-odam.js?v=a2b0b55a"></script>
 <script src="js/08-saralash.js?v=d754a902"></script>
 <script src="js/09-sehrli-olam.js?v=f2e11d61"></script>
-<script src="js/09-darslar.js?v=257ee563"></script>
+<script src="js/09-darslar.js?v=db38f866"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=769f789e"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
