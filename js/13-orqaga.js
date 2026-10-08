@@ -54,6 +54,7 @@
     "scr-osimlik": "os-back",
     "scr-trans": "tf-back",
     "scr-qob": "qo-back",
+    "scr-rek": "rk-back",
     "scr-qb": "qb-back",
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",

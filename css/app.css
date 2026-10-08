@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-astro .kb-hdr,#scr-osimlik .kb-hdr,#scr-trans .kb-hdr,#scr-qob .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-astro .kb-ttl,#scr-osimlik .kb-ttl,#scr-trans .kb-ttl,#scr-qob .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-osimlik .kb-ttl .cup-kick,#scr-trans .kb-ttl .cup-kick,#scr-qob .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-osimlik .kb-ttl .cup-title,#scr-trans .kb-ttl .cup-title,#scr-qob .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-astro .kb-hdr,#scr-osimlik .kb-hdr,#scr-trans .kb-hdr,#scr-qob .kb-hdr,#scr-rek .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-astro .kb-ttl,#scr-osimlik .kb-ttl,#scr-trans .kb-ttl,#scr-qob .kb-ttl,#scr-rek .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-osimlik .kb-ttl .cup-kick,#scr-trans .kb-ttl .cup-kick,#scr-qob .kb-ttl .cup-kick,#scr-rek .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-osimlik .kb-ttl .cup-title,#scr-trans .kb-ttl .cup-title,#scr-qob .kb-ttl .cup-title,#scr-rek .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -2811,6 +2811,19 @@ body.kr-on .mp{display:none!important}
 #scr-dars .fn-qr{margin:14px 0 0}
 #scr-dars .fn-qr .qo-ic{flex:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(243,213,143,.16);color:#f3d58f}
 #scr-dars .fn-qr .qo-ic svg{width:26px;height:26px}
+/* Rekordlar */
+.rk-sec{display:block;margin:22px 0 2px;font:600 22px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.rk-hero{display:flex;align-items:center;gap:14px;margin-top:6px;padding:14px;border-radius:20px;border:1px solid rgba(var(--dr-rgb),.45);background:linear-gradient(140deg,rgba(var(--dr-rgb),.2),rgba(var(--dr-rgb),.04))}
+.rk-hero img{flex:none;width:76px;height:76px;border-radius:50%}
+.rk-hero p{margin:0;font:500 12.5px/1.5 'Manrope',sans-serif;color:var(--text)}
+.rk-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.rk-tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.04);text-align:center}
+.rk-tile b{font:600 34px/1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.rk-tile small{font:600 11px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.rk-top-t{display:block;margin:20px 0 8px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.rk-bosh{margin:0;padding:16px;border-radius:14px;border:1px dashed var(--line);text-align:center;font:500 12.5px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.rk-son{font:600 64px/1 'Cormorant Garamond',serif;color:#f3d58f}
+#scr-rek .kb-ttl .cup-title.uzun{font-size:clamp(13px,4vw,17px)!important;letter-spacing:.04em}
 /* Uchish darsi */
 .uc-box{display:flex;justify-content:center}
 #uc-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;border:1px solid rgba(224,178,91,.4);background:#141829}
