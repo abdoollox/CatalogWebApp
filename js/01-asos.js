@@ -160,7 +160,7 @@
     { img:"img/sort/q5.jpg", w: [{"gryffindor":3, "hufflepuff":1}, {"slytherin":3, "ravenclaw":1}, {"ravenclaw":3, "gryffindor":1}, {"hufflepuff":3, "slytherin":1}],
       uz: { q:"Qaysi dars sizni ko'proq o'ziga tortadi?",
             a:["Qora sehrga qarshi himoya",
-               "Iksirlar tayyorlash",
+               "Damlamalar tayyorlash",
                "Afsunlar",
                "Giyohshunoslik"] },
       ru: { q:"Какой предмет вам интереснее всего?",

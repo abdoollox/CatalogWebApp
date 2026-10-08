@@ -46,7 +46,7 @@
       uz: {
         traits: "Maqsad · zukkolik · tadbirkorlik", symbol: "Ilon", element: "Suv", colors: "Yashil va kumush",
         founder: ["Salazar Sliterin", "Ilonlar tilini bilgan. Qasr ichida Maxfiy hujrani yashirincha qurib ketgan."],
-        head: ["Severus Sneyp", "Iksirlar ustozi. 7-kitobda mudirlik Horas Slaggornga o'tadi."],
+        head: ["Severus Sneyp", "Damlamalar ustozi. 7-kitobda mudirlik Horas Slaggornga o'tadi."],
         ghost: ["Qonli Baron", "Kiyimi kumushrang qon dog'lari bilan qoplangan. Hatto Pivz ham undan qo'rqadi."],
         captain: ["Markus Flint", "1–3-kitoblarda. 5-kitobda — Grexem Montegyu."],
         prefects: ["Drako Malfoy va Pensi Parkinson", "5-kitobdan boshlab."],

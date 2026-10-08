@@ -1,4 +1,4 @@
-/* Darslar: Xogvarts fanlari - har biri kichik interaktiv mashg'ulot (Afsunlar, Iksirlar...), kuniga bir marta ball
+/* Darslar: Xogvarts fanlari - har biri kichik interaktiv mashg'ulot (Afsunlar, Damlamalar...), kuniga bir marta ball
    Ilova kodi bir necha faylga bo'lingan; hammasi BIR umumiy maydonda ishlaydi
    va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
    narsani chaqirmang - tekshiruv: tools/tartib.js */
@@ -19,7 +19,7 @@
       ust: { uz: "Professor Flitvik", ru: "Профессор Флитвик", en: "Professor Flitwick" },
       izoh: { uz: "Tayoqcha harakatini barmog'ingiz bilan chizing.", ru: "Нарисуйте пальцем движение палочки.", en: "Trace the wand movement with your finger." } },
     { id: "iksir", on: true, rgb: "110,190,130",
-      nom: { uz: "Iksirlar", ru: "Зельеварение", en: "Potions" },
+      nom: { uz: "Damlamalar", ru: "Зельеварение", en: "Potions" },
       ust: { uz: "Professor Sneyp", ru: "Профессор Снегг", en: "Professor Snape" },
       izoh: { uz: "Retseptni eslab qoling va damlamani tartib bilan tayyorlang.", ru: "Запомните рецепт и сварите зелье по порядку.", en: "Memorise the recipe and brew the potion in order." } },
     { id: "trans", on: false, rgb: "200,150,90",
@@ -85,7 +85,10 @@
           ikRec: "Retsept", ikRecS: "Masalliqlar tartibini eslab qoling — keyin retsept yopiladi.", ikGo: "Tayyorman",
           ikCook: "Masalliqlarni tartib bilan qozonga soling", ikErr: function (a, b) { return "Xato: " + a + " / " + b; },
           ikBad: ["Noto'g'ri. Diqqat qiling!", "Yana xato. Qozon qaynab ketyapti…"], ikBoom: "Damlama buzildi. Retseptni qaytadan o'qing.",
-          ikOk: "Damlama tayyor. Professor Sneyp… hech narsa demadi. Bu maqtov.", ikStep: function (a, b) { return a + " / " + b; } },
+          ikOk: "Damlama tayyor. Professor Sneyp… hech narsa demadi. Bu maqtov.",
+          ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
+          ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
+          ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
     ru: { kick: "Хогвартс", ttl: "Уроки", tile: "Уроки", tileNew: function (n) { return "Заданий на сегодня: " + n; }, tileDone: "Уроки и состязания",
           sum: function (a, b) { return "Пройдено уроков: " + a + " / " + b; }, note: "Уроки — тренировка без ограничений. Очки даются в разделе «Состязания».",
           pts: function (n) { return "+" + n + " очков"; }, done: "Сделано", soon: "Скоро", go: "На урок", again: "Потренироваться",
@@ -127,6 +130,9 @@
           ikRec: "Рецепт", ikRecS: "Запомните порядок ингредиентов — потом рецепт закроется.", ikGo: "Готов",
           ikCook: "Кладите ингредиенты в котёл по порядку", ikErr: function (a, b) { return "Ошибки: " + a + " / " + b; },
           ikBad: ["Неверно. Внимательнее!", "Опять ошибка. Котёл закипает…"], ikBoom: "Зелье испорчено. Прочитайте рецепт ещё раз.",
+          ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
+          ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
+          ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
           ikOk: "Зелье готово. Профессор Снегг… ничего не сказал. Это похвала.", ikStep: function (a, b) { return a + " / " + b; } },
     en: { kick: "Hogwarts", ttl: "Classes", tile: "Classes", tileNew: function (n) { return n + " tasks waiting today"; }, tileDone: "Lessons and contests",
           sum: function (a, b) { return a + " / " + b + " lessons completed"; }, note: "Lessons are practice — as many as you like. Points are won in Contests.",
@@ -169,6 +175,9 @@
           ikRec: "Recipe", ikRecS: "Memorise the order of the ingredients — then the recipe closes.", ikGo: "Ready",
           ikCook: "Add the ingredients to the cauldron in order", ikErr: function (a, b) { return "Mistakes: " + a + " / " + b; },
           ikBad: ["Wrong. Pay attention!", "Wrong again. The cauldron is boiling over…"], ikBoom: "The potion is ruined. Read the recipe again.",
+          ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
+          ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
+          ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
           ikOk: "The potion is ready. Professor Snape… said nothing. That is praise.", ikStep: function (a, b) { return a + " / " + b; } }
   };
 
@@ -186,7 +195,7 @@
   function drImg(id) { return IMG_DIR + "dars/" + id + ".webp"; }
 
   // Mahalliy ko'rikda server yo'q - namuna
-  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 5 }, drLocalBest = {};
+  var drLocalLvl = { tarix: 2, afsun: 40, iksir: 30 }, drLocalBest = {};
   function drSample(body) {
     body = body || {};
     var res = { ok: true };
@@ -225,7 +234,7 @@
     res.lessons = {
       tarix: { level: drLocalLvl.tarix, total: 46, contest: bell("tarix", "10") },
       afsun: { level: drLocalLvl.afsun, total: 48, contest: bell("afsun", "lumos") },
-      iksir: { level: drLocalLvl.iksir, total: 24, contest: bell("iksir", "boils") } };
+      iksir: { level: drLocalLvl.iksir, total: 36, contest: bell("iksir", "boils") } };
     return res;
   }
 
@@ -614,7 +623,7 @@
     for (var n = 1; n <= jami; n++) {
       (function (k) {
         var b = drEl("button", "fn-l" + (k <= lv ? " done" : k === lv + 1 ? " now" : " lock"), String(k));
-        if (fanId === "afsun" && k <= lv && afBahoGet(k) >= 4) { b.classList.add("bh" + afBahoGet(k)); }
+        if (DR_BAHO_K[fanId] && k <= lv && drBahoGet(fanId, k) >= 4) { b.classList.add("bh" + drBahoGet(fanId, k)); }
         b.type = "button";
         b.addEventListener("click", function () {
           if (k > lv + 1) { showToast(x.locked); return; }
@@ -1179,20 +1188,23 @@
     var n = af.rounds.length || 1, s = sum / n;
     return { acc: Math.round(acc / n), vaqt: vaqt, n: n, baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1 };
   }
-  function afBahoGet(n) { try { return (JSON.parse(localStorage.getItem("hp_af_baho") || "{}") || {})[n] || 0; } catch (e) { return 0; } }
-  function afBahoSave(n, b) {
+  // Eng yaxshi baho shu qurilmada (fan bo'yicha): darslar to'rida halqa bilan ko'rinadi
+  var DR_BAHO_K = { afsun: "hp_af_baho", iksir: "hp_ik_baho" };
+  function drBahoGet(fan, n) { try { return (JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {})[n] || 0; } catch (e) { return 0; } }
+  function drBahoSave(fan, n, b) {
     try {
-      var m = JSON.parse(localStorage.getItem("hp_af_baho") || "{}") || {};
-      if (!(m[n] >= b)) { m[n] = b; localStorage.setItem("hp_af_baho", JSON.stringify(m)); }
+      var m = JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {};
+      if (!(m[n] >= b)) { m[n] = b; localStorage.setItem(DR_BAHO_K[fan], JSON.stringify(m)); }
     } catch (e) {}
   }
+  function afBahoSave(n, b) { drBahoSave("afsun", n, b); }
   function afBahoEl(sc) {
     var x = drX(), el = drEl("div", "af-baho b" + sc.baho), pp = drEl("span", "af-baho-p");
     for (var i = 1; i <= 5; i++) { pp.appendChild(drEl("i", i <= sc.baho ? "on" : "")); }
     el.appendChild(drEl("small", "af-baho-k", x.afBahoT));
     el.appendChild(drEl("b", "af-baho-n", x.afBaho[sc.baho - 1]));
     el.appendChild(pp);
-    el.appendChild(drEl("span", "af-baho-s", x.afAcc(sc.acc) + " · " + x.afVaqt(sc.vaqt, sc.n)));
+    el.appendChild(drEl("span", "af-baho-s", sc.izoh || (x.afAcc(sc.acc) + " · " + x.afVaqt(sc.vaqt, sc.n))));
     return el;
   }
 
@@ -1490,24 +1502,64 @@
 
   function ikNom(m) { var i = lang === "ru" ? 1 : lang === "en" ? 2 : 0; return (IK_M[m] || [m, m, m])[i]; }
 
-  // Qiyinlik aylanaga qarab: nechta masalliq orasidan tanlanadi va nechta xatoga ruxsat
+  /* Darslar rejasi (bot: hpdars.IKSIR_DARS = 36), har bosqichda o'sha 12 damlama:
+       1-12  retsept xohlagancha ochiq turadi; 8 masalliq; 3 xatoda damlama buziladi
+       13-24 12 masalliq; 2 xato
+       25-36 IMTIHON: retsept bir necha soniya ko'rinib yopiladi; 14 masalliq; 2 xato
+     Hamma bosqichda SHAM (vaqt) va BAHO: xato, buzilish va kechikish bahoni pasaytiradi; «Qoniqarli»dan past - dars o'tmaydi. */
   var IK_TARTIB = ["boils", "forget", "shrink", "antidote", "wiggenweld", "uyqu",
                    "skelegro", "living", "wit", "peace", "polyjuice", "felix"];          // bot: hpdars.DARSLAR bilan bir xil
-  var IK_BOSQ = [{ chips: 8, xato: 3 }, { chips: 12, xato: 2 }];      // 1-12-darslar; 13-24-darslar
+  var IK_BOSQ = [{ chips: 8, xato: 3, sek: 5 }, { chips: 12, xato: 2, sek: 4 }, { chips: 14, xato: 2, sek: 3, yop: true }];
+  function ikSnImg(k) { return IMG_DIR + "sneyp/" + k + ".webp"; }
   function ikOpen(bell, n) {
     var st = drData && drData.iksir;
     var item = bell === true ? (st && st.contest && st.contest.item) : IK_TARTIB[((n || 1) - 1) % IK_TARTIB.length];
     var id = IK[item] ? item : "boils";
     var bq = bell === true ? { chips: 10, xato: 99 } : IK_BOSQ[Math.min(Math.floor(((n || 1) - 1) / IK_TARTIB.length), IK_BOSQ.length - 1)];
-    ik = { id: id, phase: "rec", step: 0, err: 0, chips: [], bq: bq, bell: bell === true, n: n || 1 };
+    ikStop();
+    ik = { id: id, phase: "rec", step: 0, err: 0, chips: [], bq: bq, bell: bell === true, n: n || 1,
+           errJami: 0, boom: 0, t0: 0, pct: 1, lim: 0, kayf: "maslahat", yopT: 0, tm: 0 };
+    ik.lim = bq.sek ? (3 + IK[id].r.length * bq.sek) * 1000 : 0;
     drShowGame("scr-iksir");
+    ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var i = new Image(); i.src = ikSnImg(k); });
     var x = drX(), f = drFan("iksir");
     $("ik-kick").textContent = f.nom[lang];
     $("ik-ttl").textContent = f.ust[lang];
-    $("ik-today").textContent = ik.bell ? x.bell : x.lvl(ik.n);
+    $("ik-today").textContent = ik.bell ? x.bell : x.lvl(ik.n) + (bq.yop ? " · " + x.ikImt : "");
     $("ik-timer").classList.toggle("hidden", !ik.bell);
     $("ik-name").textContent = IK[id][lang] || IK[id].uz;
     ikRender();
+    ikYopBosh();
+  }
+  function ikStop() { if (ik) { clearInterval(ik.tm); clearInterval(ik.yopTm); ik.tm = 0; ik.yopTm = 0; } }
+  // Imtihon: retsept sanoq bilan o'zi yopiladi
+  function ikYopBosh() {
+    if (!ik || !ik.bq.yop || ik.phase !== "rec") { return; }
+    var me = ik, qoldi = 4 + IK[ik.id].r.length;
+    clearInterval(ik.yopTm);
+    var chiz = function () { if (ik === me && ik.phase === "rec") { $("ik-go").textContent = drX().ikGo + " · " + qoldi; $("ik-rec-s").textContent = ik.msg || drX().ikYop(qoldi); } };
+    chiz();
+    ik.yopTm = setInterval(function () {
+      if (ik !== me || ik.phase !== "rec") { clearInterval(me.yopTm); return; }
+      qoldi--;
+      if (qoldi <= 0) { clearInterval(me.yopTm); ik.msg = ""; ikStart(); return; }
+      chiz();
+    }, 1000);
+  }
+  // Sham: pishirish boshlangandan yonadi
+  function ikSham() {
+    var sh = $("ik-sham");
+    if (!sh || !ik) { return; }
+    sh.classList.toggle("hidden", ik.bell || ik.phase !== "cook" || !ik.lim);
+    if (ik.t0) { ik.pct = Math.max(0, 1 - (Date.now() - ik.t0) / ik.lim); }
+    $("ik-sham-w").style.width = (ik.pct * 100).toFixed(1) + "%";
+    sh.classList.toggle("ochdi", ik.pct <= 0);
+    sh.classList.toggle("oz", ik.pct > 0 && ik.pct < 0.3);
+  }
+  function ikKayf(k) {
+    if (!ik) { return; }
+    ik.kayf = k;
+    ["ik-sn-im", "ik-sn-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = ikSnImg(k); } });
   }
 
   function ikShuffle(a) {
@@ -1522,6 +1574,14 @@
     ik.step = 0;
     ik.err = 0;
     ik.msg = "";
+    clearInterval(ik.yopTm);
+    if (ik.lim) {
+      var me = ik;
+      ik.t0 = Date.now(); ik.pct = 1;
+      clearInterval(ik.tm);
+      ik.tm = setInterval(function () { if (ik !== me || ik.phase !== "cook") { clearInterval(me.tm); return; } ikSham(); }, 100);
+    }
+    ikKayf("maslahat");
     ikRender();
   }
 
@@ -1535,6 +1595,8 @@
     $("ik-pot").style.setProperty("--ik", p.c);
     $("ik-pot").style.setProperty("--ik-h", Math.round(18 + 62 * ik.step / rec.length) + "%");
     $("ik-pot").classList.toggle("tayyor", ik.phase === "done");
+    ikSham();
+    ikKayf(ik.kayf);
     if (ik.phase === "rec") {
       $("ik-rec-t").textContent = x.ikRec;
       $("ik-rec-s").textContent = ik.msg || x.ikRecS;
@@ -1546,7 +1608,7 @@
       return;
     }
     if (ik.phase === "cook") {
-      $("ik-cook-t").textContent = ik.msg || x.ikCook;
+      $("ik-cook-t").textContent = ik.msg || ik.okMsg || x.ikCook;
       $("ik-cook-t").classList.toggle("bad", !!ik.msg);
       $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + (ik.bell ? x.ikErr(ik.err, "∞").replace(" / ∞", "") : x.ikErr(ik.err, ik.bq.xato));
       var box = $("ik-chips");
@@ -1568,6 +1630,8 @@
     if (rec[ik.step] === m) {
       ik.step++;
       ik.msg = "";
+      ik.kayf = "yaxshi";
+      if (!ik.bell && ik.step < rec.length) { ik.okMsg = x.ikTogri[ik.step % x.ikTogri.length]; }
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
       $("ik-pot").classList.remove("qayna");
       void $("ik-pot").offsetWidth;
@@ -1581,8 +1645,7 @@
           ik.phase = "done";
           ikRender();
           if (ik.bell) { blFinish($("ik-res")); return; }
-          var daraja = ik.n;
-          drDone("iksir", daraja, function (yangi) { drResult($("ik-res"), x.ikOk, "iksir", daraja, yangi); });
+          ikEnd();
         }, 700);
         return;
       }
@@ -1591,6 +1654,9 @@
     }
     // xato masalliq
     ik.err++;
+    ik.errJami++;
+    ik.okMsg = "";
+    ikKayf("xafa");
     if (bl && ik.bell) { bl.xato++; }
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
     btn.classList.add("xato");
@@ -1604,8 +1670,11 @@
         ik.lock = false;
         ik.phase = "rec";
         ik.step = 0;
+        ik.boom++;
         ik.msg = x.ikBoom;
+        ik.kayf = "xafa";
         ikRender();
+        ikYopBosh();
       }, 700);
       return;
     }
@@ -1615,10 +1684,47 @@
     $("ik-prog").textContent = x.ikStep(ik.step, rec.length) + " · " + (ik.bell ? x.ikErr(ik.err, "∞").replace(" / ∞", "") : x.ikErr(ik.err, ik.bq.xato));
   }
 
+  // Dars oxiri: baho (xato -12, buzilish -15, sham o'chsa -20, ikki baravar kechiksa -40) va Professor Sneyp xulosasi
+  function ikEnd() {
+    var x = drX(), me = ik, daraja = ik.n, otgan = ik.t0 ? Date.now() - ik.t0 : 0;
+    var kech = ik.lim && otgan > ik.lim ? (otgan > ik.lim * 2 ? 2 : 1) : 0;
+    var s = Math.max(0, 100 - ik.errJami * 12 - ik.boom * 15 - kech * 20);
+    var sc = { baho: s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1, izoh: x.ikXato(ik.errJami) + " · " + x.ikVaqt[kech ? 1 : 0] };
+    var otdi = sc.baho >= 3, box = $("ik-res");
+    clearInterval(ik.tm);
+    $("ik-pot").classList.toggle("tayyor", otdi);
+    var show = function (yangi) {
+      if (ik !== me) { return; }
+      if (otdi) { drResult(box, "«" + x.ikSnB[sc.baho - 1] + "»", "iksir", daraja, yangi); }
+      else {
+        box.innerHTML = "";
+        box.appendChild(drEl("p", "dr-res-t", "«" + x.ikSnB[sc.baho - 1] + "»"));
+        box.appendChild(drEl("p", "dr-res-s", x.afLow));
+        var r = drEl("button", "dr-btn", x.retry);
+        r.type = "button";
+        r.addEventListener("click", function () { ikOpen(false, daraja); });
+        box.appendChild(r);
+        var b = drEl("button", "dr-btn ikkinchi", x.toList);
+        b.type = "button";
+        b.addEventListener("click", function () { ik = null; fanOpen("iksir"); });
+        box.appendChild(b);
+        box.classList.remove("hidden");
+      }
+      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
+      fi.className = "af-fl-big";
+      fi.alt = "";
+      fi.src = ikSnImg(sc.baho >= 5 ? "zor" : sc.baho === 4 ? "yaxshi" : sc.baho === 3 ? "maslahat" : "xafa");
+      box.insertBefore(fi, ft);
+      box.insertBefore(drEl("small", "af-baho-k", x.ikSnN), ft);
+      box.insertBefore(afBahoEl(sc), box.firstChild);
+    };
+    if (otdi) { drBahoSave("iksir", daraja, sc.baho); drDone("iksir", daraja, show); } else { show(null); }
+  }
+
   function drSetup() {
     $("dr-back").addEventListener("click", function () { $("scr-dars").classList.add("hidden"); drQayt = false; try { openHub(); } catch (e) {} });
     $("af-back").addEventListener("click", function () { var b = af && af.bell; af = null; blAbort(); if (b) { blOpen("afsun"); } else { fanOpen("afsun"); } });
-    $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ik = null; blAbort(); if (b) { blOpen("iksir"); } else { fanOpen("iksir"); } });
+    $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ikStop(); ik = null; blAbort(); if (b) { blOpen("iksir"); } else { fanOpen("iksir"); } });
     $("tr-back").addEventListener("click", function () { var b = tr && tr.bell; tr = null; blAbort(); if (b) { blOpen("tarix"); } else { fanOpen("tarix"); } });
     $("bl-back").addEventListener("click", function () {
       blAbort();
