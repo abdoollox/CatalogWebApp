@@ -132,10 +132,10 @@
           qobT: "Qobiliyatlar", qobK: "Mening darajam", qobS: "Har fan boshqa qobiliyatni mashq qildiradi. Daraja o'tilgan darslar va baholaringizdan hisoblanadi.",
           qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
           qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Qobiliyatlaringiz profilingizda boshqa sehrgarlarga ham ko'rinadi.",
-          rekT: "Rekord", rekSec: "Rekordlar", rekRule: "Bu yerda tezlik emas, chidam muhim: xatosiz kim uzoqqa boradi. Birinchi xatoda o'yin tugaydi. Jadval har dushanba yangilanadi, eng yaxshi natijangiz saqlanib qoladi.",
-          rekWeek: "Shu hafta", rekAll: "Eng yaxshi natija", rekGo: "Boshlash", rekTop: "Hafta peshqadamlari", rekEmpty: "Bu hafta hali hech kim urinmadi. Birinchi bo'ling!",
+          rekT: "Rekord", rekSec: "Rekordlar", rekRule: "Bu yerda tezlik emas, chidam muhim: xatosiz kim uzoqqa boradi. Birinchi xatoda o'yin tugaydi. Jadval doimiy: eng yaxshi natijangiz unda qoladi.",
+          rekWeek: "O'rningiz", rekAll: "Rekordingiz", rekGo: "Boshlash", rekTop: "Rekordchilar", rekEmpty: "Hali hech kim urinmadi. Birinchi bo'ling!",
           rekRes: "Natija", rekNew: "Yangi rekord!", rekOld: function (n) { return "Rekordingiz: " + n; }, rekAgain: "Yana urinish", rekBack: "Rekordlar jadvali",
-          rekCard: function (a) { return a ? "Rekordingiz: " + a : "Hali urinmagansiz"; }, rekPlace: function (p, n) { return p + "-o'rin · " + n + " kishi"; },
+          rekCard: function (a) { return a ? "Rekordingiz: " + a : "Hali urinmagansiz"; }, rekPlace: function (p, n) { return n + " kishi ichida"; },
           ikImt: "Imtihon", ikYop: function (n) { return "Retsept " + n + " soniyadan keyin yopiladi"; }, ikXato: function (n) { return "Xato: " + n; },
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
@@ -220,10 +220,10 @@
           qobT: "Способности", qobK: "Мой уровень", qobS: "Каждый предмет тренирует свою способность. Уровень считается по пройденным урокам и вашим оценкам.",
           qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
           qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Ваши способности видны другим волшебникам в вашем профиле.",
-          rekT: "Рекорд", rekSec: "Рекорды", rekRule: "Здесь важна не скорость, а выдержка: кто пройдёт дальше без ошибок. Игра заканчивается на первой ошибке. Таблица обновляется каждый понедельник, ваш лучший результат сохраняется.",
-          rekWeek: "На этой неделе", rekAll: "Лучший результат", rekGo: "Начать", rekTop: "Лидеры недели", rekEmpty: "На этой неделе ещё никто не пробовал. Будьте первым!",
+          rekT: "Рекорд", rekSec: "Рекорды", rekRule: "Здесь важна не скорость, а выдержка: кто пройдёт дальше без ошибок. Игра заканчивается на первой ошибке. Таблица постоянная: ваш лучший результат остаётся в ней.",
+          rekWeek: "Ваше место", rekAll: "Ваш рекорд", rekGo: "Начать", rekTop: "Рекордсмены", rekEmpty: "Ещё никто не пробовал. Будьте первым!",
           rekRes: "Результат", rekNew: "Новый рекорд!", rekOld: function (n) { return "Ваш рекорд: " + n; }, rekAgain: "Ещё раз", rekBack: "Таблица рекордов",
-          rekCard: function (a) { return a ? "Ваш рекорд: " + a : "Вы ещё не пробовали"; }, rekPlace: function (p, n) { return p + "-е место · участников: " + n; },
+          rekCard: function (a) { return a ? "Ваш рекорд: " + a : "Вы ещё не пробовали"; }, rekPlace: function (p, n) { return "участников: " + n; },
           ikImt: "Экзамен", ikYop: function (n) { return "Рецепт закроется через " + n + " с"; }, ikXato: function (n) { return "Ошибок: " + n; },
           ikVaqt: ["Вовремя", "Свеча погасла"], ikSnN: "Профессор Снегг", ikTogri: ["Хм. Верно.", "Продолжайте.", "Так."],
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
@@ -309,10 +309,10 @@
           qobT: "Abilities", qobK: "My level", qobS: "Each subject trains a different ability. Your level comes from the lessons you have passed and your grades.",
           qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
           qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Other wizards can see your abilities in your profile.",
-          rekT: "Record", rekSec: "Records", rekRule: "This is about endurance, not speed: who gets furthest without a mistake. The game ends on your first mistake. The table resets every Monday; your best result is kept.",
-          rekWeek: "This week", rekAll: "Best ever", rekGo: "Begin", rekTop: "This week's leaders", rekEmpty: "Nobody has tried this week yet. Be the first!",
+          rekT: "Record", rekSec: "Records", rekRule: "This is about endurance, not speed: who gets furthest without a mistake. The game ends on your first mistake. The table is permanent: your best result stays on it.",
+          rekWeek: "Your place", rekAll: "Your record", rekGo: "Begin", rekTop: "Record holders", rekEmpty: "Nobody has tried yet. Be the first!",
           rekRes: "Result", rekNew: "New record!", rekOld: function (n) { return "Your record: " + n; }, rekAgain: "Try again", rekBack: "Records table",
-          rekCard: function (a) { return a ? "Your record: " + a : "Not tried yet"; }, rekPlace: function (p, n) { return "Place " + p + " of " + n; },
+          rekCard: function (a) { return a ? "Your record: " + a : "Not tried yet"; }, rekPlace: function (p, n) { return "of " + n; },
           ikImt: "Exam", ikYop: function (n) { return "The recipe closes in " + n + " s"; }, ikXato: function (n) { return "Mistakes: " + n; },
           ikVaqt: ["In time", "The candle went out"], ikSnN: "Professor Snape", ikTogri: ["Hm. Correct.", "Continue.", "Indeed."],
           ikSnB: ["That is not a potion, it is a disaster. Again.", "Pitiful. Can you not even read a recipe?", "Acceptable. Nobody will be poisoned — an achievement in itself.", "Not bad. I did not expect that from you.", "Outstanding. I do not say that word often."],
@@ -626,7 +626,7 @@
   /* ================= REKORD: xatosiz kim uzoqqa boradi (egasi g'oyasi, 2026-10-08) =================
      Kunlik bellashuv - kim TEZ; rekord - kim UZOQ: har fanda cheksiz rejim, birinchi xatoda tugaydi, natija - nechta
      qadam o'tilgani. Darslarni tugatganlar ham zerikmasin. Server: {record: fan, score}, {records: 1} (hpdars.dars_rekord,
-     haftalik jadval - dushanbadan; eng yaxshi natija doim qoladi). Hozircha BALL BERILMAYDI. Har o'yinda `rek` bayrog'i:
+     jadval DOIMIY - egasi qarori). Hozircha BALL BERILMAYDI. Har o'yinda `rek` bayrog'i:
      tezlik/qiyinlik qadam sayin oshadi (har o'yinning Open funksiyasiga "rek" beriladi). */
   var rekData = null, rekFan = null, rekAt = 0, rekSahifa = null;
   var REK_BIR = { tarix: ["savol", "вопросов", "questions"], afsun: ["afsun", "заклинаний", "spells"], iksir: ["masalliq", "ингредиентов", "ingredients"],
@@ -654,7 +654,7 @@
     $("rk-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     $("rk-im").src = drImg(f.id);
     $("rk-rule").textContent = x.rekRule;
-    $("rk-week").textContent = String(r.week);
+    $("rk-week").textContent = r.place ? String(r.place) : "—";
     $("rk-week-t").textContent = x.rekWeek + (r.place ? " · " + x.rekPlace(r.place, r.n) : "");
     $("rk-all").textContent = String(r.all);
     $("rk-all-t").textContent = x.rekAll + " · " + rekBir(f.id);
