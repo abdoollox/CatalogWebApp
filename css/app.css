@@ -3177,3 +3177,20 @@ body.kr-on .mp{display:none!important}
 .pu-c.yoq .pu-im img{filter:grayscale(.6) brightness(.7)}
 .pu-c.yoq b{color:var(--dim)}
 #pu-resort{margin-top:10px}
+
+/* Profil sahifasi (egasi, 2026-10-09): uchlik eng tepada, ism sarlavha ustida, elementlar orasi bir xil (12px) */
+#pm .pm-head{display:none}
+#pm .pu{margin:6px 0 0}
+#pm #pu-resort{margin:12px 0 0}
+#pm .pm-wal,#pm .nsh-go{margin:12px 0 0}
+#pm .panel{margin:12px 0 0}
+#pm .pm-lbl{margin:26px 4px 10px!important}
+#pm .hub-pv,#pm #hub-set-note{margin-top:12px}
+#pm .pm-card{margin:0}
+#pm .pm-card + .pm-lbl{margin-top:26px}
+#pm > :last-child{margin-bottom:24px}
+/* ma'lumot oynasida kichik yopish belgisi */
+.nsh .hpask-box{position:relative}
+.nsh-x{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--dim);font:400 22px/1 'Manrope',sans-serif;cursor:pointer;display:grid;place-items:center;padding:0 0 2px}
+.nsh-x:active{transform:scale(.94)}
+.nsh-x.hidden{display:none}

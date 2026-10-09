@@ -977,7 +977,7 @@
     // Fakultet
     var hh = HOUSES[house], hx = UY_XAR[lang] || UY_XAR.uz;
     katak(t.houseLbl, IMG_DIR + hh.img, hh[lang], "gerb", function () {
-      nshBox({ codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "", text: hx[house] || "",
+      nshBox({ x: true, codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "", text: hx[house] || "",
                more: { label: hx.more, fn: function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } } },
                more2: { label: al("uyShare"), fn: function () { uyShare(); } } });
     });
@@ -985,24 +985,24 @@
     if (wand) {
       var ws = IMG_DIR + "tayoqcha/" + wand.wood + ".webp", wn = WOODS[wand.wood][lang];
       katak(t.wandLbl, ws, wn, "", function () {
-        nshBox({ codes: ["x"], srcs: [ws], kick: t.wandLbl, title: wn, text: CORES[wand.core][lang] + " · " + FLEX[wand.flex].len + " " + t.inch + " · " + FLEX[wand.flex][lang],
+        nshBox({ x: true, codes: ["x"], srcs: [ws], kick: t.wandLbl, title: wn, text: CORES[wand.core][lang] + " · " + FLEX[wand.flex].len + " " + t.inch + " · " + FLEX[wand.flex][lang],
                  more: { label: t.wandMore, fn: openWandDetail }, more2: { label: TQ_TX[lang] || TQ_TX.uz, fn: tqShare } });
       });
     } else {
       katak(t.wandLbl, IMG_DIR + "tayoqcha/quti.webp", "—", "yoq", function () {
-        nshBox({ codes: ["x"], srcs: [IMG_DIR + "tayoqcha/quti.webp"], kick: t.wandLbl, title: t.wandNone, text: t.wandNote, more: { label: t.wandCta, fn: startWand } });
+        nshBox({ x: true, codes: ["x"], srcs: [IMG_DIR + "tayoqcha/quti.webp"], kick: t.wandLbl, title: t.wandNone, text: t.wandNote, more: { label: t.wandCta, fn: startWand } });
       });
     }
     // Patronus
     var px = patX(), p = patronus && PATRONUS[patronus];
     if (p) {
       katak(px.lbl, patImg(patronus), p[lang], "", function () {
-        nshBox({ codes: ["x"], srcs: [patImg(patronus)], kick: px.lbl, title: p[lang], text: p["n_" + lang] + "\n\n" + p["w_" + lang] + ".\n\n" + px.what,
+        nshBox({ x: true, codes: ["x"], srcs: [patImg(patronus)], kick: px.lbl, title: p[lang], text: p["n_" + lang] + "\n\n" + p["w_" + lang] + ".\n\n" + px.what,
                  more2: { label: px.share, fn: patShare } });
       });
     } else {
       katak(px.lbl, patImg("mist"), "—", "yoq", function () {
-        nshBox({ codes: ["x"], srcs: [patImg("mist")], kick: px.lbl, title: px.none, text: px.noneS, more: { label: px.cta, fn: startPatronus } });
+        nshBox({ x: true, codes: ["x"], srcs: [patImg("mist")], kick: px.lbl, title: px.none, text: px.noneS, more: { label: px.cta, fn: startPatronus } });
       });
     }
   }

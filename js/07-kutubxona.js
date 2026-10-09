@@ -457,6 +457,7 @@
     pmFill();
     try { pmDarsRows(); } catch (e) {}
     try { puRender(); } catch (e) {}
+    try { $("pm-kick").textContent = $("pm-name").textContent; } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
     $("pm").classList.remove("hidden");
   }
 
@@ -735,6 +736,10 @@
       if (o.more2) { more2.textContent = o.more2.label; more2.onclick = function () { box.classList.add("hidden"); o.more2.fn(); }; }
     }
     $("nsh-ok").onclick = yop;
+    // o.x: katta «Yopish» tugmasi o'rnida burchakda kichik × (profil kataklari - egasi, 2026-10-09)
+    $("nsh-ok").classList.toggle("hidden", !!o.x);
+    var xb = $("nsh-x");
+    if (xb) { xb.classList.toggle("hidden", !o.x); xb.onclick = yop; }
     box.onclick = function (ev) { if (ev.target === box) { yop(); } };
     box.classList.remove("hidden");
   }

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=f5cd2ff5">
+<link rel="stylesheet" href="css/app.css?v=e33a131b">
 </head>
 <body>
 <div class="shell">
@@ -149,9 +149,14 @@
   <!-- Profil sahifasi (o'ng tepadagi tugma): hamyon, sehrgar, sozlamalar. Alohida sahifa, modal emas. js/07 pm* -->
   <div id="pm" class="screen hidden">
     <div class="cat-head">
-      <div style="display:flex;flex-direction:column;gap:2px"><h1 id="pm-title"></h1></div>
+      <div style="display:flex;flex-direction:column;gap:2px"><span class="kicker" id="pm-kick"></span><h1 id="pm-title"></h1></div>
       <button class="back-btn" id="pm-close" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
     </div>
+    <!-- Fakultet, tayoqcha, Patronus - bitta qatorda uchta katak (egasi, 2026-10-09); bosilsa ma'lumot oynasi (puRender).
+         Pastdagi uchta eski panel saralangan odamda yashirin (#pm.uchlik) - ular holat va tugmalarni saqlab turadi. -->
+    <div class="pu hidden" id="pu"></div>
+    <button class="resort hidden" id="pu-resort" type="button"></button>
+
     <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
     <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span><i class="pm-chev">›</i></button>
 
@@ -162,11 +167,6 @@
 
     <!-- Qobiliyatlar: profil sahifasidan ham ochiladi (js/09-darslar.js pmDarsRows) -->
     <button class="nsh-go hidden" id="pm-qob" type="button"><span class="nsh-go-tx"><b id="pm-qob-t"></b><small id="pm-qob-s"></small></span><i class="pm-chev">›</i></button>
-
-    <!-- Fakultet, tayoqcha, Patronus - bitta qatorda uchta katak (egasi, 2026-10-09); bosilsa ma'lumot oynasi (puRender).
-         Pastdagi uchta eski panel saralangan odamda yashirin (#pm.uchlik) - ular holat va tugmalarni saqlab turadi. -->
-    <div class="pu hidden" id="pu"></div>
-    <button class="resort hidden" id="pu-resort" type="button"></button>
 
     <!-- Fakultet va tayoqcha: ilgari alohida "Sehrgar" sahifasida edi (scr-prof) -->
     <div class="panel" id="house-panel">
@@ -807,6 +807,7 @@
   <!-- Nishon oynasi: tafsilot, yangi nishon tabrigi, boshqa odamning nishonlari -->
   <div id="nsh" class="hpask nsh hidden" role="dialog" aria-modal="true">
     <div class="hpask-box">
+      <button class="nsh-x hidden" id="nsh-x" type="button" aria-label="Yopish">×</button>
       <span class="nsh-kick" id="nsh-kick"></span>
       <div class="nsh-row" id="nsh-row"></div>
       <b class="hpask-t" id="nsh-t"></b>
@@ -1624,13 +1625,13 @@
 <script src="js/04-kubok-oyna.js?v=e91dfe37"></script>
 <script src="js/05-umumiy.js?v=f5f0a218"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
-<script src="js/07-kutubxona.js?v=9075fdf1"></script>
+<script src="js/07-kutubxona.js?v=643ee8c7"></script>
 <script src="js/07-kitoblar.js?v=4b9988d7"></script>
 <script src="js/07-kitob-matn.js?v=053ca97b"></script>
 <script src="js/07-odam.js?v=18ed3043"></script>
 <script src="js/08-saralash.js?v=15498b02"></script>
 <script src="js/09-sehrli-olam.js?v=a4cf6a83"></script>
-<script src="js/09-darslar.js?v=29a72ff9"></script>
+<script src="js/09-darslar.js?v=df61cfcd"></script>
 <script src="js/09-issiqxona.js?v=2759b103"></script>
 <script src="js/09-duel.js?v=28040436"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
