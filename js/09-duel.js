@@ -3,7 +3,7 @@
    va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
    narsani chaqirmang - tekshiruv: tools/tartib.js */
 "use strict";
-  /* QOIDA: har duelchida 3 jon. Har raundda TUR tanlanadi (hujum / himoya / hiyla), keyin shu turdagi afsun barmoq bilan
+  /* QOIDA: har duelchida 5 jon. Har raundda TUR tanlanadi (hujum / himoya / hiyla), keyin shu turdagi afsun barmoq bilan
      chiziladi - aniqlik 0..100 (duAcc). Hujum hiylani, hiyla himoyani, himoya hujumni yengadi; bir xil turda aniqrog'i
      yutadi; aniqlik 35 dan past - afsun chiqmadi. Raundni SERVER hal qiladi (hpduel.py, POST /api/duel) - raqib yurishi
      ham serverda. REJA: duel haftalik TURNIR bo'ladi (saralash du-ch, pley-off pa-ya, JONLI, belgilangan vaqtda) -
@@ -19,7 +19,7 @@
     hiyla: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 8c3-4 6-4 8 0s5 4 8 0M4 16c3-4 6-4 8 0s5 4 8 0"/></svg>'
   };
   var DU_X = {
-    uz: { ttl: "Duel", kick: "Duel klubi", note: "Raqibni tanlang. Har ikkingizda 3 tadan jon bor: kim birinchi tugatsa — yutqazadi.",
+    uz: { ttl: "Duel", kick: "Duel klubi", note: "Raqibni tanlang. Har ikkingizda 5 tadan jon bor: kim birinchi tugatsa — yutqazadi.",
           tur: { hujum: "Hujum", himoya: "Himoya", hiyla: "Hiyla" }, raq: ["Birinchi kurs o'quvchisi", "Yuqori kurs o'quvchisi", "Duel ustozi"], lvl: ["Oson", "O'rta", "Qiyin"],
           best: function (n) { return n ? "Eng yaxshi natija: " + n : "Hali yengilmagan"; }, rule: "Hujum hiylani yengadi · hiyla himoyani · himoya hujumni",
           planT: "Duel turniri", plan: "Dushanba–chorshanba: saralash — shu yerda ball to'plang. Eng yaxshi 16 duelchi pley-offga chiqadi: payshanba 1/8 final, juma chorak final, shanba yarim final, yakshanba final. Pley-off jonli o'tadi: duellar soat 21:00 da boshlanadi, 5 daqiqa ichida kelmagan duelchi yutqazadi. Kubok ballari: pley-offga chiqqanga +5, har g'alaba uchun +10, +15, +20, chempionga +30.",
@@ -27,7 +27,7 @@
           pick: function (r) { return r + "-raund. Nima qilasiz?"; }, draw: function (nom) { return nom + " — afsunni chizing!"; }, wait: "Afsunlar to'qnashmoqda…",
           you: "Siz", w1: "Zarbangiz yetdi!", w0: "Durang — afsunlar bir-birini so'ndirdi.", wm: "Raqib ustun keldi.", fail: "afsun chiqmadi", next: "Keyingi raund",
           won: "G'alaba!", lost: "Mag'lubiyat", score: function (n) { return "Saralash bali: " + n; }, again: "Yana duel", back: "Raqiblar", acc: "aniqlik" },
-    ru: { ttl: "Дуэль", kick: "Дуэльный клуб", note: "Выберите соперника. У каждого по 3 жизни: у кого закончатся первыми — тот проиграл.",
+    ru: { ttl: "Дуэль", kick: "Дуэльный клуб", note: "Выберите соперника. У каждого по 5 жизней: у кого закончатся первыми — тот проиграл.",
           tur: { hujum: "Атака", himoya: "Защита", hiyla: "Уловка" }, raq: ["Первокурсник", "Старшекурсник", "Мастер дуэлей"], lvl: ["Легко", "Средне", "Сложно"],
           best: function (n) { return n ? "Лучший результат: " + n : "Ещё не побеждён"; }, rule: "Атака бьёт уловку · уловка — защиту · защита — атаку",
           planT: "Дуэльный турнир", plan: "Понедельник–среда: отбор — набирайте очки здесь. 16 лучших дуэлянтов выходят в плей-офф: четверг — 1/8 финала, пятница — четвертьфинал, суббота — полуфинал, воскресенье — финал. Плей-офф проходит вживую: дуэли начинаются в 21:00, кто не придёт в течение 5 минут — проигрывает. Очки кубка: за выход в плей-офф +5, за победы +10, +15, +20, чемпиону +30.",
@@ -35,7 +35,7 @@
           pick: function (r) { return "Раунд " + r + ". Что будете делать?"; }, draw: function (nom) { return nom + " — начертите заклинание!"; }, wait: "Заклинания сталкиваются…",
           you: "Вы", w1: "Ваш удар достиг цели!", w0: "Ничья — заклинания погасили друг друга.", wm: "Соперник оказался сильнее.", fail: "заклинание не вышло", next: "Следующий раунд",
           won: "Победа!", lost: "Поражение", score: function (n) { return "Очки отбора: " + n; }, again: "Ещё дуэль", back: "Соперники", acc: "точность" },
-    en: { ttl: "Duel", kick: "Duelling Club", note: "Choose your opponent. You each have 3 lives: whoever runs out first loses.",
+    en: { ttl: "Duel", kick: "Duelling Club", note: "Choose your opponent. You each have 5 lives: whoever runs out first loses.",
           tur: { hujum: "Attack", himoya: "Defence", hiyla: "Trick" }, raq: ["First-year student", "Senior student", "Duelling master"], lvl: ["Easy", "Medium", "Hard"],
           best: function (n) { return n ? "Best result: " + n : "Not beaten yet"; }, rule: "Attack beats trick · trick beats defence · defence beats attack",
           planT: "Duelling tournament", plan: "Monday–Wednesday: qualifying — earn points here. The top 16 duellists reach the play-offs: Thursday round of 16, Friday quarter-finals, Saturday semi-finals, Sunday final. Play-offs are live: duels start at 21:00, and anyone who fails to turn up within 5 minutes loses. Cup points: +5 for reaching the play-offs, +10, +15, +20 for each win, +30 for the champion.",
@@ -89,13 +89,13 @@
   function duSample(body) {
     if (!duLocal) { duLocal = { best: { 1: 190, 2: 0, 3: 0 }, g: null }; }
     var L = duLocal, res = { ok: true };
-    if (body && body.start) { L.g = { id: 1, level: body.start, lives: 3, rlives: 3, round: 0, over: false, sum: 0 }; res.game = L.g; }
+    if (body && body.start) { L.g = { id: 1, level: body.start, lives: 5, rlives: 5, round: 0, over: false, sum: 0 }; res.game = L.g; }
     if (body && body.move && L.g) {
       var g = L.g, his = DU_TUR[Math.floor(Math.random() * 3)], racc = Math.round([50, 68, 84][g.level - 1] + (Math.random() - 0.5) * 30), a = body.acc, w;
       if (a < 35 && racc < 35) { w = 0; } else if (a < 35) { w = -1; } else if (racc < 35) { w = 1; }
       else if (his === body.move) { w = Math.abs(a - racc) < 5 ? 0 : a > racc ? 1 : -1; } else { w = DU_YENG[body.move] === his ? 1 : -1; }
       g.round++; g.sum += a; if (w > 0) { g.rlives--; } if (w < 0) { g.lives--; }
-      g.over = g.lives <= 0 || g.rlives <= 0 || g.round >= 12; g.won = g.over && g.lives > g.rlives;
+      g.over = g.lives <= 0 || g.rlives <= 0 || g.round >= 20; g.won = g.over && g.lives > g.rlives;
       g.score = g.won ? g.level * 100 + g.lives * 20 + Math.floor(g.sum / g.round * 0.5) : 0;
       if (g.won) { L.best[g.level] = Math.max(L.best[g.level], g.score); }
       res.round = { mine: body.move, his: his, acc: a, racc: racc, win: w }; res.game = g;
@@ -118,7 +118,7 @@
   var duArL = null;
   function duArSample(body) {
     var n = Date.now(), A = duArL;
-    if (!A || body.sinov) { A = duArL = { bosh: n + 6000, r: 0, rb: 0, l: 3, rl: 3, mv: null, last: null, over: false }; if (body.sinov) { return { ok: true, test_id: 1, mine: duSample({}).mine, top: [], cup: null }; } }
+    if (!A || body.sinov) { A = duArL = { bosh: n + 6000, r: 0, rb: 0, l: 5, rl: 5, mv: null, last: null, over: false }; if (body.sinov) { return { ok: true, test_id: 1, mine: duSample({}).mine, top: [], cup: null }; } }
     if (!A.over && n >= A.bosh && A.r === 0) { A.r = 1; A.rb = n; }
     if (!A.over && A.r && n >= A.rb) {
       if (body.move && !A.mv) { A.mv = [body.move, body.acc]; A.mt = n; }
@@ -152,9 +152,10 @@
   }
   function duStop() { if (du) { clearTimeout(du.tm); clearTimeout(du.poll); cancelAnimationFrame(du.raf || 0); } du = null; }
 
+  function duJonlar() { return (duData && duData.rules && duData.rules.lives) || 5; }     // har duelchida 5 jon (egasi, 2026-10-09)
   function duJon(el, n) {
     el.innerHTML = "";
-    for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < n ? "on" : "")); }
+    for (var i = 0; i < duJonlar(); i++) { el.appendChild(drEl("i", i < n ? "on" : "")); }
   }
 
   /* ---------- bosh ko'rinish: raqiblar, turnir rejasi, saralash jadvali ---------- */
@@ -252,7 +253,7 @@
   function duArena(id) {
     var x = duX();
     duStop();
-    du = { mode: "ar", arena: id, game: { lives: 3, rlives: 3, round: 0 }, rnd: 0, shown: 0, step: "" };
+    du = { mode: "ar", arena: id, game: { lives: duJonlar(), rlives: duJonlar(), round: 0 }, rnd: 0, shown: 0, step: "" };
     $("du-home").classList.add("hidden");
     $("du-game").classList.remove("hidden");
     $("du-res").classList.add("hidden");
