@@ -950,10 +950,38 @@
   /* Profildagi UCHLIK (egasi, 2026-10-09): Fakultet / Tayoqcha / Patronus bitta qatorda - joy tejash uchun. Hech biri
      «tanlangan» emas; katak bosilsa ma'lumot oynasi (nshBox): ta'rif, «Batafsil», «Ulashish». Rasm - doira (A variant).
      Saralanmagan odamda uchlik yo'q - eski Fakultet paneli (saralanish tugmasi bilan) ko'rinadi. */
+  /* Uchala oyna BIR XIL tuzilgan (egasi, 2026-10-09 - namuna: fakultet oynasi): qisqa ta'rif + «… haqida batafsil»
+     (alohida sahifa) + «…ni ulashish». Tayoqcha: yog'och ta'rifi (WOOD_LORE) → tafsilot sahifasi; Patronus: xarakter →
+     xuddi shu sahifa Patronus ko'rinishida (openPatDetail). */
+  var PU_TX = {
+    uz: { wand: "Tayoqcha haqida batafsil", pat: "Patronus haqida batafsil", h1: "Sizning xarakteringiz", h2: "Patronus nima?" },
+    ru: { wand: "Подробнее о палочке", pat: "Подробнее о Патронусе", h1: "Ваш характер", h2: "Что такое Патронус?" },
+    en: { wand: "More about the wand", pat: "More about the Patronus", h1: "Your character", h2: "What is a Patronus?" }
+  };
+  // Patronus tafsiloti: tayoqcha tafsiloti sahifasi (scr-detail) qayta ishlatiladi; «ortga» - profilga
+  function openPatDetail() {
+    var p = patronus && PATRONUS[patronus], px = patX(), pt = PU_TX[lang] || PU_TX.uz;
+    if (!p) { return; }
+    $("scr-detail").classList.add("pat");
+    $("det-kicker").textContent = px.lbl;
+    $("det-back-txt").textContent = T[lang].back;
+    $("det-art").innerHTML = '<img class="det-rasm" alt="" src="' + patImg(patronus) + '">';
+    $("det-title").textContent = p[lang];
+    $("det-spec").textContent = p["w_" + lang];
+    $("det-famous").classList.add("hidden");
+    $("det-h-wood").textContent = pt.h1;
+    $("det-wood").textContent = p["n_" + lang];
+    $("det-h-core").textContent = pt.h2;
+    $("det-core").textContent = px.what;
+    pmHide();
+    $("scr-detail").classList.remove("hidden");
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+
   function puRender() {
     var box = $("pu"), pm = $("pm");
     if (!box || !pm) { return; }
-    var t = T[lang], bor = house !== "none" && !!HOUSES[house];
+    var t = T[lang], bor = house !== "none" && !!HOUSES[house], pt = PU_TX[lang] || PU_TX.uz;
     pm.classList.toggle("uchlik", bor);
     box.classList.toggle("hidden", !bor);
     var rs = $("pu-resort");
@@ -985,8 +1013,8 @@
     if (wand) {
       var ws = IMG_DIR + "tayoqcha/" + wand.wood + ".webp", wn = WOODS[wand.wood][lang];
       katak(t.wandLbl, ws, wn, "", function () {
-        nshBox({ x: true, codes: ["x"], srcs: [ws], kick: t.wandLbl, title: wn, text: CORES[wand.core][lang] + " · " + FLEX[wand.flex].len + " " + t.inch + " · " + FLEX[wand.flex][lang],
-                 more: { label: t.wandMore, fn: openWandDetail }, more2: { label: TQ_TX[lang] || TQ_TX.uz, fn: tqShare } });
+        nshBox({ x: true, codes: ["x"], srcs: [ws], kick: t.wandLbl, title: wn, text: WOOD_LORE[wand.wood][lang],
+                 more: { label: pt.wand, fn: openWandDetail }, more2: { label: TQ_TX[lang] || TQ_TX.uz, fn: tqShare } });
       });
     } else {
       katak(t.wandLbl, IMG_DIR + "tayoqcha/quti.webp", "—", "yoq", function () {
@@ -997,8 +1025,8 @@
     var px = patX(), p = patronus && PATRONUS[patronus];
     if (p) {
       katak(px.lbl, patImg(patronus), p[lang], "", function () {
-        nshBox({ x: true, codes: ["x"], srcs: [patImg(patronus)], kick: px.lbl, title: p[lang], text: p["n_" + lang] + "\n\n" + p["w_" + lang] + ".\n\n" + px.what,
-                 more2: { label: px.share, fn: patShare } });
+        nshBox({ x: true, codes: ["x"], srcs: [patImg(patronus)], kick: px.lbl, title: p[lang], text: p["n_" + lang],
+                 more: { label: pt.pat, fn: openPatDetail }, more2: { label: px.share, fn: patShare } });
       });
     } else {
       katak(px.lbl, patImg("mist"), "—", "yoq", function () {
