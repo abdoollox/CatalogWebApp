@@ -9,7 +9,7 @@
      - har xatboshi qaysi PDF betidan olingani yozib boriladi (data-p) - joy, surgich va xatcho'p shu bet bilan.
      Matni yo'q (skaner) PDF da bu rejim yo'q - faqat asl sahifa (varaqlash). Sozlamalar: hp_kt_pref. */
   var KM_TX = {
-    uz: { set: "O'qish sozlamalari", mode: "Ko'rinish", mText: "Matn", mFlip: "Asl sahifa", mScroll: "Surib o'qish",
+    uz: { yz: "Yozuv", yzLot: "Lotin", yzKir: "Кирилл", set: "O'qish sozlamalari", mode: "Ko'rinish", mText: "Matn", mFlip: "Asl sahifa", mScroll: "Surib o'qish",
           size: "Harf kattaligi", theme: "Fon", font: "Shrift", fSerif: "Kitobiy", fSans: "Sodda", gap: "Qator oralig'i",
           thTun: "Tun", thSepia: "Sepiya", thKun: "Kun", close: "Yopish",
           toc: "Mundarija", marks: "Xatcho'plar", find: "Qidiruv", front: "Muqova va kirish", pages: function (a, b) { return a + "–" + b + "-betlar"; },
@@ -18,7 +18,7 @@
           findPh: "So'z yoki ibora", findGo: "Qidirish", finding: function (a, b) { return "Qidirilmoqda… " + a + " / " + b; },
           found: function (n) { return n ? n + " ta joy topildi" : "Hech narsa topilmadi"; }, more: "Faqat birinchi 60 tasi ko'rsatildi",
           wait: "Bob ochilmoqda…", del: "O'chirish" },
-    ru: { set: "Настройки чтения", mode: "Вид", mText: "Текст", mFlip: "Оригинал", mScroll: "Прокрутка",
+    ru: { yz: "Письменность", yzLot: "Латиница", yzKir: "Кириллица", set: "Настройки чтения", mode: "Вид", mText: "Текст", mFlip: "Оригинал", mScroll: "Прокрутка",
           size: "Размер букв", theme: "Фон", font: "Шрифт", fSerif: "Книжный", fSans: "Простой", gap: "Интервал",
           thTun: "Ночь", thSepia: "Сепия", thKun: "День", close: "Закрыть",
           toc: "Оглавление", marks: "Закладки", find: "Поиск", front: "Обложка и вступление", pages: function (a, b) { return "Стр. " + a + "–" + b; },
@@ -27,7 +27,7 @@
           findPh: "Слово или фраза", findGo: "Найти", finding: function (a, b) { return "Ищем… " + a + " / " + b; },
           found: function (n) { return n ? "Найдено мест: " + n : "Ничего не найдено"; }, more: "Показаны только первые 60",
           wait: "Глава открывается…", del: "Удалить" },
-    en: { set: "Reading settings", mode: "View", mText: "Text", mFlip: "Original", mScroll: "Scroll",
+    en: { yz: "Script", yzLot: "Latin", yzKir: "Cyrillic", set: "Reading settings", mode: "View", mText: "Text", mFlip: "Original", mScroll: "Scroll",
           size: "Text size", theme: "Background", font: "Font", fSerif: "Bookish", fSans: "Plain", gap: "Line spacing",
           thTun: "Night", thSepia: "Sepia", thKun: "Day", close: "Close",
           toc: "Contents", marks: "Bookmarks", find: "Search", front: "Cover and front matter", pages: function (a, b) { return "Pages " + a + "–" + b; },
@@ -53,6 +53,7 @@
       if (/^(tun|sepia|kun)$/.test(kmSaved.th)) { kmPref.th = kmSaved.th; }
       if (/^(serif|sans)$/.test(kmSaved.ff)) { kmPref.ff = kmSaved.ff; }
       if (KM_GAPS[kmSaved.lh] != null) { kmPref.lh = kmSaved.lh; }
+      if (/^(lot|kir)$/.test(kmSaved.yz)) { kmPref.yz = kmSaved.yz; }
     }
   } catch (e) {}
 
@@ -61,6 +62,48 @@
   var kmCache = {};          // bet -> {rows, img}
   var kmSec = -1, kmScreens = 1, kmScr = 0, kmMarks = [], kmBusy = false, kmDrag = null, kmGenLocal = 0;
   var kmNavTab = "toc", kmFindGen = 0;
+
+  /* LOTINGA O'GIRIB KO'RSATISH (egasi, 2026-10-09): o'zbekcha kitoblar kirill yozuvida, ilova esa lotinda. Fayl
+     o'zgarmaydi - matn rejimida harflar EKRANDA o'zbek lotin alifbosiga o'giriladi (kmPref.yz: "lot" | "kir";
+     sozlamada «Yozuv» qatori faqat kirill kitobda ko'rinadi). Qoidalar: е - so'z boshida va unlidan keyin «ye»,
+     ц - unlidan keyin «ts», aks holda «s»; ў - o‘, ғ - g‘, ъ - ’, ь - tashlanadi. */
+  var kmKirill = false;
+  var KM_LOT = { "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "ж": "j", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+                 "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u", "ф": "f", "х": "x", "ч": "ch", "ш": "sh", "щ": "sh",
+                 "ъ": "\u2019", "ь": "", "э": "e", "ю": "yu", "я": "ya", "ё": "yo", "ы": "i", "ў": "o\u2018", "қ": "q", "ғ": "g\u2018", "ҳ": "h" };
+  var KM_UNLI = /[аеёиоуэюяўыАЕЁИОУЭЮЯЎЫ]/;
+  function kmLotin(s) {
+    if (!s || !/[\u0400-\u04ff]/.test(s)) { return s; }
+    var out = "", n = s.length;
+    for (var i = 0; i < n; i++) {
+      var ch = s.charAt(i), kich = ch.toLowerCase(), l = KM_LOT[kich];
+      var oldin = i > 0 ? s.charAt(i - 1) : "", keyin = i + 1 < n ? s.charAt(i + 1) : "";
+      if (kich === "е") { l = (!oldin || !/[\u0400-\u04ff]/.test(oldin) || KM_UNLI.test(oldin) || /[ъьЪЬ]/.test(oldin)) ? "ye" : "e"; }
+      else if (kich === "ц") { l = (oldin && KM_UNLI.test(oldin)) ? "ts" : "s"; }
+      if (l === undefined) { out += ch; continue; }
+      if (ch !== kich && l) {
+        // bosh harf: so'z to'liq bosh harflarda bo'lsa «CH», aks holda «Ch»
+        var hammasi = keyin && keyin !== keyin.toLowerCase() && /[\u0400-\u04ff]/.test(keyin) || (!keyin || !/[\u0400-\u04ff]/.test(keyin)) && oldin && oldin !== oldin.toLowerCase() && /[\u0400-\u04ff]/.test(oldin);
+        l = hammasi ? l.toUpperCase() : l.charAt(0).toUpperCase() + l.slice(1);
+      }
+      out += l;
+    }
+    return out;
+  }
+  // Yozuv almashganda: o'qilgan betlar qaytadan o'giriladi, o'quvchi turgan betida qoladi
+  function kmYozuv(yz) {
+    if (kmPref.yz === yz) { return; }
+    kmPref.yz = yz;
+    kmSave();
+    kmCache = {};
+    kmPlainCache = {};
+    if (krMode === "text" && kmSec >= 0) {
+      var joy = kmHere(), sec = kmSec;
+      kmSec = -1;
+      kmOpenSec(sec, joy ? { p: joy.p } : undefined);
+    }
+    kmSetRender();
+  }
 
   function kmX() { return KM_TX[lang] || KM_TX.uz; }
   function kmSave() { try { window.localStorage.setItem("hp_kt_pref", JSON.stringify(kmPref)); } catch (e) {} }
@@ -74,6 +117,7 @@
     kmBusy = false;
     kmDrag = null;
     kmHasText = false;
+    kmKirill = false;
     kmGenLocal++;
     kmFindGen++;
     kmPlainCache = {};
@@ -250,6 +294,27 @@
           r.text = parts.map(function (p) { return p.s; }).join("").replace(/\s+/g, " ").trim();
           delete r.segs;
         });
+        // Kirill kitob: lotinga o'girib ko'rsatish (kmLotin)
+        var kirSon = 0;
+        rows.forEach(function (r) { kirSon += (r.text.match(/[\u0400-\u04ff]/g) || []).length; });
+        if (kirSon > 40 && !kmKirill) { kmKirill = true; }
+        if (kmKirill) {
+          // TIRE: bu kitoblarda muloqot va izoh tiresi o'rnida oddiy defis («- ») yozilgan - ekranda uzun tire ko'rsatiladi
+          var tire = function (t) { return t.replace(/(^|\s)[-\u2013](?=\s)/g, "$1\u2014"); };
+          rows.forEach(function (r) {
+            r.parts.forEach(function (pt, i) {
+              pt.s = tire(pt.s);
+              if (i === 0) { pt.s = pt.s.replace(/^(\s*)[-\u2013](?=\s|$)/, "$1\u2014"); }
+            });
+            r.text = tire(r.text);
+          });
+        }
+        if (kmKirill && kmPref.yz !== "kir") {
+          rows.forEach(function (r) {
+            r.parts.forEach(function (pt) { pt.s = kmLotin(pt.s); });
+            r.text = kmLotin(r.text);
+          });
+        }
         var res = { rows: rows, img: rows.length === 0 && rasmBor, ratio: vp.width / vp.height };
         if (!xom) { kmCache[n] = res; }
         return res;
@@ -261,13 +326,16 @@
   function kmBlocks(sec) {
     var ps = [], n;
     for (n = sec.p; n <= sec.e; n++) { ps.push(n); }
-    var blocks = [], cur = null;
+    var blocks = [], cur = null, oldR = null;
     var chain = Promise.resolve();
     ps.forEach(function (pn) {
       chain = chain.then(function () { return kmLines(pn); }).then(function (pg) {
         if (pg.img) { blocks.push({ k: "img", p: pn, ratio: pg.ratio }); cur = null; return; }
         if (!pg.rows.length) { return; }                        // bo'sh oq bet - tashlab ketiladi
         var birinchi = true;
+        // Betdagi eng o'ng chet: satr undan ancha oldin tugasa - «qisqa satr» (xatboshi oxiri bo'lishi mumkin)
+        var betOng = 0;
+        pg.rows.forEach(function (r) { if (r.r > betOng) { betOng = r.r; } });
         pg.rows.forEach(function (r) {
           var chap = r.x - kmL, ong = kmR - r.r;
           var katta = r.sz >= kmSz * 1.3;
@@ -275,7 +343,17 @@
           var parts = r.parts.map(function (p) { return { s: p.s, i: p.i }; });
           if (katta) { blocks.push({ k: "h", p: pn, parts: parts }); cur = null; birinchi = false; return; }
           if (markaz) { blocks.push({ k: "c", p: pn, parts: parts }); cur = null; birinchi = false; return; }
+          /* XATBOSHI (2026-10-09, egasi so'radi - o'zbekcha kitoblarda butun bet bitta xatboshi bo'lib chiqardi):
+             birinchi satri surilmagan kitoblarda ham xatboshi ajratiladi - (a) satrlar orasida kattaroq bo'shliq bo'lsa,
+             (b) oldingi satr QISQA tugagan va gap tugatuvchi tinish belgisi bilan yakunlangan bo'lsa yoki yangi satr
+             muloqot tiresi bilan boshlansa. Surilgan birinchi satr - avvalgidek. */
           var yangi = !cur || chap > 6;
+          if (!yangi && oldR) {
+            var qisqa = (oldR.ong - oldR.r) > Math.max(40, (oldR.ong - kmL) * 0.12);
+            if (!birinchi && (r.y - oldR.y) > oldR.sz * 1.75) { yangi = true; }
+            else if (qisqa && (/[.!?\u2026:;\u00bb\u201d"]$/.test(oldR.text) || /^[-\u2013\u2014]\s/.test(r.text))) { yangi = true; }
+          }
+          oldR = { y: r.y, r: r.r, sz: r.sz, text: r.text, ong: betOng };
           if (yangi) {
             cur = { k: chap > 30 ? "q" : "p", p: pn, parts: parts, tekis: chap <= 6 };
             blocks.push(cur);
@@ -284,7 +362,7 @@
             var oxir = cur.parts[cur.parts.length - 1];
             var bosh = parts[0].s.replace(/^\s+/, "");
             oxir.s = oxir.s.replace(/\s+$/, "");
-            if (/[A-Za-zА-Яа-яЁёÀ-ɏ'’ʻ]-$/.test(oxir.s) && /^[a-zа-яёà-ÿ]/.test(bosh)) { oxir.s = oxir.s.slice(0, -1); }
+            if (/[A-Za-zА-Яа-яЁёÀ-ɏ'’ʻ\u2018\u045e\u049b\u0493\u04b3\u040e\u049a\u0492\u04b2]-$/.test(oxir.s) && /^[a-zа-яёà-ÿ\u045e\u049b\u0493\u04b3]/.test(bosh)) { oxir.s = oxir.s.slice(0, -1); }
             else { oxir.s += " "; }
             parts[0].s = bosh;
             if (birinchi) { cur.parts.push({ pm: pn }); }       // shu yerdan yangi PDF beti boshlanadi
@@ -734,6 +812,12 @@
       b.classList.toggle("on", kmPref.ff === f[0]);
     });
     [0, 1, 2].forEach(function (i) { $("km-lh-" + i).classList.toggle("on", kmPref.lh === i); });
+    $("km-only-kir").classList.toggle("hidden", !kmKirill);
+    $("km-l-yz").textContent = x.yz;
+    $("km-yz-lot").textContent = x.yzLot;
+    $("km-yz-kir").textContent = x.yzKir;
+    $("km-yz-lot").classList.toggle("on", kmPref.yz !== "kir");
+    $("km-yz-kir").classList.toggle("on", kmPref.yz === "kir");
   }
 
   function kmSetup() {
@@ -755,6 +839,8 @@
     ["text", "flip", "scroll"].forEach(function (m) {
       $("km-m-" + m).addEventListener("click", function () { krModeSet(m); kmSetRender(); });
     });
+    $("km-yz-lot").addEventListener("click", function () { kmYozuv("lot"); });
+    $("km-yz-kir").addEventListener("click", function () { kmYozuv("kir"); });
     $("km-size-m").addEventListener("click", function () { if (kmPref.fs > 0) { kmPref.fs--; kmSave(); kmRelayout(); kmSetRender(); } });
     $("km-size-p").addEventListener("click", function () { if (kmPref.fs < KM_SIZES.length - 1) { kmPref.fs++; kmSave(); kmRelayout(); kmSetRender(); } });
     ["tun", "sepia", "kun"].forEach(function (t) {
