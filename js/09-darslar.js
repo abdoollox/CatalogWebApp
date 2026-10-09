@@ -953,22 +953,24 @@
     mk(x.rekSec, r && r.all ? r.all + " " + rekBir(id) : x.rekGo, r && r.place ? x.rekWeek + ": " + r.place : x.rekTileS, r && r.top && r.top[0] ? String(r.top[0].score) : "", function () { rekOpen(id, "fan"); });
   }
 
-  // «Men» (profil) sahifasidagi qatorlar: Qo'riqxona va Qobiliyatlar
+  // Qo'riqxona - Xogvarts bosh sahifasidagi katak (egasi, 2026-10-09: profilda emas)
+  function qrHubOpen() { qrKel = "hub"; qrOpen(); }
+  function qrSoni() {
+    var n = 0;
+    try { ((qrData && qrData.list) || []).forEach(function (m) { if (m.got) { n++; } }); } catch (e) {}
+    return n;
+  }
+
+  // Profil sahifasidagi qator: Qobiliyatlar
   function pmDarsRows() {
     var x = drX(), ichkarida = false;
     try { ichkarida = hasHouse(); } catch (e) {}
-    var a = $("pm-qr"), b = $("pm-qob");
-    if (!a || !b) { return; }
-    a.classList.toggle("hidden", !ichkarida);
+    var b = $("pm-qob");
+    if (!b) { return; }
     b.classList.toggle("hidden", !ichkarida);
     if (!ichkarida) { return; }
-    var n = 0;
-    try { ((qrData && qrData.list) || []).forEach(function (m) { if (m.got) { n++; } }); } catch (e) {}
-    $("pm-qr-t").textContent = x.qrT;
-    $("pm-qr-s").textContent = x.pmQrS(n);
     $("pm-qob-t").textContent = x.qobBtn;
     $("pm-qob-s").textContent = x.qobBtnS;
-    a.onclick = function () { qrKel = "pm"; $("pm").classList.add("hidden"); qrOpen(); };
     b.onclick = function () { qobKel = "pm"; $("pm").classList.add("hidden"); qobOpen(); };
   }
 
@@ -3733,7 +3735,7 @@
     $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
     $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else if (rekFan) { rekQayt(); } else { fanOpen("maxluq"); } });
     $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });
-    $("qr-back").addEventListener("click", function () { if (qrKel === "pm") { qrKel = "fan"; $("scr-qoriq").classList.add("hidden"); pmOpen(); } else { fanOpen("maxluq"); } });
+    $("qr-back").addEventListener("click", function () { if (qrKel === "hub") { qrKel = "fan"; $("scr-qoriq").classList.add("hidden"); openHub(); } else { fanOpen("maxluq"); } });
     $("yl-back").addEventListener("click", function () { var b = yl && yl.bell; ylStop(); yl = null; blAbort(); if (b) { blOpen("astro"); } else if (rekFan) { rekQayt(); } else { fanOpen("astro"); } });
     $("yl-go").addEventListener("click", function () { if (yl) { ylGo(); } });
     $("os-back").addEventListener("click", function () { var b = os && os.bell; osStop(); os = null; blAbort(); if (b) { blOpen("osimlik"); } else if (rekFan) { rekQayt(); } else { fanOpen("osimlik"); } });
