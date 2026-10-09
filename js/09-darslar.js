@@ -1520,14 +1520,17 @@
     if (af.idx < af.pts.length - 2) { afFail(x.afShort); return; }
     // urinish o'tdi
     var otgan = af.t0 ? Date.now() - af.t0 : 0;
-    af.rounds.push({ r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used && !af.bt,
+    // Aniqlik: duel bilan bir xil QATTIQ o'lchov (duAcc, js/09-duel.js - egasi, 2026-10-09); yoddan chizilganda chegaralar kengroq
+    var aniq = null, wn = af.w || 1, nm = function (v) { return v.map(function (p) { return [p[0] / wn, p[1] / wn]; }); };
+    try { aniq = duAcc(nm(af.pts), nm(af.trail), afR() === 0 && !af.show); } catch (e) {}
+    af.rounds.push({ a: aniq, r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used && !af.bt,
                      late: !af.bell && otgan > af.lim ? (otgan > af.lim * 2 ? 2 : 1) : 0 });
     var tugadi = af.round >= af.steps.length - 1, oxir = af.rounds[af.rounds.length - 1];
     if (af.mode !== "zan" || tugadi) { af.t0 = 0; }
     af.off = false;
     af.ok = true;
     // Professor Flitvik izohi (bellashuvda - eski qisqa matn)
-    var fl = oxir.late ? x.afFl.c : (oxir.r < 0.4 && !oxir.fails && !oxir.used ? x.afFl.a : x.afFl.b);
+    var fl = oxir.late ? x.afFl.c : ((oxir.a != null ? oxir.a >= 85 : oxir.r < 0.4) && !oxir.fails && !oxir.used ? x.afFl.a : x.afFl.b);
     af.msg = af.bell ? x.afOk[Math.min(af.round, 2)] : fl[(af.n + af.round) % fl.length];
     af.kayf = fl === x.afFl.a ? "zor" : fl === x.afFl.b ? "yaxshi" : "maslahat";
     af.bad = false;
@@ -1564,7 +1567,7 @@
   function afScore() {
     var sum = 0, acc = 0, vaqt = 0;
     af.rounds.forEach(function (q) {
-      var a = 100 * Math.max(0, Math.min(1, 1 - (q.r - 0.25) / 1.1));
+      var a = q.a != null ? q.a : 100 * Math.max(0, Math.min(1, 1 - (q.r - 0.25) / 1.1));
       acc += a;
       if (!q.late) { vaqt++; }
       sum += Math.max(0, a - Math.min(q.fails, 3) * 12 - (q.used ? 20 : 0) - q.late * 20);

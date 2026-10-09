@@ -430,8 +430,10 @@
      (3) ENG YOMON QISM - eng uzoqlashgan beshdan bir qism (bitta katta xato ham ko'rinadi); (4) QOPLASH - shaklning
      qancha qismi chizilgan (yarmi chizilsa ball ham shunga yarasha). Chegaralar: DU_ACC. */
   var DU_ACC = { n: 64, nol: 0.010, toliq: 0.075, qop: 0.055 };
-  function duAcc(pts, user) {
+  // yoddan = true: namuna ko'rsatilmagan (Afsunlar darsining «yoddan» urinishlari) - o'lchov shu, chegaralar kengroq
+  function duAcc(pts, user, yoddan) {
     if (!user || user.length < 6) { return 0; }
+    var toliq = yoddan ? 0.115 : DU_ACC.toliq, qop = yoddan ? 0.085 : DU_ACC.qop;
     var N = DU_ACC.n, P = afResample(pts, N), U = afResample(user, N), i;
     var H = function (p, q) { return Math.hypot(p[0] - q[0], p[1] - q[1]); };
     var yaqin = function (a, b) { return a.map(function (p) { var m = 9; b.forEach(function (q) { var d = H(p, q); if (d < m) { m = d; } }); return m; }); };
@@ -441,9 +443,9 @@
     var tartib = Math.min(oldin, orqa) / N;
     var a = yaqin(P, U), b = yaqin(U, P), yaq = (orta(a) + orta(b)) / 2;
     var hammasi = a.concat(b).sort(function (x, y) { return y - x; }), yomon = orta(hammasi.slice(0, Math.ceil(hammasi.length / 5)));
-    var qoplangan = a.filter(function (x) { return x <= DU_ACC.qop; }).length / N;
+    var qoplangan = a.filter(function (x) { return x <= qop; }).length / N;
     var d = 0.4 * tartib + 0.25 * yaq + 0.35 * yomon;
-    var ball = 100 * (1 - (d - DU_ACC.nol) / (DU_ACC.toliq - DU_ACC.nol));
+    var ball = 100 * (1 - (d - DU_ACC.nol) / (toliq - DU_ACC.nol));
     if (qoplangan < 0.92) { ball *= qoplangan / 0.92; }
     return Math.max(0, Math.min(100, Math.round(ball)));
   }
