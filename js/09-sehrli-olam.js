@@ -15,6 +15,20 @@
     kick: { uz: "Sehr maktabi", ru: "Школа магии", en: "School of magic" },      // qisqa: bir qatorga sig'sin
     title: { uz: "Xogvarts", ru: "Хогвартс", en: "Hogwarts" },
     pts: { uz: "ball", ru: "очков", en: "points" },
+    g1: { uz: "O'qish", ru: "Учёба", en: "Study" },
+    g2: { uz: "Xonalar", ru: "Комнаты", en: "Rooms" },
+    g3: { uz: "Maydon", ru: "Арена", en: "Arena" },
+    bellN: { uz: "Bugun %d ta", ru: "Сегодня: %d", en: "%d today" },
+    bellOk: { uz: "Bugun bajarildi", ru: "На сегодня всё", en: "Done for today" },
+    rekS: { uz: "Kim uzoqqa boradi", ru: "Кто пройдёт дальше", en: "Who goes furthest" },
+    issiq: { uz: "Issiqxona", ru: "Теплица", en: "Greenhouse" },
+    chatS: { uz: "Suhbat", ru: "Общение", en: "Chat" },
+    duel: { uz: "Duel", ru: "Дуэль", en: "Duel" },
+    chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
+    chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
+    chessR: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" },
+    refs: { uz: "Do'stlar", ru: "Друзья", en: "Friends" },
+    refsS: { uz: "Taklif reytingi", ru: "Рейтинг приглашений", en: "Invite ranking" },
     mine: { uz: "Bu hafta siz: %d ball", ru: "Ваши очки за неделю: %d", en: "Your points this week: %d" },
     dailyT: { uz: "Kunlik savol", ru: "Вопрос дня", en: "Daily question" },
     dailyNew: { uz: "Bugungi savol · +10 ball", ru: "Сегодняшний вопрос · +10", en: "Today's question · +10" },
@@ -175,50 +189,60 @@
       mine.classList.toggle("hidden", hid === "none");
     }
 
-    // Bo'limlar
+    // Bo'limlar (egasi, 2026-10-09): uch guruh - O'qish / Xonalar / Maydon; har katak «qasr darchasi»
+    // (tepasi ravoqli sahna rasmi, img/hub/<kalit>.webp). Dumaloq nishon ko'rinishi ISHLATILMAYDI.
     var grid = $("hub-grid");
     grid.innerHTML = "";
-    var tasksN = 0;                       // faqat kunlik savol sanaladi
-    try { (tasksData.tasks || []).forEach(function (x) { if (x.type === "daily") { tasksN++; } }); } catch (e) {}
     var chatN = worldChatN();
     var refsN = (refsData && refsData.me && refsData.me.refs) || 0;
-    var tiles = [
-      // Kunlik savol: ro'yxat sahifasisiz, to'g'ridan-to'g'ri savolning o'zi (imtihon olib tashlangach
-      // "Vazifalar" ichida faqat shu qolgan edi)
-      // Darslar (egasi, 2026-10-07): kunlik savol o'rnida. Kunlik savol endi "Sehrgarlik tarixi" darsi ichida
-      // (js/09-darslar.js). Saralanmagan odamga - eski kunlik savol.
-      // Kunlik savol ilovadan olib tashlandi (egasi, 2026-10-07): o'rnida Darslar; ball - «Bellashuv» bo'limida.
-      { key: "tasks", rgb: "232,132,60", title: drX().tile,
-        sub: drJami() ? drX().tileProg(drJami()[0], drJami()[1]) : drX().tileDone, badge: 0, go: drOpen, needHouse: true },
-      // «Bellashuv» (egasi, 2026-10-07): shaxmat o'rnida - fanlar bellashuvlari va shaxmat bitta sahifada
-      { key: "bell", rgb: "var(--gold-rgb)", title: drX().blTile,
-        sub: drPending() > 0 ? drX().blTileNew(drPending()) : (drPending() === 0 ? drX().blTileDone : c.chessS || ""),
-        badge: Math.max(0, drPending()), go: blHomeOpen, needHouse: true },
-      { key: "rek", rgb: "214,96,96", title: drX().rekSec, sub: drX().rekTileS, badge: 0, go: rekHomeOpen, needHouse: true },
-      { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
-      { key: "qoriq", rgb: "126,176,96", title: drX().qrT, sub: drX().pmQrS(qrSoni()), badge: 0, go: qrHubOpen, needHouse: true },
-      { key: "refs", rgb: "var(--gold-rgb)", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
+    var dx = drX(), HT = function (k) { return HUB_TX[k][lang]; };
+    var soon = function (nom) { return function () { showToast(dx.soon + ": " + nom); }; };
+    var guruhlar = [
+      { t: HT("g1"), k: [
+        { key: "dars", title: dx.tile, sub: drJami() ? drJami()[0] + " / " + drJami()[1] : "", go: drOpen },
+        { key: "bell", title: dx.blTile, sub: drPending() > 0 ? HT("bellN").replace("%d", String(drPending())) : HT("bellOk"), badge: Math.max(0, drPending()), go: blHomeOpen },
+        { key: "rek", title: dx.rekSec, sub: HT("rekS"), go: rekHomeOpen }] },
+      { t: HT("g2"), k: [
+        { key: "qoriq", title: dx.qrT, sub: dx.pmQrS(qrSoni()), go: qrHubOpen },
+        { key: "issiq", title: HT("issiq"), sub: dx.soon, self: true, soon: true, go: soon(HT("issiq")) },
+        { key: "chat", title: c.chatT, sub: HT("chatS"), badge: chatN, go: openChat }] },
+      { t: HT("g3"), k: [
+        { key: "duel", title: HT("duel"), sub: dx.soon, self: true, soon: true, go: soon(HT("duel")) },
+        { key: "chess", title: HT("chess"), sub: hubChess && hubChess.rating ? HT("chessR").replace("%d", String(hubChess.rating)) : HT("chessS"), go: openChessHub },
+        { key: "refs", title: HT("refs"), sub: HT("refsS"), badge: refsN, go: openRefs, open: true }] }
     ];
-    tiles.forEach(function (tile) {
-      if (tile.needHouse && hid === "none") { return; }
-      var el = document.createElement("button");
-      el.type = "button";
-      el.className = "hub-tile";
-      el.style.setProperty("--tc-rgb", tile.rgb);
-      el.innerHTML = '<span class="hub-tile-ic">' + hubSvg(HUB_ICONS[tile.key]) + "</span>";
-      if (tile.badge > 0) {
-        var bd = document.createElement("i");
-        bd.textContent = tile.badge > 99 ? "99+" : String(tile.badge);
-        el.appendChild(bd);
-      }
-      var bt = document.createElement("b");
-      bt.textContent = tile.title;
-      el.appendChild(bt);
-      var sp = document.createElement("span");
-      sp.textContent = tile.sub;
-      el.appendChild(sp);
-      el.onclick = tile.self ? tile.go : hubGo(tile.go);
-      grid.appendChild(el);
+    guruhlar.forEach(function (g) {
+      var qator = document.createElement("div");
+      qator.className = "hg3";
+      g.k.forEach(function (tile) {
+        if (!tile.open && hid === "none") { return; }
+        var el = document.createElement("button");
+        el.type = "button";
+        el.className = "hx" + (tile.soon ? " soon" : "");
+        var ph = document.createElement("span");
+        ph.className = "hx-ph";
+        ph.style.backgroundImage = "url(" + IMG_DIR + "hub/" + tile.key + ".webp)";
+        el.appendChild(ph);
+        if (tile.badge > 0) {
+          var bd = document.createElement("i");
+          bd.textContent = tile.badge > 99 ? "99+" : String(tile.badge);
+          el.appendChild(bd);
+        }
+        var bt = document.createElement("b");
+        bt.textContent = tile.title;
+        el.appendChild(bt);
+        var sp = document.createElement("small");
+        sp.textContent = tile.sub;
+        el.appendChild(sp);
+        el.onclick = tile.self ? tile.go : hubGo(tile.go);
+        qator.appendChild(el);
+      });
+      if (!qator.children.length) { return; }
+      var h = document.createElement("div");
+      h.className = "hg-t";
+      h.textContent = g.t;
+      grid.appendChild(h);
+      grid.appendChild(qator);
     });
 
     // Jonli tasma (so'nggi saralanishlar) endi shu sahifaning pastida - ilgari kubok sahifasida edi

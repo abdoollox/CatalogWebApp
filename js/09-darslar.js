@@ -591,26 +591,6 @@
       card.addEventListener("click", function () { blOpen(f.id, "list"); });
       bb.appendChild(card);
     });
-    // Sehrgarlar shaxmati
-    var ch = drEl("button", "dr-card");
-    ch.type = "button";
-    ch.style.setProperty("--dr-rgb", "165,127,224");
-    var ci = drEl("span", "dr-im kubok");
-    ci.style.color = "rgb(165,127,224)";
-    ci.innerHTML = hubSvg(HUB_ICONS.chess);
-    ch.appendChild(ci);
-    var ct = drEl("span", "dr-tx");
-    ct.appendChild(drEl("b", "", x.chessT));
-    ct.appendChild(drEl("small", "dr-izoh", x.chessS));
-    ch.appendChild(ct);
-    ch.appendChild(drEl("span", "dr-chip", "+10"));
-    ch.addEventListener("click", function () {
-      $("scr-blh").classList.add("hidden");
-      blQayt = true;
-      try { worldFrom = "hub"; } catch (e) {}
-      openChessHub();
-    });
-    bb.appendChild(ch);
   }
   // Rekordlar ro'yxati: xatosiz kim uzoqqa boradi (egasi g'oyasi, 2026-10-08; alohida bo'lim - 2026-10-09)
   function blhRekList(bb, x) {
