@@ -189,12 +189,12 @@
       // Kunlik savol ilovadan olib tashlandi (egasi, 2026-10-07): o'rnida Darslar; ball - «Bellashuv» bo'limida.
       { key: "tasks", rgb: "232,132,60", title: drX().tile,
         sub: drJami() ? drX().tileProg(drJami()[0], drJami()[1]) : drX().tileDone, badge: 0, go: drOpen, needHouse: true },
-      // Chat endi pastki menyuda (egasi, 2026-10-09: bosh sahifada Darslar, Bellashuv, Rekordlar kataklari)
       // «Bellashuv» (egasi, 2026-10-07): shaxmat o'rnida - fanlar bellashuvlari va shaxmat bitta sahifada
       { key: "bell", rgb: "var(--gold-rgb)", title: drX().blTile,
         sub: drPending() > 0 ? drX().blTileNew(drPending()) : (drPending() === 0 ? drX().blTileDone : c.chessS || ""),
         badge: Math.max(0, drPending()), go: blHomeOpen, needHouse: true },
       { key: "rek", rgb: "214,96,96", title: drX().rekSec, sub: drX().rekTileS, badge: 0, go: rekHomeOpen, needHouse: true },
+      { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
       { key: "refs", rgb: "var(--gold-rgb)", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
     ];
     tiles.forEach(function (tile) {
@@ -226,7 +226,6 @@
     $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
     $("hub-wand-t").textContent = HUB_TX.wandT[lang];
     $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
-    try { navSync(); } catch (e) {}
   }
 
   function openHub() {
