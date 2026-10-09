@@ -111,7 +111,7 @@
   function ktX() { return KT_TX[lang] || KT_TX.uz; }
   function ktNum(id) { return parseInt(id.charAt(2), 10); }
   function ktName(id) { return (KT_NOM[lang] || KT_NOM.uz)[ktNum(id) - 1]; }
-  var KT_RASM_V = "5";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
+  var KT_RASM_V = "6";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
   function ktArt(id) { return IMG_DIR + "kitob/" + id + ".webp?v=" + KT_RASM_V; }
   function ktBook(id) {
     var list = (ktData && ktData.books) || [];
