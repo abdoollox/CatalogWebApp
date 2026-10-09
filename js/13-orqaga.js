@@ -50,6 +50,7 @@
     "scr-uchish": "uc-back",
     "scr-maxluq": "mx-back",
     "scr-qoriq": "qr-back",
+    "scr-issiq": "is-back",
     "scr-astro": "yl-back",
     "scr-osimlik": "os-back",
     "scr-trans": "tf-back",

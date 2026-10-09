@@ -468,7 +468,7 @@
     drQayt = false;
     qrLoad();
     drBahoSync();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -545,7 +545,7 @@
   function blHomeOpen(mode) {
     blhMode = mode === "rek" ? "rek" : "bell";
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     rekFan = null;
@@ -708,7 +708,7 @@
     if (kel) { blKel = kel; }
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -868,7 +868,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     rekLoad(function () { if (fanId === id && !$("scr-fan").classList.contains("hidden")) { fanMore(); } });
@@ -883,7 +883,13 @@
     $("fn-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     var qb = $("fn-qr");
     if (qb) {
-      qb.classList.toggle("hidden", fanId !== "maxluq");
+      qb.classList.toggle("hidden", fanId !== "maxluq" && fanId !== "osimlik");
+      qb.classList.toggle("is", fanId === "osimlik");
+      if (fanId === "osimlik") {      // O'simlikshunoslik: Issiqxonaga yo'l (js/09-issiqxona.js)
+        $("fn-qr-im").src = isImg("mandragora", 2);
+        $("fn-qr-t").textContent = isX().ttl;
+        $("fn-qr-s").textContent = isX().fanS(Math.min(12, Math.floor((st ? st.level : 0) / 3)));
+      } else { $("fn-qr-im").src = qrImg("gippo", 2); }
       if (fanId === "maxluq") { $("fn-qr-t").textContent = x.qrT; $("fn-qr-s").textContent = x.qrOpenS(Math.min(11, Math.floor((st ? st.level : 0) / 3))); }
     }
     fanMore();
@@ -978,12 +984,13 @@
       if (!res || !res.ok) { showToast(drX().fail, "err"); cb(null); return; }
       drData = res.lessons || drData;
       if (res["new"]) { try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {} }
+      if (res["new"] && id === "osimlik" && level % 3 === 0) { try { isSeed(level); } catch (e) {} }      // yangi urug' - Issiqxonaga
       cb(!!res["new"]);
     });
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -2914,6 +2921,7 @@
       }
     }
     res.gal = L.gal;
+    res.hosil = 2;
     res.prices = { gal: 1, n: 5, teen: 3, adult: 10, gift_every: 7, gift: 1 };
     res.list = QR_TARTIB.map(function (kod, i) {
       var q = L.m[kod], b = q ? q.fed : 0, st = b >= 10 ? 2 : b >= 3 ? 1 : 0;
@@ -2967,7 +2975,7 @@
     if (!d) { $("qr-sum").textContent = ""; $("qr-gal").textContent = ""; return; }
     var bor = d.list.filter(function (q) { return q.got; }).length, P = d.prices || { gal: 1, n: 5 };
     $("qr-sum").textContent = x.qrSum(bor, d.list.length);
-    $("qr-gal").textContent = x.qrGal(d.gal);
+    $("qr-gal").textContent = x.qrGal(d.gal) + (d.hosil ? " · " + isX().hosil(d.hosil).toLowerCase() : "");
     d.list.forEach(function (q) {
       var t = mxTx(q.kod), c = drEl("div", "qr-c" + (q.got ? "" : " yopiq") + (q.stage === 2 ? " katta" : ""));
       c.setAttribute("data-k", q.kod);
@@ -3001,6 +3009,12 @@
         fb.type = "button";
         fb.addEventListener("click", function () { qrAct({ feed: q.kod }, q.kod); });
         bt.appendChild(fb);
+      }
+      if (!q.today && q.food < 1 && d.hosil > 0) {       // Issiqxona hosili: 1 hosil = 1 boqish
+        var hb = drEl("button", "qr-b asosiy", isX().qrHosil(d.hosil));
+        hb.type = "button";
+        hb.addEventListener("click", function () { qrAct({ feed: q.kod, hosil: 1 }, q.kod); });
+        bt.appendChild(hb);
       }
       if (q.food < 1) {
         var bb = drEl("button", "qr-b", x.qrBuy(P.gal, P.n));
@@ -3726,7 +3740,7 @@
     $("dr-qob").addEventListener("click", function () { qobKel = "dars"; qobOpen(); });
     $("rk-back").addEventListener("click", function () { if (rekKel === "fan" && rekSahifa) { fanOpen(rekSahifa); } else { blHomeOpen("rek"); } });
     $("rk-go").addEventListener("click", function () { if (rekSahifa) { rekBosh(rekSahifa); } });
-    $("fn-qr").addEventListener("click", function () { qrKel = "fan"; qrOpen(); });
+    $("fn-qr").addEventListener("click", function () { if (fanId === "osimlik") { isKel = "fan"; isOpen(); } else { qrKel = "fan"; qrOpen(); } });
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
       var r = uc.getBoundingClientRect(), W = uch.w * 0.84;

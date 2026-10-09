@@ -22,6 +22,7 @@
     bellOk: { uz: "Bugun bajarildi", ru: "На сегодня всё", en: "Done for today" },
     rekS: { uz: "Kim uzoqqa boradi", ru: "Кто пройдёт дальше", en: "Who goes furthest" },
     issiq: { uz: "Issiqxona", ru: "Теплица", en: "Greenhouse" },
+    issiqS: { uz: "O'simliklar", ru: "Растения", en: "Plants" },
     chatS: { uz: "Suhbat", ru: "Общение", en: "Chat" },
     duel: { uz: "Duel", ru: "Дуэль", en: "Duel" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
@@ -204,7 +205,7 @@
         { key: "rek", title: dx.rekSec, sub: HT("rekS"), go: rekHomeOpen }] },
       { t: HT("g2"), k: [
         { key: "qoriq", title: dx.qrT, sub: dx.pmQrS(qrSoni()), go: qrHubOpen },
-        { key: "issiq", title: HT("issiq"), sub: dx.soon, self: true, soon: true, go: soon(HT("issiq")) },
+        { key: "issiq", title: HT("issiq"), sub: isSoni() ? isX().sum(isSoni(), 12) : HT("issiqS"), badge: isKutmoqda(), go: isHubOpen },
         { key: "chat", title: c.chatT, sub: HT("chatS"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
         { key: "duel", title: HT("duel"), sub: dx.soon, self: true, soon: true, go: soon(HT("duel")) },
@@ -263,7 +264,7 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -271,6 +272,7 @@
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
+    try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)
     renderHub();
 
     // Sonlar va reyting fonda yangilanadi
