@@ -174,7 +174,7 @@
             r.sz = Math.max(r.sz, sz);
             r.len += it.str.trim().length;
           }
-          r.segs.push({ x: x, w: it.width || 0, s: it.str, i: ital[it.fontName] });
+          r.segs.push({ x: x, w: it.width || 0, s: it.str, i: ital[it.fontName], f: it.fontName });
         });
         rows = rows.filter(function (r) { return r.len > 0; });
         rows.sort(function (a, b) { return a.y - b.y; });
@@ -184,6 +184,60 @@
         }
         rows.forEach(function (r) {
           r.segs.sort(function (a, b) { return a.x - b.x; });
+          /* ZAXIRA SHRIFT HARFLARI (2026-10-09, o'zbekcha kirill kitoblar): LibreOffice asosiy shriftda yo'q harfni
+             (ў, қ, ғ, ҳ) boshqa shriftda ALOHIDA bo'lak qilib, asosiy matndagi bo'sh joy USTIGA chizadi. Shunchaki
+             ketma-ket qo'shilsa so'z bo'linib qoladi («Ни оят» + «ҳ»). Shuning uchun boshqa shriftdagi qisqa bo'lak
+             oldingi bo'lakning ichiga tushsa, u o'sha joydagi bo'shliq O'RNIGA qo'yiladi. */
+          // Zaxira shrift o'z harflari orasiga bo'shliq ham chizadi (joy surish uchun) - u asosiy matn ustiga tushadi va
+          // so'zni bo'lib yuboradi. Satrning ASOSIY shriftida bo'lmagan, faqat bo'shliqdan iborat bo'laklar tashlanadi.
+          var sanoq = {}, asosiy = null;
+          r.segs.forEach(function (sg) { var k = sg.s.replace(/\s+/g, "").length; if (k) { sanoq[sg.f] = (sanoq[sg.f] || 0) + k; } });
+          Object.keys(sanoq).forEach(function (f) { if (asosiy === null || sanoq[f] > sanoq[asosiy]) { asosiy = f; } });
+          // ZAXIRA shrift - shu satrda FAQAT o'zbekcha maxsus harflarni (ў қ ғ ҳ) chizgan shrift. Qoidalar faqat unga
+          // tegishli: kursiv yoki qalin so'zlar (boshqa shrift, lekin oddiy harflar) bularga tushmaydi.
+          var zaxira = {};
+          r.segs.forEach(function (sg) {
+            if (sg.f === asosiy) { return; }
+            var k = sg.s.replace(/\s+/g, "");
+            if (!k) { if (zaxira[sg.f] === undefined) { zaxira[sg.f] = true; } return; }
+            zaxira[sg.f] = zaxira[sg.f] !== false && /^[\u045e\u049b\u0493\u04b3\u040e\u049a\u0492\u04b2]+$/.test(k);
+          });
+          if (!Object.keys(zaxira).some(function (f) { return zaxira[f] && sanoq[f]; })) { zaxira = {}; }     // bunday shrift yo'q - hech narsa o'zgarmaydi
+          r.segs = r.segs.filter(function (sg) { return sg.s.trim() || !zaxira[sg.f]; });
+          var toza = [], uy = null, kut = null;
+          r.segs.forEach(function (sg) {
+            var q = sg.s.replace(/\s+/g, "");
+            // Bo'sh joy ALOHIDA bo'lak bo'lib kelgan hol: zaxira harf aynan uning ustida turadi - harf o'sha joyni egallaydi
+            var oxt = toza.length ? toza[toza.length - 1] : null;
+            if (oxt && q && zaxira[sg.f] && !oxt.s.trim() && oxt.w >= r.sz * 0.4 && Math.abs(sg.x - oxt.x) <= r.sz * 0.12) {
+              toza.pop();
+              sg = { x: oxt.x, w: Math.max(sg.w, oxt.w), s: q, i: sg.i, f: sg.f };
+              toza.push(sg); kut = null;
+              return;
+            }
+            if (oxt && !q && zaxira[oxt.f] && oxt.s.trim() && !zaxira[sg.f] && sg.w >= r.sz * 0.4 && Math.abs(sg.x - oxt.x) <= r.sz * 0.12) {
+              oxt.w = Math.max(oxt.w, sg.w); kut = null;
+              return;
+            }
+            if (uy && q && zaxira[sg.f] && !zaxira[uy.f] && uy.w > 0 && sg.x >= uy.x - 0.5 && sg.x < uy.x + uy.w - r.sz * 0.12) {
+              var taxmin = Math.round((sg.x - uy.x) / uy.w * uy.s.length), joy = -1, d;
+              for (d = 0; d <= 3 && joy < 0; d++) {
+                if (/\s/.test(uy.s.charAt(taxmin + d))) { joy = taxmin + d; }
+                else if (/\s/.test(uy.s.charAt(taxmin - d))) { joy = taxmin - d; }
+              }
+              if (joy >= 0) { uy.s = uy.s.slice(0, joy) + q + uy.s.slice(joy + 1); return; }
+            }
+            // So'z BOSHIDAGI zaxira harf: bo'sh joy keyingi bo'lakning boshida turadi va aynan shu harf o'rnidan boshlanadi
+            if (kut && !zaxira[sg.f] && /^\s/.test(sg.s) && sg.s.trim() && Math.abs(sg.x - kut.x) <= r.sz * 0.35) {
+              toza.splice(toza.indexOf(kut), 1);
+              sg.s = kut.s.replace(/\s+/g, "") + sg.s.replace(/^\s/, "");
+              sg.x = Math.min(sg.x, kut.x);
+            }
+            kut = (q && zaxira[sg.f]) ? sg : null;
+            toza.push(sg);
+            if (sg.s.trim() && sg.w > 0 && !zaxira[sg.f]) { uy = sg; }
+          });
+          r.segs = toza;
           var parts = [], oxir = null;
           r.segs.forEach(function (sg) {
             var s = sg.s;
