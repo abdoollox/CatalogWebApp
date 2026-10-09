@@ -954,9 +954,57 @@
      (alohida sahifa) + «…ni ulashish». Tayoqcha: yog'och ta'rifi (WOOD_LORE) → tafsilot sahifasi; Patronus: xarakter →
      xuddi shu sahifa Patronus ko'rinishida (openPatDetail). */
   var PU_TX = {
-    uz: { wand: "Tayoqcha haqida batafsil", pat: "Patronus haqida batafsil", h1: "Sizning xarakteringiz", h2: "Patronus nima?" },
-    ru: { wand: "Подробнее о палочке", pat: "Подробнее о Патронусе", h1: "Ваш характер", h2: "Что такое Патронус?" },
-    en: { wand: "More about the wand", pat: "More about the Patronus", h1: "Your character", h2: "What is a Patronus?" }
+    uz: { wand: "Tayoqcha haqida batafsil", pat: "Patronus haqida batafsil", h1: "Sizning xarakteringiz", h2: "Patronus nima?", h3: "Asarda" },
+    ru: { wand: "Подробнее о палочке", pat: "Подробнее о Патронусе", h1: "Ваш характер", h2: "Что такое Патронус?", h3: "В книгах" },
+    en: { wand: "More about the wand", pat: "More about the Patronus", h1: "Your character", h2: "What is a Patronus?", h3: "In the story" }
+  };
+  // Har Patronus asarda qanday uchraydi (uz, ru, en) - tafsilot sahifasidagi «Asarda» bo'limi. Yangi Patronus qo'shilsa shu yerga ham yozing.
+  var PAT_LORE = {
+    stag: ["Garri uchinchi kursda ko'l bo'yida yuzga yaqin dementorni aynan shu bug'u bilan quvib yuborgan. Bug'u — otasi Jeymsning hayvonga aylangandagi qiyofasi: Garri otasini hech qachon ko'rmagan bo'lsa-da, eng og'ir damda uni o'sha himoya qiladi.",
+      "На третьем курсе Гарри именно этим оленем прогнал у озера около сотни дементоров. Олень — анимагический облик его отца Джеймса: Гарри никогда не знал отца, но в самую тяжёлую минуту его защищает именно он.",
+      "In his third year Harry drove away around a hundred Dementors by the lake with this very stag. The stag is the Animagus form of his father James: Harry never knew him, yet in his darkest hour it is his father who protects him."],
+    doe: ["Lilining Patronusi ohu edi. Sneyp uni umr bo'yi sevgani uchun uning Patronusi ham ohu bo'lib qolgan. Aynan shu kumush ohu qish kechasi Garrini o'rmondagi muzlagan ko'lga, Griffindor qilichiga boshlab borgan.",
+      "Патронусом Лили была лань. Снегг любил её всю жизнь, и поэтому его Патронус тоже принял облик лани. Именно эта серебряная лань зимней ночью привела Гарри к замёрзшему лесному озеру и мечу Гриффиндора.",
+      "Lily's Patronus was a doe. Snape loved her all his life, and so his Patronus took the same shape. It was this silver doe that led Harry through a winter night to a frozen forest pool and the Sword of Gryffindor."],
+    otter: ["Germiona bu afsunni Dambldor armiyasi mashg'ulotlarida o'rgangan. Deyarli har afsunni birinchi urinishda uddalaydigan Germiona uchun Patronus eng qiyin afsunlardan biri bo'lgan — bu yerda bilim emas, baxtli xotira kerak.",
+      "Гермиона освоила это заклинание на занятиях Отряда Дамблдора. Ей, у которой почти любое заклинание получается с первого раза, Патронус давался труднее всего: здесь нужны не знания, а счастливое воспоминание.",
+      "Hermione learned this charm in Dumbledore's Army. For someone who masters almost any spell at the first attempt, the Patronus was one of the hardest: it takes not knowledge but a happy memory."],
+    dog: ["Ron Patronusni Dambldor armiyasida, Garrining darslarida o'rgangan. Uning Patronusi — kichik, tinib-tinchimas teryer it: bo'yi kichik, lekin egasidan bir qadam ham ortda qolmaydi.",
+      "Рон научился вызывать Патронуса в Отряде Дамблдора, на уроках Гарри. Его Патронус — маленький неугомонный терьер: ростом невелик, но от хозяина не отстаёт ни на шаг.",
+      "Ron learned the Patronus in Dumbledore's Army, in Harry's lessons. His is a small, restless terrier: not big, but never a step behind its master."],
+    horse: ["Jinni Patronusni Dambldor armiyasida o'rgangan — o'shanda u to'rtinchi kursda edi. Bunday yoshda to'liq shakldagi Patronus chiqarish kam sehrgarning qo'lidan keladi.",
+      "Джинни научилась вызывать Патронуса в Отряде Дамблдора — тогда она была на четвёртом курсе. В таком возрасте телесный Патронус удаётся немногим волшебникам.",
+      "Ginny learned the Patronus in Dumbledore's Army, when she was only a fourth-year. Few witches or wizards manage a corporeal Patronus at that age."],
+    hare: ["Xogvarts jangida dementorlar Garri, Ron va Germionani o'rab olganda, Lunaning kumush quyoni Ernining to'ng'izi va Sheymusning tulkisi bilan birga ularni quvib yuborgan. Luna o'shanda Garriga shunchaki: «Baxtli narsani o'yla», — degan.",
+      "В битве за Хогвартс, когда дементоры окружили Гарри, Рона и Гермиону, серебряный заяц Полумны вместе с кабаном Эрни и лисом Симуса отогнал их. Полумна тогда просто сказала Гарри: «Подумай о чём-нибудь счастливом».",
+      "At the Battle of Hogwarts, when Dementors closed in on Harry, Ron and Hermione, Luna's silver hare drove them back together with Ernie's boar and Seamus's fox. Luna simply told Harry: “Think of something happy.”"],
+    swan: ["Cho Patronusini Dambldor armiyasining Zarur xonadagi mashg'ulotlarida chiqargan. Uning kumush oqqushi xona bo'ylab suzib yurgan.",
+      "Чжоу вызвала своего Патронуса на занятиях Отряда Дамблдора в Выручай-комнате. Её серебряный лебедь плавно кружил по комнате.",
+      "Cho produced her Patronus in Dumbledore's Army lessons in the Room of Requirement. Her silver swan glided around the room."],
+    phoenix: ["Dambldorning Patronusi — feniks, sodiq qushi Foksga o'xshab. Patronus orqali xabar yuborishni aynan Dambldor o'ylab topgan, Feniks jamiyati a'zolari bir-biriga shu yo'l bilan xabar berishgan.",
+      "Патронус Дамблдора — феникс, как и его верная птица Фоукс. Именно Дамблдор придумал передавать сообщения с помощью Патронусов: так связывались между собой члены Ордена Феникса.",
+      "Dumbledore's Patronus is a phoenix, like his faithful bird Fawkes. It was Dumbledore who devised sending messages by Patronus — the way members of the Order of the Phoenix kept in touch."],
+    cat: ["Professor Makgonagall o'zi ham mushukka aylana oladi. Xogvarts jangi oldidan u bir yo'la uchta kumush mushuk chiqarib, fakultet mudirlarini chaqirgani yuborgan — bir vaqtda bir nechta Patronusni boshqarish juda kam sehrgarning qo'lidan keladi.",
+      "Профессор Макгонагалл и сама умеет превращаться в кошку. Перед битвой за Хогвартс она вызвала сразу трёх серебряных кошек и отправила их за деканами факультетов — управлять несколькими Патронусами одновременно умеют очень немногие.",
+      "Professor McGonagall can turn into a cat herself. Before the Battle of Hogwarts she conjured three silver cats at once and sent them to fetch the Heads of House — very few can direct several Patronuses at the same time."],
+    lynx: ["Bill va Flyorning to'yi avjida Kingslining kumush silovsini davraning o'rtasiga tushib, uning ovozi bilan: «Vazirlik quladi. Skrimjer o'ldi. Ular kelishyapti», — degan. Shu ogohlantirish ko'pchilikning hayotini saqlab qolgan.",
+      "В разгар свадьбы Билла и Флёр серебряная рысь Кингсли приземлилась посреди гостей и его голосом произнесла: «Министерство пало. Скримджер мёртв. Они идут». Это предупреждение спасло многим жизнь.",
+      "In the middle of Bill and Fleur's wedding, Kingsley's silver lynx landed among the guests and spoke in his voice: “The Ministry has fallen. Scrimgeour is dead. They are coming.” That warning saved many lives."],
+    weasel: ["To'ydan qochgandan keyin Garri, Ron va Germionaga Artur Uizlining kumush latchasi yetib kelgan: «Oila omon. Javob bermang, bizni kuzatishyapti». Qisqa xabar — lekin ular uchun eng muhimi.",
+      "После бегства со свадьбы к Гарри, Рону и Гермионе примчался серебряный горностай Артура Уизли: «Семья в безопасности. Не отвечайте, за нами следят». Короткое послание — но самое важное для них.",
+      "After they fled the wedding, Arthur Weasley's silver weasel reached Harry, Ron and Hermione: “Family safe, do not reply, we are being watched.” A short message — and the one that mattered most to them."],
+    wolf: ["Tonksning Patronusi ilgari boshqacha edi. Remus Lyupinni sevib qolgach, u katta to'rt oyoqli maxluqqa — bo'riga aylangan. Kuchli his-tuyg'u Patronusning qiyofasini o'zgartira olishiga bu eng yorqin misol.",
+      "Раньше Патронус Тонкс был другим. Когда она полюбила Римуса Люпина, он превратился в большое четвероногое существо — волка. Это самый яркий пример того, что сильное чувство может изменить облик Патронуса.",
+      "Tonks's Patronus used to be different. After she fell in love with Remus Lupin it became a large four-legged creature — a wolf. It is the clearest example that strong feeling can change a Patronus's shape."],
+    goat: ["Xogsmidda o'lim yeguvchilar Garrining bug'usini ko'rib qolishganda, Aberfort o'z Patronusini chiqarib: «Bu bug'u emas, ahmoq, echki!» — degan va ularni chalg'itgan. Qaysarligi shu kecha uch do'stning hayotini saqlab qolgan.",
+      "Когда Пожиратели смерти заметили в Хогсмиде оленя Гарри, Аберфорт выпустил своего Патронуса: «Это не олень, болван, а козёл!» — и сбил их с толку. Его упрямство в ту ночь спасло жизнь троим друзьям.",
+      "When Death Eaters spotted Harry's stag in Hogsmeade, Aberforth sent out his own Patronus — “That's not a stag, you idiot, it's a goat!” — and threw them off. His stubbornness saved three lives that night."],
+    fox: ["Sheymus Dambldor armiyasida birinchi marta Patronus chiqarganda quvonib: «Nimadir junli narsa chiqdi!» — degan. Xogvarts jangida esa uning tulkisi Lunaning quyoni va Ernining to'ng'izi bilan birga dementorlarni Garridan quvib yuborgan.",
+      "Когда Симус впервые вызвал Патронуса в Отряде Дамблдора, он обрадовался: «Получилось что-то мохнатое!» А в битве за Хогвартс его лис вместе с зайцем Полумны и кабаном Эрни отогнал дементоров от Гарри.",
+      "When Seamus first produced a Patronus in Dumbledore's Army he was thrilled that it was “definitely something hairy”. At the Battle of Hogwarts his fox, with Luna's hare and Ernie's boar, drove the Dementors away from Harry."],
+    boar: ["Xogvarts jangida dementorlar Garri, Ron va Germionaga yopirilganda, Ernining kumush to'ng'izi Lunaning quyoni va Sheymusning tulkisi bilan birga ularni ortga uloqtirgan. To'ng'iz Xogvarts gerbi va darvozasida ham bor.",
+      "В битве за Хогвартс, когда дементоры набросились на Гарри, Рона и Гермиону, серебряный кабан Эрни вместе с зайцем Полумны и лисом Симуса отбросил их. Кабан есть и на гербе, и на воротах Хогвартса.",
+      "At the Battle of Hogwarts, when Dementors swooped on Harry, Ron and Hermione, Ernie's silver boar threw them back together with Luna's hare and Seamus's fox. The boar also appears on Hogwarts's crest and gates."]
   };
   // Patronus tafsiloti: tayoqcha tafsiloti sahifasi (scr-detail) qayta ishlatiladi; «ortga» - profilga
   function openPatDetail() {
@@ -971,8 +1019,12 @@
     $("det-famous").classList.add("hidden");
     $("det-h-wood").textContent = pt.h1;
     $("det-wood").textContent = p["n_" + lang];
-    $("det-h-core").textContent = pt.h2;
-    $("det-core").textContent = px.what;
+    var lore = PAT_LORE[patronus];
+    $("det-h-core").textContent = lore ? pt.h3 : pt.h2;
+    $("det-core").textContent = lore ? lore[lang === "ru" ? 1 : lang === "en" ? 2 : 0] : px.what;
+    $("det-b3").classList.toggle("hidden", !lore);
+    $("det-h3").textContent = pt.h2;
+    $("det-p3").textContent = px.what;
     pmHide();
     $("scr-detail").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}

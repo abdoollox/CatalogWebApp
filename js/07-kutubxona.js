@@ -1649,6 +1649,7 @@
     var wd = WOODS[wand.wood], cr = CORES[wand.core], fl = FLEX[wand.flex];
 
     $("scr-detail").classList.remove("pat");      // shu sahifa Patronus tafsiloti uchun ham ishlatiladi (openPatDetail)
+    $("det-b3").classList.add("hidden");
     $("det-kicker").textContent = t.detKicker;
     $("det-back-txt").textContent = t.back;
 
