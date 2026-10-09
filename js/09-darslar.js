@@ -77,7 +77,7 @@
           // afsunlar
           afStep: function (a, b) { return a + " / " + b + "-urinish"; },
           afR: ["Chiziq bo'ylab chizing", "Chiziq xira — diqqat bilan", "Endi yoddan chizing"],
-          afStart: "Yonib turgan nuqtadan boshlang", afOff: "Tayoqcha chetga chiqdi — qaytadan", afShort: "Harakatni oxirigacha chizing",
+          afStart: "Yonib turgan nuqtadan boshlang", afNoaniq: function (n) { return "Afsun noaniq chiqdi — aniqlik " + n + "%. Rekord uchun kamida 60% kerak."; }, afJarima: function (n, s) { return "Aniqlik " + n + "% — jarima +" + s + " s"; }, afOff: "Tayoqcha chetga chiqdi — qaytadan", afShort: "Harakatni oxirigacha chizing",
           afOk: ["Yaxshi! Yana bir marta.", "Ajoyib! Endi yoddan.", "Barakalla! Afsun o'zlashtirildi."], afShow: "Chiziqni ko'rsatish",
           afBaho: ["Troll", "Yomon", "Qoniqarli", "Kutilganidan yuqori", "A'lo"], afBahoT: "Baho", afAcc: function (p) { return "Aniqlik " + p + "%"; }, afVaqt: function (a, b) { return "Vaqtida " + a + " / " + b; },
           afLow: "Keyingi darsga o'tish uchun kamida «Qoniqarli» baho kerak.",
@@ -168,7 +168,7 @@
           practice: "Этот урок сегодня уже сделан — за тренировку очки не даются.", fail: "Не получилось, попробуйте чуть позже",
           afStep: function (a, b) { return "Попытка " + a + " / " + b; },
           afR: ["Ведите по линии", "Линия бледная — внимательнее", "Теперь по памяти"],
-          afStart: "Начните со светящейся точки", afOff: "Палочка ушла в сторону — ещё раз", afShort: "Доведите движение до конца",
+          afStart: "Начните со светящейся точки", afNoaniq: function (n) { return "Заклинание вышло неточным — " + n + "%. Для рекорда нужно не меньше 60%."; }, afJarima: function (n, s) { return "Точность " + n + "% — штраф +" + s + " с"; }, afOff: "Палочка ушла в сторону — ещё раз", afShort: "Доведите движение до конца",
           afOk: ["Хорошо! Ещё раз.", "Отлично! Теперь по памяти.", "Браво! Заклинание освоено."], afShow: "Показать линию",
           afBaho: ["Тролль", "Слабо", "Удовлетворительно", "Выше ожидаемого", "Превосходно"], afBahoT: "Оценка", afAcc: function (p) { return "Точность " + p + "%"; }, afVaqt: function (a, b) { return "Вовремя " + a + " / " + b; },
           afLow: "Чтобы перейти к следующему уроку, нужна оценка не ниже «Удовлетворительно».",
@@ -258,7 +258,7 @@
           practice: "This class is already done today — practice gives no points.", fail: "That didn't work, please try again shortly",
           afStep: function (a, b) { return "Attempt " + a + " / " + b; },
           afR: ["Trace along the line", "The line is faint — careful", "Now from memory"],
-          afStart: "Start from the glowing dot", afOff: "The wand went astray — again", afShort: "Finish the whole movement",
+          afStart: "Start from the glowing dot", afNoaniq: function (n) { return "The spell came out sloppy — " + n + "% accuracy. A record needs at least 60%."; }, afJarima: function (n, s) { return "Accuracy " + n + "% — penalty +" + s + " s"; }, afOff: "The wand went astray — again", afShort: "Finish the whole movement",
           afOk: ["Good! Once more.", "Excellent! Now from memory.", "Bravo! The charm is learnt."], afShow: "Show the line",
           afBaho: ["Troll", "Poor", "Acceptable", "Exceeds Expectations", "Outstanding"], afBahoT: "Grade", afAcc: function (p) { return "Accuracy " + p + "%"; }, afVaqt: function (a, b) { return "In time " + a + " / " + b; },
           afLow: "You need at least “Acceptable” to move on.",
@@ -1235,6 +1235,7 @@
     obliviate: ["Maggl sehrni ko'rib qoldi — u buni unutishi kerak.", "Магл увидел волшебство — он должен это забыть.", "A Muggle has seen magic — they must forget it."]
   };
   var AF_N = 30;
+  var AF_REK_ANIQ = 60;       // rekordda afsun hisoblanishi uchun eng kam aniqlik (duAcc)
   var af = null;      // {id, round, pts:[...], idx, drawing, trail, done, msg, ok, bajar}
 
   // Siniq chiziqni teng oraliqli AF_N nuqtaga bo'lish
@@ -1523,6 +1524,11 @@
     // Aniqlik: duel bilan bir xil QATTIQ o'lchov (duAcc, js/09-duel.js - egasi, 2026-10-09); yoddan chizilganda chegaralar kengroq
     var aniq = null, wn = af.w || 1, nm = function (v) { return v.map(function (p) { return [p[0] / wn, p[1] / wn]; }); };
     try { aniq = duAcc(nm(af.pts), nm(af.trail), afR() === 0 && !af.show); } catch (e) {}
+    // Rekord va bellashuvda ham aniqlik hisobga olinadi (egasi, 2026-10-09): rekordda 60% dan past afsun urinishni
+    // tugatadi; bellashuvda 70% dan past +3 s, 50% dan past +6 s (server har «xato»ga 3 s qo'shadi).
+    var jarima = 0;
+    if (aniq != null && af.rek && aniq < AF_REK_ANIQ) { showToast(x.afNoaniq(aniq), "err"); afRekTugat(false); return; }
+    if (aniq != null && af.bell && bl) { jarima = aniq < 50 ? 2 : aniq < 70 ? 1 : 0; bl.xato += jarima; }
     af.rounds.push({ a: aniq, r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used && !af.bt,
                      late: !af.bell && otgan > af.lim ? (otgan > af.lim * 2 ? 2 : 1) : 0 });
     var tugadi = af.round >= af.steps.length - 1, oxir = af.rounds[af.rounds.length - 1];
@@ -1531,7 +1537,7 @@
     af.ok = true;
     // Professor Flitvik izohi (bellashuvda - eski qisqa matn)
     var fl = oxir.late ? x.afFl.c : ((oxir.a != null ? oxir.a >= 85 : oxir.r < 0.4) && !oxir.fails && !oxir.used ? x.afFl.a : x.afFl.b);
-    af.msg = af.bell ? x.afOk[Math.min(af.round, 2)] : fl[(af.n + af.round) % fl.length];
+    af.msg = af.bell ? (jarima ? x.afJarima(aniq, jarima * 3) : x.afOk[Math.min(af.round, 2)]) : fl[(af.n + af.round) % fl.length];
     af.kayf = fl === x.afFl.a ? "zor" : fl === x.afFl.b ? "yaxshi" : "maslahat";
     af.bad = false;
     af.lock = true;
