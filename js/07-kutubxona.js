@@ -455,6 +455,7 @@
   function pmShow() {
     ["scr-cat", "scr-hub", "scr-prof", "scr-detail", "scr-nsh"].forEach(function (id) { $(id).classList.add("hidden"); });
     pmFill();
+    try { pmDarsRows(); } catch (e) {}
     $("pm").classList.remove("hidden");
   }
 
@@ -1008,7 +1009,7 @@
     sqQayt = true;
     try { worldFrom = "hub"; } catch (e) {}          // "ortga" -> openHub() -> yana shu ro'yxat
     try {
-      if (code === "daily") { blOpen("tarix"); }            // kunlik savol o'rnida: Sehrgarlik tarixi bellashuvi
+      if (code === "daily") { blOpen("tarix", "list"); }            // kunlik savol o'rnida: Sehrgarlik tarixi bellashuvi
       else if (code === "chat") { openChat(); }
       else if (code === "chess") { openChessHub(); }
       else if (code === "owl") { openOwl(); owlFrom = "hub"; }

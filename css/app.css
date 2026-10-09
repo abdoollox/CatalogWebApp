@@ -2998,3 +2998,25 @@ body.kr-on .mp{display:none!important}
   background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:10px;line-height:17px}
 
 #scr-fan .fn-grid{max-height:none}
+
+/* ============ XOGVARTS PASTKI MENYUSI va fan sahifasidagi bellashuv/rekord kataklari (egasi, 2026-10-09) ============ */
+.hnav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center;padding:5px 6px calc(5px + env(safe-area-inset-bottom));
+  background:rgba(13,12,18,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid rgba(var(--gold-rgb),.3);box-shadow:0 -8px 24px rgba(0,0,0,.45)}
+.hnav button{position:relative;flex:1;max-width:96px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px 5px;border:0;background:none;cursor:pointer;
+  color:var(--dim);font:600 10.5px/1 'Manrope',sans-serif;-webkit-tap-highlight-color:transparent}
+.hnav button span{display:flex;width:24px;height:24px}
+.hnav button span svg{width:24px;height:24px}
+.hnav button b{font:inherit;white-space:nowrap}
+.hnav button.on{color:var(--gold-hi)}
+.hnav button.on::before{content:"";position:absolute;top:-6px;left:28%;right:28%;height:2px;border-radius:2px;background:var(--gold-hi);box-shadow:0 0 10px rgba(var(--gold-rgb),.8)}
+.hnav button i{position:absolute;top:2px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:#b3392f;color:#fff;font:700 10px/16px 'Manrope',sans-serif;font-style:normal;text-align:center}
+body.nav-on .screen::after{content:"";display:block;flex:none;height:calc(76px + env(safe-area-inset-bottom))}
+body.nav-on .mp{bottom:calc(72px + env(safe-area-inset-bottom))}
+.fn-more{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 0}
+.fn-mc{position:relative;display:flex;flex-direction:column;gap:5px;min-width:0;padding:13px 14px 12px;border-radius:18px;text-align:left;cursor:pointer;color:var(--text);
+  border:1px solid rgba(var(--dr-rgb),.45);background:linear-gradient(160deg,rgba(var(--dr-rgb),.2),rgba(var(--dr-rgb),.05) 70%)}
+.fn-mc small:first-child{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:rgba(var(--dr-rgb),1)}
+.fn-mc b{font:600 19px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fn-mc span{font:500 11.5px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.fn-mc em{position:absolute;top:10px;right:10px;padding:3px 7px;border-radius:9px;background:rgba(var(--dr-rgb),.28);font:700 11px/1 'Manrope',sans-serif;font-style:normal;color:#fff}
+#pm-qob .pm-chev{margin-left:auto}

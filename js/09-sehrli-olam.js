@@ -35,6 +35,7 @@
     chat: "M4 5.5h16v10.5H10l-6 4z M8 9.5h8 M8 12.5h5",
     bell: "M7.5 4h9v5a4.5 4.5 0 0 1-9 0z M7.5 5.5H4.5V7a3 3 0 0 0 3 3 M16.5 5.5h3V7a3 3 0 0 1-3 3 M12 13.5V17 M8.5 20h7 M9.5 17h5",
     chess: "M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z",
+    rek: "M5.5 21V3.5 M5.5 4.5h12l-2.6 3.8 2.6 3.8h-12 M3.5 21h4",
     refs: "M9 5.5a3 3 0 1 1 0 6a3 3 0 1 1 0-6z M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5",
     wand: "M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M15 9h.01 M17.8 6.2L19 5 M3 21l9-9 M12.2 6.2L11 5"
   };
@@ -188,11 +189,12 @@
       // Kunlik savol ilovadan olib tashlandi (egasi, 2026-10-07): o'rnida Darslar; ball - «Bellashuv» bo'limida.
       { key: "tasks", rgb: "232,132,60", title: drX().tile,
         sub: drJami() ? drX().tileProg(drJami()[0], drJami()[1]) : drX().tileDone, badge: 0, go: drOpen, needHouse: true },
-      { key: "chat", rgb: hh.rgb, title: c.chatT, sub: c.chatS, badge: chatN, go: openChat, needHouse: true },
+      // Chat endi pastki menyuda (egasi, 2026-10-09: bosh sahifada Darslar, Bellashuv, Rekordlar kataklari)
       // «Bellashuv» (egasi, 2026-10-07): shaxmat o'rnida - fanlar bellashuvlari va shaxmat bitta sahifada
       { key: "bell", rgb: "var(--gold-rgb)", title: drX().blTile,
         sub: drPending() > 0 ? drX().blTileNew(drPending()) : (drPending() === 0 ? drX().blTileDone : c.chessS || ""),
         badge: Math.max(0, drPending()), go: blHomeOpen, needHouse: true },
+      { key: "rek", rgb: "214,96,96", title: drX().rekSec, sub: drX().rekTileS, badge: 0, go: rekHomeOpen, needHouse: true },
       { key: "refs", rgb: "var(--gold-rgb)", title: refT().kick, sub: c.refsS, badge: refsN, go: openRefs }
     ];
     tiles.forEach(function (tile) {
@@ -224,6 +226,7 @@
     $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
     $("hub-wand-t").textContent = HUB_TX.wandT[lang];
     $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
+    try { navSync(); } catch (e) {}
   }
 
   function openHub() {

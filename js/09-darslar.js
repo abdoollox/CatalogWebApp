@@ -132,6 +132,7 @@
           qobT: "Qobiliyatlar", qobK: "Mening darajam", qobS: "Har fan boshqa qobiliyatni mashq qildiradi. Daraja o'tilgan darslar va baholaringizdan hisoblanadi.",
           qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
           qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Qobiliyatlaringiz profilingizda boshqa sehrgarlarga ham ko'rinadi.",
+          rekTileS: "Xatosiz kim uzoqqa boradi", rekHomeS: "Fanni tanlang. Bu yerda tezlik emas, chidam muhim: birinchi xatoda o'yin tugaydi. Kun oxirida har fanning birinchi uch rekordchisi ball oladi.", rekPrize: function (p) { return "Har kuni yarim tunda rekordchilarga ball: 1-o'rin +" + p[0] + ", 2-o'rin +" + p[1] + ", 3-o'rin +" + p[2] + "."; }, fnBell: "Bugungi bellashuv", fnRek: "Rekord", navHome: "Bosh sahifa", navMen: "Men", navChat: "Chat", pmQrS: function (n) { return n ? n + " ta maxluq" : "Maxluqlar darsidan olinadi"; },
           rekT: "Rekord", rekSec: "Rekordlar", rekRule: "Bu yerda tezlik emas, chidam muhim: xatosiz kim uzoqqa boradi. Birinchi xatoda o'yin tugaydi. Jadval doimiy: eng yaxshi natijangiz unda qoladi.",
           rekWeek: "O'rningiz", rekAll: "Rekordingiz", rekGo: "Boshlash", rekTop: "Rekordchilar", rekEmpty: "Hali hech kim urinmadi. Birinchi bo'ling!",
           rekRes: "Natija", rekNew: "Yangi rekord!", rekOld: function (n) { return "Rekordingiz: " + n; }, rekAgain: "Yana urinish", rekBack: "Rekordlar jadvali",
@@ -220,6 +221,7 @@
           qobT: "Способности", qobK: "Мой уровень", qobS: "Каждый предмет тренирует свою способность. Уровень считается по пройденным урокам и вашим оценкам.",
           qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
           qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Ваши способности видны другим волшебникам в вашем профиле.",
+          rekTileS: "Кто пройдёт дальше без ошибок", rekHomeS: "Выберите предмет. Здесь важна не скорость, а выдержка: игра заканчивается на первой ошибке. В конце дня трое лучших по каждому предмету получают очки.", rekPrize: function (p) { return "Каждую полночь рекордсмены получают очки: 1-е место +" + p[0] + ", 2-е +" + p[1] + ", 3-е +" + p[2] + "."; }, fnBell: "Состязание дня", fnRek: "Рекорд", navHome: "Главная", navMen: "Я", navChat: "Чат", pmQrS: function (n) { return n ? "Существ: " + n : "Появляются на уроках ухода"; },
           rekT: "Рекорд", rekSec: "Рекорды", rekRule: "Здесь важна не скорость, а выдержка: кто пройдёт дальше без ошибок. Игра заканчивается на первой ошибке. Таблица постоянная: ваш лучший результат остаётся в ней.",
           rekWeek: "Ваше место", rekAll: "Ваш рекорд", rekGo: "Начать", rekTop: "Рекордсмены", rekEmpty: "Ещё никто не пробовал. Будьте первым!",
           rekRes: "Результат", rekNew: "Новый рекорд!", rekOld: function (n) { return "Ваш рекорд: " + n; }, rekAgain: "Ещё раз", rekBack: "Таблица рекордов",
@@ -309,6 +311,7 @@
           qobT: "Abilities", qobK: "My level", qobS: "Each subject trains a different ability. Your level comes from the lessons you have passed and your grades.",
           qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
           qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Other wizards can see your abilities in your profile.",
+          rekTileS: "Who gets furthest without a mistake", rekHomeS: "Pick a subject. This is about endurance, not speed: the game ends on your first mistake. At the end of each day the top three in every subject earn points.", rekPrize: function (p) { return "Every midnight the record holders earn points: 1st +" + p[0] + ", 2nd +" + p[1] + ", 3rd +" + p[2] + "."; }, fnBell: "Today's contest", fnRek: "Record", navHome: "Home", navMen: "Me", navChat: "Chat", pmQrS: function (n) { return n ? n + " creatures" : "Earned in Care of Magical Creatures"; },
           rekT: "Record", rekSec: "Records", rekRule: "This is about endurance, not speed: who gets furthest without a mistake. The game ends on your first mistake. The table is permanent: your best result stays on it.",
           rekWeek: "Your place", rekAll: "Your record", rekGo: "Begin", rekTop: "Record holders", rekEmpty: "Nobody has tried yet. Be the first!",
           rekRes: "Result", rekNew: "New record!", rekOld: function (n) { return "Your record: " + n; }, rekAgain: "Try again", rekBack: "Records table",
@@ -535,8 +538,12 @@
   /* --- «Bellashuv» bo'limi (egasi, 2026-10-07): Xogvarts bosh sahifasida shaxmat o'rnida. Ball shu yerda:
          fanlar bellashuvlari + sehrgarlar shaxmati. Darslar sahifasida bellashuv ko'rsatilmaydi. --- */
   var blQayt = false;
+  var blhMode = "bell";      // "bell" - fanlar bellashuvi + shaxmat; "rek" - rekordlar (bosh sahifadagi alohida katak)
+  var blKel = "list", rekKel = "list", qrKel = "fan", qobKel = "dars";   // qayerdan ochilgan: "ortga" o'sha yerga
 
-  function blHomeOpen() {
+  function rekHomeOpen() { blHomeOpen("rek"); }
+  function blHomeOpen(mode) {
+    blhMode = mode === "rek" ? "rek" : "bell";
     blQayt = false;
     ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
@@ -559,9 +566,10 @@
   function blHomeRender() {
     var x = drX(), bb = $("blh-list");
     $("blh-kick").textContent = x.kick;
-    $("blh-ttl").textContent = x.blTile;
-    $("blh-note").textContent = x.blHomeS;
+    $("blh-ttl").textContent = blhMode === "rek" ? x.rekSec : x.blTile;
+    $("blh-note").textContent = blhMode === "rek" ? x.rekHomeS : x.blHomeS;
     bb.innerHTML = "";
+    if (blhMode === "rek") { blhRekList(bb, x); return; }
     DR_FANLAR.forEach(function (f) {
       var c = f.on && drData && drData[f.id] && drData[f.id].contest;
       if (!c) { return; }
@@ -580,7 +588,7 @@
       tx.appendChild(drEl("small", "dr-izoh", c.ms ? x.sec(c.ms) + " · " + x.place(c.place, c.n) : x.bellNone));
       card.appendChild(tx);
       card.appendChild(drEl("span", "dr-chip", "+" + c.prizes.top[0]));
-      card.addEventListener("click", function () { blOpen(f.id); });
+      card.addEventListener("click", function () { blOpen(f.id, "list"); });
       bb.appendChild(card);
     });
     // Sehrgarlar shaxmati
@@ -603,8 +611,9 @@
       openChessHub();
     });
     bb.appendChild(ch);
-    // Rekordlar: xatosiz kim uzoqqa boradi (egasi g'oyasi, 2026-10-08)
-    bb.appendChild(drEl("b", "rk-sec", x.rekSec));
+  }
+  // Rekordlar ro'yxati: xatosiz kim uzoqqa boradi (egasi g'oyasi, 2026-10-08; alohida bo'lim - 2026-10-09)
+  function blhRekList(bb, x) {
     DR_FANLAR.forEach(function (f) {
       if (!f.on) { return; }
       var r = rekData && rekData[f.id], card = drEl("button", "dr-card"), im = drEl("span", "dr-im"), img = document.createElement("img");
@@ -618,7 +627,7 @@
       tx.appendChild(drEl("small", "dr-izoh", x.rekCard(r ? r.all : 0) + (r && r.all ? " " + rekBir(f.id) : "")));
       card.appendChild(tx);
       if (r && r.top && r.top[0]) { card.appendChild(drEl("span", "dr-chip", String(r.top[0].score))); }
-      card.addEventListener("click", function () { rekOpen(f.id); });
+      card.addEventListener("click", function () { rekOpen(f.id, "list"); });
       bb.appendChild(card);
     });
   }
@@ -638,7 +647,8 @@
     rekAt = Date.now();
     drPost({ records: 1 }, function (res) { if (res && res.records) { rekData = res.records; } if (cb) { cb(); } });
   }
-  function rekOpen(fan) {
+  function rekOpen(fan, kel) {
+    if (kel) { rekKel = kel; }
     rekFan = null;
     rekSahifa = fan;
     drShowGame("scr-rek");
@@ -653,7 +663,7 @@
     $("rk-ttl").textContent = f.nom[lang];
     $("rk-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     $("rk-im").src = drImg(f.id);
-    $("rk-rule").textContent = x.rekRule;
+    $("rk-rule").textContent = x.rekRule + " " + x.rekPrize(r.prizes || [5, 3, 2]);
     $("rk-week").textContent = r.place ? String(r.place) : "—";
     $("rk-week-t").textContent = x.rekWeek + (r.place ? " · " + x.rekPlace(r.place, r.n) : "");
     $("rk-all").textContent = String(r.all);
@@ -676,6 +686,7 @@
   }
   function rekBosh(fan) {
     rekFan = fan;
+    drPost({ rek_start: fan }, function () {});       // urinish serverda boshlanadi - natija shu vaqtga sig'ishi kerak
     if (fan === "tarix") { trRek(); } else if (fan === "afsun") { afOpen("rek"); } else if (fan === "iksir") { ikOpen("rek"); }
     else if (fan === "himoya") { hmOpen("rek"); } else if (fan === "uchish") { uchOpen("rek"); } else if (fan === "maxluq") { mxOpen("rek"); }
     else if (fan === "astro") { ylOpen("rek"); } else if (fan === "osimlik") { osOpen("rek"); } else if (fan === "trans") { tfOpen("rek"); }
@@ -713,7 +724,8 @@
   /* --- bellashuv sahifasi --- */
   var blFan = null, bl = null;       // bl: ketayotgan urinish {fan, t0, xato}
 
-  function blOpen(fan) {
+  function blOpen(fan, kel) {
+    if (kel) { blKel = kel; }
     blFan = fan;
     bl = null;
     ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
@@ -876,9 +888,10 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
+    rekLoad(function () { if (fanId === id && !$("scr-fan").classList.contains("hidden")) { fanMore(); } });
     try { window.scrollTo(0, 0); } catch (e) {}
   }
 
@@ -893,6 +906,7 @@
       qb.classList.toggle("hidden", fanId !== "maxluq");
       if (fanId === "maxluq") { $("fn-qr-t").textContent = x.qrT; $("fn-qr-s").textContent = x.qrOpenS(Math.min(11, Math.floor((st ? st.level : 0) / 3))); }
     }
+    fanMore();
     var im = $("fn-im");
     im.src = drImg(f.id);
     $("scr-fan").style.setProperty("--dr-rgb", f.rgb);
@@ -915,6 +929,47 @@
         grid.appendChild(b);
       })(n);
     }
+  }
+
+  // Fan sahifasidagi ikki katak: shu fanning bugungi bellashuvi va rekordi (egasi, 2026-10-09: «matritsa» navigatsiya)
+  function fanMore() {
+    var x = drX(), box = $("fn-more"), st = drData && drData[fanId], c = st && st.contest, r = rekData && rekData[fanId];
+    if (!box) { return; }
+    box.innerHTML = "";
+    var mk = function (kick, ttl, sub, chip, go) {
+      var b = drEl("button", "fn-mc");
+      b.type = "button";
+      b.appendChild(drEl("small", "", kick));
+      b.appendChild(drEl("b", "", ttl));
+      b.appendChild(drEl("span", "", sub));
+      if (chip) { b.appendChild(drEl("em", "", chip)); }
+      b.addEventListener("click", go);
+      box.appendChild(b);
+    };
+    var id = fanId;
+    if (c) {
+      mk(x.blTile, id === "afsun" || id === "iksir" || id === "tarix" ? drItemName(id, c.item) : x.fnBell, c.ms ? x.sec(c.ms) + " · " + x.place(c.place, c.n) : x.bellNone, "+" + c.prizes.top[0], function () { blOpen(id, "fan"); });
+    }
+    mk(x.rekSec, r && r.all ? r.all + " " + rekBir(id) : x.rekGo, r && r.place ? x.rekWeek + ": " + r.place : x.rekTileS, r && r.top && r.top[0] ? String(r.top[0].score) : "", function () { rekOpen(id, "fan"); });
+  }
+
+  // «Men» (profil) sahifasidagi qatorlar: Qo'riqxona va Qobiliyatlar
+  function pmDarsRows() {
+    var x = drX(), ichkarida = false;
+    try { ichkarida = hasHouse(); } catch (e) {}
+    var a = $("pm-qr"), b = $("pm-qob");
+    if (!a || !b) { return; }
+    a.classList.toggle("hidden", !ichkarida);
+    b.classList.toggle("hidden", !ichkarida);
+    if (!ichkarida) { return; }
+    var n = 0;
+    try { ((qrData && qrData.list) || []).forEach(function (m) { if (m.got) { n++; } }); } catch (e) {}
+    $("pm-qr-t").textContent = x.qrT;
+    $("pm-qr-s").textContent = x.pmQrS(n);
+    $("pm-qob-t").textContent = x.qobBtn;
+    $("pm-qob-s").textContent = x.qobBtnS;
+    a.onclick = function () { qrKel = "pm"; $("pm").classList.add("hidden"); qrOpen(); };
+    b.onclick = function () { qobKel = "pm"; $("pm").classList.add("hidden"); qobOpen(); };
   }
 
   // N-darsni ochish
@@ -3678,18 +3733,18 @@
     $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
     $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else if (rekFan) { rekQayt(); } else { fanOpen("maxluq"); } });
     $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });
-    $("qr-back").addEventListener("click", function () { fanOpen("maxluq"); });
+    $("qr-back").addEventListener("click", function () { if (qrKel === "pm") { qrKel = "fan"; $("scr-qoriq").classList.add("hidden"); pmOpen(); } else { fanOpen("maxluq"); } });
     $("yl-back").addEventListener("click", function () { var b = yl && yl.bell; ylStop(); yl = null; blAbort(); if (b) { blOpen("astro"); } else if (rekFan) { rekQayt(); } else { fanOpen("astro"); } });
     $("yl-go").addEventListener("click", function () { if (yl) { ylGo(); } });
     $("os-back").addEventListener("click", function () { var b = os && os.bell; osStop(); os = null; blAbort(); if (b) { blOpen("osimlik"); } else if (rekFan) { rekQayt(); } else { fanOpen("osimlik"); } });
     $("os-go").addEventListener("click", function () { if (os) { osGo(); } });
     $("tf-back").addEventListener("click", function () { var b = tf && tf.bell; tfStop(); tf = null; blAbort(); if (b) { blOpen("trans"); } else if (rekFan) { rekQayt(); } else { fanOpen("trans"); } });
     $("tf-go").addEventListener("click", function () { if (tf) { tfGo(); } });
-    $("qo-back").addEventListener("click", function () { drOpen(); });
-    $("dr-qob").addEventListener("click", qobOpen);
-    $("rk-back").addEventListener("click", function () { blHomeOpen(); });
+    $("qo-back").addEventListener("click", function () { if (qobKel === "pm") { qobKel = "dars"; $("scr-qob").classList.add("hidden"); pmOpen(); } else { drOpen(); } });
+    $("dr-qob").addEventListener("click", function () { qobKel = "dars"; qobOpen(); });
+    $("rk-back").addEventListener("click", function () { if (rekKel === "fan" && rekSahifa) { fanOpen(rekSahifa); } else { blHomeOpen("rek"); } });
     $("rk-go").addEventListener("click", function () { if (rekSahifa) { rekBosh(rekSahifa); } });
-    $("fn-qr").addEventListener("click", qrOpen);
+    $("fn-qr").addEventListener("click", function () { qrKel = "fan"; qrOpen(); });
     var uc = $("uc-canvas"), ucYur = function (ev) {
       if (!uch || uch.over) { return; }
       var r = uc.getBoundingClientRect(), W = uch.w * 0.84;
@@ -3705,7 +3760,7 @@
     $("bl-back").addEventListener("click", function () {
       blAbort();
       try { if (sqBack()) { $("scr-bell").classList.add("hidden"); return; } } catch (e) {}     // Shokolad qurbaqa topshirig'idan kelingan
-      blHomeOpen();
+      if (blKel === "fan" && blFan) { fanOpen(blFan); } else { blHomeOpen("bell"); }
     });
     $("blh-back").addEventListener("click", function () { $("scr-blh").classList.add("hidden"); blQayt = false; try { openHub(); } catch (e) {} });
     $("fn-back").addEventListener("click", function () { drOpen(); });

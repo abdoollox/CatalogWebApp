@@ -136,7 +136,92 @@
     setTimeout(backSync, 0);
   }
 
+  /* ---------- Xogvarts PASTKI MENYUSI (egasi, 2026-10-09) ----------
+     Bosh sahifa / Darslar / Bellashuv / Chat / Men. Faqat saralangan odamga va faqat «ko'rib chiqish» sahifalarida
+     ko'rinadi (o'yin, chat, kutubxona, o'qish oynasida yo'q). Yangi sahifada menyu kerak bo'lsa NAV_ON ga yozing. */
+  var NAV_ON = ["scr-hub", "scr-dars", "scr-fan", "scr-blh", "scr-bell", "scr-rek", "scr-qob", "scr-qoriq", "scr-cup", "scr-cup-hist",
+                "scr-house", "scr-refs", "scr-hall-full", "scr-feed-full", "scr-sq", "scr-qb", "scr-nsh", "pm"];
+  var navQueued = false, navTayyor = false;
+
+  function navKey(top) {
+    if (top === "scr-hub") { return "home"; }
+    if (top === "scr-dars" || top === "scr-fan") { return "dars"; }
+    if (top === "scr-qob") { return qobKel === "pm" ? "men" : "dars"; }
+    if (top === "scr-qoriq") { return qrKel === "pm" ? "men" : "dars"; }
+    if (top === "scr-blh") { return blhMode === "bell" ? "bell" : ""; }
+    if (top === "scr-bell") { return blKel === "fan" ? "dars" : "bell"; }
+    if (top === "scr-rek") { return rekKel === "fan" ? "dars" : ""; }
+    if (top === "pm" || top === "scr-nsh") { return "men"; }
+    return "";
+  }
+
+  function navSync() {
+    navQueued = false;
+    var bar = $("hnav");
+    if (!bar) { return; }
+    var top = backTopScreen(), on = false;
+    try { on = NAV_ON.indexOf(top) >= 0 && hasHouse() && !((top === "pm" || top === "scr-nsh" || top === "scr-qb") && pmFrom !== "hub" && !$("scr-cat").classList.contains("hidden")); } catch (e) {}
+    if (on && (top === "pm" || top === "scr-nsh") && pmFrom !== "hub") { on = false; }
+    bar.classList.toggle("hidden", !on);
+    document.body.classList.toggle("nav-on", on);
+    if (!on) { return; }
+    var x = drX(), key = navKey(top);
+    if (!navTayyor) {
+      navTayyor = true;
+      $("hn-home").firstChild.innerHTML = QASR_SVG;
+      $("hn-dars").firstChild.innerHTML = hubSvg(HUB_ICONS.tasks);
+      $("hn-bell").firstChild.innerHTML = hubSvg(HUB_ICONS.bell);
+      $("hn-chat").firstChild.innerHTML = hubSvg(HUB_ICONS.chat);
+      $("hn-men").firstChild.innerHTML = PM_ICON;
+      ["home", "dars", "bell", "chat", "men"].forEach(function (k) {
+        $("hn-" + k).addEventListener("click", function () { navGo(k); });
+      });
+    }
+    [["home", x.navHome], ["dars", x.tile], ["bell", x.blTile], ["chat", x.navChat], ["men", x.navMen]].forEach(function (p) {
+      var b = $("hn-" + p[0]);
+      b.children[1].textContent = p[1];
+      b.classList.toggle("on", p[0] === key);
+    });
+    var cn = 0, bn = 0;
+    try { cn = worldChatN(); } catch (e) {}
+    try { bn = Math.max(0, drPending()); } catch (e) {}
+    [["chat", cn], ["bell", bn]].forEach(function (p) {
+      var i = $("hn-" + p[0]).children[2];
+      i.textContent = p[1] > 99 ? "99+" : String(p[1]);
+      i.classList.toggle("hidden", !(p[1] > 0));
+    });
+  }
+
+  function navQueue() {
+    if (navQueued) { return; }
+    navQueued = true;
+    setTimeout(navSync, 0);
+  }
+
+  // Menyudan o'tish: «ortga qaytish» bayroqlari tozalanadi, ochiq sahifa yopiladi, keyin bo'lim ochiladi
+  function navGo(k) {
+    if (navKey(backTopScreen()) === k && (k === "home" || backTopScreen() === { dars: "scr-dars", bell: "scr-blh", men: "pm" }[k])) { try { window.scrollTo(0, 0); } catch (e) {} return; }
+    sqQayt = false; drQayt = false; blQayt = false; rekFan = null;
+    try { blAbort(); } catch (e) {}
+    NAV_ON.forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
+    try { worldFrom = "hub"; } catch (e) {}
+    if (k === "dars") { drOpen(); }
+    else if (k === "bell") { blHomeOpen("bell"); }
+    else if (k === "chat") { openChat(); }
+    else if (k === "men") { pmOpen(); pmFrom = "hub"; navQueue(); }
+    else { openHub(); }
+  }
+
+  function initNav() {
+    if (window.MutationObserver) {
+      var mo = new MutationObserver(navQueue), els = document.querySelectorAll(".screen"), i;
+      for (i = 0; i < els.length; i++) { mo.observe(els[i], { attributes: true, attributeFilter: ["class"] }); }
+    }
+    navSync();
+  }
+
   function initBack() {
+    try { initNav(); } catch (e) {}
     if (!tg || !tg.BackButton) { return; }
     try { tg.BackButton.onClick(backPress); } catch (e) {}
     if (window.MutationObserver) {
