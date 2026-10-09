@@ -111,7 +111,7 @@
   function ktX() { return KT_TX[lang] || KT_TX.uz; }
   function ktNum(id) { return parseInt(id.charAt(2), 10); }
   function ktName(id) { return (KT_NOM[lang] || KT_NOM.uz)[ktNum(id) - 1]; }
-  var KT_RASM_V = "6";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
+  var KT_RASM_V = "7";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
   function ktArt(id) { return IMG_DIR + "kitob/" + id + ".webp?v=" + KT_RASM_V; }
   function ktBook(id) {
     var list = (ktData && ktData.books) || [];
@@ -235,7 +235,8 @@
       var sp = document.createElement("span");
       sp.className = "kt-sp";
       sp.innerHTML = '<img alt="" decoding="async"><i class="kt-sp-f"></i>';
-      sp.querySelector("img").src = IMG_DIR + "kitob/" + id + "-yon.webp?v=" + KT_RASM_V;
+      // jild yonidagi nom ilova tilida (inglizchasi - qo'shimchasiz fayl)
+      sp.querySelector("img").src = IMG_DIR + "kitob/" + id + "-yon" + (lang === "uz" || lang === "ru" ? "-" + lang : "") + ".webp?v=" + KT_RASM_V;
       if (st === "lock") { sp.querySelector(".kt-sp-f").innerHTML = MS_ICON.lock; }
       var fc = document.createElement("span");
       fc.className = "kt-fc";
@@ -347,7 +348,8 @@
     // Til tanlovi: bittadan ko'p bo'lsa tugmalar; o'z tilida yo'q bo'lsa - izoh
     var lb = $("kt-langs");
     lb.innerHTML = "";
-    if (langs.length > 1) {
+    // Kitob ILOVA TILIDA ochiladi (egasi, 2026-10-10): til tanlovi faqat shu tilda fayl yo'q bo'lsa ko'rinadi
+    if (langs.length > 1 && !bk.files[lang]) {
       langs.forEach(function (l) {
         var t = document.createElement("button");
         t.type = "button";
