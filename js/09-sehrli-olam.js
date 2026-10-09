@@ -25,6 +25,7 @@
     issiqS: { uz: "O'simliklar", ru: "Растения", en: "Plants" },
     chatS: { uz: "Suhbat", ru: "Общение", en: "Chat" },
     duel: { uz: "Duel", ru: "Дуэль", en: "Duel" },
+    duelS: { uz: "Afsunlar jangi", ru: "Битва заклинаний", en: "Battle of spells" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
     chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
     chessR: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" },
@@ -208,7 +209,7 @@
         { key: "issiq", title: HT("issiq"), sub: isSoni() ? isX().sum(isSoni(), 12) : HT("issiqS"), badge: isKutmoqda(), go: isHubOpen },
         { key: "chat", title: c.chatT, sub: HT("chatS"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
-        { key: "duel", title: HT("duel"), sub: dx.soon, self: true, soon: true, go: soon(HT("duel")) },
+        { key: "duel", title: HT("duel"), sub: HT("duelS"), go: duOpen },
         { key: "chess", title: HT("chess"), sub: hubChess && hubChess.rating ? HT("chessR").replace("%d", String(hubChess.rating)) : HT("chessS"), go: openChessHub },
         { key: "refs", title: HT("refs"), sub: HT("refsS"), badge: refsN, go: openRefs, open: true }] }
     ];
@@ -264,7 +265,7 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
