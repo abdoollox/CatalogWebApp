@@ -947,6 +947,66 @@
     return n;
   }
 
+  /* Profildagi UCHLIK (egasi, 2026-10-09): Fakultet / Tayoqcha / Patronus bitta qatorda - joy tejash uchun. Hech biri
+     «tanlangan» emas; katak bosilsa ma'lumot oynasi (nshBox): ta'rif, «Batafsil», «Ulashish». Rasm - doira (A variant).
+     Saralanmagan odamda uchlik yo'q - eski Fakultet paneli (saralanish tugmasi bilan) ko'rinadi. */
+  function puRender() {
+    var box = $("pu"), pm = $("pm");
+    if (!box || !pm) { return; }
+    var t = T[lang], bor = house !== "none" && !!HOUSES[house];
+    pm.classList.toggle("uchlik", bor);
+    box.classList.toggle("hidden", !bor);
+    var rs = $("pu-resort");
+    rs.classList.toggle("hidden", !(bor && cupMe().can_resort));
+    rs.textContent = t.resort;
+    rs.onclick = startSorting;
+    if (!bor) { return; }
+    box.innerHTML = "";
+    var katak = function (lbl, src, nom, cls, fn) {
+      var b = drEl("button", "pu-c" + (cls ? " " + cls : ""));
+      b.type = "button";
+      b.appendChild(drEl("small", "", lbl));
+      var im = drEl("span", "pu-im"), img = document.createElement("img");
+      img.alt = ""; img.src = src;
+      im.appendChild(img);
+      b.appendChild(im);
+      b.appendChild(drEl("b", "", nom));
+      b.addEventListener("click", fn);
+      box.appendChild(b);
+    };
+    // Fakultet
+    var hh = HOUSES[house], hx = UY_XAR[lang] || UY_XAR.uz;
+    katak(t.houseLbl, IMG_DIR + hh.img, hh[lang], "gerb", function () {
+      nshBox({ codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "", text: hx[house] || "",
+               more: { label: hx.more, fn: function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } } },
+               more2: { label: al("uyShare"), fn: function () { uyShare(); } } });
+    });
+    // Tayoqcha
+    if (wand) {
+      var ws = IMG_DIR + "tayoqcha/" + wand.wood + ".webp", wn = WOODS[wand.wood][lang];
+      katak(t.wandLbl, ws, wn, "", function () {
+        nshBox({ codes: ["x"], srcs: [ws], kick: t.wandLbl, title: wn, text: CORES[wand.core][lang] + " · " + FLEX[wand.flex].len + " " + t.inch + " · " + FLEX[wand.flex][lang],
+                 more: { label: t.wandMore, fn: openWandDetail }, more2: { label: TQ_TX[lang] || TQ_TX.uz, fn: tqShare } });
+      });
+    } else {
+      katak(t.wandLbl, IMG_DIR + "tayoqcha/quti.webp", "—", "yoq", function () {
+        nshBox({ codes: ["x"], srcs: [IMG_DIR + "tayoqcha/quti.webp"], kick: t.wandLbl, title: t.wandNone, text: t.wandNote, more: { label: t.wandCta, fn: startWand } });
+      });
+    }
+    // Patronus
+    var px = patX(), p = patronus && PATRONUS[patronus];
+    if (p) {
+      katak(px.lbl, patImg(patronus), p[lang], "", function () {
+        nshBox({ codes: ["x"], srcs: [patImg(patronus)], kick: px.lbl, title: p[lang], text: p["n_" + lang] + "\n\n" + p["w_" + lang] + ".\n\n" + px.what,
+                 more2: { label: px.share, fn: patShare } });
+      });
+    } else {
+      katak(px.lbl, patImg("mist"), "—", "yoq", function () {
+        nshBox({ codes: ["x"], srcs: [patImg("mist")], kick: px.lbl, title: px.none, text: px.noneS, more: { label: px.cta, fn: startPatronus } });
+      });
+    }
+  }
+
   // Profil sahifasidagi qator: Qobiliyatlar
   function pmDarsRows() {
     var x = drX(), ichkarida = false;

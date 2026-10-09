@@ -456,6 +456,7 @@
     ["scr-cat", "scr-hub", "scr-prof", "scr-detail", "scr-nsh"].forEach(function (id) { $(id).classList.add("hidden"); });
     pmFill();
     try { pmDarsRows(); } catch (e) {}
+    try { puRender(); } catch (e) {}
     $("pm").classList.remove("hidden");
   }
 
@@ -728,6 +729,11 @@
     var more = $("nsh-more");
     more.classList.toggle("hidden", !o.more);
     if (o.more) { more.textContent = o.more.label; more.onclick = function () { box.classList.add("hidden"); o.more.fn(); }; }
+    var more2 = $("nsh-more2");                  // uchinchi tugma (profil kataklari: «Ulashish»)
+    if (more2) {
+      more2.classList.toggle("hidden", !o.more2);
+      if (o.more2) { more2.textContent = o.more2.label; more2.onclick = function () { box.classList.add("hidden"); o.more2.fn(); }; }
+    }
     $("nsh-ok").onclick = yop;
     box.onclick = function (ev) { if (ev.target === box) { yop(); } };
     box.classList.remove("hidden");

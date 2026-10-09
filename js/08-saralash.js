@@ -901,6 +901,7 @@
       $("pat-share").textContent = x.share;
       $("pat-share").classList.toggle("hidden", !p);
       $("pat-share").onclick = patShare;
+      try { puRender(); } catch (e) {}          // profildagi uchlik (Patronus kech yuklanishi mumkin)
     }
     var grid = $("hub-grid");
     if (!grid) { return; }
