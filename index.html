@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=34763803">
+<link rel="stylesheet" href="css/app.css?v=ddf5a259">
 </head>
 <body>
 <div class="shell">
@@ -156,6 +156,8 @@
          Pastdagi uchta eski panel saralangan odamda yashirin (#pm.uchlik) - ular holat va tugmalarni saqlab turadi. -->
     <div class="pu hidden" id="pu"></div>
     <button class="resort hidden" id="pu-resort" type="button"></button>
+    <!-- Ikkinchi qator: Nishonlar / Kolleksiya / Qobiliyatlar (js/09-xarid.js pu2Render) -->
+    <div class="pu hidden" id="pu2"></div>
 
     <div class="pm-head"><span class="pm-av big" id="pm-av2"></span><span class="pm-who"><b id="pm-name"></b><small id="pm-house"></small></span></div>
     <button class="pm-wal" id="pm-wal" type="button"><span class="pm-coin"></span><span class="pm-wal-tx"><b id="pm-wal-n"></b><small id="pm-wal-s"></small></span><i class="pm-chev">›</i></button>
@@ -522,6 +524,18 @@
       <div class="du-rev hidden" id="du-rev"></div>
       <div class="dr-res hidden" id="du-res"></div>
     </div>
+  </div>
+
+  <!-- Xaridlar: sotib olingan va olinishi mumkin bo'lgan narsalar (js/09-xarid.js) -->
+  <div id="scr-xarid" class="screen hidden">
+    <div class="cup-hdr kb-hdr">
+      <button class="back-btn" id="xr-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
+      <div class="kb-ttl"><span class="cup-kick" id="xr-kick"></span><span class="cup-title" id="xr-ttl"></span></div>
+      <span class="kb-sp" aria-hidden="true"></span>
+    </div>
+    <div class="xr-bal"><span class="pm-coin"></span><b id="xr-gal"></b><button class="qr-b" id="xr-how" type="button"></button></div>
+    <span class="xr-sum" id="xr-sum"></span>
+    <div id="xr-list"></div>
   </div>
 
   <div id="scr-astro" class="screen hidden">
@@ -1630,19 +1644,20 @@
 <script src="js/04-kubok-oyna.js?v=e91dfe37"></script>
 <script src="js/05-umumiy.js?v=f5f0a218"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
-<script src="js/07-kutubxona.js?v=116cc536"></script>
+<script src="js/07-kutubxona.js?v=e2607678"></script>
 <script src="js/07-kitoblar.js?v=4b9988d7"></script>
 <script src="js/07-kitob-matn.js?v=053ca97b"></script>
 <script src="js/07-odam.js?v=18ed3043"></script>
 <script src="js/08-saralash.js?v=15498b02"></script>
-<script src="js/09-sehrli-olam.js?v=a4cf6a83"></script>
-<script src="js/09-darslar.js?v=e55d3c37"></script>
+<script src="js/09-sehrli-olam.js?v=1efe5fc0"></script>
+<script src="js/09-darslar.js?v=aadf3fba"></script>
 <script src="js/09-issiqxona.js?v=2759b103"></script>
 <script src="js/09-duel.js?v=28040436"></script>
+<script src="js/09-xarid.js?v=ff5c38cd"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=cd0f4521"></script>
 <script src="js/11-chat.js?v=769f789e"></script>
 <script src="js/12-shaxmat.js?v=df942f31"></script>
-<script src="js/13-orqaga.js?v=311d4230"></script>
+<script src="js/13-orqaga.js?v=e424903b"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
 

@@ -2563,10 +2563,10 @@ body.kr-on .mp{display:none!important}
 .od-go:active{opacity:.7}
 
 /* ===== DARSLAR: fanlar ro'yxati, Afsunlar va Iksirlar o'yinlari (js/09-darslar.js) ===== */
-#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-issiq .kb-hdr,#scr-duel .kb-hdr,#scr-astro .kb-hdr,#scr-osimlik .kb-hdr,#scr-trans .kb-hdr,#scr-qob .kb-hdr,#scr-rek .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-issiq .kb-ttl,#scr-duel .kb-ttl,#scr-astro .kb-ttl,#scr-osimlik .kb-ttl,#scr-trans .kb-ttl,#scr-qob .kb-ttl,#scr-rek .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
-#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-issiq .kb-ttl .cup-kick,#scr-duel .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-osimlik .kb-ttl .cup-kick,#scr-trans .kb-ttl .cup-kick,#scr-qob .kb-ttl .cup-kick,#scr-rek .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
-#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-issiq .kb-ttl .cup-title,#scr-duel .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-osimlik .kb-ttl .cup-title,#scr-trans .kb-ttl .cup-title,#scr-qob .kb-ttl .cup-title,#scr-rek .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+#scr-dars .kb-hdr,#scr-afsun .kb-hdr,#scr-iksir .kb-hdr,#scr-bell .kb-hdr,#scr-fan .kb-hdr,#scr-tarix .kb-hdr,#scr-himoya .kb-hdr,#scr-uchish .kb-hdr,#scr-maxluq .kb-hdr,#scr-qoriq .kb-hdr,#scr-issiq .kb-hdr,#scr-duel .kb-hdr,#scr-xarid .kb-hdr,#scr-astro .kb-hdr,#scr-osimlik .kb-hdr,#scr-trans .kb-hdr,#scr-qob .kb-hdr,#scr-rek .kb-hdr,#scr-blh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-dars .kb-ttl,#scr-afsun .kb-ttl,#scr-iksir .kb-ttl,#scr-bell .kb-ttl,#scr-fan .kb-ttl,#scr-tarix .kb-ttl,#scr-himoya .kb-ttl,#scr-uchish .kb-ttl,#scr-maxluq .kb-ttl,#scr-qoriq .kb-ttl,#scr-issiq .kb-ttl,#scr-duel .kb-ttl,#scr-xarid .kb-ttl,#scr-astro .kb-ttl,#scr-osimlik .kb-ttl,#scr-trans .kb-ttl,#scr-qob .kb-ttl,#scr-rek .kb-ttl,#scr-blh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-dars .kb-ttl .cup-kick,#scr-afsun .kb-ttl .cup-kick,#scr-iksir .kb-ttl .cup-kick,#scr-bell .kb-ttl .cup-kick,#scr-fan .kb-ttl .cup-kick,#scr-tarix .kb-ttl .cup-kick,#scr-himoya .kb-ttl .cup-kick,#scr-uchish .kb-ttl .cup-kick,#scr-maxluq .kb-ttl .cup-kick,#scr-qoriq .kb-ttl .cup-kick,#scr-issiq .kb-ttl .cup-kick,#scr-duel .kb-ttl .cup-kick,#scr-xarid .kb-ttl .cup-kick,#scr-astro .kb-ttl .cup-kick,#scr-osimlik .kb-ttl .cup-kick,#scr-trans .kb-ttl .cup-kick,#scr-qob .kb-ttl .cup-kick,#scr-rek .kb-ttl .cup-kick,#scr-blh .kb-ttl .cup-kick{color:var(--gold)}
+#scr-dars .kb-ttl .cup-title,#scr-afsun .kb-ttl .cup-title,#scr-iksir .kb-ttl .cup-title,#scr-bell .kb-ttl .cup-title,#scr-fan .kb-ttl .cup-title,#scr-tarix .kb-ttl .cup-title,#scr-himoya .kb-ttl .cup-title,#scr-uchish .kb-ttl .cup-title,#scr-maxluq .kb-ttl .cup-title,#scr-qoriq .kb-ttl .cup-title,#scr-issiq .kb-ttl .cup-title,#scr-duel .kb-ttl .cup-title,#scr-xarid .kb-ttl .cup-title,#scr-astro .kb-ttl .cup-title,#scr-osimlik .kb-ttl .cup-title,#scr-trans .kb-ttl .cup-title,#scr-qob .kb-ttl .cup-title,#scr-rek .kb-ttl .cup-title,#scr-blh .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
 .dr-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .dr-card{--dr-rgb:224,178,91;position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;text-align:left;cursor:pointer;
   border-radius:18px;border:1px solid rgba(var(--dr-rgb),.34);color:var(--text);
@@ -3195,3 +3195,23 @@ body.kr-on .mp{display:none!important}
 .nsh-x:active{transform:scale(.94)}
 .nsh-x.hidden{display:none}
 #scr-detail.pat .det-block:last-child{display:none}
+
+/* ============ PROFIL: ikkinchi qator va «XARIDLAR» sahifasi (js/09-xarid.js) ============ */
+#pm.uchlik #nsh-sec,#pm.uchlik #qb-row,#pm.uchlik #pm-qob{display:none!important}
+#pm #pu2{margin:10px 0 0}
+.pu-im.svg svg{width:78px;height:78px;max-width:100%}
+#pu2 .pu-c b{font:700 15px/1.1 'Manrope',sans-serif}
+.xr-bal{display:flex;align-items:center;gap:10px;margin:6px 0 0;padding:14px;border-radius:18px;border:1px solid rgba(var(--gold-rgb),.45);background:rgba(var(--gold-rgb),.07)}
+.xr-bal b{flex:1;font:600 24px/1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.xr-sum{display:block;margin:10px 2px 0;font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.xr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.xr-i{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;padding:0;border:0;background:none;color:var(--text);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.xr-i:active .xr-ph{transform:scale(.97)}
+.xr-ph{display:block;width:100%;aspect-ratio:1;border-radius:14px;background:#15131c center/cover no-repeat;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.14),0 6px 14px rgba(0,0,0,.45);transition:transform .15s}
+.xr-i.kitob .xr-ph{aspect-ratio:2/3}
+.xr-i.sot .xr-ph{filter:saturate(.45) brightness(.6)}
+.xr-i b{max-width:100%;font:600 14px/1.15 'Cormorant Garamond',serif;color:var(--text);overflow-wrap:anywhere}
+.xr-i small{padding:4px 8px;border-radius:99px;font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.xr-i.bor small{background:rgba(110,190,120,.2);color:#9be3a0}
+.xr-i.sot small{background:rgba(var(--gold-rgb),.2);color:var(--gold-hi)}
+.xr-food{margin-top:0}

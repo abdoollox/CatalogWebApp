@@ -350,17 +350,17 @@
      shu menyuga ko'chdi (#back-btn yashirin qoldi - eski kod unga tayanadi). */
   var PM_TX = {
     uz: { guest: "Sehrgar", noHouse: "Hali saralanmagan", gal: function (n) { return n + " galleon"; },
-          walS: "Har hafta yakunida kubok ballaringiz uchun beriladi: 10 ballga 1 galleon.",
+          walS: "Xaridlar: albomlar, kitoblar, yemish. Galleon har hafta kubok ballari uchun beriladi.",
           prof: "Profil", profS: "Fakultet, tayoqcha va nishonlar", lang: "Til",
           sec1: "Sehrgar", sec2: "Sozlamalar", me: "Mening sehrgarim",
           bot: "Bot xabarlari", botS: "Boyo'g'li xatlari Telegram'da ham kelsin", close: "Yopish" },
     ru: { guest: "Волшебник", noHouse: "Ещё не распределён", gal: function (n) { return n + " галлеонов"; },
-          walS: "Выдаются в конце каждой недели за очки Кубка: 1 галлеон за 10 очков.",
+          walS: "Покупки: альбомы, книги, корм. Галлеоны выдаются каждую неделю за очки Кубка.",
           prof: "Профиль", profS: "Факультет, палочка и значки", lang: "Язык",
           sec1: "Волшебник", sec2: "Настройки", me: "Мой волшебник",
           bot: "Сообщения бота", botS: "Присылать письма совы и в Telegram", close: "Закрыть" },
     en: { guest: "Wizard", noHouse: "Not sorted yet", gal: function (n) { return n + " Galleons"; },
-          walS: "Paid at the end of each week for your Cup points: 1 Galleon per 10 points.",
+          walS: "Purchases: albums, books, food. Galleons are paid each week for your Cup points.",
           prof: "Profile", profS: "House, wand and badges", lang: "Language",
           sec1: "Wizard", sec2: "Settings", me: "My wizard",
           bot: "Bot messages", botS: "Also send owl letters in Telegram", close: "Close" }
@@ -457,6 +457,7 @@
     pmFill();
     try { pmDarsRows(); } catch (e) {}
     try { puRender(); } catch (e) {}
+    try { pu2Render(); } catch (e) {}
     try { $("pm-kick").textContent = $("pm-name").textContent; } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
     $("pm").classList.remove("hidden");
   }
