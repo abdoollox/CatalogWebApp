@@ -111,7 +111,7 @@
   function ktX() { return KT_TX[lang] || KT_TX.uz; }
   function ktNum(id) { return parseInt(id.charAt(2), 10); }
   function ktName(id) { return (KT_NOM[lang] || KT_NOM.uz)[ktNum(id) - 1]; }
-  var KT_RASM_V = "3";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
+  var KT_RASM_V = "5";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
   function ktArt(id) { return IMG_DIR + "kitob/" + id + ".webp?v=" + KT_RASM_V; }
   function ktBook(id) {
     var list = (ktData && ktData.books) || [];
@@ -171,7 +171,7 @@
      Kitoblar javonda TIK turadi (yon tomoni ko'rinadi). Bosilgan kitob javondan chiqib, muqovasi bilan
      buriladi (3D), ostida nomi va tugma chiqadi; yana bosilsa yoki tugma bosilsa - kitob sahifasi. */
   var KT_LOOK = {            // jild yonining eni (bo'yiga nisbatan) - kitob qalinligi, rasmning o'zidan
-    kt1: 0.1107, kt2: 0.1268, kt3: 0.1357, kt4: 0.2536, kt5: 0.2536, kt6: 0.2446, kt7: 0.2054
+    kt1: 0.19, kt2: 0.19, kt3: 0.19, kt4: 0.19, kt5: 0.19, kt6: 0.19, kt7: 0.19        // egasi (2026-10-09): hammasi bir xil qalinlikda
   };
   var ktSel = null;
 

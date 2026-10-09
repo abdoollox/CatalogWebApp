@@ -2418,7 +2418,7 @@ body.kr-on .mp{display:none!important}
 .kt-sp img{display:block;width:100%;height:100%;object-fit:fill}
 .kt-sp::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.45),rgba(255,255,255,.07) 30%,rgba(0,0,0,0) 60%,rgba(0,0,0,.4))}
 .kt-bk.on .kt-sp{transform:rotateY(-62deg);filter:brightness(.7)}
-.kt-sp-f{position:absolute;left:50%;bottom:25%;z-index:2;width:16px;height:16px;margin-left:-8px;color:var(--gold-hi);filter:drop-shadow(0 1px 2px #000)}
+.kt-sp-f{position:absolute;left:50%;bottom:21%;z-index:2;width:16px;height:16px;margin-left:-8px;color:var(--gold-hi);filter:drop-shadow(0 1px 2px #000)}
 .kt-sp-f:empty{display:none}
 .kt-sp-f svg{display:block;width:16px;height:16px}
 .kt-fc{position:relative;flex:none;width:calc(var(--h) * .6437);height:100%;transform-origin:left;transform:rotateY(88.8deg);
