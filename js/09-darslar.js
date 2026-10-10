@@ -135,6 +135,13 @@
           rekTileS: "Xatosiz kim uzoqqa boradi", rekHomeS: "Fanni tanlang. Bu yerda tezlik emas, chidam muhim: birinchi xatoda o'yin tugaydi. Kun oxirida har fanning birinchi uch rekordchisi ball oladi.", rekPrize: function (p) { return "Har kuni yarim tunda rekordchilarga ball: 1-o'rin +" + p[0] + ", 2-o'rin +" + p[1] + ", 3-o'rin +" + p[2] + "."; }, fnBell: "Bugungi bellashuv", fnRek: "Rekord", navHome: "Bosh sahifa", navMen: "Men", navChat: "Chat", pmQrS: function (n) { return n ? n + " ta maxluq" : "Maxluqlar darsidan olinadi"; },
           rekTag: "Xatosiz kim uzoqqa boradi?", rekQ1: "Birinchi xatoda o'yin tugaydi", rekQ2: "Eng yaxshi natijangiz jadvalda doim qoladi",
           rekPzT: "Kunlik sovrin · har kuni yarim tunda", rekPzO: "-o'rin", rekPzB: "ball",
+          bhKut: "bugun kutilayotgan ball", bhQat: "qatnashdingiz", bhVaqt: function (s, d) { return "Tugashiga " + s + " soat " + d + " daqiqa"; },
+          bhYana: function (n) { return "Yana " + n + " ta bellashuv kutmoqda — har biri +15 gacha"; }, bhHamma: "Bugun hamma bellashuvda qatnashdingiz",
+          bhYaqin: function (fan, n) { return fan + ": ballga " + n + " pog'ona qoldi"; }, bhGacha: "gacha", bhHozir: "hozircha",
+          bhKecha: function (n) { return "Kecha bellashuvlardan +" + n + " ball oldingiz"; },
+          rhTush: function (fan, a, b) { return fan + ": " + a + "-o'rindan " + b + "-o'ringa tushdingiz"; }, rhTushYana: function (n) { return " (yana " + n + " fanda)"; },
+          rhKun: "har kungi ballingiz", rhFan: "fanda rekordingiz bor", rhYoq: "Hali birinchi uchlikda emassiz — bitta fanda uchlikka kiring, har kuni ball olasiz",
+          rhYaqin: function (fan, orin, n, bir) { return fan + ": " + orin + "-o'ringa " + n + " " + bir + " qoldi"; }, rhOrin: "-o'rin", rhZor: "Hamma fanda birinchisiz!",
           rekT: "Rekord", rekSec: "Rekordlar", rekRule: "Bu yerda tezlik emas, chidam muhim: xatosiz kim uzoqqa boradi. Birinchi xatoda o'yin tugaydi. Jadval doimiy: eng yaxshi natijangiz unda qoladi.",
           rekWeek: "O'rningiz", rekAll: "Rekordingiz", rekGo: "Boshlash", rekTop: "Rekordchilar", rekEmpty: "Hali hech kim urinmadi. Birinchi bo'ling!",
           rekRes: "Natija", rekNew: "Yangi rekord!", rekOld: function (n) { return "Rekordingiz: " + n; }, rekAgain: "Yana urinish", rekBack: "Rekordlar jadvali",
@@ -226,6 +233,13 @@
           rekTileS: "Кто пройдёт дальше без ошибок", rekHomeS: "Выберите предмет. Здесь важна не скорость, а выдержка: игра заканчивается на первой ошибке. В конце дня трое лучших по каждому предмету получают очки.", rekPrize: function (p) { return "Каждую полночь рекордсмены получают очки: 1-е место +" + p[0] + ", 2-е +" + p[1] + ", 3-е +" + p[2] + "."; }, fnBell: "Состязание дня", fnRek: "Рекорд", navHome: "Главная", navMen: "Я", navChat: "Чат", pmQrS: function (n) { return n ? "Существ: " + n : "Появляются на уроках ухода"; },
           rekTag: "Кто пройдёт дальше без ошибок?", rekQ1: "Игра заканчивается на первой ошибке", rekQ2: "Ваш лучший результат остаётся в таблице навсегда",
           rekPzT: "Ежедневный приз · каждый день в полночь", rekPzO: " место", rekPzB: "очк.",
+          bhKut: "ожидаемые очки за сегодня", bhQat: "участий", bhVaqt: function (s, d) { return "До конца " + s + " ч " + d + " мин"; },
+          bhYana: function (n) { return "Ещё состязаний: " + n + " — в каждом до +15"; }, bhHamma: "Сегодня вы участвовали во всех состязаниях",
+          bhYaqin: function (fan, n) { return fan + ": до очков " + n + " мест"; }, bhGacha: "до", bhHozir: "пока",
+          bhKecha: function (n) { return "Вчера за состязания вы получили +" + n; },
+          rhTush: function (fan, a, b) { return fan + ": вы опустились с " + a + "-го на " + b + "-е место"; }, rhTushYana: function (n) { return " (и ещё в " + n + ")"; },
+          rhKun: "очков каждый день", rhFan: "предметов с вашим рекордом", rhYoq: "Вы пока не в тройке — войдите в тройку по одному предмету и получайте очки каждый день",
+          rhYaqin: function (fan, orin, n, bir) { return fan + ": до " + orin + "-го места — " + n + " " + bir; }, rhOrin: " место", rhZor: "Вы первый по всем предметам!",
           rekT: "Рекорд", rekSec: "Рекорды", rekRule: "Здесь важна не скорость, а выдержка: кто пройдёт дальше без ошибок. Игра заканчивается на первой ошибке. Таблица постоянная: ваш лучший результат остаётся в ней.",
           rekWeek: "Ваше место", rekAll: "Ваш рекорд", rekGo: "Начать", rekTop: "Рекордсмены", rekEmpty: "Ещё никто не пробовал. Будьте первым!",
           rekRes: "Результат", rekNew: "Новый рекорд!", rekOld: function (n) { return "Ваш рекорд: " + n; }, rekAgain: "Ещё раз", rekBack: "Таблица рекордов",
@@ -318,6 +332,13 @@
           rekTileS: "Who gets furthest without a mistake", rekHomeS: "Pick a subject. This is about endurance, not speed: the game ends on your first mistake. At the end of each day the top three in every subject earn points.", rekPrize: function (p) { return "Every midnight the record holders earn points: 1st +" + p[0] + ", 2nd +" + p[1] + ", 3rd +" + p[2] + "."; }, fnBell: "Today's contest", fnRek: "Record", navHome: "Home", navMen: "Me", navChat: "Chat", pmQrS: function (n) { return n ? n + " creatures" : "Earned in Care of Magical Creatures"; },
           rekTag: "Who gets furthest without a mistake?", rekQ1: "The game ends on your first mistake", rekQ2: "Your best result stays on the table for good",
           rekPzT: "Daily prize · every day at midnight", rekPzO: " place", rekPzB: "pts",
+          bhKut: "points expected today", bhQat: "entered", bhVaqt: function (s, d) { return s + " h " + d + " min left"; },
+          bhYana: function (n) { return n + " more contests waiting — up to +15 each"; }, bhHamma: "You entered every contest today",
+          bhYaqin: function (fan, n) { return fan + ": " + n + " places from points"; }, bhGacha: "up to", bhHozir: "so far",
+          bhKecha: function (n) { return "Yesterday you won +" + n + " points in contests"; },
+          rhTush: function (fan, a, b) { return fan + ": you dropped from place " + a + " to " + b; }, rhTushYana: function (n) { return " (and " + n + " more)"; },
+          rhKun: "points every day", rhFan: "subjects with your record", rhYoq: "You are not in a top three yet — get into one and earn points every day",
+          rhYaqin: function (fan, orin, n, bir) { return fan + ": " + n + " " + bir + " to place " + orin; }, rhOrin: " place", rhZor: "You are first in every subject!",
           rekT: "Record", rekSec: "Records", rekRule: "This is about endurance, not speed: who gets furthest without a mistake. The game ends on your first mistake. The table is permanent: your best result stays on it.",
           rekWeek: "Your place", rekAll: "Your record", rekGo: "Begin", rekTop: "Record holders", rekEmpty: "Nobody has tried yet. Be the first!",
           rekRes: "Result", rekNew: "New record!", rekOld: function (n) { return "Your record: " + n; }, rekAgain: "Try again", rekBack: "Records table",
@@ -578,6 +599,7 @@
     $("blh-ttl").textContent = blhMode === "rek" ? x.rekSec : x.blTile;
     $("blh-note").textContent = blhMode === "rek" ? x.rekHomeS : x.blHomeS;
     bb.innerHTML = "";
+    blhHero(x);
     if (blhMode === "rek") { blhRekList(bb, x); return; }
     DR_FANLAR.forEach(function (f) {
       var c = f.on && drData && drData[f.id] && drData[f.id].contest;
@@ -596,10 +618,98 @@
       tx.appendChild(drEl("small", "dr-ust", drItemName(f.id, c.item)));
       tx.appendChild(drEl("small", "dr-izoh", c.ms ? x.sec(c.ms) + " · " + x.place(c.place, c.n) : x.bellNone));
       card.appendChild(tx);
-      card.appendChild(drEl("span", "dr-chip", "+" + c.prizes.top[0]));
+      // O'ngdagi yorliq: qatnashgan bo'lsa - hozirgi o'rni bo'yicha kutilayotgan ball; qatnashmagan bo'lsa - eng ko'pi
+      var kut = c.ms ? blBall(c) : null;
+      card.appendChild(drEl("span", "dr-chip" + (kut === 0 ? " nol" : ""), kut === null ? "+" + c.prizes.top[0] + " " + x.bhGacha : "+" + kut));
       card.addEventListener("click", function () { blOpen(f.id, "list"); });
       bb.appendChild(card);
     });
+  }
+  // Rekord o'rinlari shu qurilmada eslab qolinadi (hp_rek_orin) - uchlikdan tushib qolgani shundan bilinadi
+  var rhTushgan = {};
+  function rhOrinOl() { try { return JSON.parse(window.localStorage.getItem("hp_rek_orin") || "{}") || {}; } catch (e) { return {}; } }
+  function rhOrinYoz(o) { try { window.localStorage.setItem("hp_rek_orin", JSON.stringify(o)); } catch (e) {} }
+  // Bellashuvda hozirgi o'rin bo'yicha kutilayotgan ball (kun yakunida beriladi; o'rin o'zgarsa - ball ham)
+  function blBall(c) {
+    if (!c || !c.ms || !c.place) { return 0; }
+    return c.place <= 3 ? c.prizes.top[c.place - 1] : c.place <= 10 ? c.prizes.ten : 0;
+  }
+  /* Ro'yxat sahifasi tepasi (egasi, 2026-10-10: Bellashuv va Rekordlar bir-biriga o'xshab qolgan edi).
+     BELLASHUV - bugungi kun: halqa (nechta bellashuvda qatnashgan), kutilayotgan ball, tugashiga vaqt, eng yaqin imkoniyat.
+     REKORDLAR - doimiy: har kuni oladigan ball, medallar (nechta fanda 1/2/3-o'rin), eng yaqin maqsad. */
+  function blhHero(x) {
+    var box = $("blh-hero");
+    if (!box) { return; }
+    box.innerHTML = "";
+    box.className = "dr-hero blh-hero " + (blhMode === "rek" ? "rek" : "bell");
+    var tep = drEl("div", "dr-hero-t"), ost = drEl("div", "blh-ost");
+    var halqa = function (ulush, ichi) {
+      var a = 2 * Math.PI * 27, w = drEl("span", "dr-ring");
+      w.innerHTML = '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" class="dr-ring-b"/><circle cx="32" cy="32" r="27" class="dr-ring-f" style="stroke-dasharray:' +
+        a.toFixed(1) + ";stroke-dashoffset:" + (a * (1 - Math.max(0, Math.min(1, ulush)))).toFixed(1) + '"/></svg>';
+      w.appendChild(drEl("b", "", ichi));
+      return w;
+    };
+    var orta = drEl("span", "dr-hero-m");
+    if (blhMode !== "rek") {
+      var jami = 0, qat = 0, ball = 0, yaqin = null, kecha = 0;
+      DR_FANLAR.forEach(function (f) {
+        var c = f.on && drData && drData[f.id] && drData[f.id].contest;
+        if (!c) { return; }
+        jami++;
+        kecha += (c.yesterday && c.yesterday.pts) || 0;
+        if (c.ms) {
+          qat++; ball += blBall(c);
+          if (c.place > 10 && (!yaqin || c.place - 10 < yaqin.n)) { yaqin = { fan: f.nom[lang], n: c.place - 10 }; }
+        }
+      });
+      tep.appendChild(halqa(jami ? qat / jami : 0, qat + "/" + jami));
+      orta.appendChild(drEl("b", "", "+" + ball));
+      orta.appendChild(drEl("small", "", x.bhKut));
+      tep.appendChild(orta);
+      var v = blLeft();
+      ost.appendChild(drEl("span", "blh-v", x.bhVaqt(v[0], v[1])));
+      ost.appendChild(drEl("span", "blh-m", jami - qat > 0 ? x.bhYana(jami - qat) : yaqin ? x.bhYaqin(yaqin.fan, yaqin.n) : x.bhHamma));
+      if (kecha > 0) { ost.appendChild(drEl("span", "blh-k", x.bhKecha(kecha))); }
+    } else {
+      var med = [0, 0, 0], kun = 0, bor = 0, maq = null, fanlar = 0, eski = rhOrinOl(), yangi = {};
+      DR_FANLAR.forEach(function (f) {
+        if (!f.on) { return; }
+        fanlar++;
+        var r = rekData && rekData[f.id];
+        if (!r || !r.all) { return; }
+        bor++;
+        // O'RIN YO'QOTILDI: shu qurilmada oxirgi ko'rilgan o'rin uchlikda edi, hozir pastroq - ogohlantirish (fan sahifasi ochilguncha turadi)
+        if (r.place) {
+          yangi[f.id] = r.place;
+          if (eski[f.id] && eski[f.id] <= 3 && r.place > eski[f.id]) { rhTushgan[f.id] = { fan: f.nom[lang], a: eski[f.id], b: r.place }; }
+          else if (rhTushgan[f.id] && r.place <= rhTushgan[f.id].a) { delete rhTushgan[f.id]; }
+        }
+        var sov = r.prizes || [5, 3, 2];
+        if (r.place && r.place <= 3) { med[r.place - 1]++; kun += sov[r.place - 1] || 0; }
+        // eng yaqin maqsad: bir pog'ona yuqoridagi odamdan o'tish uchun nechta kerak (faqat uchlikka olib chiqadigan qadam)
+        if (r.place && r.place > 1 && r.place <= 4 && r.top && r.top[r.place - 2]) {
+          var kerak = r.top[r.place - 2].score - r.all + 1;
+          if (kerak > 0 && (!maq || kerak < maq.n)) { maq = { fan: f.nom[lang], orin: r.place - 1, n: kerak, bir: rekBir(f.id) }; }
+        }
+      });
+      var m = drEl("span", "rh-med");
+      med.forEach(function (n, i) { var d = drEl("i", "o" + (i + 1) + (n ? "" : " yoq"), String(n)); m.appendChild(d); });
+      tep.appendChild(m);
+      orta.appendChild(drEl("b", "", "+" + kun));
+      orta.appendChild(drEl("small", "", x.rhKun));
+      tep.appendChild(orta);
+      ost.appendChild(drEl("span", "blh-v", bor + " / " + fanlar + " " + x.rhFan));
+      ost.appendChild(drEl("span", "blh-m", maq ? x.rhYaqin(maq.fan, maq.orin, maq.n, maq.bir) : (med[0] === fanlar && fanlar ? x.rhZor : kun ? "" : x.rhYoq)));
+      if (rekData) { rhOrinYoz(yangi); }
+      var tk = Object.keys(rhTushgan);
+      if (tk.length) {
+        var t0 = rhTushgan[tk[0]];
+        ost.appendChild(drEl("span", "blh-w", x.rhTush(t0.fan, t0.a, t0.b) + (tk.length > 1 ? x.rhTushYana(tk.length - 1) : "")));
+      }
+    }
+    box.appendChild(tep);
+    box.appendChild(ost);
   }
   // Rekordlar ro'yxati: xatosiz kim uzoqqa boradi (egasi g'oyasi, 2026-10-08; alohida bo'lim - 2026-10-09)
   function blhRekList(bb, x) {
@@ -615,7 +725,9 @@
       tx.appendChild(drEl("b", "", f.nom[lang]));
       tx.appendChild(drEl("small", "dr-izoh", x.rekCard(r ? r.all : 0) + (r && r.all ? " " + rekBir(f.id) : "")));
       card.appendChild(tx);
-      if (r && r.top && r.top[0]) { card.appendChild(drEl("span", "dr-chip", String(r.top[0].score))); }
+      // O'ngdagi yorliq: o'z o'rni (uchlikda bo'lsa - medal rangida); urinmagan bo'lsa - yetakchining natijasi
+      if (r && r.place) { card.appendChild(drEl("span", "dr-chip rh-o" + (r.place <= 3 ? " o" + r.place : ""), r.place + x.rhOrin)); }
+      else if (r && r.top && r.top[0]) { card.appendChild(drEl("span", "dr-chip", String(r.top[0].score))); }
       card.addEventListener("click", function () { rekOpen(f.id, "list"); });
       bb.appendChild(card);
     });
@@ -646,6 +758,7 @@
     rekLoad(function () { if (rekSahifa === fan && !$("scr-rek").classList.contains("hidden")) { rekRender(); } });
   }
   function rekRender() {
+    try { delete rhTushgan[rekSahifa]; } catch (e) {}
     var x = drX(), f = drFan(rekSahifa), r = (rekData && rekData[rekSahifa]) || { week: 0, all: 0, top: [], n: 0, place: null };
     $("scr-rek").style.setProperty("--dr-rgb", f.rgb);
     $("rk-kick").textContent = x.rekT;
