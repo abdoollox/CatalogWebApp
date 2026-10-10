@@ -282,6 +282,8 @@
     dc.addEventListener("click", duDostOyna);
     box.appendChild(dc);
     box.appendChild(drEl("small", "du-msh-q", tm.botQ));
+    var qator = drEl("div", "du-rq3");
+    box.appendChild(qator);
     [1, 2, 3].forEach(function (l) {
       var c = drEl("button", "du-rq"), im = document.createElement("img");
       c.type = "button";
@@ -292,7 +294,7 @@
       tx.appendChild(drEl("b", "", x.raq[l - 1]));
       c.appendChild(tx);
       c.addEventListener("click", function () { duStart(l); });
-      box.appendChild(c);
+      qator.appendChild(c);
     });
     $("du-info-b").classList.remove("hidden");
     duCup();
@@ -1043,12 +1045,12 @@
     };
     var kuchi = function (tur, acc, qarshi) { return acc < 35 ? 0 : acc + (DU_YENG[tur] === qarshi ? duBonus() : 0); };
     var kr = kuchi(r.his, r.racc, r.mine), km = kuchi(r.mine, r.acc, r.his);
+    box.appendChild(yon(x.you, r.mine, r.acc, r.win > 0, r.his));              // o'quvchi doim CHAPDA (egasi, 2026-10-11)
     box.appendChild(yon(du.mode === "ar" ? du.oppName : x.raq[du.level - 1], r.his, r.racc, r.win < 0, r.mine));
-    box.appendChild(yon(x.you, r.mine, r.acc, r.win > 0, r.his));
-    var tort = drEl("div", "du-tort"), ch = drEl("i", ""), on = drEl("i", "");       // kuchlar tortishuvi: chap - raqib, o'ng - siz
+    var tort = drEl("div", "du-tort"), ch = drEl("i", ""), on = drEl("i", "");       // kuchlar tortishuvi: chap - siz, o'ng - raqib
     ch.style.cssText = "flex:" + Math.max(kr, 6) + ";background:rgb(" + DU_RGB[r.his] + ")";
     on.style.cssText = "flex:" + Math.max(km, 6) + ";background:rgb(" + DU_RGB[r.mine] + ")";
-    tort.appendChild(ch); tort.appendChild(on);
+    tort.appendChild(on); tort.appendChild(ch);
     box.appendChild(tort);
     if (du) { du.trk = du.trk || []; if (du.trkR !== (r.r || du.game.round)) { du.trkR = r.r || du.game.round; du.trk.push(r.win); } }
     $("du-turs").classList.add("hidden");

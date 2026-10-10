@@ -3356,3 +3356,10 @@ button.du-bc:active{transform:scale(.98)}
 .du-dz-n{margin:6px 2px 0;font:500 12px/1.5 'Manrope',sans-serif;color:var(--dim)}
 .cmc-du .cmc-ic{display:grid;place-items:center;padding:0;color:#e3ccff;background:radial-gradient(circle at 50% 40%,rgba(201,162,255,.35),rgba(20,18,30,.95));border-color:rgba(201,162,255,.6)}
 .cmc-du .cmc-ic svg{width:22px;height:22px}
+/* Duel: kompyuter raqiblar bitta qatorda (uchta ixcham katak) */
+.du-rq3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.du-rq3 .du-rq{flex-direction:column;align-items:stretch;gap:8px;padding:8px 8px 12px;text-align:center}
+.du-rq3 .du-rq img{width:100%;height:auto;aspect-ratio:1;border-radius:14px}
+.du-rq3 .du-rq-tx{align-items:center;gap:6px}
+.du-rq3 .du-lv{align-self:center}
+.du-rq3 .du-rq-tx b{font-size:15.5px;line-height:1.15}
