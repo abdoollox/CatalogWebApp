@@ -414,6 +414,7 @@
     if (jrQayta) { /* faqat ko'rsatiladi */ } else if (jrPreview) { applyHouse(id); } else {
       setHouse(id);
       reportHouse(id);
+      try { kursBosh(); } catch (e) {}          // yangi saralangan o'quvchi 1-kursdan boshlaydi (bo'limlar bosqichma-bosqich ochiladi)
     }
     var t = T[lang];
     var h = HOUSES[id];

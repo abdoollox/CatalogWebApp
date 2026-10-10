@@ -1021,7 +1021,9 @@
     var grid = $("hub-grid");
     if (!grid) { return; }
     var card = $("hub-sq");
-    if (!sqData) { if (card) { card.classList.add("hidden"); } return; }
+    var erta = false;
+    try { erta = kursN() < 2; } catch (e) {}       // Shokolad qurbaqa 2-kursdan ochiladi
+    if (!sqData || erta) { if (card) { card.classList.add("hidden"); } return; }
     var x = sqX(), d = sqData;
     if (!card) {
       card = document.createElement("button");

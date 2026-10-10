@@ -37,6 +37,7 @@
     chessV: { uz: "Chorshanba, 21:00", ru: "Среда, 21:00", en: "Wednesday, 21:00" },
     vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
     vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
+    kursda: { uz: "%d-kursda ochiladi", ru: "Откроется на %d-м курсе", en: "Unlocks in year %d" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
     chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
     chessR: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" },
@@ -138,11 +139,15 @@
       sort.classList.add("hidden");
     }
 
-    try { hubJadval(JD_ON && hid !== "none"); } catch (e) {}
+    var kn = hid === "none" ? 4 : kursN();
+    kursChizilgan = kn;
+    root.classList.remove("k1", "k2", "k3", "k4");
+    root.classList.add("k" + kn);
+    try { hubJadval(JD_ON && hid !== "none" && kn >= 4); } catch (e) {}
 
     // Kubok: to'rtta qum soati
     var cup = $("hub-cup");
-    if (!cupData) {
+    if (!cupData || kn < 2) {
       cup.classList.add("hidden");
     } else {
       cup.classList.remove("hidden");
@@ -213,25 +218,28 @@
     var guruhlar = [
       { t: HT("g1"), k: [
         { key: "dars", title: dx.tile, sub: drJami() ? HT("darsP").replace("%a", drJami()[0]).replace("%b", drJami()[1]) : "", go: drOpen },
-        { key: "bell", title: dx.blTile, sub: hs.bellJ ? HT("bellP").replace("%a", hs.bellJ - Math.max(0, drPending())).replace("%b", hs.bellJ) : "", badge: Math.max(0, drPending()), go: blHomeOpen },
-        { key: "rek", title: dx.rekSec, sub: hs.fanJ ? HT("rekP").replace("%a", hs.rekN).replace("%b", hs.fanJ) : "", go: rekHomeOpen }] },
+        { key: "bell", kurs: 2, title: dx.blTile, sub: hs.bellJ ? HT("bellP").replace("%a", hs.bellJ - Math.max(0, drPending())).replace("%b", hs.bellJ) : "", badge: Math.max(0, drPending()), go: blHomeOpen },
+        { key: "rek", kurs: 3, title: dx.rekSec, sub: hs.fanJ ? HT("rekP").replace("%a", hs.rekN).replace("%b", hs.fanJ) : "", go: rekHomeOpen }] },
       { t: HT("g2"), k: [
-        { key: "qoriq", title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
-        { key: "issiq", title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
+        { key: "qoriq", kurs: 3, title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
+        { key: "issiq", kurs: 3, title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
         { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
-        { key: "duel", title: HT("duel"), sub: HT("duelV"), go: duOpen },
-        { key: "chess", title: HT("chess"), sub: HT("chessV"), go: openChessHub },
-        { key: "vik", title: HT("vik"), sub: HT("vikS"), go: vkOpen }] }
+        { key: "duel", kurs: 4, title: HT("duel"), sub: HT("duelV"), go: duOpen },
+        { key: "chess", kurs: 4, title: HT("chess"), sub: HT("chessV"), go: openChessHub },
+        { key: "vik", kurs: 4, title: HT("vik"), sub: HT("vikS"), go: vkOpen }] }
     ];
+    hubKurs(grid, kn, hid);
     guruhlar.forEach(function (g) {
       var qator = document.createElement("div");
       qator.className = "hg3";
       g.k.forEach(function (tile) {
         if (!tile.open && hid === "none") { return; }
+        var qulf = !!(tile.kurs && kn < tile.kurs);      // hali ochilmagan: xira, ostida «N-kursda ochiladi» (egasi, 2026-10-11)
+        if (qulf) { tile.sub = HT("kursda").replace("%d", tile.kurs); tile.badge = 0; tile.self = true; tile.go = function () { showToast(HT("kursda").replace("%d", tile.kurs)); }; }
         var el = document.createElement("button");
         el.type = "button";
-        el.className = "hx" + (tile.soon ? " soon" : "");
+        el.className = "hx" + (tile.soon ? " soon" : "") + (qulf ? " qulf" : "");
         var ph = document.createElement("span");
         ph.className = "hx-ph";
         ph.style.backgroundImage = "url(" + IMG_DIR + "hub/" + tile.key + ".webp)";
@@ -277,6 +285,75 @@
     $("hub-wand-ic").innerHTML = hubSvg(HUB_ICONS.wand);
     $("hub-wand-t").textContent = HUB_TX.wandT[lang];
     $("hub-wand-s").textContent = wand ? wandLabel(wand, lang) : HUB_TX.wandNone[lang];
+  }
+
+  /* KURS KARTASI (kataklar tepasida, 1-3-kursda): hozirgi kurs, keyingisigacha nima qilish kerak va unda nima ochiladi.
+     Kurs oshgan bo'lsa (kursKutmoqda) - tabrik oynasi. 4-kursda karta yo'q. */
+  var KURS_TX = {
+    uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", dars: function (a, b) { return a + " / " + b + " dars"; }, bell: "Bitta bellashuvda qatnashing",
+          gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
+          och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
+          tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish" },
+    ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", dars: function (a, b) { return "Уроков: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
+          gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
+          och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
+          tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить" },
+    en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", dars: function (a, b) { return a + " / " + b + " lessons"; }, bell: "Take part in one contest",
+          gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
+          och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
+          tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue" }
+  };
+  function hubKurs(grid, kn, hid) {
+    var eski = $("hub-kurs"), x = KURS_TX[lang] || KURS_TX.uz;
+    if (eski) { eski.parentNode.removeChild(eski); }
+    if (kursKutmoqda && hid !== "none") { var yangi = kursKutmoqda; kursKutmoqda = 0; setTimeout(function () { kursTabrik(yangi); }, 350); }
+    if (hid === "none" || kn >= 4) { return; }
+    var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
+    var k = drKurs || { lessons: 0, need2: 3, need4: 10 }, kerak = kn === 1 ? k.need2 : k.need4, bor = Math.min(k.lessons || 0, kerak);
+    var card = mk("div", "hub-kurs");
+    card.id = "hub-kurs";
+    var tep = mk("div", "hub-kurs-t");
+    var chap = mk("span", "");
+    chap.appendChild(mk("small", "", x.k));
+    chap.appendChild(mk("b", "", x.kurs(kn)));
+    tep.appendChild(chap);
+    var pog = mk("span", "hub-kurs-p");
+    [1, 2, 3, 4].forEach(function (i) { pog.appendChild(mk("i", i <= kn ? "on" : "", String(i))); });
+    tep.appendChild(pog);
+    card.appendChild(tep);
+    var qat = mk("div", "hub-kurs-q");
+    qat.appendChild(mk("b", "", x.gacha(kn + 1)));
+    qat.appendChild(mk("span", "", kn === 2 ? x.bell : x.dars(bor, kerak)));
+    card.appendChild(qat);
+    var chiz = mk("span", "hub-kurs-c"), ich = mk("i", "");
+    ich.style.width = (kn === 2 ? 0 : Math.round(bor * 100 / kerak)) + "%";
+    chiz.appendChild(ich);
+    card.appendChild(chiz);
+    card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + x.och[kn + 1]));
+    var b = mk("button", "dr-btn", kn === 2 ? x.bBell : x.bDars);
+    b.type = "button";
+    b.onclick = hubGo(kn === 2 ? blHomeOpen : drOpen);
+    card.appendChild(b);
+    grid.parentNode.insertBefore(card, grid);
+  }
+  function kursTabrik(n) {
+    var x = KURS_TX[lang] || KURS_TX.uz, eski = $("du-info");
+    if (eski) { eski.parentNode.removeChild(eski); }
+    var orqa = document.createElement("div"), oyna = document.createElement("div"), yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); } };
+    orqa.className = "du-info kurs-tb";
+    orqa.id = "du-info";
+    oyna.className = "du-info-p";
+    oyna.innerHTML = '<div class="kurs-tb-i"><u></u><b></b><small></small><p></p><button type="button" class="dr-btn"></button></div>';
+    oyna.querySelector("u").textContent = String(n);
+    oyna.querySelector("b").textContent = x.tabrik(n);
+    oyna.querySelector("small").textContent = x.tabrikS;
+    oyna.querySelector("p").textContent = x.och[n] || "";
+    oyna.querySelector("button").textContent = x.ok;
+    oyna.querySelector("button").onclick = yop;
+    orqa.appendChild(oyna);
+    orqa.addEventListener("click", function (e) { if (e.target === orqa) { yop(); } });
+    document.body.appendChild(orqa);
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
   }
 
   function openHub() {

@@ -432,8 +432,25 @@
     window.fetch(API_DARS, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": drInit() },
                              body: JSON.stringify(body || {}) })
       .then(function (r) { return r.json(); })
-      .then(function (res) { cb(res && (res.ok || res.error === "no_tries" || res.error === "not_started" || res.error === "locked") ? res : (MS_LOCAL ? drSample(body) : res)); })
+      .then(function (res) { kursOl(res); cb(res && (res.ok || res.error === "no_tries" || res.error === "not_started" || res.error === "locked") ? res : (MS_LOCAL ? drSample(body) : res)); })
       ["catch"](function () { cb(MS_LOCAL ? drSample(body) : null); });
+  }
+
+  /* KURSLAR (egasi, 2026-10-11): bo'limlar bosqichma-bosqich ochiladi (server: hpdars.kurs). Bu yerda faqat holat:
+     drKurs - serverdan kelgan {n, lessons, bell, need2, need4}; oxirgi ko'rilgan kurs shu qurilmada (hp_kurs) eslanadi -
+     kurs oshsa bosh sahifada tabrik chiqadi (kursKutmoqda). Holat hali kelmagan bo'lsa: eslangan kurs, u ham yo'q bo'lsa 4
+     (eski o'quvchilarga qulf bir zum ham ko'rinmasin); yangi saralangan odamga saralash paytida 1 yozib qo'yiladi (kursBosh). */
+  var drKurs = null, kursKutmoqda = 0, kursChizilgan = 0;
+  function kursEsda() { try { return parseInt(localStorage.getItem(TK("hp_kurs")) || "0", 10) || 0; } catch (e) { return 0; } }
+  function kursYoz(n) { try { localStorage.setItem(TK("hp_kurs"), String(n)); } catch (e) {} }
+  function kursN() { return (drKurs && drKurs.n) || kursEsda() || 4; }
+  function kursBosh() { drKurs = null; kursKutmoqda = 0; kursYoz(1); drAt = 0; }
+  function kursOl(res) {
+    if (!res || !res.kurs || !res.kurs.n) { return; }
+    var esda = kursEsda();
+    drKurs = res.kurs;
+    if (esda && drKurs.n > esda) { kursKutmoqda = drKurs.n; }
+    if (drKurs.n !== esda) { kursYoz(drKurs.n); }
   }
 
   function drApply(res) {
@@ -441,6 +458,8 @@
     var oldin = drPending();
     drData = res.lessons || {};
     if (!$("scr-dars").classList.contains("hidden")) { drRender(); }
+    // kurs o'zgargan bo'lsa bosh sahifa qayta chiziladi (bir marta: kursChizilgan renderHub da yangilanadi - halqa bo'lmaydi)
+    if (kursN() !== kursChizilgan) { try { if (hubVisible()) { renderHub(); return; } } catch (e) {} }
     // Bosh sahifa FAQAT kartadagi son o'zgargan bo'lsa qayta chiziladi. DIQQAT (2026-10-07 xatosi): renderHub
     // drLoad ni chaqiradi - bu yerda shartsiz renderHub chaqirilsa cheksiz so'rov halqasi bo'ladi va ilova qotadi.
     if (drPending() !== oldin) { try { if (hubVisible()) { renderHub(); } } catch (e) {} }
