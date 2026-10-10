@@ -174,14 +174,6 @@
     room: '<path d="M5.5 11V8a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3v3 M3.5 12.5a1.5 1.5 0 0 1 3 0V15h11v-2.5a1.5 1.5 0 0 1 3 0V18h-17z M6 18v2 M18 18v2"/>',
     famous: '<path d="M12 3.5l1.7 4.3 4.3 1.7-4.3 1.7L12 15.5l-1.7-4.3L6 9.5l4.3-1.7z M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z M5.5 15.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/>'
   };
-  var CUP_TROPHY =
-    '<svg viewBox="0 0 48 48" fill="none" aria-hidden="true">' +
-      '<path d="M15 7h18v9.5c0 5.2-4 9.5-9 9.5s-9-4.3-9-9.5z" fill="url(#cupGold)" stroke="#f3d58f" stroke-width="1.2"/>' +
-      '<path d="M15 10.5H9.5c0 5 2.6 8 6.8 8.6 M33 10.5h5.5c0 5-2.6 8-6.8 8.6" stroke="#e0b25b" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M24 26v6 M18.5 40.5h11 M20 32h8l1.6 8.5H18.4z" stroke="#e0b25b" stroke-width="2" stroke-linejoin="round" fill="rgba(224,178,91,.18)"/>' +
-      '<path d="M24 11.2l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z" fill="#fff6dc" opacity=".9"/>' +
-      '<defs><linearGradient id="cupGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6dc98"/><stop offset="1" stop-color="#b8862f"/></linearGradient></defs>' +
-    '</svg>';
 
   function svgIcon(paths, cls) {
     return '<svg class="' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +

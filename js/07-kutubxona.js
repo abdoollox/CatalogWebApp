@@ -783,16 +783,6 @@
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
   }
 
-  // Boshqa odamning nishonlari (chatdan)
-  function nshPeer(uid, name) {
-    var x = nshX();
-    nshPost({ uid: uid }, function (res) {
-      var codes = (res.list || []).filter(function (b) { return b.got; }).map(function (b) { return b.code; });
-      nshBox({ codes: codes, names: true, kick: x.of + (codes.length ? " · " + codes.length + " / " + (res.total || NSH_ORDER.length) : ""),
-               title: name || "", text: codes.length ? "" : x.none });
-    });
-  }
-
   /* ---------- SHOKOLAD QURBAQA: kunlik topshiriqlar va sehrgarlar kartochkalari (egasi, 2026-10-05) ----------
      Har kuni 6 ta topshiriq (server tanlaydi, hammaga bir xil). HAMMASI bajarilganda odam qutini o'zi ochadi:
      +10 ball, 1 galleon va SHU KUNNING sehrgar kartochkasi (kolleksiyaga). Oraliq mukofot yo'q.

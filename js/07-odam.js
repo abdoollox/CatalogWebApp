@@ -23,7 +23,7 @@
           inch: "inches", cards: "Wizard cards", chess: "Chess rating", games: function (n, w) { return n + " games · " + w + " wins"; },
           online: "in the app now", peer: "View profile", write: "Send a message", close: "Close", you: "This is you", fail: "Could not open the profile", anon: "Wizard" }
   };
-  var odamBusy = false, odamCur = null;
+  var odamBusy = false;
 
   function odamX() { return ODAM_TX[lang] || ODAM_TX.uz; }
   function odamInit() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
@@ -53,7 +53,6 @@
     var done = function (res) {
       odamBusy = false;
       if (!res || !res.ok) { showToast(odamX().fail, "err"); return; }
-      odamCur = res;
       odamRender(res);
       $("odam").classList.remove("hidden");
       try { $("odam").scrollTop = 0; } catch (e) {}
@@ -82,7 +81,7 @@
     return t;
   }
 
-  function odamClose() { $("odam").classList.add("hidden"); odamCur = null; }
+  function odamClose() { $("odam").classList.add("hidden"); }
 
   // Katak (o'z profilidagi .pu-c bilan bir xil): kichik sarlavha, doira rasm, nom/son
   function odamKatak(qator, lbl, src, nom, cls, fn, svg) {

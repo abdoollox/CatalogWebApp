@@ -1,4 +1,0 @@
-Eski keshlangan index.html lar uchun vaqtincha qoldirilgan fayllar:
-  js/app.js                (75054d8 sahifasi)
-  js/13-ishga-tushirish.js (ab9a423 va 9714d30 sahifalari; hozir 14-ishga-tushirish.js)
-2026-10-07 dan keyin o'chirish mumkin: git rm js/app.js js/13-ishga-tushirish.js js/ESKI.txt

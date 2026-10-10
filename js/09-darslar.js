@@ -693,7 +693,6 @@
     if (score > 0) { drPost({ record: fan, score: score }, function (res) { if (res && res.records) { rekData = rekData || {}; rekData[fan] = res.records[fan]; } }); }
   }
 
-  var DR_KUBOK = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 3h10v2h3v3a4 4 0 0 1-3.6 4A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 7.6 12 4 4 0 0 1 4 8V5h3zm10 4v2.8A2 2 0 0 0 18 8V7zM6 7v1a2 2 0 0 0 1 1.8V7z"/></svg>';
   function drItemName(fan, item) {
     if (fan === "afsun") { return ((AF[item] || {})[lang] || (AF[item] || {}).uz || [item])[0]; }
     if (fan === "iksir") { return (IK[item] || {})[lang] || (IK[item] || {}).uz || item; }
@@ -2033,7 +2032,6 @@
     polyjuice:  { c: "#8a8f4a", r: ["lacewing", "leech", "bicorn", "boomslang", "hair"], uz: "Ko'p qiyofali damlama", ru: "Оборотное зелье", en: "Polyjuice Potion" },
     felix:      { c: "#f3d58f", r: ["ashwinder", "horseradish", "squill", "murtlap", "thyme"], uz: "Feliks Felitsis", ru: "Феликс Фелицис", en: "Felix Felicis" }
   };
-  var IK_XATO = 3;
   var ik = null;      // {id, phase: "rec"|"cook"|"done", step, err, chips, bajar}
 
   // Masalliq rasmi (img/masalliq/<kod>.webp) + nomi

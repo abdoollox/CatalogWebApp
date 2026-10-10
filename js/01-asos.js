@@ -72,7 +72,6 @@
   ];
 
   var NUMERALS = ["I","II","III","IV","V","VI","VII","VIII"];
-  var YEARS = ["2001","2002","2004","2005","2007","2009","2010","2011"];
 
   // Qaysi film qaysi tilda hali yuklanmagan (catalog.py da message_id = 0).
   // Bunday kartalar kulrang bo'lib ko'rinadi va bosilmaydi.

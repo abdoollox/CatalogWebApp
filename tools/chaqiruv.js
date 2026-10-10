@@ -7,7 +7,7 @@ const fs = require("fs"), path = require("path");
 const acorn = require("./node_modules/acorn");
 const dir = path.join(__dirname, "..", "js");
 let src = "";
-fs.readdirSync(dir).filter(f => /^\d\d-.*\.js$/.test(f) && f !== "13-ishga-tushirish.js").sort()
+fs.readdirSync(dir).filter(f => /^\d\d-.*\.js$/.test(f)).sort()
   .forEach(f => { src += fs.readFileSync(path.join(dir, f), "utf8") + "\n"; });
 const ast = acorn.parse(src, { ecmaVersion: 2020 });
 const bor = new Set(), chaq = new Set();

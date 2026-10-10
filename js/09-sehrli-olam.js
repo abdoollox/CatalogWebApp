@@ -71,18 +71,6 @@
   }
 
   // Bo'limga o'tish: "Ortga" bosilganda shu sahifaga qaytadi.
-  // Kunlik savol - to'g'ridan-to'g'ri. Savol yo'q (javob berilgan) bo'lsa - qisqa xabar.
-  function openDaily() {
-    var task = null;
-    try {
-      (tasksData.tasks || []).forEach(function (x) { if (!task && x.type === "daily") { task = x; } });
-    } catch (e) {}
-    if (!task) { showToast(HUB_TX.dailyWait[lang]); return; }
-    worldFrom = hubVisible() ? "hub" : worldFrom;
-    ["scr-hub", "scr-cup", "scr-tasks"].forEach(function (id) { $(id).classList.add("hidden"); });
-    startTask(task);
-  }
-
   function hubGo(fn) {
     return function () {
       worldFrom = "hub";

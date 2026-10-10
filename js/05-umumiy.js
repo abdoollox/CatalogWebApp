@@ -452,11 +452,6 @@
     })["catch"](function () {});
   }
 
-  // Fayl hajmi doim MB da (egasi, 2026-10-04) - bot tugmalari bilan bir xil
-  function qsSize(b) {
-    return b ? Math.round(b / 1048576) + " MB" : "";
-  }
-
   function qsFilmName(id) {
     var all = MOVIES.concat(MOVIES_FB);
     for (var i = 0; i < all.length; i++) {
