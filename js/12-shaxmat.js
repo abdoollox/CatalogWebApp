@@ -1623,6 +1623,11 @@
       title.style.color = "var(--dim)";
       desc.textContent = rtxt + ".";
     }
+    // Jonli o'yin (bot emas) tarixda qoladi - shuni aytamiz: raqib ham keyin qayta ko'ra oladi
+    if (chessState.gameMode !== "bot" && result !== "aborted" && (result === "win" || result === "loss" || result === "draw")) {
+      desc.textContent += " " + L("savedNote");
+      chessLastAt = 0;
+    }
     $("chess-board-overlay").classList.remove("hidden");
   }
 
@@ -1766,6 +1771,7 @@
     renderChessHub();
     renderBotBadges();
     chessRefreshMine();
+    loadLastGames();
     // Hub ochiq turganda raqib qidirayotganlar soni yangilanib turadi.
     stopHubTimer();
     chessHubTimer = setInterval(function () {
@@ -2279,6 +2285,40 @@
     csSpark(p.series);
   }
 
+  // Tarixdagi bitta o'yin qatori (statistika sahifasi va shaxmat bosh sahifasidagi «So'nggi o'yinlar»)
+  function histRow(h) {
+    var mark = { win: L("resW"), loss: L("resL"), draw: L("resD") }[h.result];
+    var d = h.delta, yur = Math.ceil((h.plies || 0) / 2);
+    return csRow('<span class="res ' + h.result + '">' + escapeHtmlChess(mark) + '</span><span class="nm"><b>' +
+      escapeHtmlChess(h.opp.name) + "</b><span>" + escapeHtmlChess(reasonText(h.reason, h.result)) + " · " +
+      escapeHtmlChess(L("movesN").replace("%d", yur)) + " · " + csDate(h.time) + '</span></span>' +
+      (d !== null && d !== undefined ? '<span class="dl ' + (d >= 0 ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>" : ""),
+      ' data-game="' + escapeHtmlChess(h.id) + '"');
+  }
+  // Shaxmat bosh sahifasi: so'nggi uch o'yin. Profil 30 soniyada bir martadan ko'p so'ralmaydi.
+  var chessLastAt = 0;
+  function renderLastGames() {
+    var hist = chessStats.prof ? chessStats.prof.history : null, box = $("ch-last");
+    if (!box) { return; }
+    box.classList.toggle("hidden", !(hist && hist.length));
+    if (!hist || !hist.length) { return; }
+    var html = "";
+    hist.slice(0, 3).forEach(function (h) { html += histRow(h); });
+    $("ch-last-list").innerHTML = html;
+  }
+  function loadLastGames() {
+    renderLastGames();
+    var now = Date.now();
+    if (now - chessLastAt < 30000) { return; }
+    chessLastAt = now;
+    chessApi("profile").then(function (res) {
+      if (!res || !res.ok) { return; }
+      chessStats.prof = res;
+      chessStats.bots = res.bots || chessStats.bots;
+      renderLastGames();
+    })["catch"](function () {});
+  }
+
   function csRow(html, attrs, me) {
     return '<button type="button" class="cs-row' + (me ? " me" : "") + '"' + (attrs || "") + ">" + html + "</button>";
   }
@@ -2315,15 +2355,7 @@
       var hist = chessStats.prof ? chessStats.prof.history : null;
       if (!hist) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("loading")) + "</div>"; return; }
       if (!hist.length) { box.innerHTML = '<div class="cs-empty">' + escapeHtmlChess(L("histEmpty")) + "</div>"; return; }
-      hist.forEach(function (h) {
-        var mark = { win: L("resW"), loss: L("resL"), draw: L("resD") }[h.result];
-        var d = h.delta;
-        html += csRow('<span class="res ' + h.result + '">' + escapeHtmlChess(mark) + '</span><span class="nm"><b>' +
-          escapeHtmlChess(h.opp.name) + "</b><span>" + escapeHtmlChess(reasonText(h.reason, h.result)) + " · " +
-          escapeHtmlChess(chessTcLabel(h.base + "+" + (h.inc || 0))) + " · " + csDate(h.time) + '</span></span>' +
-          (d !== null && d !== undefined ? '<span class="dl ' + (d >= 0 ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>" : ""),
-          ' data-game="' + escapeHtmlChess(h.id) + '"');
-      });
+      hist.forEach(function (h) { html += histRow(h); });
     } else {
       var bots = chessStats.bots || {}, names = L("botNames");
       BOT_ORDER.forEach(function (lv, i) {
@@ -2406,17 +2438,23 @@
   }
 
   // Tarixdagi o'yinni ko'rish: tugagan holat, yurishlar ro'yxati bilan orqaga-oldinga.
-  function chessReview(gid) {
+  function chessReview(gid, hubdan) {
     chessApi("state", null, "?game_id=" + encodeURIComponent(gid)).then(function (res) {
       if (!res || !res.game || res.game.v !== 2) { showToast(L("err"), "err"); return; }
-      chessStats.from = "stats";
+      chessStats.from = hubdan ? null : "stats";       // bosh sahifadan ochilgan bo'lsa - «ortga» bosh sahifaga
       $("scr-chess-stats").classList.add("hidden");
+      $("scr-chess-hub").classList.add("hidden");
       openPvP(res.game, true);
     })["catch"](function () { showToast(L("netErr"), "err"); });
   }
 
   function initChessStatsUI() {
     $("ch-rate").addEventListener("click", function () { openChessStats("top"); });
+    $("ch-last-all").addEventListener("click", function () { openChessStats("hist"); });
+    $("ch-last-list").addEventListener("click", function (e) {
+      var row = e.target.closest ? e.target.closest(".cs-row") : null;
+      if (row && row.getAttribute("data-game")) { stopHubTimer(); chessReview(row.getAttribute("data-game"), true); }
+    });
     $("chess-stats-back").addEventListener("click", closeChessStats);
     $("cs-tabs").addEventListener("click", function (e) {
       var b = e.target.closest ? e.target.closest("[data-v]") : null;

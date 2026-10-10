@@ -1344,6 +1344,11 @@
     .cs-tabs{margin-top:14px}
     .cs-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer;font:600 13.5px/1.3 'Manrope',sans-serif}
     .cs-row:last-child{border-bottom:none}
+    .ch-last{padding:14px 6px 8px}
+    .ch-last-h{display:flex;align-items:center;justify-content:space-between;padding:0 10px 6px}
+    .ch-last-h b{font:800 10.5px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+    .ch-last-h button{border:none;background:transparent;color:var(--gold);font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer;padding:6px 0 6px 10px}
+    .ch-last-n{margin:6px 10px 4px;font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
     .cs-row.me{background:rgba(var(--gold-rgb),.10)}
     .cs-row .rk{flex:none;width:24px;font:800 13px/1 'Manrope',sans-serif;color:var(--dim);text-align:center}
     .cs-row .rk.top{color:var(--gold-hi)}
@@ -1401,6 +1406,12 @@
       </span>
       <span class="ch-rate-go"><span data-xt="ratingsBtn">Jadval</span> ›</span>
     </button>
+    <!-- SO'NGGI O'YINLAR: tarix shu yerda ham ko'rinadi (egasi, 2026-10-10) - qator bosilsa o'yin yurishma-yurish ochiladi -->
+    <div id="ch-last" class="ch-card ch-last hidden">
+      <div class="ch-last-h"><b data-xt="lastGames">So'nggi o'yinlar</b><button type="button" id="ch-last-all" data-xt="allGames">Hammasi</button></div>
+      <div id="ch-last-list"></div>
+      <p class="ch-last-n" data-xt="lastNote"></p>
+    </div>
 
     <!-- DAVOM ETAYOTGAN O'YIN -->
     <div id="chess-resume" class="ch-card ch-resume hidden">
@@ -1669,9 +1680,9 @@
 <script src="js/09-issiqxona.js?v=2759b103"></script>
 <script src="js/09-duel.js?v=28040436"></script>
 <script src="js/09-xarid.js?v=ff5c38cd"></script>
-<script src="js/10-matnlar-chat-shaxmat.js?v=03764add"></script>
+<script src="js/10-matnlar-chat-shaxmat.js?v=976686fa"></script>
 <script src="js/11-chat.js?v=d8716f72"></script>
-<script src="js/12-shaxmat.js?v=df942f31"></script>
+<script src="js/12-shaxmat.js?v=7bf869bb"></script>
 <script src="js/13-orqaga.js?v=e424903b"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>
