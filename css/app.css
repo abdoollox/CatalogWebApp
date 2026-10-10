@@ -3412,3 +3412,54 @@ button.du-bc:active{transform:scale(.98)}
 .sq-dj.d2{background:rgba(214,160,60,.55)}
 .sq-dj.d3{background:rgba(190,70,60,.65)}
 .sq-task.done .sq-dj{opacity:.5}
+/* VIKTORINA «Oxirgi sehrgar» */
+#scr-vik .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-vik .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-vik .kb-ttl .cup-kick{color:#7ec8a0}
+#scr-vik .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+.vk-hero .du-h-m small{color:#7ec8a0}
+.vk-qoida{margin-top:14px;padding:6px 16px 14px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.vk-q{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.09)}
+.vk-q u{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(126,200,160,.16);color:#9fe0bd;font:800 12px/1 'Manrope',sans-serif;text-decoration:none}
+.vk-q span{font:600 14px/1.35 'Manrope',sans-serif;color:var(--text)}
+.vk-sov{padding-top:14px}
+.vk-sov > small{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.vk-sov-r{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.vk-pz{display:flex;flex-direction:column;align-items:center;gap:5px;padding:11px 4px;border-radius:14px;border:1px solid rgba(243,213,143,.5);background:rgba(243,213,143,.08)}
+.vk-pz.o2{border-color:rgba(205,210,220,.45);background:rgba(205,210,220,.06)}
+.vk-pz.o3{border-color:rgba(205,140,90,.5);background:rgba(205,140,90,.07)}
+.vk-pz b{font:800 19px/1 'Manrope',sans-serif;color:#f3d58f}
+.vk-pz.o2 b{color:#d5dae4}.vk-pz.o3 b{color:#e0a276}
+.vk-pz small{font:700 10px/1 'Manrope',sans-serif;color:var(--dim)}
+.vk-sov p,.vk-otgan{margin:10px 2px 0;font:500 12px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.vk-g-top{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.vk-g-top b{font:800 11px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#9fe0bd}
+.vk-g-top span{padding:6px 11px;border-radius:99px;background:rgba(243,213,143,.12);color:var(--gold-hi);font:800 12px/1 'Manrope',sans-serif}
+.vk-g-vq{display:flex;align-items:center;gap:10px;margin-top:14px}
+.vk-g-vq span{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.vk-g-vq i{display:block;height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#7ec8a0,#f3d58f)}
+.vk-g-vq i.oz{background:#e2574c}
+.vk-g-vq em{flex:none;min-width:22px;text-align:right;font:800 13px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim);font-variant-numeric:tabular-nums}
+.vk-g-q{min-height:96px;margin:22px 4px 20px;display:flex;align-items:center;justify-content:center;text-align:center;font:600 25px/1.2 'Cormorant Garamond',serif;color:var(--text)}
+.vk-g-a{display:flex;flex-direction:column;gap:10px}
+.vk-a{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:10px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);text-align:left;cursor:pointer;font-family:inherit}
+.vk-a:active{transform:scale(.985)}
+.vk-a u{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);font:800 13px/1 'Manrope',sans-serif;text-decoration:none;color:var(--dim)}
+.vk-a span{font:700 15px/1.3 'Manrope',sans-serif}
+.vk-a:disabled{cursor:default;opacity:.62}
+.vk-a.men{opacity:1;border-color:rgba(243,213,143,.8);background:rgba(243,213,143,.1)}
+.vk-a.men u{background:rgba(243,213,143,.3);color:var(--gold-hi)}
+.vk-a.togri{opacity:1;border-color:rgba(95,217,143,.85);background:rgba(95,217,143,.13)}
+.vk-a.togri u{background:rgba(95,217,143,.3);color:#8ff0b6}
+.vk-a.xato{opacity:1;border-color:rgba(226,87,76,.85);background:rgba(226,87,76,.13)}
+.vk-a.xato u{background:rgba(226,87,76,.3);color:#ff9d94}
+.vk-g-h{min-height:22px;margin:16px 4px 0;text-align:center;font:700 14px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.vk-g-h.yaxshi{color:#8ff0b6}.vk-g-h.yomon{color:#ff9d94}
+.vk-end{margin-top:6px}
+.vk-golib{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0 4px}
+.vk-golib small{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi)}
+.vk-golib b{font:600 30px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.vk-men{display:flex;flex-direction:column;align-items:center;gap:5px;margin:12px 0;padding:12px;border-radius:14px;background:rgba(243,213,143,.08);border:1px solid rgba(243,213,143,.35)}
+.vk-men b{font:800 14px/1.2 'Manrope',sans-serif;color:var(--gold-hi)}
+.vk-men small{font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.vk-end .bl-list{margin:10px 0 14px;text-align:left}

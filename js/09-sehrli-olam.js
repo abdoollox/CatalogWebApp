@@ -254,7 +254,7 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -288,18 +288,19 @@
   function jdYopiq() { try { return window.localStorage.getItem(JD_KEY) === "1"; } catch (e) { return false; } }
   var JD_TADBIR = [
     { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
+    { k: "vik", kun: 4, s: 21, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
     { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
     { k: "kubok", kun: 6, s: 23, m: 59, d: 1, rgb: "243,213,143", go: function () { openCup(); } }
   ];
   var JD_TX = {
     uz: { t: "Jadval", s: "shu hafta", kun: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], toliq: ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"],
-          chess: "Shaxmat turniri", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
+          chess: "Shaxmat turniri", vik: "Viktorina «Oxirgi sehrgar»", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
           kunQ: "kun", soatQ: "soat", daqQ: "daq", har: "Har kuni", harS: "9 ta bellashuv (yarim tungacha) · Shokolad qurbaqa" },
     ru: { t: "Расписание", s: "эта неделя", kun: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], toliq: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
-          chess: "Шахматный турнир", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
+          chess: "Шахматный турнир", vik: "Викторина «Последний волшебник»", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
           kunQ: "дн.", soatQ: "ч", daqQ: "мин", har: "Каждый день", harS: "9 состязаний (до полуночи) · Шоколадная лягушка" },
     en: { t: "Schedule", s: "this week", kun: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], toliq: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          chess: "Chess tournament", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
+          chess: "Chess tournament", vik: "Quiz “The Last Wizard”", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
           kunQ: "d", soatQ: "h", daqQ: "min", har: "Every day", harS: "9 contests (until midnight) · Chocolate Frog" }
   };
   function hubJadval(korsat) {
