@@ -1337,7 +1337,7 @@
   var TR_IMG = ["img/yol/pl1.jpg", "img/yol/pl2.jpg", "img/yol/pl3.jpg", "img/yol/pl4.jpg", "img/yol/pl5.jpg"];
 
   function trPanel(i, text) {
-    var st = $("tr-stage");
+    var st = $("trn-stage");
     var f = kmPanel(TR_IMG[i], i + 1, text, i % 2);
     st.appendChild(f);
     if (i > 0) {
@@ -1349,7 +1349,7 @@
 
   // Sahna ostidagi tugma (ixtiyoriy izoh bilan); keyingi sahna ochilganda ikkalasi ham yo'qoladi
   function trBtn(text, fn, izoh) {
-    var st = $("tr-stage");
+    var st = $("trn-stage");
     if (izoh) { st.appendChild(jrEl("p", "tr-note grk-note", izoh)); }
     var b = jrEl("button", "tr-go grk-go", text);
     b.type = "button";
@@ -1361,7 +1361,7 @@
   }
 
   function trClear() {
-    var st = $("tr-stage");
+    var st = $("trn-stage");
     var eski = st.querySelectorAll(".grk-go, .grk-note");
     for (var i = 0; i < eski.length; i++) { st.removeChild(eski[i]); }
   }
@@ -1373,11 +1373,11 @@
     jrHideAll();
     $("scr-train").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
-    $("tr-back").innerHTML = hubSvg(AL_ICONS.back);
-    $("tr-back").setAttribute("aria-label", al("title"));
-    $("tr-kick").textContent = al("s2p");
-    $("tr-title").textContent = al("s2t");
-    var stage = $("tr-stage");
+    $("trn-back").innerHTML = hubSvg(AL_ICONS.back);
+    $("trn-back").setAttribute("aria-label", al("title"));
+    $("trn-kick").textContent = al("s2p");
+    $("trn-title").textContent = al("s2t");
+    var stage = $("trn-stage");
     stage.className = "grk";
     stage.innerHTML = "";
     TR_IMG.forEach(function (u) { try { (new Image()).src = u; } catch (e) {} });
@@ -1420,8 +1420,8 @@
     function zal() {
       trClear();
       if (!jrQayta) { jrSet(TRAIN_KEY); onbStep("train"); }
-      $("tr-kick").textContent = al("s3p");
-      $("tr-title").textContent = al("s3t");
+      $("trn-kick").textContent = al("s3p");
+      $("trn-title").textContent = al("s3t");
       trPanel(4, lines[5]);
       trBtn(al("ltBack"), jrHome, al("arrS"));
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}

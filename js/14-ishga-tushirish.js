@@ -11,7 +11,7 @@
     renderLangs();
     $("back-btn").addEventListener("click", goBack);
     $("world-btn").addEventListener("click", goWorld);
-    $("tr-back").addEventListener("click", jrHome);
+    $("trn-back").addEventListener("click", jrHome);
     $("lt-later").addEventListener("click", jrLetterCancel);
     $("lt").addEventListener("click", function (ev) {
       if (ev.target !== $("lt")) { return; }

@@ -63,7 +63,7 @@
     "scr-hub": "hub-back",
     "scr-owl": "owl-back",
     "scr-vault": "gr-back",
-    "scr-train": "tr-back",
+    "scr-train": "trn-back",
     "scr-world": function () { worldBack(); },
     "scr-prof": "prof-back",
     "scr-detail": "det-back",
