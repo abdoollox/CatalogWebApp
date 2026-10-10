@@ -49,7 +49,7 @@
   ];
   var DR_TX = {
     uz: { kick: "Xogvarts", ttl: "Darslar", tile: "Darslar", tileNew: function (n) { return "Bugun " + n + " ta topshiriq kutmoqda"; }, tileDone: "Darslar va bellashuv",
-          sum: function (a, b) { return a + " / " + b + " dars o'tilgan"; }, note: "Darslar — mashq, xohlagancha o'ting. Ball «Bellashuv» bo'limida beriladi.",
+          sum: function (a, b) { return a + " / " + b + " dars o'tilgan"; }, sumL: "dars o'tilgan", note: "Darslar — mashq, xohlagancha o'ting. Ball «Bellashuv»da beriladi.",
           pts: function (n) { return "+" + n + " ball"; }, done: "Bajarildi", soon: "Tez orada", go: "Darsga kirish", again: "Mashq qilish",
           of: function (a, b) { return a + " / " + b + " dars"; }, lessons: "Darslar", lessonsS: "Mashq: ball berilmaydi, xohlagancha o'ting. Ball — «Bellashuv» bo'limida.",
           blTile: "Bellashuv", blTileNew: function (n) { return "Bugun " + n + " ta bellashuv kutmoqda"; }, blTileDone: "Bugun hammasida qatnashdingiz",
@@ -141,7 +141,7 @@
           ikVaqt: ["Vaqtida", "Sham o'chdi"], ikSnN: "Professor Sneyp", ikTogri: ["Hm. To'g'ri.", "Davom eting.", "Shunday."],
           ikSnB: ["Bu damlama emas, bu falokat. Qaytadan.", "Achinarli. Retseptni o'qishni ham bilmaysizmi?", "Qoniqarli. Hech kim zaharlanmaydi — shunisi ham katta gap.", "Yomon emas. Sizdan buni kutmagan edim.", "A'lo. Bu so'zni tez-tez aytmayman."], ikStep: function (a, b) { return a + " / " + b; } },
     ru: { kick: "Хогвартс", ttl: "Уроки", tile: "Уроки", tileNew: function (n) { return "Заданий на сегодня: " + n; }, tileDone: "Уроки и состязания",
-          sum: function (a, b) { return "Пройдено уроков: " + a + " / " + b; }, note: "Уроки — тренировка без ограничений. Очки даются в разделе «Состязания».",
+          sum: function (a, b) { return "Пройдено уроков: " + a + " / " + b; }, sumL: "уроков пройдено", note: "Уроки — тренировка без ограничений. Очки даются в «Состязаниях».",
           pts: function (n) { return "+" + n + " очков"; }, done: "Сделано", soon: "Скоро", go: "На урок", again: "Потренироваться",
           of: function (a, b) { return a + " / " + b + " уроков"; }, lessons: "Уроки", lessonsS: "Тренировка: очки не даются, проходите сколько хотите. Очки — в разделе «Состязания».",
           blTile: "Состязания", blTileNew: function (n) { return "Сегодня ждут состязания: " + n; }, blTileDone: "Сегодня вы участвовали во всех",
@@ -231,7 +231,7 @@
           ikSnB: ["Это не зелье, это катастрофа. Заново.", "Прискорбно. Вы и рецепт прочесть не способны?", "Удовлетворительно. Никто не отравится — уже достижение.", "Неплохо. От вас я этого не ожидал.", "Превосходно. Я нечасто произношу это слово."],
           ikOk: "Зелье готово. Профессор Снегг… ничего не сказал. Это похвала.", ikStep: function (a, b) { return a + " / " + b; } },
     en: { kick: "Hogwarts", ttl: "Classes", tile: "Classes", tileNew: function (n) { return n + " tasks waiting today"; }, tileDone: "Lessons and contests",
-          sum: function (a, b) { return a + " / " + b + " lessons completed"; }, note: "Lessons are practice — as many as you like. Points are won in Contests.",
+          sum: function (a, b) { return a + " / " + b + " lessons completed"; }, sumL: "lessons completed", note: "Lessons are practice — as many as you like. Points are won in Contests.",
           pts: function (n) { return "+" + n + " points"; }, done: "Done", soon: "Coming soon", go: "Enter class", again: "Practise",
           of: function (a, b) { return a + " / " + b + " lessons"; }, lessons: "Lessons", lessonsS: "Practice: no points, do as many as you like. Points are won in Contests.",
           blTile: "Contests", blTileNew: function (n) { return n + " contests waiting today"; }, blTileDone: "You took part in all of today's",
@@ -494,9 +494,12 @@
     var ochiq = DR_FANLAR.filter(function (f) { return f.on; });
     var bajar = 0, jami = 0;
     ochiq.forEach(function (f) { var q = drData && drData[f.id]; bajar += q ? q.level : 0; jami += q ? q.total : 24; });
-    $("dr-sum").textContent = x.sum(bajar, jami);
-    $("dr-bar").style.width = Math.round(100 * bajar / (jami || 1)) + "%";
-    $("dr-note").textContent = x.note;
+    var foiz = Math.round(100 * bajar / (jami || 1)), aylana = 2 * Math.PI * 27;
+    $("dr-sum").textContent = bajar + " / " + jami;
+    $("dr-suml").textContent = x.sumL;
+    $("dr-pct").textContent = foiz + "%";
+    $("dr-ring").style.strokeDasharray = aylana.toFixed(1);
+    $("dr-ring").style.strokeDashoffset = (aylana * (1 - Math.min(1, bajar / (jami || 1)))).toFixed(1);
     box.innerHTML = "";
     DR_FANLAR.forEach(function (f) {
       var st = drData && drData[f.id];
