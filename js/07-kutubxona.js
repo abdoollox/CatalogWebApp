@@ -917,6 +917,36 @@
   var sqData = null, sqAsked = false, sqBusy = false;
   var sqQayt = false;          // topshiriqqa sandiq sahifasidan ketilgan: "ortga" shu ro'yxatga qaytaradi
 
+  /* YANGI VAZIFALAR (egasi, 2026-10-11): har kuni 2 yengil + 3 o'rtacha + 1 qiyin. Server: hpsandiq.OSON / ORTA / QIYIN.
+     [sarlavha, izoh]; daraja yorlig'i serverdan (tier: 1 yengil, 2 o'rtacha, 3 qiyin). */
+  var SQ_T2 = {
+    uz: { tier: ["", "Yengil", "O'rtacha", "Qiyin"],
+          parvarish: ["Issiqxona yoki Qo'riqxonada parvarish qiling", "O'simlikni sug'oring yoki maxluqni boqing"], chat: ["Chatga yozing yoki reaksiya qo'ying", "Katta zal yoki fakultet xonasi"],
+          share: ["Do'stingizga ulashing", "Taklif havolasi, fakultet yoki Patronus"], dars: ["Bitta dars o'ting", "Istalgan fandan — o'tilganini qayta o'ynasa ham bo'ladi"],
+          bell3: ["Uch xil fanda bellashing", "Bugungi bellashuvlardan uchtasida qatnashing"], duel: ["Bitta duel o'ynang", "Kompyuter raqib yoki do'stingiz bilan"],
+          chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"], rek: ["Rekord rejimida urinib ko'ring", "Istalgan fanda — xatosiz qancha uzoqqa borasiz"],
+          kitob: ["Kitob o'qing", "Kutubxonadagi istalgan kitobni oching"], duel_yut: ["Duelda g'alaba qozoning", "Kompyuter raqib yoki jonli duel"],
+          bell_top: ["Bellashuvda o'ntalikka kiring", "Bugungi istalgan fanda birinchi o'n kishi ichida bo'ling"],
+          alo: ["Darsni «A'lo» bahoga o'ting", "Baho qo'yiladigan istalgan fanda"], rek_yangi: ["O'z rekordingizni yangilang", "Istalgan fanning rekord rejimida"] },
+    ru: { tier: ["", "Лёгкое", "Среднее", "Трудное"],
+          parvarish: ["Позаботьтесь о растении или существе", "Полейте в Теплице или покормите в Заповеднике"], chat: ["Напишите в чат или поставьте реакцию", "Большой зал или гостиная факультета"],
+          share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], dars: ["Пройдите один урок", "Любой предмет — можно и уже пройденный"],
+          bell3: ["Состязайтесь по трём предметам", "Участвуйте в трёх сегодняшних состязаниях"], duel: ["Сыграйте одну дуэль", "С компьютерным соперником или с другом"],
+          chess: ["Сыграйте партию в шахматы", "Можно и с ботом"], rek: ["Попробуйте режим рекорда", "Любой предмет — как далеко вы пройдёте без ошибок"],
+          kitob: ["Почитайте книгу", "Откройте любую книгу в библиотеке"], duel_yut: ["Победите в дуэли", "Компьютерный соперник или живая дуэль"],
+          bell_top: ["Войдите в десятку состязания", "Будьте среди первых десяти по любому предмету сегодня"],
+          alo: ["Пройдите урок на «Превосходно»", "Любой предмет, где ставится оценка"], rek_yangi: ["Побейте свой рекорд", "В режиме рекорда по любому предмету"] },
+    en: { tier: ["", "Easy", "Medium", "Hard"],
+          parvarish: ["Care for a plant or a creature", "Water in the Greenhouse or feed in the Reserve"], chat: ["Write in the chat or react", "The Great Hall or your common room"],
+          share: ["Share with a friend", "Invite link, house or Patronus"], dars: ["Pass one lesson", "Any subject — replaying a passed one counts"],
+          bell3: ["Compete in three subjects", "Take part in three of today's contests"], duel: ["Play one duel", "Against a computer opponent or a friend"],
+          chess: ["Play a game of chess", "A bot game counts too"], rek: ["Try record mode", "Any subject — how far can you go without a mistake"],
+          kitob: ["Read a book", "Open any book in the library"], duel_yut: ["Win a duel", "A computer opponent or a live duel"],
+          bell_top: ["Reach a contest top ten", "Be among the first ten in any subject today"],
+          alo: ["Pass a lesson with “Outstanding”", "Any graded subject"], rek_yangi: ["Beat your own record", "In record mode of any subject"] }
+  };
+  function sqT2() { return SQ_T2[lang] || SQ_T2.uz; }
+  function sqMatn(t) { return (t.tier ? sqT2()[t.code] : null) || sqX().t[t.code] || sqT2()[t.code]; }
   function sqX() { return SQ_TX[lang] || SQ_TX.uz; }
   function qbImg(code) { return IMG_DIR + "qurbaqa/" + code + ".webp"; }
   function qbTx(code) { return ((QB[lang] || QB.uz)[code]) || [code, ""]; }
@@ -928,7 +958,7 @@
     if (!sqDemo) {
       sqDemo = { ok: true, kun: "2026-10-05", total: 6, opened: false, streak: 3, big: false, card: null,
                  cards: { dumbledore: 1, flamel: 2, hufflepuff: 1, scamander: 1, uric: 1 }, cards_total: 24,
-                 tasks: ["daily", "chat", "music", "owl", "cup", "house"].map(function (c, i) { return { code: c, done: i < 3 }; }),
+                 tasks: ["parvarish", "chat", "dars", "bell3", "duel", "bell_top"].map(function (c, i) { return { code: c, done: i < 3, tier: i < 2 ? 1 : i < 5 ? 2 : 3 }; }),
                  prizes: { ball: 10, gal: 1, big_every: 7, big_gal: 3 } };
     }
     var d = sqDemo;
@@ -1030,6 +1060,16 @@
       if (code === "daily") { blOpen("tarix", "list"); }            // kunlik savol o'rnida: Sehrgarlik tarixi bellashuvi
       else if (code === "chat") { openChat(); }
       else if (code === "chess") { openChessHub(); }
+      else if (code === "parvarish") { if (isSoni() > 0) { isHubOpen(); } else { qrHubOpen(); } }
+      else if (code === "dars" || code === "alo") { drOpen(); }
+      else if (code === "bell3" || code === "bell_top") { blHomeOpen(); }
+      else if (code === "rek" || code === "rek_yangi") { rekHomeOpen(); }
+      else if (code === "duel" || code === "duel_yut") { duOpen(); }
+      else if (code === "kitob") {
+        $("scr-cat").classList.remove("hidden");
+        renderCatalog();
+        setTimeout(function () { try { document.querySelector(".kt-shelf").scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {} }, 160);
+      }
       else if (code === "owl") { openOwl(); owlFrom = "hub"; }
       else if (code === "cup") { openCup(); }
       else if (code === "house" && h) { openHouse(h); }
@@ -1084,7 +1124,7 @@
     var list = $("sq-tasks");
     list.innerHTML = "";
     d.tasks.forEach(function (t) {
-      var tx = x.t[t.code];
+      var tx = sqMatn(t);
       if (!tx) { return; }
       var row = document.createElement("button");
       row.type = "button";
@@ -1092,6 +1132,12 @@
       row.innerHTML = '<span class="sq-ck">' + (t.done ? SQ_CHECK : "") + '</span><span class="sq-task-tx"><b></b><small></small></span><i>›</i>';
       row.querySelector("b").textContent = tx[0];
       row.querySelector("small").textContent = tx[1];
+      if (t.tier) {                             // daraja yorlig'i: yengil / o'rtacha / qiyin
+        var dj = document.createElement("u");
+        dj.className = "sq-dj d" + t.tier;
+        dj.textContent = sqT2().tier[t.tier];
+        row.querySelector(".sq-task-tx").insertBefore(dj, row.querySelector("b"));
+      }
       if (!t.done) { row.onclick = function () { sqGo(t.code); }; }
       list.appendChild(row);
     });

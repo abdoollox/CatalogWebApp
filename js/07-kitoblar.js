@@ -541,6 +541,7 @@
     // Statistikaga va nishonga: shu kitob o'qish uchun ochildi (sessiyada bir marta)
     if (!ktLogged[id + lg] && ktInit()) {
       ktLogged[id + lg] = true;
+      try { sqDone("kitob"); } catch (e) {}                    // Shokolad qurbaqa: «kitob o'qing»
       window.fetch(API_BOOKS + "/send", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": ktInit() },

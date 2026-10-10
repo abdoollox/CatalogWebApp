@@ -823,6 +823,7 @@
     b.addEventListener("click", function () { rekOpen(fan); });
     box.appendChild(b);
     box.classList.remove("hidden");
+    try { sqDone("rek"); if (yangi && score > 0) { sqDone("rek_yangi"); } } catch (e) {}      // Shokolad qurbaqa vazifalari
     if (yangi && score > 0) { try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {} }
     if (score > 0) { drPost({ record: fan, score: score }, function (res) { if (res && res.records) { rekData = rekData || {}; rekData[fan] = res.records[fan]; } }); }
   }
@@ -1256,6 +1257,7 @@
       drBusy = false;
       if (!res || !res.ok) { showToast(drX().fail, "err"); cb(null); return; }
       drData = res.lessons || drData;
+      try { sqDone("dars"); } catch (e) {}                     // Shokolad qurbaqa: «bitta dars o'ting» (qayta o'ynalgani ham)
       if (res["new"]) { try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {} }
       if (res["new"] && id === "osimlik" && level % 3 === 0) { try { isSeed(level); } catch (e) {} }      // yangi urug' - Issiqxonaga
       cb(!!res["new"]);
@@ -1860,6 +1862,7 @@
   var drBahoOx = null;      // oxirgi qo'yilgan baho - drDone uni serverga ham yuboradi (qobiliyatlar boshqalarga ko'rinishi uchun)
   function drBahoSave(fan, n, b) {
     drBahoOx = { fan: fan, n: n, b: b };
+    if (b >= 5) { try { sqDone("alo"); } catch (e) {} }        // Shokolad qurbaqa: «darsni A'lo bahoga o'ting»
     try {
       var m = JSON.parse(localStorage.getItem(DR_BAHO_K[fan]) || "{}") || {};
       if (!(m[n] >= b)) { m[n] = b; localStorage.setItem(DR_BAHO_K[fan], JSON.stringify(m)); }

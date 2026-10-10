@@ -3407,3 +3407,8 @@ button.du-bc:active{transform:scale(.98)}
 .hub-jd.yopiq{padding-bottom:14px}
 .hub-jd.yopiq .hub-jd-h i{transform:rotate(90deg)}
 .hub-jd.yopiq .hub-jd-h span{color:var(--text)}
+/* Shokolad qurbaqa: vazifa darajasi yorlig'i */
+.sq-dj{align-self:flex-start;padding:3px 7px;border-radius:99px;font:800 8.5px/1 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:#fff;background:rgba(110,170,120,.5)}
+.sq-dj.d2{background:rgba(214,160,60,.55)}
+.sq-dj.d3{background:rgba(190,70,60,.65)}
+.sq-task.done .sq-dj{opacity:.5}
