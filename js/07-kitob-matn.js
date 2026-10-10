@@ -248,27 +248,69 @@
           });
           if (!Object.keys(zaxira).some(function (f) { return zaxira[f] && sanoq[f]; })) { zaxira = {}; }     // bunday shrift yo'q - hech narsa o'zgarmaydi
           r.segs = r.segs.filter(function (sg) { return sg.s.trim() || !zaxira[sg.f]; });
+          // Zaxira bo'lak bir nechta harfdan iborat bo'lishi mumkin («қ ғ» - har biri o'z bo'sh joyi ustida): har harf ALOHIDA
+          // bo'lak qilinadi, joyi bo'lak ichidagi o'rnidan olinadi (2026-10-10: shu sabab har ~180 so'zdan biri yakka qolardi).
+          var yoyilgan = [];
+          r.segs.forEach(function (sg) {
+            if (!zaxira[sg.f] || sg.s.length < 2 || !sg.w) { yoyilgan.push(sg); return; }
+            for (var ci = 0; ci < sg.s.length; ci++) {
+              if (/\s/.test(sg.s.charAt(ci))) { continue; }
+              yoyilgan.push({ x: sg.x + sg.w * ci / sg.s.length, w: sg.w / sg.s.length, s: sg.s.charAt(ci), i: sg.i, f: sg.f });
+            }
+          });
+          r.segs = yoyilgan;
+          r.segs.sort(function (a, b) { return a.x - b.x; });       // yoyilgan harflar o'z joyiga (ikkinchisi keyingi bo'lak ichida bo'lishi mumkin)
+          // Zaxira harf ALOHIDA bo'sh joy bo'lagi ustida: harf shu bo'lak ichida turadi. Bo'lak harfdan oldin/keyin ham
+          // davom etsa (so'z oralig'i + harf joyi bitta bo'lak bo'lib kelgan: « ҳ») - o'sha tomonda bo'sh joy saqlanadi.
+          var ustida = function (harf, joy) {
+            return joy.w >= r.sz * 0.4 && harf.x >= joy.x - 0.6 && harf.x + harf.w * 0.5 <= joy.x + joy.w + 0.6;
+          };
+          var qoshil = function (harf, joy, q) {
+            var old = harf.x - joy.x > r.sz * 0.2, key = (joy.x + joy.w) - (harf.x + harf.w) > r.sz * 0.2;
+            return { x: joy.x, w: joy.w, s: (old ? " " : "") + q + (key ? " " : ""), i: harf.i, f: harf.f, bir: true };
+          };
+          // Harf enini taxminlash (asosiy shrift - antikva): bo'sh joy va tinish belgilari tor, bosh va keng harflar enli.
+          var en = function (ch) {
+            if (/\s/.test(ch)) { return 0.25; }
+            if (/[.,;:!'\u2019\-\u2013()"\u00ab\u00bb]/.test(ch)) { return 0.3; }
+            if (/[\u0448\u0449\u0436\u043c\u044e\u044b\u0444]/.test(ch)) { return 0.74; }
+            if (/[\u0433\u0442\u0441\u0435\u044d\u0437\u043a\u043b\u0451]/.test(ch)) { return 0.45; }
+            if (ch !== ch.toLowerCase()) { return 0.7; }
+            return 0.52;
+          };
+          // Bo'lak ichida shu x ga ENG YAQIN bo'sh joyni topadi (bir xil enli deb taxmin qilish uzun satrda adashtirardi)
+          var joyTop = function (uyB, mx) {
+            var jami = 0, k2, eng = -1, engD = 1e9, yig = 0, m2;
+            for (k2 = 0; k2 < uyB.s.length; k2++) { jami += en(uyB.s.charAt(k2)); }
+            if (!jami) { return -1; }
+            m2 = uyB.w / jami;
+            for (k2 = 0; k2 < uyB.s.length; k2++) {
+              var e2 = en(uyB.s.charAt(k2));
+              if (/\s/.test(uyB.s.charAt(k2))) {
+                var d2 = Math.abs(uyB.x + m2 * (yig + e2 / 2) - mx);
+                if (d2 < engD) { engD = d2; eng = k2; }
+              }
+              yig += e2;
+            }
+            return engD <= r.sz * 0.9 ? eng : -1;
+          };
           var toza = [], uy = null, kut = null;
           r.segs.forEach(function (sg) {
             var q = sg.s.replace(/\s+/g, "");
             // Bo'sh joy ALOHIDA bo'lak bo'lib kelgan hol: zaxira harf aynan uning ustida turadi - harf o'sha joyni egallaydi
             var oxt = toza.length ? toza[toza.length - 1] : null;
-            if (oxt && q && zaxira[sg.f] && !oxt.s.trim() && oxt.w >= r.sz * 0.4 && Math.abs(sg.x - oxt.x) <= r.sz * 0.12) {
+            if (oxt && q && zaxira[sg.f] && !oxt.s.trim() && !zaxira[oxt.f] && ustida(sg, oxt)) {
               toza.pop();
-              sg = { x: oxt.x, w: Math.max(sg.w, oxt.w), s: q, i: sg.i, f: sg.f };
-              toza.push(sg); kut = null;
+              toza.push(qoshil(sg, oxt, q)); kut = null;
               return;
             }
-            if (oxt && !q && zaxira[oxt.f] && oxt.s.trim() && !zaxira[sg.f] && sg.w >= r.sz * 0.4 && Math.abs(sg.x - oxt.x) <= r.sz * 0.12) {
-              oxt.w = Math.max(oxt.w, sg.w); kut = null;
+            if (oxt && !q && zaxira[oxt.f] && oxt.s.trim() && !oxt.bir && !zaxira[sg.f] && ustida(oxt, sg)) {
+              toza.pop();
+              toza.push(qoshil(oxt, sg, oxt.s.replace(/\s+/g, ""))); kut = null;
               return;
             }
             if (uy && q && zaxira[sg.f] && !zaxira[uy.f] && uy.w > 0 && sg.x >= uy.x - 0.5 && sg.x < uy.x + uy.w - r.sz * 0.12) {
-              var taxmin = Math.round((sg.x - uy.x) / uy.w * uy.s.length), joy = -1, d;
-              for (d = 0; d <= 3 && joy < 0; d++) {
-                if (/\s/.test(uy.s.charAt(taxmin + d))) { joy = taxmin + d; }
-                else if (/\s/.test(uy.s.charAt(taxmin - d))) { joy = taxmin - d; }
-              }
+              var joy = joyTop(uy, sg.x + sg.w / 2);
               if (joy >= 0) { uy.s = uy.s.slice(0, joy) + q + uy.s.slice(joy + 1); return; }
             }
             // So'z BOSHIDAGI zaxira harf: bo'sh joy keyingi bo'lakning boshida turadi va aynan shu harf o'rnidan boshlanadi
