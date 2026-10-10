@@ -3298,3 +3298,44 @@ button.du-bc:active{transform:scale(.98)}
 .du-info-q span{min-width:0}
 .du-info-q b{display:block;font:800 13.5px/1.3 'Manrope',sans-serif;color:var(--text)}
 .du-info-q p{margin:5px 0 0;font:500 13px/1.5 'Manrope',sans-serif;color:var(--dim)}
+/* DUEL O'YIN EKRANI - qayta bezaldi (2026-10-10): sahna, katta tur kartalari, kuchlar tortishuvi, raundlar izi */
+#du-game .du-vs{position:relative;margin-top:10px;padding:18px 10px 16px;border-radius:24px;border:1px solid rgba(243,213,143,.28);overflow:hidden;
+  background:radial-gradient(120% 90% at 50% -10%,rgba(243,213,143,.16),transparent 60%),linear-gradient(180deg,#1c1a26,#12131b)}
+#du-game .du-vs::before{content:"";position:absolute;left:50%;top:14px;bottom:14px;width:1px;background:linear-gradient(180deg,transparent,rgba(243,213,143,.35),transparent)}
+#du-game .du-side img,#du-game .du-me-av{width:86px;height:86px;border-radius:50%;box-shadow:0 0 0 2px rgba(243,213,143,.7),0 0 0 6px rgba(243,213,143,.08),0 8px 22px rgba(0,0,0,.5)}
+#du-game .du-me-av img{width:56px;height:56px;border-radius:0;box-shadow:none}
+#du-game .du-side small{font:800 12.5px/1.2 'Manrope',sans-serif;color:var(--text);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#du-game .du-jon i{width:22px;height:26px}
+.du-mid{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.du-mid b{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;border:1px solid rgba(243,213,143,.6);background:#14151d;font:700 16px/1 'Cormorant Garamond',serif;color:var(--gold-hi);box-shadow:0 0 18px rgba(243,213,143,.18)}
+.du-mid small{padding:4px 9px;border-radius:99px;background:rgba(243,213,143,.12);font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-hi);white-space:nowrap}
+.du-mid small:empty{display:none}
+#du-game .du-msg{margin:18px 0 14px;font-size:22px}
+#du-game .du-turs{gap:10px}
+#du-game .du-tur{gap:10px;padding:18px 4px 14px;border-radius:22px;border:1px solid rgba(var(--tu),.6);
+  background:radial-gradient(90% 60% at 50% 0%,rgba(var(--tu),.34),transparent 70%),linear-gradient(180deg,rgba(var(--tu),.12),rgba(14,15,21,.9));box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.du-tur-ic{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:rgba(var(--tu),.16);box-shadow:inset 0 0 0 1px rgba(var(--tu),.5),0 0 22px rgba(var(--tu),.25)}
+#du-game .du-tur-ic svg{width:34px;height:34px}
+#du-game .du-tur b{font-size:21px}
+.du-tur-y{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;padding-top:9px;border-top:1px dashed rgba(255,255,255,.12)}
+.du-tur-y u{font:700 9px/1 'Manrope',sans-serif;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--dim)}
+.du-tur-y i{display:none}
+.du-tur-y em{display:inline-flex;align-items:center;gap:4px;font:800 11.5px/1 'Manrope',sans-serif;font-style:normal;color:rgb(var(--ty))}
+.du-iz{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px}
+.du-iz.hidden{display:none}
+.du-iz small{font:700 9.5px/1 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.du-iz span{display:flex;gap:5px}
+.du-iz i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.18)}
+.du-iz i.g{background:#f3d58f;box-shadow:0 0 8px rgba(243,213,143,.6)}
+.du-iz i.y{background:#e2574c}
+#du-game .du-rv{position:relative;gap:7px;padding:16px 6px 14px;border-radius:22px;opacity:.6;background:linear-gradient(180deg,rgba(var(--tu),.14),rgba(14,15,21,.9))}
+#du-game .du-rv.yutdi{opacity:1;border-color:rgba(243,213,143,.85);box-shadow:0 0 0 1px rgba(243,213,143,.3),0 0 26px rgba(243,213,143,.22)}
+#du-game .du-rv-ic{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:rgba(var(--tu),.16);box-shadow:inset 0 0 0 1px rgba(var(--tu),.5)}
+#du-game .du-rv-ic svg{width:30px;height:30px}
+#du-game .du-rv strong{font:800 34px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;color:var(--text)}
+#du-game .du-rv.yutdi strong{color:var(--gold-hi)}
+#du-game .du-rv em{color:var(--dim)}
+#du-game .du-rv em.yoq{color:#f0786c}
+.du-rv-j{position:absolute;top:10px;right:10px;padding:3px 6px;border-radius:99px;background:rgba(226,87,76,.18);color:#ff8f85;font:800 9.5px/1 'Manrope',sans-serif;text-decoration:none}
+.du-tort{grid-column:1 / -1;display:flex;gap:3px;height:8px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.06)}
+.du-tort i{display:block;border-radius:99px}
