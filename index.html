@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=aa20c57d">
+<link rel="stylesheet" href="css/app.css?v=bf807cc5">
 </head>
 <body>
 <div class="shell">
@@ -516,17 +516,22 @@
     <div class="cup-hdr kb-hdr">
       <button class="back-btn" id="du-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>
       <div class="kb-ttl"><span class="cup-kick" id="du-kick"></span><span class="cup-title" id="du-ttl"></span></div>
-      <span class="kb-sp" aria-hidden="true"></span>
+      <span class="kb-sp"><button class="du-info-t hidden" id="du-info-b" type="button" aria-label="Info">i</button></span>
     </div>
     <div id="du-home">
-      <p class="dr-desc" id="du-note"></p>
-      <p class="du-rule" id="du-rule"></p>
+      <!-- Duel sahifasi tepasi: o'rin, saralash bali, holat, «Duellar tarixi» (duHero); ostida uch tur qoidasi -->
+      <div class="dr-hero du-hero" id="du-hero"></div>
+      <div class="du-plan du-tor-k" id="du-cup"></div>
+      <div class="du-uch" id="du-uch"></div>
       <div class="du-raq" id="du-raq"></div>
-      <div class="du-plan"><b id="du-plan-t"></b><p id="du-plan"></p><div id="du-cup"></div></div>
+      <div class="du-plan hidden" id="du-plan"></div>
       <span class="rk-top-t" id="du-top-t"></span>
       <span id="du-mine"></span>
       <div class="bl-list" id="du-top"></div>
     </div>
+    <!-- Duellar tarixi va bitta duelni raund-raund ko'rish (duHist, duRep) -->
+    <div class="hidden" id="du-hist"><div class="du-h-list" id="du-h-list"></div></div>
+    <div class="hidden" id="du-rep"></div>
     <div class="hidden" id="du-game">
       <div class="du-vs">
         <div class="du-side"><img id="du-r-im" alt=""><small id="du-r-nom"></small><span class="du-jon" id="du-r-jon"></span></div>
@@ -1688,7 +1693,7 @@
 <script src="js/09-sehrli-olam.js?v=bacaf628"></script>
 <script src="js/09-darslar.js?v=9354c81b"></script>
 <script src="js/09-issiqxona.js?v=2759b103"></script>
-<script src="js/09-duel.js?v=28040436"></script>
+<script src="js/09-duel.js?v=0304589c"></script>
 <script src="js/09-xarid.js?v=ff5c38cd"></script>
 <script src="js/10-matnlar-chat-shaxmat.js?v=b4107d72"></script>
 <script src="js/11-chat.js?v=ac236e49"></script>
