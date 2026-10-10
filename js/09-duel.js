@@ -949,7 +949,7 @@
     g.fillStyle = "rgba(" + rgb + ",.95)";
     g.beginPath(); g.arc(du.pts[0][0] * w, du.pts[0][1] * w, 8, 0, Math.PI * 2); g.fill();
     if (du.user.length > 1) {
-      g.strokeStyle = "#f3d58f"; g.lineWidth = 5; g.shadowColor = "rgba(243,213,143,.9)"; g.shadowBlur = 12;
+      g.strokeStyle = "#eef2f7"; g.lineWidth = 5; g.shadowColor = "rgba(226,232,240,.9)"; g.shadowBlur = 12;
       g.beginPath();
       for (i = 0; i < du.user.length; i++) { g[i ? "lineTo" : "moveTo"](du.user[i][0] * w, du.user[i][1] * w); }
       g.stroke();

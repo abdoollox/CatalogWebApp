@@ -1688,16 +1688,16 @@
     }
     // boshlanish nuqtasi doim ko'rinadi
     var s = af.pts[0];
-    g.fillStyle = "rgba(243,213,143,.25)";
+    g.fillStyle = "rgba(226,232,240,.25)";
     g.beginPath(); g.arc(s[0], s[1], 17, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#f3d58f";
+    g.fillStyle = "#eef2f7";
     g.beginPath(); g.arc(s[0], s[1], 7, 0, Math.PI * 2); g.fill();
     // chizilgan iz
     if (af.trail.length > 1) {
       g.lineCap = "round"; g.lineJoin = "round";
-      g.shadowColor = af.ok ? "rgba(243,213,143,.95)" : af.off ? "rgba(255,130,110,.9)" : "rgba(150,200,255,.9)";
+      g.shadowColor = af.ok ? "rgba(226,232,240,.95)" : af.off ? "rgba(255,130,110,.9)" : "rgba(150,200,255,.9)";
       g.shadowBlur = 14;
-      g.strokeStyle = af.ok ? "#f3d58f" : af.off ? "#ffc1b6" : "#cfe4ff";
+      g.strokeStyle = af.ok ? "#eef2f7" : af.off ? "#ffc1b6" : "#cfe4ff";
       g.lineWidth = 5;
       g.beginPath();
       for (i = 0; i < af.trail.length; i++) { if (i) { g.lineTo(af.trail[i][0], af.trail[i][1]); } else { g.moveTo(af.trail[i][0], af.trail[i][1]); } }
@@ -1709,7 +1709,7 @@
     af.sp = af.sp.filter(function (u) { return now - u.t < 520; });
     af.sp.forEach(function (u) {
       var k = (now - u.t) / 520;
-      g.fillStyle = "rgba(243,213,143," + (1 - k) + ")";
+      g.fillStyle = "rgba(226,232,240," + (1 - k) + ")";
       g.beginPath(); g.arc(u.x + u.vx * k, u.y + u.vy * k + 18 * k * k, 3.4 * (1 - k) + 0.8, 0, Math.PI * 2); g.fill();
     });
     if (af.fx) { afFx(g, af.fx.id, Math.min(1, (now - af.fx.t0) / af.fx.ms), w); }

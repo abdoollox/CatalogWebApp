@@ -34,7 +34,7 @@
     for (i = 0; i < n; i++) { tash.push(nuqta(i, R)); ich.push(nuqta(i, 5 + (R - 5) * v[i] / 100)); }
     return '<svg viewBox="0 0 78 78" aria-hidden="true"><circle cx="39" cy="39" r="38" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>' +
            '<polygon points="' + tash.join(" ") + '" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1"/>' +
-           '<polygon points="' + ich.join(" ") + '" fill="rgba(243,213,143,.35)" stroke="#f3d58f" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+           '<polygon points="' + ich.join(" ") + '" fill="rgba(226,232,240,.3)" stroke="#eef2f7" stroke-width="1.6" stroke-linejoin="round"/></svg>';
   }
   function pu2Render() {
     var box = $("pu2"), pm = $("pm");

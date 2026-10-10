@@ -2427,7 +2427,7 @@
         escapeHtmlChess(titleName(p.title)) + (p.house ? " · " + escapeHtmlChess(cupHouseName(p.house)) : "") +
         '</div><div class="s">' + (p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew")) +
         '</div></div></div><div class="cs-stats"><div><b>' + p.games + "</b><span>" + L("statGames") + '</span></div><div><b style="color:#5fd98f">' +
-        p.wins + "</b><span>" + L("statWins") + '</span></div><div><b style="color:#f3d58f">' + p.draws + "</b><span>" + L("statDraws") +
+        p.wins + "</b><span>" + L("statWins") + '</span></div><div><b style="color:#dfe5ee">' + p.draws + "</b><span>" + L("statDraws") +
         '</span></div><div><b style="color:#ff8a7a">' + p.losses + "</b><span>" + L("statLosses") + "</span></div></div>" +
         (me ? "" : '<button type="button" class="ch-btn ch-gold" style="margin-top:14px" data-challenge="1">' + CHESS_IC.swords + "<span>" +
           escapeHtmlChess(L("chatChess")) + "</span></button>") + "</div>";
