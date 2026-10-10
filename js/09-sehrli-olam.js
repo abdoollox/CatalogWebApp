@@ -283,7 +283,9 @@
   /* HAFTA JADVALI (egasi, 2026-10-11: «qaysi kuni qanday eventlar o'tkazilishi haqida ma'lumot bo'lishi kerak»).
      Haftalik tadbirlar qat'iy kun va soatda (Toshkent): yangi tadbir qo'shilsa JD_TADBIR ga qator yoziladi.
      kun: 0 = dushanba … 6 = yakshanba; d - davomiyligi (daqiqa): shu vaqt ichida «HOZIR» deb ko'rinadi. */
-  var JD_ON = false;         // egasi namunani tasdiqlagach true bo'ladi
+  var JD_ON = true;          // egasi namunani tasdiqladi (2026-10-11)
+  var JD_KEY = "hp_jd_yopiq";  // yig'ilgan holat shu qurilmada eslanadi (egasi: «minimise qilish funksiyasi»)
+  function jdYopiq() { try { return window.localStorage.getItem(JD_KEY) === "1"; } catch (e) { return false; } }
   var JD_TADBIR = [
     { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
     { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
@@ -309,10 +311,27 @@
     var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
     // Toshkent vaqti (UTC+5): hafta kuni (0 = dushanba) va haftaning boshidan o'tgan daqiqalar
     var tk = new Date(Date.now() + 5 * 3600 * 1000), bugun = (tk.getUTCDay() + 6) % 7, hozir = bugun * 1440 + tk.getUTCHours() * 60 + tk.getUTCMinutes();
-    var bosh = mk("div", "hub-jd-h");
+    // Tadbirlar - eng yaqini birinchi (shu haftada o'tib ketgani keyingi haftaga suriladi)
+    var royxat = JD_TADBIR.map(function (tb) {
+      var vaqt = tb.kun * 1440 + tb.s * 60 + tb.m, qol = vaqt - hozir, ketmoqda = qol <= 0 && qol > -tb.d;
+      if (qol <= -tb.d) { qol += 7 * 1440; }
+      return { tb: tb, qol: qol, ketmoqda: ketmoqda };
+    }).sort(function (a, b) { return (a.ketmoqda ? -1 : a.qol) - (b.ketmoqda ? -1 : b.qol); });
+    // Sarlavha bosilsa karta yig'iladi/ochiladi; yig'ilganda eng yaqin tadbir bir qatorda ko'rinadi
+    var yopiq = jdYopiq(), yaqin = royxat[0];
+    box.classList.toggle("yopiq", yopiq);
+    var bosh = mk("button", "hub-jd-h");
+    bosh.type = "button";
     bosh.appendChild(mk("b", "", x.t));
-    bosh.appendChild(mk("span", "", x.s));
+    bosh.appendChild(mk("span", "", yopiq && yaqin ? x[yaqin.tb.k] + " · " + (yaqin.ketmoqda ? x.hozir.toLowerCase() : (yaqin.tb.kun === bugun && yaqin.qol < 1440 ? x.bugun.toLowerCase() : x.kun[yaqin.tb.kun])
+      + " " + ("0" + yaqin.tb.s).slice(-2) + ":" + ("0" + yaqin.tb.m).slice(-2)) : x.s));
+    bosh.appendChild(mk("i", "", "›"));
+    bosh.addEventListener("click", function () {
+      try { window.localStorage.setItem(JD_KEY, jdYopiq() ? "0" : "1"); } catch (e) {}
+      hubJadval(true);
+    });
     box.appendChild(bosh);
+    if (yopiq) { return; }
     var hafta = mk("div", "hub-jd-w");
     x.kun.forEach(function (nom, i) {
       var k = mk("span", "hub-jd-d" + (i === bugun ? " bugun" : "") + (i < bugun ? " otdi" : ""));
@@ -323,12 +342,6 @@
       hafta.appendChild(k);
     });
     box.appendChild(hafta);
-    // Tadbirlar - eng yaqini birinchi (shu haftada o'tib ketgani keyingi haftaga suriladi)
-    var royxat = JD_TADBIR.map(function (tb) {
-      var vaqt = tb.kun * 1440 + tb.s * 60 + tb.m, qol = vaqt - hozir, ketmoqda = qol <= 0 && qol > -tb.d;
-      if (qol <= -tb.d) { qol += 7 * 1440; }
-      return { tb: tb, qol: qol, ketmoqda: ketmoqda };
-    }).sort(function (a, b) { return (a.ketmoqda ? -1 : a.qol) - (b.ketmoqda ? -1 : b.qol); });
     royxat.forEach(function (r) {
       var tb = r.tb, q = mk("button", "hub-jd-r" + (r.ketmoqda ? " hozir" : ""));
       q.type = "button";

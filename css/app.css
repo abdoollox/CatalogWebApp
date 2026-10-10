@@ -3378,7 +3378,7 @@ button.du-bc:active{transform:scale(.98)}
 /* XOGVARTS BOSH SAHIFASI: hafta jadvali */
 .hub-jd{margin-top:14px;padding:14px 14px 12px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02))}
 .hub-jd.hidden{display:none}
-.hub-jd-h{display:flex;align-items:baseline;justify-content:space-between}
+.hub-jd-h{display:flex;align-items:center;gap:10px;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;font-family:inherit}
 .hub-jd-h b{font:800 10.5px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-hi)}
 .hub-jd-h span{font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
 .hub-jd-w{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:12px 0 10px}
@@ -3402,3 +3402,8 @@ button.du-bc:active{transform:scale(.98)}
 .hub-jd-r > i{flex:none;font:400 18px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
 .hub-jd-f{margin:8px 2px 0;padding-top:10px;border-top:1px dashed rgba(255,255,255,.09);font:500 11.5px/1.45 'Manrope',sans-serif;color:var(--dim)}
 .hub-jd-f b{font-weight:700;color:var(--text)}
+.hub-jd-h span{flex:1;min-width:0;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hub-jd-h i{flex:none;font:400 17px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim);transform:rotate(-90deg);transition:transform .2s}
+.hub-jd.yopiq{padding-bottom:14px}
+.hub-jd.yopiq .hub-jd-h i{transform:rotate(90deg)}
+.hub-jd.yopiq .hub-jd-h span{color:var(--text)}
