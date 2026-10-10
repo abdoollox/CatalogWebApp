@@ -1113,9 +1113,13 @@
       });
       panel.appendChild(rx);
     }
-    var list = document.createElement("div");
-    list.className = "chat-menu-list";
-    function item(icon, label, fn, danger) {
+    // Uch guruh (egasi, 2026-10-10): xabar amallari / odam (ismi bilan) / o'chirish va bloklash. Bo'sh guruh chizilmaydi.
+    function guruh() {
+      var g = document.createElement("div");
+      g.className = "chat-menu-list";
+      return g;
+    }
+    function item(g, icon, label, fn, danger, ong) {
       var btn = document.createElement("button");
       btn.type = "button";
       if (danger) btn.className = "danger";
@@ -1123,30 +1127,62 @@
       ic.innerHTML = icon;
       btn.appendChild(ic);
       btn.appendChild(document.createTextNode(label));
+      var r = null;
+      if (ong != null) {
+        r = document.createElement("small");
+        r.className = "chat-menu-r";
+        r.textContent = ong;
+        btn.appendChild(r);
+      }
       btn.addEventListener("click", function() { chatCloseMenu(); fn(); });
-      list.appendChild(btn);
+      g.appendChild(btn);
+      return r;
     }
-    if (!m.tmp && chatBannedUntil === false) item(CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
-    if (!own && !m.tmp && !chatIsDm(chatRoom)) {
-      item(CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
+    var gx = guruh(), go = guruh(), ga = guruh();
+    // 1) Xabar
+    if (!m.tmp && chatBannedUntil === false) item(gx, CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
+    if (!m.kind) item(gx, CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
+    if (own && chatCanEdit(m) && !m.chess && !m.kind) item(gx, CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
+    // «Kim o'qidi» faqat xabar egasiga va adminga (yonida soni); reaksiyalar hammaga
+    if (!m.tmp && (own || chatAdmin)) {
+      var soni = item(gx, CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); }, false, "");
+      chatAct(chatRoom, { action: "info", id: m.id }).then(function(res) {
+        if (res && res.ok && res.can_read && soni.isConnected) soni.textContent = L("chatReadCnt").replace("%s", res.readers_n);
+      }).catch(function() {});
     }
-    if (!m.tmp) item(CHAT_SVG.odam, odamX().peer, function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
-    // Kim o'qidi / kim reaksiya bosdi (egasi, 2026-10-10) - bitta oyna, ikki bo'lim
-    // «Kim o'qidi» faqat xabar egasiga va adminga; reaksiyalar hammaga (egasi, 2026-10-10)
-    if (!m.tmp && (own || chatAdmin)) item(CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); });
-    if (!m.tmp && m.reactions && m.reactions.length) item(CHAT_SVG.kayfiyat, L("chatReacts"), function() { chatInfo(m, "react"); });
-    if (!m.kind) item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
-    if (own && chatCanEdit(m) && !m.chess && !m.kind) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
-    if (own || (chatAdmin && !m.tmp)) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);
+    if (!m.tmp && m.reactions && m.reactions.length) {
+      var rn = 0;
+      m.reactions.forEach(function(r) { rn += r.n || 0; });
+      item(gx, CHAT_SVG.kayfiyat, L("chatReacts"), function() { chatInfo(m, "react"); }, false, rn ? String(rn) : null);
+    }
+    // 2) Odam (o'z xabarida yo'q)
+    if (!own && !m.tmp) {
+      var hh = HOUSES[m.house] || {}, bosh = document.createElement("div");
+      bosh.className = "chat-menu-h";
+      var ism = document.createElement("b");
+      ism.textContent = m.name || "Sehrgar";
+      if (hh.accent) ism.style.color = hh.accent;
+      bosh.appendChild(ism);
+      if (HOUSES[m.house]) bosh.appendChild(document.createTextNode(" · " + cupHouseName(m.house)));
+      go.appendChild(bosh);
+      item(go, CHAT_SVG.odam, odamX().peer, function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
+      if (!chatIsDm(chatRoom)) item(go, CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
+    }
+    // 3) O'chirish va bloklash
+    if (own || (chatAdmin && !m.tmp)) item(ga, CHAT_SVG.trash, L("chatDelMsg"), function() { chatDelete(m); }, true);
     if (chatAdmin && !own && !m.tmp) {
       if (m.uid in chatBans) {
-        item(CHAT_SVG.unban, L("chatUnban"), function() { chatBanAct(m, 0, true); });
+        item(ga, CHAT_SVG.unban, L("chatUnban"), function() { chatBanAct(m, 0, true); });
       } else {
-        item(CHAT_SVG.ban24, L("chatBan24"), function() { chatBanAct(m, 24); });
-        item(CHAT_SVG.ban, L("chatBanForever"), function() { chatBanAct(m, 0); }, true);
+        // Bitta band: bosilganda muddat so'raladi (24 soat / butunlay)
+        item(ga, CHAT_SVG.ban, L("chatBlockOne"), function() {
+          chatSheet(m.name || "Sehrgar", null, [
+            { icon: CHAT_SVG.ban24, label: L("chatBan24"), fn: function() { chatBanAct(m, 24); } },
+            { icon: CHAT_SVG.ban, label: L("chatBanForever"), danger: true, fn: function() { chatBanAct(m, 0); } }]);
+        }, true, L("chatBlockS") + " ›");
       }
     }
-    panel.appendChild(list);
+    [gx, go, ga].forEach(function(g) { if (g.querySelector("button")) panel.appendChild(g); });
     ov.appendChild(panel);
     ov.addEventListener("click", function(e) { if (e.target === ov) chatCloseMenu(); });
     ov.addEventListener("contextmenu", function(e) { e.preventDefault(); chatCloseMenu(); });

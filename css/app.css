@@ -3246,3 +3246,12 @@ span.od-n{cursor:default}
 .ci-t{margin:16px 2px 6px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 .ci-t:first-child{margin-top:4px}
 #chat-info .pp-r{font-size:20px}
+
+/* Chat xabar menyusi: guruhlar (xabar / odam / o'chirish-bloklash) */
+.chat-menu-box{width:252px}
+.chat-menu-box .chat-menu-list + .chat-menu-list{margin-top:8px}
+.chat-menu-box .chat-menu-list button{padding:11px 14px}
+.chat-menu-h{padding:10px 14px 9px;font:600 12px/1.2 'Manrope',sans-serif;color:var(--dim);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-menu-h b{font-weight:700}
+.chat-menu-r{margin-left:auto;padding-left:8px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim);white-space:nowrap}
+.chat-menu-list button.danger .chat-menu-r{color:inherit;opacity:.7}
