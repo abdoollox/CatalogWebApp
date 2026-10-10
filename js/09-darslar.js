@@ -1254,6 +1254,15 @@
   }
 
   // N-darsni ochish
+  // Saralangandan keyingi BIRINCHI DARS: to'g'ri Afsunlar 1-darsi («ortga» - fan sahifasi, undan bosh sahifa)
+  function ilkDars() {
+    try { jrHideAll(); } catch (e) {}
+    fanId = "afsun";
+    drQayt = false;
+    try { drLoad(); } catch (e) {}
+    afOpen(false, 1);
+  }
+
   function fanLevel(id, n) {
     if (id === "afsun") { afOpen(false, n); }
     else if (id === "iksir") { ikOpen(false, n); }

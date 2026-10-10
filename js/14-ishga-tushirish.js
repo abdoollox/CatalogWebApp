@@ -188,7 +188,7 @@
     });
   }
 
-  function initTest() { testBar(); testFreshCheck(); }
+  function initTest() { testBar(); testFreshCheck(); testSarBosh(); }
 
   // Hamyon holati ishga tushishda o'qiladi: xatdagi kundalik va kutubxona
   // tugmasi (xat/9¾) shunga qarab chiziladi.

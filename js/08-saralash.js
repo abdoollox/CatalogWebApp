@@ -428,12 +428,24 @@
     r.appendChild(lentaEl("span", "rv-place", HAT[lang].place));
     r.appendChild(lentaEl("span", "reveal-name", h[lang]));
     r.appendChild(lentaEl("span", "reveal-note", ((h["note_" + lang] || "") + (jrQayta ? "" : " " + t.lockFinal)).trim()));
-    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : journey ? al("rvHouse") : t.rvDone);
+    // Saralangach - to'g'ri BIRINCHI DARSGA (egasi, 2026-10-11): Xogvarts bosh sahifasi birdaniga og'irlik qilmasin.
+    // Professor Makgonagall yo'l ko'rsatadi; bosh sahifani odam birinchi darsdan keyin ko'radi.
+    var ilk = !jrQayta && !jrPreview && !!journey;
+    if (ilk) {
+      var mk = lentaEl("div", "af-fl lnt-mk");
+      var mi = document.createElement("img");
+      mi.src = "img/makgonagall/yaxshi.webp"; mi.alt = "";
+      mk.appendChild(mi);
+      mk.appendChild(lentaEl("p", "dr-hint", al("ilkMk")));
+      r.appendChild(mk);
+    }
+    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : ilk ? al("ilkGo") : journey ? al("rvHouse") : t.rvDone);
     b.type = "button";
     b.onclick = function () {
       $("scr-hat").classList.add("hidden");
       $("hat-km").innerHTML = "";
       if (jrQayta) { jrHome(); return; }
+      if (ilk) { $("scr-reveal").classList.add("hidden"); journey = null; ilkDars(); return; }
       closeReveal();
     };
     r.appendChild(b);

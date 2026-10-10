@@ -677,6 +677,10 @@
             en: "The Sorting Hat is waiting. The house it names is yours for life." },
     endGo: { uz: "Qalpoq oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
+    ilkMk: { uz: "Tabriklayman! Birinchi darsingiz — Afsunlar. Professor Flitvik sizni sinfda kutyapti.",
+             ru: "Поздравляю! Ваш первый урок — Заклинания. Профессор Флитвик ждёт вас в классе.",
+             en: "Congratulations! Your first lesson is Charms. Professor Flitwick is waiting in the classroom." },
+    ilkGo: { uz: "Birinchi darsga", ru: "На первый урок", en: "To the first lesson" },
     rvWand: { uz: "Maktubga qaytish", ru: "Вернуться к письму", en: "Back to the letter" },
 
     pvBtn: { uz: "Sinov o'quvchisi bo'lib kirish", ru: "Войти как тестовый ученик", en: "Enter as a test student" },
@@ -788,12 +792,12 @@
     bar: { uz: "SINOV O'QUVCHISI", ru: "ТЕСТОВЫЙ УЧЕНИК", en: "TEST STUDENT" },
     zero: { uz: "Noldan", ru: "С нуля", en: "Reset" },
     exit: { uz: "Chiqish", ru: "Выйти", en: "Exit" },
-    askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Ilova noldan boshlanadi, asl profilingiz saqlanib qoladi.",
-             ru: "Войти как тестовый ученик? Приложение начнётся с нуля, ваш профиль сохранится.",
-             en: "Enter as a test student? The app starts from zero; your real profile stays." },
-    askZero: { uz: "Sinov o'quvchisini butunlay tozalaymizmi? U yana yangi odamdek boshlaydi.",
-               ru: "Полностью очистить тестового ученика? Он снова начнёт как новичок.",
-               en: "Wipe the test student completely? It starts again as a newcomer." }
+    askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Saralanishdan boshlaysiz, asl profilingiz saqlanib qoladi.",
+             ru: "Войти как тестовый ученик? Начнёте с распределения, ваш профиль сохранится.",
+             en: "Enter as a test student? You start at the Sorting; your real profile stays." },
+    askZero: { uz: "Sinov o'quvchisini butunlay tozalaymizmi? U yana saralanishdan boshlaydi.",
+               ru: "Полностью очистить тестового ученика? Он снова начнёт с распределения.",
+               en: "Wipe the test student completely? It starts again at the Sorting." }
   };
 
   // Tasdiqlash oynasi - o'zimizning uslubda (egasi Telegram oynasini yoqtirmadi, 2026-10-03).
@@ -872,10 +876,35 @@
       .then(function () { done(); });
   }
 
+  /* «Noldan» = SARALANISH BOSHI (egasi, 2026-10-11): maktub, Gringotts, tayoqcha va poyezd o'tilgan deb olinadi.
+     Server sinov hisobini o'zi shu holatda qayta yaratadi (hpcup.test_reset); bu yerda qurilmadagi belgilar
+     qo'yiladi va qayta yuklangach saralanish ochiladi (testSarBosh). */
+  var SAR_KEY = "hp_test_sar";
+  function testTayyor() {
+    try {
+      window.localStorage.setItem(LETTER_KEY, "1");
+      window.localStorage.setItem(TRAIN_KEY, "1");
+      window.localStorage.setItem(SAR_KEY, "1");
+    } catch (e) {}
+    try { setWand({ wood: "holly", core: "phoenix", flex: "supple" }); } catch (e) {}
+    window.location.reload();
+  }
+  function testSarBosh() {
+    if (!HP_TEST) { return; }
+    var bor = false;
+    try { bor = window.localStorage.getItem(SAR_KEY) === "1"; window.localStorage.removeItem(SAR_KEY); } catch (e) {}
+    if (!bor) { return; }
+    setTimeout(function () {
+      if (hasHouse() || $("scr-cat").classList.contains("hidden")) { return; }
+      try { closeLetter(); } catch (e) {}
+      jrSort();
+    }, 900);
+  }
+
   function testReset() {
     testAsk(testTx("askZero"), function () {
       testServerWipe(function () {
-        testWipeLocal(function () { window.location.reload(); });
+        testWipeLocal(testTayyor);
       });
     });
   }
@@ -888,7 +917,7 @@
     if (!fresh) { return; }
     try { window.localStorage.removeItem(FRESH_KEY); } catch (e) {}
     testServerWipe(function () {
-      testWipeLocal(function () { window.location.reload(); });
+      testWipeLocal(testTayyor);
     });
   }
 

@@ -3508,3 +3508,6 @@ body.tg-fs .kr-top{top:var(--fs)}
    sahifa (masalan, boshqa odam profili ochilganda bosh sahifa) shu yerdan ko'rinib qolardi (egasi surati, 2026-10-11).
    Oynalardan (profil 75, chat 50, pastki varaqlar 70-1500) yuqorida, tasdiq oynasi (2500) va sinov tasmasidan (3000) pastda. */
 body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--fs);z-index:2400;background:var(--bg);pointer-events:none}
+/* Saralash natijasi: Makgonagall birinchi darsga yo'llaydi */
+.lnt-mk{margin:20px auto 22px}
+.lnt-mk .dr-hint{font-size:14px;line-height:1.45}
