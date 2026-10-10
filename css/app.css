@@ -3215,3 +3215,28 @@ body.kr-on .mp{display:none!important}
 .xr-i.bor small{background:rgba(110,190,120,.2);color:#9be3a0}
 .xr-i.sot small{background:rgba(var(--gold-rgb),.2);color:var(--gold-hi)}
 .xr-food{margin-top:0}
+
+/* ============ BOSHQA ODAM PROFILI - sahifa ko'rinishida, o'z profili (#pm) kabi (js/07-odam.js) ============ */
+.od-page{position:fixed;inset:0;z-index:75;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;justify-content:center;background:var(--bg)}
+.od-page.hidden{display:none}
+.od-page .od-box{width:100%;max-width:440px;max-height:none;padding:22px 18px 28px;border:0;animation:riseIn .3s ease both}
+.od-holat{margin:-8px 0 12px;text-align:center;font:600 11.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.od-holat.on{color:var(--ok)}
+.od-page .pu{margin:6px 0 0}
+.od-page .od-q2{margin-top:10px}
+.od-page .od-q2 .pu-c b{font:700 15px/1.1 'Manrope',sans-serif}
+.od-page .pu-c.on{border-color:rgba(var(--gold-rgb),.7);box-shadow:0 0 0 1px rgba(var(--gold-rgb),.35) inset}
+.od-page .od-card,.od-page .od-stats{margin-top:12px}
+.od-bolim.hidden{display:none}
+.od-lbl i{float:right;font-style:normal;letter-spacing:.04em;color:var(--gold-hi)}
+.od-xr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 6px}
+.od-xi{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.od-xi img{width:58px;height:58px;max-width:100%;object-fit:contain}
+.od-xona.osimlik .od-xi img{border-radius:14px;object-fit:cover}
+.od-xi small{font:600 9.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center}
+.od-chess{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:4px 10px}
+.od-chess .od-lbl{grid-column:1 / -1;margin-bottom:4px}
+.od-chess b{font:700 22px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.od-chess small{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim);text-align:right}
+.od-page .od-write{margin-top:18px}
+span.od-n{cursor:default}

@@ -1405,8 +1405,9 @@
         (chatPeople.room === "global" ? (hh.crest ? hh.crest + " " : "") + cupHouseName(m.house) + " · " : "") +
         L("chatPoints").replace("%s", m.points);
       var mine = m.uid == me;
-      var row = chatPersonRow(m, sub, m.online, mine ? L("chatYou") : CHAT_SVG.dm);
-      if (!mine) row.addEventListener("click", function() { chatOpenDm(m); });
+      // A'zo bosilsa - PROFILI ochiladi (egasi, 2026-10-10); xabar yozish profil ichidagi tugmada
+      var row = chatPersonRow(m, sub, m.online, mine ? L("chatYou") : "›");
+      row.addEventListener("click", function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
       frag.appendChild(row);
     });
     box.appendChild(frag);
