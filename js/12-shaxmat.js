@@ -1920,6 +1920,8 @@
       if (player) { btn = act(L("resumeBtn"), false); }
     } else if (c.status === "finished") {
       st = wn + " ⚔ " + bn + " — " + (c.winner ? L("cardWon").replace("%s", c.winner == c.white.uid ? wn : bn) : L("draw"));
+      // Tugagan o'yinni HAR KIM yurishma-yurish ko'ra oladi (egasi, 2026-10-10) - o'ynaganlar ham, chatdagi boshqalar ham
+      btn = '<button type="button" class="cmc-b" data-chess-view="1" data-g="' + escapeHtmlChess(c.id) + '">' + escapeHtmlChess(L("cardView")) + "</button>";
     } else {
       st = L("cardExpired");
     }
@@ -2131,6 +2133,12 @@
       chessStats.from = null;
       $("scr-chess-game").classList.add("hidden");
       openChessStats();
+      return;
+    }
+    if (chessStats.from === "chat") {            // chatdagi kartadan ko'rilgan o'yin - chatga qaytamiz
+      chessStats.from = null;
+      $("scr-chess-game").classList.add("hidden");
+      try { openChat(); } catch (e) { openChessHub(); }
       return;
     }
     openChessHub();
@@ -2441,7 +2449,8 @@
   function chessReview(gid, hubdan) {
     chessApi("state", null, "?game_id=" + encodeURIComponent(gid)).then(function (res) {
       if (!res || !res.game || res.game.v !== 2) { showToast(L("err"), "err"); return; }
-      chessStats.from = hubdan ? null : "stats";       // bosh sahifadan ochilgan bo'lsa - «ortga» bosh sahifaga
+      // «ortga» qayerga: "chat" - chatga, true - shaxmat bosh sahifasiga, aks holda - statistika (tarix) sahifasiga
+      chessStats.from = hubdan === "chat" ? "chat" : hubdan ? null : "stats";
       $("scr-chess-stats").classList.add("hidden");
       $("scr-chess-hub").classList.add("hidden");
       openPvP(res.game, true);

@@ -1784,6 +1784,8 @@
         if (pm) chatReact(pm, pill.getAttribute("data-rx"));
         return;
       }
+      var cv = t.closest("[data-chess-view]");
+      if (cv) { chessReview(cv.getAttribute("data-g"), "chat"); return; }
       var ca = t.closest("[data-chess-act]");
       if (ca) { chessFromChat(ca.getAttribute("data-g")); return; }
       var q = t.closest(".cm-q");
