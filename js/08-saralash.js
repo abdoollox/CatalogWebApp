@@ -452,10 +452,10 @@
   }
 
   /* ---------- QASR BO'YLAB SAYOHAT (egasi, 2026-10-11) ----------
-     Saralangan zahoti fakultet SARDORI birinchi kurslarni qasr bo'ylab olib yuradi: zinapoyalar, umumiy xona,
-     sinflar, hovli, turnir zali - har sahnada nima borligi va qaysi KURSDA ochilishi aytiladi.
-     Oxirida Makgonagall birinchi darsga yo'llaydi. Rasmlar img/yol/sy1..5.jpg, umumiy xona fakultetga qarab sy2-<g|s|r|h>.jpg.
-     Sardorlar - asardagi (Pottermore) ismlar. Kurs qoidasi o'zgarsa SHU matnlarni ham yangilang. */
+     Saralangan zahoti fakultet SARDORI birinchi kurslarni qasr bo'ylab olib yuradi: zinapoyalar va umumiy xona,
+     keyin Xogvarts bosh sahifasiga olib kiradi va u yerda EKRANNING O'ZIDA yo'riqnoma boshlanadi (09-yoriqnoma.js).
+     Rasmlar img/yol/sy1.jpg va fakultetga qarab sy2-<g|s|r|h>.jpg (sinflar, hovli, turnir zali rasmlari - dizayn-tizimi/sayohat/, zaxirada).
+     Sardorlar - asardagi (Pottermore) ismlar. */
   var SY_TX = {
     go: { uz: "%s ortidan borish", ru: "Идти за старостой", en: "Follow the prefect" },
     ism_gryffindor: { uz: "Persi Uizli", ru: "Перси Уизли", en: "Percy Weasley" },
@@ -468,17 +468,7 @@
     s2: { uz: "«Bu — bizning umumiy xonamiz. Shu yerda fakultetdoshlar bilan suhbatlashasiz. U sizga hozirdan ochiq».",
           ru: "«Это наша общая гостиная. Здесь вы общаетесь со своим факультетом. Она открыта для вас уже сейчас».",
           en: "“This is our common room. Here you talk with your housemates. It is open to you right now.”" },
-    s3: { uz: "«Bu yo'lakda — sinflar. To'qqiz fanning hammasi 1-kursdan ochiq. Dars o'tganingiz sari kursingiz oshadi va qasrning yangi eshiklari ochiladi».",
-          ru: "«В этом коридоре — классы. Все девять предметов открыты с 1 курса. Чем больше уроков, тем выше курс — и тем больше дверей замка открывается».",
-          en: "“This corridor holds the classrooms. All nine subjects are open from year 1. The more lessons you pass, the higher your year — and the more doors open.”" },
-    s4: { uz: "«2-kursda kunlik bellashuvlar boshlanadi — fakultetga ball shulardan keladi. 3-kursda esa hovlidagi Issiqxona va Qo'riqxonada o'z o'simlik va maxluqlaringizni parvarish qilasiz».",
-          ru: "«На 2 курсе начинаются ежедневные состязания — они приносят баллы факультету. А на 3 курсе во дворе, в Теплице и Заповеднике, вы будете растить своих растений и существ».",
-          en: "“In year 2 the daily contests begin — that is where house points come from. In year 3 you raise your own plants and creatures in the Greenhouse and the Reserve.”" },
-    s5: { uz: "«Bu zal — 4-kurslar uchun: duel, shaxmat va viktorina turnirlari. Javondagi oltin kubokni ko'ryapsizmi? Har hafta eng ko'p ball to'plagan fakultet uni oladi. Bizni uyaltirmang!»",
-          ru: "«Этот зал — для 4 курса: турниры по дуэлям, шахматам и викторине. Видите золотой кубок? Каждую неделю его получает факультет с наибольшим числом баллов. Не подведите нас!»",
-          en: "“This hall is for year 4: duelling, chess and quiz tournaments. See the golden cup? Each week it goes to the house with the most points. Do not let us down!”" },
-    nx: { uz: "Davom etish", ru: "Дальше", en: "Continue" },
-    hub: { uz: "Avval Xogvartsni ko'rish", ru: "Сначала осмотреть Хогвартс", en: "Look around Hogwarts first" }
+    nx: { uz: "Davom etish", ru: "Дальше", en: "Continue" }
   };
   function syT(k) { return (SY_TX[k] && (SY_TX[k][lang] || SY_TX[k].uz)) || ""; }
 
@@ -486,7 +476,7 @@
     var ul = $("hat-km").querySelector(".lnt-ul");
     if (ul) { ul.parentNode.removeChild(ul); }
     var h = HOUSES[id] || HOUSES.none;
-    var rasm = ["img/yol/sy1.jpg", "img/yol/sy2-" + String(id).charAt(0) + ".jpg", "img/yol/sy3.jpg", "img/yol/sy4.jpg", "img/yol/sy5.jpg"];
+    var rasm = ["img/yol/sy1.jpg", "img/yol/sy2-" + String(id).charAt(0) + ".jpg"];
     rasm.forEach(function (u) { var i = new Image(); i.src = u; });
     var n = 0;
     function qadam() {
@@ -504,21 +494,11 @@
         $("hat-km").appendChild(b);
         return;
       }
-      // Sayohat oxiri: Makgonagall birinchi darsga yo'llaydi
-      var mk = lentaEl("div", "af-fl lnt-mk");
-      var mi = document.createElement("img");
-      mi.src = "img/makgonagall/yaxshi.webp"; mi.alt = "";
-      mk.appendChild(mi);
-      mk.appendChild(lentaEl("p", "dr-hint", al("ilkMk")));
-      $("hat-km").appendChild(mk);
-      var go = lentaEl("button", "tr-go grk-go", al("ilkGo"));
+      // Sayohat oxiri: Xogvarts bosh sahifasiga - u yerda sardor EKRANNING O'ZIDA qadam-baqadam tushuntiradi (09-yoriqnoma.js)
+      var go = lentaEl("button", "tr-go grk-go", al("rvHouse"));
       go.type = "button";
-      go.onclick = function () { syYop(); ilkDars(); };
+      go.onclick = function () { yqKut(); syYop(); enterWorld(); setTimeout(yqBosh, 700); };
       $("hat-km").appendChild(go);
-      var hb = lentaEl("button", "lnt-ul", syT("hub"));
-      hb.type = "button";
-      hb.onclick = function () { syYop(); enterWorld(); };
-      $("hat-km").appendChild(hb);
     }
     qadam();
   }

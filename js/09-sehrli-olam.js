@@ -240,6 +240,7 @@
         var el = document.createElement("button");
         el.type = "button";
         el.className = "hx" + (tile.soon ? " soon" : "") + (qulf ? " qulf" : "");
+        el.setAttribute("data-k", tile.key);
         var ph = document.createElement("span");
         ph.className = "hx-ph";
         ph.style.backgroundImage = "url(" + IMG_DIR + "hub/" + tile.key + ".webp)";
@@ -382,6 +383,7 @@
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}
     try { jrAdminCheck(); } catch (e) {}
+    setTimeout(function () { try { yqBosh(); } catch (e) {} }, 800);     // tugallanmagan yo'riqnoma (09-yoriqnoma.js) davom etadi
   }
 
   function leaveHub() {
