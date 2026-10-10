@@ -26,6 +26,15 @@
     chatS: { uz: "Suhbat", ru: "Общение", en: "Chat" },
     duel: { uz: "Duel", ru: "Дуэль", en: "Duel" },
     duelS: { uz: "Afsunlar jangi", ru: "Битва заклинаний", en: "Battle of spells" },
+    darsP: { uz: "%a / %b dars", ru: "Уроков: %a / %b", en: "%a / %b lessons" },
+    bellP: { uz: "Bugun %a / %b", ru: "Сегодня: %a / %b", en: "%a / %b today" },
+    rekP: { uz: "%a / %b fanda", ru: "Предметов: %a / %b", en: "%a / %b subjects" },
+    qoriqP: { uz: "%a / %b maxluq", ru: "Существ: %a / %b", en: "%a / %b creatures" },
+    issiqP: { uz: "%a / %b o'simlik", ru: "Растений: %a / %b", en: "%a / %b plants" },
+    chatP: { uz: "%a ta yangi xabar", ru: "Новых сообщений: %a", en: "%a new messages" },
+    chatP0: { uz: "Yangi xabar yo'q", ru: "Новых сообщений нет", en: "No new messages" },
+    duelV: { uz: "Yakshanba, 21:00", ru: "Воскресенье, 21:00", en: "Sunday, 21:00" },
+    chessV: { uz: "Chorshanba, 21:00", ru: "Среда, 21:00", en: "Wednesday, 21:00" },
     vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
     vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
@@ -190,18 +199,29 @@
     var refsN = (refsData && refsData.me && refsData.me.refs) || 0;
     var dx = drX(), HT = function (k) { return HUB_TX[k][lang]; };
     var soon = function (nom) { return function () { showToast(dx.soon + ": " + nom); }; };
+    /* KATAK OSTIDAGI YOZUV - BITTA TIZIM (egasi, 2026-10-11: «hammasida turlicha, bitta tizimga keltirish kerak»):
+       «O'qish» va «Xonalar» - o'quvchining HOLATI «N / M nima» ko'rinishida (chatda - yangi xabarlar soni);
+       «Maydon» - turnir KUNI VA SOATI. Shior va ta'riflar («Afsunlar jangi», «Suhbat»…) ishlatilmaydi. */
+    var hs = { bellJ: 0, fanJ: 0, rekN: 0 };
+    DR_FANLAR.forEach(function (f) {
+      var st = f.on && drData && drData[f.id];
+      if (!st) { return; }
+      hs.fanJ++;
+      if (st.contest) { hs.bellJ++; }
+      if (st.rek > 0) { hs.rekN++; }
+    });
     var guruhlar = [
       { t: HT("g1"), k: [
-        { key: "dars", title: dx.tile, sub: drJami() ? drJami()[0] + " / " + drJami()[1] : "", go: drOpen },
-        { key: "bell", title: dx.blTile, sub: drPending() > 0 ? HT("bellN").replace("%d", String(drPending())) : HT("bellOk"), badge: Math.max(0, drPending()), go: blHomeOpen },
-        { key: "rek", title: dx.rekSec, sub: HT("rekS"), go: rekHomeOpen }] },
+        { key: "dars", title: dx.tile, sub: drJami() ? HT("darsP").replace("%a", drJami()[0]).replace("%b", drJami()[1]) : "", go: drOpen },
+        { key: "bell", title: dx.blTile, sub: hs.bellJ ? HT("bellP").replace("%a", hs.bellJ - Math.max(0, drPending())).replace("%b", hs.bellJ) : "", badge: Math.max(0, drPending()), go: blHomeOpen },
+        { key: "rek", title: dx.rekSec, sub: hs.fanJ ? HT("rekP").replace("%a", hs.rekN).replace("%b", hs.fanJ) : "", go: rekHomeOpen }] },
       { t: HT("g2"), k: [
-        { key: "qoriq", title: dx.qrT, sub: dx.pmQrS(qrSoni()), go: qrHubOpen },
-        { key: "issiq", title: HT("issiq"), sub: isSoni() ? isX().sum(isSoni(), 12) : HT("issiqS"), badge: isKutmoqda(), go: isHubOpen },
-        { key: "chat", title: c.chatT, sub: HT("chatS"), badge: chatN, go: openChat }] },
+        { key: "qoriq", title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
+        { key: "issiq", title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
+        { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
-        { key: "duel", title: HT("duel"), sub: HT("duelS"), go: duOpen },
-        { key: "chess", title: HT("chess"), sub: HT("chessS"), go: openChessHub },
+        { key: "duel", title: HT("duel"), sub: HT("duelV"), go: duOpen },
+        { key: "chess", title: HT("chess"), sub: HT("chessV"), go: openChessHub },
         { key: "vik", title: HT("vik"), sub: HT("vikS"), go: vkOpen }] }
     ];
     guruhlar.forEach(function (g) {
