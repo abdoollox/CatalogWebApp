@@ -9,6 +9,16 @@
     // Pastga surish ilovani YOPIB yuborardi: uzun sahifani (xat, chat, ro'yxatlar)
     // o'qiyman deganda Telegram ilovani yopardi. 7.7 dan boshlab buni o'chirish mumkin.
     try { if (tg.disableVerticalSwipes) { tg.disableVerticalSwipes(); } } catch (e) {}
+    /* TO'LIQ EKRAN (egasi, 2026-10-11): telefonda ilova Telegram sarlavhasisiz, butun ekranda ochiladi (Telegram 8.0+).
+       Kompyuterda yoqilmaydi (butun monitorni egallardi). To'liq ekranda tepada Telegram tugmalari va telefon «qoshi» turadi -
+       sahifa ularning ostidan boshlanishi uchun body ga `tg-fs` klassi qo'yiladi (css: --fs = xavfsiz chegara). O'chirish: TG_TOLIQ = false. */
+    var TG_TOLIQ = true;
+    var tgFsSync = function () { try { document.body.classList.toggle("tg-fs", !!tg.isFullscreen); } catch (e) {} };
+    try {
+      if (tg.onEvent) { tg.onEvent("fullscreenChanged", tgFsSync); }
+      if (TG_TOLIQ && tg.requestFullscreen && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0") && (tg.platform === "ios" || tg.platform === "android")) { tg.requestFullscreen(); }
+      tgFsSync();
+    } catch (e) {}
   }
 
   var BOT = "garripotterkinobot";

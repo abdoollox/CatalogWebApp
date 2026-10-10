@@ -3465,3 +3465,14 @@ button.du-bc:active{transform:scale(.98)}
 .vk-end .bl-list{margin:10px 0 14px;text-align:left}
 .hub-dost{margin-top:16px}
 .hub-dost-n{flex:none;min-width:22px;padding:4px 7px;border-radius:99px;background:var(--gold);color:var(--gold-ink);font:800 11px/1 'Manrope',sans-serif;font-style:normal;text-align:center}
+/* TO'LIQ EKRAN (Telegram 8.0+, faqat telefonda): tepada Telegram tugmalari va telefon «qoshi» uchun joy */
+:root{--fs:calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px))}
+body.tg-fs{padding-top:var(--fs)}
+body.tg-fs.hptest{padding-top:calc(var(--fs) + 28px)}
+body.tg-fs .hptest-bar{top:var(--fs)}
+body.tg-fs #scr-chat{top:var(--fs);height:calc(var(--tg-viewport-height,100vh) - var(--fs))}
+body.tg-fs #scr-world,body.tg-fs .od-page{top:var(--fs)}
+body.tg-fs.hptest #scr-chat,body.tg-fs.hptest #scr-world{top:calc(var(--fs) + 28px)}
+body.tg-fs.hptest #scr-chat{height:calc(var(--tg-viewport-height,100vh) - var(--fs) - 28px)}
+body.tg-fs .lt{padding-top:calc(34px + var(--fs))}
+body.tg-fs .kr-top{top:var(--fs)}
