@@ -89,4 +89,9 @@ for(const [key,f,line] of execKeys){
     late++; console.log('KECHIKKAN:',fname(f),t.slice(0,50),'->',hits.length,'nom, masalan:',hits.slice(0,6).map(h=>h+'('+fname(decl[h].file)+')').join(' ')); }
 }
 console.log('kechikkan xavf:',late);
-process.exit(bad||late?1:0);
+// TAKROR id (2026-10-11): ikki element bitta id bilan bo'lsa $("...") BIRINCHISINI oladi - 9¾ platforma to'rt kun bo'sh
+// chiqqan (tr-stage / tr-back / tr-kick Sehrgarlik tarixi darsida ham bor edi). Takror bo'lsa xato deb chiqadi.
+const idlar={}; for(const m of html.matchAll(/\sid="([^"]+)"/g)) idlar[m[1]]=(idlar[m[1]]||0)+1;
+const takror=Object.keys(idlar).filter(k=>idlar[k]>1);
+console.log('takror id:',takror.length?takror.join(', '):"yo'q");
+process.exit(bad||late||takror.length?1:0);
