@@ -3504,3 +3504,7 @@ body.tg-fs .kr-top{top:var(--fs)}
 .kurs-tb-i small{font:700 11px/1 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .kurs-tb-i p{margin:0 0 12px;font:600 14.5px/1.45 'Manrope',sans-serif;color:var(--gold-hi)}
 .kurs-tb-i .dr-btn{width:100%}
+/* To'liq ekran: tepadagi Telegram tugmalari zonasi DOIM fon rangida yopiq turadi - aks holda surilgan sahifa yoki ostidagi
+   sahifa (masalan, boshqa odam profili ochilganda bosh sahifa) shu yerdan ko'rinib qolardi (egasi surati, 2026-10-11).
+   Oynalardan (profil 75, chat 50, pastki varaqlar 70-1500) yuqorida, tasdiq oynasi (2500) va sinov tasmasidan (3000) pastda. */
+body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--fs);z-index:2400;background:var(--bg);pointer-events:none}
