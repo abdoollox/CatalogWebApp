@@ -51,7 +51,15 @@
           tKun: function (k, t) { return "Turnir: " + k + ", 21:00 · " + t + " qoldi"; }, tBugun: function (t) { return "Turnir bugun 21:00 da · " + t + " qoldi"; }, tKunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"],
           tSoni: function (n) { return n + " kishi yozildi"; }, tQat: "Qatnashaman", tBor: "Siz turnirga yozilgansiz", tChiq: "Chiqish", tYopiq: "Yozilish yopildi — to'r tuzilmoqda", tKeyin: "Yozilish dushanbadan ochiladi", qoldi: "qoldi",
           tYoz: "Turnirga yozilmagan edingiz. Keyingi turnir — kelasi yakshanba.", bye: "bu bosqichni o'tkazib yuboradi", ball: function (n) { return "+" + n + " ball"; }, qatT: "Yozilganlar",
-          keyingi: function (t) { return "Keyingi duelingiz " + t + " dan keyin. Arenada qoling!"; }, vaqtT: "Vaqt tugadi — joni ko'p duelchi yutdi.", kunQ: "kun", rndN: function (n) { return n + "-raund"; }, yengadi: "yengadi", izT: "Raundlar", jonM: "−1 jon", byeT: "Bu bosqichni o'tkazib yuboradi (reytingi yuqori)", rey: "Reyting", turT: "Duel turniri", raqib: function (n) { return "Raqibingiz: " + n; },
+          keyingi: function (t) { return "Keyingi duelingiz " + t + " dan keyin. Arenada qoling!"; }, vaqtT: "Vaqt tugadi — joni ko'p duelchi yutdi.", kunQ: "kun", mashqT: "Mashq", mashqS: "Ball va turnirga ta'sir qilmaydi", dostT: "Do'st bilan duel", dostS: "Chatga taklif yuboring — qabul qilgan sehrgar bilan jonli duel",
+          dostSh: "Kimni duelga chaqirasiz?", dZal: "Katta zalga e'lon", dZalS: "Barcha fakultetlar ko'radi", dUy: "Fakultet xonasiga", dUyS: "Faqat o'z fakultetingiz",
+          dShaxsiy: "Bitta do'stingizni chaqirish uchun: u bilan shaxsiy suhbatni oching va tepadagi ismini bosing → «Duelga chaqirish».",
+          ochiq: function (v) { return "Taklif yuborildi. Raqib kutilmoqda… " + v; }, bekorB: "Taklifni bekor qilish", eskirdi: "Taklifni hech kim qabul qilmadi.",
+          dQayt: "Duel sahifasiga", dostQ: "Do'stona duel", botQ: "Kompyuter raqiblar", yubordi: "Taklif chatga yuborildi",
+          cT: "Sehrgarlar dueli", cSub: "Do'stona · ballsiz", cMine: "Siz duelga chaqirdingiz — raqib kutilmoqda", cCalls: function (n) { return n + " duelga chaqirmoqda!"; },
+          cAccept: "Qabul qilish", cOpen: "Arenaga kirish", cPlaying: "duel ketmoqda", cWon: function (n) { return n + " yutdi"; }, cView: "Duelni ko'rish", cExp: "Taklif muddati tugadi",
+          eTaken: "Bu taklifni boshqa sehrgar qabul qilib bo'ldi", eExp: "Taklif muddati tugagan", chatDuel: "Duelga chaqirish",
+          rndN: function (n) { return n + "-raund"; }, yengadi: "yengadi", izT: "Raundlar", jonM: "−1 jon", byeT: "Bu bosqichni o'tkazib yuboradi (reytingi yuqori)", rey: "Reyting", turT: "Duel turniri", raqib: function (n) { return "Raqibingiz: " + n; },
           kutadi: "kutadi", torT: "Turnir to'ri", surish: "Yonga suring — keyingi bosqichlar", yozS: "Kuchliroq duelchilar birinchi bosqichni o'tkazib yuboradi",
           hist: "Duellar tarixi", histBosh: "Hali tugagan duelingiz yo'q.", rnd: function (n) { return n + " raund"; }, jon: "jon", gal: "G'alaba", mag: "Mag'lubiyat",
           eski: "Bu duelning raundlari saqlanmagan — u yangilanishdan oldin o'ynalgan.", jonli: "JONLI", kelmadiQ: "kelmadi", uchN: "Ustun tur +25 · kuchi baland yutadi",
@@ -69,7 +77,15 @@
           tKun: function (k, t) { return "Турнир: " + k + ", 21:00 · осталось " + t; }, tBugun: function (t) { return "Турнир сегодня в 21:00 · осталось " + t; }, tKunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
           tSoni: function (n) { return "Записалось: " + n; }, tQat: "Участвую", tBor: "Вы записаны на турнир", tChiq: "Выйти", tYopiq: "Запись закрыта — составляется сетка", tKeyin: "Запись откроется в понедельник", qoldi: "осталось",
           tYoz: "Вы не записались на этот турнир. Следующий — в будущее воскресенье.", bye: "пропускает этот круг", ball: function (n) { return "+" + n + " очк."; }, qatT: "Участники",
-          keyingi: function (t) { return "Ваша следующая дуэль через " + t + ". Оставайтесь на арене!"; }, vaqtT: "Время вышло — победил тот, у кого больше жизней.", kunQ: "дн.", rndN: function (n) { return "Раунд " + n; }, yengadi: "бьёт", izT: "Раунды", jonM: "−1 жизнь", byeT: "Пропускают этот круг (высокий рейтинг)", rey: "Рейтинг", turT: "Дуэльный турнир", raqib: function (n) { return "Ваш соперник: " + n; },
+          keyingi: function (t) { return "Ваша следующая дуэль через " + t + ". Оставайтесь на арене!"; }, vaqtT: "Время вышло — победил тот, у кого больше жизней.", kunQ: "дн.", mashqT: "Тренировка", mashqS: "Не влияет на очки и турнир", dostT: "Дуэль с другом", dostS: "Отправьте вызов в чат — живая дуэль с тем, кто примет",
+          dostSh: "Кого вызвать на дуэль?", dZal: "Объявить в Большом зале", dZalS: "Увидят все факультеты", dUy: "В гостиную факультета", dUyS: "Только ваш факультет",
+          dShaxsiy: "Чтобы вызвать одного друга: откройте личный чат с ним и нажмите на его имя вверху → «Вызвать на дуэль».",
+          ochiq: function (v) { return "Вызов отправлен. Ждём соперника… " + v; }, bekorB: "Отменить вызов", eskirdi: "Вызов никто не принял.",
+          dQayt: "На страницу дуэлей", dostQ: "Дружеская дуэль", botQ: "Компьютерные соперники", yubordi: "Вызов отправлен в чат",
+          cT: "Дуэль волшебников", cSub: "Дружеская · без очков", cMine: "Вы вызвали на дуэль — ждём соперника", cCalls: function (n) { return n + " вызывает на дуэль!"; },
+          cAccept: "Принять", cOpen: "Войти на арену", cPlaying: "идёт дуэль", cWon: function (n) { return "победа: " + n; }, cView: "Посмотреть дуэль", cExp: "Срок вызова истёк",
+          eTaken: "Этот вызов уже принял другой волшебник", eExp: "Срок вызова истёк", chatDuel: "Вызвать на дуэль",
+          rndN: function (n) { return "Раунд " + n; }, yengadi: "бьёт", izT: "Раунды", jonM: "−1 жизнь", byeT: "Пропускают этот круг (высокий рейтинг)", rey: "Рейтинг", turT: "Дуэльный турнир", raqib: function (n) { return "Ваш соперник: " + n; },
           kutadi: "ждёт", torT: "Сетка турнира", surish: "Листайте вбок — следующие круги", yozS: "Более сильные дуэлянты пропускают первый круг",
           hist: "История дуэлей", histBosh: "У вас пока нет завершённых дуэлей.", rnd: function (n) { return "раундов: " + n; }, jon: "жизни", gal: "Победа", mag: "Поражение",
           eski: "Раунды этой дуэли не сохранены — она была сыграна до обновления.", jonli: "ИДЁТ", kelmadiQ: "не пришёл", uchN: "Преимущество типа +25 · побеждает более сильное",
@@ -87,7 +103,15 @@
           tKun: function (k, t) { return "Tournament: " + k + ", 21:00 · " + t + " left"; }, tBugun: function (t) { return "Tournament today at 21:00 · " + t + " left"; }, tKunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
           tSoni: function (n) { return n + " signed up"; }, tQat: "I'm in", tBor: "You are signed up", tChiq: "Leave", tYopiq: "Sign-up is closed — the bracket is being drawn", tKeyin: "Sign-up opens on Monday", qoldi: "left",
           tYoz: "You did not sign up for this tournament. The next one is next Sunday.", bye: "skips this round", ball: function (n) { return "+" + n + " pts"; }, qatT: "Signed up",
-          keyingi: function (t) { return "Your next duel is in " + t + ". Stay in the arena!"; }, vaqtT: "Time is up — the duellist with more lives won.", kunQ: "d", rndN: function (n) { return "Round " + n; }, yengadi: "beats", izT: "Rounds", jonM: "−1 life", byeT: "Skip this round (higher rating)", rey: "Rating", turT: "Duelling tournament", raqib: function (n) { return "Your opponent: " + n; },
+          keyingi: function (t) { return "Your next duel is in " + t + ". Stay in the arena!"; }, vaqtT: "Time is up — the duellist with more lives won.", kunQ: "d", mashqT: "Practice", mashqS: "Does not affect points or the tournament", dostT: "Duel a friend", dostS: "Send a challenge to the chat — a live duel with whoever accepts",
+          dostSh: "Who do you challenge?", dZal: "Announce in the Great Hall", dZalS: "All Houses will see it", dUy: "House common room", dUyS: "Your House only",
+          dShaxsiy: "To challenge one friend: open your private chat with them and tap their name at the top → “Challenge to a duel”.",
+          ochiq: function (v) { return "Challenge sent. Waiting for an opponent… " + v; }, bekorB: "Cancel the challenge", eskirdi: "Nobody accepted the challenge.",
+          dQayt: "Back to Duels", dostQ: "Friendly duel", botQ: "Computer opponents", yubordi: "Challenge sent to the chat",
+          cT: "Wizards' duel", cSub: "Friendly · no points", cMine: "You sent a challenge — waiting for an opponent", cCalls: function (n) { return n + " challenges you to a duel!"; },
+          cAccept: "Accept", cOpen: "Enter the arena", cPlaying: "duel in progress", cWon: function (n) { return n + " won"; }, cView: "Watch the duel", cExp: "The challenge has expired",
+          eTaken: "Another wizard has already accepted", eExp: "The challenge has expired", chatDuel: "Challenge to a duel",
+          rndN: function (n) { return "Round " + n; }, yengadi: "beats", izT: "Rounds", jonM: "−1 life", byeT: "Skip this round (higher rating)", rey: "Rating", turT: "Duelling tournament", raqib: function (n) { return "Your opponent: " + n; },
           kutadi: "bye", torT: "Bracket", surish: "Swipe sideways for the next rounds", yozS: "Stronger duellists skip the first round",
           hist: "Duel history", histBosh: "You have no finished duels yet.", rnd: function (n) { return n + " rounds"; }, jon: "lives", gal: "Victory", mag: "Defeat",
           eski: "The rounds of this duel were not saved — it was played before the update.", jonli: "LIVE", kelmadiQ: "no-show", uchN: "Type advantage +25 · the stronger spell wins",
@@ -239,8 +263,25 @@
     duKorinish = "home";
     duHero();
     duUch();
-    var box = $("du-raq");
+    var box = $("du-raq"), tm = duT();
     box.innerHTML = "";
+    // MASHQ (egasi, 2026-10-11): do'st bilan duel va kompyuter raqiblar bitta bo'limda; ball va turnirga ta'sir qilmaydi
+    var ms = drEl("span", "du-st-t du-msh");
+    ms.appendChild(drEl("b", "", tm.mashqT));
+    ms.appendChild(drEl("em", "", tm.mashqS));
+    box.appendChild(ms);
+    var dc = drEl("button", "du-rq du-dost");
+    dc.type = "button";
+    var di = drEl("span", "du-dost-ic"); di.innerHTML = DU_QILICH;
+    dc.appendChild(di);
+    var dt = drEl("span", "du-rq-tx");
+    dt.appendChild(drEl("small", "du-lv ld", "PvP"));
+    dt.appendChild(drEl("b", "", tm.dostT));
+    dt.appendChild(drEl("span", "", tm.dostS));
+    dc.appendChild(dt);
+    dc.addEventListener("click", duDostOyna);
+    box.appendChild(dc);
+    box.appendChild(drEl("small", "du-msh-q", tm.botQ));
     [1, 2, 3].forEach(function (l) {
       var c = drEl("button", "du-rq"), im = document.createElement("img");
       c.type = "button";
@@ -349,6 +390,111 @@
     hb.addEventListener("click", duHist);
     box.appendChild(hb);
   }
+  var DU_QILICH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 17.5 3 6V3h3l11.5 11.5"/><path d="m13 19 6-6"/><path d="m16 16 4 4"/><path d="m19 21 2-2"/><path d="M14.5 6.5 18 3h3v3l-3.5 3.5"/><path d="m5 14 4 4"/><path d="m7 17-3 3"/><path d="m3 19 2 2"/></svg>';
+  /* DO'ST BILAN DUEL (egasi, 2026-10-11; shaxmatdagi kabi): chatga taklif kartasi tushadi, kim qabul qilsa - jonli duel (arena).
+     Ball va reytingga ta'sir qilmaydi. Server: chat amali "duel", /api/duel {accept | cancel}. */
+  function duDostOyna() {
+    var eski = $("du-info"), t = duT();
+    if (eski) { eski.parentNode.removeChild(eski); }
+    var orqa = drEl("div", "du-info"), oyna = drEl("div", "du-info-p"), yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); } };
+    orqa.id = "du-info";
+    var bosh = drEl("div", "du-info-h");
+    bosh.appendChild(drEl("b", "", t.dostSh));
+    var xb = drEl("button", "", "×");
+    xb.type = "button";
+    xb.addEventListener("click", yop);
+    bosh.appendChild(xb);
+    oyna.appendChild(bosh);
+    var tana = drEl("div", "du-info-b du-dz");
+    [["global", t.dZal, t.dZalS], ["house", t.dUy, t.dUyS]].forEach(function (q) {
+      var b = drEl("button", "du-dz-b");
+      b.type = "button";
+      var s2 = document.createElement("span");
+      s2.appendChild(drEl("b", "", q[1]));
+      s2.appendChild(drEl("small", "", q[2]));
+      b.appendChild(s2);
+      b.appendChild(drEl("i", "", "›"));
+      b.addEventListener("click", function () { yop(); duInvite(q[0]); });
+      tana.appendChild(b);
+    });
+    tana.appendChild(drEl("p", "du-dz-n", t.dShaxsiy));
+    oyna.appendChild(tana);
+    orqa.appendChild(oyna);
+    orqa.addEventListener("click", function (e) { if (e.target === orqa) { yop(); } });
+    document.body.appendChild(orqa);
+  }
+  // Duel ekranini istalgan joydan (chat, profil) ochib, arenaga kiradi
+  function duArOch(id) {
+    try { if (!$("scr-chat").classList.contains("hidden")) { closeChat(); } } catch (e) {}
+    ["scr-cup", "scr-hub"].forEach(function (s2) { var e = $(s2); if (e) { e.classList.add("hidden"); } });
+    drShowGame("scr-duel");
+    $("du-kick").textContent = duX().kick;
+    $("du-ttl").textContent = duX().ttl;
+    $("du-hist").classList.add("hidden");
+    $("du-rep").classList.add("hidden");
+    duKorinish = "home";
+    duArena(id);
+  }
+  function duInvite(room) {
+    var t = duT(), d = drInit();
+    if (MS_LOCAL) { showToast(t.yubordi); duArOch(1); return; }
+    window.fetch(API_CHAT, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": d },
+      body: JSON.stringify({ action: "duel", room: room, v: 2, initData: d }) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.ok && res.duel_id) { showToast(t.yubordi); duArOch(res.duel_id); return; }
+        showToast(res && res.error === "slow" ? L("chatSlow").replace("%s", res.retry || 5) : res && res.error === "banned" ? L("chatBannedShort")
+          : res && String(res.error || "").indexOf("dm_") === 0 ? L("chatDmClosedShort") : drX().fail, "err");
+      })["catch"](function () { showToast(drX().fail, "err"); });
+  }
+  // Chatdagi karta tugmasi: qabul qilish / arenaga kirish
+  function duFromChat(id) {
+    var t = duT();
+    duPost({ accept: id }, function (res) {
+      if (res && res.friend_id) { duArOch(res.friend_id); return; }
+      showToast(res && res.error === "taken" ? t.eTaken : res && res.error === "expired" ? t.eExp : drX().fail, "err");
+    });
+  }
+  function duFromChatKor(id) {
+    try { if (!$("scr-chat").classList.contains("hidden")) { closeChat(); } } catch (e) {}
+    ["scr-cup", "scr-hub"].forEach(function (s2) { var e = $(s2); if (e) { e.classList.add("hidden"); } });
+    drShowGame("scr-duel");
+    $("du-home").classList.add("hidden");
+    $("du-game").classList.add("hidden");
+    $("du-kick").textContent = duX().kick;
+    duRep("m", id, "chat");
+  }
+  // Chat xabari o'rnidagi karta (holati jonli: kutmoqda -> ketmoqda -> tugadi)
+  function duChatCard(m) {
+    var c = m.duel, t = duT(), me = (tgUser() || {}).id || 0, el = drEl("div", "cmc cmc-du");
+    var an = (c.a && c.a.name) || "Sehrgar", bn = (c.b && c.b.name) || "Sehrgar", menda = me && (me === c.a.uid || (c.b && me === c.b.uid));
+    var bosh = drEl("div", "cmc-h"), ic = drEl("span", "cmc-ic"), tx = document.createElement("div");
+    ic.innerHTML = DU_QILICH;
+    tx.appendChild(drEl("b", "", t.cT));
+    tx.appendChild(drEl("span", "", t.cSub));
+    bosh.appendChild(ic); bosh.appendChild(tx);
+    el.appendChild(bosh);
+    var st = "", tugma = null;
+    if (c.status === "waiting") {
+      if (me === c.a.uid) { st = t.cMine; tugma = [t.cOpen, "act", false]; } else { st = t.cCalls(an); tugma = [t.cAccept, "act", true]; }
+    } else if (c.status === "active") {
+      st = an + " ⚔ " + bn + " — " + t.cPlaying;
+      if (menda) { tugma = [t.cOpen, "act", false]; }
+    } else if (c.status === "finished" && c.winner) {
+      st = an + " ⚔ " + bn + " — " + t.cWon(c.winner === c.a.uid ? an : bn) + " (" + c.lives[0] + " : " + c.lives[1] + ")";
+      if (c.why === "duel" || c.why === "vaqt") { tugma = [t.cView, "view", false]; }
+    } else { st = t.cExp; }
+    el.appendChild(drEl("div", "cmc-s", st));
+    if (tugma) {
+      var b = drEl("button", "cmc-b" + (tugma[2] ? " gold" : ""), tugma[0]);
+      b.type = "button";
+      b.setAttribute("data-duel-" + tugma[1], "1");
+      b.setAttribute("data-g", String(c.id));
+      el.appendChild(b);
+    }
+    return el;
+  }
+
   /* «i» tugmasi (egasi, 2026-10-10): turnir haqidagi hamma ma'lumot bitta oynada; sonlar serverdagi qoidalardan */
   function duInfoMatn() {
     var q = (duData && duData.rules) || {}, pt = q.points || {};
@@ -547,7 +693,7 @@
         row.appendChild(rasm);
         var tx = drEl("span", "du-hr-tx");
         tx.appendChild(drEl("b", "", g.k === "o" ? x.raq[g.level - 1] : ((g.opp && g.opp.name) || "Sehrgar")));
-        var izoh = (g.k === "m" ? t.st[g.stage] + " · " : "") + (g.why === "kelmadi" || g.why === "ikkalasi" ? t.kelmadiQ : t.rnd(g.rounds) + " · " + t.jon + " " + g.lives[0] + " : " + g.lives[1]);
+        var izoh = (g.k === "m" ? (g.friend ? t.dostQ : t.st[g.stage]) + " · " : "") + (g.why === "kelmadi" || g.why === "ikkalasi" ? t.kelmadiQ : t.rnd(g.rounds) + " · " + t.jon + " " + g.lives[0] + " : " + g.lives[1]);
         var sana = "";
         try { sana = csDate(g.time); } catch (e) { sana = ""; }
         tx.appendChild(drEl("small", "", izoh + (sana ? " · " + sana : "")));
@@ -578,7 +724,7 @@
       var r = res && res.replay;
       box.innerHTML = "";
       if (!r) { box.appendChild(drEl("p", "rk-bosh", drX().fail)); return; }
-      $("du-ttl").textContent = r.k === "m" ? t.st[r.stage] : x.raq[r.level - 1];
+      $("du-ttl").textContent = r.k === "m" ? (r.friend ? t.dostQ : t.st[r.stage]) : x.raq[r.level - 1];
       var n1 = r.k === "m" ? (r.me ? t.rSiz : r.p1.name) : t.rSiz, n2 = r.k === "m" ? r.p2.name : x.raq[r.level - 1];
       var bosh = drEl("div", "du-rp-h");
       var tomon = function (nom, jon, gol) { var e = drEl("span", "du-rp-s" + (gol ? " g" : "")); e.appendChild(drEl("b", "", nom)); var j = drEl("span", "du-jon"); for (var i = 0; i < r.start; i++) { j.appendChild(drEl("i", i < jon ? "on" : "")); } e.appendChild(j); return e; };
@@ -636,10 +782,28 @@
     var x = duX(), t = duT();
     du.ar = ar;
     du.game = { lives: ar.lives, rlives: ar.rlives, round: Math.max(0, ar.round - 1) };
-    du.oppName = ar.opp.uid ? ar.opp.name : t.bot;
+    du.oppName = ar.opp.uid ? ar.opp.name : ar.friend ? "" : t.bot;
     $("du-r-nom").textContent = du.oppName;
     var rim = $("du-r-im"), src = ar.opp.house ? (cupCrestImg(ar.opp.house, 54) || {}).src : IMG_DIR + "duel/r4.webp";
-    if (src && rim.getAttribute("data-s") !== src) { rim.setAttribute("data-s", src); rim.src = src; rim.classList.toggle("gerb", !!ar.opp.house); }
+    if (src && rim.getAttribute("src") !== src) { rim.setAttribute("src", src); rim.classList.toggle("gerb", !!ar.opp.house); }
+    $("du-r-nom").textContent = du.oppName || "…";
+    if (ar.phase === "open") {                   // do'stona duel: taklifni hali hech kim qabul qilmagan
+      duHearts();
+      $("du-rnd").textContent = "";
+      $("du-msg").textContent = t.ochiq(duMS(ar.expires_in));
+      var ob = $("du-res");
+      if (!du.ochiqB) {
+        du.ochiqB = true;
+        ob.innerHTML = "";
+        var bb = drEl("button", "qr-b", t.bekorB);
+        bb.type = "button";
+        bb.addEventListener("click", function () { var id = du.arena; duStop(); duPost({ cancel: id }, function () {}); duOpen(); });
+        ob.appendChild(bb);
+        ob.classList.remove("hidden");
+      }
+      return;
+    }
+    if (du.ochiqB) { du.ochiqB = false; $("du-res").classList.add("hidden"); $("du-res").innerHTML = ""; }
     if (ar.phase === "early" || ar.phase === "wait") {
       duHearts();
       $("du-msg").textContent = (ar.phase === "early" ? t.early(duMS(ar.starts_in)) : t.wait(duMS(ar.wait_left))) + " " + (ar.opp.here ? t.here : t.nothere);
@@ -666,19 +830,20 @@
     $("du-turs").classList.add("hidden");
     $("du-draw").classList.add("hidden");
     if (ar.why !== "duel") { $("du-rev").classList.add("hidden"); }
-    $("du-msg").textContent = ar.why === "kelmadi" ? (ar.won ? t.kelmadi : t.kelmadim) : ar.why === "ikkalasi" ? t.ikkalasi : ar.why === "vaqt" ? t.vaqtT : "";
+    $("du-msg").textContent = ar.why === "bekor" ? t.eskirdi : ar.why === "kelmadi" ? (ar.won ? t.kelmadi : t.kelmadim) : ar.why === "ikkalasi" ? t.ikkalasi : ar.why === "vaqt" ? t.vaqtT : "";
     box.innerHTML = "";
-    box.appendChild(drEl("b", "rk-son", ar.won ? x.won : x.lost));
-    if (!ar.test) {
+    if (ar.why !== "bekor") { box.appendChild(drEl("b", "rk-son", ar.won ? x.won : x.lost)); }
+    if (ar.friend) { box.appendChild(drEl("small", "dr-res-s", t.cSub)); }
+    if (!ar.test && !ar.friend) {
       if (ar.won && duBall(ar.stage)) { box.appendChild(drEl("b", "dr-res-p", t.pts(duBall(ar.stage)))); }
       box.appendChild(drEl("small", "dr-res-s", ar.won ? (ar.stage === 2 ? t.champ : ar.next ? t.keyingi(duMS(ar.next["in"])) : "") : t.out));
     }
     // G'olib keyingi bosqichga O'ZI o'tadi: bir necha soniyadan keyin keyingi duel arenasi ochiladi (tanaffus atigi 1 daqiqa)
-    if (!ar.test && ar.won && ar.next) {
+    if (!ar.test && !ar.friend && ar.won && ar.next) {
       var kid = ar.next.id;
       du.tm = setTimeout(function () { if (du && du.mode === "ar" && du.done) { duArena(kid); } }, 6000);
     }
-    var b = drEl("button", "dr-btn", t.tbl);
+    var b = drEl("button", "dr-btn", ar.friend ? t.dQayt : t.tbl);
     b.type = "button";
     b.addEventListener("click", function () { duOpen(); });
     box.appendChild(b);
@@ -923,7 +1088,11 @@
     $("du-back").addEventListener("click", function () {
       var ochiq = $("du-info");
       if (ochiq) { ochiq.parentNode.removeChild(ochiq); return; }
-      if (du) { duStop(); duHome(); return; }
+      if (du) {
+        if (du.mode === "ar" && du.ar && du.ar.phase === "open") { duPost({ cancel: du.arena }, function () {}); }     // kutib turmasa taklif bekor
+        duStop(); duOpen(); return;
+      }
+      if (duKorinish === "rep" && duRepDan === "chat") { $("scr-duel").classList.add("hidden"); duKorinish = "home"; try { openChat(); } catch (e) { openHub(); } return; }
       if (duKorinish === "rep") { if (duRepDan === "hist") { duHist(); } else { duHome(); } return; }
       if (duKorinish === "hist") { duHome(); return; }
       $("scr-duel").classList.add("hidden");

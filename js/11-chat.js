@@ -51,6 +51,7 @@
       'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
   }
   var CHAT_SVG = {
+    tayoq: chatSvg('<path d="m3 21 11-11"/><path d="m13 8 3 3"/><path d="M17 3v3M15.5 4.500h3M21 9v2M20 10h2M19.500 14.500v1"/>'),
     odam: chatSvg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
     oqildi: chatSvg('<path d="m2 12.5 4.5 4.5L16 7"/><path d="m11.5 16 1 1L22 7"/>'),
     kayfiyat: chatSvg('<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4 4 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>'),
@@ -311,6 +312,7 @@
         b.appendChild(q);
       }
       if (m.chess) { b.className += " cm-chess"; b.appendChild(chessChatCard(m)); }
+      else if (m.duel) { b.className += " cm-chess"; b.appendChild(duChatCard(m)); }
       else { chatFillText(b, m.text); }
       var reacts = m.reactions || [];
       if (reacts.length) {
@@ -737,6 +739,7 @@
     chatSheet(p.name || "Sehrgar", null, [
       { icon: CHAT_SVG.odam, label: odamX().peer, fn: function() { odamOpen(p.uid, p); } },
       { icon: CHESS_IC.swords, label: L("chatChess"), fn: function() { chessAnnounce(chatRoom); } },
+      { icon: CHAT_SVG.tayoq, label: duT().chatDuel, fn: function() { duInvite(chatRoom); } },
       blocked ?
       { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
       { icon: CHAT_SVG.ban, label: L("chatDmBlock"), danger: true, fn: function() { chatBlock(p, true); } }]);
@@ -1142,7 +1145,7 @@
     // 1) Xabar
     if (!m.tmp && chatBannedUntil === false) item(gx, CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
     if (!m.kind) item(gx, CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
-    if (own && chatCanEdit(m) && !m.chess && !m.kind) item(gx, CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
+    if (own && chatCanEdit(m) && !m.chess && !m.duel && !m.kind) item(gx, CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
     // «Kim o'qidi» faqat xabar egasiga va adminga (yonida soni); reaksiyalar hammaga
     if (!m.tmp && (own || chatAdmin)) {
       var soni = item(gx, CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); }, false, "");
@@ -1786,6 +1789,10 @@
       }
       var cv = t.closest("[data-chess-view]");
       if (cv) { chessReview(cv.getAttribute("data-g"), "chat"); return; }
+      var da = t.closest("[data-duel-act]");
+      if (da) { duFromChat(parseInt(da.getAttribute("data-g"), 10)); return; }
+      var dv = t.closest("[data-duel-view]");
+      if (dv) { duFromChatKor(parseInt(dv.getAttribute("data-g"), 10)); return; }
       var ca = t.closest("[data-chess-act]");
       if (ca) { chessFromChat(ca.getAttribute("data-g")); return; }
       var q = t.closest(".cm-q");
