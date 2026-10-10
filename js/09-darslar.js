@@ -133,6 +133,8 @@
           qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
           qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Qobiliyatlaringiz profilingizda boshqa sehrgarlarga ham ko'rinadi.",
           rekTileS: "Xatosiz kim uzoqqa boradi", rekHomeS: "Fanni tanlang. Bu yerda tezlik emas, chidam muhim: birinchi xatoda o'yin tugaydi. Kun oxirida har fanning birinchi uch rekordchisi ball oladi.", rekPrize: function (p) { return "Har kuni yarim tunda rekordchilarga ball: 1-o'rin +" + p[0] + ", 2-o'rin +" + p[1] + ", 3-o'rin +" + p[2] + "."; }, fnBell: "Bugungi bellashuv", fnRek: "Rekord", navHome: "Bosh sahifa", navMen: "Men", navChat: "Chat", pmQrS: function (n) { return n ? n + " ta maxluq" : "Maxluqlar darsidan olinadi"; },
+          rekTag: "Xatosiz kim uzoqqa boradi?", rekQ1: "Birinchi xatoda o'yin tugaydi", rekQ2: "Eng yaxshi natijangiz jadvalda doim qoladi",
+          rekPzT: "Kunlik sovrin · har kuni yarim tunda", rekPzO: "-o'rin", rekPzB: "ball",
           rekT: "Rekord", rekSec: "Rekordlar", rekRule: "Bu yerda tezlik emas, chidam muhim: xatosiz kim uzoqqa boradi. Birinchi xatoda o'yin tugaydi. Jadval doimiy: eng yaxshi natijangiz unda qoladi.",
           rekWeek: "O'rningiz", rekAll: "Rekordingiz", rekGo: "Boshlash", rekTop: "Rekordchilar", rekEmpty: "Hali hech kim urinmadi. Birinchi bo'ling!",
           rekRes: "Natija", rekNew: "Yangi rekord!", rekOld: function (n) { return "Rekordingiz: " + n; }, rekAgain: "Yana urinish", rekBack: "Rekordlar jadvali",
@@ -222,6 +224,8 @@
           qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
           qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Ваши способности видны другим волшебникам в вашем профиле.",
           rekTileS: "Кто пройдёт дальше без ошибок", rekHomeS: "Выберите предмет. Здесь важна не скорость, а выдержка: игра заканчивается на первой ошибке. В конце дня трое лучших по каждому предмету получают очки.", rekPrize: function (p) { return "Каждую полночь рекордсмены получают очки: 1-е место +" + p[0] + ", 2-е +" + p[1] + ", 3-е +" + p[2] + "."; }, fnBell: "Состязание дня", fnRek: "Рекорд", navHome: "Главная", navMen: "Я", navChat: "Чат", pmQrS: function (n) { return n ? "Существ: " + n : "Появляются на уроках ухода"; },
+          rekTag: "Кто пройдёт дальше без ошибок?", rekQ1: "Игра заканчивается на первой ошибке", rekQ2: "Ваш лучший результат остаётся в таблице навсегда",
+          rekPzT: "Ежедневный приз · каждый день в полночь", rekPzO: " место", rekPzB: "очк.",
           rekT: "Рекорд", rekSec: "Рекорды", rekRule: "Здесь важна не скорость, а выдержка: кто пройдёт дальше без ошибок. Игра заканчивается на первой ошибке. Таблица постоянная: ваш лучший результат остаётся в ней.",
           rekWeek: "Ваше место", rekAll: "Ваш рекорд", rekGo: "Начать", rekTop: "Рекордсмены", rekEmpty: "Ещё никто не пробовал. Будьте первым!",
           rekRes: "Результат", rekNew: "Новый рекорд!", rekOld: function (n) { return "Ваш рекорд: " + n; }, rekAgain: "Ещё раз", rekBack: "Таблица рекордов",
@@ -312,6 +316,8 @@
           qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
           qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Other wizards can see your abilities in your profile.",
           rekTileS: "Who gets furthest without a mistake", rekHomeS: "Pick a subject. This is about endurance, not speed: the game ends on your first mistake. At the end of each day the top three in every subject earn points.", rekPrize: function (p) { return "Every midnight the record holders earn points: 1st +" + p[0] + ", 2nd +" + p[1] + ", 3rd +" + p[2] + "."; }, fnBell: "Today's contest", fnRek: "Record", navHome: "Home", navMen: "Me", navChat: "Chat", pmQrS: function (n) { return n ? n + " creatures" : "Earned in Care of Magical Creatures"; },
+          rekTag: "Who gets furthest without a mistake?", rekQ1: "The game ends on your first mistake", rekQ2: "Your best result stays on the table for good",
+          rekPzT: "Daily prize · every day at midnight", rekPzO: " place", rekPzB: "pts",
           rekT: "Record", rekSec: "Records", rekRule: "This is about endurance, not speed: who gets furthest without a mistake. The game ends on your first mistake. The table is permanent: your best result stays on it.",
           rekWeek: "Your place", rekAll: "Your record", rekGo: "Begin", rekTop: "Record holders", rekEmpty: "Nobody has tried yet. Be the first!",
           rekRes: "Result", rekNew: "New record!", rekOld: function (n) { return "Your record: " + n; }, rekAgain: "Try again", rekBack: "Records table",
@@ -646,7 +652,19 @@
     $("rk-ttl").textContent = f.nom[lang];
     $("rk-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     $("rk-im").src = drImg(f.id);
-    $("rk-rule").textContent = x.rekRule + " " + x.rekPrize(r.prizes || [5, 3, 2]);
+    $("rk-tag").textContent = x.rekTag;
+    $("rk-q1").textContent = x.rekQ1;
+    $("rk-q2").textContent = x.rekQ2;
+    $("rk-pz-t").textContent = x.rekPzT;
+    var pz = $("rk-pz-r"), sov = r.prizes || [5, 3, 2];
+    pz.innerHTML = "";
+    sov.slice(0, 3).forEach(function (ball, i) {
+      var d = drEl("span", "bl-pz o" + (i + 1));
+      d.appendChild(drEl("i", "", String(i + 1)));
+      d.appendChild(drEl("b", "", "+" + ball));
+      d.appendChild(drEl("small", "", (i + 1) + x.rekPzO + " · " + x.rekPzB));
+      pz.appendChild(d);
+    });
     $("rk-week").textContent = r.place ? String(r.place) : "—";
     $("rk-week-t").textContent = x.rekWeek + (r.place ? " · " + x.rekPlace(r.place, r.n) : "");
     $("rk-all").textContent = String(r.all);
