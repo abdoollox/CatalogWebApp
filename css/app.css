@@ -3374,4 +3374,4 @@ button.du-bc:active{transform:scale(.98)}
 .sht-msh{display:flex;margin-top:22px}
 .sht-rang{flex:none;width:9px;height:9px;border-radius:2px;background:#3a3d46;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
 .sht-rang.oq{background:#ece6da;box-shadow:none}
-#cs-rating,#cs-spark,#cs-tabs,#cs-top-filter,#cs-note,#cs-sub{display:none!important}
+#cs-rating,#cs-spark,#cs-tabs,#cs-top-filter,#cs-note,#cs-sub,#cs-title{display:none!important}

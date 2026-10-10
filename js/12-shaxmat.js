@@ -2280,7 +2280,7 @@
   }
 
   function renderStatsProfile(p) {
-    $("cs-piece").innerHTML = getPieceSVG(TITLE_PIECE[p.title] || "P", "marble");
+    $("cs-piece").innerHTML = getPieceSVG("N", "marble");            // unvon (Piyoda, Ot…) ham ko'rsatilmaydi (egasi, 2026-10-11)
     $("cs-rating").textContent = p.rating;
     $("cs-title").textContent = L("titleLine").replace("%s", titleName(p.title));
     $("cs-sub").textContent = p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew");
