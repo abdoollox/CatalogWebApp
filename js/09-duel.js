@@ -52,7 +52,7 @@
           tSoni: function (n) { return n + " kishi yozildi"; }, tQat: "Qatnashaman", tBor: "Siz turnirga yozilgansiz", tChiq: "Chiqish", tYopiq: "Yozilish yopildi — to'r tuzilmoqda", tKeyin: "Yozilish dushanbadan ochiladi", qoldi: "qoldi",
           tYoz: "Turnirga yozilmagan edingiz. Keyingi turnir — kelasi yakshanba.", bye: "bu bosqichni o'tkazib yuboradi", ball: function (n) { return "+" + n + " ball"; }, qatT: "Yozilganlar",
           keyingi: function (t) { return "Keyingi duelingiz " + t + " dan keyin. Arenada qoling!"; }, vaqtT: "Vaqt tugadi — joni ko'p duelchi yutdi.", kunQ: "kun", byeT: "Bu bosqichni o'tkazib yuboradi (reytingi yuqori)", rey: "Reyting", turT: "Duel turniri", raqib: function (n) { return "Raqibingiz: " + n; },
-          kutadi: "kutadi", torT: "Turnir to'ri", surish: "Yonga suring — keyingi bosqichlar", yozS: "Reytingi yuqorilar birinchi bosqichni o'tkazib yuboradi",
+          kutadi: "kutadi", torT: "Turnir to'ri", surish: "Yonga suring — keyingi bosqichlar", yozS: "Kuchliroq duelchilar birinchi bosqichni o'tkazib yuboradi",
           hist: "Duellar tarixi", histBosh: "Hali tugagan duelingiz yo'q.", rnd: function (n) { return n + " raund"; }, jon: "jon", gal: "G'alaba", mag: "Mag'lubiyat",
           eski: "Bu duelning raundlari saqlanmagan — u yangilanishdan oldin o'ynalgan.", jonli: "JONLI", kelmadiQ: "kelmadi", uchN: "Ustun tur +25 · kuchi baland yutadi",
           chiq: "chiqmadi", raund: "Raund", rSiz: "Siz", ham: "Barcha duellar",
@@ -70,7 +70,7 @@
           tSoni: function (n) { return "Записалось: " + n; }, tQat: "Участвую", tBor: "Вы записаны на турнир", tChiq: "Выйти", tYopiq: "Запись закрыта — составляется сетка", tKeyin: "Запись откроется в понедельник", qoldi: "осталось",
           tYoz: "Вы не записались на этот турнир. Следующий — в будущее воскресенье.", bye: "пропускает этот круг", ball: function (n) { return "+" + n + " очк."; }, qatT: "Участники",
           keyingi: function (t) { return "Ваша следующая дуэль через " + t + ". Оставайтесь на арене!"; }, vaqtT: "Время вышло — победил тот, у кого больше жизней.", kunQ: "дн.", byeT: "Пропускают этот круг (высокий рейтинг)", rey: "Рейтинг", turT: "Дуэльный турнир", raqib: function (n) { return "Ваш соперник: " + n; },
-          kutadi: "ждёт", torT: "Сетка турнира", surish: "Листайте вбок — следующие круги", yozS: "Дуэлянты с высоким рейтингом пропускают первый круг",
+          kutadi: "ждёт", torT: "Сетка турнира", surish: "Листайте вбок — следующие круги", yozS: "Более сильные дуэлянты пропускают первый круг",
           hist: "История дуэлей", histBosh: "У вас пока нет завершённых дуэлей.", rnd: function (n) { return "раундов: " + n; }, jon: "жизни", gal: "Победа", mag: "Поражение",
           eski: "Раунды этой дуэли не сохранены — она была сыграна до обновления.", jonli: "ИДЁТ", kelmadiQ: "не пришёл", uchN: "Преимущество типа +25 · побеждает более сильное",
           chiq: "не вышло", raund: "Раунд", rSiz: "Вы", ham: "Все дуэли",
@@ -88,7 +88,7 @@
           tSoni: function (n) { return n + " signed up"; }, tQat: "I'm in", tBor: "You are signed up", tChiq: "Leave", tYopiq: "Sign-up is closed — the bracket is being drawn", tKeyin: "Sign-up opens on Monday", qoldi: "left",
           tYoz: "You did not sign up for this tournament. The next one is next Sunday.", bye: "skips this round", ball: function (n) { return "+" + n + " pts"; }, qatT: "Signed up",
           keyingi: function (t) { return "Your next duel is in " + t + ". Stay in the arena!"; }, vaqtT: "Time is up — the duellist with more lives won.", kunQ: "d", byeT: "Skip this round (higher rating)", rey: "Rating", turT: "Duelling tournament", raqib: function (n) { return "Your opponent: " + n; },
-          kutadi: "bye", torT: "Bracket", surish: "Swipe sideways for the next rounds", yozS: "Higher-rated duellists skip the first round",
+          kutadi: "bye", torT: "Bracket", surish: "Swipe sideways for the next rounds", yozS: "Stronger duellists skip the first round",
           hist: "Duel history", histBosh: "You have no finished duels yet.", rnd: function (n) { return n + " rounds"; }, jon: "lives", gal: "Victory", mag: "Defeat",
           eski: "The rounds of this duel were not saved — it was played before the update.", jonli: "LIVE", kelmadiQ: "no-show", uchN: "Type advantage +25 · the stronger spell wins",
           chiq: "failed", raund: "Round", rSiz: "You", ham: "All duels",
@@ -107,7 +107,6 @@
   function duBall(s) { var p = duData && duData.rules && duData.rules.points; return (p && p[String(s)]) || 0; }
   // Vaqt Toshkent bo'yicha "21:06"
   function duSoat(ts) { var d = new Date((ts + 5 * 3600) * 1000); return ("0" + d.getUTCHours()).slice(-2) + ":" + ("0" + d.getUTCMinutes()).slice(-2); }
-  function duBotR(l) { var b = duData && duData.rules && duData.rules.bots; return (b && b[String(l)]) || { 1: 850, 2: 1050, 3: 1250 }[l]; }
   function duT() { return DU_T[lang] || DU_T.uz; }
   function duMS(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + (s % 60 < 10 ? "0" : "") + (s % 60); }
 
@@ -250,28 +249,12 @@
       var tx = drEl("span", "du-rq-tx");
       tx.appendChild(drEl("small", "du-lv l" + l, x.lvl[l - 1]));
       tx.appendChild(drEl("b", "", x.raq[l - 1]));
-      tx.appendChild(drEl("span", "", x.best(duBotR(l))));
       c.appendChild(tx);
       c.addEventListener("click", function () { duStart(l); });
       box.appendChild(c);
     });
     $("du-info-b").classList.remove("hidden");
     duCup();
-    $("du-top-t").textContent = x.topT;
-    $("du-mine").textContent = d && d.rating && d.rating.games ? x.mine(d.rating.r, d.place, d.n) : "";
-    var tb = $("du-top");
-    tb.innerHTML = "";
-    if (!d || !d.top.length) { tb.appendChild(drEl("p", "rk-bosh", x.empty)); return; }
-    d.top.forEach(function (p, i) {
-      var row = drEl("div", "bl-row" + (p.me ? " me" : ""));
-      row.appendChild(drEl("i", "o" + (i + 1), String(i + 1)));
-      var cr = drEl("span", "bl-cr"), im = cupCrestImg(p.house, 18);
-      if (im) { cr.appendChild(im); }
-      row.appendChild(cr);
-      row.appendChild(drEl("b", "", p.name + (p.me ? " (" + drX().you + ")" : "")));
-      row.appendChild(drEl("em", "", String(p.score)));
-      tb.appendChild(odamLink(row, p));
-    });
   }
 
   /* ---------- sahifa tepasi (egasi, 2026-10-10): o'rin, saralash bali, holat, «Duellar tarixi» ---------- */
@@ -306,7 +289,7 @@
     var box = $("du-hero"), d = duData, t = duT();
     if (!box) { return; }
     box.innerHTML = "";
-    var rt = (d && d.rating) || { r: 1000 }, c = d && d.cup, tr = d && d.tour, meId = duMen();
+    var c = d && d.cup, tr = d && d.tour, meId = duMen();
     var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
     chap.appendChild(drEl("small", "", t.turT));
     var sar = "", izoh = "", tugma = null;
@@ -333,10 +316,6 @@
     chap.appendChild(drEl("b", "", sar));
     if (izoh) { chap.appendChild(drEl("em", "", izoh)); }
     tep.appendChild(chap);
-    var rc = drEl("span", "du-h-r");
-    rc.appendChild(drEl("small", "", t.rey));
-    rc.appendChild(drEl("b", "", String(rt.r)));
-    tep.appendChild(rc);
     box.appendChild(tep);
     if (tugma) {
       var tb = drEl("div", "du-yoz"), gb = drEl("button", "dr-btn", tugma[0]);
@@ -377,27 +356,27 @@
       wait: Math.round((q.wait || 60) / 60), yop: Math.round((((duData && duData.tour) || {}).close || 300) / 60), p16: pt["16"] || 5, p8: pt["8"] || 10, p4: pt["4"] || 20, p2: pt["2"] || 30 };
     if (lang === "ru") { return [["Когда", "Раз в неделю — в воскресенье в 21:00 (время Ташкента). Победитель определяется в тот же вечер."],
       ["Кто участвует", "Отбора нет. Играет каждый, кто нажал «Участвую». Запись закрывается за " + r.yop + " мин. до начала — после этого составляется сетка."],
-      ["Как составляется сетка", "Турнир на выбывание: победитель идёт дальше, проигравший выбывает. Если участников не хватает на полную сетку, дуэлянты с более высоким рейтингом пропускают первый круг («ждёт»), остальные играют в нём."],
+      ["Как составляется сетка", "Турнир на выбывание: победитель идёт дальше, проигравший выбывает. Если участников не хватает на полную сетку, более сильные дуэлянты пропускают первый круг («ждёт»), остальные играют в нём."],
       ["Как проходит дуэль", "У каждого " + r.jon + " жизней. В каждом раунде вы выбираете тип и рисуете заклинание (" + r.raund + " секунд). Атака бьёт хитрость, хитрость — защиту, защита — атаку: сильный тип даёт +" + r.bonus + " к силе. Сила — это точность рисунка; у кого сила выше, тот отнимает у соперника жизнь. При точности ниже " + r.fail + " заклинание не срабатывает."],
       ["Время", "На дуэль — не больше " + r.match + " минут. Если время вышло, побеждает тот, у кого осталось больше жизней. Между кругами перерыв " + r.gap + " мин. Кто не вошёл на арену за " + r.wait + " мин. после начала — проигрывает."],
       ["Очки", "За победу — очки в кубок факультета: в 1/8 финала +" + r.p16 + ", в четвертьфинале +" + r.p8 + ", в полуфинале +" + r.p4 + ", в финале +" + r.p2 + ". За более ранние круги и за пропуск круга очков нет."],
-      ["Рейтинг дуэлянта", "Все начинают с 1000. Победа повышает рейтинг, поражение понижает; за победу над сильным соперником прибавляется больше. Тренировочные дуэли тоже считаются, но слабее."],
+      ["Кто пропускает первый круг", "Это определяется по вашим результатам в дуэлях: кто чаще побеждает, тот считается сильнее. Тренировочные дуэли тоже учитываются."],
       ["Напоминание", "Записавшимся сова приносит напоминание утром в день турнира и за 10 минут до начала."]]; }
     if (lang === "en") { return [["When", "Once a week — on Sunday at 21:00 (Tashkent time). The winner is decided that same evening."],
       ["Who plays", "No qualifying. Everyone who taps “I'm in” plays. Sign-up closes " + r.yop + " minutes before the start — then the bracket is drawn."],
-      ["How the bracket works", "It is a knockout: the winner moves on, the loser is out. If there are not enough players for a full bracket, higher-rated duellists skip the first round (“bye”) and the rest play it."],
+      ["How the bracket works", "It is a knockout: the winner moves on, the loser is out. If there are not enough players for a full bracket, stronger duellists skip the first round (“bye”) and the rest play it."],
       ["How a duel works", "Each duellist has " + r.jon + " lives. Every round you pick a type and draw the spell (" + r.raund + " seconds). Attack beats trick, trick beats defence, defence beats attack: the stronger type adds +" + r.bonus + " power. Power is your drawing accuracy; the higher power takes one life. Below " + r.fail + " accuracy the spell fails."],
       ["Time", "A duel lasts " + r.match + " minutes at most. When time runs out, the one with more lives wins. There is a " + r.gap + "-minute break between rounds. Anyone who has not entered the arena within " + r.wait + " minute(s) loses."],
       ["Points", "A win earns House Cup points: +" + r.p16 + " in the round of 16, +" + r.p8 + " in the quarter-final, +" + r.p4 + " in the semi-final, +" + r.p2 + " in the final. No points for earlier rounds or for a bye."],
-      ["Duel rating", "Everyone starts at 1000. A win raises it, a loss lowers it; beating a stronger opponent gives more. Practice duels count too, but less."],
+      ["Who skips the first round", "It depends on your duel results: the more you win, the stronger you are considered. Practice duels count too."],
       ["Reminder", "If you signed up, an owl reminds you on the morning of the tournament and 10 minutes before it starts."]]; }
     return [["Qachon", "Haftada bir marta — yakshanba kuni soat 21:00 da (Toshkent vaqti). G'olib shu oqshomning o'zida aniqlanadi."],
       ["Kim qatnashadi", "Saralash yo'q. «Qatnashaman» tugmasini bosgan har bir o'quvchi o'ynaydi. Yozilish turnirdan " + r.yop + " daqiqa oldin yopiladi — shundan keyin to'r tuziladi."],
-      ["To'r qanday tuziladi", "Turnir — olib tashlash usulida: yutgan keyingi bosqichga o'tadi, yutqazgan turnirni tark etadi. Ishtirokchilar soni to'rga to'liq yetmasa, duel reytingi yuqori bo'lganlar birinchi bosqichni o'tkazib yuboradi («kutadi»), qolganlar o'sha bosqichda bellashadi."],
+      ["To'r qanday tuziladi", "Turnir — olib tashlash usulida: yutgan keyingi bosqichga o'tadi, yutqazgan turnirni tark etadi. Ishtirokchilar soni to'rga to'liq yetmasa, kuchliroq duelchilar birinchi bosqichni o'tkazib yuboradi («kutadi»), qolganlar o'sha bosqichda bellashadi."],
       ["Duel qanday o'tadi", "Har duelchida " + r.jon + " ta jon. Har raundda tur tanlaysiz va afsunni chizasiz (" + r.raund + " soniya). Hujum hiylani, hiyla himoyani, himoya hujumni yengadi: ustun tur kuchga +" + r.bonus + " qo'shadi. Kuch — chizish aniqligi; kimning kuchi baland bo'lsa, raqibining bir joni ketadi. Aniqlik " + r.fail + " dan past bo'lsa afsun chiqmaydi."],
       ["Vaqt", "Bir duelga eng ko'pi " + r.match + " daqiqa. Vaqt tugasa — joni ko'p qolgan yutadi. Bosqichlar orasida " + r.gap + " daqiqa tanaffus. Duel boshlanganidan " + r.wait + " daqiqa ichida arenaga kirmagan duelchi yutqazadi."],
       ["Ballar", "G'alaba uchun fakultet kubogiga ball: 1/8 finalda +" + r.p16 + ", chorak finalda +" + r.p8 + ", yarim finalda +" + r.p4 + ", finalda +" + r.p2 + ". Oldingi bosqichlar va o'tkazib yuborilgan bosqich uchun ball yo'q."],
-      ["Duel reytingi", "Hamma 1000 dan boshlaydi. G'alaba reytingni oshiradi, mag'lubiyat tushiradi; kuchli raqibni yengsangiz ko'proq qo'shiladi. Mashq duellari (kompyuter raqiblar) ham hisobga olinadi, lekin kamroq."],
+      ["Kim birinchi bosqichni o'tkazib yuboradi", "Bu duellardagi natijalaringizga qarab aniqlanadi: ko'proq yutgan duelchi kuchliroq hisoblanadi. Mashq duellari (kompyuter raqiblar) ham hisobga olinadi."],
       ["Eslatma", "Turnirga yozilganlarga turnir kuni ertalab va boshlanishiga 10 daqiqa qolganda boyo'g'li xabar olib keladi."]];
   }
   function duInfo() {
@@ -895,7 +874,6 @@
     $("du-msg").textContent = "";
     box.innerHTML = "";
     box.appendChild(drEl("b", "rk-son", g.won ? x.won : x.lost));
-    if (g.delta != null) { box.appendChild(drEl("b", "dr-res-p", x.rdelta(g.delta))); }
     var a = drEl("button", "dr-btn", x.again);
     a.type = "button";
     a.addEventListener("click", function () { duStart(level); });
