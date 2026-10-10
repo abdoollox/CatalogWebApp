@@ -677,9 +677,9 @@
             en: "The Sorting Hat is waiting. The house it names is yours for life." },
     endGo: { uz: "Qalpoq oldiga borish", ru: "Подойти к шляпе", en: "Approach the Hat" },
     rvHouse: { uz: "Xogvartsga kirish", ru: "Войти в Хогвартс", en: "Enter Hogwarts" },
-    ilkMk: { uz: "Tabriklayman! Birinchi darsingiz — Afsunlar. Professor Flitvik sizni sinfda kutyapti.",
-             ru: "Поздравляю! Ваш первый урок — Заклинания. Профессор Флитвик ждёт вас в классе.",
-             en: "Congratulations! Your first lesson is Charms. Professor Flitwick is waiting in the classroom." },
+    ilkMk: { uz: "Qasr bilan tanishdingiz. Endi birinchi darsingiz — Afsunlar. Professor Flitvik sizni sinfda kutyapti.",
+             ru: "С замком вы познакомились. Теперь ваш первый урок — Заклинания. Профессор Флитвик ждёт вас в классе.",
+             en: "Now you know the castle. Your first lesson is Charms. Professor Flitwick is waiting in the classroom." },
     ilkGo: { uz: "Birinchi darsga", ru: "На первый урок", en: "To the first lesson" },
     rvWand: { uz: "Maktubga qaytish", ru: "Вернуться к письму", en: "Back to the letter" },
 

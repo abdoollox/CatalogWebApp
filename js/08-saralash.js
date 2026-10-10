@@ -428,24 +428,15 @@
     r.appendChild(lentaEl("span", "rv-place", HAT[lang].place));
     r.appendChild(lentaEl("span", "reveal-name", h[lang]));
     r.appendChild(lentaEl("span", "reveal-note", ((h["note_" + lang] || "") + (jrQayta ? "" : " " + t.lockFinal)).trim()));
-    // Saralangach - to'g'ri BIRINCHI DARSGA (egasi, 2026-10-11): Xogvarts bosh sahifasi birdaniga og'irlik qilmasin.
-    // Professor Makgonagall yo'l ko'rsatadi; bosh sahifani odam birinchi darsdan keyin ko'radi.
+    // Saralangach SARDOR QASRNI TANISHTIRADI (egasi, 2026-10-11: asardagidek), oxirida birinchi darsga yo'llaydi.
     var ilk = !jrQayta && !jrPreview && !!journey;
-    if (ilk) {
-      var mk = lentaEl("div", "af-fl lnt-mk");
-      var mi = document.createElement("img");
-      mi.src = "img/makgonagall/yaxshi.webp"; mi.alt = "";
-      mk.appendChild(mi);
-      mk.appendChild(lentaEl("p", "dr-hint", al("ilkMk")));
-      r.appendChild(mk);
-    }
-    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : ilk ? al("ilkGo") : journey ? al("rvHouse") : t.rvDone);
+    var b = lentaEl("button", "tr-go grk-go", jrQayta ? al("ltBack") : ilk ? syT("go").replace("%s", syT("ism_" + id)) : journey ? al("rvHouse") : t.rvDone);
     b.type = "button";
     b.onclick = function () {
+      if (ilk) { b.parentNode.removeChild(b); journey = null; syBosh(id); return; }
       $("scr-hat").classList.add("hidden");
       $("hat-km").innerHTML = "";
       if (jrQayta) { jrHome(); return; }
-      if (ilk) { $("scr-reveal").classList.add("hidden"); journey = null; ilkDars(); return; }
       closeReveal();
     };
     r.appendChild(b);
@@ -458,6 +449,83 @@
     try {
       if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); }
     } catch (e) {}
+  }
+
+  /* ---------- QASR BO'YLAB SAYOHAT (egasi, 2026-10-11) ----------
+     Saralangan zahoti fakultet SARDORI birinchi kurslarni qasr bo'ylab olib yuradi: zinapoyalar, umumiy xona,
+     sinflar, hovli, turnir zali - har sahnada nima borligi va qaysi KURSDA ochilishi aytiladi.
+     Oxirida Makgonagall birinchi darsga yo'llaydi. Rasmlar img/yol/sy1..5.jpg, umumiy xona fakultetga qarab sy2-<g|s|r|h>.jpg.
+     Sardorlar - asardagi (Pottermore) ismlar. Kurs qoidasi o'zgarsa SHU matnlarni ham yangilang. */
+  var SY_TX = {
+    go: { uz: "%s ortidan borish", ru: "Идти за старостой", en: "Follow the prefect" },
+    ism_gryffindor: { uz: "Persi Uizli", ru: "Перси Уизли", en: "Percy Weasley" },
+    ism_slytherin: { uz: "Jemma Farli", ru: "Джемма Фарли", en: "Gemma Farley" },
+    ism_ravenclaw: { uz: "Robert Xilliard", ru: "Роберт Хиллиард", en: "Robert Hilliard" },
+    ism_hufflepuff: { uz: "Gabriel Trumen", ru: "Габриэль Трумэн", en: "Gabriel Truman" },
+    s1: { uz: "«Birinchi kurslar, ortimdan! Men — %s, %h sardoriman. Zinapoyalarga ehtiyot bo'ling: ular joyini o'zgartirib turadi».",
+          ru: "«Первокурсники, за мной! Я — %s, староста факультета %h. Осторожнее на лестницах: они любят менять направление».",
+          en: "“First-years, follow me! I am %s, prefect of %h. Mind the staircases — they like to change.”" },
+    s2: { uz: "«Bu — bizning umumiy xonamiz. Shu yerda fakultetdoshlar bilan suhbatlashasiz. U sizga hozirdan ochiq».",
+          ru: "«Это наша общая гостиная. Здесь вы общаетесь со своим факультетом. Она открыта для вас уже сейчас».",
+          en: "“This is our common room. Here you talk with your housemates. It is open to you right now.”" },
+    s3: { uz: "«Bu yo'lakda — sinflar. To'qqiz fanning hammasi 1-kursdan ochiq. Dars o'tganingiz sari kursingiz oshadi va qasrning yangi eshiklari ochiladi».",
+          ru: "«В этом коридоре — классы. Все девять предметов открыты с 1 курса. Чем больше уроков, тем выше курс — и тем больше дверей замка открывается».",
+          en: "“This corridor holds the classrooms. All nine subjects are open from year 1. The more lessons you pass, the higher your year — and the more doors open.”" },
+    s4: { uz: "«2-kursda kunlik bellashuvlar boshlanadi — fakultetga ball shulardan keladi. 3-kursda esa hovlidagi Issiqxona va Qo'riqxonada o'z o'simlik va maxluqlaringizni parvarish qilasiz».",
+          ru: "«На 2 курсе начинаются ежедневные состязания — они приносят баллы факультету. А на 3 курсе во дворе, в Теплице и Заповеднике, вы будете растить своих растений и существ».",
+          en: "“In year 2 the daily contests begin — that is where house points come from. In year 3 you raise your own plants and creatures in the Greenhouse and the Reserve.”" },
+    s5: { uz: "«Bu zal — 4-kurslar uchun: duel, shaxmat va viktorina turnirlari. Javondagi oltin kubokni ko'ryapsizmi? Har hafta eng ko'p ball to'plagan fakultet uni oladi. Bizni uyaltirmang!»",
+          ru: "«Этот зал — для 4 курса: турниры по дуэлям, шахматам и викторине. Видите золотой кубок? Каждую неделю его получает факультет с наибольшим числом баллов. Не подведите нас!»",
+          en: "“This hall is for year 4: duelling, chess and quiz tournaments. See the golden cup? Each week it goes to the house with the most points. Do not let us down!”" },
+    nx: { uz: "Davom etish", ru: "Дальше", en: "Continue" },
+    hub: { uz: "Avval Xogvartsni ko'rish", ru: "Сначала осмотреть Хогвартс", en: "Look around Hogwarts first" }
+  };
+  function syT(k) { return (SY_TX[k] && (SY_TX[k][lang] || SY_TX[k].uz)) || ""; }
+
+  function syBosh(id) {
+    var ul = $("hat-km").querySelector(".lnt-ul");
+    if (ul) { ul.parentNode.removeChild(ul); }
+    var h = HOUSES[id] || HOUSES.none;
+    var rasm = ["img/yol/sy1.jpg", "img/yol/sy2-" + String(id).charAt(0) + ".jpg", "img/yol/sy3.jpg", "img/yol/sy4.jpg", "img/yol/sy5.jpg"];
+    rasm.forEach(function (u) { var i = new Image(); i.src = u; });
+    var n = 0;
+    function qadam() {
+      n++;
+      var matn = syT("s" + n).replace("%s", syT("ism_" + id)).replace("%h", h[lang] || "");
+      lentaShow(kmPanel(rasm[n - 1], n, matn, n % 2 === 0));
+      if (n < rasm.length) {
+        var b = lentaEl("button", "tr-go grk-go", syT("nx"));
+        b.type = "button";
+        b.onclick = function () {
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+          b.parentNode.removeChild(b);
+          qadam();
+        };
+        $("hat-km").appendChild(b);
+        return;
+      }
+      // Sayohat oxiri: Makgonagall birinchi darsga yo'llaydi
+      var mk = lentaEl("div", "af-fl lnt-mk");
+      var mi = document.createElement("img");
+      mi.src = "img/makgonagall/yaxshi.webp"; mi.alt = "";
+      mk.appendChild(mi);
+      mk.appendChild(lentaEl("p", "dr-hint", al("ilkMk")));
+      $("hat-km").appendChild(mk);
+      var go = lentaEl("button", "tr-go grk-go", al("ilkGo"));
+      go.type = "button";
+      go.onclick = function () { syYop(); ilkDars(); };
+      $("hat-km").appendChild(go);
+      var hb = lentaEl("button", "lnt-ul", syT("hub"));
+      hb.type = "button";
+      hb.onclick = function () { syYop(); enterWorld(); };
+      $("hat-km").appendChild(hb);
+    }
+    qadam();
+  }
+  function syYop() {
+    $("scr-hat").classList.add("hidden");
+    $("scr-reveal").classList.add("hidden");
+    $("hat-km").innerHTML = "";
   }
 
   function finishSorting() {
