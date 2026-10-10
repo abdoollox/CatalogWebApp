@@ -10,17 +10,17 @@
     uz: { qoriq: "Qo'riqxonasi", issiq: "Issiqxonasi", nsh: "Nishonlar", qb: "Kolleksiya", qob: "Qobiliyatlar", bosh: "Hali bo'sh", prof: "Profil", stage: ["bola", "o'smir", "katta"], pstage: ["nihol", "o'smoqda", "yetilgan"], kick: "Sehrgar", noHouse: "Hali saralanmagan", since: function (d) { return "Xogvartsda " + d + " dan"; },
           week: "Shu hafta", all: "Jami ball", films: "Filmlar", wand: "Tayoqcha", pat: "Patronus", badges: "Nishonlar",
           noWand: "Hali tayoqchasi yo'q", noPat: "Patronusini hali chaqirmagan", noBadges: "Hali nishoni yo'q",
-          inch: "dyuym", cards: "Sehrgar kartochkalari", chess: "Shaxmat reytingi", games: function (n, w) { return n + " o'yin · " + w + " g'alaba"; },
+          inch: "dyuym", cards: "Sehrgar kartochkalari", chess: "Shaxmat", games: function (n, w) { return n + " o'yin · " + w + " g'alaba"; },
           online: "hozir ilovada", peer: "Profilni ko'rish", write: "Xabar yozish", close: "Yopish", you: "Bu siz", fail: "Profil ochilmadi", anon: "Sehrgar" },
     ru: { qoriq: "Питомник", issiq: "Теплица", nsh: "Значки", qb: "Коллекция", qob: "Способности", bosh: "Пока пусто", prof: "Профиль", stage: ["малыш", "подросток", "взрослый"], pstage: ["росток", "растёт", "созрело"], kick: "Волшебник", noHouse: "Ещё не распределён", since: function (d) { return "В Хогвартсе с " + d; },
           week: "За неделю", all: "Всего очков", films: "Фильмы", wand: "Палочка", pat: "Патронус", badges: "Значки",
           noWand: "Палочки пока нет", noPat: "Патронус ещё не вызван", noBadges: "Значков пока нет",
-          inch: "дюймов", cards: "Карточки волшебников", chess: "Шахматный рейтинг", games: function (n, w) { return "Игр: " + n + " · побед: " + w; },
+          inch: "дюймов", cards: "Карточки волшебников", chess: "Шахматы", games: function (n, w) { return "Игр: " + n + " · побед: " + w; },
           online: "сейчас в приложении", peer: "Открыть профиль", write: "Написать", close: "Закрыть", you: "Это вы", fail: "Профиль не открылся", anon: "Волшебник" },
     en: { qoriq: "Menagerie", issiq: "Greenhouse", nsh: "Badges", qb: "Collection", qob: "Abilities", bosh: "Empty so far", prof: "Profile", stage: ["baby", "young", "grown"], pstage: ["sprout", "growing", "mature"], kick: "Wizard", noHouse: "Not sorted yet", since: function (d) { return "At Hogwarts since " + d; },
           week: "This week", all: "Total points", films: "Films", wand: "Wand", pat: "Patronus", badges: "Badges",
           noWand: "No wand yet", noPat: "Has not cast a Patronus yet", noBadges: "No badges yet",
-          inch: "inches", cards: "Wizard cards", chess: "Chess rating", games: function (n, w) { return n + " games · " + w + " wins"; },
+          inch: "inches", cards: "Wizard cards", chess: "Chess", games: function (n, w) { return n + " games · " + w + " wins"; },
           online: "in the app now", peer: "View profile", write: "Send a message", close: "Close", you: "This is you", fail: "Could not open the profile", anon: "Wizard" }
   };
   var odamBusy = false;
@@ -271,8 +271,7 @@
     if (d.chess) {
       var sh = odamEl("div", "od-card od-chess");
       sh.appendChild(odamEl("span", "od-lbl", x.chess));
-      sh.appendChild(odamEl("b", "", String(d.chess.rating)));
-      sh.appendChild(odamEl("small", "", x.games(d.chess.games, d.chess.wins)));
+      sh.appendChild(odamEl("small", "", x.games(d.chess.games, d.chess.wins)));     // reyting soni ko'rsatilmaydi (egasi, 2026-10-11)
       box.appendChild(sh);
     }
 

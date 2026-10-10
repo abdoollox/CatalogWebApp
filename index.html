@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=a358245d">
+<link rel="stylesheet" href="css/app.css?v=58a80556">
 </head>
 <body>
 <div class="shell">
@@ -1386,13 +1386,17 @@
     .cs-sheet .box{width:100%;max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 16px 26px;box-sizing:border-box}
     .ch-rules{color:var(--dim);font:500 12px/1.55 'Manrope',sans-serif;margin:14px 4px 30px}
     </style>
-    <div class="cup-hdr">
+    <div class="cup-hdr kb-hdr">
       <button class="back-btn" id="chess-hub-back"><span style="font-size:13px">‹</span> <span id="chess-hub-back-txt" data-xt="back">Ortga</span></button>
-      <div style="margin: 0 auto; padding-right: 48px; font-weight: 600; font-size: 16px; color: #b784d1;" data-xt="chessHubTitle">Sehrgar shaxmati</div>
+      <div class="kb-ttl"><span class="cup-kick" data-xt="hubKicker">Jonli o'yin</span><span class="cup-title" data-xt="chessHubTitle">Sehrgar shaxmati</span></div>
+      <span class="kb-sp"><button class="du-info-t" id="sht-info-b" type="button" aria-label="Info">i</button></span>
     </div>
+    <!-- TURNIR (egasi, 2026-10-11): tepa karta va to'r - duel sahifasidagi qolip (js/12-shaxmat-turnir.js) -->
+    <div class="dr-hero du-hero" id="sht-hero"></div>
+    <div class="du-plan du-tor-k" id="sht-cup"></div>
 
-    <!-- SARLAVHA -->
-    <div class="ch-card">
+    <!-- SARLAVHA (yashirin: o'rnida turnir kartasi) -->
+    <div class="ch-card sht-yoq">
       <div class="ch-hero">
         <div class="ch-mark" id="ch-mark"><i></i><i></i><i></i><i></i><span id="ch-mark-piece"></span></div>
         <div style="min-width:0">
@@ -1409,7 +1413,7 @@
     </div>
 
     <!-- REYTING -->
-    <button id="ch-rate" class="ch-card ch-rate" type="button">
+    <button id="ch-rate" class="ch-card ch-rate sht-yoq" type="button">
       <span class="ch-rate-pc" id="ch-rate-piece"></span>
       <span class="ch-rate-m">
         <span class="lbl" data-xt="myRating">Sizning reytingingiz</span>
@@ -1418,13 +1422,6 @@
       </span>
       <span class="ch-rate-go"><span data-xt="ratingsBtn">Jadval</span> ›</span>
     </button>
-    <!-- SO'NGGI O'YINLAR: tarix shu yerda ham ko'rinadi (egasi, 2026-10-10) - qator bosilsa o'yin yurishma-yurish ochiladi -->
-    <div id="ch-last" class="ch-card ch-last hidden">
-      <div class="ch-last-h"><b data-xt="lastGames">So'nggi o'yinlar</b><button type="button" id="ch-last-all" data-xt="allGames">Hammasi</button></div>
-      <div id="ch-last-list"></div>
-      <p class="ch-last-n" data-xt="lastNote"></p>
-    </div>
-
     <!-- DAVOM ETAYOTGAN O'YIN -->
     <div id="chess-resume" class="ch-card ch-resume hidden">
       <span class="dot"></span>
@@ -1436,6 +1433,7 @@
       <button id="chess-resume-go" style="background: #9b59b6; color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font: 700 13px 'Manrope',sans-serif; cursor: pointer;" data-xt="resumeBtn">Qaytish</button>
     </div>
 
+    <span class="du-st-t du-msh sht-msh" id="sht-mashq"></span>
     <!-- JONLI JANG: tasodifiy raqib, do'st, chat, kod -->
     <div class="ch-card">
       <div class="ch-h"><span class="ch-ic" data-ic="swords"></span><span data-xt="pvpTitle2">Jonli jang</span></div>
@@ -1487,6 +1485,13 @@
       <div class="ch-lbl" data-xt="colorLbl">Rangingiz</div>
       <div class="ch-seg" id="ch-color"><button data-v="w"></button><button data-v="r"></button><button data-v="b"></button></div>
       <button id="btn-start-bot-game" class="ch-btn ch-ghost"><span class="ch-ic" data-ic="play"></span><span data-xt="startBot2">Bot bilan boshlash</span></button>
+    </div>
+
+    <!-- SO'NGGI O'YINLAR: tarix shu yerda ham ko'rinadi (egasi, 2026-10-10) - qator bosilsa o'yin yurishma-yurish ochiladi -->
+    <div id="ch-last" class="ch-card ch-last hidden">
+      <div class="ch-last-h"><b data-xt="lastGames">So'nggi o'yinlar</b><button type="button" id="ch-last-all" data-xt="allGames">Hammasi</button></div>
+      <div id="ch-last-list"></div>
+      <p class="ch-last-n" data-xt="lastNote"></p>
     </div>
 
     <!-- TAXTA USLUBI -->
@@ -1685,16 +1690,17 @@
 <script src="js/07-kutubxona.js?v=8c4f764c"></script>
 <script src="js/07-kitoblar.js?v=582a9b52"></script>
 <script src="js/07-kitob-matn.js?v=5ad05696"></script>
-<script src="js/07-odam.js?v=a30d2ecf"></script>
+<script src="js/07-odam.js?v=ac4133f4"></script>
 <script src="js/08-saralash.js?v=15498b02"></script>
 <script src="js/09-sehrli-olam.js?v=bacaf628"></script>
 <script src="js/09-darslar.js?v=9354c81b"></script>
 <script src="js/09-issiqxona.js?v=2759b103"></script>
 <script src="js/09-duel.js?v=5fbae271"></script>
 <script src="js/09-xarid.js?v=ff5c38cd"></script>
-<script src="js/10-matnlar-chat-shaxmat.js?v=b4107d72"></script>
+<script src="js/10-matnlar-chat-shaxmat.js?v=7c793767"></script>
 <script src="js/11-chat.js?v=1595c70c"></script>
-<script src="js/12-shaxmat.js?v=0ef6cd1c"></script>
+<script src="js/12-shaxmat.js?v=346505fe"></script>
+<script src="js/12-shaxmat-turnir.js?v=707fc2e6"></script>
 <script src="js/13-orqaga.js?v=e424903b"></script>
 <script src="js/14-ishga-tushirish.js?v=abd1c0db"></script>
 <script src="js/15-pochta.js?v=6168e801"></script>

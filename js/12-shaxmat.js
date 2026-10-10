@@ -698,11 +698,7 @@
     } else if (g.award && g.award.limit_reached) {
       extra = L("limitFull").replace("%d", g.award.limit);
     }
-    var rt = g.rating && g.rating[g.you];
-    if (rt) {
-      // Reyting o'zgarishi: "Reyting: 1216 (+16)"
-      extra += (extra ? " " : "") + L("ratingAfter").replace("%r", rt.r + rt.d).replace("%d", (rt.d > 0 ? "+" : "") + rt.d);
-    }
+    // Reyting o'zgarishi KO'RSATILMAYDI (egasi, 2026-10-11: shaxmatda ham reyting yashirin)
     showChessOverlay(res, g.reason, extra);
     chessHaptic(res === "win" ? "success" : res === "loss" ? "error" : "warning");
   }
@@ -1772,6 +1768,8 @@
     renderBotBadges();
     chessRefreshMine();
     loadLastGames();
+    shtRender();
+    shtLoad();
     // Hub ochiq turganda raqib qidirayotganlar soni yangilanib turadi.
     stopHubTimer();
     chessHubTimer = setInterval(function () {
@@ -2296,11 +2294,11 @@
   // Tarixdagi bitta o'yin qatori (statistika sahifasi va shaxmat bosh sahifasidagi «So'nggi o'yinlar»)
   function histRow(h) {
     var mark = { win: L("resW"), loss: L("resL"), draw: L("resD") }[h.result];
-    var d = h.delta, yur = Math.ceil((h.plies || 0) / 2);
+    var yur = Math.ceil((h.plies || 0) / 2);
     return csRow('<span class="res ' + h.result + '">' + escapeHtmlChess(mark) + '</span><span class="nm"><b>' +
       escapeHtmlChess(h.opp.name) + "</b><span>" + escapeHtmlChess(reasonText(h.reason, h.result)) + " · " +
       escapeHtmlChess(L("movesN").replace("%d", yur)) + " · " + csDate(h.time) + '</span></span>' +
-      (d !== null && d !== undefined ? '<span class="dl ' + (d >= 0 ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>" : ""),
+      "",
       ' data-game="' + escapeHtmlChess(h.id) + '"');
   }
   // Shaxmat bosh sahifasi: so'nggi uch o'yin. Profil 30 soniyada bir martadan ko'p so'ralmaydi.
@@ -2401,7 +2399,7 @@
     applyXT();
     seekStop(true);
     stopHubTimer();
-    chessStats.tab = tab || chessStats.tab || "top";
+    chessStats.tab = "hist";                   // reyting jadvali va zinapoya yashirin (egasi, 2026-10-11) - faqat tarix
     chessStats.top = {};
     $("scr-chess-hub").classList.add("hidden");
     $("scr-chess-game").classList.add("hidden");
@@ -2426,7 +2424,7 @@
       ov.className = "cs-sheet";
       ov.innerHTML = '<div class="box"><div class="cs-prof"><span class="pc">' + getPieceSVG(TITLE_PIECE[p.title] || "P", "marble") +
         '</span><div style="min-width:0"><div class="r" style="font-size:26px">' + escapeHtmlChess(p.name) + '</div><div class="t">' +
-        p.rating + " · " + escapeHtmlChess(titleName(p.title)) + (p.house ? " · " + escapeHtmlChess(cupHouseName(p.house)) : "") +
+        escapeHtmlChess(titleName(p.title)) + (p.house ? " · " + escapeHtmlChess(cupHouseName(p.house)) : "") +
         '</div><div class="s">' + (p.games ? L("rankLine").replace("%r", p.rank || "—").replace("%b", p.best) : L("rateNew")) +
         '</div></div></div><div class="cs-stats"><div><b>' + p.games + "</b><span>" + L("statGames") + '</span></div><div><b style="color:#5fd98f">' +
         p.wins + "</b><span>" + L("statWins") + '</span></div><div><b style="color:#f3d58f">' + p.draws + "</b><span>" + L("statDraws") +

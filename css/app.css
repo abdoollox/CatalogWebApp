@@ -3363,3 +3363,15 @@ button.du-bc:active{transform:scale(.98)}
 .du-rq3 .du-rq-tx{align-items:center;gap:6px}
 .du-rq3 .du-lv{align-self:center}
 .du-rq3 .du-rq-tx b{font-size:15.5px;line-height:1.15}
+/* SHAXMAT: duel sahifasi qolipi (turnir kartasi, to'r, «Mashq»), reyting yashirin */
+#scr-chess-hub .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-chess-hub .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-chess-hub .kb-ttl .cup-kick{color:#b784d1}
+#scr-chess-hub .kb-ttl .cup-title{margin:0;font-size:clamp(17px,5.3vw,23px)!important;white-space:nowrap}
+.sht-yoq{display:none!important}
+#sht-cup:empty{display:none}
+#sht-cup{display:flex;flex-direction:column;gap:8px}
+.sht-msh{display:flex;margin-top:22px}
+.sht-rang{flex:none;width:9px;height:9px;border-radius:2px;background:#3a3d46;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.sht-rang.oq{background:#ece6da;box-shadow:none}
+#cs-rating,#cs-spark,#cs-tabs,#cs-top-filter,#cs-note,#cs-sub{display:none!important}
