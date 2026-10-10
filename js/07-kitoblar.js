@@ -111,8 +111,10 @@
   function ktX() { return KT_TX[lang] || KT_TX.uz; }
   function ktNum(id) { return parseInt(id.charAt(2), 10); }
   function ktName(id) { return (KT_NOM[lang] || KT_NOM.uz)[ktNum(id) - 1]; }
-  var KT_RASM_V = "7";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
-  function ktArt(id) { return IMG_DIR + "kitob/" + id + ".webp?v=" + KT_RASM_V; }
+  var KT_RASM_V = "8";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
+  // Muqova ham ilova tilida (egasi, 2026-10-10): kt1-uz.webp, kt1-ru.webp; inglizchasi - qo'shimchasiz
+  function ktTil() { return lang === "uz" || lang === "ru" ? "-" + lang : ""; }
+  function ktArt(id) { return IMG_DIR + "kitob/" + id + ktTil() + ".webp?v=" + KT_RASM_V; }
   function ktBook(id) {
     var list = (ktData && ktData.books) || [];
     for (var i = 0; i < list.length; i++) { if (list[i].id === id) { return list[i]; } }
@@ -236,7 +238,7 @@
       sp.className = "kt-sp";
       sp.innerHTML = '<img alt="" decoding="async"><i class="kt-sp-f"></i>';
       // jild yonidagi nom ilova tilida (inglizchasi - qo'shimchasiz fayl)
-      sp.querySelector("img").src = IMG_DIR + "kitob/" + id + "-yon" + (lang === "uz" || lang === "ru" ? "-" + lang : "") + ".webp?v=" + KT_RASM_V;
+      sp.querySelector("img").src = IMG_DIR + "kitob/" + id + "-yon" + ktTil() + ".webp?v=" + KT_RASM_V;
       if (st === "lock") { sp.querySelector(".kt-sp-f").innerHTML = MS_ICON.lock; }
       var fc = document.createElement("span");
       fc.className = "kt-fc";
