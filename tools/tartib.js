@@ -12,7 +12,8 @@
 const path=require('path');
 const ROOT=path.join(__dirname,'..');
 const MALUM={'msInit();':"tugmalar faqat albom ochilganda; javob kelganda kutubxona yashirin",
-  'var WORLD_MAPS = {':"xarita tugmalari; xarita faqat ishga tushirishda chiziladi"};
+  'var WORLD_MAPS = {':"xarita tugmalari; xarita faqat ishga tushirishda chiziladi",
+  'var JD_TADBIR = [':"hafta jadvali; sahifalar faqat qator bosilganda ochiladi"};
 const acorn=require('acorn'),escope=require('eslint-scope'),fs=require('fs');
 const html=fs.readFileSync(path.join(ROOT,'index.html'),'utf8');
 const files=[...html.matchAll(/<script src="(js\/[\w.-]+\.js)\?v=\w*"><\/script>/g)].map(m=>m[1]);
