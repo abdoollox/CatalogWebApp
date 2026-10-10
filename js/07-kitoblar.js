@@ -111,6 +111,8 @@
   function ktX() { return KT_TX[lang] || KT_TX.uz; }
   function ktNum(id) { return parseInt(id.charAt(2), 10); }
   function ktName(id) { return (KT_NOM[lang] || KT_NOM.uz)[ktNum(id) - 1]; }
+  // Yuklab olish VAQTINCHA YOPIQ (egasi, 2026-10-10: fayllar yuklab olishga tayyor emas). Ochish: true.
+  var KT_YUKLASH = false;
   var KT_RASM_V = "8";      // muqova rasmlari almashganda oshiring (fayl nomi o'sha - brauzer eskisini keshdan bermasin)
   // Muqova ham ilova tilida (egasi, 2026-10-10): kt1-uz.webp, kt1-ru.webp; inglizchasi - qo'shimchasiz
   function ktTil() { return lang === "uz" || lang === "ru" ? "-" + lang : ""; }
@@ -387,10 +389,10 @@
       }));
     }
     ["pdf", "epub", "fb2"].forEach(function (f) {
-      if (!files[f]) { return; }
+      if (!files[f] || !KT_YUKLASH) { return; }
       acts.appendChild(ktBtn("kt-dl", MS_ICON.dl, x.dl(f.toUpperCase(), ktSize(files[f].size)), function () { ktSend(id, ktLang, f); }));
     });
-    $("kt-hint").textContent = (files.pdf && !files.pdf.read ? x.big + " " : "") + x.hint;
+    $("kt-hint").textContent = KT_YUKLASH ? (files.pdf && !files.pdf.read ? x.big + " " : "") + x.hint : "";
   }
 
   /* --- galleonga ochish --- */
