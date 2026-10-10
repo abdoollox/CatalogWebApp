@@ -26,6 +26,8 @@
     chatS: { uz: "Suhbat", ru: "Общение", en: "Chat" },
     duel: { uz: "Duel", ru: "Дуэль", en: "Duel" },
     duelS: { uz: "Afsunlar jangi", ru: "Битва заклинаний", en: "Battle of spells" },
+    vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
+    vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
     chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
     chessR: { uz: "Reyting %d", ru: "Рейтинг %d", en: "Rating %d" },
@@ -200,7 +202,7 @@
       { t: HT("g3"), k: [
         { key: "duel", title: HT("duel"), sub: HT("duelS"), go: duOpen },
         { key: "chess", title: HT("chess"), sub: HT("chessS"), go: openChessHub },
-        { key: "refs", title: HT("refs"), sub: HT("refsS"), badge: refsN, go: openRefs, open: true }] }
+        { key: "vik", title: HT("vik"), sub: HT("vikS"), go: vkOpen }] }
     ];
     guruhlar.forEach(function (g) {
       var qator = document.createElement("div");
@@ -235,6 +237,18 @@
       grid.appendChild(h);
       grid.appendChild(qator);
     });
+
+    // «Do'stlar» - kataklar ostida alohida qator (2026-10-11: «Maydon»dagi o'rnini Viktorina oldi); saralanmaganlarga ham ko'rinadi
+    var dq = document.createElement("button");
+    dq.type = "button";
+    dq.className = "hub-row hub-dost";
+    dq.innerHTML = '<span class="hub-row-ic">' + hubSvg(HUB_ICONS.refs) + '</span><span class="hub-row-tx"><b></b><span></span></span>' +
+      (refsN > 0 ? '<i class="hub-dost-n"></i>' : "") + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>';
+    dq.querySelector("b").textContent = HT("refs");
+    dq.querySelector(".hub-row-tx span").textContent = HT("refsS");
+    if (refsN > 0) { dq.querySelector(".hub-dost-n").textContent = refsN > 99 ? "99+" : String(refsN); }
+    dq.onclick = hubGo(openRefs);
+    grid.appendChild(dq);
 
     // Jonli tasma (so'nggi saralanishlar) endi shu sahifaning pastida - ilgari kubok sahifasida edi
     try { renderFeed(); } catch (e) {}
