@@ -57,7 +57,6 @@
     wand: "M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M15 9h.01 M17.8 6.2L19 5 M3 21l9-9 M12.2 6.2L11 5"
   };
 
-  var hubChess = null;     // {rating, title, games} - shaxmat serveridan
 
   function hubSvg(d) {
     if (!d) { return ""; }
@@ -127,6 +126,8 @@
     } else {
       sort.classList.add("hidden");
     }
+
+    try { hubJadval(JD_ON && hid !== "none"); } catch (e) {}
 
     // Kubok: to'rtta qum soati
     var cup = $("hub-cup");
@@ -198,7 +199,7 @@
         { key: "chat", title: c.chatT, sub: HT("chatS"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
         { key: "duel", title: HT("duel"), sub: HT("duelS"), go: duOpen },
-        { key: "chess", title: HT("chess"), sub: hubChess && hubChess.rating ? HT("chessR").replace("%d", String(hubChess.rating)) : HT("chessS"), go: openChessHub },
+        { key: "chess", title: HT("chess"), sub: HT("chessS"), go: openChessHub },
         { key: "refs", title: HT("refs"), sub: HT("refsS"), badge: refsN, go: openRefs, open: true }] }
     ];
     guruhlar.forEach(function (g) {
@@ -270,11 +271,6 @@
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}
     try { jrAdminCheck(); } catch (e) {}
-    try {
-      chessApi("mine").then(function (res) {
-        if (res && res.rating) { hubChess = res.rating; if (hubVisible()) { renderHub(); } }
-      })["catch"](function () {});
-    } catch (e) {}
   }
 
   function leaveHub() {
@@ -282,6 +278,81 @@
     $("hub-set").classList.add("hidden");
     $("scr-cat").classList.remove("hidden");
     renderCatalog();
+  }
+
+  /* HAFTA JADVALI (egasi, 2026-10-11: «qaysi kuni qanday eventlar o'tkazilishi haqida ma'lumot bo'lishi kerak»).
+     Haftalik tadbirlar qat'iy kun va soatda (Toshkent): yangi tadbir qo'shilsa JD_TADBIR ga qator yoziladi.
+     kun: 0 = dushanba … 6 = yakshanba; d - davomiyligi (daqiqa): shu vaqt ichida «HOZIR» deb ko'rinadi. */
+  var JD_ON = false;         // egasi namunani tasdiqlagach true bo'ladi
+  var JD_TADBIR = [
+    { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
+    { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
+    { k: "kubok", kun: 6, s: 23, m: 59, d: 1, rgb: "243,213,143", go: function () { openCup(); } }
+  ];
+  var JD_TX = {
+    uz: { t: "Jadval", s: "shu hafta", kun: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], toliq: ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"],
+          chess: "Shaxmat turniri", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
+          kunQ: "kun", soatQ: "soat", daqQ: "daq", har: "Har kuni", harS: "9 ta bellashuv (yarim tungacha) · Shokolad qurbaqa" },
+    ru: { t: "Расписание", s: "эта неделя", kun: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], toliq: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
+          chess: "Шахматный турнир", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
+          kunQ: "дн.", soatQ: "ч", daqQ: "мин", har: "Каждый день", harS: "9 состязаний (до полуночи) · Шоколадная лягушка" },
+    en: { t: "Schedule", s: "this week", kun: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], toliq: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          chess: "Chess tournament", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
+          kunQ: "d", soatQ: "h", daqQ: "min", har: "Every day", harS: "9 contests (until midnight) · Chocolate Frog" }
+  };
+  function hubJadval(korsat) {
+    var box = $("hub-jd"), x = JD_TX[lang] || JD_TX.uz;
+    if (!box) { return; }
+    box.classList.toggle("hidden", !korsat);
+    box.innerHTML = "";
+    if (!korsat) { return; }
+    var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
+    // Toshkent vaqti (UTC+5): hafta kuni (0 = dushanba) va haftaning boshidan o'tgan daqiqalar
+    var tk = new Date(Date.now() + 5 * 3600 * 1000), bugun = (tk.getUTCDay() + 6) % 7, hozir = bugun * 1440 + tk.getUTCHours() * 60 + tk.getUTCMinutes();
+    var bosh = mk("div", "hub-jd-h");
+    bosh.appendChild(mk("b", "", x.t));
+    bosh.appendChild(mk("span", "", x.s));
+    box.appendChild(bosh);
+    var hafta = mk("div", "hub-jd-w");
+    x.kun.forEach(function (nom, i) {
+      var k = mk("span", "hub-jd-d" + (i === bugun ? " bugun" : "") + (i < bugun ? " otdi" : ""));
+      k.appendChild(mk("b", "", nom));
+      var nq = mk("i", "");
+      JD_TADBIR.forEach(function (tb) { if (tb.kun === i && tb.k !== "kubok") { var n = mk("u", ""); n.style.background = "rgb(" + tb.rgb + ")"; nq.appendChild(n); } });
+      k.appendChild(nq);
+      hafta.appendChild(k);
+    });
+    box.appendChild(hafta);
+    // Tadbirlar - eng yaqini birinchi (shu haftada o'tib ketgani keyingi haftaga suriladi)
+    var royxat = JD_TADBIR.map(function (tb) {
+      var vaqt = tb.kun * 1440 + tb.s * 60 + tb.m, qol = vaqt - hozir, ketmoqda = qol <= 0 && qol > -tb.d;
+      if (qol <= -tb.d) { qol += 7 * 1440; }
+      return { tb: tb, qol: qol, ketmoqda: ketmoqda };
+    }).sort(function (a, b) { return (a.ketmoqda ? -1 : a.qol) - (b.ketmoqda ? -1 : b.qol); });
+    royxat.forEach(function (r) {
+      var tb = r.tb, q = mk("button", "hub-jd-r" + (r.ketmoqda ? " hozir" : ""));
+      q.type = "button";
+      q.style.setProperty("--jd", tb.rgb);
+      var vq = mk("span", "hub-jd-v");
+      vq.appendChild(mk("b", "", ("0" + tb.s).slice(-2) + ":" + ("0" + tb.m).slice(-2)));
+      vq.appendChild(mk("small", "", x.kun[tb.kun]));
+      q.appendChild(vq);
+      var mt = mk("span", "hub-jd-m");
+      mt.appendChild(mk("b", "", x[tb.k]));
+      var qolT = r.qol >= 1440 ? Math.floor(r.qol / 1440) + " " + x.kunQ + " " + Math.floor(r.qol % 1440 / 60) + " " + x.soatQ
+        : r.qol >= 60 ? Math.floor(r.qol / 60) + " " + x.soatQ + " " + (r.qol % 60) + " " + x.daqQ : Math.max(1, r.qol) + " " + x.daqQ;
+      mt.appendChild(mk("small", "", x.toliq[tb.kun] + (r.ketmoqda ? "" : " · " + qolT + " " + x.qoldi)));
+      q.appendChild(mt);
+      if (r.ketmoqda) { q.appendChild(mk("em", "", x.hozir)); }
+      else if (tb.kun === bugun && r.qol < 1440) { q.appendChild(mk("em", "", x.bugun)); }
+      q.appendChild(mk("i", "", "›"));
+      q.addEventListener("click", function () { tb.go(); });
+      box.appendChild(q);
+    });
+    var har = mk("p", "hub-jd-f");
+    har.appendChild(mk("b", "", x.har + ": "));
+    har.appendChild(document.createTextNode(x.harS));
+    box.appendChild(har);
   }
 
   function renderHubSettings() {
