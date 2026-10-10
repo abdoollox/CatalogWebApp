@@ -1132,7 +1132,8 @@
     }
     if (!m.tmp) item(CHAT_SVG.odam, odamX().peer, function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
     // Kim o'qidi / kim reaksiya bosdi (egasi, 2026-10-10) - bitta oyna, ikki bo'lim
-    if (!m.tmp) item(CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); });
+    // «Kim o'qidi» faqat xabar egasiga va adminga; reaksiyalar hammaga (egasi, 2026-10-10)
+    if (!m.tmp && (own || chatAdmin)) item(CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); });
     if (!m.tmp && m.reactions && m.reactions.length) item(CHAT_SVG.kayfiyat, L("chatReacts"), function() { chatInfo(m, "react"); });
     if (!m.kind) item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
     if (own && chatCanEdit(m) && !m.chess && !m.kind) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
@@ -1389,7 +1390,7 @@
   function chatInfoRender(res, avval) {
     var box = $("chat-info-list"), me = chatUser().id || 0;
     box.innerHTML = "";
-    $("chat-info-sub").textContent = L("chatInfoSub").replace("%s", res.readers_n);
+    $("chat-info-sub").textContent = res.can_read ? L("chatInfoSub").replace("%s", res.readers_n) : "";
     function bolim(sarlavha, royxat, ong) {
       var t = document.createElement("div");
       t.className = "ci-t";
@@ -1404,6 +1405,7 @@
     }
     var reak = function() { if (res.reactions.length) bolim(L("chatReactN").replace("%s", res.reactions.length), res.reactions, function(p) { return p.e; }); };
     var oqi = function() {
+      if (!res.can_read) return;
       bolim(L("chatReadN").replace("%s", res.readers_n), res.readers);
       if (!res.readers.length) box.appendChild(chatHint(L("chatNoRead")));
     };
