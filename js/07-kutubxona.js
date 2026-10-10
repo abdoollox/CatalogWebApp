@@ -500,7 +500,8 @@
      Boshqa odamning nishonlari chatdan ochiladi (nshPeer). Galleon berilmaydi. */
   var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
   var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "streak_7",
-                   "perfect_week", "kubok_golib", "top_3", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1"];
+                   "perfect_week", "kubok_golib", "top_3", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1",
+                   "maxluq_1", "maxluq_katta", "maxluq_12", "issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12", "kitob_1", "kitob_7"];
   var NSH_TX = {
     uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
           freshN: function (n) { return n + " ta yangi nishon"; }, freshP: "Hammasi profilingizda turadi.",
@@ -526,7 +527,10 @@
                albom: ["Musiqa ixlosmandi", "Galleonga bitta albom oching"],
                serial_1: ["Birinchi qism", "Serialning bitta qismini oling"],
                maxluq_1: ["Birinchi maxluq", "Qo'riqxonangizga birinchi maxluqni oling"], maxluq_katta: ["Katta maxluq", "Bitta maxluqni boqib, katta qilib o'stiring"],
-               maxluq_12: ["To'liq qo'riqxona", "O'n ikki maxluqning hammasini yig'ing"] } },
+               maxluq_12: ["To'liq qo'riqxona", "O'n ikki maxluqning hammasini yig'ing"],
+               issiq_1: ["Birinchi urug'", "Issiqxonangizga birinchi o'simlikni oling"], issiq_yetilgan: ["Yetilgan o'simlik", "Bitta o'simlikni sug'orib, to'liq yetishtiring"],
+               issiq_hosil: ["Birinchi hosil", "Yetilgan o'simlikdan birinchi hosilni oling"], issiq_12: ["To'liq issiqxona", "O'n ikki o'simlikning hammasini yig'ing"],
+               kitob_1: ["Birinchi kitob", "Ilovada birinchi kitobni oching"], kitob_7: ["Yetti kitob", "Yettala kitobning hammasini oching"] } },
     ru: { sec: "Значки", got: "Получен", lock: "Ещё не получен", close: "Закрыть", fresh: "Новый значок",
           freshN: function (n) { return "Новых значков: " + n; }, freshP: "Все они хранятся в вашем профиле.",
           prog: function (a, b) { return a + " / " + b; }, of: "Значки", none: "Значков пока нет",
@@ -551,7 +555,10 @@
                albom: ["Ценитель музыки", "Откройте один альбом за галлеоны"],
                serial_1: ["Первая серия", "Получите одну серию сериала"],
                maxluq_1: ["Первое существо", "Получите первое существо в питомник"], maxluq_katta: ["Взрослое существо", "Вырастите одно существо до взрослого"],
-               maxluq_12: ["Полный питомник", "Соберите всех двенадцать существ"] } },
+               maxluq_12: ["Полный питомник", "Соберите всех двенадцать существ"],
+               issiq_1: ["Первое семя", "Получите первое растение в теплицу"], issiq_yetilgan: ["Зрелое растение", "Поливайте одно растение, пока оно не созреет"],
+               issiq_hosil: ["Первый урожай", "Соберите первый урожай со зрелого растения"], issiq_12: ["Полная теплица", "Соберите все двенадцать растений"],
+               kitob_1: ["Первая книга", "Откройте первую книгу в приложении"], kitob_7: ["Семь книг", "Откройте все семь книг"] } },
     en: { sec: "Badges", got: "Earned", lock: "Not earned yet", close: "Close", fresh: "New badge",
           freshN: function (n) { return n + " new badges"; }, freshP: "They are all kept in your profile.",
           prog: function (a, b) { return a + " / " + b; }, of: "Badges", none: "No badges yet",
@@ -576,7 +583,10 @@
                albom: ["Music Lover", "Unlock one album with Galleons"],
                serial_1: ["First Episode", "Get one episode of the series"],
                maxluq_1: ["First Creature", "Get your first creature for the menagerie"], maxluq_katta: ["Grown Creature", "Feed one creature until it is fully grown"],
-               maxluq_12: ["Full Menagerie", "Collect all twelve creatures"] } }
+               maxluq_12: ["Full Menagerie", "Collect all twelve creatures"],
+               issiq_1: ["First Seed", "Get your first plant for the greenhouse"], issiq_yetilgan: ["Mature Plant", "Water one plant until it is fully grown"],
+               issiq_hosil: ["First Harvest", "Gather the first harvest from a mature plant"], issiq_12: ["Full Greenhouse", "Collect all twelve plants"],
+               kitob_1: ["First Book", "Open your first book in the app"], kitob_7: ["Seven Books", "Open all seven books"] } }
   };
   // Toifalar (egasi: nishonlar ko'payadi, guruhlarga bo'linsin). Yangi nishon -> shu ro'yxatga.
   var NSH_GROUPS = [
@@ -586,7 +596,9 @@
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
     ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }],
-    ["maxluq", ["maxluq_1", "maxluq_katta", "maxluq_12"], { uz: "Qo'riqxona", ru: "Питомник", en: "Menagerie" }]
+    ["maxluq", ["maxluq_1", "maxluq_katta", "maxluq_12"], { uz: "Qo'riqxona", ru: "Питомник", en: "Menagerie" }],
+    ["issiq", ["issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12"], { uz: "Issiqxona", ru: "Теплица", en: "Greenhouse" }],
+    ["kitob", ["kitob_1", "kitob_7"], { uz: "Kitoblar", ru: "Книги", en: "Books" }]
   ];
   var NSH_SUM = { uz: "nishon olingan", ru: "значков получено", en: "badges earned" };
   var nshData = null, nshAsked = false, nshSampleSeen = false;
