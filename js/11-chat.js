@@ -51,6 +51,9 @@
       'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
   }
   var CHAT_SVG = {
+    odam: chatSvg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),
+    oqildi: chatSvg('<path d="m2 12.5 4.5 4.5L16 7"/><path d="m11.5 16 1 1L22 7"/>'),
+    kayfiyat: chatSvg('<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4 4 0 0 0 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>'),
     nishon: chatSvg('<circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/>'),
     reply: chatSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
     copy: chatSvg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
@@ -732,7 +735,7 @@
   function chatPeerSheet() {
     var p = chatPeerOf(chatRoom), blocked = chatDmState === "blocked_by_me";
     chatSheet(p.name || "Sehrgar", null, [
-      { icon: CHAT_SVG.nishon, label: odamX().peer, fn: function() { odamOpen(p.uid, p); } },
+      { icon: CHAT_SVG.odam, label: odamX().peer, fn: function() { odamOpen(p.uid, p); } },
       { icon: CHESS_IC.swords, label: L("chatChess"), fn: function() { chessAnnounce(chatRoom); } },
       blocked ?
       { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
@@ -1127,7 +1130,10 @@
     if (!own && !m.tmp && !chatIsDm(chatRoom)) {
       item(CHAT_SVG.dm, L("chatWrite"), function() { chatOpenDm({ uid: m.uid, name: m.name, house: m.house }); });
     }
-    if (!m.tmp) item(CHAT_SVG.nishon, odamX().peer, function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
+    if (!m.tmp) item(CHAT_SVG.odam, odamX().peer, function() { odamOpen(m.uid, { name: m.name, house: m.house }); });
+    // Kim o'qidi / kim reaksiya bosdi (egasi, 2026-10-10) - bitta oyna, ikki bo'lim
+    if (!m.tmp) item(CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); });
+    if (!m.tmp && m.reactions && m.reactions.length) item(CHAT_SVG.kayfiyat, L("chatReacts"), function() { chatInfo(m, "react"); });
     if (!m.kind) item(CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
     if (own && chatCanEdit(m) && !m.chess && !m.kind) item(CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
     if (own || (chatAdmin && !m.tmp)) item(CHAT_SVG.trash, L("chatDelete"), function() { chatDelete(m); }, true);
@@ -1360,6 +1366,48 @@
   function chatClosePeople() {
     chatPeople = null;
     $("chat-people").classList.add("hidden");
+    chatCloseInfo();
+  }
+
+  /* Xabar haqida: kim reaksiya bosgan va kim o'qigan. Server: POST {action: "info", id}. Qator bosilsa - profili. */
+  var chatInfoId = 0;
+  function chatCloseInfo() { chatInfoId = 0; $("chat-info").classList.add("hidden"); }
+  function chatInfo(m, avval) {
+    chatInfoId = m.id;
+    $("chat-info-title").textContent = L("chatInfoT");
+    $("chat-info-sub").textContent = "";
+    var box = $("chat-info-list");
+    box.innerHTML = "";
+    box.appendChild(chatHint(L("loading")));
+    $("chat-info").classList.remove("hidden");
+    chatAct(chatRoom, { action: "info", id: m.id }).then(function(res) {
+      if (chatInfoId !== m.id) return;
+      if (!(res && res.ok)) { box.innerHTML = ""; box.appendChild(chatHint(L("chatNobody"))); return; }
+      chatInfoRender(res, avval);
+    }).catch(function() { if (chatInfoId === m.id) { box.innerHTML = ""; box.appendChild(chatHint(L("chatNobody"))); } });
+  }
+  function chatInfoRender(res, avval) {
+    var box = $("chat-info-list"), me = chatUser().id || 0;
+    box.innerHTML = "";
+    $("chat-info-sub").textContent = L("chatInfoSub").replace("%s", res.readers_n);
+    function bolim(sarlavha, royxat, ong) {
+      var t = document.createElement("div");
+      t.className = "ci-t";
+      t.textContent = sarlavha;
+      box.appendChild(t);
+      royxat.forEach(function(p) {
+        var hh = HOUSES[p.house] || {};
+        var row = chatPersonRow(p, p.uid == me ? L("chatYou") : (HOUSES[p.house] ? (hh.crest ? hh.crest + " " : "") + cupHouseName(p.house) : ""), false, ong ? ong(p) : "");
+        row.addEventListener("click", function() { odamOpen(p.uid, { name: p.name, house: p.house }); });
+        box.appendChild(row);
+      });
+    }
+    var reak = function() { if (res.reactions.length) bolim(L("chatReactN").replace("%s", res.reactions.length), res.reactions, function(p) { return p.e; }); };
+    var oqi = function() {
+      bolim(L("chatReadN").replace("%s", res.readers_n), res.readers);
+      if (!res.readers.length) box.appendChild(chatHint(L("chatNoRead")));
+    };
+    if (avval === "react") { reak(); oqi(); } else { oqi(); reak(); }
   }
 
   function chatRenderPeople() {
@@ -1603,6 +1651,7 @@
       else if (chatIsDm(chatRoom)) chatPeerSheet();
     });
     $("chat-people-back").addEventListener("click", chatClosePeople);
+    $("chat-info-back").addEventListener("click", chatCloseInfo);
     $("chat-people-q").addEventListener("input", chatRenderPeople);
     $("chat-bar-x").addEventListener("mousedown", function(e) { e.preventDefault(); });
     $("chat-bar-x").addEventListener("click", chatCancelCompose);
