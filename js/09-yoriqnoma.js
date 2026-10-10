@@ -58,11 +58,12 @@
     if (yq || !yqKerak() || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
     var o = document.createElement("div");
     o.className = "yq";
-    o.innerHTML = '<div class="yq-teshik"></div><div class="yq-box"><b class="yq-kim"></b><p class="yq-m"></p>'
+    o.innerHTML = '<div class="yq-teshik"></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><p class="yq-m"></p></div></div>'
       + '<div class="yq-btm"><button type="button" class="yq-otkaz"></button><span class="yq-n"></span><button type="button" class="yq-nx"></button></div></div>';
     document.body.appendChild(o);
     yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0 };
     var uy = cupMe().house || house;
+    o.querySelector(".yq-rasm").src = "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp";     // sardor rasmi (asl: dizayn-tizimi/sardor/)
     o.querySelector(".yq-kim").textContent = yqT("kim").replace("%s", syT("ism_" + uy));
     o.querySelector(".yq-otkaz").textContent = yqT("otkaz");
     o.querySelector(".yq-otkaz").onclick = yqTugat;
