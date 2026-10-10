@@ -577,16 +577,6 @@
   function duCup() {
     var x = duX(), t = duT(), box = $("du-cup"), c = duData && duData.cup, tr = duData && duData.tour;
     box.innerHTML = "";
-    // admin sinov tugmasi to'r ustida emas - pastdagi qoida kartasida (o'quvchi ko'rinishiga xalal bermasin)
-    var planK = $("du-plan");
-    planK.innerHTML = "";
-    planK.classList.toggle("hidden", !(duData && duData.admin));
-    if (duData && duData.admin) {
-      var tb = drEl("button", "qr-b du-test", t.test);
-      tb.type = "button";
-      tb.addEventListener("click", function () { duPost({ sinov: 1 }, function (res) { if (res && res.test_id) { duArena(res.test_id); } else { showToast(drX().fail, "err"); } }); });
-      planK.appendChild(tb);
-    }
     if (!c) { return; }
     if (c.from) { box.appendChild(drEl("p", "du-cup-n", t.from)); return; }
     if (c.size == null) {                               // to'r hali tuzilmagan: yozilganlar ro'yxati (reyting bo'yicha)
