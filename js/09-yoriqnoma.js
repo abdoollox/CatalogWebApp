@@ -58,22 +58,30 @@
   // Ko'rinib turgan element (yashirin sahifadagisi hisobga olinmaydi)
   function yqEl() {
     var e = null;
-    try { e = YQ_QADAM[yq.i].el(); } catch (x) {}
+    try { e = yq.q[yq.i].el(); } catch (x) {}
     if (!e || !e.getClientRects().length) { return null; }
     return e;
   }
 
+  // Bosh sahifa yo'riqnomasi (saralangandan keyin): sardor nomidan
   function yqBosh() {
     if (yq || !yqKerak() || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
+    var uy = cupMe().house || house;
+    yqOch(YQ_QADAM, { kim: yqT("kim").replace("%s", syT("ism_" + uy)), rasm: "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp", kalit: YQ_KEY });
+  }
+
+  /* Istalgan sahifa uchun yo'riqnoma: qadamlar = [{el: funksiya, t: YQ_TX kaliti yoki m: tayyor matn, tap, kut}],
+     o = {kim: sarlavha, rasm: doiradagi rasm, kalit: tugaganda o'chiriladigan belgi (ixtiyoriy), tugash: funksiya (ixtiyoriy)}. */
+  function yqOch(qadamlar, o2) {
+    if (yq) { return; }
     var o = document.createElement("div");
     o.className = "yq";
     o.innerHTML = '<div class="yq-teshik"></div><div class="yq-qol"><svg viewBox="0 0 24 24" fill="#fff" stroke="#10141a" stroke-width="1.1" stroke-linejoin="round"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10l5.2 1.1A2.3 2.3 0 0 1 19 13.4l-.6 4.3A3.8 3.8 0 0 1 14.6 21h-2.9a3.8 3.8 0 0 1-3-1.5L5.3 15a1.4 1.4 0 0 1 2.1-1.8L9 14.6z"/></svg></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><p class="yq-m"></p></div></div>'
       + '<div class="yq-btm"><span class="yq-n"></span><button type="button" class="yq-nx"></button></div></div>';
     document.body.appendChild(o);
-    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0 };
-    var uy = cupMe().house || house;
-    o.querySelector(".yq-rasm").src = "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp";     // sardor rasmi (asl: dizayn-tizimi/sardor/)
-    o.querySelector(".yq-kim").textContent = yqT("kim").replace("%s", syT("ism_" + uy));
+    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null };
+    o.querySelector(".yq-rasm").src = o2.rasm;
+    o.querySelector(".yq-kim").textContent = o2.kim;
     o.querySelector(".yq-nx").onclick = function () { yqKeyingi(); };
     document.addEventListener("click", yqBosildi, true);
     yq.iv = setInterval(yqJoy, 200);
@@ -83,23 +91,25 @@
   function yqKeyingi() {
     if (!yq) { return; }
     yq.i++; yq.kut = 0;
-    if (yq.i >= YQ_QADAM.length) { yqTugat(); return; }
+    if (yq.i >= yq.q.length) { yqTugat(); return; }
     yqJoy();
   }
 
   function yqTugat() {
-    try { window.localStorage.removeItem(YQ_KEY); } catch (e) {}
-    if (!yq) { return; }
+    if (!yq) { try { window.localStorage.removeItem(YQ_KEY); } catch (e) {} return; }
+    var tugash = yq.tugash;
+    if (yq.kalit) { try { window.localStorage.removeItem(yq.kalit); } catch (e) {} }
     clearInterval(yq.iv);
     document.removeEventListener("click", yqBosildi, true);
     if (yq.o.parentNode) { yq.o.parentNode.removeChild(yq.o); }
     yq = null;
+    if (tugash) { try { tugash(); } catch (e) {} }
   }
 
   // Yoritilgan joydan va izoh oynasidan boshqa hech narsa bosilmaydi
   function yqBosildi(ev) {
     if (!yq) { return; }
-    var t = ev.target, q = YQ_QADAM[yq.i], e = yqEl();
+    var t = ev.target, q = yq.q[yq.i], e = yqEl();
     if (yq.o.querySelector(".yq-box").contains(t)) { return; }
     if (q.tap && e && e.contains(t)) { setTimeout(yqKeyingi, 60); return; }
     if (q.kut && e && e.contains(t)) { return; }
@@ -109,13 +119,13 @@
 
   // Kutilgan ish bajarildi (masalan, chatga xabar yuborildi) - keyingi qadam
   function yqHodisa(nom) {
-    if (yq && YQ_QADAM[yq.i].kut === nom) { setTimeout(yqKeyingi, 500); }
+    if (yq && yq.q[yq.i].kut === nom) { setTimeout(yqKeyingi, 500); }
   }
 
   // Teshik va izohni element ustiga qo'yadi (sahifa qayta chizilsa ham ergashadi)
   function yqJoy() {
     if (!yq) { return; }
-    var q = YQ_QADAM[yq.i], e = yqEl(), o = yq.o;
+    var q = yq.q[yq.i], e = yqEl(), o = yq.o;
     var tsh = o.querySelector(".yq-teshik"), box = o.querySelector(".yq-box");
     if (!e) {
       // element hali chizilmagan: biroz kutamiz; chiqmasa - qadam tashlab ketiladi (bosiladigan qadamda yo'riqnoma tugaydi)
@@ -129,8 +139,8 @@
     o.classList.remove("kut");
     tsh.style.left = (r.left - p) + "px"; tsh.style.top = (r.top - p) + "px";
     tsh.style.width = (r.width + p * 2) + "px"; tsh.style.height = (r.height + p * 2) + "px";
-    o.querySelector(".yq-m").textContent = yqT(q.t);
-    o.querySelector(".yq-n").textContent = (yq.i + 1) + " / " + YQ_QADAM.length;
+    o.querySelector(".yq-m").textContent = q.m || yqT(q.t);
+    o.querySelector(".yq-n").textContent = (yq.i + 1) + " / " + yq.q.length;
     var nx = o.querySelector(".yq-nx");
     // «O'tkazib yuborish» yo'q (egasi, 2026-10-11). Yozish qadamida odam tiqilib qolmasin: 40 soniyadan keyin «Keyingi» ochiladi.
     if (yq.t0i !== yq.i) { yq.t0i = yq.i; yq.t0 = Date.now(); }
