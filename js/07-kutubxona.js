@@ -1402,6 +1402,7 @@
     maybeWorldLink();
     msMaybeOst();
     srMaybeOpen();
+    kqTekshir();       // kutubxona yo'riqnomasi (09-yoriqnoma-kutubxona.js)
   }
 
   // Bot "Saralanish" tugmasi WebApp'ni ?screen=sort bilan ochadi — shunda

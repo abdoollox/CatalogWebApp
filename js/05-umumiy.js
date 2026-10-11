@@ -540,7 +540,7 @@
     var t = T[lang];
     var init = "";
     try { init = (tg && tg.initData) || ""; } catch (e) {}
-    if (!init || !window.fetch) { openInBot(id); return; }
+    if (!init || !window.fetch) { kqFilmXato(); openInBot(id); return; }
 
     sending = true;
     var pending = showToast(t.sending);
@@ -560,9 +560,11 @@
         renderCatalog();
         persist();
         showUndoNote(id, res.title || "", res.message_id);
+        yqHodisa("film");      // kutubxona yo'riqnomasi (09-yoriqnoma-kutubxona.js) film kelishini kutadi
         return;
       }
 
+      kqFilmXato();
       var err = res && res.error;
       if (err === "not_ready") { showToast(t.notReadyMsg, "err"); return; }
       // Film manbada topilmadi: botga o'tish ham yordam bermaydi, adminlar xabardor
@@ -578,6 +580,7 @@
     })["catch"](function () {
       sending = false;
       dismissNote(pending);
+      kqFilmXato();
       openInBot(id);
     });
   }
