@@ -351,20 +351,96 @@
     card.appendChild(b);
     grid.parentNode.insertBefore(card, grid);
   }
+  /* KURS TABRIGI (egasi, 2026-10-11: «vizual jihatdan yaxshilash»): yonib turgan kurs muhri, to'rt pog'onali yo'l
+     (o'tilganlari belgili), Professor Makgonagall tabrigi, ochilgan xonalar rasmlari va keyingi maqsad. Rang - fakultet urg'usi. */
+  var KURS_TB = {
+    uz: { kick: "Xogvarts · yangi kurs", muhr: "kurs", mg: "Professor Makgonagall", keyin: "Keyingi maqsad", oxir: "Siz eng yuqori kursdasiz — Xogvartsning hamma xonalari ochiq.",
+          gap: { 2: "Tabriklayman! Birinchi kursni sharaf bilan tugatdingiz. Endi fakultetingiz uchun bellashish vaqti.",
+                 3: "Ajoyib! Endi rekord qo'yasiz, maxluq va o'simliklaringizni o'zingiz parvarish qilasiz.",
+                 4: "Barakalla! Siz eng yuqori kursdasiz. Maydon sizni kutmoqda: duel, shaxmat va viktorina." },
+          xona: { bell: "Bellashuv", sq: "Shokolad qurbaqa", cup: "Xogvarts kubogi", rek: "Rekordlar", qoriq: "Qo'riqxona", issiq: "Issiqxona", duel: "Duel", chess: "Shaxmat", vik: "Viktorina" },
+          qosh: { 4: "va Hafta jadvali" } },
+    ru: { kick: "Хогвартс · новый курс", muhr: "курс", mg: "Профессор Макгонагалл", keyin: "Следующая цель", oxir: "Вы на старшем курсе — все комнаты Хогвартса открыты.",
+          gap: { 2: "Поздравляю! Первый курс пройден с честью. Теперь пора состязаться за свой факультет.",
+                 3: "Превосходно! Теперь вы ставите рекорды и сами ухаживаете за существами и растениями.",
+                 4: "Браво! Вы на старшем курсе. Арена ждёт вас: дуэль, шахматы и викторина." },
+          xona: { bell: "Состязания", sq: "Шоколадная лягушка", cup: "Кубок школы", rek: "Рекорды", qoriq: "Заповедник", issiq: "Теплица", duel: "Дуэль", chess: "Шахматы", vik: "Викторина" },
+          qosh: { 4: "и Расписание недели" } },
+    en: { kick: "Hogwarts · new year", muhr: "year", mg: "Professor McGonagall", keyin: "Next goal", oxir: "You are in the top year — every room in Hogwarts is open.",
+          gap: { 2: "Congratulations! You finished your first year with honour. Now it is time to compete for your house.",
+                 3: "Splendid! Now you set records and look after your own creatures and plants.",
+                 4: "Well done! You are in the top year. The Arena awaits: duels, chess and the quiz." },
+          xona: { bell: "Contests", sq: "Chocolate Frog", cup: "House Cup", rek: "Records", qoriq: "Reserve", issiq: "Greenhouse", duel: "Duel", chess: "Chess", vik: "Quiz" },
+          qosh: { 4: "and the Weekly schedule" } }
+  };
+  var KURS_XONA = { 2: ["bell", "sq", "cup"], 3: ["rek", "qoriq", "issiq"], 4: ["duel", "chess", "vik"] };
+  function kursXonaRasm(k) {
+    if (k === "sq") { return IMG_DIR + "qurbaqa/dumbledore.webp"; }
+    if (k === "cup") { var uy = "gryffindor"; try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {} return IMG_DIR + uy.charAt(0).toUpperCase() + uy.slice(1) + "_crest.png"; }
+    return IMG_DIR + "hub/" + k + ".webp";
+  }
   function kursTabrik(n) {
-    var x = KURS_TX[lang] || KURS_TX.uz, eski = $("du-info");
+    var x = KURS_TX[lang] || KURS_TX.uz, t = KURS_TB[lang] || KURS_TB.uz, eski = $("du-info"), i;
     if (eski) { eski.parentNode.removeChild(eski); }
     var orqa = document.createElement("div"), oyna = document.createElement("div"), yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); } };
     orqa.className = "du-info kurs-tb";
     orqa.id = "du-info";
     oyna.className = "du-info-p";
-    oyna.innerHTML = '<div class="kurs-tb-i"><u></u><b></b><small></small><p></p><button type="button" class="dr-btn"></button></div>';
-    oyna.querySelector("u").textContent = String(n);
-    oyna.querySelector("b").textContent = x.tabrik(n);
-    oyna.querySelector("small").textContent = x.tabrikS;
-    oyna.querySelector("p").textContent = x.och[n] || "";
-    oyna.querySelector("button").textContent = x.ok;
-    oyna.querySelector("button").onclick = yop;
+    var ich = drEl("div", "ktb");
+    // uchqunlar (bezak)
+    var uq = drEl("div", "ktb-uq");
+    for (i = 0; i < 14; i++) { var u = drEl("i", ""); u.style.left = (4 + (i * 53) % 92) + "%"; u.style.animationDelay = (i * 0.23).toFixed(2) + "s"; u.style.animationDuration = (2.4 + (i % 4) * 0.5) + "s"; uq.appendChild(u); }
+    ich.appendChild(uq);
+    var muhr = drEl("div", "ktb-muhr");
+    muhr.appendChild(drEl("span", "ktb-nur"));
+    var ich2 = drEl("span", "ktb-ich");
+    ich2.appendChild(drEl("b", "", String(n)));
+    ich2.appendChild(drEl("small", "", t.muhr));
+    muhr.appendChild(ich2);
+    ich.appendChild(muhr);
+    ich.appendChild(drEl("small", "ktb-kick", t.kick));
+    ich.appendChild(drEl("b", "ktb-t", x.tabrik(n)));
+    // to'rt pog'onali yo'l
+    var yol = drEl("div", "ktb-yol");
+    for (i = 1; i <= 4; i++) {
+      var pg = drEl("span", "ktb-pg" + (i < n ? " otdi" : i === n ? " hoz" : ""));
+      pg.appendChild(drEl("i", "", i < n ? "✓" : String(i)));
+      pg.appendChild(drEl("small", "", x.kurs(i)));
+      yol.appendChild(pg);
+    }
+    ich.appendChild(yol);
+    // Makgonagall tabrigi
+    var mg = drEl("div", "ktb-mg"), mim = document.createElement("img");
+    mim.alt = ""; mim.src = IMG_DIR + "makgonagall/zor.webp";
+    mg.appendChild(mim);
+    var mt = drEl("div", "ktb-mg-t");
+    mt.appendChild(drEl("small", "", t.mg));
+    mt.appendChild(drEl("p", "", t.gap[n] || ""));
+    mg.appendChild(mt);
+    ich.appendChild(mg);
+    // ochilgan xonalar
+    ich.appendChild(drEl("small", "ktb-kick", x.tabrikS));
+    var xs = drEl("div", "ktb-xona");
+    (KURS_XONA[n] || []).forEach(function (k) {
+      var c = drEl("span", "ktb-x" + (k === "cup" ? " gerb" : "")), r = drEl("span", "ktb-x-r");
+      r.style.backgroundImage = "url(" + kursXonaRasm(k) + ")";
+      c.appendChild(r);
+      c.appendChild(drEl("b", "", t.xona[k]));
+      xs.appendChild(c);
+    });
+    ich.appendChild(xs);
+    if (t.qosh[n]) { ich.appendChild(drEl("small", "ktb-qosh", t.qosh[n])); }
+    // keyingi maqsad
+    var kk = drKurs || {}, har = kk["need" + (n + 1)] || [0, 0, 3, 9, 15][n + 1];
+    var mq = drEl("div", "ktb-maq");
+    mq.appendChild(drEl("small", "", n < 4 ? t.keyin : ""));
+    mq.appendChild(drEl("span", "", n < 4 ? x.vazifa(n + 1, har) : t.oxir));
+    ich.appendChild(mq);
+    var bt = drEl("button", "dr-btn", x.ok);
+    bt.type = "button";
+    bt.onclick = yop;
+    ich.appendChild(bt);
+    oyna.appendChild(ich);
     orqa.appendChild(oyna);
     orqa.addEventListener("click", function (e) { if (e.target === orqa) { yop(); } });
     document.body.appendChild(orqa);
