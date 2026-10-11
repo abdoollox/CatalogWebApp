@@ -310,9 +310,9 @@
     if (kursKutmoqda && hid !== "none") { var yangi = kursKutmoqda; kursKutmoqda = 0; setTimeout(function () { kursTabrik(yangi); }, 350); }
     if (hid === "none" || kn >= 4) { return; }
     var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
-    // Kurs sharti HAR FANDAN (egasi, 2026-10-11): 2-kursga - har fandan 3 tadan dars, 4-kursga - 9 tadan. fan2/fan4 - shartni bajargan fanlar soni.
-    var k = drKurs || { fans: 9, fan2: 0, fan4: 0, need2: 3, need4: 9 }, har = kn === 1 ? k.need2 : k.need4;
-    var kerak = k.fans || 9, bor = Math.min((kn === 1 ? k.fan2 : k.fan4) || 0, kerak);
+    // Kurs sharti faqat DARSLAR, HAR FANDAN (egasi, 2026-10-11): 2-kursga 3 tadan, 3-kursga 9 tadan, 4-kursga 15 tadan. fanN - shartni bajargan fanlar soni.
+    var k = drKurs || { fans: 9, fan2: 0, fan3: 0, fan4: 0, need2: 3, need3: 9, need4: 15 }, keyin = kn + 1, har = k["need" + keyin] || [0, 0, 3, 9, 15][keyin];
+    var kerak = k.fans || 9, bor = Math.min(k["fan" + keyin] || 0, kerak);
     var card = mk("div", "hub-kurs");
     card.id = "hub-kurs";
     var tep = mk("div", "hub-kurs-t");
@@ -326,16 +326,16 @@
     card.appendChild(tep);
     var qat = mk("div", "hub-kurs-q");
     qat.appendChild(mk("b", "", x.gacha(kn + 1)));
-    qat.appendChild(mk("span", "", kn === 2 ? x.bell : x.dars(bor, kerak, har)));
+    qat.appendChild(mk("span", "", x.dars(bor, kerak, har)));
     card.appendChild(qat);
     var chiz = mk("span", "hub-kurs-c"), ich = mk("i", "");
-    ich.style.width = (kn === 2 ? 0 : Math.round(bor * 100 / kerak)) + "%";
+    ich.style.width = Math.round(bor * 100 / kerak) + "%";
     chiz.appendChild(ich);
     card.appendChild(chiz);
     card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + x.och[kn + 1]));
-    var b = mk("button", "dr-btn", kn === 2 ? x.bBell : x.bDars);
+    var b = mk("button", "dr-btn", x.bDars);
     b.type = "button";
-    b.onclick = hubGo(kn === 2 ? blHomeOpen : drOpen);
+    b.onclick = hubGo(drOpen);
     card.appendChild(b);
     grid.parentNode.insertBefore(card, grid);
   }
