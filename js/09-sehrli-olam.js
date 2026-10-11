@@ -291,15 +291,15 @@
   /* KURS KARTASI (kataklar tepasida, 1-3-kursda): hozirgi kurs, keyingisigacha nima qilish kerak va unda nima ochiladi.
      Kurs oshgan bo'lsa (kursKutmoqda) - tabrik oynasi. 4-kursda karta yo'q. */
   var KURS_TX = {
-    uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", dars: function (a, b, n) { return a + " / " + b + " fanda " + n + " tadan dars"; }, bell: "Bitta bellashuvda qatnashing",
+    uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", vazifa: function (k, n) { return k + "-kursga o'tish uchun har bir fandan " + n + " tadan dars o'ting"; }, tayyor: function (a, b) { return a + " / " + b + " fan tayyor"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
           och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish" },
-    ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", dars: function (a, b, n) { return "По " + n + " урока: " + a + " / " + b + " предметов"; }, bell: "Поучаствуйте в одном состязании",
+    ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", vazifa: function (k, n) { return "Чтобы перейти на " + k + "-й курс, пройдите по " + n + " урока по каждому предмету"; }, tayyor: function (a, b) { return "Готово: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
           och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
           tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить" },
-    en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", dars: function (a, b, n) { return a + " / " + b + " subjects with " + n + " lessons"; }, bell: "Take part in one contest",
+    en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", vazifa: function (k, n) { return "To reach year " + k + ", pass " + n + " lessons in every subject"; }, tayyor: function (a, b) { return a + " / " + b + " subjects done"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
           och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
           tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue" }
@@ -324,14 +324,26 @@
     [1, 2, 3, 4].forEach(function (i) { pog.appendChild(mk("i", i <= kn ? "on" : "", String(i))); });
     tep.appendChild(pog);
     card.appendChild(tep);
+    // Nima qilish kerakligi ANIQ yoziladi va to'qqiz fan alohida ko'rsatiladi (egasi, 2026-10-11: «tushunarli bo'lmay qolibdi»)
     var qat = mk("div", "hub-kurs-q");
-    qat.appendChild(mk("b", "", x.gacha(kn + 1)));
-    qat.appendChild(mk("span", "", x.dars(bor, kerak, har)));
+    qat.appendChild(mk("b", "", x.vazifa(kn + 1, har)));
+    qat.appendChild(mk("span", "", x.tayyor(bor, kerak)));
     card.appendChild(qat);
-    var chiz = mk("span", "hub-kurs-c"), ich = mk("i", "");
-    ich.style.width = Math.round(bor * 100 / kerak) + "%";
-    chiz.appendChild(ich);
-    card.appendChild(chiz);
+    var fq = mk("div", "hub-kurs-f");
+    DR_FANLAR.forEach(function (f) {
+      var lv = Math.min(har, (drData && drData[f.id] && drData[f.id].level) || 0), ok = lv >= har;
+      var fb = mk("button", "hub-kurs-fb" + (ok ? " ok" : ""));
+      fb.type = "button";
+      fb.style.setProperty("--dr-rgb", f.rgb);
+      var fi = document.createElement("img");
+      fi.src = IMG_DIR + "dars/" + f.id + ".webp"; fi.alt = "";
+      fb.appendChild(fi);
+      fb.appendChild(mk("small", "", ok ? "✓" : lv + " / " + har));
+      fb.setAttribute("aria-label", f.nom[lang] || f.nom.uz);
+      fb.onclick = hubGo(function () { fanOpen(f.id); });
+      fq.appendChild(fb);
+    });
+    card.appendChild(fq);
     card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + x.och[kn + 1]));
     var b = mk("button", "dr-btn", x.bDars);
     b.type = "button";
