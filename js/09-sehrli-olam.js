@@ -606,7 +606,7 @@
                                  "<span>" + W_SET_TX.lib[lang] + "</span>";
     $("hub-set-hub").innerHTML = QASR_SVG + "<span>" + HUB_TX.title[lang] + "</span>";
     $("hub-set-lib").className = cur === "lib" ? "on" : "";
-    $("hub-set-pv").classList.toggle("hidden", !jrIsAdmin());
+    $("hub-set-pv").classList.toggle("hidden", !jrIsAdmin() || HP_TEST);      // sinov rejimida - pastdagi «Sinov o'quvchisi» bo'limi
     $("hub-pv-ic").innerHTML = hubSvg(AL_ICONS.letter);
     $("hub-pv-t").textContent = al("pvBtn");
     $("hub-pv-s").textContent = al("pvNote");
@@ -905,6 +905,8 @@
     bar: { uz: "SINOV O'QUVCHISI", ru: "ТЕСТОВЫЙ УЧЕНИК", en: "TEST STUDENT" },
     zero: { uz: "Noldan", ru: "С нуля", en: "Reset" },
     exit: { uz: "Chiqish", ru: "Выйти", en: "Exit" },
+    pmT: { uz: "Siz sinov o'quvchisisiz", ru: "Вы — тестовый ученик", en: "You are the test student" },
+    pmS: { uz: "Asl profilingiz saqlangan", ru: "Ваш настоящий профиль сохранён", en: "Your real profile is safe" },
     askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Saralanishdan boshlaysiz, asl profilingiz saqlanib qoladi.",
              ru: "Войти как тестовый ученик? Начнёте с распределения, ваш профиль сохранится.",
              en: "Enter as a test student? You start at the Sorting; your real profile stays." },
@@ -1087,26 +1089,25 @@
     });
   }
 
-  function testBar() {
-    if (!HP_TEST || document.querySelector(".hptest-bar")) { return; }
-    document.body.classList.add("hptest");
-    var bar = document.createElement("div");
-    bar.className = "hptest-bar";
-    var tag = document.createElement("span");
-    tag.textContent = testTx("bar");
-    var zero = document.createElement("button");
-    zero.type = "button";
-    zero.textContent = testTx("zero");
-    zero.addEventListener("click", testReset);
-    var out = document.createElement("button");
-    out.type = "button";
-    out.textContent = testTx("exit");
-    out.addEventListener("click", testExit);
-    bar.appendChild(tag);
-    bar.appendChild(zero);
-    bar.appendChild(out);
-    document.body.appendChild(bar);
+  /* Sinov o'quvchisi boshqaruvi PROFIL sahifasida (egasi, 2026-10-11: tepadagi qizil tasma olib tashlandi).
+     Profil ochilganda (pmFill) chaqiriladi; faqat sinov rejimida ko'rinadi. */
+  function testPm() {
+    var box = $("pm-test");
+    if (!box) { return; }
+    box.classList.toggle("hidden", !HP_TEST);
+    if (!HP_TEST) { return; }
+    $("pm-test-l").textContent = testTx("bar");
+    $("pm-test-t").textContent = testTx("pmT");
+    $("pm-test-s").textContent = testTx("pmS");
+    $("pm-test-0").textContent = testTx("zero");
+    $("pm-test-x").textContent = testTx("exit");
+    if (!box.getAttribute("data-ok")) {
+      box.setAttribute("data-ok", "1");
+      $("pm-test-0").addEventListener("click", testReset);
+      $("pm-test-x").addEventListener("click", testExit);
+    }
   }
+  function testBar() { testPm(); }       // tasma yo'q - eski chaqiruvlar uchun
 
   function jrAdminCheck() {
     if (jrAdminAsked || chatAdmin || !window.fetch) { return; }

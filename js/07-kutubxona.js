@@ -413,6 +413,7 @@
     $("pm-wal-n").textContent = x.gal(pmGal());
     $("pm-wal-s").textContent = x.walS;
     $("pm-sec2").textContent = x.sec2;
+    try { testPm(); } catch (e) {}           // sinov o'quvchisi boshqaruvi (js/09-sehrli-olam.js)
     // Fakultet va tayoqcha panellari (ilgari "Sehrgar" sahifasida edi)
     try { renderProfile(); } catch (e) {}
     try { patPaint(); patLoad(); } catch (e) {}

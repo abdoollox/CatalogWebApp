@@ -1672,15 +1672,6 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 @media (prefers-reduced-motion:reduce){.lt-card{animation:none}}
 /* Adminlar: yangi o'quvchi yo'lini ko'rish */
 .hub-pv{margin-top:12px}
-/* Sinov o'quvchisi tasmasi (faqat adminlar ko'radi) */
-.hptest-bar{position:fixed;top:0;left:0;right:0;height:28px;z-index:3000;display:flex;
-  align-items:center;justify-content:center;gap:8px;padding:0 10px;
-  background:linear-gradient(90deg,#5d1f1f,#8a2b2b,#5d1f1f);color:#ffe9c9;
-  font:800 11px/1 'Manrope',sans-serif;letter-spacing:.4px}
-.hptest-bar button{background:rgba(0,0,0,.3);color:#ffe9c9;border:1px solid rgba(255,233,201,.35);
-  border-radius:8px;padding:4px 9px;font:800 11px 'Manrope',sans-serif;cursor:pointer}
-body.hptest{padding-top:28px}
-body.hptest #scr-chat,body.hptest #scr-world{top:28px}
 .hub-pv .hub-row-tx span{white-space:normal}
 
 /* --- BOYO'G'LI POCHTASI (js/15-pochta.js) --- */
@@ -3503,12 +3494,8 @@ button.du-bc:active{transform:scale(.98)}
 /* TO'LIQ EKRAN (Telegram 8.0+, faqat telefonda): tepada Telegram tugmalari va telefon «qoshi» uchun joy */
 :root{--fs:calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px))}
 body.tg-fs{padding-top:var(--fs)}
-body.tg-fs.hptest{padding-top:calc(var(--fs) + 28px)}
-body.tg-fs .hptest-bar{top:var(--fs)}
 body.tg-fs #scr-chat{top:var(--fs);height:calc(var(--tg-viewport-height,100vh) - var(--fs))}
 body.tg-fs #scr-world,body.tg-fs .od-page{top:var(--fs)}
-body.tg-fs.hptest #scr-chat,body.tg-fs.hptest #scr-world{top:calc(var(--fs) + 28px)}
-body.tg-fs.hptest #scr-chat{height:calc(var(--tg-viewport-height,100vh) - var(--fs) - 28px)}
 body.tg-fs .lt{padding-top:calc(34px + var(--fs))}
 body.tg-fs .kr-top{top:var(--fs)}
 /* KURSLAR: bosh sahifa bosqichma-bosqich ochiladi */
@@ -3630,3 +3617,5 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .tsb-o b{font:700 14.5px/1.2 'Manrope',sans-serif}
 .tsb-o small{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
 .tsb-x{display:block;margin:14px auto 0;padding:8px 14px;border:0;background:none;color:var(--dim);font:700 13px/1 'Manrope',sans-serif;cursor:pointer}
+#pm .pm-test .pm-row{flex-wrap:wrap}
+#pm-test-0{border-color:rgba(var(--gold-rgb),.6);color:var(--gold-hi)}
