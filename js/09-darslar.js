@@ -3882,16 +3882,21 @@
     }
     return d;
   }
+  /* 1-12-DARSLAR BOSQICHMA-BOSQICH (egasi, 2026-10-11): har bosqichda afsunning BITTA turi o'rgatiladi -
+     1-3: SONI (ko'payadi / kamayadi), 4-6: HAJMI (kattalashadi / kichrayadi), 7-8: NURINING RANGI, 9-10: BURILISHI, 11-12: boshqa BUYUMGA aylanishi.
+     13-darsdan ikki, 25-darsdan uch o'zgarish birdan (hamma tur aralash). Har yangi turning birinchi darsida yo'riqnoma chiqadi (tfYoriq). */
+  function tfTur(n) { return n <= 3 ? "n" : n <= 6 ? "s" : n <= 8 ? "c" : n <= 10 ? "r" : n <= 12 ? "o" : ""; }
   function tfPlan(n, urug, rek) {
     var bell = urug != null, s0 = rek ? Math.floor(Math.random() * 90000) : bell ? urug : n * 83, soni = rek ? 150 : bell ? 8 : 5 + Math.min(3, Math.floor((n - 1) / 9));
     var m = bell ? 2 : n <= 12 ? 1 : n <= 24 ? 2 : 3, var_ = !bell && n > 24 ? 6 : 4, savol = [], i, g, k;
+    var tur = !bell && !rek ? tfTur(n) : "", havza = tur ? TF_OP.filter(function (op0) { return op0.k === tur; }) : TF_OP;
     var rnd = function (z) { return afRnd(s0 + z * 3.17); };
     var tasodif = function (z) { return { o: Math.floor(rnd(z) * 6), c: Math.floor(rnd(z + 1) * 3), s: Math.floor(rnd(z + 2) * 3), n: 1 + Math.floor(rnd(z + 3) * 3), r: Math.floor(rnd(z + 4) * 4) }; };
     for (i = 0; i < soni; i++) {
       if (rek) { m = i < 5 ? 1 : i < 15 ? 2 : 3; var_ = i < 15 ? 4 : 6; }
       var z = i * 97, qoida = [], band = {}, a, b;
       g = 0;
-      while (qoida.length < m && g < 80) { var op = TF_OP[Math.floor(rnd(z + 10 + g) * TF_OP.length)]; g++; if (!band[op.k]) { band[op.k] = 1; qoida.push(op); } }
+      while (qoida.length < m && g < 80) { var op = havza[Math.floor(rnd(z + 10 + g) * havza.length)]; g++; if (!band[op.k]) { band[op.k] = 1; qoida.push(op); } }
       g = 0;
       do { a = tasodif(z + 200 + g * 5); g++; } while (!tfYaroqli(tfQolla(a, qoida)) && g < 60);
       g = 0;
@@ -3926,7 +3931,8 @@
     $("tf-stage").classList.add("hidden");
     $("tf-intro").classList.toggle("hidden", tf.bell || tf.rek);
     if (tf.bell || tf.rek) { tfGo(); return; }
-    $("tf-intro-t").textContent = x.tfI[tf.n <= 12 ? 0 : tf.n <= 24 ? 1 : 2];
+    var tur0 = tfTur(tf.n), tx0 = TF_YQ[lang] || TF_YQ.uz;
+    $("tf-intro-t").textContent = tur0 ? tx0.tur[tur0] + " " + tx0.qoida : x.tfI[tf.n <= 24 ? 1 : 2];
     $("tf-go").textContent = x.tfGo;
     $("tf-qanday").textContent = (TF_YQ[lang] || TF_YQ.uz).qanday;
     tfKayf("maslahat");
@@ -3937,7 +3943,7 @@
     $("tf-sham").classList.toggle("hidden", tf.bell);
     tf.i = 0;
     tfStep();
-    if (!tf.bell && !tf.rek && tfYqKerak()) { tfYoriq(); }
+    if (!tf.bell && !tf.rek && tfYqKerak(tf.n)) { tfYoriq(); }
   }
 
   /* TRANSFIGURATSIYA YO'RIQNOMASI (egasi, 2026-10-11: o'quvchilar eng qiynalayotgan fan - birinchi darsdayoq qanday bajarilishi ko'rsatilsin).
@@ -3945,21 +3951,33 @@
      Bir marta ko'rsatiladi (hp_tf_yoriq); kirish ekranidagi «Qanday bajariladi?» tugmasi uni qayta ochadi. Dvigatel: yqOch (09-yoriqnoma.js). */
   var TF_YQ_KEY = TK("hp_tf_yoriq");
   var TF_YQ = {
-    uz: { kim: "Professor Makgonagall", qanday: "Qanday bajariladi?",
+    uz: { kim: "Professor Makgonagall", qanday: "Qanday bajariladi?", yangi: "Yangi afsun turi.",
+          qoida: "Yuqorida afsun bitta buyumni qanday o'zgartirgani ko'rsatiladi — pastdagi buyumga ham xuddi shuni qo'llaysiz.",
+          tur: { n: "Bu darslarda afsun buyumlar SONINI o'zgartiradi: ko'paytiradi yoki kamaytiradi.", s: "Bu darslarda afsun buyumning HAJMINI o'zgartiradi: kattalashtiradi yoki kichraytiradi.",
+                 c: "Bu darslarda afsun buyum NURINING RANGINI o'zgartiradi (oltin, ko'k, qizil).", r: "Bu darslarda afsun buyumni BURADI.",
+                 o: "Bu darslarda afsun buyumni BOSHQA BUYUMGA aylantiradi.", ar: "Endi afsun bir vaqtda bir nechta narsani o'zgartiradi: soni, hajmi, rangi, burilishi yoki buyumning o'zi." },
           o: "buyum boshqa buyumga aylandi", c: "nurining rangi o'zgardi", s1: "buyum kattalashdi", s0: "buyum kichraydi", n1: "buyumlar soni ko'paydi", n0: "buyumlar soni kamaydi", r: "buyum burildi", va: " va ",
           q1: function (z) { return "Yuqori qatorga qarang. Afsun chapdagi buyumni o'ngdagisiga aylantirdi. Nima o'zgardi? " + tfBosh(z) + "."; },
           q2: function (z) { return "Endi pastki qator. Xuddi shu afsun bu buyumga ham qo'llanadi — demak bu yerda ham " + z + ", aynan yuqoridagichalik. Boshqa hech narsasi o'zgarmaydi."; },
           q3: "«?» o'rniga mos variantni pastdan tanlaysiz. Ehtiyot bo'ling: ba'zilari deyarli to'g'ri, lekin bitta belgisi boshqacha.",
           q4: "Sham — bu vaqt. U o'chguncha javob berish kerak. Hozir shoshilmang, u to'xtab turibdi.",
           q5: function (z) { return "Mana to'g'ri javob: pastki qatordagi buyumning o'zi, faqat " + z + ". Uni bosing."; } },
-    ru: { kim: "Профессор Макгонагалл", qanday: "Как это делается?",
+    ru: { kim: "Профессор Макгонагалл", qanday: "Как это делается?", yangi: "Новый вид заклинания.",
+          qoida: "Сверху показано, как заклинание изменило один предмет — то же самое вы применяете к предмету ниже.",
+          tur: { n: "На этих уроках заклинание меняет КОЛИЧЕСТВО предметов: их становится больше или меньше.", s: "На этих уроках заклинание меняет РАЗМЕР предмета: увеличивает или уменьшает.",
+                 c: "На этих уроках заклинание меняет ЦВЕТ СВЕЧЕНИЯ предмета (золотой, синий, красный).", r: "На этих уроках заклинание ПОВОРАЧИВАЕТ предмет.",
+                 o: "На этих уроках заклинание превращает предмет в ДРУГОЙ ПРЕДМЕТ.", ar: "Теперь заклинание меняет сразу несколько признаков: количество, размер, цвет, поворот или сам предмет." },
           o: "предмет стал другим предметом", c: "изменился цвет свечения", s1: "предмет стал больше", s0: "предмет стал меньше", n1: "предметов стало больше", n0: "предметов стало меньше", r: "предмет повернулся", va: " и ",
           q1: function (z) { return "Посмотрите на верхний ряд. Заклинание превратило левый предмет в правый. Что изменилось? " + tfBosh(z) + "."; },
           q2: function (z) { return "Теперь нижний ряд. То же заклинание применяется к этому предмету — значит, и здесь " + z + ", ровно настолько же. Больше ничего не меняется."; },
           q3: "Вместо «?» выберите подходящий вариант внизу. Осторожно: некоторые почти верны, но отличаются одним признаком.",
           q4: "Свеча — это время. Ответить нужно, пока она горит. Сейчас не спешите: она остановлена.",
           q5: function (z) { return "Вот верный ответ: тот же предмет из нижнего ряда, только " + z + ". Нажмите на него."; } },
-    en: { kim: "Professor McGonagall", qanday: "How does it work?",
+    en: { kim: "Professor McGonagall", qanday: "How does it work?", yangi: "A new kind of spell.",
+          qoida: "The top row shows how the spell changed one object — you apply the very same change to the object below.",
+          tur: { n: "In these lessons the spell changes HOW MANY objects there are: more or fewer.", s: "In these lessons the spell changes the object's SIZE: bigger or smaller.",
+                 c: "In these lessons the spell changes the object's GLOW COLOUR (gold, blue, red).", r: "In these lessons the spell ROTATES the object.",
+                 o: "In these lessons the spell turns the object into ANOTHER OBJECT.", ar: "Now the spell changes several things at once: number, size, colour, rotation or the object itself." },
           o: "the object became a different object", c: "the glow colour changed", s1: "the object grew", s0: "the object shrank", n1: "there are more of them", n0: "there are fewer of them", r: "the object was rotated", va: " and ",
           q1: function (z) { return "Look at the top row. The spell turned the left object into the right one. What changed? " + tfBosh(z) + "."; },
           q2: function (z) { return "Now the bottom row. The same spell is cast on this object — so here too " + z + ", by exactly as much. Nothing else changes."; },
@@ -3968,7 +3986,8 @@
           q5: function (z) { return "Here is the right answer: the same bottom-row object, only " + z + ". Tap it."; } }
   };
   function tfBosh(z) { return z.charAt(0).toUpperCase() + z.slice(1); }
-  function tfYqKerak() { try { return window.localStorage.getItem(TF_YQ_KEY) !== "1"; } catch (e) { return false; } }
+  function tfYqKalit(n) { return TF_YQ_KEY + "_" + (tfTur(n) || "ar"); }       // har tur uchun alohida belgi; 13+ darslar - "ar" (aralash)
+  function tfYqKerak(n) { try { return window.localStorage.getItem(tfYqKalit(n)) !== "1"; } catch (e) { return false; } }
   // Savoldagi o'zgarishni so'z bilan: a -> a2 farqidan
   function tfFarq(q) {
     var x = TF_YQ[lang] || TF_YQ.uz, a = q.a, b = q.a2, out = [];
@@ -3981,10 +4000,12 @@
   }
   function tfYoriq() {
     var x = TF_YQ[lang] || TF_YQ.uz, me = tf, q = tf.savol[tf.i], z = tfFarq(q);
+    var tur = tfTur(tf.n);
     tf.yoriq = true;
-    try { window.localStorage.setItem(TF_YQ_KEY, "1"); } catch (e) {}
+    try { window.localStorage.setItem(tfYqKalit(tf.n), "1"); } catch (e) {}
     var el = function (sel) { return function () { return document.querySelector(sel); }; };
     yqOch([
+      { el: el("#tf-qoida"), m: (tur ? x.yangi + " " + x.tur[tur] : x.tur.ar) + " " + x.qoida },
       { el: el("#tf-qoida .tf-qator:first-child"), m: x.q1(z) },
       { el: el("#tf-qoida .tf-qator:last-child"), m: x.q2(z) },
       { el: el("#tf-opts"), m: x.q3 },
@@ -4187,7 +4208,7 @@
     $("os-go").addEventListener("click", function () { if (os) { osGo(); } });
     $("tf-back").addEventListener("click", function () { var b = tf && tf.bell; tfStop(); tf = null; blAbort(); if (b) { blOpen("trans"); } else if (rekFan) { rekQayt(); } else { fanOpen("trans"); } });
     $("tf-go").addEventListener("click", function () { if (tf) { tfGo(); } });
-    $("tf-qanday").addEventListener("click", function () { if (tf) { try { window.localStorage.removeItem(TF_YQ_KEY); } catch (e) {} tfGo(); } });
+    $("tf-qanday").addEventListener("click", function () { if (tf) { try { window.localStorage.removeItem(tfYqKalit(tf.n)); } catch (e) {} tfGo(); } });
     $("qo-back").addEventListener("click", function () { if (qobKel === "pm") { qobKel = "dars"; $("scr-qob").classList.add("hidden"); pmOpen(); } else { drOpen(); } });
     $("dr-qob").addEventListener("click", function () { qobKel = "dars"; qobOpen(); });
     $("rk-back").addEventListener("click", function () { if (rekKel === "fan" && rekSahifa) { fanOpen(rekSahifa); } else { blHomeOpen("rek"); } });
