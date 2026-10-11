@@ -2800,6 +2800,7 @@ body.kr-on .mp{display:none!important}
 #tr-opts .tr-o.xato i{background:#e06f64;border-color:#e06f64;color:#200c0a}
 #tr-opts .tr-o.tanlandi i{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
 .tr-bn{margin-top:16px}
+.dr-res-q{margin:12px auto 2px;max-width:320px;text-align:center;font:500 italic 17px/1.35 'Cormorant Garamond',serif;color:var(--text)}
 .tr-opts{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 .tr-o{padding:16px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;text-align:left;
   font:600 14.5px/1.35 'Manrope',sans-serif;transition:transform .12s,background .2s,border-color .2s}

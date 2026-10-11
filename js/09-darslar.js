@@ -1374,9 +1374,12 @@
   /* Professor Binns (arvoh o'qituvchi) izoh beradi - boshqa fanlardagi professor qolipida (egasi, 2026-10-11: sahifa bezaldi).
      Rasmlar img/binns/zor|yaxshi|maslahat|xafa.webp (asl: dizayn-tizimi/binns/). */
   var TR_BN = {
-    uz: { bosh: "Savolni o'qing va javobni tanlang.", ok: ["To'g'ri!", "Aynan shunday.", "Barakalla, daftarga yozib qo'ydim."], zor: "Ketma-ket to'g'ri — a'lo!", yoq: "Afsus… To'g'ri javob yashil rangda.", bell: "Javob qabul qilindi." },
-    ru: { bosh: "Прочитайте вопрос и выберите ответ.", ok: ["Верно!", "Именно так.", "Молодец, записал в журнал."], zor: "Подряд верно — превосходно!", yoq: "Увы… Верный ответ выделен зелёным.", bell: "Ответ принят." },
-    en: { bosh: "Read the question and choose an answer.", ok: ["Correct!", "Exactly so.", "Well done, noted in my register."], zor: "Right again — outstanding!", yoq: "Alas… The right answer is in green.", bell: "Answer recorded." }
+    uz: { bosh: "Savolni o'qing va javobni tanlang.", ok: ["To'g'ri!", "Aynan shunday.", "Barakalla, daftarga yozib qo'ydim."], zor: "Ketma-ket to'g'ri — a'lo!", yoq: "Afsus… To'g'ri javob yashil rangda.", bell: "Javob qabul qilindi.",
+          nZor: "Birorta ham xato yo'q. Bunday o'quvchini anchadan beri ko'rmagan edim.", nYax: "Yaxshi. Dars o'tildi.", nOz: "Oz qoldi. Konspektni yana bir o'qib, qayta keling.", nYom: "Hm… Siz darsda uxlab qolgan ko'rinasiz. Qaytadan." },
+    ru: { bosh: "Прочитайте вопрос и выберите ответ.", ok: ["Верно!", "Именно так.", "Молодец, записал в журнал."], zor: "Подряд верно — превосходно!", yoq: "Увы… Верный ответ выделен зелёным.", bell: "Ответ принят.",
+          nZor: "Ни одной ошибки. Давно я не встречал такого ученика.", nYax: "Хорошо. Урок пройден.", nOz: "Почти. Перечитайте конспект и возвращайтесь.", nYom: "Хм… Похоже, вы проспали урок. Ещё раз." },
+    en: { bosh: "Read the question and choose an answer.", ok: ["Correct!", "Exactly so.", "Well done, noted in my register."], zor: "Right again — outstanding!", yoq: "Alas… The right answer is in green.", bell: "Answer recorded.",
+          nZor: "Not a single mistake. I have not seen such a pupil in a long while.", nYax: "Good. Lesson passed.", nOz: "Nearly there. Reread your notes and come back.", nYom: "Hm… You seem to have slept through the lesson. Once more." }
   };
   function trBinns(kayf, matn) {
     var im = $("tr-bn-im");
@@ -1458,12 +1461,24 @@
     var x = drX(), t = tr, box = $("tr-res");
     $("tr-stage").classList.add("hidden");
     if (t.bell) { tr = null; blFinish(box); return; }
-    var natija = x.trRes(t.ok, t.qs.length);
+    var natija = x.trRes(t.ok, t.qs.length), bn = TR_BN[lang] || TR_BN.uz;
+    // Natija: Professor Binnsning katta rasmi va xulosasi (boshqa fanlardagi professor qolipida)
+    function binns(kayf, gap) {
+      var fi = document.createElement("img");
+      fi.className = "af-fl-big"; fi.alt = ""; fi.src = IMG_DIR + "binns/" + kayf + ".webp";
+      var q = drEl("p", "dr-res-q", "«" + gap + "»");
+      box.insertBefore(q, box.firstChild);
+      box.insertBefore(fi, box.firstChild);
+    }
     if (t.ok >= t.need) {
-      drDone("tarix", t.level, function (yangi) { drResult(box, natija, "tarix", t.level, yangi); });
+      drDone("tarix", t.level, function (yangi) {
+        drResult(box, natija, "tarix", t.level, yangi);
+        binns(t.ok >= t.qs.length ? "zor" : "yaxshi", t.ok >= t.qs.length ? bn.nZor : bn.nYax);
+      });
       return;
     }
     box.innerHTML = "";
+    binns(t.ok * 2 >= t.qs.length ? "maslahat" : "xafa", t.ok * 2 >= t.qs.length ? bn.nOz : bn.nYom);
     box.appendChild(drEl("p", "dr-res-t", natija));
     box.appendChild(drEl("small", "dr-res-s", x.trFail(t.need, t.qs.length)));
     var r = drEl("button", "dr-btn", x.retry);
