@@ -375,7 +375,6 @@
   };
   var KURS_XONA = { 2: ["bell", "sq", "cup"], 3: ["rek", "qoriq", "issiq"], 4: ["duel", "chess", "vik"] };
   function kursXonaRasm(k) {
-    if (k === "sq") { return IMG_DIR + "qurbaqa/dumbledore.webp"; }
     if (k === "cup") { var uy = "gryffindor"; try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {} return IMG_DIR + uy.charAt(0).toUpperCase() + uy.slice(1) + "_crest.png"; }
     return IMG_DIR + "hub/" + k + ".webp";
   }
