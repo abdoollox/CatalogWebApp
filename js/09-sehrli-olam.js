@@ -914,9 +914,12 @@
     askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Saralanishdan boshlaysiz, asl profilingiz saqlanib qoladi.",
              ru: "Войти как тестовый ученик? Начнёте с распределения, ваш профиль сохранится.",
              en: "Enter as a test student? You start at the Sorting; your real profile stays." },
-    askZero: { uz: "Sinov o'quvchisini butunlay tozalaymizmi? U yana saralanishdan boshlaydi.",
-               ru: "Полностью очистить тестового ученика? Он снова начнёт с распределения.",
-               en: "Wipe the test student completely? It starts again at the Sorting." }
+    askZero: { uz: "Sinov o'quvchisi butunlay tozalanadi.\n\n«1-kurs tugagan» — saralangan, har fandan 3 tadan dars o'tilgan, Xogvartsda 2-kurs tabrigi ochiladi.\n«Saralanishdan» — Saralovchi qalpoqdan boshlaydi.",
+               ru: "Тестовый ученик будет полностью очищен.\n\n«1-й курс пройден» — распределён, по 3 урока по каждому предмету, в Хогвартсе откроется поздравление со 2-м курсом.\n«С распределения» — начнёт со Шляпы.",
+               en: "The test student will be wiped.\n\n“Year 1 done” — sorted, 3 lessons in every subject passed, Hogwarts opens with the year 2 congratulation.\n“From the Sorting” — starts at the Sorting Hat." },
+    zeroT: { uz: "Qayerdan boshlaymiz?", ru: "С чего начнём?", en: "Where do we start?" },
+    zKurs: { uz: "1-kurs tugagan", ru: "1-й курс пройден", en: "Year 1 done" },
+    zSar: { uz: "Saralanishdan", ru: "С распределения", en: "From the Sorting" }
   };
 
   // Tasdiqlash oynasi - o'zimizning uslubda (egasi Telegram oynasini yoqtirmadi, 2026-10-03).
@@ -941,7 +944,7 @@
     $("hpask-no").textContent = opt.no || t[1];
     function yop() { box.classList.add("hidden"); }
     $("hpask-ok").onclick = function () { yop(); done(); };
-    $("hpask-no").onclick = yop;
+    $("hpask-no").onclick = function () { yop(); if (opt.noFn) { opt.noFn(); } };      // noFn - ikkinchi tanlov (bo'lmasa shunchaki yopiladi)
     box.onclick = function (ev) { if (ev.target === box) { yop(); } };
     box.classList.remove("hidden");
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
@@ -986,13 +989,14 @@
   }
 
   // Serverdagi sinov hisobini o'chiradi (manfiy raqamli hisob), keyin qurilmani
-  function testServerWipe(done) {
+  // bosqich: "kurs1" - server o'quvchini 1-kursni tugatgan holda qayta yaratadi (javobda fakulteti)
+  function testServerWipe(done, bosqich) {
     var d = chatInitData();
-    if (!d || !window.fetch) { done(); return; }
-    fetch(API_TEST_RESET, { method: "POST", headers: { "X-Telegram-Init-Data": d } })
+    if (!d || !window.fetch) { done(null); return; }
+    fetch(API_TEST_RESET, { method: "POST", headers: { "X-Telegram-Init-Data": d, "Content-Type": "application/json" }, body: JSON.stringify({ bosqich: bosqich || "" }) })
       .then(function (r) { return r.json(); })
       ["catch"](function () { return null; })
-      .then(function () { done(); });
+      .then(function (res) { done(res); });
   }
 
   /* «Noldan» = SARALANISH BOSHI (egasi, 2026-10-11): maktub, Gringotts, tayoqcha va poyezd o'tilgan deb olinadi.
@@ -1020,12 +1024,35 @@
     }, 900);
   }
 
+  /* «Noldan» ikki tanlov (egasi, 2026-10-11): «1-kurs tugagan» - saralangan, har fandan 3 tadan dars (server hpcup.test_reset
+     "kurs1"), qayta yuklangach Xogvarts ochiladi va 2-kurs tabrigi chiqadi (qurilmada kurs 1 deb yoziladi); «Saralanishdan» - avvalgidek. */
+  var HUB_KEY_T = "hp_test_hub";
+  function testKurs1(uy) {
+    try {
+      window.localStorage.setItem(LETTER_KEY, "1");
+      window.localStorage.setItem(TRAIN_KEY, "1");
+      window.localStorage.setItem(HUB_KEY_T, "1");
+    } catch (e) {}
+    try { setWand({ wood: "holly", core: "phoenix", flex: "supple" }); } catch (e) {}
+    try { setHouse(uy); } catch (e) {}
+    kursYoz(1);
+    window.location.reload();
+  }
+  function testHubBosh() {
+    if (!HP_TEST) { return; }
+    var bor = false;
+    try { bor = window.localStorage.getItem(HUB_KEY_T) === "1"; window.localStorage.removeItem(HUB_KEY_T); } catch (e) {}
+    if (!bor) { return; }
+    setTimeout(function () { if (hasHouse()) { try { closeLetter(); } catch (e) {} openHub(); } }, 900);
+  }
+  function testQayta(bosqich) {
+    testServerWipe(function (res) {
+      testWipeLocal(function () { if (bosqich === "kurs1" && res && res.ok && res.house) { testKurs1(res.house); } else { testTayyor(); } });
+    }, bosqich);
+  }
   function testReset() {
-    testAsk(testTx("askZero"), function () {
-      testServerWipe(function () {
-        testWipeLocal(testTayyor);
-      });
-    });
+    testAsk(testTx("askZero"), function () { testQayta("kurs1"); },
+            { title: testTx("zeroT"), ok: testTx("zKurs"), no: testTx("zSar"), noFn: function () { testQayta(null); }, left: true });
   }
 
   // Kirgandan keyingi birinchi ochilish: hisobni tozalab, chinakam noldan boshlaymiz
