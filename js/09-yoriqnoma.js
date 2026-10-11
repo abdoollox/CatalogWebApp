@@ -188,6 +188,13 @@
           bell: "Ball yig'ishning asosiy usuli — Bellashuv. Har kuni har fanda bitta bellashuv: kim tez va xatosiz bajarsa, o'sha ko'p ball oladi (1-o'ringa +15). «Bellashuv»ni bosing.",
           bhero: "Tepada — bugungi natijangiz: nechta bellashuvda qatnashdingiz va hozirgi o'rinlaringizga qarab bugun qancha ball kutilmoqda. Kun yarim tunda yopiladi.",
           blist: "Mana bugungi bellashuvlar — har fanda bittadan. Birinchisini bosib, sinab ko'ring!",
+          bh: "Bu — bugungi bellashuv: topshiriq hammaga bir xil. Kun yarim tunda yopiladi — qancha vaqt qolgani shu yerda.",
+          bpz: "Kun yakunida o'rin bo'yicha ball beriladi: 1-o'ringa +%1, 2-o'ringa +%2, 3-o'ringa +%3, 4–10-o'rinlarga +%4. Bu ball fakultetingizga qo'shiladi.",
+          bme: "Bu — sizning natijangiz. Kuniga uchta urinish bor, eng yaxshisi hisoblanadi. Vaqt «Boshlash» bosilgandan yuradi, har xato +3 soniya.",
+          btop: "Pastda — bugungi peshqadamlar: kim tezroq bajarsa, o'sha yuqorida.",
+          bgo: "Endi o'zingiz qatnashing — «Boshlash»ni bosing. Omad!",
+          eslat: "Siz hali birorta bellashuvda qatnashmadingiz. Fakultetingizga ball olib kelish uchun bittasidan o'ting — «Bellashuv»ni bosing.",
+          blist2: "Istalgan fanni tanlang.",
           rek: "Rekordlar — har fanda «xatosiz kim uzoqqa boradi». Har kuni yarim tunda birinchi uchlik ball oladi.",
           qoriq: "Qo'riqxona — Maxluqlar darslarida olingan maxluqlaringiz. Galleonga yemish olib boqasiz, ular o'sadi va darslarda yordam beradi.",
           issiq: "Issiqxona — O'simlikshunoslik darslaridan urug'lar. Har kuni bepul sug'orasiz; yetilgan o'simlik maxluqlarga yemish beradi.",
@@ -210,6 +217,13 @@
           bell: "Главный способ набирать баллы — Состязания. Каждый день по одному в каждом предмете: кто быстрее и без ошибок, тот получает больше (1-е место +15). Нажмите «Состязание».",
           bhero: "Наверху — ваш итог за сегодня: в скольких состязаниях вы участвовали и сколько баллов ожидается по вашим текущим местам. День закрывается в полночь.",
           blist: "Вот сегодняшние состязания — по одному в каждом предмете. Нажмите на первое и попробуйте!",
+          bh: "Это сегодняшнее состязание: задание у всех одинаковое. День закрывается в полночь — сколько осталось, видно здесь.",
+          bpz: "В конце дня баллы по местам: 1-е место +%1, 2-е +%2, 3-е +%3, 4–10-е +%4. Эти баллы идут вашему факультету.",
+          bme: "Это ваш результат. В день три попытки, засчитывается лучшая. Время идёт с нажатия «Начать», каждая ошибка +3 секунды.",
+          btop: "Ниже — лидеры дня: кто быстрее, тот выше.",
+          bgo: "Теперь попробуйте сами — нажмите «Начать». Удачи!",
+          eslat: "Вы ещё не участвовали ни в одном состязании. Чтобы принести баллы факультету, пройдите одно — нажмите «Состязание».",
+          blist2: "Выберите любой предмет.",
           rek: "Рекорды — в каждом предмете: кто дальше пройдёт без ошибок. Каждую полночь первая тройка получает баллы.",
           qoriq: "Заповедник — ваши существа с уроков ухода за ними. Покупайте корм за галлеоны: они растут и помогают на уроках.",
           issiq: "Теплица — семена с уроков травологии. Поливайте каждый день бесплатно; зрелое растение даёт корм существам.",
@@ -232,6 +246,13 @@
           bell: "The main way to earn points is Contests. One every day in every subject: the fastest without mistakes earns the most (1st place +15). Tap “Contest”.",
           bhero: "At the top is your day so far: how many contests you entered and how many points your current places would earn. The day closes at midnight.",
           blist: "Here are today's contests — one per subject. Tap the first one and give it a try!",
+          bh: "This is today's contest: everyone gets the same task. The day closes at midnight — the time left is shown here.",
+          bpz: "At the end of the day points go by place: 1st +%1, 2nd +%2, 3rd +%3, 4th–10th +%4. These points go to your house.",
+          bme: "This is your result. You have three tries a day; the best counts. The clock starts when you press Start, each mistake adds 3 seconds.",
+          btop: "Below — today's leaders: the fastest are on top.",
+          bgo: "Now it's your turn — press Start. Good luck!",
+          eslat: "You have not entered a contest yet. To bring points to your house, finish one — tap “Contest”.",
+          blist2: "Pick any subject.",
           rek: "Records — in every subject, who goes furthest without a mistake. Every midnight the top three earn points.",
           qoriq: "The Reserve — creatures from your Care of Magical Creatures lessons. Buy food with galleons; they grow and help in lessons.",
           issiq: "The Greenhouse — seeds from Herbology lessons. Water them free every day; a grown plant gives food for your creatures.",
@@ -260,7 +281,7 @@
            { el: yqQ("#scr-cup #cup-back"), m: kyT("cupX"), tap: true, bet: 1 },
            { el: tile("bell"), m: kyT("bell"), tap: true, bet: 1 },
            { el: yqQ("#scr-blh #blh-hero"), m: kyT("bhero"), bet: 1 },
-           { el: yqQ("#scr-blh #blh-list > *"), m: kyT("blist"), tap: true, bet: 1 }],
+           { el: yqQ("#scr-blh #blh-list > *"), m: kyT("blist"), tap: true, bet: 1 }].concat(kyBell()),
           [{ el: yqQ("#hub-sq"), m: kyT("sq") },
            { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("kurs") }]],
       3: [[{ el: tile("qoriq"), m: kyT("qoriq") },
@@ -275,6 +296,31 @@
            { el: yqQ("#scr-hub .hub-dost"), m: kyT("dost") }]]
     };
     return (Q[n] && Q[n][b]) || [];
+  }
+  /* Fan bellashuvi sahifasining ichida (egasi, 2026-10-11): bugungi topshiriq, o'rinlar bo'yicha ball, urinishlar va qoida,
+     peshqadamlar - va oxirida «Boshlash»ni o'zi bosadi (bir bellashuvda qatnashishga majbur; «ortga» bu qadamda bosilmaydi). */
+  function kyBell() {
+    var pz = null;
+    try { DR_FANLAR.some(function (f) { var c = drData && drData[f.id] && drData[f.id].contest; if (c && c.prizes) { pz = c.prizes; } return !!pz; }); } catch (e) {}
+    var t = (pz && pz.top) || [15, 10, 7], o = (pz && pz.ten) || 3;
+    return [{ el: yqQ("#scr-bell .bl-hero"), m: kyT("bh"), bet: 1 },
+            { el: yqQ("#scr-bell #bl-prizes"), m: kyT("bpz").replace("%1", t[0]).replace("%2", t[1]).replace("%3", t[2]).replace("%4", o), bet: 1 },
+            { el: yqQ("#scr-bell #bl-me"), m: kyT("bme"), bet: 1 },
+            { el: yqQ("#scr-bell #bl-top-t"), m: kyT("btop"), bet: 1 },
+            { el: yqQ("#scr-bell #bl-go"), m: kyT("bgo"), tap: true, bet: 1 }];
+  }
+  // Hali birorta bellashuvni tugatmagan bo'lsa (2-kurs, yo'riqnomaning 1-qismidan keyin) - bosh sahifa ochilganda yana bellashuvga yo'llaydi
+  var kyEslat = 0;
+  function kyBellBor() {
+    if (drKurs && (drKurs.bellf || 0) >= 1) { return true; }
+    try { return DR_FANLAR.some(function (f) { var c = drData && drData[f.id] && drData[f.id].contest; return !!(c && c.ms); }); } catch (e) { return false; }
+  }
+  function yqBellEslat() {
+    if (yq || kursN() !== 2 || !kyBor("hp_kyq_2") || kyBellBor() || Date.now() - kyEslat < 3 * 60 * 1000) { return false; }
+    kyEslat = Date.now();
+    return kyOch([{ el: yqQ('#scr-hub .hx[data-k="bell"]'), m: kyT("eslat"), tap: true },
+                  { el: yqQ("#scr-blh #blh-list > .dr-card:not(.done)"), m: kyT("blist2"), tap: true, bet: 1 },
+                  { el: yqQ("#scr-bell #bl-go"), m: kyT("bgo"), tap: true, bet: 1 }]);
   }
   function kyOch(q) {
     // hozir ko'rinmayotgan narsalar (Patronus olingan, jadval yashirin...) tashlab ketiladi; boshqa sahifadagi qadam (bet) qoladi
@@ -301,9 +347,10 @@
   // 2-qism: keyingi safar bosh sahifa ochilganda (openHub)
   function yqKursDavom() {
     if (yq || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
+    if (yqBellEslat()) { return; }                  // avval - birinchi bellashuv (2-qism undan keyin)
     var n = kursN(), t0 = parseInt(kyBor("hp_kyq_" + n) || "0", 10);
     if (n < 2 || n > 4 || !t0 || kyBor("hp_kyq_" + n + "b")) { return; }
-    var vaqt = Date.now() - (t0 > 1 ? t0 : 0) >= KY_KEYIN, bell = n === 2 && drKurs && (drKurs.bellf || 0) >= 1;
+    var vaqt = Date.now() - (t0 > 1 ? t0 : 0) >= KY_KEYIN, bell = n === 2 && kyBellBor();
     if (!vaqt && !bell) { return; }
     kyQoy("hp_kyq_" + n + "b", "1");
     kySq();                                          // qurbaqa kartasi endi ko'rinadi - 2-qism shundan boshlanadi
