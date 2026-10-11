@@ -906,12 +906,16 @@
     askIn: { uz: "Sinov o'quvchisi bo'lib kirasizmi? Saralanishdan boshlaysiz, asl profilingiz saqlanib qoladi.",
              ru: "Войти как тестовый ученик? Начнёте с распределения, ваш профиль сохранится.",
              en: "Enter as a test student? You start at the Sorting; your real profile stays." },
-    askZero: { uz: "Sinov o'quvchisi butunlay tozalanadi.\n\n«1-kurs tugagan» — saralangan, har fandan 3 tadan dars o'tilgan, Xogvartsda 2-kurs tabrigi ochiladi.\n«Saralanishdan» — Saralovchi qalpoqdan boshlaydi.",
-               ru: "Тестовый ученик будет полностью очищен.\n\n«1-й курс пройден» — распределён, по 3 урока по каждому предмету, в Хогвартсе откроется поздравление со 2-м курсом.\n«С распределения» — начнёт со Шляпы.",
-               en: "The test student will be wiped.\n\n“Year 1 done” — sorted, 3 lessons in every subject passed, Hogwarts opens with the year 2 congratulation.\n“From the Sorting” — starts at the Sorting Hat." },
+    // «Noldan» oynasi (egasi, 2026-10-11): uchta bosqichdan biri
     zeroT: { uz: "Qayerdan boshlaymiz?", ru: "С чего начнём?", en: "Where do we start?" },
+    zeroS: { uz: "Sinov o'quvchisi butunlay tozalanadi va tanlangan bosqichdan boshlanadi.", ru: "Тестовый ученик будет полностью очищен и начнёт с выбранного этапа.", en: "The test student is wiped and starts at the chosen stage." },
+    zNol: { uz: "0 dan", ru: "С нуля", en: "From zero" },
+    zNolS: { uz: "Birinchi marta kirgan odamdek — hech narsa yo'q. Xogvarts maktubi birinchi film olingandan keyin chiqadi.", ru: "Как будто впервые — ничего нет. Письмо из Хогвартса появится после первого фильма.", en: "As if for the first time — nothing yet. The Hogwarts letter appears after the first film." },
+    zSar: { uz: "Saralanishdan", ru: "С распределения", en: "From the Sorting" },
+    zSarS: { uz: "Maktub, Gringotts, tayoqcha va poyezd o'tilgan — Saralovchi qalpoqdan boshlanadi.", ru: "Письмо, Гринготтс, палочка и поезд пройдены — начнёте со Шляпы.", en: "Letter, Gringotts, wand and train done — you start at the Sorting Hat." },
     zKurs: { uz: "1-kurs tugagan", ru: "1-й курс пройден", en: "Year 1 done" },
-    zSar: { uz: "Saralanishdan", ru: "С распределения", en: "From the Sorting" }
+    zKursS: { uz: "Saralangan, har fandan 3 tadan dars o'tilgan. Xogvarts 2-kurs tabrigi bilan ochiladi.", ru: "Распределён, по 3 урока по каждому предмету. Хогвартс откроется поздравлением со 2-м курсом.", en: "Sorted, 3 lessons in every subject. Hogwarts opens with the year 2 congratulation." },
+    zBekor: { uz: "Bekor qilish", ru: "Отмена", en: "Cancel" }
   };
 
   // Tasdiqlash oynasi - o'zimizning uslubda (egasi Telegram oynasini yoqtirmadi, 2026-10-03).
@@ -1037,14 +1041,36 @@
     if (!bor) { return; }
     setTimeout(function () { if (hasHouse()) { try { closeLetter(); } catch (e) {} openHub(); } }, 900);
   }
+  // bosqich: "nol" - chinakam noldan; null - saralanish boshi; "kurs1" - 1-kurs tugagan
   function testQayta(bosqich) {
     testServerWipe(function (res) {
-      testWipeLocal(function () { if (bosqich === "kurs1" && res && res.ok && res.house) { testKurs1(res.house); } else { testTayyor(); } });
+      testWipeLocal(function () {
+        if (bosqich === "kurs1" && res && res.ok && res.house) { testKurs1(res.house); }
+        else if (bosqich === "nol") { window.location.reload(); }
+        else { testTayyor(); }
+      });
     }, bosqich);
   }
+  // «Noldan» - uchta bosqichli tanlov oynasi (tasdiq oynasi uslubida, .tsb-*)
   function testReset() {
-    testAsk(testTx("askZero"), function () { testQayta("kurs1"); },
-            { title: testTx("zeroT"), ok: testTx("zKurs"), no: testTx("zSar"), noFn: function () { testQayta(null); }, left: true });
+    var eski = $("tsb");
+    if (eski) { eski.parentNode.removeChild(eski); }
+    var o = document.createElement("div"), box = document.createElement("div"), yop = function () { if (o.parentNode) { o.parentNode.removeChild(o); } };
+    o.id = "tsb"; o.className = "hpask"; box.className = "hpask-box tsb";
+    var t = document.createElement("b"); t.className = "hpask-t"; t.textContent = testTx("zeroT"); box.appendChild(t);
+    var p = document.createElement("p"); p.className = "hpask-p"; p.textContent = testTx("zeroS"); box.appendChild(p);
+    [["nol", "zNol", "zNolS"], [null, "zSar", "zSarS"], ["kurs1", "zKurs", "zKursS"]].forEach(function (v, i) {
+      var b = document.createElement("button"), n = document.createElement("i"), tx = document.createElement("span"), bb = document.createElement("b"), sm = document.createElement("small");
+      b.type = "button"; b.className = "tsb-o";
+      n.textContent = String(i + 1); bb.textContent = testTx(v[1]); sm.textContent = testTx(v[2]);
+      tx.appendChild(bb); tx.appendChild(sm); b.appendChild(n); b.appendChild(tx);
+      b.onclick = function () { yop(); testQayta(v[0]); };
+      box.appendChild(b);
+    });
+    var c = document.createElement("button"); c.type = "button"; c.className = "tsb-x"; c.textContent = testTx("zBekor"); c.onclick = yop; box.appendChild(c);
+    o.appendChild(box);
+    o.onclick = function (ev) { if (ev.target === o) { yop(); } };
+    document.body.appendChild(o);
   }
 
   // Kirgandan keyingi birinchi ochilish: hisobni tozalab, chinakam noldan boshlaymiz

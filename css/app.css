@@ -3620,3 +3620,13 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .screen.natija .dr-head>:not(.ms-kick),.screen.natija .ik-pot,.screen.natija .ik-slots,.screen.natija #ik-rec,.screen.natija #ik-cook{display:none}
 .screen.natija .dr-res{margin-top:12px}
 .af-baho.b3 .af-baho-n{color:#cfd6e0}
+/* Sinov o'quvchisi: «Noldan» - uchta bosqich (testReset, js/09-sehrli-olam.js) */
+.tsb{text-align:center}
+.tsb .hpask-p{margin-bottom:14px}
+.tsb-o{display:flex;align-items:center;gap:12px;width:100%;margin-top:8px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);text-align:left;cursor:pointer;font:inherit}
+.tsb-o:active{transform:scale(.985)}
+.tsb-o i{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;font:800 13px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-ink);background:var(--gold)}
+.tsb-o span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tsb-o b{font:700 14.5px/1.2 'Manrope',sans-serif}
+.tsb-o small{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.tsb-x{display:block;margin:14px auto 0;padding:8px 14px;border:0;background:none;color:var(--dim);font:700 13px/1 'Manrope',sans-serif;cursor:pointer}
