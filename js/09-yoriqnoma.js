@@ -181,7 +181,17 @@
           cupS: "Har fakultet ballari qayerdan kelgani: bellashuv, Shokolad qurbaqa, filmlar, shaxmat, do'stlar. Qaysi yo'l fakultetga ko'proq ball keltirayotgani shu yerda ko'rinadi.",
           cupY: "Bu — sizning hissangiz: bu hafta to'plagan ballingiz va fakultetingiz ichidagi o'rningiz. Pastda — har bir usul qancha ball berishi va siz undan qanchasini olganingiz. Hafta yakunida har 10 ballga 1 galleon.",
           cupX: "Endi ball yig'ish usullaridan birini ko'rib chiqamiz. «Ortga»ni bosing.",
-          sq: "Shokolad qurbaqa: har kuni oltita topshiriq. Hammasini bajarsangiz quti ochiladi — 10 ball, 1 galleon va sehrgar kartochkasi.",
+          sq: "Ball yig'ishning yana bir usuli — Shokolad qurbaqa. Har kuni yangi quti. Ichiga kirib ko'ramiz — kartani bosing.",
+          sq1: "Bugungi kartochka hozircha sir: qutini ochgandagina qaysi mashhur sehrgar ekanini bilasiz — Dambldor, Merlin, Flamel…",
+          sq2: "Bugungi oltita topshiriq: yengil, o'rtacha va qiyin. Bajarilgani belgilanadi; topshiriqni bossangiz — o'sha joyga olib boradi.",
+          sq3: "Oltitasi bajarilgach shu tugma yonadi — qutini ochasiz: fakultetingizga +%b ball, sizga %g galleon va sehrgar kartochkasi.",
+          sq4: "Ochilgan kartochkalar kolleksiyangizga tushadi — jami %n ta sehrgar. Hammasini yig'a olasizmi?",
+          sq5: "Ketma-ketlik: har kuni qutini ochsangiz, sanoq o'sadi — har %k-kunda qo'shimcha +%g galleon. Bir kun o'tkazib yuborsangiz, noldan boshlanadi.",
+          sq6: "Qurbaqa 3-kursga o'tish shartlaridan biri ham. Ortga qaytib, shartlarni ko'ramiz — «Ortga»ni bosing.",
+          ks0: "3-kursga o'tish uchun uchta shart bor. Bajarilgani yashil bo'ladi.",
+          ks1: "Birinchisi — har bir fandan 9 tadan dars. Pastdagi belgilarda har fan qanchada ekani ko'rinadi.",
+          ks2: "Ikkinchisi — Shokolad qurbaqadan bitta karta: kunning oltita topshirig'ini bajarib, qutini oching.",
+          ks3: "Uchinchisi — to'qqiz fanning har birida kamida bir marta bellashuv. Qatorni bossangiz — o'sha joyga olib boradi. Omad!",
           kurs: "Bu yerda keyingi kursga o'tish shartlari. Bajarilgan shart yashil bo'ladi, qatorni bossangiz — o'sha joyga olib boradi.",
           pat: "Patronusingizni ham chaqirib ko'ring — u bir marta aniqlanadi va profilingizda turadi.",
           dost: "Do'stlaringizni taklif qiling — har bir kelgan do'st uchun fakultetingizga ball qo'shiladi.",
@@ -214,7 +224,17 @@
           cupS: "Откуда у каждого факультета баллы: состязания, Шоколадная лягушка, фильмы, шахматы, друзья. Здесь видно, какой путь приносит факультету больше всего.",
           cupY: "Это ваш вклад: баллы за эту неделю и ваше место внутри факультета. Ниже — сколько даёт каждый способ и сколько вы уже получили. В конце недели — 1 галлеон за каждые 10 баллов.",
           cupX: "Теперь разберём один из способов набирать баллы. Нажмите «Назад».",
-          sq: "Шоколадная лягушка: каждый день шесть заданий. Выполните все — коробка откроется: 10 баллов, 1 галлеон и карточка волшебника.",
+          sq: "Ещё один способ набирать баллы — Шоколадная лягушка. Каждый день новая коробка. Заглянем внутрь — нажмите на карточку.",
+          sq1: "Сегодняшняя карточка пока тайна: кто из знаменитых волшебников на ней, узнаете, только открыв коробку — Дамблдор, Мерлин, Фламель…",
+          sq2: "Шесть заданий на сегодня: лёгкие, средние и трудные. Выполненные отмечаются; нажмите на задание — оно приведёт куда нужно.",
+          sq3: "Когда все шесть выполнены, загорится эта кнопка — откройте коробку: факультету +%b баллов, вам %g галлеон и карточка волшебника.",
+          sq4: "Открытые карточки попадают в вашу коллекцию — всего %n волшебников. Соберёте всех?",
+          sq5: "Серия: открываете коробку каждый день — счёт растёт, каждый %k-й день ещё +%g галлеона. Пропустите день — начнётся заново.",
+          sq6: "Лягушка — ещё и одно из условий перехода на 3-й курс. Вернёмся и посмотрим условия — нажмите «Назад».",
+          ks0: "Для перехода на 3-й курс три условия. Выполненное становится зелёным.",
+          ks1: "Первое — по 9 уроков по каждому предмету. По значкам ниже видно, где вы в каждом предмете.",
+          ks2: "Второе — одна карточка Шоколадной лягушки: выполните шесть заданий дня и откройте коробку.",
+          ks3: "Третье — хотя бы одно состязание по каждому из девяти предметов. Нажмите на строку — она приведёт куда нужно. Удачи!",
           kurs: "Здесь условия перехода на следующий курс. Выполненное становится зелёным, нажмите на строку — она приведёт куда нужно.",
           pat: "Вызовите и своего Патронуса — он определяется один раз и остаётся в профиле.",
           dost: "Приглашайте друзей — за каждого пришедшего друга ваш факультет получает баллы.",
@@ -247,7 +267,17 @@
           cupS: "Where each house's points come from: contests, the Chocolate Frog, films, chess, friends. You can see which way brings the house the most.",
           cupY: "This is your contribution: your points this week and your place within your house. Below — how much each way gives and how much you have earned from it. At week's end, 1 galleon for every 10 points.",
           cupX: "Now let's look at one of the ways to earn points. Tap “Back”.",
-          sq: "Chocolate Frog: six tasks every day. Finish them all and the box opens — 10 points, 1 galleon and a wizard card.",
+          sq: "Another way to earn points — the Chocolate Frog. A new box every day. Let's look inside — tap the card.",
+          sq1: "Today's card is still a secret: you find out which famous wizard it is only when you open the box — Dumbledore, Merlin, Flamel…",
+          sq2: "Today's six tasks: easy, medium and hard. Done ones are ticked; tap a task and it takes you there.",
+          sq3: "When all six are done this button lights up — open the box: +%b points for your house, %g galleon for you and a wizard card.",
+          sq4: "Opened cards go into your collection — %n wizards in all. Can you collect them all?",
+          sq5: "Streak: open the box every day and the count grows — every %kth day brings +%g extra galleons. Miss a day and it starts over.",
+          sq6: "The Frog is also one of the conditions for year 3. Let's go back and see them — tap “Back”.",
+          ks0: "There are three conditions for year 3. Done ones turn green.",
+          ks1: "First — 9 lessons in every subject. The icons below show where you are in each.",
+          ks2: "Second — one Chocolate Frog card: finish the day's six tasks and open the box.",
+          ks3: "Third — at least one contest in each of the nine subjects. Tap a row and it takes you there. Good luck!",
           kurs: "Here are the conditions for the next year. Done ones turn green; tap a row and it takes you there.",
           pat: "Summon your Patronus too — it is revealed once and stays on your profile.",
           dost: "Invite your friends — your house earns points for every friend who joins.",
@@ -294,8 +324,7 @@
            { el: tile("bell"), m: kyT("bell"), tap: true, bet: 1 },
            { el: yqQ("#scr-blh #blh-hero"), m: kyT("bhero"), bet: 1 },
            { el: yqQ("#scr-blh #blh-list > *"), m: kyT("blist"), tap: true, bet: 1 }].concat(kyBell()),
-          [{ el: yqQ("#hub-sq"), m: kyT("sq") },
-           { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("kurs") }]],
+          kySqQ()],
       3: [[{ el: tile("qoriq"), m: kyT("qoriq") },
            { el: tile("issiq"), m: kyT("issiq") }],
           [{ el: tile("rek"), m: kyT("rek") },
@@ -345,6 +374,24 @@
              { el: yqQ("#scr-bell #bl-back"), m: kyT("tug3"), tap: true, bet: 1 },
              { el: yqQ("#scr-blh #blh-list"), m: kyT("tug4"), bet: 1 }]);
     }, 900);
+  }
+  /* 2-kursning 2-qismi (egasi, 2026-10-11: «qurbaqa ham chuqurroq»): qurbaqa kartasi -> Shokolad qurbaqa sahifasining ICHI
+     (sir kartochka, oltita topshiriq, quti va mukofot, kolleksiya, ketma-ketlik) -> ortga -> 3-kursning uchta sharti bittadan. */
+  function kySqQ() {
+    var pz = { ball: 10, gal: 1, big_every: 7, big_gal: 3 }, jami = 24;
+    try { if (sqData) { pz = sqData.prizes || pz; jami = sqData.cards_total || (QB_ORDER && QB_ORDER.length) || jami; } } catch (e) {}
+    var shart = function (i) { return function () { return document.querySelectorAll("#hub-kurs .hub-kurs-s")[i] || null; }; };
+    return [{ el: yqQ("#hub-sq"), m: kyT("sq"), tap: true },
+            { el: yqQ("#scr-sq #sq-card"), m: kyT("sq1"), bet: 1 },
+            { el: yqQ("#scr-sq #sq-tasks"), m: kyT("sq2"), bet: 1 },
+            { el: yqQ("#scr-sq #sq-open"), m: kyT("sq3").replace("%b", pz.ball).replace("%g", pz.gal), bet: 1 },
+            { el: yqQ("#scr-sq #sq-coll"), m: kyT("sq4").replace("%n", jami), bet: 1 },
+            { el: yqQ("#scr-sq .sq-str"), m: kyT("sq5").replace("%k", pz.big_every).replace("%g", pz.big_gal), bet: 1 },
+            { el: yqQ("#scr-sq #sq-back"), m: kyT("sq6"), tap: true, bet: 1 },
+            { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("ks0"), bet: 1 },
+            { el: shart(0), m: kyT("ks1"), bet: 1 },
+            { el: shart(1), m: kyT("ks2"), bet: 1 },
+            { el: shart(2), m: kyT("ks3"), bet: 1 }];
   }
   function kyOch(q) {
     // hozir ko'rinmayotgan narsalar (Patronus olingan, jadval yashirin...) tashlab ketiladi; boshqa sahifadagi qadam (bet) qoladi
