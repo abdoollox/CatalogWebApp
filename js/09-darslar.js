@@ -1009,6 +1009,7 @@
       bt.addEventListener("click", function () { blOpen(b.fan); });
       box.appendChild(bt);
       box.classList.remove("hidden");
+      if (res && res.ok) { try { kyBellTugadi(box); } catch (e) {} }      // birinchi bellashuvdan keyin sardor (js/09-yoriqnoma.js)
     });
   }
 

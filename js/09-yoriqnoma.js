@@ -195,6 +195,10 @@
           bgo: "Endi o'zingiz qatnashing — «Boshlash»ni bosing. Omad!",
           eslat: "Siz hali birorta bellashuvda qatnashmadingiz. Fakultetingizga ball olib kelish uchun bittasidan o'ting — «Bellashuv»ni bosing.",
           blist2: "Istalgan fanni tanlang.",
+          tug1: "Barakalla, birinchi bellashuvingiz! Bu — natijangiz va hozirgi o'rningiz. Kun oxirigacha boshqalar ham qatnashadi, o'rningiz o'zgarishi mumkin. Yaxshilamoqchi bo'lsangiz — yana ikki urinish bor.",
+          tug2: "Endi jadvalga qaytamiz — tugmani bosing.",
+          tug3: "Boshqa fanlarga o'tamiz — «Ortga»ni bosing.",
+          tug4: "Xuddi shu tartibda qolgan fanlarning bellashuvlarida ham qatnashing: har biri fakultetingizga alohida ball beradi. Bellashuvlar har kuni yangilanadi.",
           rek: "Rekordlar — har fanda «xatosiz kim uzoqqa boradi». Har kuni yarim tunda birinchi uchlik ball oladi.",
           qoriq: "Qo'riqxona — Maxluqlar darslarida olingan maxluqlaringiz. Galleonga yemish olib boqasiz, ular o'sadi va darslarda yordam beradi.",
           issiq: "Issiqxona — O'simlikshunoslik darslaridan urug'lar. Har kuni bepul sug'orasiz; yetilgan o'simlik maxluqlarga yemish beradi.",
@@ -224,6 +228,10 @@
           bgo: "Теперь попробуйте сами — нажмите «Начать». Удачи!",
           eslat: "Вы ещё не участвовали ни в одном состязании. Чтобы принести баллы факультету, пройдите одно — нажмите «Состязание».",
           blist2: "Выберите любой предмет.",
+          tug1: "Браво, ваше первое состязание! Это ваш результат и текущее место. До конца дня участвуют и другие, место может измениться. Хотите улучшить — осталось ещё две попытки.",
+          tug2: "Теперь вернёмся к таблице — нажмите кнопку.",
+          tug3: "Перейдём к другим предметам — нажмите «Назад».",
+          tug4: "Точно так же участвуйте в состязаниях по остальным предметам: каждое приносит факультету свои баллы. Состязания обновляются каждый день.",
           rek: "Рекорды — в каждом предмете: кто дальше пройдёт без ошибок. Каждую полночь первая тройка получает баллы.",
           qoriq: "Заповедник — ваши существа с уроков ухода за ними. Покупайте корм за галлеоны: они растут и помогают на уроках.",
           issiq: "Теплица — семена с уроков травологии. Поливайте каждый день бесплатно; зрелое растение даёт корм существам.",
@@ -253,6 +261,10 @@
           bgo: "Now it's your turn — press Start. Good luck!",
           eslat: "You have not entered a contest yet. To bring points to your house, finish one — tap “Contest”.",
           blist2: "Pick any subject.",
+          tug1: "Well done, your first contest! This is your result and your current place. Others will play until the end of the day, so your place may change. Want to improve? You have two more tries.",
+          tug2: "Now back to the table — tap the button.",
+          tug3: "On to other subjects — tap “Back”.",
+          tug4: "In the same way, enter the contests in the other subjects: each one brings your house its own points. Contests refresh every day.",
           rek: "Records — in every subject, who goes furthest without a mistake. Every midnight the top three earn points.",
           qoriq: "The Reserve — creatures from your Care of Magical Creatures lessons. Buy food with galleons; they grow and help in lessons.",
           issiq: "The Greenhouse — seeds from Herbology lessons. Water them free every day; a grown plant gives food for your creatures.",
@@ -321,6 +333,18 @@
     return kyOch([{ el: yqQ('#scr-hub .hx[data-k="bell"]'), m: kyT("eslat"), tap: true },
                   { el: yqQ("#scr-blh #blh-list > .dr-card:not(.done)"), m: kyT("blist2"), tap: true, bet: 1 },
                   { el: yqQ("#scr-bell #bl-go"), m: kyT("bgo"), tap: true, bet: 1 }]);
+  }
+  /* Birinchi bellashuv tugagach (egasi, 2026-10-11): sardor natijani tushuntiradi va «shu tartibda boshqa bellashuvlarda ham
+     qatnashing» deb ro'yxatga olib boradi. 2-kursda, yo'riqnomaning 1-qismidan keyin, bir marta (hp_kyq_2r). */
+  function kyBellTugadi(box) {
+    if (yq || kursN() !== 2 || !kyBor("hp_kyq_2") || kyBor("hp_kyq_2r")) { return; }
+    kyQoy("hp_kyq_2r", "1");
+    setTimeout(function () {
+      kyOch([{ el: function () { return box && box.getClientRects().length ? box : null; }, m: kyT("tug1") },
+             { el: function () { return box ? box.querySelector(".dr-btn") : null; }, m: kyT("tug2"), tap: true },
+             { el: yqQ("#scr-bell #bl-back"), m: kyT("tug3"), tap: true, bet: 1 },
+             { el: yqQ("#scr-blh #blh-list"), m: kyT("tug4"), bet: 1 }]);
+    }, 900);
   }
   function kyOch(q) {
     // hozir ko'rinmayotgan narsalar (Patronus olingan, jadval yashirin...) tashlab ketiladi; boshqa sahifadagi qadam (bet) qoladi
