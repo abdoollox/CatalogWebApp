@@ -2485,7 +2485,6 @@ body.kr-on .mp{display:none!important}
 .af-baho-p i.on{background:#eef2f7;box-shadow:0 0 8px rgba(226,232,240,.7)}
 .af-baho-s{font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
 .af-baho.b4 .af-baho-n{color:#dfe6f2}
-.af-baho.b3 .af-baho-n{color:#d9a877}
 .af-baho.b2 .af-baho-n,.af-baho.b1 .af-baho-n{color:#f08c83}
 .fn-l.bh5{box-shadow:0 0 0 2px #f3d58f,0 0 12px rgba(243,213,143,.45)}
 .fn-l.bh4{box-shadow:0 0 0 2px #c9d2e0}
@@ -2800,7 +2799,6 @@ body.kr-on .mp{display:none!important}
 #tr-opts .tr-o.xato i{background:#e06f64;border-color:#e06f64;color:#200c0a}
 #tr-opts .tr-o.tanlandi i{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
 .tr-bn{margin-top:16px}
-.dr-res-q{margin:12px auto 2px;max-width:320px;text-align:center;font:500 italic 17px/1.35 'Cormorant Garamond',serif;color:var(--text)}
 .tr-opts{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 .tr-o{padding:16px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;text-align:left;
   font:600 14.5px/1.35 'Manrope',sans-serif;transition:transform .12s,background .2s,border-color .2s}
@@ -3576,10 +3574,8 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .yq-qol svg{width:100%;height:100%;display:block}
 .yq.kut .yq-qol{display:none!important}
 @keyframes yqQol{0%,100%{transform:translateY(10px) scale(1)}50%{transform:translateY(0) scale(.9)}}
-/* Damlamalar: natija chiqqanda qozon kichrayadi - natija bitta ekranga sig'sin (egasi, 2026-10-11) */
-.ik-pot{transition:width .35s ease,height .35s ease,margin .35s ease}
-#scr-iksir:has(#ik-res:not(.hidden)) .ik-pot{width:104px;height:91px;margin-top:2px}
-#scr-iksir:has(#ik-res:not(.hidden)) .ik-slots{display:none}
-#scr-iksir:has(#ik-res:not(.hidden)) .dr-head .ms-title{font-size:24px}
-#scr-iksir:has(#ik-res:not(.hidden)) .dr-res{margin-top:10px;padding:16px 16px;gap:8px}
-#scr-iksir:has(#ik-res:not(.hidden)) .af-fl-big{width:84px;height:84px}
+/* DARS NATIJASI - to'qqiz fanda bir xil (drNatija, egasi 2026-10-11): natija paytida sahifada faqat sarlavha, «N-dars» va natija kartasi qoladi
+   (afsun nomi, qozon, fan nomi yashiriladi). Baho rangi: o'tgan baholar kumush/oq, o'tmaganlar qizil (tilla emas - urg'u qoidasi). */
+.screen.natija .dr-head>:not(.ms-kick),.screen.natija .ik-pot,.screen.natija .ik-slots,.screen.natija #ik-rec,.screen.natija #ik-cook{display:none}
+.screen.natija .dr-res{margin-top:12px}
+.af-baho.b3 .af-baho-n{color:#cfd6e0}

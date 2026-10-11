@@ -79,7 +79,7 @@
           afR: ["Chiziq bo'ylab chizing", "Chiziq xira — diqqat bilan", "Endi yoddan chizing"],
           afStart: "Yonib turgan nuqtadan boshlang", afNoaniq: function (n) { return "Afsun noaniq chiqdi — aniqlik " + n + "%. Rekord uchun kamida 60% kerak."; }, afJarima: function (n, s) { return "Aniqlik " + n + "% — jarima +" + s + " s"; }, afOff: "Tayoqcha chetga chiqdi — qaytadan", afShort: "Harakatni oxirigacha chizing",
           afOk: ["Yaxshi! Yana bir marta.", "Ajoyib! Endi yoddan.", "Barakalla! Afsun o'zlashtirildi."], afShow: "Chiziqni ko'rsatish",
-          afBaho: ["Troll", "Yomon", "Qoniqarli", "Kutilganidan yuqori", "A'lo"], afBahoT: "Baho", afAcc: function (p) { return "Aniqlik " + p + "%"; }, afVaqt: function (a, b) { return "Vaqtida " + a + " / " + b; },
+          afBaho: ["Troll", "Yomon", "Qoniqarli", "Kutilganidan yuqori", "A'lo"], afBahoT: "Baho", natT: "Natija", trTog: "to'g'ri javob", afAcc: function (p) { return "Aniqlik " + p + "%"; }, afVaqt: function (a, b) { return "Vaqtida " + a + " / " + b; },
           afLow: "Keyingi darsga o'tish uchun kamida «Qoniqarli» baho kerak.",
           afNth: function (a, b) { return a + " / " + b + "-afsun"; }, afVazT: "Qaysi afsun kerak?", afVazK: "Vaziyat", afZanK: "Ketma-ket afsunlar", afVazNo: "Bu afsun yordam bermaydi",
           afFlN: "Professor Flitvik",
@@ -179,7 +179,7 @@
           afR: ["Ведите по линии", "Линия бледная — внимательнее", "Теперь по памяти"],
           afStart: "Начните со светящейся точки", afNoaniq: function (n) { return "Заклинание вышло неточным — " + n + "%. Для рекорда нужно не меньше 60%."; }, afJarima: function (n, s) { return "Точность " + n + "% — штраф +" + s + " с"; }, afOff: "Палочка ушла в сторону — ещё раз", afShort: "Доведите движение до конца",
           afOk: ["Хорошо! Ещё раз.", "Отлично! Теперь по памяти.", "Браво! Заклинание освоено."], afShow: "Показать линию",
-          afBaho: ["Тролль", "Слабо", "Удовлетворительно", "Выше ожидаемого", "Превосходно"], afBahoT: "Оценка", afAcc: function (p) { return "Точность " + p + "%"; }, afVaqt: function (a, b) { return "Вовремя " + a + " / " + b; },
+          afBaho: ["Тролль", "Слабо", "Удовлетворительно", "Выше ожидаемого", "Превосходно"], afBahoT: "Оценка", natT: "Итог", trTog: "верных ответов", afAcc: function (p) { return "Точность " + p + "%"; }, afVaqt: function (a, b) { return "Вовремя " + a + " / " + b; },
           afLow: "Чтобы перейти к следующему уроку, нужна оценка не ниже «Удовлетворительно».",
           afNth: function (a, b) { return "Заклинание " + a + " / " + b; }, afVazT: "Какое заклинание нужно?", afVazK: "Ситуация", afZanK: "Серия заклинаний", afVazNo: "Это заклинание не поможет",
           afFlN: "Профессор Флитвик",
@@ -278,7 +278,7 @@
           afR: ["Trace along the line", "The line is faint — careful", "Now from memory"],
           afStart: "Start from the glowing dot", afNoaniq: function (n) { return "The spell came out sloppy — " + n + "% accuracy. A record needs at least 60%."; }, afJarima: function (n, s) { return "Accuracy " + n + "% — penalty +" + s + " s"; }, afOff: "The wand went astray — again", afShort: "Finish the whole movement",
           afOk: ["Good! Once more.", "Excellent! Now from memory.", "Bravo! The charm is learnt."], afShow: "Show the line",
-          afBaho: ["Troll", "Poor", "Acceptable", "Exceeds Expectations", "Outstanding"], afBahoT: "Grade", afAcc: function (p) { return "Accuracy " + p + "%"; }, afVaqt: function (a, b) { return "In time " + a + " / " + b; },
+          afBaho: ["Troll", "Poor", "Acceptable", "Exceeds Expectations", "Outstanding"], afBahoT: "Grade", natT: "Result", trTog: "correct answers", afAcc: function (p) { return "Accuracy " + p + "%"; }, afVaqt: function (a, b) { return "In time " + a + " / " + b; },
           afLow: "You need at least “Acceptable” to move on.",
           afNth: function (a, b) { return "Spell " + a + " / " + b; }, afVazT: "Which spell do you need?", afVazK: "Situation", afZanK: "Spell chain", afVazNo: "That spell won't help",
           afFlN: "Professor Flitwick",
@@ -1290,27 +1290,45 @@
 
   function drShowGame(scr) {
     ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    try { $(scr).classList.remove("natija"); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
     try { [].forEach.call(document.querySelectorAll(".fy-qanday"), function (b) { b.textContent = fyX().qanday; }); } catch (e) {}
   }
 
   // Dars oxiridagi natija paneli (hamma o'yinda bir xil): keyingi dars yoki ro'yxatga qaytish
-  function drResult(box, matn, fan, level, yangi) {
-    var x = drX(), st = drData && drData[fan];
+  /* DARS NATIJASI - TO'QQIZ FANDA BIR XIL (egasi, 2026-10-11: «yakunlanish sahifalarini bitta tizimga keltirish»):
+     tepada baho (Tarixda - to'g'ri javoblar), professorning katta rasmi, nomi va xulosasi, holat qatori, tugmalar.
+     Natija paytida sahifadagi boshqa narsalar (afsun nomi, qozon, fan nomi) yashiriladi - .screen.natija (css).
+     o = {fan, box, daraja, sc: {baho, izoh} | tarix: {ok, jami, hol}, izoh, kayf, gap, otdi, yangi, past (o'tmaganda matn),
+          qayta: funksiya, tozala: funksiya (ro'yxatga qaytishda), qoshimcha: funksiya(box, birinchiTugma)} */
+  var DR_PROF = { tarix: "binns", afsun: "flitvik", iksir: "sneyp", himoya: "lyupin", uchish: "xuch", maxluq: "xagrid", astro: "sinistra", osimlik: "sprout", trans: "makgonagall" };
+  function drNatija(o) {
+    var x = drX(), box = o.box, fan = o.fan, st = drData && drData[fan], ekran = box.closest(".screen"), i;
+    var baho = o.sc ? o.sc.baho : o.otdi ? 5 : 2;
+    var kayf = o.kayf || (baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
+    if (ekran) { ekran.classList.add("natija"); }
     box.innerHTML = "";
-    box.appendChild(drEl("p", "dr-res-t", matn));
-    if (yangi === true) { box.appendChild(drEl("b", "dr-res-p", x.passed(level))); }
-    else if (yangi === false) { box.appendChild(drEl("small", "dr-res-s", x.again2)); }
-    if (st && level < st.total && level <= st.level) {
-      var nx = drEl("button", "dr-btn", x.next + " · " + x.lvl(level + 1));
-      nx.type = "button";
-      nx.addEventListener("click", function () { fanLevel(fan, level + 1); });
-      box.appendChild(nx);
-    }
-    var b = drEl("button", "dr-btn ikkinchi", x.toList);
-    b.type = "button";
-    b.addEventListener("click", function () { fanOpen(fan); });
-    box.appendChild(b);
+    var bh = drEl("div", "af-baho b" + baho), pp = drEl("span", "af-baho-p");
+    if (o.tarix) { for (i = 0; i < o.tarix.jami; i++) { pp.appendChild(drEl("i", o.tarix.hol && o.tarix.hol[i] === 1 ? "on" : "")); } }
+    else { for (i = 1; i <= 5; i++) { pp.appendChild(drEl("i", i <= baho ? "on" : "")); } }
+    bh.appendChild(drEl("small", "af-baho-k", o.tarix ? x.natT : x.afBahoT));
+    bh.appendChild(drEl("b", "af-baho-n", o.tarix ? o.tarix.ok + " / " + o.tarix.jami : x.afBaho[baho - 1]));
+    bh.appendChild(pp);
+    bh.appendChild(drEl("span", "af-baho-s", o.izoh || (o.sc && (o.sc.izoh || (x.afAcc(o.sc.acc) + " · " + x.afVaqt(o.sc.vaqt, o.sc.n)))) || ""));
+    box.appendChild(bh);
+    var fi = document.createElement("img");
+    fi.className = "af-fl-big"; fi.alt = ""; fi.src = IMG_DIR + DR_PROF[fan] + "/" + kayf + ".webp";
+    box.appendChild(fi);
+    box.appendChild(drEl("small", "af-baho-k", drFan(fan).ust[lang]));
+    box.appendChild(drEl("p", "dr-res-t", "«" + o.gap + "»"));
+    if (!o.otdi) { box.appendChild(drEl("p", "dr-res-s", o.past || x.afLow)); }
+    else if (o.yangi === true) { box.appendChild(drEl("b", "dr-res-p", x.passed(o.daraja))); }
+    else if (o.yangi === false) { box.appendChild(drEl("small", "dr-res-s", x.again2)); }
+    var tugma = function (cls, matn, fn) { var b = drEl("button", cls, matn); b.type = "button"; b.addEventListener("click", fn); box.appendChild(b); return b; };
+    if (!o.otdi) { tugma("dr-btn", x.retry, function () { o.qayta(); }); }
+    else if (st && o.daraja < st.total && o.daraja <= st.level) { tugma("dr-btn", x.next + " · " + x.lvl(o.daraja + 1), function () { fanLevel(fan, o.daraja + 1); }); }
+    tugma("dr-btn ikkinchi", x.toList, function () { if (o.tozala) { o.tozala(); } fanOpen(fan); });
+    if (o.qoshimcha) { o.qoshimcha(box, box.querySelector(".dr-btn")); }
     box.classList.remove("hidden");
   }
 
@@ -1324,7 +1342,8 @@
     drShowGame("scr-tarix");
     var x = drX(), f = drFan("tarix");
     $("tr-kick").textContent = f.nom[lang];
-    $("tr-ttl").textContent = x.lvl(n);
+    $("tr-ttl").textContent = f.ust[lang];
+    $("tr-today").textContent = x.lvl(n);
     $("tr-timer").classList.add("hidden");
     $("tr-res").classList.add("hidden");
     $("tr-q").textContent = x.loadQ;
@@ -1343,7 +1362,8 @@
     var x = drX();
     drShowGame("scr-tarix");
     $("tr-kick").textContent = drFan("tarix").nom[lang];
-    $("tr-ttl").textContent = x.rekT;
+    $("tr-ttl").textContent = drFan("tarix").ust[lang];
+    $("tr-today").textContent = x.rekT;
     $("tr-timer").classList.add("hidden");
     $("tr-res").classList.add("hidden");
     $("tr-q").textContent = x.loadQ;
@@ -1362,8 +1382,9 @@
     if (qrYordam(["kalamush"], bell || rek).kalamush) { tr.need = Math.max(1, tr.need - 1); }
     if (bell) {
       drShowGame("scr-tarix");
-      $("tr-kick").textContent = x.bell;
-      $("tr-ttl").textContent = drFan("tarix").nom[lang];
+      $("tr-kick").textContent = drFan("tarix").nom[lang];
+      $("tr-ttl").textContent = drFan("tarix").ust[lang];
+      $("tr-today").textContent = x.bell;
       $("tr-res").classList.add("hidden");
     }
     $("tr-timer").classList.toggle("hidden", !bell);
@@ -1466,35 +1487,12 @@
     var x = drX(), t = tr, box = $("tr-res");
     $("tr-stage").classList.add("hidden");
     if (t.bell) { tr = null; blFinish(box); return; }
-    var natija = x.trRes(t.ok, t.qs.length), bn = TR_BN[lang] || TR_BN.uz;
-    // Natija: Professor Binnsning katta rasmi va xulosasi (boshqa fanlardagi professor qolipida)
-    function binns(kayf, gap) {
-      var fi = document.createElement("img");
-      fi.className = "af-fl-big"; fi.alt = ""; fi.src = IMG_DIR + "binns/" + kayf + ".webp";
-      var q = drEl("p", "dr-res-q", "«" + gap + "»");
-      box.insertBefore(q, box.firstChild);
-      box.insertBefore(fi, box.firstChild);
-    }
-    if (t.ok >= t.need) {
-      drDone("tarix", t.level, function (yangi) {
-        drResult(box, natija, "tarix", t.level, yangi);
-        binns(t.ok >= t.qs.length ? "zor" : "yaxshi", t.ok >= t.qs.length ? bn.nZor : bn.nYax);
-      });
-      return;
-    }
-    box.innerHTML = "";
-    binns(t.ok * 2 >= t.qs.length ? "maslahat" : "xafa", t.ok * 2 >= t.qs.length ? bn.nOz : bn.nYom);
-    box.appendChild(drEl("p", "dr-res-t", natija));
-    box.appendChild(drEl("small", "dr-res-s", x.trFail(t.need, t.qs.length)));
-    var r = drEl("button", "dr-btn", x.retry);
-    r.type = "button";
-    r.addEventListener("click", function () { trOpen(t.level); });
-    box.appendChild(r);
-    var b = drEl("button", "dr-btn ikkinchi", x.toList);
-    b.type = "button";
-    b.addEventListener("click", function () { fanOpen("tarix"); });
-    box.appendChild(b);
-    box.classList.remove("hidden");
+    var bn = TR_BN[lang] || TR_BN.uz, otdi = t.ok >= t.need, toliq = t.ok >= t.qs.length, yarim = t.ok * 2 >= t.qs.length;
+    var o = { fan: "tarix", box: box, daraja: t.level, tarix: { ok: t.ok, jami: t.qs.length, hol: t.hol || [] }, izoh: x.trTog, otdi: otdi,
+              kayf: otdi ? (toliq ? "zor" : "yaxshi") : yarim ? "maslahat" : "xafa", gap: otdi ? (toliq ? bn.nZor : bn.nYax) : yarim ? bn.nOz : bn.nYom,
+              past: x.trFail(t.need, t.qs.length), qayta: function () { trOpen(t.level); }, tozala: function () { tr = null; } };
+    if (otdi) { drDone("tarix", t.level, function (yangi) { o.yangi = yangi; drNatija(o); }); return; }
+    drNatija(o);
   }
 
   /* ================= AFSUNLAR: tayoqcha harakatini chizish =================
@@ -1989,15 +1987,6 @@
     } catch (e) {}
   }
   function afBahoSave(n, b) { drBahoSave("afsun", n, b); }
-  function afBahoEl(sc) {
-    var x = drX(), el = drEl("div", "af-baho b" + sc.baho), pp = drEl("span", "af-baho-p");
-    for (var i = 1; i <= 5; i++) { pp.appendChild(drEl("i", i <= sc.baho ? "on" : "")); }
-    el.appendChild(drEl("small", "af-baho-k", x.afBahoT));
-    el.appendChild(drEl("b", "af-baho-n", x.afBaho[sc.baho - 1]));
-    el.appendChild(pp);
-    el.appendChild(drEl("span", "af-baho-s", sc.izoh || (x.afAcc(sc.acc) + " · " + x.afVaqt(sc.vaqt, sc.n))));
-    return el;
-  }
 
   // Dars oxiri: afsun natijasi (animatsiya) -> baho. «Qoniqarli»dan past bo'lsa dars o'tmaydi.
   function afEnd() {
@@ -2014,33 +2003,9 @@
       af.fx = null;
       var show = function (yangi) {
         if (af !== me) { return; }
-        var box = $("af-res");
         $("af-stage").classList.add("hidden");
-        if (otdi) { drResult(box, "«" + x.afFlB[sc.baho - 1] + "»", "afsun", daraja, yangi); }
-        else {
-          box.innerHTML = "";
-          box.appendChild(drEl("p", "dr-res-t", "«" + x.afFlB[sc.baho - 1] + "»"));
-          box.appendChild(drEl("p", "dr-res-s", x.afLow));
-          var r = drEl("button", "dr-btn", x.retry);
-          r.type = "button";
-          r.addEventListener("click", function () { afOpen(false, daraja); });
-          box.appendChild(r);
-          var b = drEl("button", "dr-btn ikkinchi", x.toList);
-          b.type = "button";
-          b.addEventListener("click", function () { af = null; fanOpen("afsun"); });
-          box.appendChild(b);
-          box.classList.remove("hidden");
-        }
-        var ft = box.querySelector(".dr-res-t");
-        if (ft) {
-          var fi = document.createElement("img");
-          fi.className = "af-fl-big";
-          fi.alt = "";
-          fi.src = afFlImg(sc.baho >= 5 ? "zor" : sc.baho === 4 ? "yaxshi" : sc.baho === 3 ? "maslahat" : "xafa");
-          box.insertBefore(fi, ft);
-          box.insertBefore(drEl("small", "af-baho-k", x.afFlN), ft);
-        }
-        box.insertBefore(afBahoEl(sc), box.firstChild);
+        drNatija({ fan: "afsun", box: $("af-res"), daraja: daraja, sc: sc, gap: x.afFlB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                   qayta: function () { afOpen(false, daraja); }, tozala: function () { af = null; } });
       };
       if (otdi) { afBahoSave(daraja, sc.baho); drDone("afsun", daraja, show); } else { show(null); }
     }, af.fx.ms);
@@ -2528,28 +2493,8 @@
     $("ik-pot").classList.toggle("tayyor", otdi);
     var show = function (yangi) {
       if (ik !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.ikSnB[sc.baho - 1] + "»", "iksir", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.ikSnB[sc.baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { ikOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { ik = null; fanOpen("iksir"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = ikSnImg(sc.baho >= 5 ? "zor" : sc.baho === 4 ? "yaxshi" : sc.baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.ikSnN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "iksir", box: box, daraja: daraja, sc: sc, gap: x.ikSnB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { ikOpen(false, daraja); }, tozala: function () { ik = null; } });
     };
     if (otdi) { drBahoSave("iksir", daraja, sc.baho); drDone("iksir", daraja, show); } else { show(null); }
   }
@@ -2760,28 +2705,8 @@
     var sc = { baho: baho, izoh: x.hmStat(hm.wrong, hm.late) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (hm !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.hmLpB[baho - 1] + "»", "himoya", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.hmLpB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { hmOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { hm = null; fanOpen("himoya"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = hmLpImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.hmLpN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "himoya", box: box, daraja: daraja, sc: sc, gap: x.hmLpB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { hmOpen(false, daraja); }, tozala: function () { hm = null; } });
     };
     if (otdi) { drBahoSave("himoya", daraja, baho); drDone("himoya", daraja, show); } else { show(null); }
   }
@@ -3001,28 +2926,8 @@
     var sc = { baho: baho, izoh: x.ucStat(uch.pass, uch.R, uch.hits, uch.snitch) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (uch !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.ucXcB[baho - 1] + "»", "uchish", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.ucXcB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { uchOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { uch = null; fanOpen("uchish"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = uchXcImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.ucXcN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "uchish", box: box, daraja: daraja, sc: sc, gap: x.ucXcB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { uchOpen(false, daraja); }, tozala: function () { uch = null; } });
     };
     if (otdi) { drBahoSave("uchish", daraja, baho); drDone("uchish", daraja, show); } else { show(null); }
   }
@@ -3240,38 +3145,18 @@
     var sc = { baho: baho, izoh: x.mxStat(mx.mism, kech) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (mx !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.mxXgB[baho - 1] + "»", "maxluq", daraja, yangi); }
-      if (otdi && yangi === true && daraja % 3 === 0 && daraja / 3 <= 11) {      // har uch darsda yangi maxluq (hpqoriq)
-        var yk = QR_TARTIB[daraja / 3 - 1], qg = drEl("button", "dr-btn", x.qrGo), birinchi = box.querySelector(".dr-btn");
-        qg.type = "button";
-        qg.addEventListener("click", function () { mx = null; qrOpen(); });
-        var yim = document.createElement("img");
-        yim.className = "qr-yangi"; yim.alt = ""; yim.src = qrImg(yk, 0);
-        box.insertBefore(yim, birinchi);
-        box.insertBefore(drEl("b", "dr-res-p", x.qrNew(mxTx(yk)[0])), birinchi);
-        box.insertBefore(qg, birinchi);
-      }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.mxXgB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { mxOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { mx = null; fanOpen("maxluq"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = mxXgImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.mxXgN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "maxluq", box: box, daraja: daraja, sc: sc, gap: x.mxXgB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { mxOpen(false, daraja); }, tozala: function () { mx = null; },
+                 qoshimcha: function (bx, birinchi) {
+                   if (!otdi || yangi !== true || daraja % 3 !== 0 || daraja / 3 > 11) { return; }      // har uch darsda yangi maxluq (hpqoriq)
+                   var yk = QR_TARTIB[daraja / 3 - 1], qg = drEl("button", "dr-btn", x.qrGo), yim = document.createElement("img");
+                   qg.type = "button";
+                   qg.addEventListener("click", function () { mx = null; qrOpen(); });
+                   yim.className = "qr-yangi"; yim.alt = ""; yim.src = qrImg(yk, 0);
+                   bx.insertBefore(yim, birinchi);
+                   bx.insertBefore(drEl("b", "dr-res-p", x.qrNew(mxTx(yk)[0])), birinchi);
+                   bx.insertBefore(qg, birinchi);
+                 } });
     };
     if (otdi) { drBahoSave("maxluq", daraja, baho); drDone("maxluq", daraja, show); } else { show(null); }
   }
@@ -3641,28 +3526,8 @@
     var sc = { baho: baho, izoh: x.ylStat(yl.ok, jami) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (yl !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.ylB[baho - 1] + "»", "astro", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.ylB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { ylOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { yl = null; fanOpen("astro"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = ylSnImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.ylSnN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "astro", box: box, daraja: daraja, sc: sc, gap: x.ylB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { ylOpen(false, daraja); }, tozala: function () { yl = null; } });
     };
     if (otdi) { drBahoSave("astro", daraja, baho); drDone("astro", daraja, show); } else { show(null); }
   }
@@ -3850,28 +3715,8 @@
     var sc = { baho: baho, izoh: x.osStat(os.served, os.jami, os.wrong) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (os !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.osB[baho - 1] + "»", "osimlik", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.osB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { osOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { os = null; fanOpen("osimlik"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = osSpImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.osSpN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "osimlik", box: box, daraja: daraja, sc: sc, gap: x.osB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { osOpen(false, daraja); }, tozala: function () { os = null; } });
     };
     if (otdi) { drBahoSave("osimlik", daraja, baho); drDone("osimlik", daraja, show); } else { show(null); }
   }
@@ -4124,28 +3969,8 @@
     var sc = { baho: baho, izoh: x.tfStat(tf.ok, jami) }, otdi = baho >= 3;
     var show = function (yangi) {
       if (tf !== me) { return; }
-      if (otdi) { drResult(box, "«" + x.tfB[baho - 1] + "»", "trans", daraja, yangi); }
-      else {
-        box.innerHTML = "";
-        box.appendChild(drEl("p", "dr-res-t", "«" + x.tfB[baho - 1] + "»"));
-        box.appendChild(drEl("p", "dr-res-s", x.afLow));
-        var r = drEl("button", "dr-btn", x.retry);
-        r.type = "button";
-        r.addEventListener("click", function () { tfOpen(false, daraja); });
-        box.appendChild(r);
-        var b = drEl("button", "dr-btn ikkinchi", x.toList);
-        b.type = "button";
-        b.addEventListener("click", function () { tf = null; fanOpen("trans"); });
-        box.appendChild(b);
-        box.classList.remove("hidden");
-      }
-      var ft = box.querySelector(".dr-res-t"), fi = document.createElement("img");
-      fi.className = "af-fl-big";
-      fi.alt = "";
-      fi.src = tfMgImg(baho >= 5 ? "zor" : baho === 4 ? "yaxshi" : baho === 3 ? "maslahat" : "xafa");
-      box.insertBefore(fi, ft);
-      box.insertBefore(drEl("small", "af-baho-k", x.tfMgN), ft);
-      box.insertBefore(afBahoEl(sc), box.firstChild);
+      drNatija({ fan: "trans", box: box, daraja: daraja, sc: sc, gap: x.tfB[sc.baho - 1], otdi: otdi, yangi: yangi,
+                 qayta: function () { tfOpen(false, daraja); }, tozala: function () { tf = null; } });
     };
     if (otdi) { drBahoSave("trans", daraja, baho); drDone("trans", daraja, show); } else { show(null); }
   }
