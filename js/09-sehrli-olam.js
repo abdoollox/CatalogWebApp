@@ -293,19 +293,19 @@
   var KURS_TX = {
     uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", vazifa: function (k, n) { return k + "-kursga o'tish uchun har bir fandan " + n + " tadan dars o'ting"; }, tayyor: function (a, b) { return a + " / " + b + " fan tayyor"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
-          och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
+          och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona, Issiqxona va Patronus", 4: "Maydon — Duel, Shaxmat, Viktorina — Jadval va Do'stlar" },
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish",
           sh3: "3-kursga o'tish uchun uchta shartni bajaring", s1: function (n) { return "Har bir fandan " + n + " tadan dars"; }, s2: "Shokolad qurbaqadan bitta karta oching", s3: "To'qqiz fanning har birida bellashuvda qatnashing",
           sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish" },
     ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", vazifa: function (k, n) { return "Чтобы перейти на " + k + "-й курс, пройдите по " + n + " урока по каждому предмету"; }, tayyor: function (a, b) { return "Готово: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
-          och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
+          och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник, Теплица и Патронус", 4: "Арена — Дуэль, Шахматы, Викторина — Расписание и Друзья" },
           tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить",
           sh3: "Чтобы перейти на 3-й курс, выполните три условия", s1: function (n) { return "По " + n + " уроков по каждому предмету"; }, s2: "Откройте одну карточку Шоколадной лягушки", s3: "Поучаствуйте в состязании по каждому из девяти предметов",
           sFan: function (a, b) { return a + " / " + b + " предм."; }, bQurb: "К Шоколадной лягушке" },
     en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", vazifa: function (k, n) { return "To reach year " + k + ", pass " + n + " lessons in every subject"; }, tayyor: function (a, b) { return a + " / " + b + " subjects done"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
-          och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
+          och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve, the Greenhouse and the Patronus", 4: "The Arena — Duel, Chess, Quiz — the Schedule and Friends" },
           tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue",
           sh3: "To reach year 3, meet three conditions", s1: function (n) { return n + " lessons in every subject"; }, s2: "Open one Chocolate Frog card", s3: "Enter the contest in each of the nine subjects",
           sFan: function (a, b) { return a + " / " + b + " subjects"; }, bQurb: "Go to the Chocolate Frog" }
@@ -384,19 +384,19 @@
                  3: "Ajoyib! Endi rekord qo'yasiz, maxluq va o'simliklaringizni o'zingiz parvarish qilasiz.",
                  4: "Barakalla! Siz eng yuqori kursdasiz. Maydon sizni kutmoqda: duel, shaxmat va viktorina." },
           xona: { bell: "Bellashuv", sq: "Shokolad qurbaqa", cup: "Xogvarts kubogi", rek: "Rekordlar", qoriq: "Qo'riqxona", issiq: "Issiqxona", duel: "Duel", chess: "Shaxmat", vik: "Viktorina" },
-          qosh: { 4: "va Hafta jadvali" } },
+          qosh: { 3: "va Patronus", 4: "va Hafta jadvali, Do'stlar" } },
     ru: { kick: "Хогвартс · новый курс", muhr: "курс", mg: "Профессор Макгонагалл",
           gap: { 2: "Поздравляю! Первый курс пройден с честью. Теперь пора состязаться за свой факультет.",
                  3: "Превосходно! Теперь вы ставите рекорды и сами ухаживаете за существами и растениями.",
                  4: "Браво! Вы на старшем курсе. Арена ждёт вас: дуэль, шахматы и викторина." },
           xona: { bell: "Состязания", sq: "Шоколадная лягушка", cup: "Кубок школы", rek: "Рекорды", qoriq: "Заповедник", issiq: "Теплица", duel: "Дуэль", chess: "Шахматы", vik: "Викторина" },
-          qosh: { 4: "и Расписание недели" } },
+          qosh: { 3: "и Патронус", 4: "и Расписание недели, Друзья" } },
     en: { kick: "Hogwarts · new year", muhr: "year", mg: "Professor McGonagall",
           gap: { 2: "Congratulations! You finished your first year with honour. Now it is time to compete for your house.",
                  3: "Splendid! Now you set records and look after your own creatures and plants.",
                  4: "Well done! You are in the top year. The Arena awaits: duels, chess and the quiz." },
           xona: { bell: "Contests", sq: "Chocolate Frog", cup: "House Cup", rek: "Records", qoriq: "Reserve", issiq: "Greenhouse", duel: "Duel", chess: "Chess", vik: "Quiz" },
-          qosh: { 4: "and the Weekly schedule" } }
+          qosh: { 3: "and the Patronus", 4: "and the Weekly schedule, Friends" } }
   };
   var KURS_XONA = { 2: ["bell", "sq", "cup"], 3: ["rek", "qoriq", "issiq"], 4: ["duel", "chess", "vik"] };
   function kursXonaRasm(k) {
@@ -494,7 +494,7 @@
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}
     try { jrAdminCheck(); } catch (e) {}
-    setTimeout(function () { try { yqBosh(); } catch (e) {} }, 800);     // tugallanmagan yo'riqnoma (09-yoriqnoma.js) davom etadi
+    setTimeout(function () { try { yqBosh(); } catch (e) {} try { yqKursDavom(); } catch (e) {} }, 800);     // tugallanmagan yo'riqnoma va kurs yo'riqnomasining 2-qismi (09-yoriqnoma.js)
   }
 
   function leaveHub() {
