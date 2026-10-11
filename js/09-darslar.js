@@ -1291,6 +1291,7 @@
   function drShowGame(scr) {
     ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { window.scrollTo(0, 0); } catch (e) {}
+    try { [].forEach.call(document.querySelectorAll(".fy-qanday"), function (b) { b.textContent = fyX().qanday; }); } catch (e) {}
   }
 
   // Dars oxiridagi natija paneli (hamma o'yinda bir xil): keyingi dars yoki ro'yxatga qaytish
@@ -1368,7 +1369,9 @@
     $("tr-timer").classList.toggle("hidden", !bell);
     $("tr-stage").classList.remove("hidden");
     $("scr-tarix").style.setProperty("--dr-rgb", drFan("tarix").rgb);
+    $("tr-qanday").classList.toggle("hidden", !!(bell || rek));
     trPaint();
+    if (!bell && !rek) { fyTarix(); }        // birinchi darsda yo'riqnoma (js/09-yoriqnoma-fanlar.js)
   }
 
   /* Professor Binns (arvoh o'qituvchi) izoh beradi - boshqa fanlardagi professor qolipida (egasi, 2026-10-11: sahifa bezaldi).
@@ -1441,8 +1444,10 @@
       kut = togri ? 750 : 1500;
     }
     trProg();
-    setTimeout(function () {
-      if (!tr) { return; }
+    var me0 = tr;
+    setTimeout(function davom() {
+      if (!tr || tr !== me0) { return; }
+      if (tr.yoriq) { setTimeout(davom, 200); return; }          // yo'riqnoma o'qilguncha javoblar ekranda turadi
       if (tr.rek && (tr.xato || tr.i + 1 >= tr.qs.length)) {
         var tsc = tr.ok;
         tr = null;
@@ -1665,7 +1670,9 @@
     if (af.mode === "zan") {     // bitta sham uchala afsunga (orasidagi tanaffuslar bilan)
       af.lim = Math.round((1800 + af.steps.reduce(function (a, q) { return a + afLim(q.id, af.n); }, 0)) * af.kx);
     }
+    $("af-qanday").classList.toggle("hidden", af.bell || af.rek);
     afStepSet();
+    if (!af.bell && !af.rek) { fyAfsun(); }
   }
 
   // Navbatdagi qadam: afsun, sarlavha, (vaziyatda) variantlar
@@ -1867,6 +1874,7 @@
 
   function afDown(ev) {
     if (!af || af.done || af.lock || af.ask) { return; }
+    if (af.yoriq && yqBlok("afsun")) { return; }              // yo'riqnoma tushuntirayotganda chizilmaydi
     var p = afXY(ev), x = drX(), tol = af.w * 0.13;
     af.bad = false;
     af.ok = false;
@@ -1917,6 +1925,7 @@
     if (aniq != null && af.bell && bl) { jarima = aniq < 50 ? 2 : aniq < 70 ? 1 : 0; bl.xato += jarima; }
     af.rounds.push({ a: aniq, r: (af.dsum / (af.dn || 1)) / (af.w * 0.13), fails: af.fails, used: af.used && !af.bt,
                      late: !af.bell && otgan > af.lim ? (otgan > af.lim * 2 ? 2 : 1) : 0 });
+    if (af.yoriq) { yqHodisa("afsun"); }
     var tugadi = af.round >= af.steps.length - 1, oxir = af.rounds[af.rounds.length - 1];
     if (af.mode !== "zan" || tugadi) { af.t0 = 0; }
     af.off = false;
@@ -2325,8 +2334,10 @@
     $("ik-today").textContent = ik.rek ? x.rekT : ik.bell ? x.bell : x.lvl(ik.n) + (bq.yop ? " · " + x.ikImt : "");
     $("ik-timer").classList.toggle("hidden", !ik.bell);
     $("ik-name").textContent = IK[id][lang] || IK[id].uz;
+    $("ik-qanday").classList.toggle("hidden", ik.bell || ik.rek);
     ikRender();
     ikYopBosh();
+    fyIksir();
   }
   function ikStop() { if (ik) { clearInterval(ik.tm); clearInterval(ik.yopTm); ik.tm = 0; ik.yopTm = 0; } }
   // Imtihon: retsept sanoq bilan o'zi yopiladi
@@ -2338,6 +2349,7 @@
     chiz();
     ik.yopTm = setInterval(function () {
       if (ik !== me || ik.phase !== "rec") { clearInterval(me.yopTm); return; }
+      if (ik.yoriq) { return; }                                   // yo'riqnoma paytida sanoq to'xtaydi
       qoldi--;
       if (qoldi <= 0) { clearInterval(me.yopTm); ik.msg = ""; ikStart(); return; }
       chiz();
@@ -2376,7 +2388,7 @@
       var me = ik;
       ik.t0 = Date.now(); ik.pct = 1;
       clearInterval(ik.tm);
-      ik.tm = setInterval(function () { if (ik !== me || ik.phase !== "cook") { clearInterval(me.tm); return; } ikSham(); }, 100);
+      ik.tm = setInterval(function () { if (ik !== me || ik.phase !== "cook") { clearInterval(me.tm); return; } if (ik.yoriq) { ik.t0 = Date.now(); } ikSham(); }, 100);
     }
     ikKayf("maslahat");
     ikRender();
@@ -2636,6 +2648,7 @@
     $("hm-lives").classList.toggle("hidden", hm.bell || hm.rek);
     hm.i = 0;
     hmWave();
+    fyHimoya();
   }
 
   function hmLives() {
@@ -2680,6 +2693,7 @@
     clearInterval(hm.tm);
     hm.tm = setInterval(function () {
       if (hm !== me || $("scr-himoya").classList.contains("hidden")) { clearInterval(me.tm); return; }
+      if (hm.yoriq) { hm.t0 = Date.now(); $("hm-sham-w").style.width = "100%"; $("hm-sham").classList.remove("oz", "ochdi"); return; }              // yo'riqnoma paytida xavf joyida turadi
       if (hm.lock) { return; }
       var p = Math.min(1, (Date.now() - hm.t0) / hm.lim);
       $("hm-im").style.transform = "scale(" + (0.42 + 0.58 * p).toFixed(3) + ")";
@@ -2846,6 +2860,7 @@
     $("uc-hint").classList.remove("bad");
     uchKayf("maslahat");
     uchHud();
+    uch.fyd = false;
     uch.raf = requestAnimationFrame(uchTick);
   }
   function uchHud() {
@@ -2868,7 +2883,8 @@
     uch.ts = ts;
     uch.rx += (uch.tx - uch.rx) * Math.min(1, dt * 11);
     uch.slow -= dt;
-    uch.dist += (uch.rek ? 0.5 + Math.min(0.55, uch.pass * 0.012) : uch.v0 * (uch.slow > 0 ? 0.6 : 1 + Math.min(uch.combo, 6) * 0.08)) * dt;
+    if (!uch.yoriq) { uch.dist += (uch.rek ? 0.5 + Math.min(0.55, uch.pass * 0.012) : uch.v0 * (uch.slow > 0 ? 0.6 : 1 + Math.min(uch.combo, 6) * 0.08)) * dt; }       // yo'riqnoma paytida supurgi joyida turadi (boshqarsa bo'ladi)
+    if (!uch.fyd && uch.dist >= 0.5) { uch.fyd = true; fyUchish(); }     // birinchi halqa ko'ringach - yo'riqnoma (birinchi darsda)
     var ozgardi = false;
     uch.objs.forEach(function (o) {
       o.cx = o.t === "sn" ? o.x + Math.sin(uch.dist * 5 + o.ph) * 0.22 : o.x;
@@ -3115,7 +3131,9 @@
     $("mx-hint").classList.remove("bad");
     mxRender();
     var bosh = function () {
-      if (mx !== me) { return; }
+      if (mx !== me || mx.boshlandi) { return; }
+      mx.boshlandi = true;
+      clearTimeout(mx.pk);
       mx.cards.forEach(function (c) { c.open = false; });
       mx.lock = false;
       $("mx-hint").textContent = x.mxHint;
@@ -3124,6 +3142,7 @@
       clearInterval(mx.tm);
       mx.tm = setInterval(function () {
         if (mx !== me || $("scr-maxluq").classList.contains("hidden")) { clearInterval(me.tm); return; }
+        if (mx.yoriq) { mx.t0 = Date.now(); }                    // yo'riqnoma paytida sham yonmaydi
         if (mx.lim) {
           mx.pct = Math.max(0, 1 - (Date.now() - mx.t0) / mx.lim);
           $("mx-sham-w").style.width = (mx.pct * 100).toFixed(1) + "%";
@@ -3133,6 +3152,8 @@
         if (mx.bell) { mxHead(); }
       }, 100);
     };
+    mx.boshlandi = false;
+    if (fyMaxluq(bosh)) { return; }                               // yo'riqnoma kartalarni o'zi yopadi
     if (mx.peek > 0) { mx.pk = setTimeout(bosh, mx.peek); } else { bosh(); }
   }
   function mxHead() {
@@ -3496,8 +3517,8 @@
       if (i && savol[i - 1].id === id) { id = T[(T.indexOf(id) + 3) % L]; P = YL[id].p; }
       var bur = bosq === 0 ? [90, 180, 270][Math.floor(rnd(i * 13 + 2) * 3)] : 40 + Math.floor(rnd(i * 13 + 2) * 280);
       var opts = [{ p: P, rot: bur, aks: false, ok: true }];
-      if (bosq >= 1 && !YL_SIM[id]) { opts.push({ p: P, rot: Math.floor(rnd(i * 13 + 3) * 360), aks: true }); }
-      if (bosq === 2) { opts.push({ p: ylSiljit(P, rnd(i * 13 + 4), rnd(i * 13 + 5)), rot: Math.floor(rnd(i * 13 + 6) * 360), aks: false }); }
+      if (bosq >= 1 && !YL_SIM[id]) { opts.push({ p: P, rot: Math.floor(rnd(i * 13 + 3) * 360), aks: true, tz: "aks" }); }       // tz - tuzoq turi (yo'riqnoma ko'rsatadi)
+      if (bosq === 2) { opts.push({ p: ylSiljit(P, rnd(i * 13 + 4), rnd(i * 13 + 5)), rot: Math.floor(rnd(i * 13 + 6) * 360), aks: false, tz: "sil" }); }
       g = 0;
       var band = [id];
       while (opts.length < var_ && g < 60) {
@@ -3538,6 +3559,7 @@
     $("yl-sham").classList.toggle("hidden", yl.bell);
     yl.i = 0;
     ylStep();
+    fyAstro();
   }
   function ylHead() {
     var x = drX();
@@ -3571,6 +3593,7 @@
     yl.tm = setInterval(function () {
       if (yl !== me || $("scr-astro").classList.contains("hidden")) { clearInterval(me.tm); return; }
       if (yl.bell) { ylHead(); return; }
+      if (yl.yoriq) { yl.t0 = Date.now(); return; }
       if (yl.lock) { return; }
       var p = Math.max(0, 1 - (Date.now() - yl.t0) / yl.lim);
       $("yl-sham-w").style.width = (p * 100).toFixed(1) + "%";
@@ -3745,6 +3768,13 @@
   }
   function osTick() {
     var x = drX(), me = os, P = os.plan, now = Date.now(), ochiq = 0;
+    if (os.yoriq) {          // yo'riqnoma paytida issiqxona to'xtaydi: kutish chiziqlari va navbat surilib turadi
+      var d0 = now - (os.tl || now);
+      os.pots.forEach(function (p0) { if (p0.need >= 0) { p0.t0 += d0; } });
+      os.keyingi += d0; os.tl = now;
+      return;
+    }
+    os.tl = now;
     // yangi ehtiyoj: navbatdagi tuvak bo'sh bo'lsa
     if (os.ni < P.navbat.length && now >= os.keyingi) {
       var q = P.navbat[os.ni], pot = os.pots[q.p];
@@ -3755,6 +3785,7 @@
         pot.el.classList.add("kerak");
         os.ni++;
         os.keyingi = now + P.oraliq;
+        if (os.ni === 1) { fyOsimlik(q.p); }
       }
     }
     os.pots.forEach(function (p) {
@@ -4011,7 +4042,7 @@
       { el: el("#tf-opts"), m: x.q3 },
       { el: el("#tf-sham"), m: x.q4 },
       { el: function () { return $("tf-opts").children[q.ok] || null; }, m: x.q5(z), tap: true }
-    ], { kim: x.kim, rasm: tfMgImg("maslahat"), tugash: function () { if (tf === me) { tf.yoriq = false; tf.t0 = Date.now(); } } });
+    ], { kim: x.kim, rasm: tfMgImg("maslahat"), ekran: "scr-trans", tugash: function () { if (tf === me) { tf.yoriq = false; tf.t0 = Date.now(); } } });
   }
   function tfHead() {
     var x = drX();
@@ -4218,6 +4249,7 @@
       if (!uch || uch.over) { return; }
       var r = uc.getBoundingClientRect(), W = uch.w * 0.84;
       uch.tx = Math.max(0.05, Math.min(0.95, (ev.clientX - r.left - (uch.w - W) / 2) / W));
+      if (uch.yoriq) { yqHodisa("uchish"); }
       try { ev.preventDefault(); } catch (e) {}
     };
     if (window.PointerEvent) { uc.addEventListener("pointerdown", ucYur); uc.addEventListener("pointermove", ucYur); }

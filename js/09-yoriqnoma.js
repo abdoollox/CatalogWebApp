@@ -71,7 +71,10 @@
   }
 
   /* Istalgan sahifa uchun yo'riqnoma: qadamlar = [{el: funksiya, t: YQ_TX kaliti yoki m: tayyor matn, tap, kut}],
-     o = {kim: sarlavha, rasm: doiradagi rasm, kalit: tugaganda o'chiriladigan belgi (ixtiyoriy), tugash: funksiya (ixtiyoriy)}. */
+     qadamda yana (ixtiyoriy): on - qadam boshlanganda bir marta chaqiriladi; b - kutish qadamidagi tugma matni;
+     nuqta - barmoq ishorasi joyi (funksiya -> [x, y], ekran koordinatasi).
+     o = {kim: sarlavha, rasm: doiradagi rasm, kalit: tugaganda o'chiriladigan belgi (ixtiyoriy), tugash: funksiya (ixtiyoriy),
+          ekran: sahifa id si - o'quvchi undan chiqib ketsa yo'riqnoma darhol yopiladi}. */
   function yqOch(qadamlar, o2) {
     if (yq) { return; }
     var o = document.createElement("div");
@@ -79,7 +82,7 @@
     o.innerHTML = '<div class="yq-teshik"></div><div class="yq-qol"><svg viewBox="0 0 24 24" fill="#fff" stroke="#10141a" stroke-width="1.1" stroke-linejoin="round"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10l5.2 1.1A2.3 2.3 0 0 1 19 13.4l-.6 4.3A3.8 3.8 0 0 1 14.6 21h-2.9a3.8 3.8 0 0 1-3-1.5L5.3 15a1.4 1.4 0 0 1 2.1-1.8L9 14.6z"/></svg></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><p class="yq-m"></p></div></div>'
       + '<div class="yq-btm"><span class="yq-n"></span><button type="button" class="yq-nx"></button></div></div>';
     document.body.appendChild(o);
-    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null };
+    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null, ekran: o2.ekran || "", onI: -1 };
     o.querySelector(".yq-rasm").src = o2.rasm;
     o.querySelector(".yq-kim").textContent = o2.kim;
     o.querySelector(".yq-nx").onclick = function () { yqKeyingi(); };
@@ -111,11 +114,15 @@
     if (!yq) { return; }
     var t = ev.target, q = yq.q[yq.i], e = yqEl();
     if (yq.o.querySelector(".yq-box").contains(t)) { return; }
+    if (yq.ekran && t && t.closest && t.closest("#" + yq.ekran + " .back-btn")) { return; }      // dars yo'riqnomasida «ortga» doim ishlaydi (yo'riqnoma o'zi yopiladi)
     if (q.tap && e && e.contains(t)) { setTimeout(yqKeyingi, 60); return; }
     if (q.kut && e && e.contains(t)) { return; }
     ev.preventDefault();
     ev.stopPropagation();
   }
+
+  // O'yin maydoni (canvas) yo'riqnoma paytida qabul qiladimi: faqat hozirgi qadam shu ishni kutayotgan bo'lsa (kut: nom)
+  function yqBlok(nom) { return !!yq && yq.q[yq.i].kut !== nom; }
 
   // Kutilgan ish bajarildi (masalan, chatga xabar yuborildi) - keyingi qadam
   function yqHodisa(nom) {
@@ -125,6 +132,8 @@
   // Teshik va izohni element ustiga qo'yadi (sahifa qayta chizilsa ham ergashadi)
   function yqJoy() {
     if (!yq) { return; }
+    if (yq.ekran) { var ek = $(yq.ekran); if (!ek || ek.classList.contains("hidden")) { yqTugat(); return; } }
+    if (yq.onI !== yq.i) { yq.onI = yq.i; if (yq.q[yq.i].on) { try { yq.q[yq.i].on(); } catch (x0) {} } }
     var q = yq.q[yq.i], e = yqEl(), o = yq.o;
     var tsh = o.querySelector(".yq-teshik"), box = o.querySelector(".yq-box");
     if (!e) {
@@ -145,14 +154,17 @@
     // «O'tkazib yuborish» yo'q (egasi, 2026-10-11). Yozish qadamida odam tiqilib qolmasin: 40 soniyadan keyin «Keyingi» ochiladi.
     if (yq.t0i !== yq.i) { yq.t0i = yq.i; yq.t0 = Date.now(); }
     var ochiq = q.kut && Date.now() - yq.t0 > 40000;
-    nx.textContent = q.tap ? yqT("bos") : q.kut && !ochiq ? yqT("yoz") : yqT("nx");
+    nx.textContent = q.tap ? yqT("bos") : q.kut && !ochiq ? (q.b || yqT("yoz")) : yqT("nx");
     nx.disabled = !!q.tap || (!!q.kut && !ochiq);
     // Bosiladigan joyga barmoq ishorasi
     var qol = o.querySelector(".yq-qol");
     qol.style.display = q.tap || q.kut ? "block" : "none";
-    qol.style.left = (r.left + r.width / 2 - 6) + "px";
-    qol.style.top = (r.top + Math.min(r.height * 0.55, r.height - 14)) + "px";
+    var nq = null;
+    if (q.nuqta) { try { nq = q.nuqta(); } catch (x1) {} }
+    qol.style.left = (nq ? nq[0] - 6 : r.left + r.width / 2 - 6) + "px";
+    qol.style.top = (nq ? nq[1] : r.top + Math.min(r.height * 0.55, r.height - 14)) + "px";
     box.style.left = Math.max(12, Math.min(vw - box.offsetWidth - 12, r.left + r.width / 2 - box.offsetWidth / 2)) + "px";
     var past = r.bottom + p + 12, tepa = r.top - p - 12 - box.offsetHeight;
-    box.style.top = (past + box.offsetHeight < vh - 8 ? past : Math.max(8, tepa)) + "px";
+    // sig'masa (masalan, katta o'yin maydoni) - ko'proq joy qolgan tomonda, ekran chetida turadi
+    box.style.top = (past + box.offsetHeight < vh - 8 ? past : tepa >= 8 ? tepa : vh - r.bottom > r.top ? vh - box.offsetHeight - 8 : 8) + "px";
   }
