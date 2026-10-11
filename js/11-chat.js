@@ -904,6 +904,7 @@
         m.tries = 0;
         if (res && res.ok && (res.message || res.messages)) {
           try { sqDone("chat"); } catch (e) {}
+          try { yqHodisa("chat"); } catch (e) {}
           R.msgs = R.msgs.filter(function(x) { return x !== m; });
           if (res.message) {
             res.message.cid = m.cid;

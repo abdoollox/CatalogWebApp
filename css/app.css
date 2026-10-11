@@ -3527,7 +3527,10 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .yq-kim{display:block;font:600 11px/1 var(--f-ui,inherit);letter-spacing:.12em;text-transform:uppercase;color:#eef2f7;margin:3px 0 7px}
 .yq-m{margin:0;font-size:14.5px;line-height:1.45;color:#eef0f4}
 .yq-btm{display:flex;align-items:center;gap:10px;margin-top:12px}
-.yq-otkaz{border:none;background:none;padding:6px 0;font-size:12.5px;color:rgba(238,240,244,.55);text-decoration:underline;cursor:pointer}
-.yq-n{margin-left:auto;font-size:12px;color:rgba(238,240,244,.5)}
+.yq-n{margin-right:auto;font-size:12px;color:rgba(238,240,244,.5)}
 .yq-nx{border:none;border-radius:999px;padding:9px 16px;font-weight:700;font-size:13.5px;color:#1a1408;background:#cfd6e0;cursor:pointer}
 .yq-nx:disabled{background:none;color:#eef2f7;padding:9px 0;font-weight:600}
+.yq-qol{position:fixed;width:34px;height:34px;display:none;filter:drop-shadow(0 4px 8px rgba(0,0,0,.7));animation:yqQol 1.1s ease-in-out infinite;transition:left .28s ease,top .28s ease}
+.yq-qol svg{width:100%;height:100%;display:block}
+.yq.kut .yq-qol{display:none!important}
+@keyframes yqQol{0%,100%{transform:translateY(10px) scale(1)}50%{transform:translateY(0) scale(.9)}}
