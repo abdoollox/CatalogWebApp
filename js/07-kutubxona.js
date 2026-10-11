@@ -1009,6 +1009,7 @@
     if (!bor) { return; }
     bor.done = true;                      // ikki marta yubormaslik uchun
     sqPost({ task: code }, sqApply);
+    try { kyVazTugadi(code); } catch (e) {}     // birinchi kun yo'riqnomasi: «bajarildi» (js/09-yoriqnoma.js)
   }
 
   function qbCount() {
@@ -1132,6 +1133,7 @@
       var row = document.createElement("button");
       row.type = "button";
       row.className = "sq-task" + (t.done ? " done" : "");
+      row.setAttribute("data-k", t.code);
       row.innerHTML = '<span class="sq-ck">' + (t.done ? SQ_CHECK : "") + '</span><span class="sq-task-tx"><b></b><small></small></span><i>›</i>';
       row.querySelector("b").textContent = tx[0];
       row.querySelector("small").textContent = tx[1];
@@ -1182,6 +1184,7 @@
     sqRender();
     sqPost({}, sqApply);                 // kunlik savol boshqa joyda bajarilgan bo'lishi mumkin
     try { window.scrollTo(0, 0); } catch (e) {}
+    setTimeout(function () { try { kyVazNavbat(); } catch (e) {} }, 1500);      // birinchi kun: navbatdagi topshiriq yo'riqnomasi
   }
 
   // Qutini ochish: kartochka va mukofot oynasi (nishon oynasidan foydalanadi)
@@ -1197,7 +1200,7 @@
       var kt = qbTx(r.card);
       nshBox({ codes: ["x"], srcs: [qbImg(r.card)], card: true, kick: r.card_new === false ? x.rwKDup : x.rwK,
                title: kt[0], text: kt[1] + "\n\n" + x.rwP(r.ball, r.gal),
-               done: function () { try { nshLoad(true); } catch (e) {} } });
+               done: function () { try { nshLoad(true); } catch (e) {} setTimeout(function () { try { kyVazNavbat(); } catch (e) {} }, 800); } });
       try { walLoad(function () { pmRender(); }); } catch (e) {}
       try { fetchCup(function () {}); } catch (e) {}
     });

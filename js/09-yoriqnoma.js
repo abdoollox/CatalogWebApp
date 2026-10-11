@@ -182,6 +182,20 @@
           cupY: "Bu — sizning hissangiz: bu hafta to'plagan ballingiz va fakultetingiz ichidagi o'rningiz. Pastda — har bir usul qancha ball berishi va siz undan qanchasini olganingiz. Hafta yakunida har 10 ballga 1 galleon.",
           cupX: "Endi ball yig'ish usullaridan birini ko'rib chiqamiz. «Ortga»ni bosing.",
           sq: "Ball yig'ishning yana bir usuli — Shokolad qurbaqa. Har kuni yangi quti. Ichiga kirib ko'ramiz — kartani bosing.",
+          vNav: "Bugun — eng sodda topshiriqlar. Keling, ularni birga bajaramiz: har birida yo'l ko'rsataman.",
+          vRow: "«%s» — shu topshiriqni bosing.",
+          v_daily: "Bugungi Sehrgarlik tarixi bellashuvi — «Boshlash»ni bosing.",
+          v_chat: "Fakultetdoshlaringizga salom yozing va yuboring.", v_chatB: "Xabar yozing",
+          v_dars1: "Masalan, Afsunlar — Professor Flitvik darsi. Uni bosing.",
+          v_dars2: "Navbatdagi darsni bosing — uni o'tsangiz, topshiriq bajariladi.",
+          v_kitob1: "Bu — kitoblar javoni. Birinchi kitob bepul va u tanlab qo'yilgan.",
+          v_kitob2: "«Ochish»ni bosing.",
+          v_kitob3: "«O'qish»ni bosing — kitob ochilishi bilan topshiriq bajariladi.",
+          v_music1: "Bu — soundtrack albomlari. Birinchisi bepul — uni bosing.",
+          v_music2: "Tinglash tugmasini bosing.",
+          vDone: "Barakalla! «%s» bajarildi. Qurbaqaga qaytamiz — keyingisini bajaramiz.",
+          vOpen: "Hammasi bajarildi! Endi qutini oching.",
+          vEslat: "Qurbaqa topshiriqlarini davom ettiramiz — kartani bosing.",
           sq1: "Bugungi kartochka hozircha sir: qutini ochgandagina qaysi mashhur sehrgar ekanini bilasiz — Dambldor, Merlin, Flamel…",
           sq2: "Bugungi oltita topshiriq: yengil, o'rtacha va qiyin. Bajarilgani belgilanadi; topshiriqni bossangiz — o'sha joyga olib boradi.",
           sq3: "Oltitasi bajarilgach shu tugma yonadi — qutini ochasiz: fakultetingizga +%b ball, sizga %g galleon va sehrgar kartochkasi.",
@@ -225,6 +239,20 @@
           cupY: "Это ваш вклад: баллы за эту неделю и ваше место внутри факультета. Ниже — сколько даёт каждый способ и сколько вы уже получили. В конце недели — 1 галлеон за каждые 10 баллов.",
           cupX: "Теперь разберём один из способов набирать баллы. Нажмите «Назад».",
           sq: "Ещё один способ набирать баллы — Шоколадная лягушка. Каждый день новая коробка. Заглянем внутрь — нажмите на карточку.",
+          vNav: "Сегодня — самые простые задания. Давайте выполним их вместе: в каждом я покажу дорогу.",
+          vRow: "«%s» — нажмите на это задание.",
+          v_daily: "Сегодняшнее состязание по истории магии — нажмите «Начать».",
+          v_chat: "Напишите приветствие однокурсникам и отправьте.", v_chatB: "Напишите сообщение",
+          v_dars1: "Например, Заклинания — урок профессора Флитвика. Нажмите.",
+          v_dars2: "Нажмите на следующий урок — пройдёте его, и задание выполнено.",
+          v_kitob1: "Это книжная полка. Первая книга бесплатна, и она уже выбрана.",
+          v_kitob2: "Нажмите «Открыть».",
+          v_kitob3: "Нажмите «Читать» — как только книга откроется, задание выполнено.",
+          v_music1: "Это альбомы саундтреков. Первый бесплатный — нажмите на него.",
+          v_music2: "Нажмите кнопку воспроизведения.",
+          vDone: "Браво! «%s» — выполнено. Возвращаемся к лягушке — за следующим.",
+          vOpen: "Всё выполнено! Теперь откройте коробку.",
+          vEslat: "Продолжим задания лягушки — нажмите на карточку.",
           sq1: "Сегодняшняя карточка пока тайна: кто из знаменитых волшебников на ней, узнаете, только открыв коробку — Дамблдор, Мерлин, Фламель…",
           sq2: "Шесть заданий на сегодня: лёгкие, средние и трудные. Выполненные отмечаются; нажмите на задание — оно приведёт куда нужно.",
           sq3: "Когда все шесть выполнены, загорится эта кнопка — откройте коробку: факультету +%b баллов, вам %g галлеон и карточка волшебника.",
@@ -268,6 +296,20 @@
           cupY: "This is your contribution: your points this week and your place within your house. Below — how much each way gives and how much you have earned from it. At week's end, 1 galleon for every 10 points.",
           cupX: "Now let's look at one of the ways to earn points. Tap “Back”.",
           sq: "Another way to earn points — the Chocolate Frog. A new box every day. Let's look inside — tap the card.",
+          vNav: "Today — the simplest tasks. Let's do them together: I'll show the way in each one.",
+          vRow: "“%s” — tap this task.",
+          v_daily: "Today's History of Magic contest — press Start.",
+          v_chat: "Write a hello to your housemates and send it.", v_chatB: "Write a message",
+          v_dars1: "For example, Charms — Professor Flitwick's class. Tap it.",
+          v_dars2: "Tap the next lesson — pass it and the task is done.",
+          v_kitob1: "This is the bookshelf. The first book is free, and it is already selected.",
+          v_kitob2: "Tap “Open”.",
+          v_kitob3: "Tap “Read” — as soon as the book opens, the task is done.",
+          v_music1: "These are the soundtrack albums. The first one is free — tap it.",
+          v_music2: "Tap the play button.",
+          vDone: "Well done! “%s” is complete. Back to the frog — on to the next one.",
+          vOpen: "All done! Now open the box.",
+          vEslat: "Let's continue the frog tasks — tap the card.",
           sq1: "Today's card is still a secret: you find out which famous wizard it is only when you open the box — Dumbledore, Merlin, Flamel…",
           sq2: "Today's six tasks: easy, medium and hard. Done ones are ticked; tap a task and it takes you there.",
           sq3: "When all six are done this button lights up — open the box: +%b points for your house, %g galleon for you and a wizard card.",
@@ -378,28 +420,87 @@
   /* 2-kursning 2-qismi (egasi, 2026-10-11: «qurbaqa ham chuqurroq»): qurbaqa kartasi -> Shokolad qurbaqa sahifasining ICHI
      (sir kartochka, oltita topshiriq, quti va mukofot, kolleksiya, ketma-ketlik) -> ortga -> 3-kursning uchta sharti bittadan. */
   function kySqQ() {
-    var pz = { ball: 10, gal: 1, big_every: 7, big_gal: 3 }, jami = 24;
+    var pz = { ball: 10, gal: 1, big_every: 7, big_gal: 3 }, jami = 24, bir = false;
+    try { bir = !!(sqData && sqData.first && !sqData.opened); } catch (e) {}
     try { if (sqData) { pz = sqData.prizes || pz; jami = sqData.cards_total || (QB_ORDER && QB_ORDER.length) || jami; } } catch (e) {}
-    var shart = function (i) { return function () { return document.querySelectorAll("#hub-kurs .hub-kurs-s")[i] || null; }; };
     return [{ el: yqQ("#hub-sq"), m: kyT("sq"), tap: true },
             { el: yqQ("#scr-sq #sq-card"), m: kyT("sq1"), bet: 1 },
             { el: yqQ("#scr-sq #sq-tasks"), m: kyT("sq2"), bet: 1 },
             { el: yqQ("#scr-sq #sq-open"), m: kyT("sq3").replace("%b", pz.ball).replace("%g", pz.gal), bet: 1 },
             { el: yqQ("#scr-sq #sq-coll"), m: kyT("sq4").replace("%n", jami), bet: 1 },
-            { el: yqQ("#scr-sq .sq-str"), m: kyT("sq5").replace("%k", pz.big_every).replace("%g", pz.big_gal), bet: 1 },
-            { el: yqQ("#scr-sq #sq-back"), m: kyT("sq6"), tap: true, bet: 1 },
+            { el: yqQ("#scr-sq .sq-str"), m: kyT("sq5").replace("%k", pz.big_every).replace("%g", pz.big_gal), bet: 1 }]
+      .concat(bir ? [{ el: yqQ("#scr-sq #sq-tasks"), m: kyT("vNav"), bet: 1, on: function () { kyQoy("hp_kyq_2v", "1"); } }] : kyOxir());
+  }
+  // Qurbaqadan keyin: ortga -> 3-kursning uchta sharti bittadan (kurs kartasi shu yerda effekt bilan ochiladi)
+  function kyOxir() {
+    var shart = function (i) { return function () { return document.querySelectorAll("#hub-kurs .hub-kurs-s")[i] || null; }; };
+    return [{ el: yqQ("#scr-sq #sq-back"), m: kyT("sq6"), tap: true, bet: 1 },
             { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("ks0"), bet: 1,
               on: function () { kyQoy("hp_kyq_2k", "1"); kySq(); kyChiq("chiqk"); } },
             { el: shart(0), m: kyT("ks1"), bet: 1 },
             { el: shart(1), m: kyT("ks2"), bet: 1 },
             { el: shart(2), m: kyT("ks3"), bet: 1 }];
   }
-  function kyOch(q) {
+
+  /* BIRINCHI KUN TOPSHIRIQLARI YO'RIQNOMA BILAN (egasi, 2026-10-11: «eng sodda ishlar; har biri yo'riqnoma orqali bajartirilsin»).
+     Server birinchi qutigacha sodda ro'yxat beradi (hpsandiq.BIRINCHI, sqData.first). Rejim hp_kyq_2v (2-qismda yoqiladi) dan
+     hp_kyq_2z gacha: qurbaqa sahifasi ochilganda (sqOpen) navbatdagi bajarilmagan topshiriq yo'riqnomasi; topshiriq bajarilganda
+     (sqDone yoki bellashuv tugashi) - «bajarildi» va qurbaqaga qaytish; hammasi bajarilsa - «Qutini ochish»; quti ochilgach - kyOxir. */
+  function kyVaz() { return !!kyBor("hp_kyq_2v") && !kyBor("hp_kyq_2z"); }
+  function kyQator(code) { return yqQ('#scr-sq #sq-tasks .sq-task[data-k="' + code + '"]'); }
+  function kyVazNomi(code) {
+    try { var t = (sqData.tasks || []).filter(function (q) { return q.code === code; })[0]; return (sqMatn(t) || [code])[0]; } catch (e) { return code; }
+  }
+  function kyVazQ(code) {
+    var q = [{ el: kyQator(code), m: kyT("vRow").replace("%s", kyVazNomi(code)), tap: true }];
+    if (code === "daily") { q.push({ el: yqQ("#scr-bell #bl-go"), m: kyT("v_daily"), tap: true, bet: 1 }); }
+    else if (code === "chat") { q.push({ el: yqQ("#scr-chat #chat-form"), m: kyT("v_chat"), kut: "chat", b: kyT("v_chatB"), bet: 1 }); }
+    else if (code === "dars") { q.push({ el: function () { return document.querySelector('#scr-dars .dr-card[data-fan="afsun"]') || document.querySelector("#scr-dars .dr-card"); },
+                                         m: kyT("v_dars1"), tap: true, bet: 1 },
+                                       { el: yqQ("#scr-fan .fn-l.now"), m: kyT("v_dars2"), tap: true, bet: 1 }); }
+    else if (code === "kitob") { q.push({ el: yqQ("#scr-cat .kt-shelf"), m: kyT("v_kitob1"), bet: 1 },
+                                        { el: yqQ("#scr-cat .kt-info .kt-go"), m: kyT("v_kitob2"), tap: true, bet: 1 },
+                                        { el: yqQ("#scr-kitob #kt-acts button"), m: kyT("v_kitob3"), tap: true, bet: 1 }); }
+    else if (code === "music") { q.push({ el: yqQ("#scr-cat .ms-row .ms-card:not(.lock)"), m: kyT("v_music1"), tap: true, bet: 1 },
+                                        { el: yqQ("#scr-album #ms-play"), m: kyT("v_music2"), tap: true, bet: 1 }); }
+    return q;                                       // «house» - qatorni bosishning o'zi yetarli (sahifa ochilganda bajariladi)
+  }
+  function kySqQayt() {
+    try { if (!$("scr-oqish").classList.contains("hidden")) { krClose(); } } catch (e) {}
+    [].forEach.call(document.querySelectorAll(".screen"), function (e) { e.classList.add("hidden"); });
+    try { sqOpen(); } catch (e) {}
+  }
+  // Qurbaqa sahifasi ochilganda: navbatdagi ish
+  function kyVazNavbat() {
+    if (yq || !kyVaz() || !sqData || $("scr-sq").classList.contains("hidden")) { return; }
+    var d = sqData;
+    if (d.opened) { kyQoy("hp_kyq_2z", "1"); kyOch(kyOxir()); return; }
+    if (d.can_open) { kyOch([{ el: yqQ("#scr-sq #sq-open"), m: kyT("vOpen"), tap: true }]); return; }
+    var t = (d.tasks || []).filter(function (q) { return !q.done; })[0];
+    if (t) { kyOch(kyVazQ(t.code)); }
+  }
+  // Topshiriq bajarildi (sqDone / bellashuv tugashi): maqtov va qurbaqaga qaytish
+  function kyVazTugadi(code) {
+    if (!kyVaz()) { return; }
+    var k = 0;
+    (function och() {
+      if (yq) { if (k++ < 40) { setTimeout(och, 300); } return; }
+      var el = function () {
+        var s0 = [".screen:not(.hidden) .dr-res:not(.hidden)", "#scr-oqish:not(.hidden) .kr-top", "#scr-album:not(.hidden) #ms-play",
+                  "#scr-house:not(.hidden) #house-hero", "#scr-chat:not(.hidden) #chat-form", ".screen:not(.hidden) .kb-hdr", ".screen:not(.hidden) .cup-hdr",
+                  "#scr-cat:not(.hidden) .cat-head", ".screen:not(.hidden) .hub-head"];
+        for (var i = 0; i < s0.length; i++) { var e = document.querySelector(s0[i]); if (e && e.getClientRects().length) { return e; } }
+        return null;
+      };
+      kyOch([{ el: el, m: kyT("vDone").replace("%s", kyVazNomi(code)), bet: 1 }], kySqQayt);      // joy topilmasa ham qurbaqaga qaytadi
+    })();
+  }
+  function kyOch(q, tugash) {
     // hozir ko'rinmayotgan narsalar (Patronus olingan, jadval yashirin...) tashlab ketiladi; boshqa sahifadagi qadam (bet) qoladi
     q = q.filter(function (s) { if (s.bet) { return true; } var e = s.el(); return e && e.getClientRects().length; });
     if (!q.length) { return false; }
     var uy = cupMe().house || house;
-    yqOch(q, { kim: yqT("kim").replace("%s", syT("ism_" + uy)), rasm: "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp" });
+    yqOch(q, { kim: yqT("kim").replace("%s", syT("ism_" + uy)), rasm: "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp", tugash: tugash || null });
     return true;
   }
   function kyBor(k) { try { return window.localStorage.getItem(TK(k)); } catch (e) { return "x"; } }
@@ -430,11 +531,14 @@
     var h = $("scr-hub");
     if (h) { h.classList.add("kut" + n); }
   }
+  // Tabrik yopilgach (egasi, 2026-10-11): 2 s kutiladi -> yangi xonalar effekt bilan paydo bo'ladi -> ular chiqib bo'lgach yo'riqnoma
   function kyTabrikYopildi(n) {
-    var h = $("scr-hub");
-    if (h) { h.classList.remove("kut" + n); }
-    kyChiq("chiq" + n);
-    setTimeout(function () { kyTabrikda = false; try { yqKurs(n); } catch (e) {} }, KY_KUT);
+    setTimeout(function () {
+      var h = $("scr-hub");
+      if (h) { h.classList.remove("kut" + n); }
+      kyChiq("chiq" + n);
+      setTimeout(function () { kyTabrikda = false; try { yqKurs(n); } catch (e) {} }, 1600);
+    }, KY_KUT);
   }
   // 1-qism: kurs tabrigi yopilgach
   function yqKurs(n) {
@@ -448,6 +552,11 @@
   function yqKursDavom() {
     if (yq || kyTabrikda || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
     if (yqBellEslat()) { return; }                  // avval - birinchi bellashuv (2-qism undan keyin)
+    if (kyVaz() && Date.now() - kyEslat > 3 * 60 * 1000) {     // qurbaqa topshiriqlari chala qolgan - davom ettiramiz
+      kyEslat = Date.now();
+      kyOch([{ el: yqQ("#hub-sq"), m: kyT("vEslat"), tap: true }]);
+      return;
+    }
     var n = kursN(), t0 = parseInt(kyBor("hp_kyq_" + n) || "0", 10);
     if (n >= 2 && n <= 4 && !t0 && kyBor("hp_kyq_" + n + "t")) { yqKurs(n); return; }     // tabrik ko'rilgan, 1-qism boshlanmay qolgan
     if (n < 2 || n > 4 || !t0 || kyBor("hp_kyq_" + n + "b")) { return; }
@@ -456,5 +565,5 @@
     kyQoy("hp_kyq_" + n + "b", "1");
     kySq();                                          // qurbaqa kartasi endi ko'rinadi - effekt bilan, keyin 2-qism
     if (n === 2) { kyChiq("chiqsq"); }
-    setTimeout(function () { if (!yq && !$("scr-hub").classList.contains("hidden")) { kyOch(kyQism(n, 1)); } }, n === 2 ? 1300 : 0);
+    setTimeout(function () { if (!yq && !$("scr-hub").classList.contains("hidden")) { kyOch(kyQism(n, 1), n === 2 ? function () { setTimeout(kyVazNavbat, 900); } : null); } }, n === 2 ? 1300 : 0);
   }

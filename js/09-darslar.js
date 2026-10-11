@@ -1010,6 +1010,7 @@
       box.appendChild(bt);
       box.classList.remove("hidden");
       if (res && res.ok) { try { kyBellTugadi(box); } catch (e) {} }      // birinchi bellashuvdan keyin sardor (js/09-yoriqnoma.js)
+      if (res && res.ok && b.fan === "tarix") { try { kyVazTugadi("daily"); } catch (e) {} }      // birinchi kun qurbaqa topshirig'i
     });
   }
 
