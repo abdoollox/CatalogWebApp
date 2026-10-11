@@ -1037,7 +1037,7 @@
     $("fn-ttl").classList.toggle("uzun", f.nom[lang].length > 18);
     var qb = $("fn-qr");
     if (qb) {
-      qb.classList.toggle("hidden", fanId !== "maxluq" && fanId !== "osimlik");
+      qb.classList.toggle("hidden", (fanId !== "maxluq" && fanId !== "osimlik") || kursN() < 3);      // Qo'riqxona va Issiqxona 3-kursdan
       qb.classList.toggle("is", fanId === "osimlik");
       if (fanId === "osimlik") {      // O'simlikshunoslik: Issiqxonaga yo'l (js/09-issiqxona.js)
         $("fn-qr-im").src = isImg("mandragora", 2);
@@ -1055,6 +1055,7 @@
     $("fn-bar").style.width = Math.round(100 * lv / jami) + "%";
     $("fn-les-t").textContent = x.lessons;
     $("fn-les-s").textContent = x.lessonsS;
+    $("fn-les-s").classList.toggle("hidden", kursN() < 2);          // 1-kursda bellashuv hali yopiq - u haqdagi izoh ham ko'rinmaydi
     var grid = $("fn-grid");
     grid.innerHTML = "";
     for (var n = 1; n <= jami; n++) {
@@ -1086,11 +1087,14 @@
       b.addEventListener("click", go);
       box.appendChild(b);
     };
-    var id = fanId;
-    if (c) {
+    // Kursga qarab (egasi, 2026-10-11): Bellashuv katagi 2-kursdan, Rekord katagi 3-kursdan ko'rinadi (bosh sahifadagi qulf bilan bir xil)
+    var id = fanId, kn = kursN();
+    box.classList.toggle("bitta", kn === 2);
+    box.classList.toggle("hidden", kn < 2);
+    if (c && kn >= 2) {
       mk(x.blTile, id === "afsun" || id === "iksir" || id === "tarix" ? drItemName(id, c.item) : x.fnBell, c.ms ? x.sec(c.ms) + " · " + x.place(c.place, c.n) : x.bellNone, "+" + c.prizes.top[0], function () { blOpen(id, "fan"); });
     }
-    mk(x.rekSec, r && r.all ? r.all + " " + rekBir(id) : x.rekGo, r && r.place ? x.rekWeek + ": " + r.place : x.rekTileS, r && r.top && r.top[0] ? String(r.top[0].score) : "", function () { rekOpen(id, "fan"); });
+    if (kn >= 3) mk(x.rekSec, r && r.all ? r.all + " " + rekBir(id) : x.rekGo, r && r.place ? x.rekWeek + ": " + r.place : x.rekTileS, r && r.top && r.top[0] ? String(r.top[0].score) : "", function () { rekOpen(id, "fan"); });
   }
 
   // Qo'riqxona - Xogvarts bosh sahifasidagi katak (egasi, 2026-10-09: profilda emas)
