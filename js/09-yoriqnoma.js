@@ -175,12 +175,17 @@
      bet: 1 - boshqa sahifadagi qadam (oldingi qadamda o'quvchi o'zi o'tadi), u tekshirilmaydi.
      Bosh sahifaga yangi narsa qo'shilsa yoki kurs qoidasi o'zgarsa - KY_TX va yqKurs dagi ro'yxatni yangilang. */
   var KY_TX = {
-    uz: { cup: "Bu — Xogvarts kubogi. To'rt fakultet hafta davomida ball yig'adi, yakshanba kechasi g'olib aniqlanadi. Siz to'plagan ball ham fakultetingizga qo'shiladi.",
+    uz: { cup: "Bu — Xogvarts kubogi: to'rt fakultet butun hafta ball uchun bellashadi. Ichiga kirib ko'ramiz — kartani bosing.",
+          cupG: "Har qum soat — bitta fakultet. Ball qancha ko'p bo'lsa, soat shuncha to'ladi. Yakshanba 23:59 da eng ko'p ball to'plagan fakultet kubokni oladi.",
+          cupT: "Mavsum — bir hafta: dushanbadan yakshanba yarim tunigacha. Tugashiga qancha qolgani shu yerda.",
+          cupS: "Har fakultet ballari qayerdan kelgani: bellashuv, Shokolad qurbaqa, filmlar, shaxmat, do'stlar. Qaysi yo'l fakultetga ko'proq ball keltirayotgani shu yerda ko'rinadi.",
+          cupY: "Bu — sizning hissangiz: bu hafta to'plagan ballingiz va fakultetingiz ichidagi o'rningiz. Pastda — har bir usul qancha ball berishi va siz undan qanchasini olganingiz. Hafta yakunida har 10 ballga 1 galleon.",
+          cupX: "Endi ball yig'ish usullaridan birini ko'rib chiqamiz. «Ortga»ni bosing.",
           sq: "Shokolad qurbaqa: har kuni oltita topshiriq. Hammasini bajarsangiz quti ochiladi — 10 ball, 1 galleon va sehrgar kartochkasi.",
           kurs: "Bu yerda keyingi kursga o'tish shartlari. Bajarilgan shart yashil bo'ladi, qatorni bossangiz — o'sha joyga olib boradi.",
           pat: "Patronusingizni ham chaqirib ko'ring — u bir marta aniqlanadi va profilingizda turadi.",
           dost: "Do'stlaringizni taklif qiling — har bir kelgan do'st uchun fakultetingizga ball qo'shiladi.",
-          bell: "Ball qayerdan keladi? Bellashuvdan! Har kuni har fanda bitta bellashuv: kim tez va xatosiz bajarsa, o'sha ko'p ball oladi. «Bellashuv»ni bosing.",
+          bell: "Ball yig'ishning asosiy usuli — Bellashuv. Har kuni har fanda bitta bellashuv: kim tez va xatosiz bajarsa, o'sha ko'p ball oladi (1-o'ringa +15). «Bellashuv»ni bosing.",
           bhero: "Tepada — bugungi natijangiz: nechta bellashuvda qatnashdingiz va hozirgi o'rinlaringizga qarab bugun qancha ball kutilmoqda. Kun yarim tunda yopiladi.",
           blist: "Mana bugungi bellashuvlar — har fanda bittadan. Birinchisini bosib, sinab ko'ring!",
           rek: "Rekordlar — har fanda «xatosiz kim uzoqqa boradi». Har kuni yarim tunda birinchi uchlik ball oladi.",
@@ -192,12 +197,17 @@
           vik: "«Oxirgi sehrgar» viktorinasi — har juma 21:00. Xato qilgan chiqadi, oxirigacha qolgan — g'olib.",
           jd: "Hafta jadvali: qaysi kuni qanday turnir — shu yerda. Omad, sehrgar!",
           jd0: "Endi siz turnirlarda qatnasha olasiz. Hafta jadvali: qaysi kuni qanday turnir — shu yerda." },
-    ru: { cup: "Это Кубок школы. Четыре факультета копят баллы всю неделю, в воскресенье вечером определяется победитель. Ваши баллы идут вашему факультету.",
+    ru: { cup: "Это Кубок школы: четыре факультета всю неделю соревнуются за баллы. Заглянем внутрь — нажмите на карточку.",
+          cupG: "Каждые песочные часы — один факультет. Чем больше баллов, тем полнее часы. В воскресенье в 23:59 кубок получает факультет с наибольшим числом баллов.",
+          cupT: "Сезон длится неделю: с понедельника до полуночи воскресенья. Сколько осталось — здесь.",
+          cupS: "Откуда у каждого факультета баллы: состязания, Шоколадная лягушка, фильмы, шахматы, друзья. Здесь видно, какой путь приносит факультету больше всего.",
+          cupY: "Это ваш вклад: баллы за эту неделю и ваше место внутри факультета. Ниже — сколько даёт каждый способ и сколько вы уже получили. В конце недели — 1 галлеон за каждые 10 баллов.",
+          cupX: "Теперь разберём один из способов набирать баллы. Нажмите «Назад».",
           sq: "Шоколадная лягушка: каждый день шесть заданий. Выполните все — коробка откроется: 10 баллов, 1 галлеон и карточка волшебника.",
           kurs: "Здесь условия перехода на следующий курс. Выполненное становится зелёным, нажмите на строку — она приведёт куда нужно.",
           pat: "Вызовите и своего Патронуса — он определяется один раз и остаётся в профиле.",
           dost: "Приглашайте друзей — за каждого пришедшего друга ваш факультет получает баллы.",
-          bell: "Откуда берутся баллы? Из состязаний! Каждый день по одному в каждом предмете: кто быстрее и без ошибок, тот получает больше баллов. Нажмите «Состязание».",
+          bell: "Главный способ набирать баллы — Состязания. Каждый день по одному в каждом предмете: кто быстрее и без ошибок, тот получает больше (1-е место +15). Нажмите «Состязание».",
           bhero: "Наверху — ваш итог за сегодня: в скольких состязаниях вы участвовали и сколько баллов ожидается по вашим текущим местам. День закрывается в полночь.",
           blist: "Вот сегодняшние состязания — по одному в каждом предмете. Нажмите на первое и попробуйте!",
           rek: "Рекорды — в каждом предмете: кто дальше пройдёт без ошибок. Каждую полночь первая тройка получает баллы.",
@@ -209,12 +219,17 @@
           vik: "Викторина «Последний волшебник» — каждую пятницу в 21:00. Ошибся — выбыл, последний оставшийся — победитель.",
           jd: "Расписание недели: в какой день какой турнир — здесь. Удачи, волшебник!",
           jd0: "Теперь вам открыты турниры. Расписание недели: в какой день какой турнир — здесь." },
-    en: { cup: "This is the House Cup. The four houses collect points all week; the winner is decided on Sunday night. Your points go to your house.",
+    en: { cup: "This is the House Cup: the four houses compete for points all week. Let's look inside — tap the card.",
+          cupG: "Each hourglass is one house. The more points, the fuller the glass. On Sunday at 23:59 the house with the most points wins the cup.",
+          cupT: "A season is one week: Monday to Sunday midnight. How much time is left — right here.",
+          cupS: "Where each house's points come from: contests, the Chocolate Frog, films, chess, friends. You can see which way brings the house the most.",
+          cupY: "This is your contribution: your points this week and your place within your house. Below — how much each way gives and how much you have earned from it. At week's end, 1 galleon for every 10 points.",
+          cupX: "Now let's look at one of the ways to earn points. Tap “Back”.",
           sq: "Chocolate Frog: six tasks every day. Finish them all and the box opens — 10 points, 1 galleon and a wizard card.",
           kurs: "Here are the conditions for the next year. Done ones turn green; tap a row and it takes you there.",
           pat: "Summon your Patronus too — it is revealed once and stays on your profile.",
           dost: "Invite your friends — your house earns points for every friend who joins.",
-          bell: "Where do points come from? Contests! One every day in every subject: the fastest without mistakes earns the most points. Tap “Contest”.",
+          bell: "The main way to earn points is Contests. One every day in every subject: the fastest without mistakes earns the most (1st place +15). Tap “Contest”.",
           bhero: "At the top is your day so far: how many contests you entered and how many points your current places would earn. The day closes at midnight.",
           blist: "Here are today's contests — one per subject. Tap the first one and give it a try!",
           rek: "Records — in every subject, who goes furthest without a mistake. Every midnight the top three earn points.",
@@ -235,8 +250,15 @@
   function kyQism(n, b) {
     var tile = function (k) { return yqQ('#scr-hub .hx[data-k="' + k + '"]'); };
     var Q = {
-      2: [[{ el: yqQ("#hub-cup"), m: kyT("cup") },
-           { el: tile("bell"), m: kyT("bell"), tap: true },
+      // 2-kurs: kubok kartasi -> kubok sahifasining ICHI (qum soatlar, muddat, ball manbalari, o'z hissasi) -> ortga ->
+      // «ball yig'ish usullaridan biri» - Bellashuv (egasi, 2026-10-11: «sayoz bo'lib qolibdi»). Qurbaqa kartasi bu paytda yashirin (kySq).
+      2: [[{ el: yqQ("#hub-cup"), m: kyT("cup"), tap: true },
+           { el: yqQ("#scr-cup #cup-glasses"), m: kyT("cupG"), bet: 1 },
+           { el: yqQ("#scr-cup .cup-head"), m: kyT("cupT"), bet: 1 },
+           { el: yqQ("#scr-cup #cup-src"), m: kyT("cupS"), bet: 1 },
+           { el: yqQ("#scr-cup #cup-you"), m: kyT("cupY"), bet: 1 },
+           { el: yqQ("#scr-cup #cup-back"), m: kyT("cupX"), tap: true, bet: 1 },
+           { el: tile("bell"), m: kyT("bell"), tap: true, bet: 1 },
            { el: yqQ("#scr-blh #blh-hero"), m: kyT("bhero"), bet: 1 },
            { el: yqQ("#scr-blh #blh-list > *"), m: kyT("blist"), tap: true, bet: 1 }],
           [{ el: yqQ("#hub-sq"), m: kyT("sq") },
@@ -264,10 +286,16 @@
   }
   function kyBor(k) { try { return window.localStorage.getItem(TK(k)); } catch (e) { return "x"; } }
   function kyQoy(k, v) { try { window.localStorage.setItem(TK(k), v); } catch (e) {} }
+  // 2-kursda qurbaqa kartasi yo'riqnomaning 1-qismidan 2-qismigacha yashirin (egasi: avval kubok va bellashuv) - renderHub ham chaqiradi
+  function kySq() {
+    var h = $("scr-hub");
+    if (h) { h.classList.toggle("sq-yop", kursN() === 2 && !!kyBor("hp_kyq_2") && !kyBor("hp_kyq_2b")); }
+  }
   // 1-qism: kurs tabrigi yopilgach
   function yqKurs(n) {
     if (yq || !hasHouse() || n < 2 || n > 4 || kyBor("hp_kyq_" + n)) { return; }
     kyQoy("hp_kyq_" + n, String(Date.now()));
+    kySq();
     kyOch(kyQism(n, 0));
   }
   // 2-qism: keyingi safar bosh sahifa ochilganda (openHub)
@@ -278,5 +306,6 @@
     var vaqt = Date.now() - (t0 > 1 ? t0 : 0) >= KY_KEYIN, bell = n === 2 && drKurs && (drKurs.bellf || 0) >= 1;
     if (!vaqt && !bell) { return; }
     kyQoy("hp_kyq_" + n + "b", "1");
+    kySq();                                          // qurbaqa kartasi endi ko'rinadi - 2-qism shundan boshlanadi
     kyOch(kyQism(n, 1));
   }

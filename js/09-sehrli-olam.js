@@ -143,6 +143,7 @@
     kursChizilgan = kn;
     root.classList.remove("k1", "k2", "k3", "k4");
     root.classList.add("k" + kn);
+    try { kySq(); } catch (e) {}          // 2-kurs yo'riqnomasi paytida qurbaqa kartasi yashirin (js/09-yoriqnoma.js)
     try { hubJadval(JD_ON && hid !== "none" && kn >= 4); } catch (e) {}
 
     // Kubok: to'rtta qum soati

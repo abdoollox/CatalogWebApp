@@ -3500,7 +3500,7 @@ body.tg-fs .lt{padding-top:calc(34px + var(--fs))}
 body.tg-fs .kr-top{top:var(--fs)}
 /* KURSLAR: bosh sahifa bosqichma-bosqich ochiladi */
 /* Patronus taklifi - 3-kursdan, Do'stlar qatori - 4-kursdan (egasi, 2026-10-11: «2-kurs uchun ortiqcha») */
-#scr-hub.k1 #hub-pat,#scr-hub.k2 #hub-pat,#scr-hub.k1 .hub-dost,#scr-hub.k2 .hub-dost,#scr-hub.k3 .hub-dost,#scr-hub.k1 #hub-sq{display:none!important}
+#scr-hub.sq-yop #hub-sq,#scr-hub.k1 #hub-pat,#scr-hub.k2 #hub-pat,#scr-hub.k1 .hub-dost,#scr-hub.k2 .hub-dost,#scr-hub.k3 .hub-dost,#scr-hub.k1 #hub-sq{display:none!important}
 .hx.qulf{cursor:default}
 .hx.qulf .hx-ph{filter:grayscale(1) brightness(.42)}
 .hx.qulf b{color:var(--dim)!important}
