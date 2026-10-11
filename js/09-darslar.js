@@ -1367,17 +1367,48 @@
     }
     $("tr-timer").classList.toggle("hidden", !bell);
     $("tr-stage").classList.remove("hidden");
+    $("scr-tarix").style.setProperty("--dr-rgb", drFan("tarix").rgb);
     trPaint();
+  }
+
+  /* Professor Binns (arvoh o'qituvchi) izoh beradi - boshqa fanlardagi professor qolipida (egasi, 2026-10-11: sahifa bezaldi).
+     Rasmlar img/binns/zor|yaxshi|maslahat|xafa.webp (asl: dizayn-tizimi/binns/). */
+  var TR_BN = {
+    uz: { bosh: "Savolni o'qing va javobni tanlang.", ok: ["To'g'ri!", "Aynan shunday.", "Barakalla, daftarga yozib qo'ydim."], zor: "Ketma-ket to'g'ri — a'lo!", yoq: "Afsus… To'g'ri javob yashil rangda.", bell: "Javob qabul qilindi." },
+    ru: { bosh: "Прочитайте вопрос и выберите ответ.", ok: ["Верно!", "Именно так.", "Молодец, записал в журнал."], zor: "Подряд верно — превосходно!", yoq: "Увы… Верный ответ выделен зелёным.", bell: "Ответ принят." },
+    en: { bosh: "Read the question and choose an answer.", ok: ["Correct!", "Exactly so.", "Well done, noted in my register."], zor: "Right again — outstanding!", yoq: "Alas… The right answer is in green.", bell: "Answer recorded." }
+  };
+  function trBinns(kayf, matn) {
+    var im = $("tr-bn-im");
+    if (im && im.getAttribute("data-k") !== kayf) { im.setAttribute("data-k", kayf); im.src = IMG_DIR + "binns/" + kayf + ".webp"; }
+    $("tr-bn-t").textContent = matn;
+    $("tr-bn-t").classList.toggle("bad", kayf === "xafa");
+  }
+  // Tepadagi chiziqchalar: har savolga bittadan (to'g'ri - yashil, xato - qizil, hozirgisi - yorug')
+  function trProg() {
+    var box = $("tr-prog"), n = tr.qs.length;
+    box.innerHTML = "";
+    box.classList.toggle("hidden", n > 14);              // rekord (60 savol) - chiziqcha sig'maydi
+    if (n > 14) { return; }
+    for (var k = 0; k < n; k++) {
+      var h = tr.hol && tr.hol[k];
+      box.appendChild(drEl("i", h === 1 ? "ok" : h === -1 ? "no" : h === 2 ? "bor" : k === tr.i ? "hoz" : ""));
+    }
   }
 
   function trPaint() {
     if (!tr) { return; }
-    var x = drX(), q = tr.qs[tr.i], box = $("tr-opts");
+    var x = drX(), q = tr.qs[tr.i], box = $("tr-opts"), bn = TR_BN[lang] || TR_BN.uz;
     $("tr-step").textContent = x.trQ(tr.i + 1, tr.qs.length);
     $("tr-q").textContent = q.q;
+    trProg();
+    if (!tr.i) { ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = IMG_DIR + "binns/" + k + ".webp"; }); }
+    trBinns("maslahat", bn.bosh);
     box.innerHTML = "";
     q.a.forEach(function (matn, k) {
-      var b = drEl("button", "tr-o", matn);
+      var b = drEl("button", "tr-o");
+      b.appendChild(drEl("i", "", "ABCDEF".charAt(k)));
+      b.appendChild(drEl("span", "", matn));
       b.type = "button";
       b.addEventListener("click", function () { trPick(k, b); });
       box.appendChild(b);
@@ -1388,17 +1419,25 @@
     if (!tr || tr.lock) { return; }
     var q = tr.qs[tr.i], kut = 220;
     tr.lock = true;
+    var bn = TR_BN[lang] || TR_BN.uz;
+    tr.hol = tr.hol || [];
     if (tr.bell) {
       if (bl) { bl.answers.push(k); }
       btn.classList.add("tanlandi");
+      tr.hol[tr.i] = 2;
+      trBinns("yaxshi", bn.bell);
     } else {
       var togri = k === q.c;
       if (togri) { tr.ok++; } else { tr.xato = true; }
+      tr.ket = togri ? (tr.ket || 0) + 1 : 0;
+      tr.hol[tr.i] = togri ? 1 : -1;
+      trBinns(togri ? (tr.ket >= 3 ? "zor" : "yaxshi") : "xafa", togri ? (tr.ket >= 3 ? bn.zor : bn.ok[tr.i % bn.ok.length]) : bn.yoq);
       btn.classList.add(togri ? "togri" : "xato");
       if (!togri) { var t = $("tr-opts").children[q.c]; if (t) { t.classList.add("togri"); } }
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred(togri ? "success" : "error"); } } catch (e) {}
-      kut = togri ? 650 : 1300;
+      kut = togri ? 750 : 1500;
     }
+    trProg();
     setTimeout(function () {
       if (!tr) { return; }
       if (tr.rek && (tr.xato || tr.i + 1 >= tr.qs.length)) {
