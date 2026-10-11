@@ -3537,6 +3537,15 @@ body.tg-fs .kr-top{top:var(--fs)}
 .hub-kurs-fb small{font:700 9.5px/1 'Manrope',sans-serif;color:var(--dim);white-space:nowrap}
 .hub-kurs-fb.ok img{filter:none;box-shadow:0 0 0 2px #7fe0b0}
 .hub-kurs-fb.ok small{color:#7fe0b0;font-size:11px}
+.hub-kurs-s{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);text-align:left;font:inherit;cursor:pointer}
+div.hub-kurs-s{cursor:default;margin-top:14px}
+.hub-kurs-s i{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font:800 11px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-hi);border:1px solid rgba(var(--gold-rgb),.6)}
+.hub-kurs-s span{flex:1;min-width:0;font:700 13px/1.3 'Manrope',sans-serif}
+.hub-kurs-s em{flex:none;font:800 12px/1 'Manrope',sans-serif;font-style:normal;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.hub-kurs-s.ok{border-color:rgba(127,224,176,.35);background:rgba(127,224,176,.06)}
+.hub-kurs-s.ok i{background:#7fe0b0;border-color:#7fe0b0;color:#0c1a13}
+.hub-kurs-s.ok em{color:#7fe0b0}
+div.hub-kurs-s + .hub-kurs-f{margin-top:10px}
 .hub-kurs p{margin:12px 0 14px;font:500 12.5px/1.45 'Manrope',sans-serif;color:var(--dim)}
 /* KURS TABRIGI (kursTabrik, js/09-sehrli-olam.js): muhr, pog'onalar, Makgonagall, ochilgan xonalar. Rang - --gold (saralanganda fakultet rangi) */
 .kurs-tb .du-info-p{max-height:calc(100vh - 14px - var(--fs,0px));border-radius:24px 24px 0 0;overflow:hidden;background:radial-gradient(120% 60% at 50% 0%,rgba(var(--gold-rgb),.16),transparent 60%),#15181f}

@@ -294,15 +294,24 @@
     uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", vazifa: function (k, n) { return k + "-kursga o'tish uchun har bir fandan " + n + " tadan dars o'ting"; }, tayyor: function (a, b) { return a + " / " + b + " fan tayyor"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
           och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
-          tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish" },
+          tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish",
+          sh3: "3-kursga o'tish uchun uchta shartni bajaring", s1: function (n) { return "Har bir fandan " + n + " tadan dars"; }, s2: "Shokolad qurbaqadan bitta karta oching", s3: "To'qqiz fanning har birida bellashuvda qatnashing",
+          sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish",
+          maq3: function (n) { return "3-kursga o'tish uchun: har bir fandan " + n + " tadan dars, Shokolad qurbaqadan bitta karta va to'qqiz fanning har birida bellashuv"; } },
     ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", vazifa: function (k, n) { return "Чтобы перейти на " + k + "-й курс, пройдите по " + n + " урока по каждому предмету"; }, tayyor: function (a, b) { return "Готово: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
           och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
-          tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить" },
+          tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить",
+          sh3: "Чтобы перейти на 3-й курс, выполните три условия", s1: function (n) { return "По " + n + " уроков по каждому предмету"; }, s2: "Откройте одну карточку Шоколадной лягушки", s3: "Поучаствуйте в состязании по каждому из девяти предметов",
+          sFan: function (a, b) { return a + " / " + b + " предм."; }, bQurb: "К Шоколадной лягушке",
+          maq3: function (n) { return "Для 3-го курса: по " + n + " уроков по каждому предмету, одна карточка Шоколадной лягушки и состязание по каждому из девяти предметов"; } },
     en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", vazifa: function (k, n) { return "To reach year " + k + ", pass " + n + " lessons in every subject"; }, tayyor: function (a, b) { return a + " / " + b + " subjects done"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
           och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
-          tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue" }
+          tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue",
+          sh3: "To reach year 3, meet three conditions", s1: function (n) { return n + " lessons in every subject"; }, s2: "Open one Chocolate Frog card", s3: "Enter the contest in each of the nine subjects",
+          sFan: function (a, b) { return a + " / " + b + " subjects"; }, bQurb: "Go to the Chocolate Frog",
+          maq3: function (n) { return "For year 3: " + n + " lessons in every subject, one Chocolate Frog card and a contest in each of the nine subjects"; } }
   };
   function hubKurs(grid, kn, hid) {
     var eski = $("hub-kurs"), x = KURS_TX[lang] || KURS_TX.uz;
@@ -325,10 +334,23 @@
     tep.appendChild(pog);
     card.appendChild(tep);
     // Nima qilish kerakligi ANIQ yoziladi va to'qqiz fan alohida ko'rsatiladi (egasi, 2026-10-11: «tushunarli bo'lmay qolibdi»)
-    var qat = mk("div", "hub-kurs-q");
-    qat.appendChild(mk("b", "", x.vazifa(kn + 1, har)));
-    qat.appendChild(mk("span", "", x.tayyor(bor, kerak)));
+    var qat = mk("div", "hub-kurs-q"), uch = kn === 2;
+    qat.appendChild(mk("b", "", uch ? x.sh3 : x.vazifa(kn + 1, har)));
+    if (!uch) { qat.appendChild(mk("span", "", x.tayyor(bor, kerak))); }
     card.appendChild(qat);
+    /* 3-kurs sharti (egasi, 2026-10-11): darslar + bitta Shokolad qurbaqa kartasi + to'qqiz fanning har birida bellashuv.
+       Har shart alohida qator: raqam, matn, holat; bajarilgani yashil ✓. Sonlar serverdan (hpdars.kurs: qurb, bellf). */
+    var shart = function (i, matn, holat, ok, fn) {
+      var r = mk(fn ? "button" : "div", "hub-kurs-s" + (ok ? " ok" : ""));
+      if (fn) { r.type = "button"; r.onclick = hubGo(fn); }
+      r.appendChild(mk("i", "", ok ? "✓" : String(i)));
+      r.appendChild(mk("span", "", matn));
+      r.appendChild(mk("em", "", holat));
+      card.appendChild(r);
+      return r;
+    };
+    var qurb = k.qurb || 0, needq = k.needq || 1, bellf = Math.min(k.bellf || 0, kerak), darsOk = bor >= kerak;
+    if (uch) { shart(1, x.s1(har), x.sFan(bor, kerak), darsOk, null); }
     var fq = mk("div", "hub-kurs-f");
     DR_FANLAR.forEach(function (f) {
       var lv = Math.min(har, (drData && drData[f.id] && drData[f.id].level) || 0), ok = lv >= har;
@@ -344,10 +366,16 @@
       fq.appendChild(fb);
     });
     card.appendChild(fq);
+    if (uch) {
+      shart(2, x.s2, Math.min(qurb, needq) + " / " + needq, qurb >= needq, sqOpen);
+      shart(3, x.s3, x.sFan(bellf, kerak), bellf >= kerak, function () { blHomeOpen("bell"); });
+    }
     card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + x.och[kn + 1]));
-    var b = mk("button", "dr-btn", x.bDars);
+    // asosiy tugma - birinchi bajarilmagan shartga olib boradi
+    var bq = uch && darsOk && qurb < needq, bb = uch && darsOk && qurb >= needq && bellf < kerak;
+    var b = mk("button", "dr-btn", bq ? x.bQurb : bb ? x.bBell : x.bDars);
     b.type = "button";
-    b.onclick = hubGo(drOpen);
+    b.onclick = hubGo(bq ? sqOpen : bb ? function () { blHomeOpen("bell"); } : drOpen);
     card.appendChild(b);
     grid.parentNode.insertBefore(card, grid);
   }
@@ -433,7 +461,7 @@
     var kk = drKurs || {}, har = kk["need" + (n + 1)] || [0, 0, 3, 9, 15][n + 1];
     var mq = drEl("div", "ktb-maq");
     mq.appendChild(drEl("small", "", n < 4 ? t.keyin : ""));
-    mq.appendChild(drEl("span", "", n < 4 ? x.vazifa(n + 1, har) : t.oxir));
+    mq.appendChild(drEl("span", "", n === 2 ? x.maq3(har) : n < 4 ? x.vazifa(n + 1, har) : t.oxir));
     ich.appendChild(mq);
     var bt = drEl("button", "dr-btn", x.ok);
     bt.type = "button";
