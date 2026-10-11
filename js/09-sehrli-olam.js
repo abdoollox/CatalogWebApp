@@ -406,7 +406,9 @@
   function kursTabrik(n) {
     var x = KURS_TX[lang] || KURS_TX.uz, t = KURS_TB[lang] || KURS_TB.uz, eski = $("du-info"), i;
     if (eski) { eski.parentNode.removeChild(eski); }
-    var orqa = document.createElement("div"), oyna = document.createElement("div"), yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); } };
+    var orqa = document.createElement("div"), oyna = document.createElement("div");
+    // tabrik yopilgach - yangi ochilgan narsalar bo'yicha yo'riqnoma (yqKurs, js/09-yoriqnoma.js)
+    var yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); setTimeout(function () { try { yqKurs(n); } catch (e) {} }, 250); } };
     orqa.className = "du-info kurs-tb";
     orqa.id = "du-info";
     oyna.className = "du-info-p";

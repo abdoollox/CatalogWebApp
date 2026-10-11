@@ -168,3 +168,91 @@
     // sig'masa (masalan, katta o'yin maydoni) - ko'proq joy qolgan tomonda, ekran chetida turadi
     box.style.top = (past + box.offsetHeight < vh - 8 ? past : tepa >= 8 ? tepa : vh - r.bottom > r.top ? vh - box.offsetHeight - 8 : 8) + "px";
   }
+
+  /* KURS YO'RIQNOMASI (egasi, 2026-10-11: «2-kursga o'tgandan keyin ham onboarding davom etsin - nima yangi qo'shilsa birin-ketin
+     tushuntirilsin»). Kurs tabrigi yopilgach (kursTabrik -> yqKurs) sardor yangi ochilgan narsalarni bosh sahifaning O'ZIDA ko'rsatadi.
+     Har kursga bir marta (belgi hp_kyq_<n>). Ko'rinmayotgan narsa (masalan, Patronus taklifi - olingan bo'lsa) qadamdan chiqariladi;
+     bet: 1 - boshqa sahifadagi qadam (oldingi qadamda o'quvchi o'zi o'tadi), u tekshirilmaydi.
+     Bosh sahifaga yangi narsa qo'shilsa yoki kurs qoidasi o'zgarsa - KY_TX va yqKurs dagi ro'yxatni yangilang. */
+  var KY_TX = {
+    uz: { cup: "Bu — Xogvarts kubogi. To'rt fakultet hafta davomida ball yig'adi, yakshanba kechasi g'olib aniqlanadi. Siz to'plagan ball ham fakultetingizga qo'shiladi.",
+          sq: "Shokolad qurbaqa: har kuni oltita topshiriq. Hammasini bajarsangiz quti ochiladi — 10 ball, 1 galleon va sehrgar kartochkasi.",
+          kurs: "Bu yerda keyingi kursga o'tish shartlari. Bajarilgan shart yashil bo'ladi, qatorni bossangiz — o'sha joyga olib boradi.",
+          pat: "Patronusingizni ham chaqirib ko'ring — u bir marta aniqlanadi va profilingizda turadi.",
+          dost: "Do'stlaringizni taklif qiling — har bir kelgan do'st uchun fakultetingizga ball qo'shiladi.",
+          bell: "Eng muhimi — Bellashuv. Har kuni har fanda bitta bellashuv: kim tez va xatosiz bajarsa, o'sha ko'p ball oladi. «Bellashuv»ni bosing.",
+          bhero: "Tepada — bugungi natijangiz: nechta bellashuvda qatnashdingiz va hozirgi o'rinlaringizga qarab bugun qancha ball kutilmoqda. Kun yarim tunda yopiladi.",
+          blist: "Mana bugungi bellashuvlar — har fanda bittadan. Birinchisini bosib, sinab ko'ring!",
+          rek: "Rekordlar — har fanda «xatosiz kim uzoqqa boradi». Har kuni yarim tunda birinchi uchlik ball oladi.",
+          qoriq: "Qo'riqxona — Maxluqlar darslarida olingan maxluqlaringiz. Galleonga yemish olib boqasiz, ular o'sadi va darslarda yordam beradi.",
+          issiq: "Issiqxona — O'simlikshunoslik darslaridan urug'lar. Har kuni bepul sug'orasiz; yetilgan o'simlik maxluqlarga yemish beradi.",
+          kurs3: "4-kurs — eng yuqori kurs. Shartlari shu yerda.",
+          duel: "Duel — afsun chizib bellashasiz. Har yakshanba 21:00 da turnir, kompyuter raqiblar bilan esa istalgan payt mashq qilsa bo'ladi.",
+          chess: "Sehrgarlar shaxmati — har chorshanba 21:00 da turnir. Do'stingizni ham chatdan o'yinga chaqirsa bo'ladi.",
+          vik: "«Oxirgi sehrgar» viktorinasi — har juma 21:00. Xato qilgan chiqadi, oxirigacha qolgan — g'olib.",
+          jd: "Hafta jadvali: qaysi kuni qanday turnir — shu yerda. Omad, sehrgar!" },
+    ru: { cup: "Это Кубок школы. Четыре факультета копят баллы всю неделю, в воскресенье вечером определяется победитель. Ваши баллы идут вашему факультету.",
+          sq: "Шоколадная лягушка: каждый день шесть заданий. Выполните все — коробка откроется: 10 баллов, 1 галлеон и карточка волшебника.",
+          kurs: "Здесь условия перехода на следующий курс. Выполненное становится зелёным, нажмите на строку — она приведёт куда нужно.",
+          pat: "Вызовите и своего Патронуса — он определяется один раз и остаётся в профиле.",
+          dost: "Приглашайте друзей — за каждого пришедшего друга ваш факультет получает баллы.",
+          bell: "Главное — Состязания. Каждый день по одному в каждом предмете: кто быстрее и без ошибок, тот получает больше баллов. Нажмите «Состязание».",
+          bhero: "Наверху — ваш итог за сегодня: в скольких состязаниях вы участвовали и сколько баллов ожидается по вашим текущим местам. День закрывается в полночь.",
+          blist: "Вот сегодняшние состязания — по одному в каждом предмете. Нажмите на первое и попробуйте!",
+          rek: "Рекорды — в каждом предмете: кто дальше пройдёт без ошибок. Каждую полночь первая тройка получает баллы.",
+          qoriq: "Заповедник — ваши существа с уроков ухода за ними. Покупайте корм за галлеоны: они растут и помогают на уроках.",
+          issiq: "Теплица — семена с уроков травологии. Поливайте каждый день бесплатно; зрелое растение даёт корм существам.",
+          kurs3: "4-й курс — старший. Условия здесь.",
+          duel: "Дуэль — сражение рисованием заклинаний. Турнир каждое воскресенье в 21:00, а с компьютерными соперниками можно тренироваться всегда.",
+          chess: "Волшебные шахматы — турнир каждую среду в 21:00. Друга можно позвать на партию из чата.",
+          vik: "Викторина «Последний волшебник» — каждую пятницу в 21:00. Ошибся — выбыл, последний оставшийся — победитель.",
+          jd: "Расписание недели: в какой день какой турнир — здесь. Удачи, волшебник!" },
+    en: { cup: "This is the House Cup. The four houses collect points all week; the winner is decided on Sunday night. Your points go to your house.",
+          sq: "Chocolate Frog: six tasks every day. Finish them all and the box opens — 10 points, 1 galleon and a wizard card.",
+          kurs: "Here are the conditions for the next year. Done ones turn green; tap a row and it takes you there.",
+          pat: "Summon your Patronus too — it is revealed once and stays on your profile.",
+          dost: "Invite your friends — your house earns points for every friend who joins.",
+          bell: "Most important of all — Contests. One every day in every subject: the fastest without mistakes earns the most points. Tap “Contest”.",
+          bhero: "At the top is your day so far: how many contests you entered and how many points your current places would earn. The day closes at midnight.",
+          blist: "Here are today's contests — one per subject. Tap the first one and give it a try!",
+          rek: "Records — in every subject, who goes furthest without a mistake. Every midnight the top three earn points.",
+          qoriq: "The Reserve — creatures from your Care of Magical Creatures lessons. Buy food with galleons; they grow and help in lessons.",
+          issiq: "The Greenhouse — seeds from Herbology lessons. Water them free every day; a grown plant gives food for your creatures.",
+          kurs3: "Year 4 is the top year. Its conditions are here.",
+          duel: "Duel — you fight by drawing spells. A tournament every Sunday at 21:00; practise against computer rivals any time.",
+          chess: "Wizard chess — a tournament every Wednesday at 21:00. You can also challenge a friend from the chat.",
+          vik: "The “Last Wizard” quiz — every Friday at 21:00. One mistake and you are out; the last one standing wins.",
+          jd: "The weekly schedule: which tournament on which day — all here. Good luck, wizard!" }
+  };
+  function kyT(k) { return (KY_TX[lang] || KY_TX.uz)[k] || ""; }
+  function yqKurs(n) {
+    if (yq || !hasHouse() || n < 2 || n > 4) { return; }
+    var kalit = TK("hp_kyq_" + n);
+    try { if (window.localStorage.getItem(kalit) === "1") { return; } window.localStorage.setItem(kalit, "1"); } catch (e) { return; }
+    var tile = function (k) { return yqQ('#scr-hub .hx[data-k="' + k + '"]'); };
+    var q = n === 2 ? [
+      { el: yqQ("#hub-cup"), m: kyT("cup") },
+      { el: yqQ("#hub-sq"), m: kyT("sq") },
+      { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("kurs") },
+      { el: yqQ("#scr-hub .hub-dost"), m: kyT("dost") },
+      { el: yqQ("#hub-pat"), m: kyT("pat") },
+      { el: tile("bell"), m: kyT("bell"), tap: true },
+      { el: yqQ("#scr-blh #blh-hero"), m: kyT("bhero"), bet: 1 },
+      { el: yqQ("#scr-blh #blh-list > *"), m: kyT("blist"), tap: true, bet: 1 }
+    ] : n === 3 ? [
+      { el: tile("rek"), m: kyT("rek") },
+      { el: tile("qoriq"), m: kyT("qoriq") },
+      { el: tile("issiq"), m: kyT("issiq") },
+      { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("kurs3") }
+    ] : [
+      { el: tile("duel"), m: kyT("duel") },
+      { el: tile("chess"), m: kyT("chess") },
+      { el: tile("vik"), m: kyT("vik") },
+      { el: yqQ("#hub-jd"), m: kyT("jd") }
+    ];
+    // hozir ko'rinmayotgan narsalar (Patronus olingan, jadval yashirin...) tashlab ketiladi; boshqa sahifadagi qadam (bellashuv ro'yxati) qoladi
+    q = q.filter(function (s) { if (s.bet) { return true; } var e = s.el(); return e && e.getClientRects().length; });
+    if (!q.length) { return; }
+    var uy = cupMe().house || house;
+    yqOch(q, { kim: yqT("kim").replace("%s", syT("ism_" + uy)), rasm: "img/sardor/" + (validHouse(uy) || "gryffindor") + ".webp" });
+  }
