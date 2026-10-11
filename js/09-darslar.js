@@ -1671,27 +1671,60 @@
     g.setTransform(af.dpr, 0, 0, af.dpr, 0, 0);
     g.clearRect(0, 0, w, w);
     var ochiq = af.show ? 0.85 : afR() * 0.85;
+    var s = af.pts[0], e = af.pts[af.pts.length - 1], k2;
+    // sehrli doira: maydon o'rtasida xira halqalar va belgilar (bezak)
+    g.save();
+    g.translate(w / 2, w / 2);
+    g.strokeStyle = "rgba(150,185,240,.10)"; g.lineWidth = 1;
+    [0.44, 0.40, 0.25].forEach(function (rr) { g.beginPath(); g.arc(0, 0, w * rr, 0, Math.PI * 2); g.stroke(); });
+    for (k2 = 0; k2 < 24; k2++) {
+      var bu = k2 / 24 * Math.PI * 2, uz = k2 % 6 === 0 ? 0.045 : 0.02;
+      g.beginPath(); g.moveTo(Math.cos(bu) * w * 0.40, Math.sin(bu) * w * 0.40); g.lineTo(Math.cos(bu) * w * (0.40 + uz), Math.sin(bu) * w * (0.40 + uz)); g.stroke();
+    }
+    g.restore();
     if (ochiq > 0) {
       g.lineCap = "round"; g.lineJoin = "round";
-      g.strokeStyle = "rgba(160,190,240," + ochiq + ")";
+      // yo'l ostidagi yumshoq nur
+      g.strokeStyle = "rgba(120,170,240," + (ochiq * 0.16).toFixed(3) + ")";
+      g.lineWidth = 22;
+      g.beginPath();
+      af.pts.forEach(function (p, k) { if (k) { g.lineTo(p[0], p[1]); } else { g.moveTo(p[0], p[1]); } });
+      g.stroke();
+      g.strokeStyle = "rgba(190,214,250," + ochiq + ")";
       g.lineWidth = 3;
       g.setLineDash([2, 10]);
       g.beginPath();
       af.pts.forEach(function (p, k) { if (k) { g.lineTo(p[0], p[1]); } else { g.moveTo(p[0], p[1]); } });
       g.stroke();
       g.setLineDash([]);
-      // oxiri - kichik halqa
-      var e = af.pts[af.pts.length - 1];
-      g.strokeStyle = "rgba(160,190,240," + ochiq + ")";
-      g.lineWidth = 2;
-      g.beginPath(); g.arc(e[0], e[1], 9, 0, Math.PI * 2); g.stroke();
+      // yo'nalish o'qchalari (yo'l bo'ylab uchta)
+      [0.3, 0.55, 0.8].forEach(function (ul) {
+        var n = Math.min(af.pts.length - 2, Math.max(1, Math.round(ul * (af.pts.length - 1)))), a = af.pts[n - 1], b2 = af.pts[n + 1];
+        var bur = Math.atan2(b2[1] - a[1], b2[0] - a[0]);
+        g.save(); g.translate(af.pts[n][0], af.pts[n][1]); g.rotate(bur);
+        g.fillStyle = "rgba(210,228,255," + ochiq + ")";
+        g.beginPath(); g.moveTo(8, 0); g.lineTo(-5, -6); g.lineTo(-2, 0); g.lineTo(-5, 6); g.closePath(); g.fill();
+        g.restore();
+      });
+      // oxiri - yulduzcha (nishon)
+      g.save(); g.translate(e[0], e[1]);
+      g.strokeStyle = "rgba(190,214,250," + ochiq + ")"; g.lineWidth = 2;
+      g.beginPath(); g.arc(0, 0, 13, 0, Math.PI * 2); g.stroke();
+      g.fillStyle = "rgba(226,236,255," + ochiq + ")";
+      g.beginPath();
+      for (k2 = 0; k2 < 8; k2++) { var rr2 = k2 % 2 ? 2.4 : 7.5, b3 = k2 / 8 * Math.PI * 2 - Math.PI / 2; g.lineTo(Math.cos(b3) * rr2, Math.sin(b3) * rr2); }
+      g.closePath(); g.fill();
+      g.restore();
     }
-    // boshlanish nuqtasi doim ko'rinadi
-    var s = af.pts[0];
-    g.fillStyle = "rgba(226,232,240,.25)";
-    g.beginPath(); g.arc(s[0], s[1], 17, 0, Math.PI * 2); g.fill();
+    // boshlanish nuqtasi doim ko'rinadi: nurli halqa
+    var gr = g.createRadialGradient(s[0], s[1], 2, s[0], s[1], 26);
+    gr.addColorStop(0, "rgba(226,232,240,.55)"); gr.addColorStop(1, "rgba(226,232,240,0)");
+    g.fillStyle = gr;
+    g.beginPath(); g.arc(s[0], s[1], 26, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "rgba(226,232,240,.55)"; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(s[0], s[1], 15, 0, Math.PI * 2); g.stroke();
     g.fillStyle = "#eef2f7";
-    g.beginPath(); g.arc(s[0], s[1], 7, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(s[0], s[1], 6, 0, Math.PI * 2); g.fill();
     // chizilgan iz
     if (af.trail.length > 1) {
       g.lineCap = "round"; g.lineJoin = "round";
@@ -1712,6 +1745,24 @@
       g.fillStyle = "rgba(226,232,240," + (1 - k) + ")";
       g.beginPath(); g.arc(u.x + u.vx * k, u.y + u.vy * k + 18 * k * k, 3.4 * (1 - k) + 0.8, 0, Math.PI * 2); g.fill();
     });
+    // tayoqcha: uchi barmoq ostida; chizilmayotganda boshlanish nuqtasida turadi - qayerdan boshlash ko'rinib tursin
+    if (!af.fx && !af.done) {
+      var tu = af.drawing && af.trail.length ? af.trail[af.trail.length - 1] : s;
+      var chapga = tu[0] > w * 0.72, dx = chapga ? -0.5 : 0.5, dy = 0.866, L = Math.max(70, w * 0.26);
+      g.save();
+      g.lineCap = "round";
+      g.shadowColor = "rgba(0,0,0,.55)"; g.shadowBlur = 8; g.shadowOffsetY = 3;
+      g.strokeStyle = "#6b4a2c"; g.lineWidth = 7;
+      g.beginPath(); g.moveTo(tu[0] + dx * 12, tu[1] + dy * 12); g.lineTo(tu[0] + dx * L, tu[1] + dy * L); g.stroke();
+      g.shadowColor = "transparent";
+      g.strokeStyle = "#a9794a"; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(tu[0] + dx * 12 - 1.5, tu[1] + dy * 12); g.lineTo(tu[0] + dx * L - 1.5, tu[1] + dy * L); g.stroke();
+      g.strokeStyle = "#3d2815"; g.lineWidth = 10;                                     // dasta
+      g.beginPath(); g.moveTo(tu[0] + dx * L * 0.72, tu[1] + dy * L * 0.72); g.lineTo(tu[0] + dx * L, tu[1] + dy * L); g.stroke();
+      g.strokeStyle = "#cfd6e0"; g.lineWidth = 2;                                      // halqa
+      g.beginPath(); g.moveTo(tu[0] + dx * L * 0.70 - 5, tu[1] + dy * L * 0.70 + 3 * dx * 2); g.lineTo(tu[0] + dx * L * 0.70 + 5, tu[1] + dy * L * 0.70 - 3 * dx * 2); g.stroke();
+      g.restore();
+    }
     if (af.fx) { afFx(g, af.fx.id, Math.min(1, (now - af.fx.t0) / af.fx.ms), w); }
     // sham
     var sham = $("af-sham");
