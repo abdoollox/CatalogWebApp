@@ -2971,7 +2971,13 @@ body.kr-on .mp{display:none!important}
 .du-vaqt{width:100%;max-width:300px;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
 .du-vaqt i{display:block;height:100%;width:100%;border-radius:99px;background:rgb(var(--tu))}
 #du-canvas{display:block;border-radius:22px;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;
-  border:1px solid rgba(var(--tu),.5);background:radial-gradient(circle at 50% 45%,rgba(var(--tu),.14),rgba(12,13,18,.9))}
+  border:1px solid rgba(var(--tu),.5);
+  box-shadow:inset 0 0 0 5px rgba(8,11,17,.9),inset 0 0 0 6px rgba(var(--tu),.25),inset 0 0 60px rgba(4,7,12,.9),0 14px 34px rgba(0,0,0,.45);
+  background:
+    radial-gradient(1.4px 1.4px at 14% 20%,rgba(220,232,255,.75),transparent 60%),radial-gradient(1.2px 1.2px at 82% 14%,rgba(220,232,255,.6),transparent 60%),
+    radial-gradient(1.6px 1.6px at 70% 78%,rgba(220,232,255,.6),transparent 60%),radial-gradient(1.2px 1.2px at 24% 84%,rgba(220,232,255,.55),transparent 60%),
+    radial-gradient(1.2px 1.2px at 46% 9%,rgba(220,232,255,.5),transparent 60%),radial-gradient(1.4px 1.4px at 91% 52%,rgba(220,232,255,.5),transparent 60%),
+    radial-gradient(circle at 50% 46%,rgba(var(--tu),.26),rgba(var(--tu),.08) 45%,rgba(10,13,20,.1) 72%),#0b0f17}
 .du-rev{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .du-rev .dr-btn{grid-column:1 / -1;margin-top:4px}
 .du-rv{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:20px;border:1px solid rgba(var(--tu),.4);background:rgba(var(--tu),.08);opacity:.75}

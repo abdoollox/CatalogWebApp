@@ -940,14 +940,49 @@
     var c = $("du-canvas"), g = c.getContext("2d"), w = du.w, i, rgb = DU_RGB[du.tur];
     g.setTransform(du.r, 0, 0, du.r, 0, 0);
     g.clearRect(0, 0, w, w);
+    var P = du.pts.map(function (p) { return [p[0] * w, p[1] * w]; }), s0 = P[0], e0 = P[P.length - 1], k2;
+    // Afsunlar darsidagi maydon ko'rinishi (egasi, 2026-10-11): sehrli doira, yo'l nuri, yo'nalish o'qchalari, oxirida yulduzcha - tur rangida
+    g.save(); g.translate(w / 2, w / 2);
+    g.strokeStyle = "rgba(" + rgb + ",.12)"; g.lineWidth = 1;
+    [0.44, 0.40, 0.25].forEach(function (rr) { g.beginPath(); g.arc(0, 0, w * rr, 0, Math.PI * 2); g.stroke(); });
+    for (k2 = 0; k2 < 24; k2++) {
+      var bu = k2 / 24 * Math.PI * 2, uz = k2 % 6 === 0 ? 0.045 : 0.02;
+      g.beginPath(); g.moveTo(Math.cos(bu) * w * 0.40, Math.sin(bu) * w * 0.40); g.lineTo(Math.cos(bu) * w * (0.40 + uz), Math.sin(bu) * w * (0.40 + uz)); g.stroke();
+    }
+    g.restore();
     g.lineCap = "round"; g.lineJoin = "round";
-    g.strokeStyle = "rgba(" + rgb + ",.38)"; g.lineWidth = 12; g.setLineDash([2, 16]);
+    g.strokeStyle = "rgba(" + rgb + ",.16)"; g.lineWidth = 22;
     g.beginPath();
-    for (i = 0; i < du.pts.length; i++) { g[i ? "lineTo" : "moveTo"](du.pts[i][0] * w, du.pts[i][1] * w); }
+    for (i = 0; i < P.length; i++) { g[i ? "lineTo" : "moveTo"](P[i][0], P[i][1]); }
+    g.stroke();
+    g.strokeStyle = "rgba(" + rgb + ",.9)"; g.lineWidth = 3; g.setLineDash([2, 10]);
+    g.beginPath();
+    for (i = 0; i < P.length; i++) { g[i ? "lineTo" : "moveTo"](P[i][0], P[i][1]); }
     g.stroke();
     g.setLineDash([]);
+    [0.3, 0.55, 0.8].forEach(function (ul) {
+      var n = Math.min(P.length - 2, Math.max(1, Math.round(ul * (P.length - 1)))), a = P[n - 1], b2 = P[n + 1];
+      g.save(); g.translate(P[n][0], P[n][1]); g.rotate(Math.atan2(b2[1] - a[1], b2[0] - a[0]));
+      g.fillStyle = "rgba(" + rgb + ",.95)";
+      g.beginPath(); g.moveTo(8, 0); g.lineTo(-5, -6); g.lineTo(-2, 0); g.lineTo(-5, 6); g.closePath(); g.fill();
+      g.restore();
+    });
+    g.save(); g.translate(e0[0], e0[1]);
+    g.strokeStyle = "rgba(" + rgb + ",.9)"; g.lineWidth = 2;
+    g.beginPath(); g.arc(0, 0, 13, 0, Math.PI * 2); g.stroke();
     g.fillStyle = "rgba(" + rgb + ",.95)";
-    g.beginPath(); g.arc(du.pts[0][0] * w, du.pts[0][1] * w, 8, 0, Math.PI * 2); g.fill();
+    g.beginPath();
+    for (k2 = 0; k2 < 8; k2++) { var rr2 = k2 % 2 ? 2.4 : 7.5, b3 = k2 / 8 * Math.PI * 2 - Math.PI / 2; g.lineTo(Math.cos(b3) * rr2, Math.sin(b3) * rr2); }
+    g.closePath(); g.fill();
+    g.restore();
+    var gr = g.createRadialGradient(s0[0], s0[1], 2, s0[0], s0[1], 26);
+    gr.addColorStop(0, "rgba(226,232,240,.55)"); gr.addColorStop(1, "rgba(226,232,240,0)");
+    g.fillStyle = gr;
+    g.beginPath(); g.arc(s0[0], s0[1], 26, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = "rgba(226,232,240,.55)"; g.lineWidth = 1.5;
+    g.beginPath(); g.arc(s0[0], s0[1], 15, 0, Math.PI * 2); g.stroke();
+    g.fillStyle = "#eef2f7";
+    g.beginPath(); g.arc(s0[0], s0[1], 6, 0, Math.PI * 2); g.fill();
     if (du.user.length > 1) {
       g.strokeStyle = "#eef2f7"; g.lineWidth = 5; g.shadowColor = "rgba(226,232,240,.9)"; g.shadowBlur = 12;
       g.beginPath();
