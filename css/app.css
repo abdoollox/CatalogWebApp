@@ -3585,10 +3585,6 @@ div.hub-kurs-s + .hub-kurs-f{margin-top:10px}
 .ktb-x.gerb .ktb-x-r{background-size:72%;background-color:#1b1f29}
 .ktb-x b{font:700 12px/1.2 'Manrope',sans-serif;color:var(--text)}
 .ktb-qosh{margin-top:-4px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
-.ktb-maq{width:100%;padding:8px 12px;border-radius:14px;border:1px dashed rgba(226,232,240,.18)}
-.ktb-maq small{display:block;margin-bottom:4px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.ktb-maq small:empty{display:none}
-.ktb-maq span{font:600 12.5px/1.35 'Manrope',sans-serif;color:var(--text)}
 .ktb .dr-btn{width:100%;margin-top:4px}
 /* To'liq ekran: tepadagi Telegram tugmalari zonasi DOIM fon rangida yopiq turadi - aks holda surilgan sahifa yoki ostidagi
    sahifa (masalan, boshqa odam profili ochilganda bosh sahifa) shu yerdan ko'rinib qolardi (egasi surati, 2026-10-11).

@@ -296,22 +296,19 @@
           och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish",
           sh3: "3-kursga o'tish uchun uchta shartni bajaring", s1: function (n) { return "Har bir fandan " + n + " tadan dars"; }, s2: "Shokolad qurbaqadan bitta karta oching", s3: "To'qqiz fanning har birida bellashuvda qatnashing",
-          sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish",
-          maq3: function (n) { return "3-kursga o'tish uchun: har bir fandan " + n + " tadan dars, Shokolad qurbaqadan bitta karta va to'qqiz fanning har birida bellashuv"; } },
+          sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish" },
     ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", vazifa: function (k, n) { return "Чтобы перейти на " + k + "-й курс, пройдите по " + n + " урока по каждому предмету"; }, tayyor: function (a, b) { return "Готово: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
           och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
           tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить",
           sh3: "Чтобы перейти на 3-й курс, выполните три условия", s1: function (n) { return "По " + n + " уроков по каждому предмету"; }, s2: "Откройте одну карточку Шоколадной лягушки", s3: "Поучаствуйте в состязании по каждому из девяти предметов",
-          sFan: function (a, b) { return a + " / " + b + " предм."; }, bQurb: "К Шоколадной лягушке",
-          maq3: function (n) { return "Для 3-го курса: по " + n + " уроков по каждому предмету, одна карточка Шоколадной лягушки и состязание по каждому из девяти предметов"; } },
+          sFan: function (a, b) { return a + " / " + b + " предм."; }, bQurb: "К Шоколадной лягушке" },
     en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", vazifa: function (k, n) { return "To reach year " + k + ", pass " + n + " lessons in every subject"; }, tayyor: function (a, b) { return a + " / " + b + " subjects done"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
           och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
           tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue",
           sh3: "To reach year 3, meet three conditions", s1: function (n) { return n + " lessons in every subject"; }, s2: "Open one Chocolate Frog card", s3: "Enter the contest in each of the nine subjects",
-          sFan: function (a, b) { return a + " / " + b + " subjects"; }, bQurb: "Go to the Chocolate Frog",
-          maq3: function (n) { return "For year 3: " + n + " lessons in every subject, one Chocolate Frog card and a contest in each of the nine subjects"; } }
+          sFan: function (a, b) { return a + " / " + b + " subjects"; }, bQurb: "Go to the Chocolate Frog" }
   };
   function hubKurs(grid, kn, hid) {
     var eski = $("hub-kurs"), x = KURS_TX[lang] || KURS_TX.uz;
@@ -382,19 +379,19 @@
   /* KURS TABRIGI (egasi, 2026-10-11: «vizual jihatdan yaxshilash»): yonib turgan kurs muhri, to'rt pog'onali yo'l
      (o'tilganlari belgili), Professor Makgonagall tabrigi, ochilgan xonalar rasmlari va keyingi maqsad. Rang - fakultet urg'usi. */
   var KURS_TB = {
-    uz: { kick: "Xogvarts · yangi kurs", muhr: "kurs", mg: "Professor Makgonagall", keyin: "Keyingi maqsad", oxir: "Siz eng yuqori kursdasiz — Xogvartsning hamma xonalari ochiq.",
+    uz: { kick: "Xogvarts · yangi kurs", muhr: "kurs", mg: "Professor Makgonagall",
           gap: { 2: "Tabriklayman! Birinchi kursni sharaf bilan tugatdingiz. Endi fakultetingiz uchun bellashish vaqti.",
                  3: "Ajoyib! Endi rekord qo'yasiz, maxluq va o'simliklaringizni o'zingiz parvarish qilasiz.",
                  4: "Barakalla! Siz eng yuqori kursdasiz. Maydon sizni kutmoqda: duel, shaxmat va viktorina." },
           xona: { bell: "Bellashuv", sq: "Shokolad qurbaqa", cup: "Xogvarts kubogi", rek: "Rekordlar", qoriq: "Qo'riqxona", issiq: "Issiqxona", duel: "Duel", chess: "Shaxmat", vik: "Viktorina" },
           qosh: { 4: "va Hafta jadvali" } },
-    ru: { kick: "Хогвартс · новый курс", muhr: "курс", mg: "Профессор Макгонагалл", keyin: "Следующая цель", oxir: "Вы на старшем курсе — все комнаты Хогвартса открыты.",
+    ru: { kick: "Хогвартс · новый курс", muhr: "курс", mg: "Профессор Макгонагалл",
           gap: { 2: "Поздравляю! Первый курс пройден с честью. Теперь пора состязаться за свой факультет.",
                  3: "Превосходно! Теперь вы ставите рекорды и сами ухаживаете за существами и растениями.",
                  4: "Браво! Вы на старшем курсе. Арена ждёт вас: дуэль, шахматы и викторина." },
           xona: { bell: "Состязания", sq: "Шоколадная лягушка", cup: "Кубок школы", rek: "Рекорды", qoriq: "Заповедник", issiq: "Теплица", duel: "Дуэль", chess: "Шахматы", vik: "Викторина" },
           qosh: { 4: "и Расписание недели" } },
-    en: { kick: "Hogwarts · new year", muhr: "year", mg: "Professor McGonagall", keyin: "Next goal", oxir: "You are in the top year — every room in Hogwarts is open.",
+    en: { kick: "Hogwarts · new year", muhr: "year", mg: "Professor McGonagall",
           gap: { 2: "Congratulations! You finished your first year with honour. Now it is time to compete for your house.",
                  3: "Splendid! Now you set records and look after your own creatures and plants.",
                  4: "Well done! You are in the top year. The Arena awaits: duels, chess and the quiz." },
@@ -457,12 +454,7 @@
     });
     ich.appendChild(xs);
     if (t.qosh[n]) { ich.appendChild(drEl("small", "ktb-qosh", t.qosh[n])); }
-    // keyingi maqsad
-    var kk = drKurs || {}, har = kk["need" + (n + 1)] || [0, 0, 3, 9, 15][n + 1];
-    var mq = drEl("div", "ktb-maq");
-    mq.appendChild(drEl("small", "", n < 4 ? t.keyin : ""));
-    mq.appendChild(drEl("span", "", n === 2 ? x.maq3(har) : n < 4 ? x.vazifa(n + 1, har) : t.oxir));
-    ich.appendChild(mq);
+    // «Keyingi maqsad» bloki yo'q (egasi, 2026-10-11: «ma'lumot ko'payib ketgan») - u bosh sahifadagi kurs kartasida bor
     var bt = drEl("button", "dr-btn", x.ok);
     bt.type = "button";
     bt.onclick = yop;
