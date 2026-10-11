@@ -409,7 +409,8 @@
     if (eski) { eski.parentNode.removeChild(eski); }
     var orqa = document.createElement("div"), oyna = document.createElement("div");
     // tabrik yopilgach - yangi ochilgan narsalar bo'yicha yo'riqnoma (yqKurs, js/09-yoriqnoma.js)
-    var yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); setTimeout(function () { try { yqKurs(n); } catch (e) {} }, 250); } };
+    var yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); try { kyTabrikYopildi(n); } catch (e) {} } };
+    try { kyTabrikOchildi(n); } catch (e) {}
     orqa.className = "du-info kurs-tb";
     orqa.id = "du-info";
     oyna.className = "du-info-p";
@@ -495,7 +496,8 @@
     fetchTasks(function () { if (hubVisible()) { renderHub(); } });
     try { chatRefreshCounts(); } catch (e) {}
     try { jrAdminCheck(); } catch (e) {}
-    setTimeout(function () { try { yqBosh(); } catch (e) {} try { yqKursDavom(); } catch (e) {} }, 800);     // tugallanmagan yo'riqnoma va kurs yo'riqnomasining 2-qismi (09-yoriqnoma.js)
+    setTimeout(function () { try { yqBosh(); } catch (e) {} }, 800);     // tugallanmagan bosh sahifa yo'riqnomasi (09-yoriqnoma.js)
+    setTimeout(function () { try { yqKursDavom(); } catch (e) {} }, KY_KUT);     // kurs yo'riqnomasining davomi - biroz kutib (egasi: «birdaniga emas»)     // tugallanmagan yo'riqnoma va kurs yo'riqnomasining 2-qismi (09-yoriqnoma.js)
   }
 
   function leaveHub() {

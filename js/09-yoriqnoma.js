@@ -388,7 +388,8 @@
             { el: yqQ("#scr-sq #sq-coll"), m: kyT("sq4").replace("%n", jami), bet: 1 },
             { el: yqQ("#scr-sq .sq-str"), m: kyT("sq5").replace("%k", pz.big_every).replace("%g", pz.big_gal), bet: 1 },
             { el: yqQ("#scr-sq #sq-back"), m: kyT("sq6"), tap: true, bet: 1 },
-            { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("ks0"), bet: 1 },
+            { el: yqQ("#hub-kurs .hub-kurs-q"), m: kyT("ks0"), bet: 1,
+              on: function () { kyQoy("hp_kyq_2k", "1"); kySq(); kyChiq("chiqk"); } },
             { el: shart(0), m: kyT("ks1"), bet: 1 },
             { el: shart(1), m: kyT("ks2"), bet: 1 },
             { el: shart(2), m: kyT("ks3"), bet: 1 }];
@@ -403,27 +404,57 @@
   }
   function kyBor(k) { try { return window.localStorage.getItem(TK(k)); } catch (e) { return "x"; } }
   function kyQoy(k, v) { try { window.localStorage.setItem(TK(k), v); } catch (e) {} }
-  // 2-kursda qurbaqa kartasi yo'riqnomaning 1-qismidan 2-qismigacha yashirin (egasi: avval kubok va bellashuv) - renderHub ham chaqiradi
+  /* 2-kursda (egasi, 2026-10-11): qurbaqa kartasi - 2-qism boshlanguncha, KURS KARTASI (3-kurs vazifalari) - 2-qism unga
+     yetguncha yashirin. Tabrik ochilgan zahoti boshlanadi (hp_kyq_2t). renderHub ham chaqiradi. Ochilganda - effekt bilan (kyChiq). */
+  var KY_KUT = 2000;                                  // yo'riqnoma sahifa ochilgandan shuncha keyin boshlanadi (egasi: «birdaniga emas»)
   function kySq() {
     var h = $("scr-hub");
-    if (h) { h.classList.toggle("sq-yop", kursN() === 2 && !!kyBor("hp_kyq_2") && !kyBor("hp_kyq_2b")); }
+    if (!h) { return; }
+    var ikki = kursN() === 2 && !!(kyBor("hp_kyq_2t") || kyBor("hp_kyq_2"));
+    h.classList.toggle("sq-yop", ikki && !kyBor("hp_kyq_2b"));
+    h.classList.toggle("kurs-yop", ikki && !kyBor("hp_kyq_2k"));
+  }
+  // Yangi ochilgan narsa effekt bilan paydo bo'ladi: sahifaga vaqtincha klass (renderHub qayta chizsa ham ishlaydi)
+  function kyChiq(cls, ms) {
+    var h = $("scr-hub");
+    if (!h) { return; }
+    h.classList.remove(cls); void h.offsetWidth; h.classList.add(cls);
+    setTimeout(function () { h.classList.remove(cls); }, ms || 2600);
+  }
+  // Kurs tabrigi ochilganda: yangi xonalar tabrik yopilguncha ko'rinmaydi (kutN), yopilgach effekt bilan chiqadi (chiqN)
+  var kyTabrikda = false;                             // tabrik ochiq yoki yo'riqnoma kutilmoqda - bosh sahifa taymeri aralashmaydi
+  function kyTabrikOchildi(n) {
+    kyTabrikda = true;
+    kyQoy("hp_kyq_" + n + "t", "1");
+    kySq();
+    var h = $("scr-hub");
+    if (h) { h.classList.add("kut" + n); }
+  }
+  function kyTabrikYopildi(n) {
+    var h = $("scr-hub");
+    if (h) { h.classList.remove("kut" + n); }
+    kyChiq("chiq" + n);
+    setTimeout(function () { kyTabrikda = false; try { yqKurs(n); } catch (e) {} }, KY_KUT);
   }
   // 1-qism: kurs tabrigi yopilgach
   function yqKurs(n) {
     if (yq || !hasHouse() || n < 2 || n > 4 || kyBor("hp_kyq_" + n)) { return; }
+    if ($("scr-hub").classList.contains("hidden")) { return; }    // sahifadan chiqib ketgan - keyingi safar (yqKursDavom ochmaydi; tabrik qayta chiqmaydi)
     kyQoy("hp_kyq_" + n, String(Date.now()));
     kySq();
     kyOch(kyQism(n, 0));
   }
   // 2-qism: keyingi safar bosh sahifa ochilganda (openHub)
   function yqKursDavom() {
-    if (yq || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
+    if (yq || kyTabrikda || !hasHouse() || $("scr-hub").classList.contains("hidden")) { return; }
     if (yqBellEslat()) { return; }                  // avval - birinchi bellashuv (2-qism undan keyin)
     var n = kursN(), t0 = parseInt(kyBor("hp_kyq_" + n) || "0", 10);
+    if (n >= 2 && n <= 4 && !t0 && kyBor("hp_kyq_" + n + "t")) { yqKurs(n); return; }     // tabrik ko'rilgan, 1-qism boshlanmay qolgan
     if (n < 2 || n > 4 || !t0 || kyBor("hp_kyq_" + n + "b")) { return; }
     var vaqt = Date.now() - (t0 > 1 ? t0 : 0) >= KY_KEYIN, bell = n === 2 && kyBellBor();
     if (!vaqt && !bell) { return; }
     kyQoy("hp_kyq_" + n + "b", "1");
-    kySq();                                          // qurbaqa kartasi endi ko'rinadi - 2-qism shundan boshlanadi
-    kyOch(kyQism(n, 1));
+    kySq();                                          // qurbaqa kartasi endi ko'rinadi - effekt bilan, keyin 2-qism
+    if (n === 2) { kyChiq("chiqsq"); }
+    setTimeout(function () { if (!yq && !$("scr-hub").classList.contains("hidden")) { kyOch(kyQism(n, 1)); } }, n === 2 ? 1300 : 0);
   }
