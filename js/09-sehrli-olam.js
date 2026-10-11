@@ -291,15 +291,15 @@
   /* KURS KARTASI (kataklar tepasida, 1-3-kursda): hozirgi kurs, keyingisigacha nima qilish kerak va unda nima ochiladi.
      Kurs oshgan bo'lsa (kursKutmoqda) - tabrik oynasi. 4-kursda karta yo'q. */
   var KURS_TX = {
-    uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", dars: function (a, b) { return a + " / " + b + " dars"; }, bell: "Bitta bellashuvda qatnashing",
+    uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", dars: function (a, b, n) { return a + " / " + b + " fanda " + n + " tadan dars"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
           och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona va Issiqxona", 4: "Maydon — Duel, Shaxmat, Viktorina — va Jadval" },
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish" },
-    ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", dars: function (a, b) { return "Уроков: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
+    ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", dars: function (a, b, n) { return "По " + n + " урока: " + a + " / " + b + " предметов"; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
           och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник и Теплица", 4: "Арена — Дуэль, Шахматы, Викторина — и Расписание" },
           tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить" },
-    en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", dars: function (a, b) { return a + " / " + b + " lessons"; }, bell: "Take part in one contest",
+    en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", dars: function (a, b, n) { return a + " / " + b + " subjects with " + n + " lessons"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
           och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve and the Greenhouse", 4: "The Arena — Duel, Chess, Quiz — and the Schedule" },
           tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue" }
@@ -310,7 +310,9 @@
     if (kursKutmoqda && hid !== "none") { var yangi = kursKutmoqda; kursKutmoqda = 0; setTimeout(function () { kursTabrik(yangi); }, 350); }
     if (hid === "none" || kn >= 4) { return; }
     var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
-    var k = drKurs || { lessons: 0, need2: 3, need4: 10 }, kerak = kn === 1 ? k.need2 : k.need4, bor = Math.min(k.lessons || 0, kerak);
+    // Kurs sharti HAR FANDAN (egasi, 2026-10-11): 2-kursga - har fandan 3 tadan dars, 4-kursga - 6 tadan. fan2/fan4 - shartni bajargan fanlar soni.
+    var k = drKurs || { fans: 9, fan2: 0, fan4: 0, need2: 3, need4: 6 }, har = kn === 1 ? k.need2 : k.need4;
+    var kerak = k.fans || 9, bor = Math.min((kn === 1 ? k.fan2 : k.fan4) || 0, kerak);
     var card = mk("div", "hub-kurs");
     card.id = "hub-kurs";
     var tep = mk("div", "hub-kurs-t");
@@ -324,7 +326,7 @@
     card.appendChild(tep);
     var qat = mk("div", "hub-kurs-q");
     qat.appendChild(mk("b", "", x.gacha(kn + 1)));
-    qat.appendChild(mk("span", "", kn === 2 ? x.bell : x.dars(bor, kerak)));
+    qat.appendChild(mk("span", "", kn === 2 ? x.bell : x.dars(bor, kerak, har)));
     card.appendChild(qat);
     var chiz = mk("span", "hub-kurs-c"), ich = mk("i", "");
     ich.style.width = (kn === 2 ? 0 : Math.round(bor * 100 / kerak)) + "%";
