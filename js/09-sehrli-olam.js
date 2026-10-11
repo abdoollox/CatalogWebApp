@@ -310,8 +310,8 @@
     if (kursKutmoqda && hid !== "none") { var yangi = kursKutmoqda; kursKutmoqda = 0; setTimeout(function () { kursTabrik(yangi); }, 350); }
     if (hid === "none" || kn >= 4) { return; }
     var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
-    // Kurs sharti HAR FANDAN (egasi, 2026-10-11): 2-kursga - har fandan 3 tadan dars, 4-kursga - 6 tadan. fan2/fan4 - shartni bajargan fanlar soni.
-    var k = drKurs || { fans: 9, fan2: 0, fan4: 0, need2: 3, need4: 6 }, har = kn === 1 ? k.need2 : k.need4;
+    // Kurs sharti HAR FANDAN (egasi, 2026-10-11): 2-kursga - har fandan 3 tadan dars, 4-kursga - 9 tadan. fan2/fan4 - shartni bajargan fanlar soni.
+    var k = drKurs || { fans: 9, fan2: 0, fan4: 0, need2: 3, need4: 9 }, har = kn === 1 ? k.need2 : k.need4;
     var kerak = k.fans || 9, bor = Math.min((kn === 1 ? k.fan2 : k.fan4) || 0, kerak);
     var card = mk("div", "hub-kurs");
     card.id = "hub-kurs";

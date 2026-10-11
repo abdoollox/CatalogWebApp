@@ -196,7 +196,7 @@
   var owlEsdFresh = false;
   function owlEsdYangi() {
     try {
-      return false;      // esdalik maktub endi pochtada ko'rsatilmaydi (egasi, 2026-10-11)
+      return false;      // esdalik maktub pochtada turadi, lekin o'qilmagan xat hisoblanmaydi (egasi, 2026-10-11)
     } catch (e) { return false; }
   }
 
@@ -288,11 +288,10 @@
 
   // Fakultetga tushgan odamda ham maktub pochtada turadi - esdalik, ochib ulashsa bo'ladi
   // (egasi so'radi, 2026-10-03). Eng birinchi xat bo'lgani uchun ro'yxat oxirida.
-  // 2026-10-11 (egasi): saralangan odamga maktub pochtada QAYTA KO'RSATILMAYDI - bu karta eski saralanganlarni
-  // yangi maktubdan xabardor qilish uchun edi, vazifasini bajardi. ESDALIK = false tursa karta chizilmaydi.
-  var OWL_ESDALIK = false;
+  // 2026-10-11 (egasi): karta pochtada TURADI, lekin O'QILMAGAN xat bo'lib ko'rinmaydi (belgida «1» ham, «yangi» muhri ham yo'q) -
+  // owlEsdYangi doim "yo'q" deydi.
   function owlHogOld(t) {
-    if (!OWL_ESDALIK || owlHog() || !hasHouse()) { return null; }
+    if (owlHog() || !hasHouse()) { return null; }
     var c = owlEl("div", "owl-card owl-hog" + (owlEsdFresh ? " owl-new" : ""));
     var top = owlEl("div", "owl-top");
     var ic = owlEl("span", "owl-ic"); ic.innerHTML = OWL_SVG;
