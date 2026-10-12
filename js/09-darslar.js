@@ -1198,8 +1198,14 @@
     box.classList.toggle("hidden", !bor);
     var rs = $("pu-resort");
     rs.classList.toggle("hidden", !(bor && cupMe().can_resort));
-    rs.textContent = t.resort;
+    var qt = bor && cupMe().qayta;
+    rs.textContent = qt ? qtT("btn") : t.resort;
     rs.onclick = startSorting;
+    // Testni qayta topshirish izohi (08-saralash.js QT_TX)
+    var iz = $("pu-qt-iz");
+    if (!iz) { iz = drEl("p", "pu-qt-iz"); iz.id = "pu-qt-iz"; rs.parentNode.insertBefore(iz, rs.nextSibling); }
+    iz.textContent = qt ? qtT("iz") : "";
+    iz.classList.toggle("hidden", !qt);
     if (!bor) { return; }
     box.innerHTML = "";
     var katak = function (lbl, src, nom, cls, fn) {

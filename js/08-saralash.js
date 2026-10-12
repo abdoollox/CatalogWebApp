@@ -383,12 +383,34 @@
 
   function startSorting() { startQuest(QUEST_HOUSE); }
 
+  /* TESTNI QAYTA TOPSHIRISH (egasi, 2026-10-12): 19-sentabrgacha saralanganlarga (savollar o'shanda muvozanatlandi)
+     yangi testni BIR MARTA qayta topshirish imkoni - 19-oktabrgacha. Server cup.me.qayta ni aytadi (hpcup.QAYTA_GACHA);
+     tugma profilda (#pu-resort, puRender). Natija o'sha fakultet ham bo'lishi mumkin. Kurs, darslar va boshqalar saqlanadi. */
+  var QT_TX = {
+    btn: { uz: "Testni qayta topshirish", ru: "Пройти тест заново", en: "Retake the sorting test" },
+    iz: { uz: "Saralash savollari yangilandi. 19-oktabrgacha testni bir marta qayta topshira olasiz.",
+          ru: "Вопросы распределения обновлены. До 19 октября можно один раз пройти тест заново.",
+          en: "The sorting questions were updated. Until 19 October you can retake the test once." },
+    tt: { uz: "Testni qayta topshirish", ru: "Пройти тест заново", en: "Retake the test" },
+    ask: { uz: "Saralash savollari yangilandi — endi fakultetlar teng taqsimlanadi.\n\nTestni faqat BIR MARTA qayta topshirasiz: Saralovchi qalpoq qaysi fakultetni aytsa, o'sha bo'ladi (avvalgisi ham chiqishi mumkin). Fakultet o'zgarsa, bu haftadagi ballaringiz ham yangi fakultetga o'tadi. Kursingiz, darslaringiz, galleon va nishonlaringiz o'zingizda qoladi.",
+           ru: "Вопросы распределения обновлены — теперь факультеты распределяются поровну.\n\nПройти тест заново можно только ОДИН раз: какой факультет назовёт Шляпа, такой и будет (может выпасть и прежний). Если факультет сменится, баллы этой недели перейдут в новый факультет. Курс, уроки, галлеоны и значки останутся с вами.",
+           en: "The sorting questions were updated — houses are now evenly balanced.\n\nYou can retake the test only ONCE: whichever house the Hat names is final (it may be your old one). If your house changes, this week's points move with you. Your year, lessons, galleons and badges stay yours." },
+    ok: { uz: "Boshlash", ru: "Начать", en: "Start" },
+    no: { uz: "Hozir emas", ru: "Не сейчас", en: "Not now" }
+  };
+  function qtT(k) { return (QT_TX[k] && (QT_TX[k][lang] || QT_TX[k].uz)) || ""; }
+  function qtMi() { return hasHouse() && !!cupMe().qayta; }
+
   // Fakultet umrbod bo'lgani uchun tasdiq SAVOLLARDAN OLDIN so'raladi.
   // Yetti savolga javob bergandan keyingi ogohlantirish - ogohlantirish
   // emas, tuzoq. Tayoqcha uchun bu shart emas - u o'zgartirilishi mumkin.
   function confirmSorting() {
     if (QUEST !== QUEST_HOUSE || jrQayta) { beginQuestions(); return; }
     var t = T[lang];
+    if (qtMi()) {
+      testAsk(qtT("ask"), function () { report("sort_start", "qayta"); beginQuestions(); }, { title: qtT("tt"), ok: qtT("ok"), no: qtT("no") });
+      return;
+    }
 
     function go(agreed) {
       if (!agreed) { return; }
@@ -411,10 +433,15 @@
   // Lentadagi natija: fakultet bayrami sahnasi, gerb va fakultet nomi
   function lentaHouse() {
     var id = jrQayta ? validHouse(cupMe().house || house) : pickHouse();
+    var qayta = qtMi();          // testni qayta topshirish: kurs va yo'l boshidan boshlanmaydi
     if (jrQayta) { /* faqat ko'rsatiladi */ } else if (jrPreview) { applyHouse(id); } else {
       setHouse(id);
       reportHouse(id);
-      try { kursBosh(); } catch (e) {}          // yangi saralangan o'quvchi 1-kursdan boshlaydi (bo'limlar bosqichma-bosqich ochiladi)
+      if (qayta) {
+        try { var me = cupMe(); me.qayta = false; me.can_resort = false; me.house = id; } catch (e) {}
+      } else {
+        try { kursBosh(); } catch (e) {}          // yangi saralangan o'quvchi 1-kursdan boshlaydi (bo'limlar bosqichma-bosqich ochiladi)
+      }
     }
     var t = T[lang];
     var h = HOUSES[id];
