@@ -3680,3 +3680,5 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .pg-list{margin-top:12px}
 .pg-list .bl-row.pg-chiq{opacity:.5}
 .pg-list .bl-row u.pg-ok{flex:none;margin-left:8px;text-decoration:none;font:800 13px/1 'Manrope',sans-serif;color:#8ff0b6}
+.pg-sinov{margin-top:14px;border-style:dashed;border-color:rgba(226,87,76,.5);background:rgba(226,87,76,.06)}
+.pg-sinov i{color:#ff9d94}

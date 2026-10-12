@@ -78,7 +78,7 @@
     if (body && body.join != null) { L2.joined = !!body.join; }
     var res = { ok: true, now: hozir, tour: { ts: hozir + 6 * 86400 + 5 * 3600, now: hozir, open: true, n: 11, joined: L2.joined },
       rules: { count: 6, heat: 100, show: 14, hall: 120, penalty: 3, keep: 3, final_pts: 5, points: { "1": 30, "2": 20, "3": 10 } },
-      last: { uid: 5, name: "Garri", house: "gryffindor", n: 14 }, me: { "in": false, alive: false, out: null, place: null }, phase: L2.rej };
+      last: { uid: 5, name: "Garri", house: "gryffindor", n: 14 }, me: { "in": false, alive: false, out: null, place: null }, phase: L2.rej, can_test: true };
     var odam = [["Garri", "gryffindor", 23410], ["Jinni", "gryffindor", 24120], ["Draco", "slytherin", 24980], ["Sehrgar", "ravenclaw", 25630], ["Sedrik", "hufflepuff", 26240],
                 ["Chjou", "ravenclaw", 27910], ["Anjelina", "gryffindor", 29350], ["Markus", "slytherin", 33870], ["Nevill", "gryffindor", null]]
       .map(function (r, i) { return { uid: 100 + i, place: i + 1, name: r[0], house: r[1], ms: r[2], me: i === 3 }; });
@@ -147,6 +147,7 @@
     pgOlingan = Date.now();
     // O'z bosqichi boshlandi - uchish o'zi ochiladi (bir bosqichga bir marta)
     var h = res.heat, men = res.me || {};
+    if (res.phase === "kutish" || res.phase === "zal") { pgUchgan = -1; }     // yangi poyga - bosqichlar qaytadan sanaladi
     if (res.phase === "poyga" && h && men.alive && !h.mine && pgUchgan !== h.n && h.left > 25 && !MS_LOCAL) { pgUch(); return; }
     pgRender();
   }
@@ -200,7 +201,7 @@
     var d = pgData, t = pgT(), box = $("pg-hero"), tr = d.tour, zal = d.phase === "zal";
     box.innerHTML = "";
     var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
-    chap.appendChild(drEl("small", "", t.nom));
+    chap.appendChild(drEl("small", "", t.nom + (d.test ? " · SINOV" : "")));
     var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
     chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 21:00"));
     var iz = drEl("em", "", "");
@@ -266,6 +267,23 @@
     sv.appendChild(drEl("p", "", t.finalP(r.final_pts || 5)));
     q.appendChild(sv);
     if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
+    // Faqat adminga: sinov poygasi - kompyuter uchuvchilar bilan haqiqiy poyga oqimi (ballsiz)
+    if (d.can_test && !zal) {
+      var sb = drEl("button", "pg-mashq pg-sinov");
+      sb.type = "button";
+      var sm = drEl("span", "");
+      sm.appendChild(drEl("b", "", "Sinov poygasi"));
+      sm.appendChild(drEl("small", "", "Faqat adminga ko'rinadi · 9 ta kompyuter uchuvchi · ballsiz · 20 soniyadan keyin start"));
+      sb.appendChild(sm);
+      sb.appendChild(drEl("i", "", "›"));
+      sb.addEventListener("click", function () { pgSinov(true); });
+      q.appendChild(sb);
+    }
+  }
+  function pgSinov(on) {
+    pgPost({ sinov: on ? 1 : 0 }, function (res) {
+      if (res && res.tour) { pgApply(res); pgLoad(); } else { showToast(pgT().yoq, "err"); }
+    });
   }
 
   function pgJadval(rows, otishBor) {
@@ -289,7 +307,7 @@
     var d = pgData, t = pgT(), box = $("pg-oyin"), h = d.heat || {}, men = d.me || {}, natija = d.phase === "natija", olingan = pgOlingan;
     box.innerHTML = "";
     var tep = drEl("div", "vk-g-top");
-    tep.appendChild(drEl("b", "", natija ? t.natija(h.n + 1) : (h["final"] ? t.fin : t.bosqich(h.n + 1))));
+    tep.appendChild(drEl("b", "", (natija ? t.natija(h.n + 1) : (h["final"] ? t.fin : t.bosqich(h.n + 1))) + (d.test ? " · SINOV" : "")));
     var son = drEl("span", "", "");
     tep.appendChild(son);
     box.appendChild(tep);
@@ -363,9 +381,9 @@
       }
       box.appendChild(pgJadval(d.top, false));
     }
-    var b = drEl("button", "dr-btn", t.ortga);
+    var b = drEl("button", "dr-btn", d.test ? "Sinovni tugatish" : t.ortga);
     b.type = "button";
-    b.addEventListener("click", pgYop);
+    b.addEventListener("click", d.test ? function () { pgUchgan = -1; pgSinov(false); } : pgYop);
     box.appendChild(b);
   }
 
