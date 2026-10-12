@@ -489,6 +489,7 @@
     $("hub-set").classList.add("hidden");
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
+    try { snLoad(); } catch (e) {}          // so'rovnoma kartasi (daqiqada bir martadan ko'p so'ramaydi, bosh sahifani qayta chizmaydi)
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
     try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)
     renderHub();
@@ -537,6 +538,7 @@
   function hubJadval(korsat) {
     var box = $("hub-jd"), x = JD_TX[lang] || JD_TX.uz;
     if (!box) { return; }
+    try { snRender(); } catch (e) {}        // so'rovnoma kartasi (til yoki kurs o'zgarsa yangilanadi)
     box.classList.toggle("hidden", !korsat);
     box.innerHTML = "";
     if (!korsat) { return; }
