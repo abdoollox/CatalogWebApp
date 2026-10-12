@@ -1055,7 +1055,7 @@
     $("du-draw").classList.add("hidden");
     box.classList.remove("hidden");
     box.innerHTML = "";
-    var yon = function (nom, tur, acc, yutdi, qarshi) {
+    var yon = function (nom, tur, acc, yutdi, qarshi, qosh) {
       var c = drEl("div", "du-rv" + (yutdi ? " yutdi" : ""));
       c.style.setProperty("--tu", DU_RGB[tur]);
       c.appendChild(drEl("small", "", nom));
@@ -1064,15 +1064,16 @@
       c.appendChild(drEl("b", "", x.tur[tur]));
       // kuch = aniqlik (+ ustun tur uchun qo'shimcha); kuchi baland yutadi (hpduel.kuch)
       var ustun = acc >= 35 && DU_YENG[tur] === qarshi ? duBonus() : 0;
-      c.appendChild(drEl("strong", "", acc < 35 ? "0" : String(acc + ustun)));
-      c.appendChild(drEl("em", acc < 35 ? "yoq" : "", acc < 35 ? x.fail : x.acc + " " + acc + (ustun ? " + " + ustun : "")));
+      qosh = acc >= 35 ? (qosh || 0) : 0;             // do'kondagi duel qo'lqopi qo'shgan kuch (server hisoblaydi)
+      c.appendChild(drEl("strong", "", acc < 35 ? "0" : String(acc + ustun + qosh)));
+      c.appendChild(drEl("em", acc < 35 ? "yoq" : "", acc < 35 ? x.fail : x.acc + " " + acc + (ustun ? " + " + ustun : "") + (qosh ? " + " + qosh : "")));
       if (!yutdi && r.win) { c.appendChild(drEl("u", "du-rv-j", duT().jonM)); }
       return c;
     };
-    var kuchi = function (tur, acc, qarshi) { return acc < 35 ? 0 : acc + (DU_YENG[tur] === qarshi ? duBonus() : 0); };
-    var kr = kuchi(r.his, r.racc, r.mine), km = kuchi(r.mine, r.acc, r.his);
-    box.appendChild(yon(x.you, r.mine, r.acc, r.win > 0, r.his));              // o'quvchi doim CHAPDA (egasi, 2026-10-11)
-    box.appendChild(yon(du.mode === "ar" ? du.oppName : x.raq[du.level - 1], r.his, r.racc, r.win < 0, r.mine));
+    var kuchi = function (tur, acc, qarshi, qosh) { return acc < 35 ? 0 : acc + (DU_YENG[tur] === qarshi ? duBonus() : 0) + (qosh || 0); };
+    var kr = kuchi(r.his, r.racc, r.mine, r.rq), km = kuchi(r.mine, r.acc, r.his, r.q);
+    box.appendChild(yon(x.you, r.mine, r.acc, r.win > 0, r.his, r.q));              // o'quvchi doim CHAPDA (egasi, 2026-10-11)
+    box.appendChild(yon(du.mode === "ar" ? du.oppName : x.raq[du.level - 1], r.his, r.racc, r.win < 0, r.mine, r.rq));
     var tort = drEl("div", "du-tort"), ch = drEl("i", ""), on = drEl("i", "");       // kuchlar tortishuvi: chap - siz, o'ng - raqib
     ch.style.cssText = "flex:" + Math.max(kr, 6) + ";background:rgb(" + DU_RGB[r.his] + ")";
     on.style.cssText = "flex:" + Math.max(km, 6) + ";background:rgb(" + DU_RGB[r.mine] + ")";

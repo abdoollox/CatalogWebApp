@@ -37,6 +37,9 @@
     chessV: { uz: "Chorshanba, 21:00", ru: "Среда, 21:00", en: "Wednesday, 21:00" },
     vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
     vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
+    dokon: { uz: "Do'kon", ru: "Лавка", en: "Shop" },
+    dokonS: { uz: "Jihoz va damlamalar", ru: "Снаряжение и зелья", en: "Gear and potions" },
+    dokonG: { uz: "%a galleon", ru: "%a галл.", en: "%a Galleons" },
     poyga: { uz: "Poyga", ru: "Гонка", en: "Race" },
     poygaS: { uz: "Dushanba, 21:00", ru: "Понедельник, 21:00", en: "Monday, 21:00" },
     kursda: { uz: "%d-kursda ochiladi", ru: "Откроется на %d-м курсе", en: "Unlocks in year %d" },
@@ -226,7 +229,8 @@
       { t: HT("g2"), k: [
         { key: "qoriq", kurs: 3, title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
         { key: "issiq", kurs: 3, title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
-        { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat }] },
+        { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat },
+        { key: "dokon", kurs: 2, title: HT("dokon"), sub: dkGalleon() != null ? HT("dokonG").replace("%a", dkGalleon()) : HT("dokonS"), go: dkOpen }] },
       { t: HT("g3"), k: [
         { key: "poyga", kurs: 4, title: HT("poyga"), sub: HT("poygaS"), go: pgOpen },
         { key: "chess", kurs: 4, title: HT("chess"), sub: HT("chessV"), go: openChessHub },
@@ -482,13 +486,14 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
     $("hub-set").classList.add("hidden");
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
+    try { dkLoad(function () { if (hubVisible()) { var el = document.querySelector('#hub-grid .hx[data-k="dokon"] small'); if (el && dkGalleon() != null && !el.getAttribute("data-q")) { el.textContent = HT("dokonG").replace("%a", dkGalleon()); } } }); } catch (e) {}      // do'kon: jihozlar holati (daqiqada bir), bosh sahifani qayta chizmaydi
     try { snLoad(); } catch (e) {}          // so'rovnoma kartasi (daqiqada bir martadan ko'p so'ramaydi, bosh sahifani qayta chizmaydi)
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
     try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)

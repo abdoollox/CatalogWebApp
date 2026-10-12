@@ -54,6 +54,7 @@
     "scr-duel": "du-back",
     "scr-vik": "vk-back",
     "scr-poyga": "pg-back",
+    "scr-dokon": "dk-back",
     "scr-xarid": "xr-back",
     "scr-astro": "yl-back",
     "scr-osimlik": "os-back",

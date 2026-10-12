@@ -171,7 +171,13 @@
     clearTimeout(pgTm);
     clearInterval(pgSoat);
     pgUchmoqda = true; pgTashladi = false; pgChiqN = -1;
-    uchPoyga({ urug: r.seed, halqa: r.rings, har: r.every, joy: qol < 0 ? (r.pos || 0) : 0, kut: Math.max(0, qol * 1000), otdi: Math.max(0, -qol * 1000),
+    var tezlik = qol >= 0 && dkDamlama("tezlik") > 0;            // do'kon: startdan katta tezlik
+    if (tezlik) {
+      if (!d.test) { dkPost({ use: "tezlik" }, function (res) { if (res && res.gear) { dkQabul(res); } }); }
+      setTimeout(function () { dkDamXabar("tezlik"); }, Math.max(0, qol * 1000) + 300);
+    }
+    if (dkDaraja("supurgi")) { dkXabar("supurgi", "supurgi", dkFoiz("supurgi", "speed")); }
+    uchPoyga({ gaz0: tezlik ? 0.8 : 0, urug: r.seed, halqa: r.rings, har: r.every, joy: qol < 0 ? (r.pos || 0) : 0, kut: Math.max(0, qol * 1000), otdi: Math.max(0, -qol * 1000),
       sarlavha: t.nom + (d.test ? " · SINOV" : ""), ost: t.ttl,
       nazorat: function (k, ms) { pgCps[k] = Math.round(ms); pgUchYubor(); },
       tugadi: function (nat) { pgOxPos = r.rings; pgUchmoqda = false; pgMarra = true; pgUchYubor(); pgKorsat(); },      // yo'l oxiri - natija sahifada kutiladi

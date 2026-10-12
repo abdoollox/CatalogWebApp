@@ -222,6 +222,7 @@
     else if (!natija) { holat.textContent = s.mine != null ? t.qabul : ""; }
     else if (men.out === s.n) { holat.textContent = s.mine == null ? t.ulgurmadi : t.xato; holat.classList.add("yomon"); }
     else if (men.alive && s.mine === s.c) { holat.textContent = t.togri; holat.classList.add("yaxshi"); }
+    else if (men.alive && men.saved === s.n) { holat.textContent = dkT().ishladi.feliks; holat.classList.add("yaxshi"); dkVaqt = 0; }      // do'kon: Feliks Felitsis
     else if (men.alive) { holat.textContent = t.bekor; }
     else { holat.textContent = t.chiqqan((men.out || 0) + 1); }
     var box = $("vk-g-a");

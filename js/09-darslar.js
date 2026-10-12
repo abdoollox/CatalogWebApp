@@ -552,7 +552,7 @@
     drQayt = false;
     qrLoad();
     drBahoSync();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -633,7 +633,7 @@
   function blHomeOpen(mode) {
     blhMode = mode === "rek" ? "rek" : "bell";
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     rekFan = null;
@@ -900,7 +900,7 @@
     if (kel) { blKel = kel; }
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -1037,6 +1037,7 @@
       else {
         var c = drData[b.fan].contest;
         box.appendChild(drEl("p", "dr-res-t", x.resT(x.sec(res.ms))));
+        if (res.shop && res.shop.forgiven) { dkDamXabar("diqqat"); dkVaqt = 0; }
         if (b.fan === "tarix" && typeof res.wrong === "number") { box.appendChild(drEl("small", "dr-res-s", x.trRes(b.answers.length - res.wrong, b.answers.length))); }
         box.appendChild(drEl("b", "dr-res-p", x.place(c.place, c.n)));
         if (res.best < res.ms) { box.appendChild(drEl("small", "dr-res-s", x.resBest(x.sec(res.best)))); }
@@ -1062,7 +1063,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     rekLoad(function () { if (fanId === id && !$("scr-fan").classList.contains("hidden")) { fanMore(); } });
@@ -1335,7 +1336,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { $(scr).classList.remove("natija"); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
     try { [].forEach.call(document.querySelectorAll(".fy-qanday"), function (b) { b.textContent = fyX().qanday; }); } catch (e) {}
@@ -1424,7 +1425,7 @@
   }
   function trStart(qs, bell, level, need, rek) {
     var x = drX();
-    tr = { qs: qs, i: 0, ok: 0, bell: !!bell, rek: !!rek, level: level, need: need || qs.length, lock: false };
+    tr = { qs: qs, i: 0, ok: 0, bell: !!bell, rek: !!rek, level: level, need: need || qs.length, lock: false, esl: bell ? 0 : dkDaraja("eslatgich") };
     if (qrYordam(["kalamush"], bell || rek).kalamush) { tr.need = Math.max(1, tr.need - 1); }
     if (bell) {
       drShowGame("scr-tarix");
@@ -1478,8 +1479,15 @@
     if (!tr.i) { ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = IMG_DIR + "binns/" + k + ".webp"; }); }
     trBinns("maslahat", bn.bosh);
     box.innerHTML = "";
+    // do'kon: eslatgich - birinchi tr.esl ta savolda bitta noto'g'ri javob o'chiriladi (to'g'ri javob ilovaga faqat darsda keladi)
+    var ochadi = -1;
+    if (tr.esl > 0 && tr.i < tr.esl && typeof q.c === "number" && q.a.length > 2) {
+      ochadi = (q.c + 1 + (tr.i * 7 + (tr.level || 0)) % (q.a.length - 1)) % q.a.length;
+      if (!tr.i) { dkXabar("eslatgich", "esl"); }
+    }
     q.a.forEach(function (matn, k) {
-      var b = drEl("button", "tr-o");
+      var b = drEl("button", "tr-o" + (k === ochadi ? " dk-och" : ""));
+      if (k === ochadi) { b.disabled = true; }
       b.appendChild(drEl("i", "", "ABCDEF".charAt(k)));
       b.appendChild(drEl("span", "", matn));
       b.type = "button";
@@ -1709,7 +1717,8 @@
     $("af-stage").classList.remove("hidden");
     $("af-show").textContent = x.afShow;
     var afY = qrYordam(["kalmar", "boutrakl"], af.bell || af.rek);
-    af.kx = afY.kalmar ? 1.25 : 1;
+    af.kx = (afY.kalmar ? 1.25 : 1) * (af.bell ? 1 : 1 + dkFoiz("qolqop", "candle") / 100);     // do'kon: duel qo'lqopi
+    if (!af.bell) { dkXabar("qolqop", "sham", dkFoiz("qolqop", "candle")); }
     af.bt = !!afY.boutrakl;
     if (af.mode === "zan") {     // bitta sham uchala afsunga (orasidagi tanaffuslar bilan)
       af.lim = Math.round((1800 + af.steps.reduce(function (a, q) { return a + afLim(q.id, af.n); }, 0)) * af.kx);
@@ -2335,7 +2344,8 @@
            errJami: 0, boom: 0, t0: 0, pct: 1, lim: 0, kayf: "maslahat", yopT: 0, tm: 0 };
     var ikY = qrYordam(["flobber", "salamandra"], ik.bell || ik.rek);
     if (ikY.flobber) { ik.bq = { chips: bq.chips, xato: bq.xato + 1, sek: bq.sek, yop: bq.yop }; bq = ik.bq; }
-    ik.lim = bq.sek ? Math.round((3 + IK[id].r.length * bq.sek) * 1000 * (ikY.salamandra ? 1.25 : 1)) : 0;
+    ik.lim = bq.sek ? Math.round((3 + IK[id].r.length * bq.sek) * 1000 * (ikY.salamandra ? 1.25 : 1) * (1 + dkFoiz("qozon", "candle") / 100)) : 0;      // do'kon: qozon
+    if (ik.lim && !ik.bell) { dkXabar("qozon", "sham", dkFoiz("qozon", "candle")); }
     drShowGame("scr-iksir");
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var i = new Image(); i.src = ikSnImg(k); });
     Object.keys(IK_M).forEach(function (m) { var i = new Image(); i.src = IMG_DIR + "masalliq/" + m + ".webp"; });      // tugmalar bo'sh chiqmasin
@@ -2597,7 +2607,7 @@
     var st = drData && drData.himoya, x = drX(), f = drFan("himoya");
     var plan = bell === "rek" ? hmRekPlan() : bell === true ? hmBellPlan(st && st.contest && st.contest.item) : hmPlan(n || 1);
     hmStop();
-    hm = { n: n || 1, bell: bell === true, rek: bell === "rek", waves: plan.waves, lim: plan.lim, opts: plan.opts, yangi: plan.yangi,
+    hm = { n: n || 1, bell: bell === true, rek: bell === "rek", waves: plan.waves, lim: bell === true ? plan.lim : Math.round(plan.lim * (1 + dkFoiz("mantiya", "danger") / 100)), opts: plan.opts, yangi: plan.yangi,
            i: 0, lives: 3, jon: 3, wrong: 0, late: 0, tSum: 0, t0: 0, tm: 0, lock: false };
     var hmY = qrYordam(["testral", "mushuk"], hm.bell || hm.rek);
     if (hm.rek) { hm.lives = hm.jon = 1; }
@@ -2654,7 +2664,7 @@
 
   // Navbatdagi xavf: rasm uzoqdan yaqinlashadi, sham yonadi, variantlar chiqadi
   function hmWave() {
-    if (hm.rek) { hm.lim = Math.max(1500, 5000 - hm.i * 110); hm.opts = hm.i >= 15 ? 6 : 4; }
+    if (hm.rek) { hm.lim = Math.round(Math.max(1500, 5000 - hm.i * 110) * (1 + dkFoiz("mantiya", "danger") / 100)); hm.opts = hm.i >= 15 ? 6 : 4; }
     var x = drX(), me = hm, id = hm.waves[hm.i], t = HM[id], box = $("hm-opts"), ids = [t.s], g = 0;
     var hammasi = HM_TARTIB.map(function (k) { return HM[k].s; });
     while (ids.length < hm.opts && g < 300) {
@@ -2804,7 +2814,8 @@
       objs.push({ t: "bld", d: objs[k].d + 0.5, x: Math.max(0.1, Math.min(0.9, (objs[k].x + objs[k + 1].x) / 2 + (afRnd(s0 + 600 + i) - 0.5) * 0.24)) });
     }
     if (bell || n >= 7) { objs.push({ t: "sn", d: 1.6 + Math.floor((0.4 + 0.35 * afRnd(s0 + 900)) * R) + 0.5, x: 0.3 + 0.4 * afRnd(s0 + 901), ph: afRnd(s0 + 902) * 6 }); }
-    return { objs: objs, R: R, len: 1.6 + R + 0.5, v0: mus || eski ? 0.62 : 0.5 + n * 0.008, rr: eski ? 0.13 : mus ? 0.115 : Math.max(0.1, 0.15 - n * 0.0014),
+    var supurgi = mus ? 1 + dkFoiz("supurgi", "speed") / 100 : 1;      // do'kon: supurgi musobaqada tezlik beradi (darsda emas - u yerda tezlik qiyinlik)
+    return { objs: objs, R: R, len: 1.6 + R + 0.5, v0: mus || eski ? 0.62 * supurgi : 0.5 + n * 0.008, rr: eski ? 0.13 : mus ? 0.115 : Math.max(0.1, 0.15 - n * 0.0014),
              gmax: mus && !rek ? UCH_GAZ.bell : UCH_GAZ.dars, eski: eski };
   }
   function uchStop() { if (uch) { uch.over = true; try { cancelAnimationFrame(uch.raf); } catch (e) {} } }
@@ -2832,6 +2843,7 @@
     $("uc-res").classList.add("hidden");
     $("uc-stage").classList.add("hidden");
     $("uc-intro").classList.toggle("hidden", uch.bell || uch.rek);
+    if (uch.bell && !uch.eski) { dkXabar("supurgi", "supurgi", dkFoiz("supurgi", "speed")); }
     if (uch.bell || uch.rek) { uchGo(); return; }
     $("uc-intro-t").textContent = x.ucIntro[uch.n === 1 ? 0 : uch.n === 4 ? 1 : uch.n === 7 ? 2 : 3];
     $("uc-go").textContent = x.ucGo;
@@ -2865,6 +2877,7 @@
     $("uc-today").textContent = "";
     $("uc-res").classList.add("hidden");
     uchGo();
+    if (o.gaz0) { uch.gaz = Math.min(uch.gmax, o.gaz0); }
     $("uc-stage").classList.add("pg");
     // Sanoq: hamma bir vaqtda boshlaydi. Sanoq paytida supurgi joyida turadi (boshqarsa bo'ladi).
     var me = uch, kut = Math.max(0, o.kut || 0), bosh = Date.now() + kut;

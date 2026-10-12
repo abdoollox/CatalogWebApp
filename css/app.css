@@ -3440,10 +3440,10 @@ button.du-bc:active{transform:scale(.98)}
 .sq-dj.d3{background:rgba(190,70,60,.65)}
 .sq-task.done .sq-dj{opacity:.5}
 /* VIKTORINA «Oxirgi sehrgar» */
-#scr-vik .kb-hdr,#scr-poyga .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-vik .kb-ttl,#scr-poyga .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-vik .kb-hdr,#scr-poyga .kb-hdr,#scr-dokon .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-vik .kb-ttl,#scr-poyga .kb-ttl,#scr-dokon .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
 #scr-vik .kb-ttl .cup-kick{color:#7ec8a0}
-#scr-vik .kb-ttl .cup-title,#scr-poyga .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-vik .kb-ttl .cup-title,#scr-poyga .kb-ttl .cup-title,#scr-dokon .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 .vk-hero .du-h-m small{color:#7ec8a0}
 .vk-qoida{margin-top:14px;padding:6px 16px 14px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
 .vk-q{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.09)}
@@ -3723,3 +3723,42 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .gl-h b{font:800 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#f3d58f}
 .gl-h span{flex:none;font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
 .gl-k .bl-row em{color:#f3d58f}
+/* DO'KON (js/09-dokon.js): jihozlar va damlamalar */
+.dk-ham{margin-top:6px;padding:16px;border-radius:20px;border:1px solid rgba(243,213,143,.4);background:linear-gradient(180deg,rgba(243,213,143,.1),rgba(255,255,255,.02));text-align:center}
+.dk-ham small{display:block;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.dk-ham b{display:block;margin-top:8px;font:600 34px/1 'Cormorant Garamond',serif;color:#f3d58f}
+.dk-ham p{margin:8px 0 0;font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.dk-bosh{display:flex;flex-direction:column;gap:5px;margin:22px 4px 2px}
+.dk-bosh b{font:800 11px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-hi)}
+.dk-bosh span{font:500 12px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.dk-k{margin-top:10px;padding:14px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.dk-k.bor{border-color:rgba(226,232,240,.34);background:rgba(226,232,240,.05)}
+.dk-k-t{display:flex;align-items:center;gap:12px}
+.dk-rasm{flex:none;width:68px;height:68px;border-radius:16px;overflow:hidden;background:#15131c;border:1px solid var(--line)}
+.dk-rasm img{display:block;width:100%;height:100%;object-fit:cover}
+.dk-k:not(.bor) .dk-rasm img{filter:saturate(.5) brightness(.75)}
+.dk-k-m{display:flex;flex-direction:column;gap:6px;min-width:0}
+.dk-k-m small{font:800 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.dk-k-m b{font:600 21px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.dk-k:not(.bor) .dk-k-m b{color:var(--dim)}
+.dk-k-m p{margin:0;font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.dk-pips{display:flex;gap:5px}
+.dk-pips i{width:22px;height:5px;border-radius:99px;background:rgba(255,255,255,.12)}
+.dk-pips i.on{background:var(--gold-hi)}
+.dk-ef{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04)}
+.dk-ef u{display:block;margin-bottom:5px;text-decoration:none;font:800 9.5px/1.2 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.dk-ef p{margin:3px 0 0;font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--text)}
+.dk-ef.kn{background:rgba(95,217,143,.07)}
+.dk-ef.kn u{color:#8ff0b6}
+.dk-btn{margin:12px 0 0;width:100%}
+.dk-btn.kam{opacity:.5}
+.dk-toliq{margin:12px 0 0;text-align:center;font:700 12px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.dk-d-p{display:flex;align-items:center;gap:8px;margin-top:12px}
+.dk-d-p .dk-btn{margin:0;flex:1;width:auto;min-width:0}
+.dk-soni{flex:none;font:700 12px/1 'Manrope',sans-serif;color:var(--dim)}
+.dk-d.bor .dk-soni{color:var(--text)}
+.dk-tg{flex:none;padding:8px 11px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--dim);font:700 11px/1 'Manrope',sans-serif;cursor:pointer}
+.dk-tg.on{border-color:rgba(95,217,143,.6);color:#8ff0b6;background:rgba(95,217,143,.08)}
+/* eslatgich o'chirgan javob (tarix darsi) */
+.tr-o.dk-och{opacity:.28;text-decoration:line-through}
+.dk-d-p .dk-btn{font-size:13px;white-space:nowrap;padding-left:10px;padding-right:10px}
