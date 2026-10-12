@@ -79,12 +79,13 @@
     if (yq) { return; }
     var o = document.createElement("div");
     o.className = "yq";
-    o.innerHTML = '<div class="yq-teshik"></div><div class="yq-qol"><svg viewBox="0 0 24 24" fill="#fff" stroke="#10141a" stroke-width="1.1" stroke-linejoin="round"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10l5.2 1.1A2.3 2.3 0 0 1 19 13.4l-.6 4.3A3.8 3.8 0 0 1 14.6 21h-2.9a3.8 3.8 0 0 1-3-1.5L5.3 15a1.4 1.4 0 0 1 2.1-1.8L9 14.6z"/></svg></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><p class="yq-m"></p></div></div>'
+    o.innerHTML = '<div class="yq-teshik"></div><div class="yq-qol"><svg viewBox="0 0 24 24" fill="#fff" stroke="#10141a" stroke-width="1.1" stroke-linejoin="round"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10l5.2 1.1A2.3 2.3 0 0 1 19 13.4l-.6 4.3A3.8 3.8 0 0 1 14.6 21h-2.9a3.8 3.8 0 0 1-3-1.5L5.3 15a1.4 1.4 0 0 1 2.1-1.8L9 14.6z"/></svg></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><b class="yq-s"></b><p class="yq-m"></p></div></div>'
       + '<div class="yq-btm"><span class="yq-n"></span><button type="button" class="yq-nx"></button></div></div>';
     document.body.appendChild(o);
-    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null, ekran: o2.ekran || "", onI: -1 };
-    o.querySelector(".yq-rasm").src = o2.rasm;
-    o.querySelector(".yq-kim").textContent = o2.kim;
+    yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null, ekran: o2.ekran || "", onI: -1, zamon: !!o2.zamon };
+    // zamon: kutubxona uchun zamonaviy ko'rinish (egasi, 2026-10-12) - qahramon va rasm yo'q, qadamda sarlavha (s), nuqtalar, ko'rsatkich
+    if (o2.zamon) { o.classList.add("zamon"); } else { o.querySelector(".yq-rasm").src = o2.rasm; }
+    o.querySelector(".yq-kim").textContent = o2.kim || "";
     o.querySelector(".yq-nx").onclick = function () { yqKeyingi(); };
     document.addEventListener("click", yqBosildi, true);
     yq.iv = setInterval(yqJoy, 200);
@@ -149,7 +150,12 @@
     tsh.style.left = (r.left - p) + "px"; tsh.style.top = (r.top - p) + "px";
     tsh.style.width = (r.width + p * 2) + "px"; tsh.style.height = (r.height + p * 2) + "px";
     o.querySelector(".yq-m").textContent = q.m || yqT(q.t);
-    o.querySelector(".yq-n").textContent = (yq.i + 1) + " / " + yq.q.length;
+    if (yq.zamon) {
+      var sv = o.querySelector(".yq-s"); sv.textContent = q.s || ""; sv.style.display = q.s ? "" : "none";
+      var nq0 = "";
+      for (var di = 0; di < yq.q.length; di++) { nq0 += '<i class="' + (di === yq.i ? "on" : di < yq.i ? "ot" : "") + '"></i>'; }
+      o.querySelector(".yq-n").innerHTML = nq0;
+    } else { o.querySelector(".yq-n").textContent = (yq.i + 1) + " / " + yq.q.length; }
     var nx = o.querySelector(".yq-nx");
     // «O'tkazib yuborish» yo'q (egasi, 2026-10-11). Yozish qadamida odam tiqilib qolmasin: 40 soniyadan keyin «Keyingi» ochiladi.
     if (yq.t0i !== yq.i) { yq.t0i = yq.i; yq.t0 = Date.now(); }
@@ -158,7 +164,7 @@
     nx.disabled = !!q.tap || (!!q.kut && !ochiq);
     // Bosiladigan joyga barmoq ishorasi
     var qol = o.querySelector(".yq-qol");
-    qol.style.display = q.tap || q.kut ? "block" : "none";
+    qol.style.display = (q.tap || q.kut) && !q.qolsiz ? "block" : "none";      // qolsiz - o'zi kutiladigan ish (masalan, film yuborilishi)
     var nq = null;
     if (q.nuqta) { try { nq = q.nuqta(); } catch (x1) {} }
     qol.style.left = (nq ? nq[0] - 6 : r.left + r.width / 2 - 6) + "px";
@@ -166,7 +172,14 @@
     box.style.left = Math.max(12, Math.min(vw - box.offsetWidth - 12, r.left + r.width / 2 - box.offsetWidth / 2)) + "px";
     var past = r.bottom + p + 12, tepa = r.top - p - 12 - box.offsetHeight;
     // sig'masa (masalan, katta o'yin maydoni) - ko'proq joy qolgan tomonda, ekran chetida turadi
-    box.style.top = (past + box.offsetHeight < vh - 8 ? past : tepa >= 8 ? tepa : vh - r.bottom > r.top ? vh - box.offsetHeight - 8 : 8) + "px";
+    var bt = past + box.offsetHeight < vh - 8 ? past : tepa >= 8 ? tepa : vh - r.bottom > r.top ? vh - box.offsetHeight - 8 : 8;
+    box.style.top = bt + "px";
+    // zamonaviy ko'rinishda oyna chetidagi uchburchak element tomonga qaraydi (oyna element ustiga tushsa - yo'q)
+    if (yq.zamon) {
+      var bl = parseFloat(box.style.left) || 0;
+      box.classList.toggle("ost", bt >= r.bottom); box.classList.toggle("ust", bt + box.offsetHeight <= r.top);
+      box.style.setProperty("--ul", Math.max(22, Math.min(box.offsetWidth - 22, r.left + r.width / 2 - bl)) + "px");
+    }
   }
 
   /* KURS YO'RIQNOMASI (egasi, 2026-10-11: «2-kursga o'tgandan keyin ham onboarding davom etsin - nima yangi qo'shilsa birin-ketin
