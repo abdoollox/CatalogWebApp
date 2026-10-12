@@ -176,6 +176,7 @@
     var box = $("sht-cup"), d = shtData, t = shtT();
     if (!box) { return; }
     box.innerHTML = "";
+    golibQoy("sht-golib", d && d.champs);                  // so'nggi turnir g'oliblari (o'rin va ball)
     var c = d && d.cup, tr = d && d.tour;
     if (!c) { return; }
     if (c.size == null) {

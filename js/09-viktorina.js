@@ -205,7 +205,8 @@
     sv.appendChild(qator);
     sv.appendChild(drEl("p", "", t.yaxshi(r.good || 5, r.good_pts || 5)));
     q.appendChild(sv);
-    if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
+    var gk = golibKarta(d.champs);                // so'nggi viktorina g'oliblari: o'rin va ball (keyingisigacha turadi)
+    if (gk) { q.appendChild(gk); } else if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
   }
 
   /* O'yin: savol, to'rt variant, vaqt chizig'i; natija - to'g'ri javob yashil, xato qizil */

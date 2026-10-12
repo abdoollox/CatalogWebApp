@@ -356,6 +356,41 @@
 
   function drX() { return DR_TX[lang] || DR_TX.uz; }
   function drInit() { try { return (tg && tg.initData) || ""; } catch (e) { return ""; } }
+  /* TURNIR G'OLIBLARI KARTASI (egasi, 2026-10-12: o'quvchilar so'radi - g'oliblar hafta davomida turnir sahifasida tursin, o'rni va bali bilan).
+     To'rt turnir sahifasida bir xil: poyga, shaxmat, viktorina, duel. ch = server javobidagi `champs`: {n, ts, top: [{uid, name, house, place, points, me}]} */
+  var GL_T = {
+    uz: { t: "So'nggi g'oliblar", n: function (n) { return n + " ishtirokchi"; }, ball: function (p) { return "+" + p + " ball"; }, siz: "siz" },
+    ru: { t: "Прошлые победители", n: function (n) { return "участников: " + n; }, ball: function (p) { return "+" + p + " очк."; }, siz: "вы" },
+    en: { t: "Last winners", n: function (n) { return n + " players"; }, ball: function (p) { return "+" + p + " pts"; }, siz: "you" }
+  };
+  function golibKarta(ch) {
+    if (!ch || !ch.top || !ch.top.length) { return null; }
+    var t = GL_T[lang] || GL_T.uz, box = drEl("div", "gl-k"), bosh = drEl("div", "gl-h"), sana = new Date(((ch.ts || 0) + 5 * 3600) * 1000);
+    var kun = sana.getUTCDate(), oy = sana.getUTCMonth() + 1;
+    bosh.appendChild(drEl("b", "", t.t));
+    bosh.appendChild(drEl("span", "", (ch.ts ? (kun < 10 ? "0" : "") + kun + "." + (oy < 10 ? "0" : "") + oy + " · " : "") + t.n(ch.n || 0)));
+    box.appendChild(bosh);
+    var list = drEl("div", "bl-list");
+    ch.top.forEach(function (p) {
+      var row = drEl("div", "bl-row" + (p.me ? " me" : ""));
+      row.appendChild(drEl("i", "o" + p.place, String(p.place)));
+      var c2 = drEl("span", "bl-cr"), im = cupCrestImg(p.house, 18);
+      if (im) { c2.appendChild(im); }
+      row.appendChild(c2);
+      row.appendChild(drEl("b", "", p.name + (p.me ? " (" + t.siz + ")" : "")));
+      row.appendChild(drEl("em", "", p.points > 0 ? t.ball(p.points) : ""));
+      list.appendChild(odamLink(row, p));
+    });
+    box.appendChild(list);
+    return box;
+  }
+  function golibQoy(id, ch) {
+    var el = $(id);
+    if (!el) { return; }
+    el.innerHTML = "";
+    var k = golibKarta(ch);
+    if (k) { el.appendChild(k); }
+  }
   function drFan(id) { for (var i = 0; i < DR_FANLAR.length; i++) { if (DR_FANLAR[i].id === id) { return DR_FANLAR[i]; } } return null; }
   function drEl(tag, cls, text) {
     var el = document.createElement(tag);

@@ -318,7 +318,8 @@
     sv.appendChild(qator);
     sv.appendChild(drEl("p", "", t.keyinP(r.next_to || 6, r.next_pts || 5)));
     q.appendChild(sv);
-    if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
+    var gk = golibKarta(d.champs);                // so'nggi poyga g'oliblari: o'rin va ball (keyingi poygagacha turadi)
+    if (gk) { q.appendChild(gk); } else if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
     // Faqat adminga: sinov poygasi - kompyuter uchuvchilar bilan haqiqiy poyga oqimi (ballsiz)
     if (d.can_test && !zal) {
       var sb = drEl("button", "pg-mashq pg-sinov");

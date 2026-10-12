@@ -577,6 +577,7 @@
   function duCup() {
     var x = duX(), t = duT(), box = $("du-cup"), c = duData && duData.cup, tr = duData && duData.tour;
     box.innerHTML = "";
+    golibQoy("du-golib", duData && duData.champs);        // so'nggi turnir g'oliblari (o'rin va ball)
     if (!c) { return; }
     if (c.from) { box.appendChild(drEl("p", "du-cup-n", t.from)); return; }
     if (c.size == null) {                               // to'r hali tuzilmagan: yozilganlar ro'yxati (reyting bo'yicha)
