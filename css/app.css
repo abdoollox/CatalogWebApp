@@ -782,7 +782,7 @@ button.glass:active .tube{transform:scale(.97)}
    Film yuborilgani shu yerda ko'rsatiladi. Tasdiq oynasi o'rniga
    "bekor qilish" ishlatiladi: to'g'ri bosgan odam to'siqni sezmaydi. */
 .notes{
-  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+  position:fixed;left:50%;bottom:calc(26px + var(--sab));transform:translateX(-50%);
   z-index:1200;display:flex;flex-direction:column;gap:9px;
   align-items:center;width:max-content;max-width:88%;
   pointer-events:none;
@@ -868,7 +868,7 @@ button.glass:active .tube{transform:scale(.97)}
 .cm-err{font-size:12px;color:#ff8a8a;margin:4px 6px 0}
 .chat-down{position:absolute;right:4px;bottom:12px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:20px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center}
 .chat-down b{position:absolute;top:-7px;left:50%;transform:translateX(-50%);min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);font-size:11px;line-height:20px;text-align:center}
-.chat-form{display:flex;align-items:flex-end;gap:10px;padding:10px 0 calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--bg)}
+.chat-form{display:flex;align-items:flex-end;gap:10px;padding:10px 0 calc(12px + var(--sab));border-top:1px solid var(--line);background:var(--bg)}
 .chat-form textarea{flex:1;resize:none;max-height:120px;padding:11px 16px;border-radius:21px;border:1px solid var(--line);background:var(--card);color:var(--text);outline:none;font:15px/1.35 'Manrope',system-ui,sans-serif}
 .chat-send{background:var(--me-bg,var(--accent));color:var(--me-ink,#fff);border:none;border-radius:50%;width:44px;height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:opacity .15s}
 .chat-send:disabled{opacity:.45}
@@ -944,7 +944,7 @@ button.glass:active .tube{transform:scale(.97)}
 .chat-dots i:nth-child(2){animation-delay:.2s}
 .chat-dots i:nth-child(3){animation-delay:.4s}
 @keyframes chatDot{0%,60%,100%{opacity:.25}30%{opacity:1}}
-.chat-banned{padding:14px 4px calc(14px + env(safe-area-inset-bottom));text-align:center;color:var(--dim);font-size:13.5px;line-height:1.4}
+.chat-banned{padding:14px 4px calc(14px + var(--sab));text-align:center;color:var(--dim);font-size:13.5px;line-height:1.4}
 /* a'zolar ro'yxati va shaxsiy suhbatlar */
 .chat-head{cursor:pointer}
 .chat-tabs .chat-tab{padding-left:4px;padding-right:4px;white-space:nowrap}
@@ -955,7 +955,7 @@ button.glass:active .tube{transform:scale(.97)}
 .chat-people-f{display:flex;gap:6px;overflow-x:auto;padding:10px 0 2px;flex:none}
 .chat-people-f button{flex:none;padding:6px 11px;border-radius:16px;border:1px solid var(--line);background:transparent;color:var(--dim);font:600 12.5px 'Manrope',sans-serif;cursor:pointer;white-space:nowrap}
 .chat-people-f button.on{background:var(--card);color:var(--text);border-color:currentColor}
-.chat-people-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 0 calc(16px + env(safe-area-inset-bottom))}
+.chat-people-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:6px 0 calc(16px + var(--sab))}
 .pp{display:flex;align-items:center;gap:12px;width:100%;padding:10px 4px;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;font:inherit;cursor:pointer}
 .pp-av{position:relative;flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(var(--pp-rgb,151,161,174),.16)}
 .pp-av.on::after{content:"";position:absolute;right:0;bottom:1px;width:11px;height:11px;border-radius:50%;background:#4cd964;border:2px solid var(--bg)}
@@ -971,7 +971,7 @@ button.glass:active .tube{transform:scale(.97)}
 .chat-people-f,.chat-at{scrollbar-width:none}
 .chat-people-f::-webkit-scrollbar,.chat-at::-webkit-scrollbar{display:none}
 /* shaxsiy xabar sozlamalari va bloklar */
-.chat-sheet{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));animation:cmPop .16s ease both}
+.chat-sheet{position:absolute;left:12px;right:12px;bottom:calc(12px + var(--sab));animation:cmPop .16s ease both}
 .chat-sheet-t{padding:14px 16px 4px;font-weight:700;font-size:15px;color:var(--text)}
 .chat-sheet-n{padding:2px 16px 12px;font-size:12.5px;color:var(--dim);line-height:1.4}
 .chat-sheet-t+button,.chat-sheet-n+button,.chat-sheet-h+button{border-top:1px solid var(--line)!important}
@@ -1314,7 +1314,7 @@ button.glass:active .tube{transform:scale(.97)}
 
 /* mini pleyer — kutubxona va albom sahifasida pastda turadi */
 .mp{
-  position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:900;
+  position:fixed;left:50%;bottom:calc(10px + var(--sab));transform:translateX(-50%);z-index:900;
   width:calc(100% - 20px);max-width:420px;display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:2px;
   padding:8px 6px 8px 8px;border-radius:16px;overflow:hidden;
   background:rgba(22,27,35,.92);box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 0 0 1px rgba(var(--gold-rgb),.28);
@@ -1332,7 +1332,7 @@ button.glass:active .tube{transform:scale(.97)}
 .mp-btn.pp{color:var(--gold)}
 .mp-btn:active{transform:scale(.88)}
 body.mp-on .shell{padding-bottom:96px}
-body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
+body.mp-on .notes{bottom:calc(84px + var(--sab))}
 /* ==/MS== */
 /* --- SEHRLI OLAM: to'liq ekranli xarita --- */
 #scr-world{position:fixed;inset:0;z-index:40;overflow:hidden;background:#0b0e13}
@@ -1384,7 +1384,7 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 .w-sheet{position:absolute;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(8,10,14,.55)}
 .w-sheet-box{
   width:100%;max-width:440px;box-sizing:border-box;
-  padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  padding:20px 18px calc(20px + var(--sab));
   border-radius:20px 20px 0 0;background:#f6ecd2;color:#2b1d12;
   box-shadow:0 -20px 40px rgba(20,12,4,.45);animation:wSheetUp .22s ease both;
 }
@@ -1473,7 +1473,7 @@ body.mp-on .notes{bottom:calc(84px + env(safe-area-inset-bottom))}
 
 .hub-sheet{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,8,11,.62)}
 .hub-sheet-box{
-  width:100%;max-width:440px;box-sizing:border-box;padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  width:100%;max-width:440px;box-sizing:border-box;padding:20px 18px calc(20px + var(--sab));
   border-radius:20px 20px 0 0;background:#141920;border-top:1px solid rgba(var(--gold-rgb),.35);
   box-shadow:0 -20px 40px rgba(0,0,0,.5);animation:wSheetUp .22s ease both;
   max-height:100%;overflow-y:auto;overscroll-behavior:contain;
@@ -2255,7 +2255,7 @@ body.kr-on .mp{display:none!important}
 .kr-pages{display:flex;flex-direction:column;gap:6px;min-width:100%}
 .kr-p{position:relative;width:100%;height:0;background:#efe9dc}
 .kr-p canvas{position:absolute;left:0;top:0;display:block;width:100%;height:100%}
-.kr-bar{position:sticky;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;display:flex;align-items:center;gap:12px;
+.kr-bar{position:sticky;bottom:calc(12px + var(--sab));z-index:6;display:flex;align-items:center;gap:12px;
   margin-top:-62px;padding:12px 16px;border-radius:99px;background:rgba(16,19,26,.95);border:1px solid rgba(var(--gold-rgb),.3);
   box-shadow:0 10px 26px rgba(0,0,0,.5)}
 .kr-bar input{flex:1 1 auto;min-width:0;accent-color:var(--gold)}
@@ -3318,7 +3318,7 @@ button.du-bc:active{transform:scale(.98)}
 .du-info-h{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px 20px;border-bottom:1px solid var(--line)}
 .du-info-h b{font:600 23px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
 .du-info-h button{width:34px;height:34px;padding:0;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);font:400 21px/1 'Manrope',sans-serif;cursor:pointer}
-.du-info-b{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 18px calc(22px + env(safe-area-inset-bottom))}
+.du-info-b{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 18px calc(22px + var(--sab))}
 .du-info-q{display:flex;gap:12px;padding:13px 0;border-bottom:1px dashed rgba(255,255,255,.09)}
 .du-info-q:last-child{border-bottom:0}
 .du-info-q u{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(226,232,240,.13);color:var(--gold-hi);font:800 11.5px/1 'Manrope',sans-serif;text-decoration:none}
@@ -3494,6 +3494,12 @@ button.du-bc:active{transform:scale(.98)}
 .hub-dost-n{flex:none;min-width:22px;padding:4px 7px;border-radius:99px;background:var(--gold);color:var(--gold-ink);font:800 11px/1 'Manrope',sans-serif;font-style:normal;text-align:center}
 /* TO'LIQ EKRAN (Telegram 8.0+, faqat telefonda): tepada Telegram tugmalari va telefon «qoshi» uchun joy */
 :root{--fs:calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px))}
+/* PASTKI XAVFSIZ CHEGARA (2026-10-12: Android'da to'liq ekranda telefonning pastki tugmalari chat yozish maydonini to'sib qo'ygan):
+   to'liq ekranda brauzerning o'z qiymati (env) nol bo'ladi - Telegram bergan qiymat ham hisobga olinadi. Pastga yopishadigan
+   har narsada env(safe-area-inset-bottom) EMAS, var(--sab) ishlating. */
+:root{--sab:max(env(safe-area-inset-bottom, 0px), calc(var(--tg-safe-area-inset-bottom, 0px) + var(--tg-content-safe-area-inset-bottom, 0px)))}
+body.tg-fs{padding-bottom:var(--sab)}
+body.tg-fs .od-page,body.tg-fs .lt{border-bottom:var(--sab) solid transparent}
 body.tg-fs{padding-top:var(--fs)}
 body.tg-fs #scr-chat{top:var(--fs);height:calc(var(--tg-viewport-height,100vh) - var(--fs))}
 body.tg-fs #scr-world,body.tg-fs .od-page{top:var(--fs)}
@@ -3538,7 +3544,7 @@ div.hub-kurs-s + .hub-kurs-f{margin-top:10px}
 .hub-kurs p{margin:12px 0 14px;font:500 12.5px/1.45 'Manrope',sans-serif;color:var(--dim)}
 /* KURS TABRIGI (kursTabrik, js/09-sehrli-olam.js): muhr, pog'onalar, Makgonagall, ochilgan xonalar. Rang - --gold (saralanganda fakultet rangi) */
 .kurs-tb .du-info-p{max-height:calc(100vh - 14px - var(--fs,0px));border-radius:24px 24px 0 0;overflow:hidden;background:radial-gradient(120% 60% at 50% 0%,rgba(var(--gold-rgb),.16),transparent 60%),#15181f}
-.ktb{position:relative;min-height:0;display:flex;flex-direction:column;align-items:center;gap:0;padding:26px 22px calc(24px + env(safe-area-inset-bottom));text-align:center;overflow-y:auto}
+.ktb{position:relative;min-height:0;display:flex;flex-direction:column;align-items:center;gap:0;padding:26px 22px calc(24px + var(--sab));text-align:center;overflow-y:auto}
 .ktb-uq{position:absolute;left:0;right:0;top:0;height:220px;pointer-events:none;overflow:hidden}
 .ktb-uq i{position:absolute;top:-10px;width:5px;height:5px;border-radius:50%;background:var(--gold-hi);box-shadow:0 0 8px rgba(var(--gold-rgb),.9);opacity:0;animation:ktbUq 3s ease-in infinite}
 @keyframes ktbUq{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(210px) scale(1);opacity:0}}
