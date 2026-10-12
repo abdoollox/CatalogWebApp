@@ -98,7 +98,7 @@
           hmLpB: ["Hechqisi yo'q. Shokolad yeng va qaytadan urinib ko'ring.", "Hali tayyor emassiz, lekin buni o'rgansa bo'ladi. Yana bir marta.", "Qoniqarli. Xavf oldida o'zingizni yo'qotmadingiz.", "Juda yaxshi! Tezligingiz oshyapti.", "A'lo! Bunday himoyani kam ko'rganman."],
           ucStep: function (a, b) { return "Halqa " + a + " / " + b; }, ucGo: "Uchish!", ucHint: "Barmog'ingizni o'ngga-chapga suring",
           ucIntro: ["Supurgini barmog'ingiz bilan o'ngga-chapga boshqaring va oltin halqalardan o'ting. Halqaning qanchalik O'RTASIDAN o'tsangiz, supurgi shunchalik tezlashadi.", "Bugun maydonda bladjerlar bor. Ularga urilmang — uchta zarbadan keyin dars tugaydi.", "Oltin Snitch ham uchib o'tadi. Tutib olsangiz, bahoyingiz oshadi.", "Supurgiga! Halqalar torayib, tezlik oshib boradi."],
-          ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucAniq: ["Chetidan o'tdingiz — tezlik kam qo'shildi", "Yaxshi! O'rtaga yaqinroq uching", "Aniq o'rtasidan — tezlashdingiz!"], ucSnT: "Snitch tutildi — katta tezlik!", pgSanoq: function (n) { return "Tayyorlaning… " + n; }, pgUch: "Uchdik! Halqalarning o'rtasidan o'ting", ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
+          ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucAniq: ["Chetidan o'tdingiz — tezlik kam qo'shildi", "Yaxshi! O'rtaga yaqinroq uching", "Aniq o'rtasidan — tezlashdingiz!"], ucSnT: "Snitch tutildi — katta tezlik!", pgSanoq: function (n) { return "Tayyorlaning… " + n; }, pgUch: "Uchdik! Halqalarning o'rtasidan o'ting", pgHalqa: function (n) { return n + " halqa"; }, ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
           ucStat: function (a, b, z, sn) { return "Halqalar: " + a + " / " + b + " · Zarba: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Supurgidan tushing. Avval yerda mashq qilamiz.", "Hali erta. Halqalarga qarang, osmonga emas!", "Qoniqarli. Supurgi sizni tinglay boshladi.", "Yaxshi uchdingiz! Qo'lingiz mustahkam.", "A'lo! Sizdan zo'r izlovchi chiqadi."],
           mxStep: function (a, b) { return "Juftlik " + a + " / " + b; }, mxGo: "Boshlash", mxHint: "Maxluqni o'z yemishi bilan juftlang", mxPeek: "Kartalarni eslab qoling…",
@@ -196,7 +196,7 @@
           hmLpB: ["Ничего страшного. Съешьте шоколад и попробуйте снова.", "Вы пока не готовы, но этому можно научиться. Ещё раз.", "Удовлетворительно. Вы не растерялись перед опасностью.", "Очень хорошо! Вы становитесь быстрее.", "Превосходно! Такую защиту я вижу редко."],
           ucStep: function (a, b) { return "Кольцо " + a + " / " + b; }, ucGo: "В полёт!", ucHint: "Ведите пальцем влево и вправо",
           ucIntro: ["Управляйте метлой пальцем влево-вправо и пролетайте через золотые кольца. Чем ближе к ЦЕНТРУ кольца — тем сильнее ускоряется метла.", "Сегодня на поле бладжеры. Не сталкивайтесь с ними — после трёх ударов урок окончен.", "Мимо пролетит золотой снитч. Поймаете — оценка будет выше.", "На метлу! Кольца сужаются, скорость растёт."],
-          ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucAniq: ["По краю — скорости прибавилось мало", "Хорошо! Держитесь ближе к центру", "Точно в центр — ускорение!"], ucSnT: "Снитч пойман — большое ускорение!", pgSanoq: function (n) { return "Приготовьтесь… " + n; }, pgUch: "Полетели! Цельтесь в центр колец", ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
+          ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucAniq: ["По краю — скорости прибавилось мало", "Хорошо! Держитесь ближе к центру", "Точно в центр — ускорение!"], ucSnT: "Снитч пойман — большое ускорение!", pgSanoq: function (n) { return "Приготовьтесь… " + n; }, pgUch: "Полетели! Цельтесь в центр колец", pgHalqa: function (n) { return "Колец: " + n; }, ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
           ucStat: function (a, b, z, sn) { return "Кольца: " + a + " / " + b + " · Ударов: " + z + (sn ? " · Снитч" : ""); },
           ucXcB: ["Слезайте с метлы. Сначала потренируемся на земле.", "Рано. Смотрите на кольца, а не в небо!", "Удовлетворительно. Метла начинает вас слушаться.", "Хороший полёт! Твёрдая рука.", "Превосходно! Из вас выйдет отличный ловец."],
           mxStep: function (a, b) { return "Пара " + a + " / " + b; }, mxGo: "Начать", mxHint: "Подберите существу его корм", mxPeek: "Запоминайте карты…",
@@ -295,7 +295,7 @@
           hmLpB: ["Never mind. Eat some chocolate and try again.", "You are not ready yet, but this can be learnt. Once more.", "Acceptable. You kept your head in the face of danger.", "Very good! You are getting quicker.", "Outstanding! I rarely see a defence like that."],
           ucStep: function (a, b) { return "Hoop " + a + " / " + b; }, ucGo: "Take off!", ucHint: "Slide your finger left and right",
           ucIntro: ["Steer the broom left and right with your finger and fly through the golden hoops. The closer to the CENTRE of a hoop you pass, the faster your broom goes.", "There are Bludgers on the pitch today. Don't hit them — three knocks and the lesson is over.", "The Golden Snitch will fly past too. Catch it and your grade goes up.", "Mount your broom! The hoops get narrower and the pace quicker."],
-          ucOk: ["Good!", "That's it!", "Splendid!"], ucAniq: ["Through the edge — little speed gained", "Good! Aim closer to the centre", "Dead centre — speeding up!"], ucSnT: "Snitch caught — big boost!", pgSanoq: function (n) { return "Get ready… " + n; }, pgUch: "Go! Aim for the centre of the hoops", ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
+          ucOk: ["Good!", "That's it!", "Splendid!"], ucAniq: ["Through the edge — little speed gained", "Good! Aim closer to the centre", "Dead centre — speeding up!"], ucSnT: "Snitch caught — big boost!", pgSanoq: function (n) { return "Get ready… " + n; }, pgUch: "Go! Aim for the centre of the hoops", pgHalqa: function (n) { return n + " hoops"; }, ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
           ucStat: function (a, b, z, sn) { return "Hoops: " + a + " / " + b + " · Knocks: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Off the broom. We'll practise on the ground first.", "Too soon. Eyes on the hoops, not the sky!", "Acceptable. The broom is starting to listen to you.", "Good flying! A steady hand.", "Outstanding! You'd make a fine Seeker."],
           mxStep: function (a, b) { return "Pair " + a + " / " + b; }, mxGo: "Begin", mxHint: "Match each creature with its food", mxPeek: "Memorise the cards…",
@@ -2744,18 +2744,18 @@
   // 12-oktabr bellashuvi eski qoidada boshlangan (9 kishi qatnashgan) - o'sha kun oxirigacha eski yo'l va eski tezlik (adolat uchun).
   // Bu funksiya va `eski` tarmoqlari 13-oktabrdan keyin kerak emas - o'chirsa bo'ladi.
   function uchEskiKun() { try { return new Date(Date.now() + 5 * 3600000).toISOString().slice(0, 10) < "2026-10-13"; } catch (e) { return false; } }
-  function uchPlan(n, urug, rek, poyga) {
+  function uchPlan(n, urug, rek, poyga, uzun) {
     var bell = urug != null, pg = poyga || 0, eski = bell && !pg && !rek && uchEskiKun(), mus = (bell || !!poyga) && !eski;
     var s0 = rek ? Math.floor(Math.random() * 90000) : bell ? urug : n * 71;
-    var R = rek ? 300 : eski ? 14 : pg ? 22 + pg * 4 : bell ? 24 : 10 + Math.floor((n - 1) / 3);
-    var bld = rek ? 70 : eski ? 5 : pg ? 6 + pg * 2 : bell ? 7 : n < 4 ? 0 : Math.min(8, 1 + Math.floor((n - 4) / 4));
+    var R = uzun ? uzun : rek ? 300 : eski ? 14 : pg ? 22 + pg * 4 : bell ? 24 : 10 + Math.floor((n - 1) / 3);
+    var bld = uzun ? Math.round(uzun / 3.6) : rek ? 70 : eski ? 5 : pg ? 6 + pg * 2 : bell ? 7 : n < 4 ? 0 : Math.min(8, 1 + Math.floor((n - 4) / 4));
     var qadam = rek ? 0.4 : eski ? 0.42 : mus ? 0.5 : Math.min(0.5, 0.26 + n * 0.008);
     var objs = [], x = 0.5, i, k;
     for (i = 0; i < R; i++) {
       x = Math.max(0.12, Math.min(0.88, x + (afRnd(s0 + i * 3) - 0.5) * 2 * qadam));
       var o = { t: "ring", d: 1.6 + i, x: x };
       // suriluvchi halqalar: faqat musobaqada, boshidagi bir nechtasi tinch
-      if (mus && !rek && i >= 6 && afRnd(s0 + 700 + i * 5) < 0.3 + pg * 0.08) {
+      if (mus && !rek && i >= 6 && afRnd(s0 + 700 + i * 5) < 0.3 + pg * 0.08 + (uzun ? Math.min(0.3, i * 0.004) : 0)) {
         o.mv = 0.09 + 0.07 * afRnd(s0 + 701 + i * 5); o.ph = afRnd(s0 + 702 + i * 5) * 6;
         o.x = Math.max(0.12 + o.mv, Math.min(0.88 - o.mv, o.x));
       }
@@ -2800,16 +2800,23 @@
     uchKayf("maslahat");
   }
 
-  /* POYGA REJIMI (dushanba turniri va uning mashqi - js/09-poyga.js): yo'l urug'i va bosqich tashqaridan keladi, jon yo'q,
-     xatolar sanaladi (uch.px - har biri +3 s), vaqt ilovada o'lchanadi. o = {urug, bosqich (1..3), sarlavha, ost, kut (ms - sanoq),
-     tugadi: function ({ms, xato, pass, R, snitch}), ortga: function ()}. */
+  /* POYGA REJIMI (dushanba turniri va uning mashqi - js/09-poyga.js): uzun yo'l (o.halqa ta halqa), jon yo'q, xato - tezlik yo'qotish.
+     o = {urug, halqa, har (nazorat oralig'i), joy (qaysi halqadan davom etadi), kut (ms - sanoq), otdi (ms - start allaqachon o'tgan bo'lsa),
+     sarlavha, ost, mashq, nazorat: function (k, ms) - har `har` halqada, tugadi: function ({ms, ...}) - yo'l oxirida, ortga: function ()}.
+     Jonli o'rinlar paneli: uchPoygaTaxta(info); tashqaridan to'xtatish: uchPoygaToxta(). */
   function uchPoyga(o) {
-    var x = drX(), plan = uchPlan(1, o.urug, false, Math.max(1, Math.min(3, o.bosqich || 1)));
+    var x = drX(), plan = uchPlan(1, o.urug, false, 2, Math.max(10, o.halqa || 30));
     uchStop();
     uch = { n: 1, bell: false, rek: false, poyga: o, px: 0, objs: plan.objs, R: plan.R, len: plan.len, v0: plan.v0, rr: plan.rr,
             gaz: 0, gmax: plan.gmax, aniq: 0, eski: false,
             dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
             ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1, t0: 0 };
+    // poygaga qayta kirgan (sahifadan chiqib qaytgan): to'xtagan halqasidan davom etadi
+    var joy = Math.max(0, Math.min(plan.R - 1, o.joy || 0));
+    if (joy > 0) {
+      uch.dist = 0.4 + joy; uch.seen = joy; uch.pass = joy;
+      uch.objs.forEach(function (ob) { if (ob.d <= uch.dist) { ob.done = true; ob.ok = ob.t === "ring"; } });
+    }
     drShowGame("scr-uchish");
     var uy = "gryffindor";
     try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {}
@@ -2820,6 +2827,8 @@
     $("uc-today").textContent = "";
     $("uc-res").classList.add("hidden");
     uchGo();
+    $("uc-stage").classList.add("pg");
+    uchPoygaTaxta(null);
     // Sanoq: hamma bir vaqtda boshlaydi. Sanoq paytida supurgi joyida turadi (boshqarsa bo'ladi).
     var me = uch, kut = Math.max(0, o.kut || 0), bosh = Date.now() + kut;
     if (kut > 150) {
@@ -2827,18 +2836,39 @@
       var sanoq = function () {
         if (uch !== me || uch.over) { return; }
         var qol = bosh - Date.now();
-        if (qol <= 0) { uch.yoriq = false; uch.t0 = Date.now(); $("uc-hint").textContent = x.pgUch; return; }
-        $("uc-hint").textContent = x.pgSanoq(Math.ceil(qol / 1000));
+        if (qol <= 0) { uch.yoriq = false; uch.t0 = Date.now(); $("uc-pg-h").textContent = x.pgUch; return; }
+        $("uc-pg-h").textContent = x.pgSanoq(Math.ceil(qol / 1000));
         setTimeout(sanoq, Math.min(200, qol));
       };
       sanoq();
-    } else { uch.t0 = Date.now(); }
+    } else { uch.t0 = Date.now() - Math.max(0, o.otdi || 0); }
+  }
+  // Poyga paytida nechta halqadan o'tilgan (js/09-poyga.js serverga aytib turadi)
+  function uchPoygaPos() { return uch && uch.poyga ? uch.seen : 0; }
+  function uchPoygaToxta() { if (uch && uch.poyga) { uchStop(); uch = null; } }
+  /* Poyga paneli (uchish ostida): o'z o'rni, nazoratgacha qolgan halqalar va yaqin raqiblar.
+     info = {orin, tirik, qoldi (nazoratgacha halqa), oxirgi (men oxirgimanmi), qator: [{n, ism, pos, men, oxir}], matn} yoki null */
+  function uchPoygaTaxta(info) {
+    var bosh = $("uc-pg-h"), list = $("uc-pg-l");
+    if (!bosh) { return; }
+    list.innerHTML = "";
+    if (!info) { bosh.textContent = ""; bosh.classList.remove("xavf"); return; }
+    if (!(uch && uch.yoriq)) { bosh.textContent = info.matn || ""; }
+    bosh.classList.toggle("xavf", !!info.oxirgi);
+    (info.qator || []).forEach(function (q) {
+      var r = drEl("div", "uc-pg-r" + (q.men ? " men" : "") + (q.oxir ? " oxir" : "") + (q.uzuq ? " uzuq" : ""));
+      r.appendChild(drEl("i", "", String(q.n)));
+      r.appendChild(drEl("b", "", q.ism));
+      r.appendChild(drEl("em", "", String(q.pos)));
+      list.appendChild(r);
+    });
   }
 
   function uchGo() {
     var x = drX(), c = $("uc-canvas");
     $("uc-intro").classList.add("hidden");
     $("uc-stage").classList.remove("hidden");
+    $("uc-stage").classList.remove("pg");
     $("uc-lives").classList.toggle("hidden", uch.bell || uch.rek || !!uch.poyga);
     var w = Math.min(c.parentNode.clientWidth || 320, 360), h = Math.round(w * 1.18), dpr = Math.min(window.devicePixelRatio || 1, 2);
     c.style.width = w + "px"; c.style.height = h + "px";
@@ -2857,9 +2887,9 @@
     var x = drX(), el = $("uc-lives"), mult = uch.slow > 0 ? 0.6 : 1 + uch.gaz;
     el.innerHTML = "";
     for (var i = 0; i < (uch.jon || 3); i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
-    $("uc-step").textContent = (uch.rek ? x.rekT + " · " + uch.pass : x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R) + (mult > 1.02 || mult < 1 ? " · ×" + mult.toFixed(2) : "")) +
+    $("uc-step").textContent = (uch.rek ? x.rekT + " · " + uch.pass : (uch.poyga && !uch.poyga.mashq ? x.pgHalqa(uch.seen) : x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R)) + (mult > 1.02 || mult < 1 ? " · ×" + mult.toFixed(2) : "")) +
       (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
-      (uch.poyga ? " · " + x.sec((uch.t0 ? Date.now() - uch.t0 : 0) + uch.px * 3000) : "");
+      (uch.poyga ? " · " + x.sec(uch.t0 ? Date.now() - uch.t0 : 0) : "");
   }
   function uchDe(matn, kayf, bad) {
     $("uc-hint").textContent = matn;
@@ -2888,6 +2918,9 @@
       var dx = Math.abs(o.cx - uch.rx);
       if (o.t === "ring") {
         uch.seen++;
+        if (uch.poyga && uch.poyga.nazorat && uch.seen % (uch.poyga.har || 10) === 0) {
+          try { uch.poyga.nazorat(uch.seen / (uch.poyga.har || 10) - 1, Date.now() - (uch.t0 || Date.now())); } catch (e) {}
+        }
         if (dx < uch.rr) {
           // aniqlik: 1 - aynan o'rtasidan, 0 - chetidan; shunga qarab tezlik qo'shiladi
           var aq = Math.max(0, 1 - dx / uch.rr), daraja = aq >= 0.7 ? 2 : aq >= 0.35 ? 1 : 0;
@@ -2898,7 +2931,7 @@
         } else {
           o.ok = false; uch.miss++; uch.combo = 0; uch.gaz *= UCH_GAZ.miss;
           if (bl && uch.bell) { bl.xato++; }
-          if (uch.poyga) { uch.px++; }
+          if (uch.poyga) { uch.px++; uch.slow = Math.max(uch.slow, 0.45); }
           uchDe(x.ucMiss, "maslahat", true);
         }
       } else if (o.t === "bld") {

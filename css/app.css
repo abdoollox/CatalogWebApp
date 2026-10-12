@@ -3682,3 +3682,19 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .pg-list .bl-row u.pg-ok{flex:none;margin-left:8px;text-decoration:none;font:800 13px/1 'Manrope',sans-serif;color:#8ff0b6}
 .pg-sinov{margin-top:14px;border-style:dashed;border-color:rgba(226,87,76,.5);background:rgba(226,87,76,.06)}
 .pg-sinov i{color:#ff9d94}
+/* Poyga paytida uchish ostidagi jonli o'rinlar paneli (professor pufagi o'rnida) */
+.uc-pg{display:none;margin-top:12px}
+#uc-stage.pg .af-fl{display:none}
+#uc-stage.pg .uc-pg{display:block}
+#uc-pg-h{margin:0 0 8px;text-align:center;font:800 14px/1.3 'Manrope',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+#uc-pg-h.xavf{color:#ff9d94}
+.uc-pg-r{display:flex;align-items:center;gap:10px;padding:7px 12px;margin-top:5px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+.uc-pg-r i{flex:none;width:22px;text-align:center;font:800 12px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
+.uc-pg-r b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.uc-pg-r em{flex:none;font:800 12.5px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim);font-variant-numeric:tabular-nums}
+.uc-pg-r.men{border-color:rgba(226,232,240,.75);background:rgba(226,232,240,.1)}
+.uc-pg-r.oxir{border-color:rgba(226,87,76,.6);background:rgba(226,87,76,.09)}
+.uc-pg-r.oxir i,.uc-pg-r.oxir em{color:#ff9d94}
+.uc-pg-r.uzuq{margin-top:11px}
+.pg-list .bl-row.pg-xavf{border-color:rgba(226,87,76,.6);background:rgba(226,87,76,.08)}
+.pg-list .bl-row.pg-xavf em{color:#ff9d94}
