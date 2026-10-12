@@ -17,7 +17,7 @@
           f4: ["Sifat", "Full HD — eng tiniq, hajmi katta. HD — o'rtacha. SD — eng yengil, internet sekin bo'lsa qulay. Raqam — fayl hajmi, qulf — bu sifat hali tayyor emas."],
           f5: ["Yuborish", "Sifatni bosing — film shu zahoti bot chatiga yuboriladi."],
           f6: ["Yuborilmoqda", "Film bot chatiga ketmoqda…"], f6b: "Kuting…",
-          f7: ["Tayyor", "Film bot chatida. Telegram'da botni oching va tomosha qiling. Boshqa filmlar ham xuddi shunday olinadi."],
+          f7: ["Tayyor", "Film bot chatida — Telegram'da botni ochib tomosha qiling. Keyingi film shu yerda turadi, uni ham xuddi shunday olasiz."],
           l1: ["Boshqa tilda", "Filmlarni rus yoki ingliz tilida ham olsa bo'ladi. Profilni oching."],
           l2: ["Til", "Shu yerda ilova tilini tanlaysiz. Til almashsa, filmlar ham o'sha tilda yuboriladi."],
           l3: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
@@ -38,7 +38,7 @@
           f4: ["Качество", "Full HD — самое чёткое, файл большой. HD — среднее. SD — самое лёгкое, удобно при медленном интернете. Число — размер файла, замок — качество ещё не готово."],
           f5: ["Отправка", "Нажмите на качество — фильм сразу придёт в чат с ботом."],
           f6: ["Отправляется", "Фильм отправляется в чат с ботом…"], f6b: "Подождите…",
-          f7: ["Готово", "Фильм в чате с ботом. Откройте бота в Telegram и смотрите. Остальные фильмы — так же."],
+          f7: ["Готово", "Фильм в чате с ботом — откройте бота в Telegram и смотрите. Следующий фильм ждёт здесь, его можно взять так же."],
           l1: ["Другой язык", "Фильмы можно получить на узбекском или английском. Откройте профиль."],
           l2: ["Язык", "Здесь выбирается язык приложения. Сменится язык — фильмы будут приходить на нём."],
           l3: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
@@ -59,7 +59,7 @@
           f4: ["Quality", "Full HD — sharpest, large file. HD — medium. SD — lightest, handy on slow internet. The number is the file size; a lock means that quality isn't ready yet."],
           f5: ["Send", "Tap a quality — the film goes straight to your chat with the bot."],
           f6: ["Sending", "The film is on its way to your chat with the bot…"], f6b: "Please wait…",
-          f7: ["Done", "The film is in your chat with the bot. Open the bot in Telegram and enjoy. Other films work the same way."],
+          f7: ["Done", "The film is in your chat with the bot — open the bot in Telegram and enjoy. The next film waits right here; get it the same way."],
           l1: ["Other languages", "You can get the films in Uzbek or Russian too. Open your profile."],
           l2: ["Language", "Choose the app language here. Change it and the films come in that language."],
           l3: ["Back", "Tap to return to the library."],
@@ -78,7 +78,7 @@
   function kqT(k) { return (KQ_TX[lang] || KQ_TX.uz)[k] || ""; }
   // Qadam: sarlavha + matn (+ boshqa maydonlar)
   function kqQ(sel, k, x) {
-    var t = kqT(k), q = { el: yqQ(sel), s: t[0], m: t[1] };
+    var t = kqT(k), q = { el: typeof sel === "function" ? sel : yqQ(sel), s: t[0], m: t[1] };
     for (var a in (x || {})) { q[a] = x[a]; }
     return q;
   }
@@ -96,8 +96,8 @@
       if (ikki) { q.push(kqQ("#qs #qs-dubs", "f3")); }
       return q.concat([kqQ("#qs #qs-list", "f4"),
                        kqQ("#qs #qs-list .qs-row:not(.lock)", "f5", { tap: true }),
-                       kqQ("#scr-cat .cat-head", "f6", { kut: "film", b: kqT("f6b"), qolsiz: true }),
-                       kqQ("#scr-cat .cat-head", "f7")]);
+                       kqQ("#rows .card:not(.soon)", "f6", { kut: "film", b: kqT("f6b"), qolsiz: true }),     // tanlangan film kartasi
+                       kqQ(kqKeyingi, "f7")]);
     }
     if (n === 2) {
       return [kqQ("#scr-cat #pm-btn", "l1", { tap: true }), kqQ("#pm #pm-langs", "l2"), kqQ("#pm #pm-close", "l3", { tap: true })];
@@ -109,6 +109,11 @@
     }
     return [kqQ("#rows .kt-shelf", "k1"), kqQ("#rows .kt-info .kt-go", "k2", { tap: true }),
             kqQ("#scr-kitob #kt-acts button", "k3", { tap: true }), kqQ("#scr-oqish #kr-aa", "k4"), kqQ("#scr-oqish #kr-nav", "k5")];
+  }
+  // «Keyingi film» kartasi (yo'q bo'lsa - birinchi film kartasi)
+  function kqKeyingi() {
+    var h = $("hero");
+    return h && h.getClientRects().length ? h : document.querySelector("#rows .card:not(.soon)");
   }
   // Qism boshlanishi uchun kerakli joy kutubxonada bormi (albomlar/kitoblar serverdan kelmagan bo'lsa - keyinroq)
   var KQ_BOSH = { 1: "#rows .card:not(.soon)", 2: "#scr-cat #pm-btn", 3: "#rows .ms-row .ms-card:not(.lock)", 4: "#rows .kt-info .kt-go" };
