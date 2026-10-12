@@ -247,7 +247,7 @@
         el.setAttribute("data-k", tile.key);
         var ph = document.createElement("span");
         ph.className = "hx-ph";
-        ph.style.backgroundImage = "url(" + IMG_DIR + "hub/" + tile.key + ".webp)";
+        ph.style.backgroundImage = "url(" + IMG_DIR + "hub/" + tile.key + ".webp" + (tile.key === "poyga" ? "?v=2" : "") + ")";      // rasm almashgan - keshdagi eskisi chiqmasin
         el.appendChild(ph);
         if (tile.badge > 0) {
           var bd = document.createElement("i");
