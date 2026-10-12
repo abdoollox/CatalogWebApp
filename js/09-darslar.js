@@ -2849,7 +2849,7 @@
   function uchPoygaPos() { return uch && uch.poyga ? Math.max(uch.seen, Math.round(Math.max(0, uch.dist - 0.6) * 10) / 10) : 0; }
   function uchPoygaToxta() { if (uch && uch.poyga) { uchStop(); uch = null; } }
   /* Poyga holati (js/09-poyga.js har soniyada beradi). Hammasi MAYDONNING O'ZIDA chiziladi (egasi, 2026-10-12: uchayotgan odam
-     pastdagi jadvalga qaray olmaydi): yaqin raqiblar - yarim shaffof «arvoh» uchuvchilar, burchakda o'rin, o'ng chetda poyga chizig'i,
+     pastdagi jadvalga qaray olmaydi; «arvoh» raqiblar ham rad etildi - o'z uchuvchisini to'sardi): burchakda o'rin, o'ng chetda poyga chizig'i,
      oxirgi bo'lsa - qizil nur. info = {orin, tirik, qoldi (nazoratgacha halqa), oxirgi, cpPos, raqib: [{k, ism, uy, pos, oxir}]} */
   function uchPoygaTaxta(info) {
     if (!uch || !uch.poyga) { return; }
@@ -2862,9 +2862,7 @@
         var dt = (hozir - gh.t) / 1000;
         if (dt > 0.25) { gh.v = Math.max(0, Math.min(2.6, gh.v * 0.5 + 0.5 * (r.pos - gh.tp) / dt)); gh.tp = r.pos; gh.t = hozir; }
       }
-      gh.ism = r.ism; gh.uy = validHouse(r.uy) || "gryffindor"; gh.oxir = r.oxir;
       yangi[r.k] = gh;
-      uchImg("rider-" + gh.uy);
     });
     uch.pgg = yangi;
   }
@@ -3082,29 +3080,15 @@
     };
     var kor = uch.objs.filter(function (o) { o.y = ry - (o.d - uch.dist) * ppu; return o.y > -70 && o.y < h + 90; }).sort(function (p, q) { return p.y - q.y; });
     kor.forEach(function (o) { if (o.y < ry) { chiz(o); } });
-    var arvoh = [];
+    // Raqiblar maydonda CHIZILMAYDI (egasi, 2026-10-12: «arvoh» uchuvchilar o'z uchuvchisini to'sib qo'yardi) - faqat o'ng chetdagi poyga chizig'ida.
+    // Server soniyada bir marta o'rin beradi - oraliqda nuqtalar tezligi bo'yicha silliq suriladi.
     if (uch.poyga && uch.pgg) {
       for (var ak in uch.pgg) {
         if (!Object.prototype.hasOwnProperty.call(uch.pgg, ak)) { continue; }
-        // server har soniyada bitta o'rin beradi - oraliqda tezligi bo'yicha silliq suriladi
         var gh = uch.pgg[ak], nishon = gh.tp + gh.v * Math.max(0, Math.min(2, (ts - gh.t) / 1000)), dtp = gh.pt ? Math.min(0.1, (ts - gh.pt) / 1000) : 0;
         gh.pt = ts; gh.p += (nishon - gh.p) * Math.min(1, dtp * 5);
-        var gy = ry - (gh.p + 0.6 - uch.dist) * ppu;
-        if (gy < -50 || gy > h + 70) { continue; }
-        var gi = Math.max(0, Math.min(uch.R - 1, gh.p - 1)), g0 = Math.floor(gi), g1 = Math.min(uch.R - 1, g0 + 1);
-        arvoh.push({ gh: gh, y: gy, cx: (uch.objs[g0].cx || 0.5) + ((uch.objs[g1].cx || 0.5) - (uch.objs[g0].cx || 0.5)) * (gi - g0) });
       }
     }
-    var arvohChiz = function (a) {
-      var as = sc(a.y), ax = w / 2 + (a.cx - 0.5) * W * as, sp = uchImg("rider-" + a.gh.uy), ah = 104 * as;
-      g.save(); g.globalAlpha = 0.42;
-      if (uchBor(sp)) { var aw = ah * sp.naturalWidth / sp.naturalHeight; g.drawImage(sp, ax - aw / 2, a.y - ah * 0.55, aw, ah); }
-      else { g.fillStyle = "#cfd6e0"; g.beginPath(); g.arc(ax, a.y, 14 * as, 0, Math.PI * 2); g.fill(); }
-      g.globalAlpha = 0.9;
-      uchYozuv(g, a.gh.ism, ax, a.y - ah * 0.55 - 8, "800 " + Math.round(8 + 4 * as) + "px Manrope, sans-serif", a.gh.oxir ? "#ff9d94" : "#eef2f7");
-      g.restore();
-    };
-    arvoh.forEach(function (a) { if (a.y < ry) { arvohChiz(a); } });
     // supurgidagi o'quvchi
     var rxp2 = w / 2 + (uch.rx - 0.5) * W, burilish = Math.max(-0.45, Math.min(0.45, (uch.tx - uch.rx) * 2.4));
     im = uchImg(uch.rider);
@@ -3113,7 +3097,6 @@
     else { g.fillStyle = "#b5382e"; g.strokeStyle = "#07090d"; g.lineWidth = 3; g.beginPath(); g.moveTo(0, -30); g.lineTo(20, 26); g.lineTo(-20, 26); g.closePath(); g.fill(); g.stroke(); }
     g.restore();
     kor.forEach(function (o) { if (o.y >= ry) { chiz(o); } });
-    arvoh.forEach(function (a) { if (a.y >= ry) { arvohChiz(a); } });
     if (ts - uch.hitAt < 320) { g.fillStyle = "rgba(240,80,70," + (0.45 * (1 - (ts - uch.hitAt) / 320)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
     if (uch.snAt && ts - uch.snAt < 500) { g.fillStyle = "rgba(243,213,143," + (0.5 * (1 - (ts - uch.snAt) / 500)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
     if (uch.poyga) { uchPoygaHud(g, w, h, ts); }
