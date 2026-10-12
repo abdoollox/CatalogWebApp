@@ -22,9 +22,7 @@
           chiqdiH: function (h) { return h + "-halqada chiqdi"; }, qayt: "Poygaga qaytish", qaytS: "Siz hali poygadasiz — vaqt to'xtamaydi",
           sizChiq: function (n) { return "Siz " + n + "-o'rinda poygani tark etdingiz"; }, tomoshaS: "Qolganini shu yerda kuzatishingiz mumkin",
           marra: "Marraga yetdingiz!", marraS: "Natija aniqlanmoqda…",
-          pOrin: function (o, n, q) { return o + "-o'rin · " + n + " uchuvchi · nazoratgacha " + q + " halqa"; },
-          pOtdi: function (o, n) { return o + "-o'rin · " + n + " uchuvchi · nazoratdan o'tdingiz"; },
-          pOxir: function (q) { return "Siz oxirgisiz! Nazoratgacha " + q + " halqa"; }, ketdi: function (i) { return i + " poygani tark etdi"; },
+          ketdi: function (i) { return i + " poygani tark etdi"; },
           tugadi: "Poyga tugadi", golib: "G'olib", golibE: "g'olib", siz: "siz", orningiz: function (n) { return "Sizning o'rningiz: " + n; },
           ball: function (n) { return "+" + n + " ball kubokka"; }, bolmadi: "Bu safar uchuvchi yetmadi — poyga o'tmadi.", ortga: "Xogvartsga qaytish",
           yoq: "Aloqa yo'q — qayta urinib ko'ring", m: " daq ", h: " soat ", kunQ: "kun", mashqK: "Mashq" },
@@ -41,9 +39,7 @@
           chiqdiH: function (h) { return "выбыл на кольце " + h; }, qayt: "Вернуться в гонку", qaytS: "Вы ещё в гонке — время идёт",
           sizChiq: function (n) { return "Вы выбыли — " + n + "-е место"; }, tomoshaS: "Дальше можно смотреть здесь",
           marra: "Вы на финише!", marraS: "Определяем результат…",
-          pOrin: function (o, n, q) { return o + "-е место · пилотов: " + n + " · до рубежа " + q; },
-          pOtdi: function (o, n) { return o + "-е место · пилотов: " + n + " · рубеж пройден"; },
-          pOxir: function (q) { return "Вы последний! До рубежа " + q + " колец"; }, ketdi: function (i) { return i + " выбывает"; },
+          ketdi: function (i) { return i + " выбывает"; },
           tugadi: "Гонка окончена", golib: "Победитель", golibE: "победитель", siz: "вы", orningiz: function (n) { return "Ваше место: " + n; },
           ball: function (n) { return "+" + n + " очков в кубок"; }, bolmadi: "В этот раз пилотов не хватило — гонка не состоялась.", ortga: "Вернуться в Хогвартс",
           yoq: "Нет связи — попробуйте ещё раз", m: " мин ", h: " ч ", kunQ: "дн.", mashqK: "Тренировка" },
@@ -60,9 +56,7 @@
           chiqdiH: function (h) { return "out at hoop " + h; }, qayt: "Back to the race", qaytS: "You are still in — the clock is running",
           sizChiq: function (n) { return "You are out — place " + n; }, tomoshaS: "You can watch the rest here",
           marra: "You reached the finish!", marraS: "Working out the result…",
-          pOrin: function (o, n, q) { return "Place " + o + " of " + n + " · " + q + " hoops to the checkpoint"; },
-          pOtdi: function (o, n) { return "Place " + o + " of " + n + " · checkpoint passed"; },
-          pOxir: function (q) { return "You are last! " + q + " hoops to the checkpoint"; }, ketdi: function (i) { return i + " is out"; },
+          ketdi: function (i) { return i + " is out"; },
           tugadi: "The race is over", golib: "Winner", golibE: "winner", siz: "you", orningiz: function (n) { return "Your place: " + n; },
           ball: function (n) { return "+" + n + " points for the Cup"; }, bolmadi: "Not enough flyers this time — no race.", ortga: "Back to Hogwarts",
           yoq: "No connection — please try again", m: " min ", h: " h ", kunQ: "d", mashqK: "Practice" }
@@ -214,24 +208,24 @@
       return;
     }
     var taxta = res.board || [], tirik = taxta.filter(function (p) { return !p.out; }), chiq = taxta.filter(function (p) { return p.out; });
-    if (pgChiqN >= 0 && chiq.length > pgChiqN && chiq[0]) { showToast(t.ketdi(chiq[0].name)); }
+    if (pgChiqN >= 0 && chiq.length > pgChiqN && chiq[0]) { uchPoygaXabar(t.ketdi(chiq[0].name)); }
     pgChiqN = chiq.length;
     var joy = -1, i;
     for (i = 0; i < tirik.length; i++) { if (tirik[i].me) { joy = i; } }
     if (joy < 0) { return; }
     var cp = res.cp != null ? res.cp : (res.race || {}).cp || 0, har = res.every || (res.race || {}).every || 10;
-    var qoldi = (cp + 1) * har - Math.max(uchPoygaPos(), tirik[joy].pos || 0), oxirgi = joy === tirik.length - 1;
-    var kerak = {}, qator = [], oldingi = -1;
-    [0, joy - 1, joy, joy + 1, tirik.length - 1].forEach(function (n) { if (n >= 0 && n < tirik.length) { kerak[n] = 1; } });
-    if (tirik.length <= 5) { for (i = 0; i < tirik.length; i++) { kerak[i] = 1; } }
+    // o'rin: server jadvali bir soniyagacha eskirgan bo'lishi mumkin - o'zining hozirgi joyi bilan qayta sanaladi
+    var men = Math.max(uchPoygaPos(), tirik[joy].pos || 0), orin = 1, raqib = [];
     for (i = 0; i < tirik.length; i++) {
-      if (!kerak[i]) { continue; }
-      qator.push({ n: i + 1, ism: tirik[i].name + (tirik[i].me ? " (" + t.siz + ")" : ""), pos: tirik[i].me ? Math.max(uchPoygaPos(), tirik[i].pos || 0) : tirik[i].pos,
-                   men: tirik[i].me, oxir: i === tirik.length - 1, uzuq: oldingi >= 0 && i - oldingi > 1 });
-      oldingi = i;
+      if (i === joy) { continue; }
+      if ((tirik[i].pos || 0) > men) { orin++; }
+      raqib.push({ k: (tirik[i].uid || "") + "|" + tirik[i].name, ism: tirik[i].name, uy: tirik[i].house, pos: tirik[i].pos || 0 });
     }
-    uchPoygaTaxta({ orin: joy + 1, tirik: tirik.length, oxirgi: oxirgi, qator: qator,
-      matn: qoldi <= 0 ? t.pOtdi(joy + 1, tirik.length) : oxirgi ? t.pOxir(qoldi) : t.pOrin(joy + 1, tirik.length, qoldi) });
+    var enKam = null;
+    raqib.forEach(function (q) { if (!enKam || q.pos < enKam.pos) { enKam = q; } });
+    if (enKam && orin < tirik.length) { enKam.oxir = true; }
+    uchPoygaTaxta({ orin: orin, tirik: tirik.length, qoldi: Math.ceil((cp + 1) * har - men), oxirgi: orin === tirik.length && tirik.length > 1,
+                    cpPos: (cp + 1) * har, raqib: raqib });
   }
   /* Mashq: 30 halqalik yo'l, tasodifiy yo'nalish; hech narsa yuborilmaydi */
   function pgMashqUch() {
@@ -351,7 +345,7 @@
       if (im) { c2.appendChild(im); }
       row.appendChild(c2);
       row.appendChild(drEl("b", "", p.name + (p.me ? " (" + t.siz + ")" : "")));
-      row.appendChild(drEl("em", "", yakun && orin === 1 ? t.golibE : p.out ? t.chiqdiH(p.pos) : t.halqa(p.pos || 0)));
+      row.appendChild(drEl("em", "", yakun && orin === 1 ? t.golibE : p.out ? t.chiqdiH(p.pos) : t.halqa(Math.floor(p.pos || 0))));
       list.appendChild(odamLink(row, p));
     });
     return list;
@@ -430,7 +424,7 @@
       ["Как это проходит", "После отсчёта все одновременно летят по одной и той же трассе. Мётлой управляете пальцем — влево и вправо. Гонка одна, без перерывов."],
       ["Кто выбывает", "Каждые " + v.har + " колец — рубеж. Кто пришёл к нему последним, покидает гонку. Так продолжается, пока не останется один пилот — он и победитель. Чем больше пилотов, тем длиннее гонка."],
       ["Как лететь быстрее", "Чем ближе к центру кольца вы пролетаете, тем сильнее ускорение. Пропущенное кольцо или удар бладжера сбивают скорость. Пойманный снитч даёт большое ускорение."],
-      ["Что видно на экране", "Под полем — ваше место, сколько колец до рубежа и ближайшие соперники. Последний в списке выделен красным: он в опасности."],
+      ["Что видно на экране", "Прямо на поле: слева вверху ваше место и сколько колец до рубежа; справа линия гонки — лидер вверху, последний внизу, большая точка — вы. Ближайшие соперники видны рядом полупрозрачными. Если вы последний, края поля краснеют."],
       ["Если пропала связь", "Кто не добрался до рубежа за " + v.kut + " с после лидера, тоже выбывает."],
       ["Опоздавшие", "Кто пришёл после старта — зритель: видит таблицу, но не летит."],
       ["Очки", "В кубок факультета: 1-е место +" + v.p1 + ", 2-е +" + v.p2 + ", 3-е +" + v.p3 + ", места 4–" + v.nt + " — +" + v.np + "."],
@@ -441,7 +435,7 @@
       ["How it works", "After the countdown everyone flies the same course at the same time. Steer the broom with your finger — left and right. It is one race with no breaks."],
       ["Who drops out", "Every " + v.har + " hoops there is a checkpoint. Whoever reaches it last leaves the race. This goes on until one flyer is left — the winner. The more flyers, the longer the race."],
       ["How to fly faster", "The closer to the centre of a hoop you pass, the bigger the boost. A missed hoop or a Bludger hit slows you down. Catching the Snitch gives a big boost."],
-      ["What you see", "Under the field: your place, hoops left to the checkpoint and the nearest rivals. The last flyer is shown in red — in danger."],
+      ["What you see", "Right on the field: your place and hoops left to the checkpoint at the top left; the race line on the right — leader on top, last at the bottom, the big dot is you. Nearby rivals fly next to you as ghosts. If you are last, the edges of the field turn red."],
       ["If the connection drops", "Anyone who does not reach a checkpoint within " + v.kut + " s after the leader is out too."],
       ["Latecomers", "Anyone who arrives after the start is a spectator: they see the table but do not fly."],
       ["Points", "For the House Cup: 1st place +" + v.p1 + ", 2nd +" + v.p2 + ", 3rd +" + v.p3 + ", places 4–" + v.nt + " get +" + v.np + "."],
@@ -452,7 +446,7 @@
       ["Qanday o'tadi", "Sanoqdan keyin hamma bir vaqtda bir xil yo'ldan uchadi. Supurgini barmoq bilan o'ngga-chapga boshqarasiz. Poyga bitta, tanaffussiz."],
       ["Kim chiqib ketadi", "Har " + v.har + " halqada — nazorat. Unga eng oxirida yetgan uchuvchi poygani tark etadi. Shu tartibda davom etadi — oxirida bitta uchuvchi qoladi, u g'olib. Uchuvchi qancha ko'p bo'lsa, poyga shuncha uzun."],
       ["Qanday tezroq uchiladi", "Halqaning o'rtasiga qancha yaqin o'tsangiz, shuncha ko'p tezlashasiz. O'tkazib yuborilgan halqa yoki bladjer zarbasi tezlikni tushiradi. Snitchni tutsangiz — katta tezlik."],
-      ["Ekranda nima ko'rinadi", "Maydon ostida — o'rningiz, nazoratgacha nechta halqa qolgani va yaqin raqiblar. Ro'yxatdagi oxirgi uchuvchi qizil rangda: u xavf ostida."],
+      ["Ekranda nima ko'rinadi", "Maydonning o'zida: chap tepada o'rningiz va nazoratgacha nechta halqa qolgani; o'ng chetda poyga chizig'i — yetakchi tepada, oxirgi pastda, katta nuqta siz. Yaqin raqiblar yoningizda yarim shaffof ko'rinadi. Oxirgi bo'lib qolsangiz maydon chetlari qizaradi."],
       ["Aloqa uzilsa", "Birinchi uchuvchi nazoratdan o'tgach " + v.kut + " soniya ichida yetib kelmagan ham chiqib ketadi."],
       ["Kechikkanlar", "Startdan keyin kelgan — tomoshabin: jadvalni ko'radi, lekin uchmaydi."],
       ["Ballar", "Fakultet kubogiga: 1-o'rin +" + v.p1 + ", 2-o'rin +" + v.p2 + ", 3-o'rin +" + v.p3 + ", 4–" + v.nt + "-o'ringa +" + v.np + "."],
