@@ -228,15 +228,15 @@
         { key: "issiq", kurs: 3, title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
         { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat }] },
       { t: HT("g3"), k: [
-        { key: "duel", kurs: 4, title: HT("duel"), sub: HT("duelV"), go: duOpen },
+        { key: "poyga", kurs: 4, title: HT("poyga"), sub: HT("poygaS"), go: pgOpen },
         { key: "chess", kurs: 4, title: HT("chess"), sub: HT("chessV"), go: openChessHub },
         { key: "vik", kurs: 4, title: HT("vik"), sub: HT("vikS"), go: vkOpen },
-        { key: "poyga", kurs: 4, title: HT("poyga"), sub: HT("poygaS"), go: pgOpen }] }
+        { key: "duel", kurs: 4, title: HT("duel"), sub: HT("duelV"), go: duOpen }] }
     ];
     hubKurs(grid, kn, hid);
     guruhlar.forEach(function (g) {
       var qator = document.createElement("div");
-      qator.className = "hg3";
+      qator.className = "hg3" + (g.k.length === 4 ? " hg4" : "");      // to'rt katak bir qatorda (haftalik turnirlar: du, ch, ju, ya)
       g.k.forEach(function (tile) {
         if (!tile.open && hid === "none") { return; }
         var qulf = !!(tile.kurs && kn < tile.kurs);      // hali ochilmagan: xira, ostida «N-kursda ochiladi» (egasi, 2026-10-11)
@@ -517,7 +517,7 @@
   var JD_KEY = "hp_jd_yopiq";  // yig'ilgan holat shu qurilmada eslanadi (egasi: «minimise qilish funksiyasi»)
   function jdYopiq() { try { return window.localStorage.getItem(JD_KEY) === "1"; } catch (e) { return false; } }
   var JD_TADBIR = [
-    { k: "poyga", kun: 0, s: 21, m: 0, d: 10, rgb: "120,170,240", dan: "2026-10-19T21:00:00+05:00", go: function () { pgOpen(); } },
+    { k: "poyga", kun: 0, s: 21, m: 0, d: 10, rgb: "120,170,240", dan: "2026-10-12T21:00:00+05:00", go: function () { pgOpen(); } },
     { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
     { k: "vik", kun: 4, s: 21, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
     { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },

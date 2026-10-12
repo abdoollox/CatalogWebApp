@@ -3686,3 +3686,7 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 #uc-stage.pg .af-fl{display:none}
 .pg-list .bl-row.pg-xavf{border-color:rgba(226,87,76,.6);background:rgba(226,87,76,.08)}
 .pg-list .bl-row.pg-xavf em{color:#ff9d94}
+/* Bosh sahifa: to'rt katakli guruh (Maydon - haftalik turnirlar) bir qatorda */
+.hg3.hg4{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.hg4 .hx b{font-size:15px}
+.hg4 .hx small{font-size:10.5px;line-height:1.25;max-width:5.6em}
