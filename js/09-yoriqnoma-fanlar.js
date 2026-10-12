@@ -307,7 +307,7 @@
 
   /* ---------- Uchish (Xuch xonim): supurgi to'xtab turadi, lekin boshqarsa bo'ladi; 4-darsdan bladjer, 7-darsdan Snitch ---------- */
   function fyUchish() {
-    if (!uch || uch.bell || uch.rek || uch.yoriq) { return; }
+    if (!uch || uch.bell || uch.rek || uch.poyga || uch.yoriq) { return; }
     var tur = fyKerakli("uchish", ["asos", uch.n >= 4 ? "bld" : "", uch.n >= 7 ? "sn" : ""]);
     if (!tur.length) { return; }
     var x = fyX(), q = [], maydon = fyEl("#scr-uchish .uc-box");

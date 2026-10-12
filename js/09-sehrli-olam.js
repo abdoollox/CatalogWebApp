@@ -37,6 +37,8 @@
     chessV: { uz: "Chorshanba, 21:00", ru: "Среда, 21:00", en: "Wednesday, 21:00" },
     vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
     vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
+    poyga: { uz: "Poyga", ru: "Гонка", en: "Race" },
+    poygaS: { uz: "Dushanba, 21:00", ru: "Понедельник, 21:00", en: "Monday, 21:00" },
     kursda: { uz: "%d-kursda ochiladi", ru: "Откроется на %d-м курсе", en: "Unlocks in year %d" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
     chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
@@ -228,7 +230,8 @@
       { t: HT("g3"), k: [
         { key: "duel", kurs: 4, title: HT("duel"), sub: HT("duelV"), go: duOpen },
         { key: "chess", kurs: 4, title: HT("chess"), sub: HT("chessV"), go: openChessHub },
-        { key: "vik", kurs: 4, title: HT("vik"), sub: HT("vikS"), go: vkOpen }] }
+        { key: "vik", kurs: 4, title: HT("vik"), sub: HT("vikS"), go: vkOpen },
+        { key: "poyga", kurs: 4, title: HT("poyga"), sub: HT("poygaS"), go: pgOpen }] }
     ];
     hubKurs(grid, kn, hid);
     guruhlar.forEach(function (g) {
@@ -294,7 +297,7 @@
   var KURS_TX = {
     uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", vazifa: function (k, n) { return k + "-kursga o'tish uchun har bir fandan " + n + " tadan dars o'ting"; }, tayyor: function (a, b) { return a + " / " + b + " fan tayyor"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
-          och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona, Issiqxona va Patronus", 4: "Maydon — Duel, Shaxmat, Viktorina — Jadval va Do'stlar" },
+          och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona, Issiqxona va Patronus", 4: "Maydon — Duel, Shaxmat, Viktorina, Poyga — Jadval va Do'stlar" },
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish",
           sh3: "3-kursga o'tish uchun uchta shartni bajaring", s1: function (n) { return "Har bir fandan " + n + " tadan dars"; }, s2: "Shokolad qurbaqadan bitta karta oching", s3: "To'qqiz fanning har birida bellashuvda qatnashing",
           sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish" },
@@ -479,7 +482,7 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -514,6 +517,7 @@
   var JD_KEY = "hp_jd_yopiq";  // yig'ilgan holat shu qurilmada eslanadi (egasi: «minimise qilish funksiyasi»)
   function jdYopiq() { try { return window.localStorage.getItem(JD_KEY) === "1"; } catch (e) { return false; } }
   var JD_TADBIR = [
+    { k: "poyga", kun: 0, s: 21, m: 0, d: 10, rgb: "120,170,240", dan: "2026-10-19T21:00:00+05:00", go: function () { pgOpen(); } },
     { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
     { k: "vik", kun: 4, s: 21, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
     { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
@@ -521,13 +525,13 @@
   ];
   var JD_TX = {
     uz: { t: "Jadval", s: "shu hafta", kun: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], toliq: ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"],
-          chess: "Shaxmat turniri", vik: "Viktorina «Oxirgi sehrgar»", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
+          chess: "Shaxmat turniri", poyga: "Supurgi poygasi", vik: "Viktorina «Oxirgi sehrgar»", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
           kunQ: "kun", soatQ: "soat", daqQ: "daq", har: "Har kuni", harS: "9 ta bellashuv (yarim tungacha) · Shokolad qurbaqa" },
     ru: { t: "Расписание", s: "эта неделя", kun: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], toliq: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
-          chess: "Шахматный турнир", vik: "Викторина «Последний волшебник»", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
+          chess: "Шахматный турнир", poyga: "Гонка на мётлах", vik: "Викторина «Последний волшебник»", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
           kunQ: "дн.", soatQ: "ч", daqQ: "мин", har: "Каждый день", harS: "9 состязаний (до полуночи) · Шоколадная лягушка" },
     en: { t: "Schedule", s: "this week", kun: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], toliq: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          chess: "Chess tournament", vik: "Quiz “The Last Wizard”", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
+          chess: "Chess tournament", poyga: "Broom race", vik: "Quiz “The Last Wizard”", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
           kunQ: "d", soatQ: "h", daqQ: "min", har: "Every day", harS: "9 contests (until midnight) · Chocolate Frog" }
   };
   function hubJadval(korsat) {
@@ -543,6 +547,8 @@
     var royxat = JD_TADBIR.map(function (tb) {
       var vaqt = tb.kun * 1440 + tb.s * 60 + tb.m, qol = vaqt - hozir, ketmoqda = qol <= 0 && qol > -tb.d;
       if (qol <= -tb.d) { qol += 7 * 1440; }
+      // `dan` - tadbirning birinchi o'tkaziladigan payti: undan oldingi hafta(lar) tashlab ketiladi
+      if (tb.dan) { var birinchi = Date.parse(tb.dan); while (Date.now() + qol * 60000 < birinchi - 60000) { qol += 7 * 1440; ketmoqda = false; } }
       return { tb: tb, qol: qol, ketmoqda: ketmoqda };
     }).sort(function (a, b) { return (a.ketmoqda ? -1 : a.qol) - (b.ketmoqda ? -1 : b.qol); });
     // Sarlavha bosilsa karta yig'iladi/ochiladi; yig'ilganda eng yaqin tadbir bir qatorda ko'rinadi

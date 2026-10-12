@@ -53,6 +53,7 @@
     "scr-issiq": "is-back",
     "scr-duel": "du-back",
     "scr-vik": "vk-back",
+    "scr-poyga": "pg-back",
     "scr-xarid": "xr-back",
     "scr-astro": "yl-back",
     "scr-osimlik": "os-back",

@@ -98,7 +98,7 @@
           hmLpB: ["Hechqisi yo'q. Shokolad yeng va qaytadan urinib ko'ring.", "Hali tayyor emassiz, lekin buni o'rgansa bo'ladi. Yana bir marta.", "Qoniqarli. Xavf oldida o'zingizni yo'qotmadingiz.", "Juda yaxshi! Tezligingiz oshyapti.", "A'lo! Bunday himoyani kam ko'rganman."],
           ucStep: function (a, b) { return "Halqa " + a + " / " + b; }, ucGo: "Uchish!", ucHint: "Barmog'ingizni o'ngga-chapga suring",
           ucIntro: ["Supurgini barmog'ingiz bilan o'ngga-chapga boshqaring va oltin halqalardan o'ting. Halqaning qanchalik O'RTASIDAN o'tsangiz, supurgi shunchalik tezlashadi.", "Bugun maydonda bladjerlar bor. Ularga urilmang — uchta zarbadan keyin dars tugaydi.", "Oltin Snitch ham uchib o'tadi. Tutib olsangiz, bahoyingiz oshadi.", "Supurgiga! Halqalar torayib, tezlik oshib boradi."],
-          ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucAniq: ["Chetidan o'tdingiz — tezlik kam qo'shildi", "Yaxshi! O'rtaga yaqinroq uching", "Aniq o'rtasidan — tezlashdingiz!"], ucSnT: "Snitch tutildi — katta tezlik!", ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
+          ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucAniq: ["Chetidan o'tdingiz — tezlik kam qo'shildi", "Yaxshi! O'rtaga yaqinroq uching", "Aniq o'rtasidan — tezlashdingiz!"], ucSnT: "Snitch tutildi — katta tezlik!", pgSanoq: function (n) { return "Tayyorlaning… " + n; }, pgUch: "Uchdik! Halqalarning o'rtasidan o'ting", ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
           ucStat: function (a, b, z, sn) { return "Halqalar: " + a + " / " + b + " · Zarba: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Supurgidan tushing. Avval yerda mashq qilamiz.", "Hali erta. Halqalarga qarang, osmonga emas!", "Qoniqarli. Supurgi sizni tinglay boshladi.", "Yaxshi uchdingiz! Qo'lingiz mustahkam.", "A'lo! Sizdan zo'r izlovchi chiqadi."],
           mxStep: function (a, b) { return "Juftlik " + a + " / " + b; }, mxGo: "Boshlash", mxHint: "Maxluqni o'z yemishi bilan juftlang", mxPeek: "Kartalarni eslab qoling…",
@@ -196,7 +196,7 @@
           hmLpB: ["Ничего страшного. Съешьте шоколад и попробуйте снова.", "Вы пока не готовы, но этому можно научиться. Ещё раз.", "Удовлетворительно. Вы не растерялись перед опасностью.", "Очень хорошо! Вы становитесь быстрее.", "Превосходно! Такую защиту я вижу редко."],
           ucStep: function (a, b) { return "Кольцо " + a + " / " + b; }, ucGo: "В полёт!", ucHint: "Ведите пальцем влево и вправо",
           ucIntro: ["Управляйте метлой пальцем влево-вправо и пролетайте через золотые кольца. Чем ближе к ЦЕНТРУ кольца — тем сильнее ускоряется метла.", "Сегодня на поле бладжеры. Не сталкивайтесь с ними — после трёх ударов урок окончен.", "Мимо пролетит золотой снитч. Поймаете — оценка будет выше.", "На метлу! Кольца сужаются, скорость растёт."],
-          ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucAniq: ["По краю — скорости прибавилось мало", "Хорошо! Держитесь ближе к центру", "Точно в центр — ускорение!"], ucSnT: "Снитч пойман — большое ускорение!", ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
+          ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucAniq: ["По краю — скорости прибавилось мало", "Хорошо! Держитесь ближе к центру", "Точно в центр — ускорение!"], ucSnT: "Снитч пойман — большое ускорение!", pgSanoq: function (n) { return "Приготовьтесь… " + n; }, pgUch: "Полетели! Цельтесь в центр колец", ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
           ucStat: function (a, b, z, sn) { return "Кольца: " + a + " / " + b + " · Ударов: " + z + (sn ? " · Снитч" : ""); },
           ucXcB: ["Слезайте с метлы. Сначала потренируемся на земле.", "Рано. Смотрите на кольца, а не в небо!", "Удовлетворительно. Метла начинает вас слушаться.", "Хороший полёт! Твёрдая рука.", "Превосходно! Из вас выйдет отличный ловец."],
           mxStep: function (a, b) { return "Пара " + a + " / " + b; }, mxGo: "Начать", mxHint: "Подберите существу его корм", mxPeek: "Запоминайте карты…",
@@ -295,7 +295,7 @@
           hmLpB: ["Never mind. Eat some chocolate and try again.", "You are not ready yet, but this can be learnt. Once more.", "Acceptable. You kept your head in the face of danger.", "Very good! You are getting quicker.", "Outstanding! I rarely see a defence like that."],
           ucStep: function (a, b) { return "Hoop " + a + " / " + b; }, ucGo: "Take off!", ucHint: "Slide your finger left and right",
           ucIntro: ["Steer the broom left and right with your finger and fly through the golden hoops. The closer to the CENTRE of a hoop you pass, the faster your broom goes.", "There are Bludgers on the pitch today. Don't hit them — three knocks and the lesson is over.", "The Golden Snitch will fly past too. Catch it and your grade goes up.", "Mount your broom! The hoops get narrower and the pace quicker."],
-          ucOk: ["Good!", "That's it!", "Splendid!"], ucAniq: ["Through the edge — little speed gained", "Good! Aim closer to the centre", "Dead centre — speeding up!"], ucSnT: "Snitch caught — big boost!", ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
+          ucOk: ["Good!", "That's it!", "Splendid!"], ucAniq: ["Through the edge — little speed gained", "Good! Aim closer to the centre", "Dead centre — speeding up!"], ucSnT: "Snitch caught — big boost!", pgSanoq: function (n) { return "Get ready… " + n; }, pgUch: "Go! Aim for the centre of the hoops", ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
           ucStat: function (a, b, z, sn) { return "Hoops: " + a + " / " + b + " · Knocks: " + z + (sn ? " · Snitch" : ""); },
           ucXcB: ["Off the broom. We'll practise on the ground first.", "Too soon. Eyes on the hoops, not the sky!", "Acceptable. The broom is starting to listen to you.", "Good flying! A steady hand.", "Outstanding! You'd make a fine Seeker."],
           mxStep: function (a, b) { return "Pair " + a + " / " + b; }, mxGo: "Begin", mxHint: "Match each creature with its food", mxPeek: "Memorise the cards…",
@@ -514,7 +514,7 @@
     drQayt = false;
     qrLoad();
     drBahoSync();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -595,7 +595,7 @@
   function blHomeOpen(mode) {
     blhMode = mode === "rek" ? "rek" : "bell";
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     rekFan = null;
@@ -862,7 +862,7 @@
     if (kel) { blKel = kel; }
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -1024,7 +1024,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     rekLoad(function () { if (fanId === id && !$("scr-fan").classList.contains("hidden")) { fanMore(); } });
@@ -1297,7 +1297,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { $(scr).classList.remove("natija"); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
     try { [].forEach.call(document.querySelectorAll(".fy-qanday"), function (b) { b.textContent = fyX().qanday; }); } catch (e) {}
@@ -2800,11 +2800,46 @@
     uchKayf("maslahat");
   }
 
+  /* POYGA REJIMI (dushanba turniri va uning mashqi - js/09-poyga.js): yo'l urug'i va bosqich tashqaridan keladi, jon yo'q,
+     xatolar sanaladi (uch.px - har biri +3 s), vaqt ilovada o'lchanadi. o = {urug, bosqich (1..3), sarlavha, ost, kut (ms - sanoq),
+     tugadi: function ({ms, xato, pass, R, snitch}), ortga: function ()}. */
+  function uchPoyga(o) {
+    var x = drX(), plan = uchPlan(1, o.urug, false, Math.max(1, Math.min(3, o.bosqich || 1)));
+    uchStop();
+    uch = { n: 1, bell: false, rek: false, poyga: o, px: 0, objs: plan.objs, R: plan.R, len: plan.len, v0: plan.v0, rr: plan.rr,
+            gaz: 0, gmax: plan.gmax, aniq: 0, eski: false,
+            dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
+            ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1, t0: 0 };
+    drShowGame("scr-uchish");
+    var uy = "gryffindor";
+    try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {}
+    uch.rider = "rider-" + uy;
+    [uch.rider, "snitch", "bludger", "fon"].forEach(uchImg);
+    $("uc-kick").textContent = o.sarlavha || "";
+    $("uc-ttl").textContent = o.ost || "";
+    $("uc-today").textContent = "";
+    $("uc-res").classList.add("hidden");
+    uchGo();
+    // Sanoq: hamma bir vaqtda boshlaydi. Sanoq paytida supurgi joyida turadi (boshqarsa bo'ladi).
+    var me = uch, kut = Math.max(0, o.kut || 0), bosh = Date.now() + kut;
+    if (kut > 150) {
+      uch.yoriq = true;
+      var sanoq = function () {
+        if (uch !== me || uch.over) { return; }
+        var qol = bosh - Date.now();
+        if (qol <= 0) { uch.yoriq = false; uch.t0 = Date.now(); $("uc-hint").textContent = x.pgUch; return; }
+        $("uc-hint").textContent = x.pgSanoq(Math.ceil(qol / 1000));
+        setTimeout(sanoq, Math.min(200, qol));
+      };
+      sanoq();
+    } else { uch.t0 = Date.now(); }
+  }
+
   function uchGo() {
     var x = drX(), c = $("uc-canvas");
     $("uc-intro").classList.add("hidden");
     $("uc-stage").classList.remove("hidden");
-    $("uc-lives").classList.toggle("hidden", uch.bell || uch.rek);
+    $("uc-lives").classList.toggle("hidden", uch.bell || uch.rek || !!uch.poyga);
     var w = Math.min(c.parentNode.clientWidth || 320, 360), h = Math.round(w * 1.18), dpr = Math.min(window.devicePixelRatio || 1, 2);
     c.style.width = w + "px"; c.style.height = h + "px";
     c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
@@ -2823,7 +2858,8 @@
     el.innerHTML = "";
     for (var i = 0; i < (uch.jon || 3); i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
     $("uc-step").textContent = (uch.rek ? x.rekT + " · " + uch.pass : x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R) + (mult > 1.02 || mult < 1 ? " · ×" + mult.toFixed(2) : "")) +
-      (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+      (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
+      (uch.poyga ? " · " + x.sec((uch.t0 ? Date.now() - uch.t0 : 0) + uch.px * 3000) : "");
   }
   function uchDe(matn, kayf, bad) {
     $("uc-hint").textContent = matn;
@@ -2862,12 +2898,13 @@
         } else {
           o.ok = false; uch.miss++; uch.combo = 0; uch.gaz *= UCH_GAZ.miss;
           if (bl && uch.bell) { bl.xato++; }
+          if (uch.poyga) { uch.px++; }
           uchDe(x.ucMiss, "maslahat", true);
         }
       } else if (o.t === "bld") {
         if (dx < 0.09) {
           o.hit = true; uch.hits++; uch.combo = 0; uch.slow = 0.8; uch.hitAt = ts; uch.gaz *= UCH_GAZ.zarba;
-          if (bl && uch.bell) { bl.xato++; } else { uch.lives--; }
+          if (uch.poyga) { uch.px++; } else if (bl && uch.bell) { bl.xato++; } else { uch.lives--; }
           uchDe(x.ucHit, "xafa", true);
           try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
         }
@@ -2878,10 +2915,11 @@
         try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
       }
     });
-    if (ozgardi || uch.bell || uch.gaz > 0.02) { uchHud(); }
+    if (ozgardi || uch.bell || uch.poyga || uch.gaz > 0.02) { uchHud(); }
     uchPaint(ts);
-    if (uch.dist > uch.len || (!uch.bell && uch.lives <= 0) || (uch.rek && (uch.miss > 0 || uch.hits > 0))) {
+    if (uch.dist > uch.len || (!uch.bell && !uch.poyga && uch.lives <= 0) || (uch.rek && (uch.miss > 0 || uch.hits > 0))) {
       uch.over = true;
+      if (uch.poyga) { uch.tms = Date.now() - (uch.t0 || Date.now()); }        // marraga yetgan payt (natija kechikishsiz o'lchanadi)
       setTimeout(function () { if (uch === me) { uchEnd(); } }, 500);
       return;
     }
@@ -2963,6 +3001,12 @@
   function uchEnd() {
     var x = drX(), me = uch, daraja = uch.n, box = $("uc-res");
     $("uc-stage").classList.add("hidden");
+    if (uch.poyga) {
+      var pg = uch.poyga, nat = { ms: uch.tms || 0, xato: uch.px, pass: uch.pass, R: uch.R, snitch: uch.snitch };
+      uch = null;
+      try { pg.tugadi(nat); } catch (e) {}
+      return;
+    }
     if (uch.rek) { rekEnd("uchish", uch.pass, box); return; }
     if (uch.bell) { blFinish(box); return; }
     var s = Math.round(100 * uch.pass / uch.R) - uch.hits * 8 + (uch.snitch ? 8 : 0);
@@ -4098,7 +4142,9 @@
     $("ik-back").addEventListener("click", function () { var b = ik && ik.bell; ikStop(); ik = null; blAbort(); if (b) { blOpen("iksir"); } else if (rekFan) { rekQayt(); } else { fanOpen("iksir"); } });
     $("hm-back").addEventListener("click", function () { var b = hm && hm.bell; hmStop(); hm = null; blAbort(); if (b) { blOpen("himoya"); } else if (rekFan) { rekQayt(); } else { fanOpen("himoya"); } });
     $("hm-go").addEventListener("click", function () { if (hm) { hmGo(); } });
-    $("uc-back").addEventListener("click", function () { var b = uch && uch.bell; uchStop(); uch = null; blAbort(); if (b) { blOpen("uchish"); } else if (rekFan) { rekQayt(); } else { fanOpen("uchish"); } });
+    $("uc-back").addEventListener("click", function () { var b = uch && uch.bell, pg0 = uch && uch.poyga; uchStop(); uch = null;
+      if (pg0) { try { pg0.ortga(); } catch (e) {} return; }
+      blAbort(); if (b) { blOpen("uchish"); } else if (rekFan) { rekQayt(); } else { fanOpen("uchish"); } });
     $("uc-go").addEventListener("click", function () { if (uch) { uchGo(); } });
     $("mx-back").addEventListener("click", function () { var b = mx && mx.bell; mxStop(); mx = null; blAbort(); if (b) { blOpen("maxluq"); } else if (rekFan) { rekQayt(); } else { fanOpen("maxluq"); } });
     $("mx-go").addEventListener("click", function () { if (mx) { mxGo(); } });

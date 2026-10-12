@@ -3440,10 +3440,10 @@ button.du-bc:active{transform:scale(.98)}
 .sq-dj.d3{background:rgba(190,70,60,.65)}
 .sq-task.done .sq-dj{opacity:.5}
 /* VIKTORINA «Oxirgi sehrgar» */
-#scr-vik .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-vik .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-vik .kb-hdr,#scr-poyga .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-vik .kb-ttl,#scr-poyga .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
 #scr-vik .kb-ttl .cup-kick{color:#7ec8a0}
-#scr-vik .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-vik .kb-ttl .cup-title,#scr-poyga .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 .vk-hero .du-h-m small{color:#7ec8a0}
 .vk-qoida{margin-top:14px;padding:6px 16px 14px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
 .vk-q{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.09)}
@@ -3650,10 +3650,33 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 @keyframes hubChiq{0%{opacity:0;transform:translateY(16px) scale(.94);filter:brightness(2) saturate(1.3)}55%{opacity:1;filter:brightness(1.35)}100%{opacity:1;transform:none;filter:none}}
 #scr-hub.kut2 #hub-cup,#scr-hub.kut2 .hx[data-k="bell"],
 #scr-hub.kut3 .hx[data-k="rek"],#scr-hub.kut3 .hx[data-k="qoriq"],#scr-hub.kut3 .hx[data-k="issiq"],#scr-hub.kut3 #hub-pat,
-#scr-hub.kut4 .hx[data-k="duel"],#scr-hub.kut4 .hx[data-k="chess"],#scr-hub.kut4 .hx[data-k="vik"],#scr-hub.kut4 #hub-jd,#scr-hub.kut4 .hub-dost{opacity:0}
+#scr-hub.kut4 .hx[data-k="duel"],#scr-hub.kut4 .hx[data-k="chess"],#scr-hub.kut4 .hx[data-k="vik"],#scr-hub.kut4 .hx[data-k="poyga"],#scr-hub.kut4 #hub-jd,#scr-hub.kut4 .hub-dost{opacity:0}
 #scr-hub.chiq2 #hub-cup,#scr-hub.chiq3 .hx[data-k="rek"],#scr-hub.chiq4 #hub-jd,
 #scr-hub.chiqsq #hub-sq,#scr-hub.chiqk #hub-kurs{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) both}
 #scr-hub.chiq2 .hx[data-k="bell"],#scr-hub.chiq3 .hx[data-k="qoriq"],#scr-hub.chiq4 .hx[data-k="duel"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .3s both}
 #scr-hub.chiq3 .hx[data-k="issiq"],#scr-hub.chiq4 .hx[data-k="chess"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .6s both}
-#scr-hub.chiq3 #hub-pat,#scr-hub.chiq4 .hx[data-k="vik"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .9s both}
+#scr-hub.chiq3 #hub-pat,#scr-hub.chiq4 .hx[data-k="vik"],#scr-hub.chiq4 .hx[data-k="poyga"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .9s both}
 #scr-hub.chiq4 .hub-dost{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) 1.2s both}
+
+/* SUPURGI POYGASI (dushanba turniri, js/09-poyga.js) - viktorina uslublari ustiga */
+.pg-hero .du-h-m small{color:#8fb8f0}
+#scr-poyga .vk-q u{background:rgba(120,170,240,.16);color:#a9c8f5}
+#scr-poyga .vk-g-top b{color:#a9c8f5}
+.pg-mashq{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin:10px 0 2px;padding:13px 14px;border-radius:16px;border:1px solid rgba(120,170,240,.4);background:rgba(120,170,240,.08);color:var(--text);text-align:left;cursor:pointer}
+.pg-mashq span{display:flex;flex-direction:column;gap:5px;min-width:0}
+.pg-mashq b{font:800 14px/1.1 'Manrope',sans-serif}
+.pg-mashq small{font:500 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.pg-mashq i{flex:none;font:400 22px/1 'Manrope',sans-serif;font-style:normal;color:#a9c8f5}
+.pg-mashq:active{transform:scale(.985)}
+.pg-holat{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:16px;padding:18px 16px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03);text-align:center}
+.pg-holat b{font:600 24px/1.15 'Cormorant Garamond',serif;color:var(--text)}
+.pg-holat small{font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.pg-holat.yaxshi{border-color:rgba(95,217,143,.55);background:rgba(95,217,143,.08)}
+.pg-holat.yaxshi b{color:#8ff0b6}
+.pg-holat.yomon{border-color:rgba(226,87,76,.5);background:rgba(226,87,76,.07)}
+.pg-holat.yomon b{color:#ff9d94}
+.pg-holat .dr-btn{margin:6px 0 0;width:100%}
+.pg-ost{margin:12px 2px 0;text-align:center;font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--dim);font-variant-numeric:tabular-nums}
+.pg-list{margin-top:12px}
+.pg-list .bl-row.pg-chiq{opacity:.5}
+.pg-list .bl-row u.pg-ok{flex:none;margin-left:8px;text-decoration:none;font:800 13px/1 'Manrope',sans-serif;color:#8ff0b6}
