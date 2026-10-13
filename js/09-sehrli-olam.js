@@ -33,15 +33,15 @@
     issiqP: { uz: "%a / %b o'simlik", ru: "Растений: %a / %b", en: "%a / %b plants" },
     chatP: { uz: "%a ta yangi xabar", ru: "Новых сообщений: %a", en: "%a new messages" },
     chatP0: { uz: "Yangi xabar yo'q", ru: "Новых сообщений нет", en: "No new messages" },
-    duelV: { uz: "Yakshanba, 21:00", ru: "Воскресенье, 21:00", en: "Sunday, 21:00" },
-    chessV: { uz: "Chorshanba, 21:00", ru: "Среда, 21:00", en: "Wednesday, 21:00" },
+    duelV: { uz: "Yakshanba, 22:00", ru: "Воскресенье, 22:00", en: "Sunday, 22:00" },
+    chessV: { uz: "Chorshanba, 22:00", ru: "Среда, 22:00", en: "Wednesday, 22:00" },
     vik: { uz: "Viktorina", ru: "Викторина", en: "Quiz" },
-    vikS: { uz: "Juma, 21:00", ru: "Пятница, 21:00", en: "Friday, 21:00" },
+    vikS: { uz: "Juma, 22:00", ru: "Пятница, 22:00", en: "Friday, 22:00" },
     dokon: { uz: "Do'kon", ru: "Лавка", en: "Shop" },
     dokonS: { uz: "Jihoz va damlamalar", ru: "Снаряжение и зелья", en: "Gear and potions" },
     dokonG: { uz: "%a galleon", ru: "%a галл.", en: "%a Galleons" },
     poyga: { uz: "Poyga", ru: "Гонка", en: "Race" },
-    poygaS: { uz: "Dushanba, 21:00", ru: "Понедельник, 21:00", en: "Monday, 21:00" },
+    poygaS: { uz: "Dushanba, 22:00", ru: "Понедельник, 22:00", en: "Monday, 22:00" },
     kursda: { uz: "%d-kursda ochiladi", ru: "Откроется на %d-м курсе", en: "Unlocks in year %d" },
     chess: { uz: "Shaxmat", ru: "Шахматы", en: "Chess" },
     chessS: { uz: "Jonli raqib bilan", ru: "С живым соперником", en: "Play a live rival" },
@@ -523,10 +523,10 @@
   var JD_KEY = "hp_jd_yopiq";  // yig'ilgan holat shu qurilmada eslanadi (egasi: «minimise qilish funksiyasi»)
   function jdYopiq() { try { return window.localStorage.getItem(JD_KEY) === "1"; } catch (e) { return false; } }
   var JD_TADBIR = [
-    { k: "poyga", kun: 0, s: 21, m: 0, d: 10, rgb: "120,170,240", dan: "2026-10-12T21:00:00+05:00", go: function () { pgOpen(); } },
-    { k: "chess", kun: 2, s: 21, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
-    { k: "vik", kun: 4, s: 21, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
-    { k: "duel", kun: 6, s: 21, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
+    { k: "poyga", kun: 0, s: 22, m: 0, d: 10, rgb: "120,170,240", dan: "2026-10-12T22:00:00+05:00", go: function () { pgOpen(); } },
+    { k: "chess", kun: 2, s: 22, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
+    { k: "vik", kun: 4, s: 22, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
+    { k: "duel", kun: 6, s: 22, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
     { k: "kubok", kun: 6, s: 23, m: 59, d: 1, rgb: "243,213,143", go: function () { openCup(); } }
   ];
   var JD_TX = {

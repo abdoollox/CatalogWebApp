@@ -261,7 +261,7 @@
     var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
     chap.appendChild(drEl("small", "", t.nom + (d.test ? " · SINOV" : "")));
     var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 21:00"));
+    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00"));
     var iz = drEl("em", "", "");
     chap.appendChild(iz);
     tep.appendChild(chap);
@@ -426,7 +426,7 @@
     if (eski) { eski.parentNode.removeChild(eski); }
     var v = { hall: Math.round((r.hall || 120) / 60), har: r.every || 10, kut: r.wait || 20, np: r.next_pts || 5, nt: r.next_to || 6, p1: pt["1"] || 30, p2: pt["2"] || 20, p3: pt["3"] || 10 };
     var bandlar = lang === "ru" ? [
-      ["Когда", "Раз в неделю — в понедельник в 21:00 (время Ташкента)."],
+      ["Когда", "Раз в неделю — в понедельник в 22:00 (время Ташкента)."],
       ["Кто участвует", "Каждый распределённый ученик, кто был на этой странице к старту. Записываться заранее не обязательно: кнопка «Участвую» нужна, чтобы сова напомнила. Стартовая линия открывается за " + v.hall + " мин до начала."],
       ["Как это проходит", "После отсчёта все одновременно летят по одной и той же трассе. Мётлой управляете пальцем — влево и вправо. Гонка одна, без перерывов."],
       ["Кто выбывает", "Каждые " + v.har + " колец — рубеж. Кто пришёл к нему последним, покидает гонку. Так продолжается, пока не останется один пилот — он и победитель. Чем больше пилотов, тем длиннее гонка."],
@@ -437,7 +437,7 @@
       ["Очки", "В кубок факультета: 1-е место +" + v.p1 + ", 2-е +" + v.p2 + ", 3-е +" + v.p3 + ", места 4–" + v.nt + " — +" + v.np + "."],
       ["Тренировка", "Кнопка «Тренировка» открывает трассу из 30 колец в любое время. Результат никуда не идёт."]]
       : lang === "en" ? [
-      ["When", "Once a week — on Monday at 21:00 (Tashkent time)."],
+      ["When", "Once a week — on Monday at 22:00 (Tashkent time)."],
       ["Who flies", "Every sorted student who is on this page at the start. You do not have to sign up: “I'm in” just makes an owl remind you. The start line opens " + v.hall + " minutes before the start."],
       ["How it works", "After the countdown everyone flies the same course at the same time. Steer the broom with your finger — left and right. It is one race with no breaks."],
       ["Who drops out", "Every " + v.har + " hoops there is a checkpoint. Whoever reaches it last leaves the race. This goes on until one flyer is left — the winner. The more flyers, the longer the race."],
@@ -448,7 +448,7 @@
       ["Points", "For the House Cup: 1st place +" + v.p1 + ", 2nd +" + v.p2 + ", 3rd +" + v.p3 + ", places 4–" + v.nt + " get +" + v.np + "."],
       ["Practice", "The “Practice” button opens a 30-hoop course at any time. The result goes nowhere."]]
       : [
-      ["Qachon", "Haftada bir marta — dushanba kuni soat 21:00 da (Toshkent vaqti)."],
+      ["Qachon", "Haftada bir marta — dushanba kuni soat 22:00 da (Toshkent vaqti)."],
       ["Kim qatnashadi", "Start paytida shu sahifada bo'lgan har bir saralangan o'quvchi. Oldindan yozilish shart emas: «Qatnashaman» tugmasi boyo'g'li eslatishi uchun kerak. Start chizig'i boshlanishidan " + v.hall + " daqiqa oldin ochiladi."],
       ["Qanday o'tadi", "Sanoqdan keyin hamma bir vaqtda bir xil yo'ldan uchadi. Supurgini barmoq bilan o'ngga-chapga boshqarasiz. Poyga bitta, tanaffussiz."],
       ["Kim chiqib ketadi", "Har " + v.har + " halqada — nazorat. Unga eng oxirida yetgan uchuvchi poygani tark etadi. Shu tartibda davom etadi — oxirida bitta uchuvchi qoladi, u g'olib. Uchuvchi qancha ko'p bo'lsa, poyga shuncha uzun."],

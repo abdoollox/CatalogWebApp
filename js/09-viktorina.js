@@ -1,4 +1,4 @@
-/* Jonli viktorina «Oxirgi sehrgar» (egasi, 2026-10-11) - juma 21:00. Server: hpviktorina.py, POST /api/viktorina.
+/* Jonli viktorina «Oxirgi sehrgar» (egasi, 2026-10-11) - juma 22:00. Server: hpviktorina.py, POST /api/viktorina.
    Ilova kodi bir necha faylga bo'lingan; hammasi BIR umumiy maydonda ishlaydi
    va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
    narsani chaqirmang - tekshiruv: tools/tartib.js */
@@ -152,7 +152,7 @@
     var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
     chap.appendChild(drEl("small", "", t.nom));
     var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 21:00"));
+    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00"));
     var iz = drEl("em", "", "");
     chap.appendChild(iz);
     tep.appendChild(chap);
@@ -294,7 +294,7 @@
     if (eski) { eski.parentNode.removeChild(eski); }
     var v = { q: r.q || 15, max: r.max || 30, hall: Math.round((r.hall || 120) / 60), good: r.good || 5, gp: r.good_pts || 5, p1: pt["1"] || 30, p2: pt["2"] || 20, p3: pt["3"] || 10 };
     var bandlar = lang === "ru" ? [
-      ["Когда", "Раз в неделю — в пятницу в 21:00 (время Ташкента). Длится 10–15 минут."],
+      ["Когда", "Раз в неделю — в пятницу в 22:00 (время Ташкента). Длится 10–15 минут."],
       ["Кто участвует", "Каждый распределённый ученик, кто был на этой странице к началу. Записываться заранее не обязательно: кнопка «Участвую» нужна, чтобы сова напомнила. Зал открывается за " + v.hall + " мин. до начала."],
       ["Как это проходит", "Все одновременно видят один вопрос и четыре ответа. На ответ — " + v.q + " секунд, изменить его нельзя. Ошибся или не успел — выбыл и дальше только смотришь."],
       ["Если ошиблись все", "Если на вопрос неверно ответили все оставшиеся, никто не выбывает — вопрос отменяется."],
@@ -303,7 +303,7 @@
       ["Очки", "В кубок факультета: 1-е место +" + v.p1 + ", 2-е +" + v.p2 + ", 3-е +" + v.p3 + ". Всем остальным, кто дал " + v.good + " верных ответов, — +" + v.gp + "."],
       ["Вопросы", "О книгах, фильмах и мире волшебников. Каждую неделю — новые, заранее их не знает никто."]]
       : lang === "en" ? [
-      ["When", "Once a week — on Friday at 21:00 (Tashkent time). It takes 10–15 minutes."],
+      ["When", "Once a week — on Friday at 22:00 (Tashkent time). It takes 10–15 minutes."],
       ["Who plays", "Every sorted student who is on this page when it starts. You do not have to sign up: “I'm in” just makes an owl remind you. The hall opens " + v.hall + " minutes before the start."],
       ["How it works", "Everyone sees the same question with four answers at once. You have " + v.q + " seconds and cannot change your answer. A wrong or late answer and you are out — from then on you only watch."],
       ["If everyone is wrong", "If all remaining players answer wrongly, nobody goes out — the question is void."],
@@ -312,7 +312,7 @@
       ["Points", "For the House Cup: 1st place +" + v.p1 + ", 2nd +" + v.p2 + ", 3rd +" + v.p3 + ". Everyone else with " + v.good + " correct answers gets +" + v.gp + "."],
       ["Questions", "About the books, the films and the wizarding world. New ones every week — nobody knows them in advance."]]
       : [
-      ["Qachon", "Haftada bir marta — juma kuni soat 21:00 da (Toshkent vaqti). 10–15 daqiqa davom etadi."],
+      ["Qachon", "Haftada bir marta — juma kuni soat 22:00 da (Toshkent vaqti). 10–15 daqiqa davom etadi."],
       ["Kim qatnashadi", "Boshlanish paytida shu sahifada bo'lgan har bir saralangan o'quvchi. Oldindan yozilish shart emas: «Qatnashaman» tugmasi boyo'g'li eslatishi uchun kerak. Zal boshlanishidan " + v.hall + " daqiqa oldin ochiladi."],
       ["Qanday o'tadi", "Hamma bir vaqtda bitta savol va to'rtta javobni ko'radi. Javobga " + v.q + " soniya beriladi, uni o'zgartirib bo'lmaydi. Xato qilgan yoki ulgurmagan chiqib ketadi va qolganini faqat tomosha qiladi."],
       ["Hamma xato qilsa", "Qolganlarning hammasi savolga xato javob bersa, hech kim chiqmaydi — savol bekor bo'ladi."],

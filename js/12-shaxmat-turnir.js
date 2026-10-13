@@ -131,7 +131,7 @@
     } else if (c && c.size === 0) { izoh = t.kam; }
     else if (tr) {
       var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-      sar = kun.charAt(0).toUpperCase() + kun.slice(1) + ", 21:00";
+      sar = kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00";
       izoh = tr.open ? duQol(tr.ts - tr.now) + " " + t.qoldi + " · " + t.soni(tr.n) : t.yopiq;
     }
     chap.appendChild(drEl("b", "", sar));
@@ -254,7 +254,7 @@
     var r = { daq: Math.round((q.base || 300) / 60), gap: Math.round((q.gap || 60) / 60), first: Math.round((q.first || 60) / 60),
       yop: Math.round((((shtData && shtData.tour) || {}).close || 300) / 60), p16: pt["16"] || 5, p8: pt["8"] || 10, p4: pt["4"] || 20, p2: pt["2"] || 30 };
     if (lang === "ru") { return [
-      ["Когда", "Раз в неделю — в среду в 21:00 (время Ташкента). Победитель определяется в тот же вечер."],
+      ["Когда", "Раз в неделю — в среду в 22:00 (время Ташкента). Победитель определяется в тот же вечер."],
       ["Кто участвует", "Отбора нет. Играет каждый, кто нажал «Участвую». Запись закрывается за " + r.yop + " мин. до начала — после этого составляется сетка."],
       ["Как составляется сетка", "Турнир на выбывание: победитель идёт дальше, проигравший выбывает. Если участников не хватает на полную сетку, более сильные шахматисты пропускают первый круг («ждёт»). Кто сильнее — определяется по вашим результатам в живых партиях."],
       ["Как проходит партия", "Каждому игроку — " + r.daq + " минут на всю партию. Партия открывается сама: оставайтесь на странице шахмат. Тот, кто стоит выше в сетке, играет белыми."],
@@ -264,7 +264,7 @@
       ["Очки", "За победу — очки в кубок факультета: в 1/8 финала +" + r.p16 + ", в четвертьфинале +" + r.p8 + ", в полуфинале +" + r.p4 + ", в финале +" + r.p2 + ". За более ранние круги и за пропуск круга очков нет."],
       ["Напоминание", "Записавшимся сова приносит напоминание утром в день турнира и за 10 минут до начала."]]; }
     if (lang === "en") { return [
-      ["When", "Once a week — on Wednesday at 21:00 (Tashkent time). The winner is decided that same evening."],
+      ["When", "Once a week — on Wednesday at 22:00 (Tashkent time). The winner is decided that same evening."],
       ["Who plays", "No qualifying. Everyone who taps “I'm in” plays. Sign-up closes " + r.yop + " minutes before the start — then the bracket is drawn."],
       ["How the bracket works", "It is a knockout: the winner moves on, the loser is out. If there are not enough players for a full bracket, stronger players skip the first round (“bye”). Strength is judged by your results in live games."],
       ["How a game works", "Each player has " + r.daq + " minutes for the whole game. The game opens by itself: stay on the chess page. The player higher in the bracket plays white."],
@@ -274,7 +274,7 @@
       ["Points", "A win earns House Cup points: +" + r.p16 + " in the round of 16, +" + r.p8 + " in the quarter-final, +" + r.p4 + " in the semi-final, +" + r.p2 + " in the final. No points for earlier rounds or for a bye."],
       ["Reminder", "If you signed up, an owl reminds you on the morning of the tournament and 10 minutes before it starts."]]; }
     return [
-      ["Qachon", "Haftada bir marta — chorshanba kuni soat 21:00 da (Toshkent vaqti). G'olib shu oqshomning o'zida aniqlanadi."],
+      ["Qachon", "Haftada bir marta — chorshanba kuni soat 22:00 da (Toshkent vaqti). G'olib shu oqshomning o'zida aniqlanadi."],
       ["Kim qatnashadi", "Saralash yo'q. «Qatnashaman» tugmasini bosgan har bir o'quvchi o'ynaydi. Yozilish turnirdan " + r.yop + " daqiqa oldin yopiladi — shundan keyin to'r tuziladi."],
       ["To'r qanday tuziladi", "Turnir — olib tashlash usulida: yutgan keyingi bosqichga o'tadi, yutqazgan turnirni tark etadi. Ishtirokchilar soni to'rga to'liq yetmasa, kuchliroq shaxmatchilar birinchi bosqichni o'tkazib yuboradi («kutadi»). Kim kuchliroq ekani jonli o'yinlardagi natijalaringizdan aniqlanadi."],
       ["O'yin qanday o'tadi", "Har o'yinchiga butun o'yin uchun " + r.daq + " daqiqa beriladi. O'yin o'zi ochiladi: shaxmat sahifasida turing. To'rda yuqori turgan o'yinchi oq donalar bilan o'ynaydi."],

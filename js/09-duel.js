@@ -22,7 +22,7 @@
     uz: { ttl: "Duel", kick: "Duel klubi", note: "Raqibni tanlang. Har ikkingizda 5 tadan jon bor: kim birinchi tugatsa — yutqazadi.",
           tur: { hujum: "Hujum", himoya: "Himoya", hiyla: "Hiyla" }, raq: ["Birinchi kurs o'quvchisi", "Yuqori kurs o'quvchisi", "Duel ustozi"], lvl: ["Oson", "O'rta", "Qiyin"],
           best: function (n) { return "Reytingi " + n; }, rdelta: function (n) { return "Reyting " + (n >= 0 ? "+" : "−") + Math.abs(n); }, rule: "Kuch = chizish aniqligi. Ustun tur +25: hujum › hiyla › himoya › hujum. Kuchi baland yutadi.", kuch: "kuch",
-          planT: "Duel turniri", plan: "Haftada bir marta, yakshanba kuni soat 21:00 da — va shu oqshomning o'zida g'olib aniqlanadi. Saralash yo'q: «Qatnashaman» tugmasini bosgan har kim o'ynaydi. Reytingi yuqori duelchilar birinchi bosqichni o'tkazib yuboradi. Har duelga 5 daqiqa, bosqichlar orasida 1 daqiqa tanaffus; 1 daqiqa ichida kelmagan duelchi yutqazadi.",
+          planT: "Duel turniri", plan: "Haftada bir marta, yakshanba kuni soat 22:00 da — va shu oqshomning o'zida g'olib aniqlanadi. Saralash yo'q: «Qatnashaman» tugmasini bosgan har kim o'ynaydi. Reytingi yuqori duelchilar birinchi bosqichni o'tkazib yuboradi. Har duelga 5 daqiqa, bosqichlar orasida 1 daqiqa tanaffus; 1 daqiqa ichida kelmagan duelchi yutqazadi.",
           topT: "Reyting jadvali", empty: "Hali hech kim duel qilmadi. Birinchi bo'ling!", mine: function (b, p, n) { return "Reytingingiz: " + b + (p ? " · " + p + "-o'rin (" + n + " kishi)" : ""); },
           pick: function (r) { return r + "-raund. Nima qilasiz?"; }, draw: function (nom) { return nom + " — afsunni chizing!"; }, wait: "Afsunlar to'qnashmoqda…",
           you: "Siz", w1: "Zarbangiz yetdi!", w0: "Durang — afsunlar bir-birini so'ndirdi.", wm: "Raqib ustun keldi.", fail: "afsun chiqmadi", next: "Keyingi raund",
@@ -30,7 +30,7 @@
     ru: { ttl: "Дуэль", kick: "Дуэльный клуб", note: "Выберите соперника. У каждого по 5 жизней: у кого закончатся первыми — тот проиграл.",
           tur: { hujum: "Атака", himoya: "Защита", hiyla: "Уловка" }, raq: ["Первокурсник", "Старшекурсник", "Мастер дуэлей"], lvl: ["Легко", "Средне", "Сложно"],
           best: function (n) { return "Рейтинг " + n; }, rdelta: function (n) { return "Рейтинг " + (n >= 0 ? "+" : "−") + Math.abs(n); }, rule: "Сила = точность рисунка. Преимущество типа +25: атака › уловка › защита › атака. Побеждает более сильное.", kuch: "сила",
-          planT: "Дуэльный турнир", plan: "Раз в неделю, в воскресенье в 21:00 — и победитель определяется в тот же вечер. Отбора нет: играет каждый, кто нажал «Участвую». Дуэлянты с высоким рейтингом пропускают первый круг. На дуэль 5 минут, между кругами перерыв 1 минута; кто не пришёл за минуту — проигрывает.",
+          planT: "Дуэльный турнир", plan: "Раз в неделю, в воскресенье в 22:00 — и победитель определяется в тот же вечер. Отбора нет: играет каждый, кто нажал «Участвую». Дуэлянты с высоким рейтингом пропускают первый круг. На дуэль 5 минут, между кругами перерыв 1 минута; кто не пришёл за минуту — проигрывает.",
           topT: "Таблица рейтинга", empty: "Пока никто не дрался. Будьте первым!", mine: function (b, p, n) { return "Ваш рейтинг: " + b + (p ? " · место " + p + " (из " + n + ")" : ""); },
           pick: function (r) { return "Раунд " + r + ". Что будете делать?"; }, draw: function (nom) { return nom + " — начертите заклинание!"; }, wait: "Заклинания сталкиваются…",
           you: "Вы", w1: "Ваш удар достиг цели!", w0: "Ничья — заклинания погасили друг друга.", wm: "Соперник оказался сильнее.", fail: "заклинание не вышло", next: "Следующий раунд",
@@ -38,17 +38,17 @@
     en: { ttl: "Duel", kick: "Duelling Club", note: "Choose your opponent. You each have 5 lives: whoever runs out first loses.",
           tur: { hujum: "Attack", himoya: "Defence", hiyla: "Trick" }, raq: ["First-year student", "Senior student", "Duelling master"], lvl: ["Easy", "Medium", "Hard"],
           best: function (n) { return "Rating " + n; }, rdelta: function (n) { return "Rating " + (n >= 0 ? "+" : "−") + Math.abs(n); }, rule: "Power = drawing accuracy. Type advantage +25: attack › trick › defence › attack. The stronger spell wins.", kuch: "power",
-          planT: "Duelling tournament", plan: "Once a week, on Sunday at 21:00 — and the winner is decided that same evening. No qualifying: everyone who taps “I'm in” plays. Higher-rated duellists skip the first round. Each duel lasts up to 5 minutes with a 1-minute break between rounds; anyone a minute late loses.",
+          planT: "Duelling tournament", plan: "Once a week, on Sunday at 22:00 — and the winner is decided that same evening. No qualifying: everyone who taps “I'm in” plays. Higher-rated duellists skip the first round. Each duel lasts up to 5 minutes with a 1-minute break between rounds; anyone a minute late loses.",
           topT: "Rating table", empty: "Nobody has duelled yet. Be the first!", mine: function (b, p, n) { return "Your rating: " + b + (p ? " · place " + p + " of " + n : ""); },
           pick: function (r) { return "Round " + r + ". What will you do?"; }, draw: function (nom) { return nom + " — draw the spell!"; }, wait: "The spells collide…",
           you: "You", w1: "Your spell hit!", w0: "A draw — the spells cancelled out.", wm: "Your opponent got the better of you.", fail: "the spell failed", next: "Next round",
           won: "Victory!", lost: "Defeat", score: function (n) { return "Qualifying points: " + n; }, again: "Duel again", back: "Opponents", acc: "accuracy" }
   };
-  /* PLEY-OFF (jonli, 21:00): to'r serverdan (holatdagi `cup`), duel «arena»da - {arena: id} har 1,5 soniyada so'raladi,
+  /* PLEY-OFF (jonli, 22:00): to'r serverdan (holatdagi `cup`), duel «arena»da - {arena: id} har 1,5 soniyada so'raladi,
      bosqichni server aytadi: early / wait / pick / reveal / over (hpduel._arena). Mahalliy ko'rikda soxta arena (duArSample). */
   var DU_T = {
     uz: { hSar: "duel reytingingiz", hOrin: "o'rin", stN: function (n) { return "1/" + n + " final"; },
-          tKun: function (k, t) { return "Turnir: " + k + ", 21:00 · " + t + " qoldi"; }, tBugun: function (t) { return "Turnir bugun 21:00 da · " + t + " qoldi"; }, tKunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"],
+          tKun: function (k, t) { return "Turnir: " + k + ", 22:00 · " + t + " qoldi"; }, tBugun: function (t) { return "Turnir bugun 22:00 da · " + t + " qoldi"; }, tKunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"],
           tSoni: function (n) { return n + " kishi yozildi"; }, tQat: "Qatnashaman", tBor: "Siz turnirga yozilgansiz", tChiq: "Chiqish", tYopiq: "Yozilish yopildi — to'r tuzilmoqda", tKeyin: "Yozilish dushanbadan ochiladi", qoldi: "qoldi",
           tYoz: "Turnirga yozilmagan edingiz. Keyingi turnir — kelasi yakshanba.", bye: "bu bosqichni o'tkazib yuboradi", ball: function (n) { return "+" + n + " ball"; }, qatT: "Yozilganlar",
           keyingi: function (t) { return "Keyingi duelingiz " + t + " dan keyin. Arenada qoling!"; }, vaqtT: "Vaqt tugadi — joni ko'p duelchi yutdi.", kunQ: "kun", mashqT: "Mashq", mashqS: "Ball va turnirga ta'sir qilmaydi", dostT: "Do'st bilan duel", dostS: "Chatga taklif yuboring — qabul qilgan sehrgar bilan jonli duel",
@@ -65,8 +65,8 @@
           eski: "Bu duelning raundlari saqlanmagan — u yangilanishdan oldin o'ynalgan.", jonli: "JONLI", kelmadiQ: "kelmadi", uchN: "Ustun tur +25 · kuchi baland yutadi",
           chiq: "chiqmadi", raund: "Raund", rSiz: "Siz", ham: "Barcha duellar",
           st: { 16: "1/8 final", 8: "Chorak final", 4: "Yarim final", 2: "Final" }, kun: { 16: "payshanba", 8: "juma", 4: "shanba", 2: "yakshanba" },
-          from: "Birinchi turnir — yakshanba 18-oktabr, 21:00. Hozircha mashq qiling: har duel reytingingizga ta'sir qiladi.",
-          kam: "Bu safar turnirga duelchi yetmadi (kamida 2 kishi kerak).", at: function (k) { return k + ", 21:00"; }, tbd: "aniqlanmoqda",
+          from: "Birinchi turnir — yakshanba 18-oktabr, 22:00. Hozircha mashq qiling: har duel reytingingizga ta'sir qiladi.",
+          kam: "Bu safar turnirga duelchi yetmadi (kamida 2 kishi kerak).", at: function (k) { return k + ", 22:00"; }, tbd: "aniqlanmoqda",
           my: function (st, k) { return "Sizning duelingiz: " + st + " — " + k; }, in_: function (t) { return "Boshlanishiga " + t + " qoldi"; }, now: "Duel boshlandi — kiring!",
           go: "Arenaga kirish", wopp: "Raqibingiz hali aniqlanmagan", test: "Sinov dueli (faqat admin)", h: " soat ", m: " daqiqa",
           early: function (t) { return "Duel " + t + " dan keyin boshlanadi"; }, wait: function (t) { return "Raqib kutilmoqda… " + t; }, here: "Raqibingiz arenada.", nothere: "Raqibingiz hali kelmadi.",
@@ -74,7 +74,7 @@
           kelmadi: "Raqibingiz kelmadi — g'alaba sizniki.", kelmadim: "Siz vaqtida kelmadingiz.", ikkalasi: "Ikkalangiz ham kelmadingiz — reytingi yuqori duelchi o'tdi.",
           pts: function (n) { return "+" + n + " ball kubokka"; }, champ: "Siz duel chempionisiz!", out: "Turnir siz uchun tugadi. Keyingi yakshanba yana urinib ko'ring!", tbl: "Turnir jadvali", bot: "Sinov raqibi" },
     ru: { hSar: "ваш дуэльный рейтинг", hOrin: "место", stN: function (n) { return "1/" + n + " финала"; },
-          tKun: function (k, t) { return "Турнир: " + k + ", 21:00 · осталось " + t; }, tBugun: function (t) { return "Турнир сегодня в 21:00 · осталось " + t; }, tKunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
+          tKun: function (k, t) { return "Турнир: " + k + ", 22:00 · осталось " + t; }, tBugun: function (t) { return "Турнир сегодня в 22:00 · осталось " + t; }, tKunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
           tSoni: function (n) { return "Записалось: " + n; }, tQat: "Участвую", tBor: "Вы записаны на турнир", tChiq: "Выйти", tYopiq: "Запись закрыта — составляется сетка", tKeyin: "Запись откроется в понедельник", qoldi: "осталось",
           tYoz: "Вы не записались на этот турнир. Следующий — в будущее воскресенье.", bye: "пропускает этот круг", ball: function (n) { return "+" + n + " очк."; }, qatT: "Участники",
           keyingi: function (t) { return "Ваша следующая дуэль через " + t + ". Оставайтесь на арене!"; }, vaqtT: "Время вышло — победил тот, у кого больше жизней.", kunQ: "дн.", mashqT: "Тренировка", mashqS: "Не влияет на очки и турнир", dostT: "Дуэль с другом", dostS: "Отправьте вызов в чат — живая дуэль с тем, кто примет",
@@ -91,8 +91,8 @@
           eski: "Раунды этой дуэли не сохранены — она была сыграна до обновления.", jonli: "ИДЁТ", kelmadiQ: "не пришёл", uchN: "Преимущество типа +25 · побеждает более сильное",
           chiq: "не вышло", raund: "Раунд", rSiz: "Вы", ham: "Все дуэли",
           st: { 16: "1/8 финала", 8: "Четвертьфинал", 4: "Полуфинал", 2: "Финал" }, kun: { 16: "четверг", 8: "пятница", 4: "суббота", 2: "воскресенье" },
-          from: "Первый турнир — в воскресенье 18 октября, 21:00. Пока тренируйтесь: каждая дуэль влияет на рейтинг.",
-          kam: "В этот раз не хватило дуэлянтов для турнира (нужно минимум 2).", at: function (k) { return k + ", 21:00"; }, tbd: "определяется",
+          from: "Первый турнир — в воскресенье 18 октября, 22:00. Пока тренируйтесь: каждая дуэль влияет на рейтинг.",
+          kam: "В этот раз не хватило дуэлянтов для турнира (нужно минимум 2).", at: function (k) { return k + ", 22:00"; }, tbd: "определяется",
           my: function (st, k) { return "Ваша дуэль: " + st + " — " + k; }, in_: function (t) { return "До начала " + t; }, now: "Дуэль началась — заходите!",
           go: "Войти на арену", wopp: "Ваш соперник ещё не определён", test: "Тестовая дуэль (только админ)", h: " ч ", m: " мин",
           early: function (t) { return "Дуэль начнётся через " + t; }, wait: function (t) { return "Ждём соперника… " + t; }, here: "Соперник на арене.", nothere: "Соперник ещё не пришёл.",
@@ -100,7 +100,7 @@
           kelmadi: "Соперник не пришёл — победа ваша.", kelmadim: "Вы не пришли вовремя.", ikkalasi: "Никто не пришёл — дальше прошёл дуэлянт с более высоким рейтингом.",
           pts: function (n) { return "+" + n + " очков в кубок"; }, champ: "Вы чемпион дуэлей!", out: "Турнир для вас окончен. Попробуйте на следующей неделе!", tbl: "Таблица турнира", bot: "Тестовый соперник" },
     en: { hSar: "your duelling rating", hOrin: "place", stN: function (n) { return "Round of " + (n * 2); },
-          tKun: function (k, t) { return "Tournament: " + k + ", 21:00 · " + t + " left"; }, tBugun: function (t) { return "Tournament today at 21:00 · " + t + " left"; }, tKunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          tKun: function (k, t) { return "Tournament: " + k + ", 22:00 · " + t + " left"; }, tBugun: function (t) { return "Tournament today at 22:00 · " + t + " left"; }, tKunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
           tSoni: function (n) { return n + " signed up"; }, tQat: "I'm in", tBor: "You are signed up", tChiq: "Leave", tYopiq: "Sign-up is closed — the bracket is being drawn", tKeyin: "Sign-up opens on Monday", qoldi: "left",
           tYoz: "You did not sign up for this tournament. The next one is next Sunday.", bye: "skips this round", ball: function (n) { return "+" + n + " pts"; }, qatT: "Signed up",
           keyingi: function (t) { return "Your next duel is in " + t + ". Stay in the arena!"; }, vaqtT: "Time is up — the duellist with more lives won.", kunQ: "d", mashqT: "Practice", mashqS: "Does not affect points or the tournament", dostT: "Duel a friend", dostS: "Send a challenge to the chat — a live duel with whoever accepts",
@@ -117,8 +117,8 @@
           eski: "The rounds of this duel were not saved — it was played before the update.", jonli: "LIVE", kelmadiQ: "no-show", uchN: "Type advantage +25 · the stronger spell wins",
           chiq: "failed", raund: "Round", rSiz: "You", ham: "All duels",
           st: { 16: "Round of 16", 8: "Quarter-final", 4: "Semi-final", 2: "Final" }, kun: { 16: "Thursday", 8: "Friday", 4: "Saturday", 2: "Sunday" },
-          from: "The first tournament is on Sunday 18 October at 21:00. Practise for now: every duel changes your rating.",
-          kam: "Not enough duellists for the tournament this time (at least 2 needed).", at: function (k) { return k + ", 21:00"; }, tbd: "to be decided",
+          from: "The first tournament is on Sunday 18 October at 22:00. Practise for now: every duel changes your rating.",
+          kam: "Not enough duellists for the tournament this time (at least 2 needed).", at: function (k) { return k + ", 22:00"; }, tbd: "to be decided",
           my: function (st, k) { return "Your duel: " + st + " — " + k; }, in_: function (t) { return "Starts in " + t; }, now: "The duel has started — come in!",
           go: "Enter the arena", wopp: "Your opponent is not known yet", test: "Test duel (admin only)", h: " h ", m: " min",
           early: function (t) { return "The duel starts in " + t; }, wait: function (t) { return "Waiting for your opponent… " + t; }, here: "Your opponent is in the arena.", nothere: "Your opponent has not arrived yet.",
@@ -352,7 +352,7 @@
     } else if (c && c.size === 0) { sar = t.turT; izoh = t.kam; }
     else if (tr) {
       var qolT = tr.ts - tr.now, kunNomi = t.tKunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-      sar = kunNomi.charAt(0).toUpperCase() + kunNomi.slice(1) + ", 21:00";
+      sar = kunNomi.charAt(0).toUpperCase() + kunNomi.slice(1) + ", 22:00";
       izoh = duQol(qolT) + " " + (t.qoldi || "") + (tr.open ? " · " + t.tSoni(tr.n) : "");
       if (!tr.open) { izoh = (c && c.from) ? t.tKeyin : t.tYopiq; }
     }
@@ -502,7 +502,7 @@
     var q = (duData && duData.rules) || {}, pt = q.points || {};
     var r = { jon: q.lives || 5, raund: q.round || 20, bonus: q.bonus || 25, fail: q.fail || 35, match: Math.round((q.match || 300) / 60), gap: Math.round((q.gap || 60) / 60),
       wait: Math.round((q.wait || 60) / 60), yop: Math.round((((duData && duData.tour) || {}).close || 300) / 60), p16: pt["16"] || 5, p8: pt["8"] || 10, p4: pt["4"] || 20, p2: pt["2"] || 30 };
-    if (lang === "ru") { return [["Когда", "Раз в неделю — в воскресенье в 21:00 (время Ташкента). Победитель определяется в тот же вечер."],
+    if (lang === "ru") { return [["Когда", "Раз в неделю — в воскресенье в 22:00 (время Ташкента). Победитель определяется в тот же вечер."],
       ["Кто участвует", "Отбора нет. Играет каждый, кто нажал «Участвую». Запись закрывается за " + r.yop + " мин. до начала — после этого составляется сетка."],
       ["Как составляется сетка", "Турнир на выбывание: победитель идёт дальше, проигравший выбывает. Если участников не хватает на полную сетку, более сильные дуэлянты пропускают первый круг («ждёт»), остальные играют в нём."],
       ["Как проходит дуэль", "У каждого " + r.jon + " жизней. В каждом раунде вы выбираете тип и рисуете заклинание (" + r.raund + " секунд). Атака бьёт хитрость, хитрость — защиту, защита — атаку: сильный тип даёт +" + r.bonus + " к силе. Сила — это точность рисунка; у кого сила выше, тот отнимает у соперника жизнь. При точности ниже " + r.fail + " заклинание не срабатывает."],
@@ -510,7 +510,7 @@
       ["Очки", "За победу — очки в кубок факультета: в 1/8 финала +" + r.p16 + ", в четвертьфинале +" + r.p8 + ", в полуфинале +" + r.p4 + ", в финале +" + r.p2 + ". За более ранние круги и за пропуск круга очков нет."],
       ["Кто пропускает первый круг", "Это определяется по вашим результатам в дуэлях: кто чаще побеждает, тот считается сильнее. Тренировочные дуэли тоже учитываются."],
       ["Напоминание", "Записавшимся сова приносит напоминание утром в день турнира и за 10 минут до начала."]]; }
-    if (lang === "en") { return [["When", "Once a week — on Sunday at 21:00 (Tashkent time). The winner is decided that same evening."],
+    if (lang === "en") { return [["When", "Once a week — on Sunday at 22:00 (Tashkent time). The winner is decided that same evening."],
       ["Who plays", "No qualifying. Everyone who taps “I'm in” plays. Sign-up closes " + r.yop + " minutes before the start — then the bracket is drawn."],
       ["How the bracket works", "It is a knockout: the winner moves on, the loser is out. If there are not enough players for a full bracket, stronger duellists skip the first round (“bye”) and the rest play it."],
       ["How a duel works", "Each duellist has " + r.jon + " lives. Every round you pick a type and draw the spell (" + r.raund + " seconds). Attack beats trick, trick beats defence, defence beats attack: the stronger type adds +" + r.bonus + " power. Power is your drawing accuracy; the higher power takes one life. Below " + r.fail + " accuracy the spell fails."],
@@ -518,7 +518,7 @@
       ["Points", "A win earns House Cup points: +" + r.p16 + " in the round of 16, +" + r.p8 + " in the quarter-final, +" + r.p4 + " in the semi-final, +" + r.p2 + " in the final. No points for earlier rounds or for a bye."],
       ["Who skips the first round", "It depends on your duel results: the more you win, the stronger you are considered. Practice duels count too."],
       ["Reminder", "If you signed up, an owl reminds you on the morning of the tournament and 10 minutes before it starts."]]; }
-    return [["Qachon", "Haftada bir marta — yakshanba kuni soat 21:00 da (Toshkent vaqti). G'olib shu oqshomning o'zida aniqlanadi."],
+    return [["Qachon", "Haftada bir marta — yakshanba kuni soat 22:00 da (Toshkent vaqti). G'olib shu oqshomning o'zida aniqlanadi."],
       ["Kim qatnashadi", "Saralash yo'q. «Qatnashaman» tugmasini bosgan har bir o'quvchi o'ynaydi. Yozilish turnirdan " + r.yop + " daqiqa oldin yopiladi — shundan keyin to'r tuziladi."],
       ["To'r qanday tuziladi", "Turnir — olib tashlash usulida: yutgan keyingi bosqichga o'tadi, yutqazgan turnirni tark etadi. Ishtirokchilar soni to'rga to'liq yetmasa, kuchliroq duelchilar birinchi bosqichni o'tkazib yuboradi («kutadi»), qolganlar o'sha bosqichda bellashadi."],
       ["Duel qanday o'tadi", "Har duelchida " + r.jon + " ta jon. Har raundda tur tanlaysiz va afsunni chizasiz (" + r.raund + " soniya). Hujum hiylani, hiyla himoyani, himoya hujumni yengadi: ustun tur kuchga +" + r.bonus + " qo'shadi. Kuch — chizish aniqligi; kimning kuchi baland bo'lsa, raqibining bir joni ketadi. Aniqlik " + r.fail + " dan past bo'lsa afsun chiqmaydi."],
