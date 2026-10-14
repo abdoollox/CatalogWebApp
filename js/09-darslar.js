@@ -552,7 +552,7 @@
     drQayt = false;
     qrLoad();
     drBahoSync();
-    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
+    ["scr-hub", "scr-cat", "scr-cup", "scr-tasks", "scr-quiz", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-sq", "pm"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -633,7 +633,7 @@
   function blHomeOpen(mode) {
     blhMode = mode === "rek" ? "rek" : "bell";
     blQayt = false;
-    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
+    ["scr-hub", "scr-cat", "scr-cup", "scr-dars", "scr-fan", "scr-afsun", "scr-iksir", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-bell", "scr-sq",
      "scr-chess-hub", "scr-chess-stats", "pm"].forEach(function (id) { var el = $(id); if (el) { el.classList.add("hidden"); } });
     $("scr-blh").classList.remove("hidden");
     rekFan = null;
@@ -900,7 +900,7 @@
     if (kel) { blKel = kel; }
     blFan = fan;
     bl = null;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-sq"].forEach(function (id) { $(id).classList.add("hidden"); });
     $("scr-bell").classList.remove("hidden");
     blRender();
     drPost({}, function (res) { if (res && res.ok) { drData = res.lessons || drData; if (!$("scr-bell").classList.contains("hidden")) { blRender(); } } });
@@ -1063,7 +1063,7 @@
     fanId = id;
     qrLoad();
     drQayt = false;
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek", "scr-blh", "scr-hub", "scr-quiz", "scr-tasks"].forEach(function (q) { $(q).classList.add("hidden"); });
     $("scr-fan").classList.remove("hidden");
     fanRender();
     rekLoad(function () { if (fanId === id && !$("scr-fan").classList.contains("hidden")) { fanMore(); } });
@@ -1336,7 +1336,7 @@
   }
 
   function drShowGame(scr) {
-    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
+    ["scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) { $(id).classList.toggle("hidden", id !== scr); });
     try { $(scr).classList.remove("natija"); } catch (e) {}
     try { window.scrollTo(0, 0); } catch (e) {}
     try { [].forEach.call(document.querySelectorAll(".fy-qanday"), function (b) { b.textContent = fyX().qanday; }); } catch (e) {}

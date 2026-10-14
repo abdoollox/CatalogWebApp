@@ -3440,10 +3440,10 @@ button.du-bc:active{transform:scale(.98)}
 .sq-dj.d3{background:rgba(190,70,60,.65)}
 .sq-task.done .sq-dj{opacity:.5}
 /* VIKTORINA «Oxirgi sehrgar» */
-#scr-vik .kb-hdr,#scr-poyga .kb-hdr,#scr-dokon .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
-#scr-vik .kb-ttl,#scr-poyga .kb-ttl,#scr-dokon .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+#scr-vik .kb-hdr,#scr-poyga .kb-hdr,#scr-dokon .kb-hdr,#scr-tosh .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+#scr-vik .kb-ttl,#scr-poyga .kb-ttl,#scr-dokon .kb-ttl,#scr-tosh .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
 #scr-vik .kb-ttl .cup-kick{color:#7ec8a0}
-#scr-vik .kb-ttl .cup-title,#scr-poyga .kb-ttl .cup-title,#scr-dokon .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
+#scr-vik .kb-ttl .cup-title,#scr-poyga .kb-ttl .cup-title,#scr-dokon .kb-ttl .cup-title,#scr-tosh .kb-ttl .cup-title{margin:0;font-size:clamp(20px,6.2vw,26px)!important;white-space:nowrap}
 .vk-hero .du-h-m small{color:#7ec8a0}
 .vk-qoida{margin-top:14px;padding:6px 16px 14px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
 .vk-q{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.09)}
@@ -3656,12 +3656,12 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 @keyframes hubChiq{0%{opacity:0;transform:translateY(16px) scale(.94);filter:brightness(2) saturate(1.3)}55%{opacity:1;filter:brightness(1.35)}100%{opacity:1;transform:none;filter:none}}
 #scr-hub.kut2 #hub-cup,#scr-hub.kut2 .hx[data-k="bell"],
 #scr-hub.kut3 .hx[data-k="rek"],#scr-hub.kut3 .hx[data-k="qoriq"],#scr-hub.kut3 .hx[data-k="issiq"],#scr-hub.kut3 #hub-pat,
-#scr-hub.kut4 .hx[data-k="duel"],#scr-hub.kut4 .hx[data-k="chess"],#scr-hub.kut4 .hx[data-k="vik"],#scr-hub.kut4 .hx[data-k="poyga"],#scr-hub.kut4 #hub-jd,#scr-hub.kut4 .hub-dost{opacity:0}
+#scr-hub.kut4 .hx[data-k="duel"],#scr-hub.kut4 .hx[data-k="chess"],#scr-hub.kut4 .hx[data-k="vik"],#scr-hub.kut4 .hx[data-k="poyga"],#scr-hub.kut4 .hx[data-k="tosh"],#scr-hub.kut4 #hub-jd,#scr-hub.kut4 .hub-dost{opacity:0}
 #scr-hub.chiq2 #hub-cup,#scr-hub.chiq3 .hx[data-k="rek"],#scr-hub.chiq4 #hub-jd,
 #scr-hub.chiqsq #hub-sq,#scr-hub.chiqk #hub-kurs{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) both}
 #scr-hub.chiq2 .hx[data-k="bell"],#scr-hub.chiq3 .hx[data-k="qoriq"],#scr-hub.chiq4 .hx[data-k="duel"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .3s both}
 #scr-hub.chiq3 .hx[data-k="issiq"],#scr-hub.chiq4 .hx[data-k="chess"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .6s both}
-#scr-hub.chiq3 #hub-pat,#scr-hub.chiq4 .hx[data-k="vik"],#scr-hub.chiq4 .hx[data-k="poyga"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .9s both}
+#scr-hub.chiq3 #hub-pat,#scr-hub.chiq4 .hx[data-k="vik"],#scr-hub.chiq4 .hx[data-k="poyga"],#scr-hub.chiq4 .hx[data-k="tosh"]{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) .9s both}
 #scr-hub.chiq4 .hub-dost{animation:hubChiq 1s cubic-bezier(.2,.9,.3,1) 1.2s both}
 
 /* SUPURGI POYGASI (dushanba turniri, js/09-poyga.js) - viktorina uslublari ustiga */
@@ -3762,3 +3762,52 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 /* eslatgich o'chirgan javob (tarix darsi) */
 .tr-o.dk-och{opacity:.28;text-decoration:line-through}
 .dk-d-p .dk-btn{font-size:13px;white-space:nowrap;padding-left:10px;padding-right:10px}
+/* TOSHCHALAR (js/09-toshchalar.js) */
+.hg3.hg5{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 10px}
+.hg3.hg5 .hx{width:calc((100% - 20px) / 3)}
+.gb-hero .du-h-m small{color:#c4a6f0}
+.gb-mq{margin-top:4px}
+.gb-bots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.gb-bot{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px 12px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-family:inherit}
+.gb-bot:active{transform:scale(.97)}
+.gb-bot-t{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d7b8ff,#7b4fc0 50%,#2c1a4a);box-shadow:0 0 14px rgba(160,110,230,.35)}
+.gb-b2 .gb-bot-t{background:radial-gradient(circle at 35% 35%,#ffe6a8,#c8923a 50%,#5a3a10)}
+.gb-b3 .gb-bot-t{background:radial-gradient(circle at 35% 35%,#ffb3a8,#c0443a 50%,#4a1410)}
+.gb-bot b{font:600 17px/1.1 'Cormorant Garamond',serif}
+.gb-bot small{font:700 10.5px/1 'Manrope',sans-serif;color:var(--dim)}
+.gb-tor{margin-top:6px}
+.gb-st{margin-top:10px}
+.gb-st>small{display:block;margin:0 4px 6px;font:800 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.gb-m{position:relative;display:flex;flex-direction:column;gap:6px;width:100%;margin-top:6px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);font-family:inherit;text-align:left;cursor:pointer}
+.gb-m:disabled{cursor:default;opacity:.7}
+.gb-m.men{border-color:rgba(226,232,240,.7)}
+.gb-m.jonli{border-color:rgba(95,217,143,.6)}
+.gb-m u{position:absolute;top:8px;right:10px;text-decoration:none;font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:.12em;color:#8ff0b6}
+.gb-m-p{display:flex;justify-content:space-between;gap:10px;padding-right:44px}
+.gb-m-p b{font:600 14px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.gb-m-p.yut b{color:var(--text)}
+.gb-m-p em{font:800 14px/1.2 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
+.gb-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.gb-p{display:flex;align-items:center;gap:7px;min-width:0;padding:7px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);flex:1}
+.gb-p.o{flex-direction:row-reverse}
+.gb-p b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 13px/1.2 'Manrope',sans-serif}
+.gb-p.o b{text-align:right}
+.gb-p strong{font:800 20px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
+.gb-p.faol{border-color:rgba(226,232,240,.8);background:rgba(226,232,240,.1)}
+.gb-z{flex:none;font:700 10.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center;max-width:76px}
+.gb-vq{height:4px;margin:10px 2px 0;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.gb-vq i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#c4a6f0,#eef2f7);transition:width .9s linear}
+.gb-box{position:relative;margin-top:10px;display:flex;justify-content:center}
+#gb-canvas{display:block;border-radius:22px;touch-action:none;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.gb-h{min-height:20px;margin:12px 4px 0;text-align:center;font:700 13.5px/1.4 'Manrope',sans-serif;color:var(--text)}
+.gb-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;border-radius:22px;background:rgba(10,10,16,.82);text-align:center}
+.gb-end.hidden{display:none}
+.gb-e-t{font:600 30px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.gb-e-t.yaxshi{color:#8ff0b6}
+.gb-e-t.yomon{color:#ff9d94}
+.gb-e-s{font:800 34px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.gb-end p{margin:0;font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.gb-e-sep{color:#b9f08f!important}
+.gb-end.sepildi{background:radial-gradient(circle at 30% 30%,rgba(110,200,60,.35),transparent 30%),radial-gradient(circle at 75% 60%,rgba(150,80,200,.35),transparent 28%),rgba(10,10,16,.85)}
+.gb-e-b{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px;width:100%}
+.gb-e-b .dr-btn{margin:0;width:80%}
