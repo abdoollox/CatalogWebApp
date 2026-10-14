@@ -91,7 +91,8 @@
   var MJ_USTUN = { olov: "havo", havo: "suv", suv: "olov" };
   var MJ_U = { olov: { rgb: "239,118,64", e: "🔥" }, suv: { rgb: "74,160,236", e: "💧" }, havo: { rgb: "150,214,196", e: "🌪️" } };
   var MJ_S = ["k", "h", "c"], MJ_B = { k: "⚔️", h: "🛡️", c: "💨" };
-  var MJ_RAUND_T = 20;
+  var MJ_RAUND_T = 30;       // server yuboradi (g.turn_t); bu - zaxira
+  var MJ_AVTO = 1.5;         // belgilangan karta vaqt tugashidan shuncha soniya oldin o'zi yuboriladi
   function mjTop(k) { var x = MJ_KARTA[k]; return x[1] >= x[2] && x[1] >= x[3] ? "k" : x[2] >= x[3] ? "h" : "c"; }
   function mjBaza(k, s) { return MJ_KARTA[k][1 + MJ_S.indexOf(s)]; }
   function mjKuch(c, s, r) {
@@ -414,18 +415,19 @@
     $("mj-info-b").classList.add("hidden");
     $("mj-end").classList.add("hidden");
     $("mj-end").setAttribute("data-k", "");
-    mj = { id: id, g: null, sel: null, tm: 0, korildi: null, rev: null, olingan: Date.now() };
+    mj = { id: id, g: null, sel: null, tm: 0, korildi: null, rev: null, olingan: Date.now(), ver: 0, iz: "" };
     mj.soat = setInterval(mjVaqt, 250);
     if (g0) { mjQabul(g0); }
     mjSor();
   }
   function mjSor() {
     if (!mj) { return; }
-    var me = mj;
+    var me = mj, ver = mj.ver;
     clearTimeout(mj.tm);
     mjPost({ oyin: mj.id }, function (res) {
       if (mj !== me) { return; }
-      if (res && res.game) { mjQabul(res.game); }
+      // so'rov yuborilgandan keyin yurish qilingan bo'lsa - bu javob eskirgan (ekran bir lahza eski holatga qaytmasin)
+      if (res && res.game && mj.ver === ver) { mjQabul(res.game); }
       mj.tm = setTimeout(mjSor, 1000);
     });
   }
@@ -439,9 +441,13 @@
       var h = mj.rev.h;
       if (g.me && h.w === g.me) { try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {} }
     }
-    if (eski && (eski.turn !== g.turn || !!eski.attack !== !!g.attack)) { mj.sel = null; }
+    if (eski && (eski.turn !== g.turn || !!eski.attack !== !!g.attack || eski.hist.length !== g.hist.length)) { mj.sel = null; }
     mj.g = g;
     mj.olingan = Date.now();
+    // holat o'zgarmagan bo'lsa qayta chizilmaydi (har soniyada qayta chizish bosilayotgan tugmani yo'qotib qo'yardi); vaqtni mjVaqt yuritadi
+    var iz = JSON.stringify([g.state, g.phase, g.turn, g.attack, g.hist.length, g.wins, g.winner, mj.sel, g.expires_in != null ? Math.round(g.expires_in / 10) : 0]);
+    if (iz === mj.iz && !(mj.rev && Date.now() - mj.rev.t < 4300)) { return; }
+    mj.iz = iz;
     mjChiz();
   }
   function mjBor(g, yon) {
@@ -452,12 +458,21 @@
   function mjVaqt() {
     var g = mj && mj.g;
     if (!g) { return; }
-    var o = (Date.now() - mj.olingan) / 1000, v = $("mj-v");
+    var o = (Date.now() - mj.olingan) / 1000, v = $("mj-v"), son = $("mj-vs2"), T = g.turn_t || MJ_RAUND_T;
     if (g.state === "ketmoqda" && (g.phase === "attack" || g.phase === "answer") && g["in"] - o <= 0) {
       var q = Math.max(0, g.left - o);
-      v.style.width = Math.min(100, q / MJ_RAUND_T * 100) + "%";
-      v.parentNode.classList.toggle("oz", q < 6);
-    } else { v.style.width = "0"; }
+      v.style.width = Math.min(100, q / T * 100) + "%";
+      v.parentNode.classList.toggle("oz", q < 8);
+      son.textContent = Math.ceil(q) + " s";
+      son.classList.toggle("oz", q < 8);
+      // belgilangan karta bor, lekin tasdiqlanmagan - vaqt tugashidan oldin o'zi yuboriladi (server tasodifiy karta qo'ymasin);
+      // hujumda kuch tanlanmagan bo'lsa - kartaning eng kuchli tomoni
+      var navim = g.me && ((g.phase === "attack" && g.turn === g.me) || (g.phase === "answer" && g.turn !== g.me));
+      if (navim && mj.sel != null && q <= MJ_AVTO && !mj.yubordi) {
+        if (g.phase === "attack") { mjYubor({ hujum: { i: mj.sel, s: mjTop(g.hand[g.me][mj.sel].k) } }); }
+        else { mjYubor({ javob: mj.sel }); }
+      }
+    } else { v.style.width = "0"; son.textContent = ""; }
   }
 
   function mjChiz() {
@@ -581,7 +596,7 @@
       var el = mjKarta(c, { tag: "button", cls: "mening" + (ish ? " ish" : "") + (mj.sel === i ? " sel" : "") + (navMen && !ish ? " faol" : "") });
       el.type = "button";
       el.disabled = ish || !navMen;
-      el.addEventListener("click", function () { mj.sel = mj.sel === i ? null : i; mjChiz(); });
+      el.addEventListener("click", function () { mj.sel = mj.sel === i ? null : i; mj.iz = ""; mjChiz(); });
       q.appendChild(el);
     });
     if (!navMen || mj.sel == null) { return; }
@@ -603,13 +618,16 @@
     }
   }
   function mjYubor(body) {
-    if (!mj) { return; }
+    if (!mj || mj.yubordi) { return; }
     var me = mj;
     body.oyin = mj.id;
+    mj.ver++;
+    mj.yubordi = true;
     $("mj-act").innerHTML = "";
     mjPost(body, function (res) {
       if (mj !== me) { return; }
-      if (res && res.game) { mj.sel = null; mjQabul(res.game); }
+      mj.yubordi = false;
+      if (res && res.game) { mj.sel = null; mj.iz = ""; mjQabul(res.game); }
       if (!res || res.move_ok === false) { showToast(mjT().aloqa, "err"); }
     });
   }

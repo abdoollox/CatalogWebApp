@@ -3909,7 +3909,10 @@ button.mj-c{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mj-ar.rev .mj-vs{color:var(--text)}
 .mj-h{min-height:34px;margin:10px 4px 0;font:600 13px/1.35 'Manrope',sans-serif;color:var(--text);text-align:center}
 .mj-h.y{color:#8ff0b6}.mj-h.m{color:#ff9a8a}
-.mj-vq{margin-top:6px}
+.mj-vqq{display:flex;align-items:center;gap:8px;margin-top:6px}
+.mj-vq{flex:1;margin:0!important;height:6px}
+.mj-vs2{min-width:34px;text-align:right;font:800 13px/1 'Manrope',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.mj-vs2.oz{color:#ff8a7a}
 .mj-vq i{background:#eef2f7}
 .mj-vq.oz i{background:#ff8a7a}
 .mj-hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:12px}
