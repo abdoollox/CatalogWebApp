@@ -1285,6 +1285,7 @@
   function chessCanAct() {
     if (chessState.gameOver || chessState.turn !== chessState.myColor) { return false; }
     if (chessState.gameMode === "pvp" && (chessNet.busy || !chessNet.game || chessNet.game.status !== "active")) { return false; }
+    if (chessState.gameMode === "pvp" && !chessNet.game.you) { return false; }      // tomoshabin (jonli o'yinni kuzatyapti) - yura olmaydi
     return true;
   }
 
@@ -1417,7 +1418,12 @@
   }
 
   // Piyoda oxirgi qatorga yetganda - qaysi donaga aylanishini o'yinchi tanlaydi.
+  // XATO TUZATILDI (2026-10-14, turnirda Farangiz yutayotgan o'yinni vaqt bilan yutqazdi): oyna taxtani bosgan barmoq ostida ochiladi;
+  // iPhone'da barmoq ko'tarilganda brauzer yana bitta «click» ni shu joyga - oynaning bo'sh foniga yuboradi va oyna darhol yopilardi
+  // (piyodani aylantirib bo'lmasdi, ilova «qotgandek» ko'rinardi). Endi oyna ochilgach PROMO_KUT ms ichidagi bosishlar hisobga olinmaydi.
+  var PROMO_KUT = 500, promoAt = 0;
   function askPromo(color, cb) {
+    promoAt = Date.now();
     var row = $("chess-promo-row");
     row.innerHTML = "";
     ["q", "r", "b", "n"].forEach(function (k) {
@@ -1427,6 +1433,7 @@
       b.innerHTML = getPieceSVG(color === "w" ? k.toUpperCase() : k);
       b.addEventListener("click", function (e) {
         e.stopPropagation();
+        if (Date.now() - promoAt < PROMO_KUT) { return; }       // oyna ochgan bosishning «aks-sadosi»
         closePromo();
         cb(k);
       });
@@ -2195,7 +2202,7 @@
     });
     $("chess-offer-yes").addEventListener("click", function () { pvpAction("draw_accept"); });
     $("chess-offer-no").addEventListener("click", function () { pvpAction("draw_decline"); });
-    $("chess-promo").addEventListener("click", function (e) { if (e.target === this) { closePromo(); } });
+    $("chess-promo").addEventListener("click", function (e) { if (e.target === this && Date.now() - promoAt >= PROMO_KUT) { closePromo(); } });
     $("btn-chess-overlay-ok").addEventListener("click", leaveChessGame);
     $("btn-chess-overlay-view").addEventListener("click", function () {
       $("chess-board-overlay").classList.add("hidden");
@@ -2462,6 +2469,8 @@
       $("scr-chess-stats").classList.add("hidden");
       $("scr-chess-hub").classList.add("hidden");
       openPvP(res.game, true);
+      // jonli o'yin (turnir to'ridan): yurishlar serverdan o'zi keladi (pvpStartPoll), tomoshabin faqat ko'radi
+      if (res.game.status === "active" && !res.game.you) { showToast(L("jonliKor")); }
     })["catch"](function () { showToast(L("netErr"), "err"); });
   }
 

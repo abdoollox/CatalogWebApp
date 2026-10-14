@@ -216,7 +216,8 @@
         var tugadi = m.state === "tugadi", bye = m.why === "bye", meniki = (m.a && m.a.uid === men) || (m.b && m.b.uid === men);
         if (meniki && (!tugadi || !menUstun)) { menUstun = col; }
         var joy = drEl("div", "du-br-m" + (si === c.stages.length - 1 ? " oxir" : ""));
-        var ochiladi = tugadi && m.game && !bye && (m.why === "oyin" || m.why === "vaqt" || m.why === "durang");
+        // tugagan o'yin - yurishma-yurish; JONLI o'yin - tomosha (egasi, 2026-10-14: «jonli o'tayotgan janglarni kuzatish»)
+        var ochiladi = m.game && !bye && ((tugadi && (m.why === "oyin" || m.why === "vaqt" || m.why === "durang")) || m.state === "ketmoqda");
         var card = drEl(ochiladi ? "button" : "div", "du-bc" + (meniki ? " men" : "") + (m.state === "ketmoqda" ? " jonli" : "") + (bye ? " bye" : ""));
         if (ochiladi) { card.type = "button"; card.addEventListener("click", function () { chessReview(m.game, true); }); }
         var yon = function (p, oq) {
