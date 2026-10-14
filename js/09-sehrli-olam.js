@@ -39,6 +39,8 @@
     vikS: { uz: "Juma, 22:00", ru: "Пятница, 22:00", en: "Friday, 22:00" },
     tosh: { uz: "Toshchalar", ru: "Плюй-камни", en: "Gobstones" },
     toshS: { uz: "Seshanba, 22:00", ru: "Вторник, 22:00", en: "Tuesday, 22:00" },
+    mjang: { uz: "Maxluqlar jangi", ru: "Битва существ", en: "Creature Battle" },
+    mjangS: { uz: "Shanba, 22:00", ru: "Суббота, 22:00", en: "Saturday, 22:00" },
     dokon: { uz: "Do'kon", ru: "Лавка", en: "Shop" },
     dokonS: { uz: "Jihoz va damlamalar", ru: "Снаряжение и зелья", en: "Gear and potions" },
     dokonG: { uz: "%a galleon", ru: "%a галл.", en: "%a Galleons" },
@@ -238,12 +240,13 @@
         { key: "tosh", kurs: 4, title: HT("tosh"), sub: HT("toshS"), go: gbOpen },
         { key: "chess", kurs: 4, title: HT("chess"), sub: HT("chessV"), go: openChessHub },
         { key: "vik", kurs: 4, title: HT("vik"), sub: HT("vikS"), go: vkOpen },
+        { key: "mjang", kurs: 4, title: HT("mjang"), sub: HT("mjangS"), go: mjOpen },
         { key: "duel", kurs: 4, title: HT("duel"), sub: HT("duelV"), go: duOpen }] }
     ];
     hubKurs(grid, kn, hid);
     guruhlar.forEach(function (g) {
       var qator = document.createElement("div");
-      qator.className = "hg3" + (g.k.length === 4 ? " hg4" : g.k.length === 5 ? " hg5" : "");      // 5 ta - 3 + 2 (o'rtada)      // to'rt katak bir qatorda (haftalik turnirlar: du, ch, ju, ya)
+      qator.className = "hg3" + (g.k.length === 4 ? " hg4" : g.k.length === 5 ? " hg5" : "");      // 5 ta - 3 + 2 (o'rtada); 6 ta - 3 + 3 (haftalik turnirlar: du, se, ch, ju, sh, ya)
       g.k.forEach(function (tile) {
         if (!tile.open && hid === "none") { return; }
         var qulf = !!(tile.kurs && kn < tile.kurs);      // hali ochilmagan: xira, ostida «N-kursda ochiladi» (egasi, 2026-10-11)
@@ -489,7 +492,7 @@
     stopSortTimer();
     ["scr-cat", "scr-world", "scr-train", "scr-prof", "scr-detail", "scr-lang", "scr-cup", "scr-cup-hist", "scr-house",
      "scr-tasks", "scr-quiz", "scr-chat", "scr-refs", "scr-hall-full", "scr-feed-full",
-     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
+     "scr-chess-hub", "scr-chess-stats", "scr-dars", "scr-afsun", "scr-iksir", "scr-bell", "scr-blh", "scr-fan", "scr-tarix", "scr-himoya", "scr-uchish", "scr-maxluq", "scr-qoriq", "scr-issiq", "scr-duel", "scr-vik", "scr-poyga", "scr-dokon", "scr-tosh", "scr-mjang", "scr-xarid", "scr-astro", "scr-osimlik", "scr-trans", "scr-qob", "scr-rek"].forEach(function (id) {
       var el = $(id);
       if (el) { el.classList.add("hidden"); }
     });
@@ -530,18 +533,19 @@
     { k: "tosh", kun: 1, s: 22, m: 0, d: 40, rgb: "183,150,230", dan: "2026-10-20T22:00:00+05:00", go: function () { gbOpen(); } },
     { k: "chess", kun: 2, s: 22, m: 0, d: 60, rgb: "183,132,209", go: function () { openChessHub(); } },
     { k: "vik", kun: 4, s: 22, m: 0, d: 15, rgb: "126,200,160", go: function () { vkOpen(); } },
+    { k: "mjang", kun: 5, s: 22, m: 0, d: 40, rgb: "239,150,90", dan: "2026-10-24T22:00:00+05:00", go: function () { mjOpen(); } },
     { k: "duel", kun: 6, s: 22, m: 0, d: 45, rgb: "224,128,112", go: function () { duOpen(); } },
     { k: "kubok", kun: 6, s: 23, m: 59, d: 1, rgb: "243,213,143", go: function () { openCup(); } }
   ];
   var JD_TX = {
     uz: { t: "Jadval", s: "shu hafta", kun: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"], toliq: ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"],
-          chess: "Shaxmat turniri", tosh: "Toshchalar turniri", poyga: "Supurgi poygasi", vik: "Viktorina «Oxirgi sehrgar»", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
+          chess: "Shaxmat turniri", tosh: "Toshchalar turniri", mjang: "Maxluqlar jangi", poyga: "Supurgi poygasi", vik: "Viktorina «Oxirgi sehrgar»", duel: "Duel turniri", kubok: "Kubok hafta yakuni", bugun: "BUGUN", hozir: "HOZIR", qoldi: "qoldi",
           kunQ: "kun", soatQ: "soat", daqQ: "daq", har: "Har kuni", harS: "9 ta bellashuv (yarim tungacha) · Shokolad qurbaqa" },
     ru: { t: "Расписание", s: "эта неделя", kun: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], toliq: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"],
-          chess: "Шахматный турнир", tosh: "Турнир по плюй-камням", poyga: "Гонка на мётлах", vik: "Викторина «Последний волшебник»", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
+          chess: "Шахматный турнир", tosh: "Турнир по плюй-камням", mjang: "Битва существ", poyga: "Гонка на мётлах", vik: "Викторина «Последний волшебник»", duel: "Дуэльный турнир", kubok: "Итоги недели кубка", bugun: "СЕГОДНЯ", hozir: "СЕЙЧАС", qoldi: "осталось",
           kunQ: "дн.", soatQ: "ч", daqQ: "мин", har: "Каждый день", harS: "9 состязаний (до полуночи) · Шоколадная лягушка" },
     en: { t: "Schedule", s: "this week", kun: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"], toliq: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          chess: "Chess tournament", tosh: "Gobstones tournament", poyga: "Broom race", vik: "Quiz “The Last Wizard”", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
+          chess: "Chess tournament", tosh: "Gobstones tournament", mjang: "Creature Battle", poyga: "Broom race", vik: "Quiz “The Last Wizard”", duel: "Duelling tournament", kubok: "House Cup week ends", bugun: "TODAY", hozir: "NOW", qoldi: "left",
           kunQ: "d", soatQ: "h", daqQ: "min", har: "Every day", harS: "9 contests (until midnight) · Chocolate Frog" }
   };
   function hubJadval(korsat) {

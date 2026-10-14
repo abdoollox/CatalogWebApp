@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Do'stni Telegram chatidan chaqirish kartalari (duel, toshchalar) uchun 16:9 rasm: img/<tur>_<til>.jpg.
+"""Do'stni Telegram chatidan chaqirish kartalari (duel, toshchalar, maxluqlar jangi) uchun 16:9 rasm: img/<tur>_<til>.jpg.
 
 Uslub shaxmat kartasidagidek (chessgen.py): qorong'i fon, oq serif sarlavha, oltin bosh harflar;
 o'ngda - o'yin rasmi oltin ramkali «qasr darchasi» ichida (bosh sahifa kataklari kabi).
 
 ISHLATISH (CatalogWebApp papkasida, faqat macOS)
     swiftc -O tools/wksnap.swift -o /tmp/wksnap
-    python3 tools/taklifgen.py <duel rasmi> <toshchalar rasmi>
-    (asl rasmlar: dizayn-tizimi/hub/hub-2.png ning pastki chap choragi va dizayn-tizimi/toshchalar/katak.jpeg)
+    python3 tools/taklifgen.py <duel rasmi> <toshchalar rasmi> [maxluqlar jangi rasmi]
+    (asl rasmlar: dizayn-tizimi/hub/hub-2.png ning pastki chap choragi, dizayn-tizimi/toshchalar/katak.jpeg,
+     dizayn-tizimi/kartalar/katak.jpeg)
 """
 
 import base64
@@ -34,6 +35,11 @@ TEXT = {
         "uz": ("Garri Potter kolleksiyasi", "Sehrgarlar o'yini", "TOSHCHALAR", "Do'stingiz sizni o'yinga chaqirmoqda", ["toshchalarni doiradan urib chiqaring", "yutqazganga — sassiq suyuqlik"]),
         "ru": ("Коллекция «Гарри Поттер»", "Игра волшебников", "ПЛЮЙ-КАМНИ", "Друг зовёт вас сыграть", ["выбивайте камешки из круга", "проигравшего обрызгает"]),
         "en": ("Harry Potter Collection", "The wizarding game", "GOBSTONES", "A friend challenges you to a game", ["knock the stones out of the ring", "the loser gets squirted"]),
+    },
+    "mjang": {
+        "uz": ("Garri Potter kolleksiyasi", "Maxluqlar", "JANGI", "Do'stingiz sizni jangga chaqirmoqda", ["har raundda bitta karta", "kuchlisi raundni oladi"]),
+        "ru": ("Коллекция «Гарри Поттер»", "Битва", "СУЩЕСТВ", "Друг зовёт вас на битву", ["одна карта за раунд", "сильнейшая берёт раунд"]),
+        "en": ("Harry Potter Collection", "Creature", "BATTLE", "A friend challenges you to a battle", ["one card per round", "the stronger card takes it"]),
     },
 }
 
@@ -95,8 +101,10 @@ def main():
         m = int(w / 2 * 0.035)
         duel_crop = (m, h // 2 + m, w // 2 - m, h - m)
     arts = {"duel": data_url(duel_src, duel_crop), "tosh": data_url(sys.argv[2])}
+    if len(sys.argv) > 3:
+        arts["mjang"] = data_url(sys.argv[3])
     tmp = tempfile.mkdtemp()
-    for tur in TEXT:
+    for tur in arts:
         for lang in TEXT[tur]:
             page = os.path.join(tmp, "%s_%s.html" % (tur, lang))
             png = os.path.join(tmp, "%s_%s.png" % (tur, lang))

@@ -56,6 +56,7 @@
     "scr-poyga": "pg-back",
     "scr-dokon": "dk-back",
     "scr-tosh": "gb-back",
+    "scr-mjang": "mj-back",
     "scr-xarid": "xr-back",
     "scr-astro": "yl-back",
     "scr-osimlik": "os-back",
