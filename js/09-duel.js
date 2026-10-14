@@ -54,6 +54,7 @@
           keyingi: function (t) { return "Keyingi duelingiz " + t + " dan keyin. Arenada qoling!"; }, vaqtT: "Vaqt tugadi — joni ko'p duelchi yutdi.", kunQ: "kun", mashqT: "Mashq", mashqS: "Ball va turnirga ta'sir qilmaydi", dostT: "Do'st bilan duel", dostS: "Chatga taklif yuboring — qabul qilgan sehrgar bilan jonli duel",
           dostSh: "Kimni duelga chaqirasiz?", dZal: "Katta zalga e'lon", dZalS: "Barcha fakultetlar ko'radi", dUy: "Fakultet xonasiga", dUyS: "Faqat o'z fakultetingiz",
           dShaxsiy: "Bitta do'stingizni chaqirish uchun: u bilan shaxsiy suhbatni oching va tepadagi ismini bosing → «Duelga chaqirish».",
+          dTg: "Telegram chatiga yuborish", dTgS: "Do'stingizga yoki guruhga karta — bosishi bilan duel boshlanadi", tgB: "Telegram chatiga yuborish",
           ochiq: function (v) { return "Taklif yuborildi. Raqib kutilmoqda… " + v; }, bekorB: "Taklifni bekor qilish", eskirdi: "Taklifni hech kim qabul qilmadi.",
           dQayt: "Duel sahifasiga", dostQ: "Do'stona duel", botQ: "Kompyuter raqiblar", yubordi: "Taklif chatga yuborildi",
           cT: "Sehrgarlar dueli", cSub: "Do'stona · ballsiz", cMine: "Siz duelga chaqirdingiz — raqib kutilmoqda", cCalls: function (n) { return n + " duelga chaqirmoqda!"; },
@@ -79,6 +80,7 @@
           tYoz: "Вы не записались на этот турнир. Следующий — в будущее воскресенье.", bye: "пропускает этот круг", ball: function (n) { return "+" + n + " очк."; }, qatT: "Участники",
           keyingi: function (t) { return "Ваша следующая дуэль через " + t + ". Оставайтесь на арене!"; }, vaqtT: "Время вышло — победил тот, у кого больше жизней.", kunQ: "дн.", mashqT: "Тренировка", mashqS: "Не влияет на очки и турнир", dostT: "Дуэль с другом", dostS: "Отправьте вызов в чат — живая дуэль с тем, кто примет",
           dostSh: "Кого вызвать на дуэль?", dZal: "Объявить в Большом зале", dZalS: "Увидят все факультеты", dUy: "В гостиную факультета", dUyS: "Только ваш факультет",
+          dTg: "Отправить в чат Telegram", dTgS: "Карточка другу или в группу — нажмёт, и дуэль начнётся", tgB: "Отправить в чат Telegram",
           dShaxsiy: "Чтобы вызвать одного друга: откройте личный чат с ним и нажмите на его имя вверху → «Вызвать на дуэль».",
           ochiq: function (v) { return "Вызов отправлен. Ждём соперника… " + v; }, bekorB: "Отменить вызов", eskirdi: "Вызов никто не принял.",
           dQayt: "На страницу дуэлей", dostQ: "Дружеская дуэль", botQ: "Компьютерные соперники", yubordi: "Вызов отправлен в чат",
@@ -106,6 +108,7 @@
           keyingi: function (t) { return "Your next duel is in " + t + ". Stay in the arena!"; }, vaqtT: "Time is up — the duellist with more lives won.", kunQ: "d", mashqT: "Practice", mashqS: "Does not affect points or the tournament", dostT: "Duel a friend", dostS: "Send a challenge to the chat — a live duel with whoever accepts",
           dostSh: "Who do you challenge?", dZal: "Announce in the Great Hall", dZalS: "All Houses will see it", dUy: "House common room", dUyS: "Your House only",
           dShaxsiy: "To challenge one friend: open your private chat with them and tap their name at the top → “Challenge to a duel”.",
+          dTg: "Send to a Telegram chat", dTgS: "A card for a friend or a group — one tap and the duel begins", tgB: "Send to a Telegram chat",
           ochiq: function (v) { return "Challenge sent. Waiting for an opponent… " + v; }, bekorB: "Cancel the challenge", eskirdi: "Nobody accepted the challenge.",
           dQayt: "Back to Duels", dostQ: "Friendly duel", botQ: "Computer opponents", yubordi: "Challenge sent to the chat",
           cT: "Wizards' duel", cSub: "Friendly · no points", cMine: "You sent a challenge — waiting for an opponent", cCalls: function (n) { return n + " challenges you to a duel!"; },
@@ -408,7 +411,7 @@
     bosh.appendChild(xb);
     oyna.appendChild(bosh);
     var tana = drEl("div", "du-info-b du-dz");
-    [["global", t.dZal, t.dZalS], ["house", t.dUy, t.dUyS]].forEach(function (q) {
+    [["tg", t.dTg, t.dTgS], ["global", t.dZal, t.dZalS], ["house", t.dUy, t.dUyS]].forEach(function (q) {
       var b = drEl("button", "du-dz-b");
       b.type = "button";
       var s2 = document.createElement("span");
@@ -416,7 +419,7 @@
       s2.appendChild(drEl("small", "", q[2]));
       b.appendChild(s2);
       b.appendChild(drEl("i", "", "›"));
-      b.addEventListener("click", function () { yop(); duInvite(q[0]); });
+      b.addEventListener("click", function () { yop(); if (q[0] === "tg") { duTgTaklif(); } else { duInvite(q[0]); } });
       tana.appendChild(b);
     });
     tana.appendChild(drEl("p", "du-dz-n", t.dShaxsiy));
@@ -436,6 +439,14 @@
     $("du-rep").classList.add("hidden");
     duKorinish = "home";
     duArena(id);
+  }
+  // Telegram chatiga taklif (30 daqiqa amal qiladi): duel yaratiladi, arenada kutiladi, karta chat tanlab yuboriladi
+  function duTgTaklif() {
+    if (MS_LOCAL) { duArOch(1); tgTaklif("duel", 1); return; }
+    duPost({ tg_invite: 1 }, function (res) {
+      if (res && res.friend_id) { duArOch(res.friend_id); tgTaklif("duel", res.friend_id); return; }
+      showToast(drX().fail, "err");
+    });
   }
   function duInvite(room) {
     var t = duT(), d = drInit();
@@ -788,6 +799,10 @@
       if (!du.ochiqB) {
         du.ochiqB = true;
         ob.innerHTML = "";
+        var tb = drEl("button", "dr-btn", t.tgB);
+        tb.type = "button";
+        tb.addEventListener("click", function () { tgTaklif("duel", du.arena); });
+        ob.appendChild(tb);
         var bb = drEl("button", "qr-b", t.bekorB);
         bb.type = "button";
         bb.addEventListener("click", function () { var id = du.arena; duStop(); duPost({ cancel: id }, function () {}); duOpen(); });

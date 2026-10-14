@@ -384,6 +384,29 @@
     box.appendChild(list);
     return box;
   }
+  /* DO'STNI TELEGRAM CHATIDAN CHAQIRISH (egasi, 2026-10-14; shaxmatdagi qolip): kind - "duel" | "tosh", id - ochiq taklif.
+     Server tayyor karta beradi (/api/taklif) - WebApp.shareMessage chat tanlatadi; eski Telegramda inline so'rov yoki havola ulashish. */
+  var API_TAKLIF = "https://bot.tizimshunos.uz/api/taklif";
+  function tgTaklif(kind, id) {
+    var inline = function () {
+      try {
+        if (tg && tg.switchInlineQuery && tg.isVersionAtLeast && tg.isVersionAtLeast("6.7")) { tg.switchInlineQuery(kind + "_" + id, ["users", "groups"]); return; }
+      } catch (e) {}
+      var url = "https://t.me/" + BOT + "/catalog?startapp=" + kind + "_" + id;
+      if (tg && tg.openTelegramLink) { tg.openTelegramLink("https://t.me/share/url?url=" + encodeURIComponent(url)); } else { window.prompt("", url); }
+    };
+    if (MS_LOCAL) { showToast("Telegram: " + kind + "_" + id); return; }
+    var can = false;
+    try { can = !!(tg && tg.shareMessage && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0")); } catch (e) {}
+    if (!can || !window.fetch) { inline(); return; }
+    window.fetch(API_TAKLIF, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": drInit() },
+      body: JSON.stringify({ kind: kind, id: id, lang: lang }) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.ok && res.id) { try { tg.shareMessage(res.id, function () {}); return; } catch (e) {} }
+        inline();
+      })["catch"](inline);
+  }
   function golibQoy(id, ch) {
     var el = $(id);
     if (!el) { return; }

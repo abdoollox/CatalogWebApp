@@ -1399,6 +1399,7 @@
     renderCatalog();
     maybeAutoSort();
     maybeChessLink();
+    maybeTaklifLink();
     maybeWorldLink();
     msMaybeOst();
     srMaybeOpen();

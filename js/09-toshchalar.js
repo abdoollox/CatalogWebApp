@@ -21,7 +21,10 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + " toshcha!" : "Toshcha chiqmadi"; }, otkazdi: "Zarba yonib ketdi — vaqt tugadi",
           yutdi: "Siz yutdingiz!", yutqazdi: "Siz yutqazdingiz", durang: "Durang", golibi: function (n) { return n + " yutdi"; }, sepdi: function (n) { return "Toshchalar " + n + "ga sassiq suyuqlik sepdi!"; }, sepSiz: "Toshchalar sizga sassiq suyuqlik sepdi!",
           kelmadi: "Raqib kelmadi", teng: "Teng — to'rda yuqori turgan o'tdi", yana: "Yana o'ynash", ortga: "Ortga", aloqa: "Aloqa yo'q — qayta urinib ko'ring",
-          qoshimcha: "Teng! Qo'shimcha zarbalar", galaba: "G'alaba", maglub: "Mag'lubiyat", yakunK: "O'yin tugadi" },
+          qoshimcha: "Teng! Qo'shimcha zarbalar", galaba: "G'alaba", maglub: "Mag'lubiyat", yakunK: "O'yin tugadi",
+          dost: "Do'st bilan", dostS: "Telegram orqali", kutT: "Do'stingizni kutyapmiz", kutS: "Kartani Telegram chatiga yuboring — do'stingiz bosishi bilan o'yin boshlanadi",
+          muddat: function (v) { return "Taklif yana " + v + " amal qiladi"; }, tgB: "Telegram chatiga yuborish", bekorB: "Bekor qilish",
+          eBand: "Bu taklifni boshqa odam qabul qilib bo'lgan", eMuddat: "Taklif muddati tugagan" },
     ru: { kick: "Турнир вторника", ttl: "Плюй-камни", nom: "Турнир по плюй-камням", kunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
           qoldi: "осталось", soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти",
           yopiq: "Запись закрыта", q1: "Выбивайте камешки из круга своим камнем", q2: "Место, направление и силу выбираете сами",
@@ -34,7 +37,10 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "Мимо"; }, otkazdi: "Удар сгорел — время вышло",
           yutdi: "Вы победили!", yutqazdi: "Вы проиграли", durang: "Ничья", golibi: function (n) { return "Победил " + n; }, sepdi: function (n) { return "Камни обрызгали " + n + " вонючей жидкостью!"; }, sepSiz: "Камни обрызгали вас вонючей жидкостью!",
           kelmadi: "Соперник не пришёл", teng: "Ничья — прошёл тот, кто выше в сетке", yana: "Ещё раз", ortga: "Назад", aloqa: "Нет связи — попробуйте ещё раз",
-          qoshimcha: "Ничья! Дополнительные удары", galaba: "Победа", maglub: "Поражение", yakunK: "Игра окончена" },
+          qoshimcha: "Ничья! Дополнительные удары", galaba: "Победа", maglub: "Поражение", yakunK: "Игра окончена",
+          dost: "С другом", dostS: "через Telegram", kutT: "Ждём вашего друга", kutS: "Отправьте карточку в чат Telegram — друг нажмёт, и игра начнётся",
+          muddat: function (v) { return "Приглашение действует ещё " + v; }, tgB: "Отправить в чат Telegram", bekorB: "Отменить",
+          eBand: "Это приглашение уже принял другой", eMuddat: "Срок приглашения истёк" },
     en: { kick: "Tuesday tournament", ttl: "Gobstones", nom: "Gobstones tournament", kunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
           qoldi: "left", soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave",
           yopiq: "Sign-up closed", q1: "Knock the stones out of the ring with your own stone", q2: "You choose the spot, the direction and the power",
@@ -47,7 +53,10 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "No stone out"; }, otkazdi: "Shot lost — time ran out",
           yutdi: "You won!", yutqazdi: "You lost", durang: "Draw", golibi: function (n) { return n + " won"; }, sepdi: function (n) { return "The Gobstones squirted " + n + " with stinky liquid!"; }, sepSiz: "The Gobstones squirted you with stinky liquid!",
           kelmadi: "The opponent did not come", teng: "Tie — the higher seed goes through", yana: "Play again", ortga: "Back", aloqa: "No connection — please try again",
-          qoshimcha: "Tie! Extra shots", galaba: "Victory", maglub: "Defeat", yakunK: "Game over" }
+          qoshimcha: "Tie! Extra shots", galaba: "Victory", maglub: "Defeat", yakunK: "Game over",
+          dost: "With a friend", dostS: "via Telegram", kutT: "Waiting for your friend", kutS: "Send the card to a Telegram chat — the game starts as soon as your friend taps it",
+          muddat: function (v) { return "The invite is valid for " + v + " more"; }, tgB: "Send to a Telegram chat", bekorB: "Cancel",
+          eBand: "Someone else has already accepted this invite", eMuddat: "The invite has expired" }
   };
   function gbT() { return GB_T[lang] || GB_T.uz; }
 
@@ -131,6 +140,10 @@
       var gg = L2.g, pd = gg.pending;
       gg.pending = null; gg.shots++; gg.score[1] += pd.ball; gg.stones = pd.qoldi; gg.last = pd; gg.last_n = gg.shots; gg.turn = "a";
       if (!gg.stones.length || gg.shots >= 10) { gg.state = "tugadi"; gg.winner = gg.score[0] > gg.score[1] ? "a" : gg.score[1] > gg.score[0] ? "b" : null; gg.turn = null; }
+    }
+    if (body.dost) {           // namuna: do'stga taklif kutilmoqda
+      return { ok: true, game: { id: 9, kind: "dost", state: "kutmoqda", me: "a", a: { uid: 1, name: "Sehrgar", house: "ravenclaw" }, b: null, score: [0, 0], shots: 0,
+        per: 5, extra: 3, turn: "a", stones: [], turn_in: 0, turn_left: 30, winner: null, expires_in: 1790, last_n: 0 } };
     }
     if (body.oyin != null || body.mashq != null || body.sinov) {
       var ko = JSON.parse(JSON.stringify(L2.g));
@@ -239,6 +252,13 @@
       b.addEventListener("click", function () { gbBoshla({ mashq: k }); });
       qator.appendChild(b);
     });
+    var db2 = drEl("button", "gb-bot gb-bd");
+    db2.type = "button";
+    db2.appendChild(drEl("span", "gb-bot-t"));
+    db2.appendChild(drEl("b", "", t.dost));
+    db2.appendChild(drEl("small", "", t.dostS));
+    db2.addEventListener("click", function () { gbBoshla({ dost: 1 }, true); });
+    qator.appendChild(db2);
     mq.appendChild(qator);
     box.appendChild(mq);
     var gk = golibKarta(d.champs);
@@ -290,11 +310,49 @@
   }
 
   /* ---------- o'yin ---------- */
-  function gbBoshla(body) {
+  function gbBoshla(body, tgga) {
     gbPost(body, function (res) {
       if (!res || !res.game) { showToast(gbT().aloqa, "err"); return; }
       gbOyin(res.game.id, res.game);
+      if (tgga) { tgTaklif("tosh", res.game.id); }          // do'st bilan: karta darhol chat tanlab yuboriladi
     });
+  }
+  // Telegram kartasi bilan kelgan do'st: taklifni qabul qilib, o'yinga kiradi
+  function gbQabul2(id) {
+    var t = gbT();
+    try { $("scr-cat").classList.add("hidden"); } catch (e) {}
+    drShowGame("scr-tosh");
+    $("gb-kick").textContent = t.kick;
+    $("gb-ttl").textContent = t.ttl;
+    gbPost({ qabul: id }, function (res) {
+      if (res && res.game) { gbOyin(res.game.id, res.game); return; }
+      showToast(res && res.error === "band" ? t.eBand : res && res.error === "muddat" ? t.eMuddat : t.aloqa, "err");
+      gbKorsat();
+    });
+  }
+  // Do'st kutilayotganda: karta yuborish va bekor qilish
+  function gbKutish() {
+    var g = gb.g, t = gbT(), box = $("gb-end");
+    box.classList.remove("hidden");
+    if (box.getAttribute("data-k") !== "kut") {
+      box.setAttribute("data-k", "kut");
+      box.innerHTML = "";
+      var k = drEl("div", "gb-e-k");
+      k.appendChild(drEl("small", "gb-e-kick", t.dost));
+      k.appendChild(drEl("b", "gb-e-t", t.kutT));
+      k.appendChild(drEl("p", "", t.kutS));
+      k.appendChild(drEl("p", "gb-kut-m", ""));
+      var tug = drEl("div", "gb-e-b"), tb = drEl("button", "dr-btn", t.tgB), bb = drEl("button", "dr-btn gb-ikki", t.bekorB);
+      tb.type = bb.type = "button";
+      tb.addEventListener("click", function () { if (gb) { tgTaklif("tosh", gb.id); } });
+      bb.addEventListener("click", function () { var id = gb && gb.id; gbPost({ bekor: id }, function () {}); gbStop(); gbKorsat(); });
+      tug.appendChild(tb);
+      tug.appendChild(bb);
+      k.appendChild(tug);
+      box.appendChild(k);
+    }
+    var m = box.querySelector(".gb-kut-m");
+    if (m && g.expires_in != null) { m.textContent = t.muddat(gbQol(g.expires_in)); }
   }
   function gbStop() {
     if (!gb) { return; }
@@ -382,6 +440,9 @@
     yon(men, $("gb-p1"));
     yon(u, $("gb-p2"));
     $("gb-z").textContent = g.shots >= g.per * 2 && g.state === "ketmoqda" ? t.qoshimcha : "VS";
+    var eb = $("gb-end");
+    if (g.kind === "dost" && g.state === "kutmoqda") { gbKutish(); return; }
+    if (eb.getAttribute("data-k") === "kut") { eb.setAttribute("data-k", ""); eb.classList.add("hidden"); eb.innerHTML = ""; }      // do'st keldi
     if (g.state === "tugadi" && !(gb.anim)) { gbYakun(); }
   }
   function gbMeni() { var g = gb && gb.g; return g && g.state === "ketmoqda" && g.me && g.turn === g.me && !gb.anim && g.turn_in <= 0.3; }
@@ -513,7 +574,8 @@
     // navbat matni va vaqt
     var h = $("gb-h"), vq = $("gb-v");
     if (g && h) {
-      if (g.state === "kutmoqda" || (g.state === "ketmoqda" && g.turn_in > 0.5 && !gb.anim && g.shots === 0)) { h.textContent = t.boshlanadi(Math.ceil(Math.max(g.turn_in || g.starts_in || 0, 0))); }
+      if (g.kind === "dost" && g.state === "kutmoqda") { h.textContent = ""; }
+      else if (g.state === "kutmoqda" || (g.state === "ketmoqda" && g.turn_in > 0.5 && !gb.anim && g.shots === 0)) { h.textContent = t.boshlanadi(Math.ceil(Math.max(g.turn_in || g.starts_in || 0, 0))); }
       else if (g.state !== "ketmoqda" || gb.anim) { h.textContent = ""; }
       else if (mening) { h.textContent = gb.aim ? t.kuch + " " + Math.round(gb.aim.p * 100) + "%" : t.otH; }
       else if (g.me && g.turn === g.me) { h.textContent = t.kut; }
@@ -592,6 +654,12 @@
     else if (g.why === "teng") { k.appendChild(drEl("p", "", t.teng)); }
     if (g.winner) { k.appendChild(drEl("p", "gb-e-sep", yutqazdi ? t.sepSiz : t.sepdi(g[g.winner === "a" ? "b" : "a"].name))); }
     var tug = drEl("div", "gb-e-b");
+    if (g.kind === "dost" && g.me) {
+      var dy = drEl("button", "dr-btn", t.yana);
+      dy.type = "button";
+      dy.addEventListener("click", function () { gbBoshla({ dost: 1 }, true); });
+      tug.appendChild(dy);
+    }
     if ((g.kind === "mashq" || g.kind === "sinov") && g.b && g.b.bot) {
       var y = drEl("button", "dr-btn", t.yana);
       y.type = "button";
