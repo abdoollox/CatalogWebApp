@@ -21,7 +21,7 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + " toshcha!" : "Toshcha chiqmadi"; }, otkazdi: "Zarba yonib ketdi — vaqt tugadi",
           yutdi: "Siz yutdingiz!", yutqazdi: "Siz yutqazdingiz", durang: "Durang", golibi: function (n) { return n + " yutdi"; }, sepdi: function (n) { return "Toshchalar " + n + "ga sassiq suyuqlik sepdi!"; }, sepSiz: "Toshchalar sizga sassiq suyuqlik sepdi!",
           kelmadi: "Raqib kelmadi", teng: "Teng — to'rda yuqori turgan o'tdi", yana: "Yana o'ynash", ortga: "Ortga", aloqa: "Aloqa yo'q — qayta urinib ko'ring",
-          qoshimcha: "Teng! Qo'shimcha zarbalar" },
+          qoshimcha: "Teng! Qo'shimcha zarbalar", galaba: "G'alaba", maglub: "Mag'lubiyat", yakunK: "O'yin tugadi" },
     ru: { kick: "Турнир вторника", ttl: "Плюй-камни", nom: "Турнир по плюй-камням", kunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
           qoldi: "осталось", soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти",
           yopiq: "Запись закрыта", q1: "Выбивайте камешки из круга своим камнем", q2: "Место, направление и силу выбираете сами",
@@ -34,7 +34,7 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "Мимо"; }, otkazdi: "Удар сгорел — время вышло",
           yutdi: "Вы победили!", yutqazdi: "Вы проиграли", durang: "Ничья", golibi: function (n) { return "Победил " + n; }, sepdi: function (n) { return "Камни обрызгали " + n + " вонючей жидкостью!"; }, sepSiz: "Камни обрызгали вас вонючей жидкостью!",
           kelmadi: "Соперник не пришёл", teng: "Ничья — прошёл тот, кто выше в сетке", yana: "Ещё раз", ortga: "Назад", aloqa: "Нет связи — попробуйте ещё раз",
-          qoshimcha: "Ничья! Дополнительные удары" },
+          qoshimcha: "Ничья! Дополнительные удары", galaba: "Победа", maglub: "Поражение", yakunK: "Игра окончена" },
     en: { kick: "Tuesday tournament", ttl: "Gobstones", nom: "Gobstones tournament", kunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
           qoldi: "left", soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave",
           yopiq: "Sign-up closed", q1: "Knock the stones out of the ring with your own stone", q2: "You choose the spot, the direction and the power",
@@ -47,7 +47,7 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "No stone out"; }, otkazdi: "Shot lost — time ran out",
           yutdi: "You won!", yutqazdi: "You lost", durang: "Draw", golibi: function (n) { return n + " won"; }, sepdi: function (n) { return "The Gobstones squirted " + n + " with stinky liquid!"; }, sepSiz: "The Gobstones squirted you with stinky liquid!",
           kelmadi: "The opponent did not come", teng: "Tie — the higher seed goes through", yana: "Play again", ortga: "Back", aloqa: "No connection — please try again",
-          qoshimcha: "Tie! Extra shots" }
+          qoshimcha: "Tie! Extra shots", galaba: "Victory", maglub: "Defeat", yakunK: "Game over" }
   };
   function gbT() { return GB_T[lang] || GB_T.uz; }
 
@@ -341,70 +341,111 @@
     gbHud();
   }
   function gbXabar(m) { if (gb) { gb.xabar = { m: m, t: performance.now() }; } }
+  // Fakultet rangi (otuvchi tosh va o'yinchi kartasi uchun); ikkalasi bir fakultetdan bo'lsa raqibniki kumush
+  function gbUyRang(h, kumush) { var x = HOUSES[validHouse(h) || ""]; return (!x || kumush) ? "214,220,230" : x.rgb; }
+  function gbAralash(rgb, k) {
+    var p = rgb.split(",").map(Number);
+    return "rgb(" + p.map(function (v) { return Math.round(k >= 0 ? v + (255 - v) * k : v * (1 + k)); }).join(",") + ")";
+  }
+  var GB_TAXTA = null;
+  function gbTaxta() {
+    if (!GB_TAXTA) { GB_TAXTA = new Image(); GB_TAXTA.src = IMG_DIR + "toshchalar/taxta.webp"; }
+    return GB_TAXTA.complete && GB_TAXTA.naturalWidth ? GB_TAXTA : null;
+  }
   function gbHud() {
     var g = gb && gb.g, t = gbT();
     if (!g) { return; }
-    var yon = function (p, sc, el, faol) {
-      el.innerHTML = "";
-      el.classList.toggle("faol", !!faol);
-      var cr = cupCrestImg(p && p.house, 20);
-      if (cr) { el.appendChild(cr); }
-      el.appendChild(drEl("b", "", p ? (g.me && p === g[g.me] ? t.siz : p.name) : "—"));
-      el.appendChild(drEl("strong", "", String(sc)));
-    };
     var men = g.me === "b" ? "b" : "a", u = men === "a" ? "b" : "a";
-    yon(g[men], g.score[men === "a" ? 0 : 1], $("gb-p1"), g.turn === men && g.state === "ketmoqda");
-    yon(g[u], g.score[u === "a" ? 0 : 1], $("gb-p2"), g.turn === u && g.state === "ketmoqda");
-    var jami = g.per * 2, n = Math.min(g.shots + 1, Math.max(jami, g.shots + 1));
-    $("gb-z").textContent = g.shots >= jami && g.state === "ketmoqda" ? t.qoshimcha : t.zarba(Math.min(n, jami), jami);
+    gb.rang = {};
+    gb.rang[men] = gbUyRang(g[men] && g[men].house, false);
+    gb.rang[u] = gbUyRang(g[u] && g[u].house, !!(g[u] && g[men] && g[u].house === g[men].house));
+    var otdi = function (k) { return k === "a" ? Math.ceil(g.shots / 2) : Math.floor(g.shots / 2); };
+    var yon = function (k, el) {
+      var p = g[k];
+      el.innerHTML = "";
+      el.classList.toggle("faol", g.turn === k && g.state === "ketmoqda");
+      el.style.setProperty("--uy", gb.rang[k]);
+      var tep = drEl("div", "gb-p-t"), cr = cupCrestImg(p && p.house, 24);
+      if (cr) { tep.appendChild(cr); }
+      tep.appendChild(drEl("b", "", p ? (g.me && k === g.me ? t.siz : p.name) : "—"));
+      el.appendChild(tep);
+      var past = drEl("div", "gb-p-b"), sc = drEl("span", "gb-sc");
+      sc.appendChild(drEl("i", ""));
+      sc.appendChild(drEl("strong", "", String(g.score[k === "a" ? 0 : 1])));
+      past.appendChild(sc);
+      var pips = drEl("span", "gb-pips"), n = otdi(k), i;
+      for (i = 0; i < g.per; i++) { pips.appendChild(drEl("i", i < n ? "on" : "")); }
+      if (n > g.per) { pips.appendChild(drEl("em", "", "+" + (n - g.per))); }
+      past.appendChild(pips);
+      el.appendChild(past);
+    };
+    yon(men, $("gb-p1"));
+    yon(u, $("gb-p2"));
+    $("gb-z").textContent = g.shots >= g.per * 2 && g.state === "ketmoqda" ? t.qoshimcha : "VS";
     if (g.state === "tugadi" && !(gb.anim)) { gbYakun(); }
   }
   function gbMeni() { var g = gb && gb.g; return g && g.state === "ketmoqda" && g.me && g.turn === g.me && !gb.anim && g.turn_in <= 0.3; }
 
-  // dunyo (doira markazi 0,0; y tepaga) <-> kanvas
-  function gbKoord() { var w = gb.w, sc = w / 2 / 1.13; return { cx: w / 2, cy: w / 2, sc: sc }; }
+  // dunyo (doira markazi 0,0; y tepaga) <-> kanvas. Doira (R = 1) taxta rasmidagi runa halqasining ichki chetiga to'g'ri keladi.
+  // Taxta rasmida runa halqasining ichki cheti rasm yarim kengligining 0,645 qismida - rasm kattalashtirib chiziladi, doira maydonning 84% ini egallaydi
+  var GB_HALQA = 0.645, GB_DOIRA = 0.84;
+  function gbKoord() { var w = gb.w; return { cx: w / 2, cy: w / 2, sc: w / 2 * GB_DOIRA }; }
   function gbJoy(s) { var r = (s * Math.PI) / 180; return [Math.cos(r) * (GB_R - GB_OR * 1.2), Math.sin(r) * (GB_R - GB_OR * 1.2)]; }
 
   function gbKadr(ts) {
     if (!gb) { return; }
     gb.raf = requestAnimationFrame(gbKadr);
-    var c = $("gb-canvas"), g2 = c.getContext("2d"), K = gbKoord(), g = gb.g, t = gbT(), i;
+    var c = $("gb-canvas"), g2 = c.getContext("2d"), K = gbKoord(), g = gb.g, t = gbT(), i, hozir = performance.now();
     var X = function (x) { return K.cx + x * K.sc; }, Y = function (y) { return K.cy - y * K.sc; };
+    var rang = gb.rang || { a: "214,220,230", b: "214,220,230" };
     g2.setTransform(gb.dpr, 0, 0, gb.dpr, 0, 0);
     g2.clearRect(0, 0, gb.w, gb.w);
-    // maydon: tosh pol, doira, runa halqasi
-    var bg = g2.createRadialGradient(K.cx, K.cy, K.sc * 0.2, K.cx, K.cy, K.sc * 1.2);
-    bg.addColorStop(0, "#2a2733"); bg.addColorStop(1, "#121118");
-    g2.fillStyle = bg; g2.fillRect(0, 0, gb.w, gb.w);
-    g2.beginPath(); g2.arc(K.cx, K.cy, K.sc * GB_R, 0, Math.PI * 2);
-    var pol = g2.createRadialGradient(K.cx, K.cy, 0, K.cx, K.cy, K.sc);
-    pol.addColorStop(0, "#3b3646"); pol.addColorStop(1, "#24212c");
-    g2.fillStyle = pol; g2.fill();
-    g2.lineWidth = 4; g2.strokeStyle = "rgba(243,213,143,.55)"; g2.shadowColor = "rgba(243,213,143,.45)"; g2.shadowBlur = 14; g2.stroke(); g2.shadowBlur = 0;
-    g2.setLineDash([3, 7]); g2.lineWidth = 1.5; g2.strokeStyle = "rgba(226,232,240,.18)";
-    g2.beginPath(); g2.arc(K.cx, K.cy, K.sc * 0.62, 0, Math.PI * 2); g2.stroke(); g2.setLineDash([]);
+    // taxta: tosh pol, disk va runa halqasi (rasm); rasm yuklanmaguncha - oddiy doira
+    var tx = gbTaxta();
+    if (tx) { var ol = gb.w * GB_DOIRA / GB_HALQA; g2.drawImage(tx, (gb.w - ol) / 2, (gb.w - ol) / 2, ol, ol); }
+    else {
+      g2.fillStyle = "#1b1824"; g2.fillRect(0, 0, gb.w, gb.w);
+      g2.beginPath(); g2.arc(K.cx, K.cy, K.sc * GB_R, 0, Math.PI * 2); g2.fillStyle = "#2c3140"; g2.fill();
+      g2.lineWidth = 3; g2.strokeStyle = "rgba(243,213,143,.6)"; g2.stroke();
+    }
+    // doira chegarasi ozgina nurlanadi (chiqish chizig'i aniq ko'rinsin)
+    g2.lineWidth = 2; g2.strokeStyle = "rgba(243,213,143," + (0.28 + 0.12 * Math.sin(ts / 600)).toFixed(3) + ")";
+    g2.shadowColor = "rgba(243,213,143,.6)"; g2.shadowBlur = 10;
+    g2.beginPath(); g2.arc(K.cx, K.cy, K.sc * GB_R, 0, Math.PI * 2); g2.stroke(); g2.shadowBlur = 0;
     // otish yoyi (pastki qism)
-    g2.lineWidth = 6; g2.strokeStyle = "rgba(226,232,240,.08)";
+    var mening = gbMeni();
+    g2.lineCap = "round"; g2.lineWidth = 7; g2.strokeStyle = mening ? "rgba(" + rang[g.me] + ",.32)" : "rgba(226,232,240,.07)";
     g2.beginPath(); g2.arc(K.cx, K.cy, K.sc * (GB_R - GB_OR * 1.2), -GB_JOY[1] * Math.PI / 180, -GB_JOY[0] * Math.PI / 180, false); g2.stroke();      // kanvasda y pastga - burchak teskari
-    var tosh = function (x, y, r, tur, a) {
+    // marmar tosh: soya, gradient, marmar chizig'i, yaltiroq nuqta
+    var tosh = function (x, y, r, rgb, a) {
+      var px = X(x), py = Y(y), rr = r * K.sc;
       g2.globalAlpha = a == null ? 1 : a;
-      var gr = g2.createRadialGradient(X(x) - r * K.sc * 0.35, Y(y) - r * K.sc * 0.35, r * K.sc * 0.1, X(x), Y(y), r * K.sc);
-      if (tur === "t") { gr.addColorStop(0, "#d7b8ff"); gr.addColorStop(0.5, "#7b4fc0"); gr.addColorStop(1, "#2c1a4a"); }
-      else if (tur === "men") { gr.addColorStop(0, "#ffffff"); gr.addColorStop(0.5, "#c9d1dc"); gr.addColorStop(1, "#5c6573"); }
-      else { gr.addColorStop(0, "#ffe6a8"); gr.addColorStop(0.5, "#c8923a"); gr.addColorStop(1, "#5a3a10"); }
-      g2.fillStyle = gr; g2.beginPath(); g2.arc(X(x), Y(y), r * K.sc, 0, Math.PI * 2); g2.fill();
-      g2.lineWidth = 1.5; g2.strokeStyle = "rgba(8,8,12,.8)"; g2.stroke();
+      g2.fillStyle = "rgba(0,0,0,.45)";
+      g2.beginPath(); g2.ellipse(px + rr * 0.22, py + rr * 0.42, rr * 0.95, rr * 0.62, 0, 0, Math.PI * 2); g2.fill();
+      var gr = g2.createRadialGradient(px - rr * 0.35, py - rr * 0.4, rr * 0.08, px, py, rr);
+      if (!rgb) { gr.addColorStop(0, "#e9d6ff"); gr.addColorStop(0.45, "#8a5ad0"); gr.addColorStop(1, "#2a1646"); }
+      else { gr.addColorStop(0, gbAralash(rgb, 0.75)); gr.addColorStop(0.5, gbAralash(rgb, 0)); gr.addColorStop(1, gbAralash(rgb, -0.6)); }
+      g2.fillStyle = gr; g2.beginPath(); g2.arc(px, py, rr, 0, Math.PI * 2); g2.fill();
+      g2.lineWidth = Math.max(1, rr * 0.16); g2.strokeStyle = rgb ? "rgba(255,255,255,.3)" : "rgba(235,215,255,.35)";
+      g2.beginPath(); g2.arc(px + rr * 0.12, py + rr * 0.1, rr * 0.55, 3.5, 5.3); g2.stroke();
+      g2.fillStyle = "rgba(255,255,255,.8)"; g2.beginPath(); g2.arc(px - rr * 0.36, py - rr * 0.4, rr * 0.17, 0, Math.PI * 2); g2.fill();
+      g2.lineWidth = 1.4; g2.strokeStyle = "rgba(8,6,14,.85)"; g2.beginPath(); g2.arc(px, py, rr, 0, Math.PI * 2); g2.stroke();
       g2.globalAlpha = 1;
     };
     var men = g && g.me ? g.me : "a";
     if (gb.anim) {
-      var an = gb.anim, f = an.ox.f, k = Math.min(f.length - 1, (performance.now() - an.t0) / an.dt), k0 = Math.floor(k), k1 = Math.min(f.length - 1, k0 + 1), fr = k - k0;
-      var otuvchi = an.ox.by === men ? "men" : "u";
+      var an = gb.anim, f = an.ox.f, k = Math.min(f.length - 1, (hozir - an.t0) / an.dt), k0 = Math.floor(k), k1 = Math.min(f.length - 1, k0 + 1), fr = k - k0;
+      var otuvchi = rang[an.ox.by] || rang.a, oxirgi = f[0].length - 1;
+      an.sp = an.sp || {};
       for (i = 0; i < f[0].length; i++) {
         var ch = an.ox.out ? an.ox.out[i] : null, alfa = 1;
-        if (ch != null && k > ch) { alfa = Math.max(0, 1 - (k - ch) / 14); if (alfa <= 0) { continue; } }
         var x = f[k0][i][0] + (f[k1][i][0] - f[k0][i][0]) * fr, y = f[k0][i][1] + (f[k1][i][1] - f[k0][i][1]) * fr;
-        tosh(x, y, i === f[0].length - 1 ? GB_OR : GB_TR, i === f[0].length - 1 ? otuvchi : "t", alfa);
+        if (ch != null && k > ch) {
+          if (i < oxirgi && !an.sp[i]) { an.sp[i] = 1; gb.splash.push({ x: x, y: y, t0: hozir }); }      // toshcha chiqdi - sassiq suyuqlik sachradi
+          alfa = Math.max(0, 1 - (k - ch) / 10);
+          if (alfa <= 0) { continue; }
+        }
+        tosh(x, y, i === oxirgi ? GB_OR : GB_TR, i === oxirgi ? otuvchi : null, alfa);
       }
       if (k >= f.length - 1 && !an.tugadi) {
         an.tugadi = true;
@@ -413,44 +454,74 @@
         setTimeout(function () { if (gb && gb.anim === an) { gb.anim = null; gbHud(); } }, 500);
       }
     } else if (g) {
-      (g.stones || []).forEach(function (s) { tosh(s[0], s[1], GB_TR, "t"); });
-      if (gbMeni()) {
-        var p = gbJoy(gb.s);
-        // nishon chizig'i (qisqa) va kuch
-        if (gb.aim && gb.aim.p > 0.03) {
-          var ar = gb.aim.a * Math.PI / 180, uz = 0.25 + gb.aim.p * 0.55;
-          g2.setLineDash([5, 6]); g2.lineWidth = 2.5; g2.strokeStyle = "rgba(255,255,255," + (0.5 + gb.aim.p * 0.4).toFixed(2) + ")";
-          g2.beginPath(); g2.moveTo(X(p[0]), Y(p[1])); g2.lineTo(X(p[0] + Math.cos(ar) * uz), Y(p[1] + Math.sin(ar) * uz)); g2.stroke(); g2.setLineDash([]);
+      (g.stones || []).forEach(function (s2) { tosh(s2[0], s2[1], GB_TR, null); });
+      if (mening) {
+        var p = gbJoy(gb.s), mr = rang[g.me];
+        if (gb.aim && gb.aim.p > 0.02) {
+          var ar = gb.aim.a * Math.PI / 180, uz = 0.22 + gb.aim.p * 0.6, ux = Math.cos(ar), uy = Math.sin(ar);
+          // orqaga tortilgan «rezina»
+          g2.lineWidth = 2; g2.strokeStyle = "rgba(255,255,255,.35)";
+          g2.beginPath(); g2.moveTo(X(p[0]), Y(p[1])); g2.lineTo(X(p[0] - ux * gb.aim.p * 0.45), Y(p[1] - uy * gb.aim.p * 0.45)); g2.stroke();
+          // yo'nalish chizig'i va o'q uchi
+          var ex = p[0] + ux * uz, ey = p[1] + uy * uz;
+          g2.setLineDash([4, 6]); g2.lineWidth = 3; g2.strokeStyle = "rgba(255,255,255," + (0.55 + gb.aim.p * 0.4).toFixed(2) + ")";
+          g2.beginPath(); g2.moveTo(X(p[0] + ux * GB_OR * 1.4), Y(p[1] + uy * GB_OR * 1.4)); g2.lineTo(X(ex), Y(ey)); g2.stroke(); g2.setLineDash([]);
+          g2.fillStyle = "rgba(255,255,255,.9)";
+          g2.beginPath(); g2.moveTo(X(ex + ux * 0.06), Y(ey + uy * 0.06));
+          g2.lineTo(X(ex - uy * 0.035), Y(ey + ux * 0.035)); g2.lineTo(X(ex + uy * 0.035), Y(ey - ux * 0.035)); g2.closePath(); g2.fill();
         }
-        tosh(p[0], p[1], GB_OR, "men");
-        g2.lineWidth = 2; g2.strokeStyle = "rgba(255,255,255," + (0.35 + 0.25 * Math.sin(ts / 220)).toFixed(2) + ")";
-        g2.beginPath(); g2.arc(X(p[0]), Y(p[1]), GB_OR * K.sc + 6, 0, Math.PI * 2); g2.stroke();
+        tosh(p[0], p[1], GB_OR, mr);
+        // kuch halqasi (tosh atrofida) yoki - nishonga olinmaganda - suriladigan joy belgisi
+        var rr2 = GB_OR * K.sc + 7;
+        if (gb.aim && gb.aim.p > 0.02) {
+          var kk = gb.aim.p, rgbK = kk < 0.5 ? "143,240,182" : kk < 0.8 ? "243,213,143" : "240,101,90";
+          g2.lineWidth = 4; g2.strokeStyle = "rgba(255,255,255,.12)"; g2.beginPath(); g2.arc(X(p[0]), Y(p[1]), rr2, 0, Math.PI * 2); g2.stroke();
+          g2.strokeStyle = "rgb(" + rgbK + ")"; g2.shadowColor = "rgba(" + rgbK + ",.8)"; g2.shadowBlur = 8;
+          g2.beginPath(); g2.arc(X(p[0]), Y(p[1]), rr2, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * kk); g2.stroke(); g2.shadowBlur = 0;
+        } else {
+          g2.lineWidth = 2; g2.strokeStyle = "rgba(255,255,255," + (0.35 + 0.25 * Math.sin(ts / 220)).toFixed(2) + ")";
+          g2.beginPath(); g2.arc(X(p[0]), Y(p[1]), rr2, 0, Math.PI * 2); g2.stroke();
+          [-1, 1].forEach(function (yo) {                       // yoy bo'ylab surish mumkinligini ko'rsatuvchi o'qchalar
+            var sa = (gb.s + yo * 13) * Math.PI / 180, rad = GB_R - GB_OR * 1.2, qx = Math.cos(sa) * rad, qy = Math.sin(sa) * rad;
+            var tx2 = -Math.sin(sa) * yo, ty2 = Math.cos(sa) * yo;
+            g2.fillStyle = "rgba(255,255,255,.55)";
+            g2.beginPath(); g2.moveTo(X(qx + tx2 * 0.05), Y(qy + ty2 * 0.05));
+            g2.lineTo(X(qx - ty2 * 0.03), Y(qy + tx2 * 0.03)); g2.lineTo(X(qx + ty2 * 0.03), Y(qy - tx2 * 0.03)); g2.closePath(); g2.fill();
+          });
+        }
       }
     }
-    // kuch chizig'i (pastda)
-    if (gb.aim && gbMeni()) {
-      var bw = gb.w * 0.5, bx = (gb.w - bw) / 2, by = gb.w - 16;
-      g2.fillStyle = "rgba(8,10,16,.6)"; g2.fillRect(bx - 2, by - 2, bw + 4, 10);
-      var kg = g2.createLinearGradient(bx, 0, bx + bw, 0); kg.addColorStop(0, "#8ff0b6"); kg.addColorStop(0.6, "#f3d58f"); kg.addColorStop(1, "#f0655a");
-      g2.fillStyle = kg; g2.fillRect(bx, by, bw * gb.aim.p, 6);
-    }
+    // sachragan sassiq suyuqlik (yashil-binafsha tomchilar)
+    gb.splash = gb.splash.filter(function (sp) { return hozir - sp.t0 < 800; });
+    gb.splash.forEach(function (sp) {
+      var q = (hozir - sp.t0) / 800, j;
+      for (j = 0; j < 9; j++) {
+        var bur = j / 9 * Math.PI * 2 + sp.x * 7, mas = 0.04 + q * 0.2 * (0.6 + (j % 3) * 0.25);
+        g2.globalAlpha = Math.max(0, 1 - q);
+        g2.fillStyle = j % 2 ? "rgba(150,230,90,.95)" : "rgba(170,110,230,.95)";
+        g2.beginPath(); g2.arc(X(sp.x + Math.cos(bur) * mas), Y(sp.y + Math.sin(bur) * mas), (1 - q) * 4 + 1.5, 0, Math.PI * 2); g2.fill();
+      }
+      g2.globalAlpha = 1;
+    });
     // xabar
-    if (gb.xabar && performance.now() - gb.xabar.t < 1800) {
-      g2.globalAlpha = Math.min(1, (1800 - (performance.now() - gb.xabar.t)) / 500);
-      g2.font = "800 18px Manrope, sans-serif"; g2.textAlign = "center"; g2.textBaseline = "middle";
-      g2.lineWidth = 4; g2.strokeStyle = "rgba(8,10,16,.85)"; g2.strokeText(gb.xabar.m, K.cx, gb.w * 0.16);
-      g2.fillStyle = "#f3d58f"; g2.fillText(gb.xabar.m, K.cx, gb.w * 0.16); g2.globalAlpha = 1;
+    if (gb.xabar && hozir - gb.xabar.t < 1800) {
+      g2.globalAlpha = Math.min(1, (1800 - (hozir - gb.xabar.t)) / 500);
+      g2.font = "800 19px Manrope, sans-serif"; g2.textAlign = "center"; g2.textBaseline = "middle";
+      g2.lineWidth = 5; g2.lineJoin = "round"; g2.strokeStyle = "rgba(8,10,16,.9)"; g2.strokeText(gb.xabar.m, K.cx, gb.w * 0.2);
+      g2.fillStyle = "#f3d58f"; g2.fillText(gb.xabar.m, K.cx, gb.w * 0.2); g2.globalAlpha = 1;
     }
     // navbat matni va vaqt
     var h = $("gb-h"), vq = $("gb-v");
     if (g && h) {
       if (g.state === "kutmoqda" || (g.state === "ketmoqda" && g.turn_in > 0.5 && !gb.anim && g.shots === 0)) { h.textContent = t.boshlanadi(Math.ceil(Math.max(g.turn_in || g.starts_in || 0, 0))); }
-      else if (g.state !== "ketmoqda") { h.textContent = ""; }
-      else if (gb.anim) { h.textContent = ""; }
-      else if (gbMeni()) { h.textContent = gb.aim ? t.kuch + " " + Math.round(gb.aim.p * 100) + "%" : t.otH; }
+      else if (g.state !== "ketmoqda" || gb.anim) { h.textContent = ""; }
+      else if (mening) { h.textContent = gb.aim ? t.kuch + " " + Math.round(gb.aim.p * 100) + "%" : t.otH; }
       else if (g.me && g.turn === g.me) { h.textContent = t.kut; }
       else { h.textContent = t.navbatR(g[g.turn] ? g[g.turn].name : ""); }
-      if (vq) { vq.style.width = (g.state === "ketmoqda" && !gb.anim ? Math.max(0, Math.min(100, (g.turn_left || 0) / 30 * 100)) : 0) + "%"; }
+      if (vq) {
+        vq.style.width = (g.state === "ketmoqda" && !gb.anim ? Math.max(0, Math.min(100, (g.turn_left || 0) / 30 * 100)) : 0) + "%";
+        vq.style.background = g.turn && rang[g.turn] ? "rgb(" + rang[g.turn] + ")" : "";
+      }
     }
   }
 
@@ -496,28 +567,44 @@
     if (!box.classList.contains("hidden")) { return; }
     box.innerHTML = "";
     box.classList.remove("hidden");
-    var men = g.me, yutdi = men && g.winner === men, yutqazdi = men && g.winner && g.winner !== men;
-    var golib = g.winner ? g[g.winner] : null, mag = g.winner ? g[g.winner === "a" ? "b" : "a"] : null;
-    box.appendChild(drEl("b", "gb-e-t" + (yutdi ? " yaxshi" : yutqazdi ? " yomon" : ""), yutdi ? t.yutdi : yutqazdi ? t.yutqazdi : g.winner ? t.golibi(golib.name) : t.durang));
-    box.appendChild(drEl("strong", "gb-e-s", g.score[0] + " : " + g.score[1]));
-    if (g.why === "kelmadi") { box.appendChild(drEl("p", "", t.kelmadi)); }
-    else if (g.why === "teng") { box.appendChild(drEl("p", "", t.teng)); }
-    if (mag) {
-      box.appendChild(drEl("p", "gb-e-sep", yutqazdi ? t.sepSiz : t.sepdi(mag.name)));
-      if (yutqazdi) { box.classList.add("sepildi"); } else { box.classList.remove("sepildi"); }
-    }
+    var men = g.me || "a", u = men === "a" ? "b" : "a", yutdi = g.me && g.winner === g.me, yutqazdi = g.me && g.winner && g.winner !== g.me;
+    var k = drEl("div", "gb-e-k" + (yutdi ? " g" : yutqazdi ? " m" : ""));
+    k.appendChild(drEl("small", "gb-e-kick", yutdi ? t.galaba : yutqazdi ? t.maglub : t.yakunK));
+    k.appendChild(drEl("b", "gb-e-t", yutdi ? t.yutdi : yutqazdi ? t.yutqazdi : g.winner ? t.golibi(g[g.winner].name) : t.durang));
+    var vs = drEl("div", "gb-e-vs");
+    var oyinchi = function (yon) {
+      var p = g[yon], d = drEl("div", "gb-e-o" + (g.winner === yon ? " yut" : g.winner ? " sep" : ""));
+      d.style.setProperty("--uy", (gb.rang && gb.rang[yon]) || "214,220,230");
+      var gerb = drEl("span", "gb-e-g"), cr = cupCrestImg(p && p.house, 58);
+      if (cr) { gerb.appendChild(cr); }
+      if (g.winner && g.winner !== yon) { for (var i = 0; i < 6; i++) { gerb.appendChild(drEl("i", "gb-dog d" + i)); } }      // sassiq suyuqlik dog'lari
+      if (g.winner === yon) { gerb.appendChild(drEl("u", "gb-toj", "✦")); }
+      d.appendChild(gerb);
+      d.appendChild(drEl("b", "", p ? (g.me && yon === g.me ? t.siz : p.name) : "—"));
+      d.appendChild(drEl("strong", "", String(g.score[yon === "a" ? 0 : 1])));
+      return d;
+    };
+    vs.appendChild(oyinchi(men));
+    vs.appendChild(drEl("span", "gb-e-x", ":"));
+    vs.appendChild(oyinchi(u));
+    k.appendChild(vs);
+    if (g.why === "kelmadi") { k.appendChild(drEl("p", "", t.kelmadi)); }
+    else if (g.why === "teng") { k.appendChild(drEl("p", "", t.teng)); }
+    if (g.winner) { k.appendChild(drEl("p", "gb-e-sep", yutqazdi ? t.sepSiz : t.sepdi(g[g.winner === "a" ? "b" : "a"].name))); }
     var tug = drEl("div", "gb-e-b");
-    if (g.kind === "mashq" && g.b && g.b.bot) {
+    if ((g.kind === "mashq" || g.kind === "sinov") && g.b && g.b.bot) {
       var y = drEl("button", "dr-btn", t.yana);
       y.type = "button";
-      y.addEventListener("click", function () { gbBoshla({ mashq: g.b.bot }); });
+      y.addEventListener("click", function () { gbBoshla(g.kind === "sinov" ? { sinov: 1 } : { mashq: g.b.bot }); });
       tug.appendChild(y);
     }
-    var o = drEl("button", "dr-link", t.ortga);
+    var o = drEl("button", "dr-btn gb-ikki", t.ortga);
     o.type = "button";
     o.addEventListener("click", function () { gbStop(); gbKorsat(); });
     tug.appendChild(o);
-    box.appendChild(tug);
+    k.appendChild(tug);
+    box.appendChild(k);
+    if (yutdi) { try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {} }
   }
 
   function gbInfo() {

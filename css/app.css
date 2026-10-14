@@ -3787,27 +3787,61 @@ body.tg-fs::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--f
 .gb-m-p b{font:600 14px/1.2 'Manrope',sans-serif;color:var(--dim)}
 .gb-m-p.yut b{color:var(--text)}
 .gb-m-p em{font:800 14px/1.2 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
-.gb-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
-.gb-p{display:flex;align-items:center;gap:7px;min-width:0;padding:7px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.03);flex:1}
-.gb-p.o{flex-direction:row-reverse}
-.gb-p b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 13px/1.2 'Manrope',sans-serif}
-.gb-p.o b{text-align:right}
-.gb-p strong{font:800 20px/1 'Manrope',sans-serif;color:var(--gold-hi);font-variant-numeric:tabular-nums}
-.gb-p.faol{border-color:rgba(226,232,240,.8);background:rgba(226,232,240,.1)}
-.gb-z{flex:none;font:700 10.5px/1.2 'Manrope',sans-serif;color:var(--dim);text-align:center;max-width:76px}
+/* Toshchalar: o'yin ekrani (2-ko'rinish) */
+.gb-top{display:flex;align-items:stretch;justify-content:space-between;gap:8px;margin-top:4px}
+.gb-p{--uy:214,220,230;flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding:9px 11px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(var(--uy),.1),rgba(255,255,255,.02));transition:border-color .2s,box-shadow .2s}
+.gb-p.faol{border-color:rgba(var(--uy),.85);box-shadow:0 0 0 1px rgba(var(--uy),.4),0 0 18px rgba(var(--uy),.25)}
+.gb-p-t{display:flex;align-items:center;gap:7px;min-width:0}
+.gb-p.o .gb-p-t{flex-direction:row-reverse}
+.gb-p-t b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 13px/1.2 'Manrope',sans-serif;color:var(--text)}
+.gb-p.o .gb-p-t b{text-align:right}
+.gb-p-b{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.gb-p.o .gb-p-b{flex-direction:row-reverse}
+.gb-sc{display:flex;align-items:center;gap:5px}
+.gb-sc i{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e9d6ff,#8a5ad0 50%,#2a1646);box-shadow:0 0 6px rgba(160,110,230,.5)}
+.gb-sc strong{font:800 22px/1 'Manrope',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.gb-pips{display:flex;align-items:center;gap:3px}
+.gb-pips i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.14)}
+.gb-pips i.on{background:rgb(var(--uy))}
+.gb-pips em{font:800 10px/1 'Manrope',sans-serif;font-style:normal;color:var(--dim)}
+.gb-z{flex:none;align-self:center;font:800 11px/1.2 'Manrope',sans-serif;letter-spacing:.1em;color:var(--dim);text-align:center;max-width:70px}
 .gb-vq{height:4px;margin:10px 2px 0;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
-.gb-vq i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#c4a6f0,#eef2f7);transition:width .9s linear}
+.gb-vq i{display:block;height:100%;width:0;border-radius:99px;background:#c4a6f0;transition:width .9s linear}
 .gb-box{position:relative;margin-top:10px;display:flex;justify-content:center}
-#gb-canvas{display:block;border-radius:22px;touch-action:none;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#gb-canvas{display:block;border-radius:24px;touch-action:none;box-shadow:0 14px 34px rgba(0,0,0,.55),0 0 0 1px rgba(243,213,143,.18)}
 .gb-h{min-height:20px;margin:12px 4px 0;text-align:center;font:700 13.5px/1.4 'Manrope',sans-serif;color:var(--text)}
-.gb-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px;border-radius:22px;background:rgba(10,10,16,.82);text-align:center}
+/* yakun oynasi */
+.gb-end{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:24px;background:rgba(8,8,14,.72);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .gb-end.hidden{display:none}
-.gb-e-t{font:600 30px/1.1 'Cormorant Garamond',serif;color:var(--text)}
-.gb-e-t.yaxshi{color:#8ff0b6}
-.gb-e-t.yomon{color:#ff9d94}
-.gb-e-s{font:800 34px/1 'Manrope',sans-serif;color:var(--gold-hi)}
-.gb-end p{margin:0;font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.gb-e-k{width:100%;max-width:330px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 16px 16px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,#1d1b27,#121119);text-align:center;box-shadow:0 18px 40px rgba(0,0,0,.6);animation:gbKir .45s cubic-bezier(.2,.9,.3,1.2) both}
+.gb-e-k.g{border-color:rgba(243,213,143,.55);background:radial-gradient(120% 70% at 50% 0%,rgba(243,213,143,.18),transparent 60%),linear-gradient(180deg,#1f1c25,#121119)}
+.gb-e-k.m{border-color:rgba(150,230,90,.4);background:radial-gradient(120% 70% at 50% 0%,rgba(150,230,90,.14),transparent 60%),linear-gradient(180deg,#1b1f1c,#121119)}
+@keyframes gbKir{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
+.gb-e-kick{font:800 10.5px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.gb-e-k.g .gb-e-kick{color:#f3d58f}
+.gb-e-k.m .gb-e-kick{color:#b9f08f}
+.gb-e-t{font:600 30px/1.05 'Cormorant Garamond',serif;color:var(--text)}
+.gb-e-vs{display:flex;align-items:flex-start;justify-content:center;gap:10px;margin:8px 0 2px;width:100%}
+.gb-e-o{--uy:214,220,230;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px}
+.gb-e-o b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 12.5px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.gb-e-o.yut b{color:var(--text)}
+.gb-e-o strong{font:800 34px/1 'Manrope',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.gb-e-o.yut strong{color:#f3d58f}
+.gb-e-g{position:relative;display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,rgba(var(--uy),.25),transparent 70%)}
+.gb-e-o.yut .gb-e-g{box-shadow:0 0 24px rgba(243,213,143,.35)}
+.gb-toj{position:absolute;top:-10px;left:50%;transform:translateX(-50%);text-decoration:none;font:400 20px/1 sans-serif;color:#f3d58f;text-shadow:0 0 10px rgba(243,213,143,.8);animation:gbToj 1.6s ease-in-out infinite}
+@keyframes gbToj{50%{transform:translateX(-50%) scale(1.2)}}
+.gb-dog{position:absolute;border-radius:50% 45% 55% 50%;background:rgba(150,230,90,.85);box-shadow:inset -2px -2px 0 rgba(60,120,20,.5);animation:gbDog .5s ease-out both}
+.gb-dog.d0{width:22px;height:18px;top:6px;left:8px;animation-delay:.25s}
+.gb-dog.d1{width:16px;height:14px;top:30px;left:44px;background:rgba(170,110,230,.85);animation-delay:.35s}
+.gb-dog.d2{width:12px;height:12px;top:46px;left:14px;animation-delay:.45s}
+.gb-dog.d3{width:9px;height:22px;top:22px;left:30px;border-radius:40% 40% 50% 50%;animation-delay:.55s}
+.gb-dog.d4{width:10px;height:10px;top:4px;left:50px;background:rgba(170,110,230,.85);animation-delay:.6s}
+.gb-dog.d5{width:14px;height:11px;top:54px;left:40px;animation-delay:.7s}
+@keyframes gbDog{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:none}}
+.gb-e-x{align-self:flex-start;margin-top:104px;font:800 26px/1 'Manrope',sans-serif;color:var(--dim)}
+.gb-e-k p{margin:0;font:600 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
 .gb-e-sep{color:#b9f08f!important}
-.gb-end.sepildi{background:radial-gradient(circle at 30% 30%,rgba(110,200,60,.35),transparent 30%),radial-gradient(circle at 75% 60%,rgba(150,80,200,.35),transparent 28%),rgba(10,10,16,.85)}
-.gb-e-b{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:8px;width:100%}
-.gb-e-b .dr-btn{margin:0;width:80%}
+.gb-e-b{display:flex;flex-direction:column;align-items:stretch;gap:8px;margin-top:8px;width:100%}
+.gb-e-b .dr-btn{margin:0;width:100%}
+.dr-btn.gb-ikki{background:transparent;border:1px solid rgba(255,255,255,.22);color:var(--text);box-shadow:none}
