@@ -17,7 +17,8 @@
           tor: "Turnir to'ri", bosq: { 2: "Final", 4: "Yarim final", 8: "Chorak final", 16: "1/8 final", 32: "1/16 final" }, jonli: "JONLI", kutadi: "kutadi",
           kor: "Ko'rish", ball: function (p) { return "g'alabaga +" + p; }, sinov: "Sinov o'yini", sinovS: "Faqat adminga ko'rinadi · kompyuter bilan, turnir oqimi",
           siz: "Siz", navbat: "Sizning navbatingiz", navbatR: function (n) { return n + " otmoqda…"; }, kut: "Kuting…", boshlanadi: function (s) { return "O'yin " + s + " soniyadan keyin boshlanadi"; },
-          joyH: "Toshni yoy bo'ylab suring — joyni tanlang", otH: "Maydonda barmoqni orqaga torting va qo'yib yuboring", kuch: "Kuch", zarba: function (a, b) { return a + " / " + b + " zarba"; },
+          joyH: "Toshni yoy bo'ylab suring — joyni tanlang", otH: "Joy: toshni yoy bo'ylab suring · Zarba: maydonda barmoqni orqaga torting", kuch: "Kuch",
+          qaytH: "bekor qilish — barmoqni ✕ ga qaytaring", bekorH: "Qo'yib yuborsangiz — zarba bekor bo'ladi", bekorX: "Zarba bekor qilindi — joyni o'zgartirsangiz bo'ladi", zarba: function (a, b) { return a + " / " + b + " zarba"; },
           chiqdi: function (n) { return n > 0 ? "+" + n + " toshcha!" : "Toshcha chiqmadi"; }, otkazdi: "Zarba yonib ketdi — vaqt tugadi",
           yutdi: "Siz yutdingiz!", yutqazdi: "Siz yutqazdingiz", durang: "Durang", golibi: function (n) { return n + " yutdi"; }, sepdi: function (n) { return "Toshchalar " + n + "ga sassiq suyuqlik sepdi!"; }, sepSiz: "Toshchalar sizga sassiq suyuqlik sepdi!",
           kelmadi: "Raqib kelmadi", teng: "Teng — to'rda yuqori turgan o'tdi", yana: "Yana o'ynash", ortga: "Ortga", aloqa: "Aloqa yo'q — qayta urinib ko'ring",
@@ -33,7 +34,8 @@
           tor: "Сетка турнира", bosq: { 2: "Финал", 4: "Полуфинал", 8: "Четвертьфинал", 16: "1/8 финала", 32: "1/16 финала" }, jonli: "LIVE", kutadi: "ждёт",
           kor: "Смотреть", ball: function (p) { return "за победу +" + p; }, sinov: "Тестовая игра", sinovS: "Только для админа · с компьютером, как в турнире",
           siz: "Вы", navbat: "Ваш ход", navbatR: function (n) { return n + " бьёт…"; }, kut: "Ждите…", boshlanadi: function (s) { return "Игра начнётся через " + s + " с"; },
-          joyH: "Двигайте камень по дуге — выберите место", otH: "Оттяните палец на поле и отпустите", kuch: "Сила", zarba: function (a, b) { return "Удар " + a + " из " + b; },
+          joyH: "Двигайте камень по дуге — выберите место", otH: "Место: двигайте камень по дуге · Удар: оттяните палец на поле", kuch: "Сила",
+          qaytH: "отмена — верните палец к ✕", bekorH: "Отпустите — удар отменится", bekorX: "Удар отменён — можно сменить место", zarba: function (a, b) { return "Удар " + a + " из " + b; },
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "Мимо"; }, otkazdi: "Удар сгорел — время вышло",
           yutdi: "Вы победили!", yutqazdi: "Вы проиграли", durang: "Ничья", golibi: function (n) { return "Победил " + n; }, sepdi: function (n) { return "Камни обрызгали " + n + " вонючей жидкостью!"; }, sepSiz: "Камни обрызгали вас вонючей жидкостью!",
           kelmadi: "Соперник не пришёл", teng: "Ничья — прошёл тот, кто выше в сетке", yana: "Ещё раз", ortga: "Назад", aloqa: "Нет связи — попробуйте ещё раз",
@@ -49,7 +51,8 @@
           tor: "Tournament bracket", bosq: { 2: "Final", 4: "Semi-final", 8: "Quarter-final", 16: "Round of 16", 32: "Round of 32" }, jonli: "LIVE", kutadi: "waiting",
           kor: "Watch", ball: function (p) { return "+" + p + " for a win"; }, sinov: "Test game", sinovS: "Admin only · against the computer, tournament flow",
           siz: "You", navbat: "Your turn", navbatR: function (n) { return n + " is shooting…"; }, kut: "Wait…", boshlanadi: function (s) { return "The game starts in " + s + " s"; },
-          joyH: "Slide your stone along the arc to pick a spot", otH: "Pull your finger back on the field and let go", kuch: "Power", zarba: function (a, b) { return "Shot " + a + " of " + b; },
+          joyH: "Slide your stone along the arc to pick a spot", otH: "Spot: slide the stone along the arc · Shot: pull your finger back on the field", kuch: "Power",
+          qaytH: "to cancel, bring your finger back to ✕", bekorH: "Let go now and the shot is cancelled", bekorX: "Shot cancelled — you can change the spot", zarba: function (a, b) { return "Shot " + a + " of " + b; },
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "No stone out"; }, otkazdi: "Shot lost — time ran out",
           yutdi: "You won!", yutqazdi: "You lost", durang: "Draw", golibi: function (n) { return n + " won"; }, sepdi: function (n) { return "The Gobstones squirted " + n + " with stinky liquid!"; }, sepSiz: "The Gobstones squirted you with stinky liquid!",
           kelmadi: "The opponent did not come", teng: "Tie — the higher seed goes through", yana: "Play again", ortga: "Back", aloqa: "No connection — please try again",
@@ -62,6 +65,7 @@
 
   // Server bilan bir xil o'lchamlar (hptosh.py)
   var GB_R = 1.0, GB_TR = 0.058, GB_OR = 0.068, GB_JOY = [-150, -30];
+  var GB_BEKOR = 0.12;          // bundan kuchsiz tortilsa (barmoq ✕ ga qaytarilsa) - zarba bekor
   var gbData = null, gbTm = null, gbSoat = null, gbOlingan = 0, gbLocal = null;
   var gb = null;      // o'yin: {id, g (server holati), seen, anim, s (joy), aim, raf, tm, w, dpr}
 
@@ -518,7 +522,14 @@
       (g.stones || []).forEach(function (s2) { tosh(s2[0], s2[1], GB_TR, null); });
       if (mening) {
         var p = gbJoy(gb.s), mr = rang[g.me];
-        if (gb.aim && gb.aim.p > 0.02) {
+        if (gb.tutish === "ot" && gb.b0) {
+          // bekor qilish joyi: barmoq tekkan nuqta - shu yerga qaytarilsa zarba bo'lmaydi
+          var bx = X(gb.b0[0]), by = Y(gb.b0[1]), bekor = !gb.aim || gb.aim.p < GB_BEKOR;
+          g2.setLineDash([4, 4]); g2.lineWidth = 2; g2.strokeStyle = bekor ? "rgba(240,101,90,.9)" : "rgba(255,255,255,.45)";
+          g2.beginPath(); g2.arc(bx, by, 16, 0, Math.PI * 2); g2.stroke(); g2.setLineDash([]);
+          g2.lineWidth = 2.5; g2.beginPath(); g2.moveTo(bx - 6, by - 6); g2.lineTo(bx + 6, by + 6); g2.moveTo(bx + 6, by - 6); g2.lineTo(bx - 6, by + 6); g2.stroke();
+        }
+        if (gb.aim && gb.aim.p >= GB_BEKOR) {
           var ar = gb.aim.a * Math.PI / 180, uz = 0.22 + gb.aim.p * 0.6, ux = Math.cos(ar), uy = Math.sin(ar);
           // orqaga tortilgan «rezina»
           g2.lineWidth = 2; g2.strokeStyle = "rgba(255,255,255,.35)";
@@ -534,7 +545,7 @@
         tosh(p[0], p[1], GB_OR, mr);
         // kuch halqasi (tosh atrofida) yoki - nishonga olinmaganda - suriladigan joy belgisi
         var rr2 = GB_OR * K.sc + 7;
-        if (gb.aim && gb.aim.p > 0.02) {
+        if (gb.aim && gb.aim.p >= GB_BEKOR) {
           var kk = gb.aim.p, rgbK = kk < 0.5 ? "143,240,182" : kk < 0.8 ? "243,213,143" : "240,101,90";
           g2.lineWidth = 4; g2.strokeStyle = "rgba(255,255,255,.12)"; g2.beginPath(); g2.arc(X(p[0]), Y(p[1]), rr2, 0, Math.PI * 2); g2.stroke();
           g2.strokeStyle = "rgb(" + rgbK + ")"; g2.shadowColor = "rgba(" + rgbK + ",.8)"; g2.shadowBlur = 8;
@@ -577,7 +588,7 @@
       if (g.kind === "dost" && g.state === "kutmoqda") { h.textContent = ""; }
       else if (g.state === "kutmoqda" || (g.state === "ketmoqda" && g.turn_in > 0.5 && !gb.anim && g.shots === 0)) { h.textContent = t.boshlanadi(Math.ceil(Math.max(g.turn_in || g.starts_in || 0, 0))); }
       else if (g.state !== "ketmoqda" || gb.anim) { h.textContent = ""; }
-      else if (mening) { h.textContent = gb.aim ? t.kuch + " " + Math.round(gb.aim.p * 100) + "%" : t.otH; }
+      else if (mening) { h.textContent = !gb.aim ? t.otH : gb.aim.p < GB_BEKOR ? t.bekorH : t.kuch + " " + Math.round(gb.aim.p * 100) + "% · " + t.qaytH; }
       else if (g.me && g.turn === g.me) { h.textContent = t.kut; }
       else { h.textContent = t.navbatR(g[g.turn] ? g[g.turn].name : ""); }
       if (vq) {
@@ -593,6 +604,12 @@
     var c = $("gb-canvas"), r = c.getBoundingClientRect(), K = gbKoord();
     var tch = e.touches && e.touches[0] ? e.touches[0] : (e.changedTouches && e.changedTouches[0]) || e;
     var x = (tch.clientX - r.left - K.cx) / K.sc, y = -(tch.clientY - r.top - K.cy) / K.sc;
+    if (bosqich === "bosh" && e.touches && e.touches.length > 1 && gb.tutish === "ot") {
+      // ikkinchi barmoq tegsa - nishonga olish bekor (egasi, 2026-10-14: «kuch berishni boshlagach, ortga qaytarolmayapman»)
+      gb.tutish = null; gb.aim = null; gbXabar(gbT().bekorX);
+      if (e.cancelable) { e.preventDefault(); }
+      return;
+    }
     if (bosqich === "bosh") {
       var p = gbJoy(gb.s);
       gb.tutish = Math.hypot(x - p[0], y - p[1]) < 0.17 ? "joy" : "ot";
@@ -607,7 +624,9 @@
         gb.aim = { a: Math.atan2(dy, dx) * 180 / Math.PI, p: Math.max(0, Math.min(1, l / 0.9)) };
       }
     } else if (bosqich === "tug") {
-      if (gb.tutish === "ot" && gb.aim && gb.aim.p > 0.06) { gbOt(gb.aim); }
+      // barmoq boshlang'ich joyiga (✕) qaytarilsa yoki deyarli tortilmagan bo'lsa - zarba bekor; keyin joyni bemalol o'zgartirsa bo'ladi
+      if (gb.tutish === "ot" && gb.aim && gb.aim.p >= GB_BEKOR) { gbOt(gb.aim); }
+      else if (gb.tutish === "ot" && gb.aim && gb.aim.p > 0.02) { gbXabar(gbT().bekorX); }
       gb.tutish = null;
       gb.aim = null;
     }
