@@ -12,17 +12,20 @@
           yoz: "Yozilganlar", kishi: function (n) { return n + " kishi"; }, hammasi: function (n) { return "Hammasini ko'rish (" + n + ")"; }, yigish: "Yig'ish",
           torIz: "Har bosqichdagi g'alaba uchun", orin: function (n) { return n + "-o'rin"; },
           bosq: { 2: "Final", 4: "Yarim final", 8: "Chorak", 16: "1/8 final", 32: "1/16 final" }, dost: "Do'st bilan", dostS: "Chat yoki Telegram",
-          kunT: function (k) { return k + " turniri"; } },
+          kunT: function (k) { return k + " turniri"; }, tarix: "O'yinlar tarixi", tarixBosh: "Hali tugagan o'yin yo'q — mashqdan boshlang",
+          tur: { mashq: "Mashq", dost: "Do'stona", turnir: "Turnir" }, gal: "G'alaba", mag: "Mag'lubiyat", dur: "Durang", kelmadi: "raqib kelmadi" },
     ru: { keyingi: "Следующий турнир", ketmoqda: "Турнир идёт", mashq: "Тренировка", ballsiz: "Без очков", qoida: "Правила и призы",
           yoz: "Записались", kishi: function (n) { return n + " чел."; }, hammasi: function (n) { return "Показать всех (" + n + ")"; }, yigish: "Свернуть",
           torIz: "За победу на каждом этапе", orin: function (n) { return n + "-е место"; },
           bosq: { 2: "Финал", 4: "Полуфинал", 8: "Четвертьфинал", 16: "1/8 финала", 32: "1/16 финала" }, dost: "С другом", dostS: "Чат или Telegram",
-          kunT: function (k) { return "Турнир: " + k; } },
+          kunT: function (k) { return "Турнир: " + k; }, tarix: "История игр", tarixBosh: "Пока нет сыгранных игр — начните с тренировки",
+          tur: { mashq: "Тренировка", dost: "Дружеская", turnir: "Турнир" }, gal: "Победа", mag: "Поражение", dur: "Ничья", kelmadi: "соперник не пришёл" },
     en: { keyingi: "Next tournament", ketmoqda: "Tournament in progress", mashq: "Practice", ballsiz: "No points", qoida: "Rules and prizes",
           yoz: "Signed up", kishi: function (n) { return n + " players"; }, hammasi: function (n) { return "Show all (" + n + ")"; }, yigish: "Collapse",
           torIz: "For a win at each stage", orin: function (n) { return ["1st", "2nd", "3rd"][n - 1] + " place"; },
           bosq: { 2: "Final", 4: "Semi-final", 8: "Quarter-final", 16: "Round of 16", 32: "Round of 32" }, dost: "With a friend", dostS: "Chat or Telegram",
-          kunT: function (k) { return k + " tournament"; } }
+          kunT: function (k) { return k + " tournament"; }, tarix: "Game history", tarixBosh: "No finished games yet — start with practice",
+          tur: { mashq: "Practice", dost: "Friendly", turnir: "Tournament" }, gal: "Win", mag: "Loss", dur: "Draw", kelmadi: "no-show" }
   };
   function tpT() { return TP_T[lang] || TP_T.uz; }
 
@@ -198,4 +201,38 @@
   function tpKun(ts, kunlar) {
     var d = new Date((ts + 5 * 3600) * 1000), k = kunlar[d.getUTCDay()];
     return k.charAt(0).toUpperCase() + k.slice(1) + ", " + ("0" + d.getUTCHours()).slice(-2) + ":" + ("0" + d.getUTCMinutes()).slice(-2);
+  }
+
+  /* O'YINLAR TARIXI (egasi, 2026-10-15) - toshchalar va maxluqlar jangi; duel tarixi ko'rinishida (du-hr qatorlari).
+     rows - server {history: 1} javobi: [{id, kind, stage, opp: {name, house, bot}, score: [men, raqib], res: g|m|d, why, ts}]
+     o = {bot: function (daraja) -> element (kompyuter raqib rasmi), och: function (id) - o'yinni ochish} */
+  function tpSana(ts) {
+    if (!ts) { return ""; }
+    var d = new Date((ts + 5 * 3600) * 1000), z = function (n) { return (n < 10 ? "0" : "") + n; };
+    return z(d.getUTCDate()) + "." + z(d.getUTCMonth() + 1) + " · " + z(d.getUTCHours()) + ":" + z(d.getUTCMinutes());
+  }
+  function tpTarix(box, rows, o) {
+    var t = tpT();
+    box.innerHTML = "";
+    if (!rows) { box.appendChild(drEl("p", "rk-bosh", drX().loading || "…")); return; }
+    if (!rows.length) { box.appendChild(drEl("p", "rk-bosh", t.tarixBosh)); return; }
+    var list = drEl("div", "du-h-list");
+    rows.forEach(function (g) {
+      var row = drEl("button", "du-hr"), rasm = drEl("span", "du-hr-im"), op = g.opp || {};
+      row.type = "button";
+      if (op.bot) { var bi = o.bot(op.bot); if (bi) { rasm.appendChild(bi); } }
+      else { var cr = cupCrestImg(op.house, 0); if (cr) { rasm.appendChild(cr); } rasm.classList.add("gerb"); }
+      row.appendChild(rasm);
+      var tx = drEl("span", "du-hr-tx");
+      tx.appendChild(drEl("b", "", op.name || "Sehrgar"));
+      var tur = g.kind === "turnir" ? (t.bosq[g.stage] || t.tur.turnir) : (t.tur[g.kind] || "");
+      var hisob = g.why === "kelmadi" || g.why === "ikkalasi" ? t.kelmadi : g.score[0] + " : " + g.score[1];
+      var sana = tpSana(g.ts);
+      tx.appendChild(drEl("small", "", tur + " · " + hisob + (sana ? " · " + sana : "")));
+      row.appendChild(tx);
+      row.appendChild(drEl("span", "du-nt " + g.res, g.res === "g" ? t.gal : g.res === "m" ? t.mag : t.dur));
+      row.addEventListener("click", function () { o.och(g.id); });
+      list.appendChild(row);
+    });
+    box.appendChild(list);
   }

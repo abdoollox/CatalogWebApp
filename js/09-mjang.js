@@ -127,6 +127,13 @@
 
   /* ---------- mahalliy ko'rik: serversiz namuna (kompyuter - eng kuchli kartani tashlaydi) ---------- */
   function mjSample(body) {
+    if (body.history) {                                // mahalliy ko'rik: namuna tarix
+      var h0 = Date.now() / 1000;
+      return { ok: true, history: [
+        { id: 31, kind: "turnir", stage: 8, opp: { name: "Germiona", house: "gryffindor" }, score: [3, 1], res: "g", why: "oyin", ts: h0 - 3600 },
+        { id: 30, kind: "dost", stage: null, opp: { name: "Draco", house: "slytherin" }, score: [1, 3], res: "m", why: "oyin", ts: h0 - 86400 },
+        { id: 29, kind: "mashq", stage: null, opp: { name: "Charli Uizli", bot: 2 }, score: [3, 2], res: "g", why: "oyin", ts: h0 - 2 * 86400 }] };
+    }
     if (!mjLocal) { mjLocal = { joined: false, g: null }; }
     var L2 = mjLocal, hozir = Date.now() / 1000;
     var kartalar = Object.keys(MJ_KARTA).map(function (k) {
@@ -182,15 +189,17 @@
   /* ---------- sahifa ---------- */
   function mjOpen() {
     try { $("scr-hub").classList.add("hidden"); } catch (e) {}
+    mjKor = "home";
     mjKorsat();
   }
   function mjKorsat() {
     drShowGame("scr-mjang");
     $("mj-kick").textContent = mjT().kick;
-    $("mj-ttl").textContent = mjT().ttl;
+    $("mj-ttl").textContent = mjKor === "tarix" ? tpT().tarix : mjT().ttl;
     $("mj-home").classList.remove("hidden");
     $("mj-game").classList.add("hidden");
-    $("mj-info-b").classList.remove("hidden");
+    $("mj-info-b").classList.toggle("hidden", mjKor === "tarix");
+    if (mjKor === "tarix") { mjTarix(); return; }
     mjRender();
     mjLoad();
   }
@@ -248,14 +257,28 @@
     if (sek >= 3600) { return Math.floor(sek / 3600) + (lang === "en" ? " h " : lang === "ru" ? " ч " : " soat ") + Math.floor(sek % 3600 / 60) + (lang === "en" ? " min" : lang === "ru" ? " мин" : " daq"); }
     return Math.floor(sek / 60) + ":" + (sek % 60 < 10 ? "0" : "") + (sek % 60);
   }
+  // O'yinlar tarixi: karta ichidagi qator ochadi; o'yin bosilsa - o'sha o'yin, «ortga» - tarixga, yana «ortga» - bosh ko'rinish
+  var mjKor = "home";
+  function mjTarix() {
+    mjKor = "tarix";
+    clearInterval(mjSoat);
+    $("mj-ttl").textContent = tpT().tarix;
+    $("mj-info-b").classList.add("hidden");
+    var box = $("mj-home"), o = { bot: function (k) { return tpRasm(IMG_DIR + "qoriq/" + (["boyogli", "ajdar", "testral"][k - 1] || "boyogli") + "-1.webp"); }, och: function (id) { mjOyin(id); } };
+    tpTarix(box, null, o);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    mjPost({ history: 1 }, function (res) { if (mjKor === "tarix" && !mj) { tpTarix(box, (res && res.history) || [], o); } });
+  }
   function mjRender() {
     var d = mjData, t = mjT(), tp = tpT(), box = $("mj-home");
+    if (mjKor === "tarix") { return; }
     box.innerHTML = "";
     clearInterval(mjSoat);
     if (!d) { return; }
     // YAGONA QOLIP (js/09-turnir-qolip.js): karta -> to'r -> g'oliblar -> mashq -> qoida -> kartalar -> yozilganlar -> sinov
     var tr = d.tour, jonli = d.cup && d.cup.stages;
     var hero = tpHero({ lab: jonli ? tp.ketmoqda : tp.keyingi, sar: tpKun(tr.ts, t.kunlar),
+      tarix: [tp.tarix, mjTarix],
       holat: tpYozHolat(tr, t.bor, t.chiq, t.qat, t.yopiq, function (on) {
         mjPost({ join: on ? 1 : 0 }, function (r) { if (r && r.tour) { mjData = r; mjRender(); } else { showToast(t.aloqa, "err"); } });
       }) });
@@ -716,6 +739,7 @@
   function mjSetup() {
     $("mj-back").addEventListener("click", function () {
       if (mj) { mjStop(); mjKorsat(); return; }
+      if (mjKor === "tarix") { mjKor = "home"; mjKorsat(); return; }
       mjYop();
     });
     $("mj-info-b").addEventListener("click", mjInfo);

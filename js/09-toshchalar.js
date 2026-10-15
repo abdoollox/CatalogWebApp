@@ -119,6 +119,13 @@
     return { qoldi: qoldi, ball: chiqdi, f: f, out: out };
   }
   function gbSample(body) {
+    if (body.history) {                                // mahalliy ko'rik: namuna tarix
+      var h0 = Date.now() / 1000;
+      return { ok: true, history: [
+        { id: 31, kind: "turnir", stage: 8, opp: { name: "Germiona", house: "gryffindor" }, score: [5, 3], res: "g", why: "oyin", ts: h0 - 3600 },
+        { id: 30, kind: "dost", stage: null, opp: { name: "Draco", house: "slytherin" }, score: [2, 4], res: "m", why: "oyin", ts: h0 - 86400 },
+        { id: 29, kind: "mashq", stage: null, opp: { name: "Ron", bot: 2 }, score: [4, 1], res: "g", why: "oyin", ts: h0 - 2 * 86400 }] };
+    }
     if (!gbLocal) { gbLocal = { joined: false, g: null }; }
     var L2 = gbLocal, hozir = Date.now() / 1000;
     if (body.join != null) { L2.joined = !!body.join; }
@@ -165,15 +172,17 @@
   /* ---------- sahifa ---------- */
   function gbOpen() {
     try { $("scr-hub").classList.add("hidden"); } catch (e) {}
+    gbKor = "home";
     gbKorsat();
   }
   function gbKorsat() {
     drShowGame("scr-tosh");
     $("gb-kick").textContent = gbT().kick;
-    $("gb-ttl").textContent = gbT().ttl;
+    $("gb-ttl").textContent = gbKor === "tarix" ? tpT().tarix : gbT().ttl;
     $("gb-home").classList.remove("hidden");
     $("gb-game").classList.add("hidden");
-    $("gb-info-b").classList.remove("hidden");
+    $("gb-info-b").classList.toggle("hidden", gbKor === "tarix");
+    if (gbKor === "tarix") { gbTarix(); return; }
     gbRender();
     gbLoad();
   }
@@ -205,14 +214,28 @@
     if (sek >= 3600) { return Math.floor(sek / 3600) + (lang === "en" ? " h " : lang === "ru" ? " ч " : " soat ") + Math.floor(sek % 3600 / 60) + (lang === "en" ? " min" : lang === "ru" ? " мин" : " daq"); }
     return Math.floor(sek / 60) + ":" + (sek % 60 < 10 ? "0" : "") + (sek % 60);
   }
+  // O'yinlar tarixi: karta ichidagi qator ochadi; o'yin bosilsa - o'sha o'yin, «ortga» - tarixga, yana «ortga» - bosh ko'rinish
+  var gbKor = "home";
+  function gbTarix() {
+    gbKor = "tarix";
+    clearInterval(gbSoat);
+    $("gb-ttl").textContent = tpT().tarix;
+    $("gb-info-b").classList.add("hidden");
+    var box = $("gb-home"), o = { bot: function (k) { return tpTosh("k" + k); }, och: function (id) { gbOyin(id); } };
+    tpTarix(box, null, o);
+    try { window.scrollTo(0, 0); } catch (e) {}
+    gbPost({ history: 1 }, function (res) { if (gbKor === "tarix" && !gb) { tpTarix(box, (res && res.history) || [], o); } });
+  }
   function gbRender() {
     var d = gbData, t = gbT(), tp = tpT(), box = $("gb-home");
+    if (gbKor === "tarix") { return; }
     box.innerHTML = "";
     clearInterval(gbSoat);
     if (!d) { return; }
     // YAGONA QOLIP (js/09-turnir-qolip.js): karta -> to'r -> g'oliblar -> mashq -> qoida -> yozilganlar -> sinov
     var tr = d.tour, jonli = d.cup && d.cup.stages;
     var hero = tpHero({ lab: jonli ? tp.ketmoqda : tp.keyingi, sar: tpKun(tr.ts, t.kunlar),
+      tarix: [tp.tarix, gbTarix],
       holat: tpYozHolat(tr, t.bor, t.chiq, t.qat, t.yopiq, function (on) {
         gbPost({ join: on ? 1 : 0 }, function (r) { if (r && r.tour) { gbData = r; gbRender(); } else { showToast(t.aloqa, "err"); } });
       }) });
@@ -694,6 +717,7 @@
   function gbSetup() {
     $("gb-back").addEventListener("click", function () {
       if (gb) { gbStop(); gbKorsat(); return; }
+      if (gbKor === "tarix") { gbKor = "home"; gbKorsat(); return; }
       gbYop();
     });
     $("gb-info-b").addEventListener("click", gbInfo);
