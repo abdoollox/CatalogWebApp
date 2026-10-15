@@ -306,7 +306,7 @@
     db2.appendChild(drEl("span", "gb-bot-t"));
     db2.appendChild(drEl("b", "", t.dost));
     db2.appendChild(drEl("small", "", t.dostS));
-    db2.addEventListener("click", function () { mjBoshla({ dost: 1 }, true); });
+    db2.addEventListener("click", function () { tkOyna("mjang"); });     // Telegram, Katta zal yoki fakultet xonasi
     qator.appendChild(db2);
     mq.appendChild(qator);
     box.appendChild(mq);
@@ -699,7 +699,7 @@
     if (g.kind === "dost" && g.me) {
       var dy = drEl("button", "dr-btn", t.yana);
       dy.type = "button";
-      dy.addEventListener("click", function () { mjBoshla({ dost: 1 }, true); });
+      dy.addEventListener("click", function () { tkOyna("mjang"); });
       tug.appendChild(dy);
     }
     if ((g.kind === "mashq" || g.kind === "sinov") && g.b && g.b.bot) {

@@ -3938,3 +3938,7 @@ button.mj-c{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mj-iz-r.m{border-color:rgba(255,138,122,.45);color:#ffb3a8}
 .mj-iz-r small{font-size:10px}
 .qr-jang{display:block;margin-top:4px;font:700 11px/1.35 'Manrope',sans-serif;color:var(--dim)}
+/* Toshchalar va Maxluqlar jangi taklifi - chat kartasi (js/09-oyin-taklif.js) */
+.cmc-tk .cmc-ic{padding:0;overflow:hidden;border-color:rgba(201,162,255,.6)}
+.cmc-tk .cmc-ic img{width:100%;height:100%;object-fit:cover;display:block}
+.cmc-mjang .cmc-ic{border-color:rgba(239,150,90,.65)}

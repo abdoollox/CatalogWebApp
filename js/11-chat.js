@@ -313,6 +313,7 @@
       }
       if (m.chess) { b.className += " cm-chess"; b.appendChild(chessChatCard(m)); }
       else if (m.duel) { b.className += " cm-chess"; b.appendChild(duChatCard(m)); }
+      else if (m.tosh || m.mjang) { b.className += " cm-chess"; b.appendChild(tkChatCard(m)); }
       else { chatFillText(b, m.text); }
       var reacts = m.reactions || [];
       if (reacts.length) {
@@ -740,6 +741,8 @@
       { icon: CHAT_SVG.odam, label: odamX().peer, fn: function() { odamOpen(p.uid, p); } },
       { icon: CHESS_IC.swords, label: L("chatChess"), fn: function() { chessAnnounce(chatRoom); } },
       { icon: CHAT_SVG.tayoq, label: duT().chatDuel, fn: function() { duInvite(chatRoom); } },
+      { icon: CHAT_SVG.tayoq, label: tkT().tosh.peer, fn: function() { tkInvite("tosh", chatRoom); } },
+      { icon: CHAT_SVG.tayoq, label: tkT().mjang.peer, fn: function() { tkInvite("mjang", chatRoom); } },
       blocked ?
       { icon: CHAT_SVG.unban, label: L("chatDmUnblock"), fn: function() { chatBlock(p, false); } } :
       { icon: CHAT_SVG.ban, label: L("chatDmBlock"), danger: true, fn: function() { chatBlock(p, true); } }]);
@@ -1146,7 +1149,7 @@
     // 1) Xabar
     if (!m.tmp && chatBannedUntil === false) item(gx, CHAT_SVG.reply, L("chatReply"), function() { chatStartReply(m); });
     if (!m.kind) item(gx, CHAT_SVG.copy, L("chatCopy"), function() { chatCopy(m.text); });
-    if (own && chatCanEdit(m) && !m.chess && !m.duel && !m.kind) item(gx, CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
+    if (own && chatCanEdit(m) && !m.chess && !m.duel && !m.tosh && !m.mjang && !m.kind) item(gx, CHAT_SVG.edit, L("chatEdit"), function() { chatStartEdit(m); });
     // «Kim o'qidi» faqat xabar egasiga va adminga (yonida soni); reaksiyalar hammaga
     if (!m.tmp && (own || chatAdmin)) {
       var soni = item(gx, CHAT_SVG.oqildi, L("chatWhoRead"), function() { chatInfo(m, "read"); }, false, "");
@@ -1790,6 +1793,8 @@
       }
       var cv = t.closest("[data-chess-view]");
       if (cv) { chessReview(cv.getAttribute("data-g"), "chat"); return; }
+      var tka = t.closest("[data-tk]");
+      if (tka) { tkFromChat(tka.getAttribute("data-tk"), parseInt(tka.getAttribute("data-g"), 10), tka.getAttribute("data-tk-q") === "1"); return; }
       var da = t.closest("[data-duel-act]");
       if (da) { duFromChat(parseInt(da.getAttribute("data-g"), 10)); return; }
       var dv = t.closest("[data-duel-view]");
