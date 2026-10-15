@@ -6,29 +6,29 @@
 
   var SHT_T = {
     uz: { turT: "Shaxmat turniri", kunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"], qoldi: "qoldi",
-          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Siz turnirga yozilgansiz", chiq: "Chiqish", yopiq: "Yozilish yopildi — to'r tuzilmoqda",
+          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Siz yozilgansiz — boyo'g'li eslatadi", chiq: "Chiqish", yopiq: "Yozilish yopildi — to'r tuzilmoqda",
           kam: "Bu safar ishtirokchi yetmadi — turnir o'tmadi.", yozing: "Qatnashish uchun yoziling", hist: "O'yinlar tarixi",
           qatT: "Yozilganlar", yozS: "Kuchliroq shaxmatchilar birinchi bosqichni o'tkazib yuboradi", torT: "Turnir to'ri", surish: "Yonga suring — keyingi bosqichlar",
           kutadi: "kutadi", jonli: "JONLI", kelmadi: "kelmadi", durang: "durang", ball: function (n) { return "+" + n + " ball"; },
           raqib: function (n) { return "Raqibingiz: " + n; }, boshlandi: "O'yin boshlandi — kiring!", kir: "O'yinga kirish", dan: function (v) { return v + " dan keyin boshlanadi"; },
           aniq: "Raqibingiz aniqlanmoqda…", oq: "Siz oq donalar bilan", qora: "Siz qora donalar bilan", champ: "Siz turnir chempionisiz!", out: "Turnir siz uchun tugadi. Keyingi chorshanba yana urinib ko'ring!",
-          mashq: "Mashq", mashqS: "Turnirdan tashqari o'yinlar", yoq: "Aloqa yo'q — qayta urinib ko'ring" },
+          mashq: "Mashq", mashqS: "Turnirdan tashqari o'yinlar", kick: "Chorshanba turniri", ttl: "Shaxmat", botT: "Bot bilan", botS: "5 daraja", seekT: "Tasodifiy", seekS: "Jonli raqib", kodT: "Kod bilan", kodS: "Ulanish", turnirdan: "Turnirdan tashqari", q1: function (m) { return "Har o'yinchiga " + m + " daqiqa — kim yutsa, keyingi bosqichga o'tadi"; }, q2: "Birinchi yurishni 1 daqiqada qilmagan yutqazadi", q3: "Durangda qora bilan o'ynagan o'tadi", temaT: "Taxta ko'rinishi", yoq: "Aloqa yo'q — qayta urinib ko'ring" },
     ru: { turT: "Шахматный турнир", kunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"], qoldi: "осталось",
-          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны на турнир", chiq: "Выйти", yopiq: "Запись закрыта — составляется сетка",
+          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти", yopiq: "Запись закрыта — составляется сетка",
           kam: "В этот раз участников не хватило — турнир не состоялся.", yozing: "Запишитесь, чтобы участвовать", hist: "История партий",
           qatT: "Записались", yozS: "Более сильные шахматисты пропускают первый круг", torT: "Сетка турнира", surish: "Листайте вбок — следующие круги",
           kutadi: "ждёт", jonli: "LIVE", kelmadi: "не пришёл", durang: "ничья", ball: function (n) { return "+" + n + " очк."; },
           raqib: function (n) { return "Ваш соперник: " + n; }, boshlandi: "Партия началась — заходите!", kir: "Войти в партию", dan: function (v) { return "начнётся через " + v; },
           aniq: "Ваш соперник определяется…", oq: "Вы играете белыми", qora: "Вы играете чёрными", champ: "Вы чемпион турнира!", out: "Турнир для вас окончен. Попробуйте в следующую среду!",
-          mashq: "Тренировка", mashqS: "Партии вне турнира", yoq: "Нет связи — попробуйте ещё раз" },
+          mashq: "Тренировка", mashqS: "Партии вне турнира", kick: "Турнир среды", ttl: "Шахматы", botT: "С ботом", botS: "5 уровней", seekT: "Случайный", seekS: "Живой соперник", kodT: "По коду", kodS: "Подключиться", turnirdan: "Вне турнира", q1: function (m) { return "У каждого " + m + " минут — победитель проходит дальше"; }, q2: "Кто не сделал первый ход за 1 минуту — проиграл", q3: "При ничьей проходит игравший чёрными", temaT: "Вид доски", yoq: "Нет связи — попробуйте ещё раз" },
     en: { turT: "Chess tournament", kunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], qoldi: "left",
-          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up", chiq: "Leave", yopiq: "Sign-up closed — drawing the bracket",
+          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave", yopiq: "Sign-up closed — drawing the bracket",
           kam: "Not enough players this time — no tournament.", yozing: "Sign up to take part", hist: "Game history",
           qatT: "Signed up", yozS: "Stronger players skip the first round", torT: "Bracket", surish: "Swipe sideways for the next rounds",
           kutadi: "bye", jonli: "LIVE", kelmadi: "no-show", durang: "draw", ball: function (n) { return "+" + n + " pts"; },
           raqib: function (n) { return "Your opponent: " + n; }, boshlandi: "Your game has started — come in!", kir: "Enter the game", dan: function (v) { return "starts in " + v; },
           aniq: "Your opponent is being decided…", oq: "You play white", qora: "You play black", champ: "You are the tournament champion!", out: "The tournament is over for you. Try again next Wednesday!",
-          mashq: "Practice", mashqS: "Games outside the tournament", yoq: "No connection — please try again" }
+          mashq: "Practice", mashqS: "Games outside the tournament", kick: "Wednesday tournament", ttl: "Chess", botT: "With a bot", botS: "5 levels", seekT: "Random", seekS: "Live opponent", kodT: "By code", kodS: "Join", turnirdan: "Outside the tournament", q1: function (m) { return m + " minutes each — the winner goes through"; }, q2: "No first move within 1 minute — you lose", q3: "In a draw, the player with black goes through", temaT: "Board style", yoq: "No connection — please try again" }
   };
   function shtT() { return SHT_T[lang] || SHT_T.uz; }
 
@@ -87,8 +87,10 @@
   }
 
   function shtRender() {
-    var mq = $("sht-mashq");
-    if (mq) { mq.innerHTML = ""; mq.appendChild(drEl("b", "", shtT().mashq)); mq.appendChild(drEl("em", "", shtT().mashqS)); }
+    var t = shtT();
+    $("sht-kick").textContent = t.kick;
+    $("sht-ttl").textContent = t.ttl;
+    shtMashq();
     shtHero();
     shtCup();
     // O'z o'yini ochilgan zahoti taxtaga o'tadi (bir o'yin uchun bir marta) - birinchi yurishga atigi 1 daqiqa bor
@@ -108,67 +110,69 @@
 
   /* Tepa karta: turnir holati (duel sahifasidagi bilan bir xil qolip) - o'rin ham, reyting ham YO'Q */
   function shtHero() {
-    var box = $("sht-hero"), d = shtData, t = shtT();
+    var box = $("sht-hero"), d = shtData, t = shtT(), tp = tpT();
     if (!box) { return; }
     box.innerHTML = "";
-    var c = d && d.cup, tr = d && d.tour, men = shtMen();
-    var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
-    chap.appendChild(drEl("small", "", t.turT));
-    var sar = t.turT, izoh = "", tugma = null;
+    var c = d && d.cup, tr = d && d.tour, men = shtMen(), o = { lab: tp.keyingi, sar: t.turT, tarix: [t.hist, function () { openChessStats("hist"); }] };
     if (c && c.size) {
+      o.lab = tp.ketmoqda;
       if (c.my) {
         var m = shtMeniki(c), raq = m ? ((m.a && m.a.uid === men) ? m.b : m.a) : null;
-        sar = duBosq(c.my.stage);
-        if (c.my.game) { izoh = (raq ? t.raqib(raq.name) + " · " : "") + t.boshlandi; tugma = [t.kir, function () { joinPvPGame(c.my.game); }]; }
-        else if (c.my.ready && c.my.ts) { izoh = (raq ? t.raqib(raq.name) + " · " : "") + (c.my.white ? t.oq : t.qora) + " · " + t.dan(duVaqt(c.my.ts - c.now)); }
-        else { izoh = t.aniq; }
+        o.sar = duBosq(c.my.stage);
+        if (c.my.game) { o.iz = (raq ? t.raqib(raq.name) + " · " : "") + t.boshlandi; o.holat = { asosiy: [t.kir, function () { joinPvPGame(c.my.game); }] }; }
+        else if (c.my.ready && c.my.ts) { o.iz = (raq ? t.raqib(raq.name) + " · " : "") + (c.my.white ? t.oq : t.qora) + " · " + t.dan(duVaqt(c.my.ts - c.now)); }
+        else { o.iz = t.aniq; }
       } else {
         var bormi = false;
         c.stages.forEach(function (st) { st.matches.forEach(function (x) { if ((x.a && x.a.uid === men) || (x.b && x.b.uid === men)) { bormi = true; } }); });
         var fin = c.stages[c.stages.length - 1].matches[0], chempion = bormi && fin.winner === men;
-        izoh = chempion ? t.champ : bormi ? t.out : "";
+        o.iz = chempion ? t.champ : bormi ? t.out : "";
       }
-    } else if (c && c.size === 0) { izoh = t.kam; }
+    } else if (c && c.size === 0) { o.iz = t.kam; }
     else if (tr) {
-      var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-      sar = kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00";
-      izoh = tr.open ? duQol(tr.ts - tr.now) + " " + t.qoldi + " · " + t.soni(tr.n) : t.yopiq;
+      o.sar = tpKun(tr.ts, t.kunlar);
+      o.iz = duQol(tr.ts - tr.now) + " " + t.qoldi + " · " + t.soni(tr.n);
+      o.holat = tpYozHolat(tr, t.bor, t.chiq, t.qat, t.yopiq, shtYozil);
     }
-    chap.appendChild(drEl("b", "", sar));
-    if (izoh) { chap.appendChild(drEl("em", "", izoh)); }
-    tep.appendChild(chap);
-    box.appendChild(tep);
-    if (tugma) {
-      var tb = drEl("div", "du-yoz"), gb = drEl("button", "dr-btn", tugma[0]);
-      gb.type = "button";
-      gb.addEventListener("click", tugma[1]);
-      tb.appendChild(gb);
-      box.appendChild(tb);
-    } else if (tr && tr.open) {
-      var yb = drEl("div", "du-yoz" + (tr.joined ? " bor" : ""));
-      if (tr.joined) {
-        yb.appendChild(drEl("b", "", t.bor));
-        var ch = drEl("button", "", t.chiq);
-        ch.type = "button";
-        ch.addEventListener("click", function () { shtYozil(false); });
-        yb.appendChild(ch);
-      } else {
-        var qb = drEl("button", "dr-btn", t.qat);
-        qb.type = "button";
-        qb.addEventListener("click", function () { shtYozil(true); });
-        yb.appendChild(qb);
-      }
-      box.appendChild(yb);
-    }
-    var hb = drEl("button", "dr-hero-q du-hero-b");
-    hb.type = "button";
-    hb.innerHTML = '<span class="qo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>';
-    var hs = document.createElement("span");
-    hs.appendChild(drEl("b", "", t.hist));
-    hb.appendChild(hs);
-    hb.appendChild(drEl("i", "", "›"));
-    hb.addEventListener("click", function () { openChessStats("hist"); });
-    box.appendChild(hb);
+    box.appendChild(tpHero(o));
+    shtQoida();
+  }
+
+  /* Mashq kataklari (yagona qolip): bot, tasodifiy raqib, kod, do'st - bosilsa pastdan oyna chiqadi (#ch-sh) */
+  function shtMashq() {
+    var box = $("sht-mashq"), t = shtT();
+    if (!box) { return; }
+    box.innerHTML = "";
+    var pc = function (p) { var e = drEl("span", "tp-pc"); e.innerHTML = getPieceSVG(p); return e; };
+    var ic = function (k) { var e = drEl("span", "tp-ic"); e.innerHTML = CHESS_IC[k] || ""; return e; };
+    var dost = tpDost(function () { shtSh("dost"); });
+    box.appendChild(tpMashq(t.turnirdan, [
+      { av: pc("n"), nom: t.botT, sub: t.botS, fn: function () { shtSh("bot"); } },
+      { av: ic("swords"), nom: t.seekT, sub: t.seekS, fn: function () { shtSh("seek"); } },
+      { av: drEl("span", "tp-ic tp-hash", "#"), nom: t.kodT, sub: t.kodS, fn: function () { shtSh("kod"); } },
+      dost]));
+    box.appendChild(drEl("p", "tp-iz", L("rulesText")));
+  }
+  function shtSh(rejim) {
+    var sh = $("ch-sh"), t = shtT();
+    if (!sh) { return; }
+    if (sh.parentNode !== document.body) { document.body.appendChild(sh); }      // .screen ichida fixed oyna sahifa pastiga yopishadi
+    sh.className = "du-info ch-sh m-" + rejim;
+    $("ch-sh-t").textContent = rejim === "bot" ? t.botT : rejim === "seek" ? t.seekT : rejim === "kod" ? t.kodT : tpT().dost;
+    renderChessHub();
+  }
+  function shtShYop() { var sh = $("ch-sh"); if (sh) { sh.classList.add("hidden"); } }
+  // Qoida va sovrinlar, taxta ko'rinishi, yozilganlar
+  function shtQoida() {
+    var d = shtData || {}, t = shtT(), tp = tpT(), r = d.rules || {}, q = $("sht-qoida"), h = $("sht-haqida"), y = $("sht-yozl");
+    if (!q) { return; }
+    var th = $("ch-themes");
+    if (th) { $("ch-tema-k").appendChild(th); }          // taxta tanlovi (tugmalari bog'langan) - tozalashdan oldin joyiga qaytariladi
+    q.innerHTML = ""; h.innerHTML = ""; y.innerHTML = "";
+    q.appendChild(tpQoida([t.q1(Math.round((r.base || 300) / 60)), t.q2, t.q3], tpTorSov(r.points), tp.torIz));
+    if (th) { h.appendChild(tpHaqida(t.temaT, "", th)); }
+    var c = d.cup, tr = d.tour;
+    if (c && c.size == null && tr) { y.appendChild(tpYoz(tr.players, tr.n, t.yozS)); }
   }
 
   /* Turnir kartasi: to'r tuzilmaguncha - yozilganlar (raqam va reytingsiz), keyin - to'r daraxti */
@@ -179,25 +183,7 @@
     golibQoy("sht-golib", d && d.champs);                  // so'nggi turnir g'oliblari (o'rin va ball)
     var c = d && d.cup, tr = d && d.tour;
     if (!c) { return; }
-    if (c.size == null) {
-      if (tr && tr.players && tr.players.length) {
-        var sq = drEl("span", "du-st-t");
-        sq.appendChild(drEl("b", "", t.qatT));
-        sq.appendChild(drEl("em", "", t.soni(tr.n)));
-        box.appendChild(sq);
-        var ql = drEl("div", "du-qat");
-        tr.players.forEach(function (p) {
-          var r = drEl("span", "du-qat-p" + (p.me ? " men" : ""));
-          var cr = cupCrestImg(p.house, 16);
-          if (cr) { r.appendChild(cr); }
-          r.appendChild(drEl("b", "", p.name));
-          ql.appendChild(r);
-        });
-        box.appendChild(ql);
-        box.appendChild(drEl("p", "du-qat-n", t.yozS));
-      }
-      return;
-    }
+    if (c.size == null) { return; }                     // to'r hali tuzilmagan - yozilganlar pastda (shtQoida)
     if (!c.size) { return; }
     var men = shtMen(), birinchi = c.stages[0].matches.length, QATOR = 62;
     var sar = drEl("span", "du-st-t");
@@ -316,6 +302,15 @@
   function shtSetup() {
     var b = $("sht-info-b");
     if (b) { b.addEventListener("click", shtInfo); }
+    // mashq oynasi: × yoki fon bosilsa yopiladi; shaxmat sahifasidan chiqilsa (o'yin boshlandi, ortga) - o'zi yopiladi
+    var sh = $("ch-sh"), hub = $("scr-chess-hub");
+    if (sh) {
+      $("ch-sh-x").addEventListener("click", shtShYop);
+      sh.addEventListener("click", function (e) { if (e.target === sh) { shtShYop(); } });
+    }
+    if (sh && hub && window.MutationObserver) {
+      new MutationObserver(function () { if (hub.classList.contains("hidden")) { shtShYop(); } }).observe(hub, { attributes: true, attributeFilter: ["class"] });
+    }
   }
 
   shtSetup();

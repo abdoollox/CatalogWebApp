@@ -10,7 +10,7 @@
   var API_POYGA = "https://bot.tizimshunos.uz/api/poyga";
   var PG_T = {
     uz: { kick: "Dushanba turniri", ttl: "Poyga", nom: "Supurgi poygasi", kunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"], qoldi: "qoldi",
-          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Eslatma yoqilgan — boyo'g'li xabar beradi", chiq: "Bekor qilish",
+          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Siz yozilgansiz — boyo'g'li eslatadi", chiq: "Chiqish",
           q1: "Hamma bir vaqtda bitta yo'ldan uchadi", q2: "Halqaning o'rtasidan o'tsangiz tezlashasiz",
           q3: function (n) { return "Har " + n + " halqada eng oxirgi uchuvchi chiqib ketadi — oxirida qolgan yutadi"; },
           sov: "Sovrinlar", orin: function (n) { return n + "-o'rin"; }, keyinP: function (a, p) { return "4–" + a + "-o'ringa — +" + p + " ball"; },
@@ -27,7 +27,7 @@
           ball: function (n) { return "+" + n + " ball kubokka"; }, bolmadi: "Bu safar uchuvchi yetmadi — poyga o'tmadi.", ortga: "Xogvartsga qaytish",
           yoq: "Aloqa yo'q — qayta urinib ko'ring", m: " daq ", h: " soat ", kunQ: "kun", mashqK: "Mashq" },
     ru: { kick: "Турнир понедельника", ttl: "Гонка", nom: "Гонка на мётлах", kunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"], qoldi: "осталось",
-          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Напоминание включено — сова сообщит", chiq: "Отменить",
+          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти",
           q1: "Все одновременно летят по одной трассе", q2: "Пролетел через центр кольца — ускорился",
           q3: function (n) { return "Каждые " + n + " колец последний пилот выбывает — побеждает тот, кто останется"; },
           sov: "Призы", orin: function (n) { return n + "-е место"; }, keyinP: function (a, p) { return "Места 4–" + a + " — +" + p + " очк."; },
@@ -44,7 +44,7 @@
           ball: function (n) { return "+" + n + " очков в кубок"; }, bolmadi: "В этот раз пилотов не хватило — гонка не состоялась.", ortga: "Вернуться в Хогвартс",
           yoq: "Нет связи — попробуйте ещё раз", m: " мин ", h: " ч ", kunQ: "дн.", mashqK: "Тренировка" },
     en: { kick: "Monday tournament", ttl: "Race", nom: "Broom race", kunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], qoldi: "left",
-          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "Reminder on — an owl will let you know", chiq: "Cancel",
+          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave",
           q1: "Everyone flies the same course at the same time", q2: "Go through the centre of a hoop to speed up",
           q3: function (n) { return "Every " + n + " hoops the last flyer drops out — the last one left wins"; },
           sov: "Prizes", orin: function (n) { return ["", "1st", "2nd", "3rd"][n] + " place"; }, keyinP: function (a, p) { return "Places 4–" + a + " — +" + p + " pts"; },
@@ -254,89 +254,31 @@
     if (oyin) { pgOyin(); } else if (ph === "tugadi") { pgYakun(); } else { pgBosh(); }
   }
 
-  /* Bosh ko'rinish: turnir kartasi (qachon / start chizig'i), mashq, qoida va sovrinlar */
+  /* Bosh ko'rinish - YAGONA QOLIP (js/09-turnir-qolip.js): karta -> g'oliblar -> mashq -> qoida va sovrinlar -> yozilganlar -> sinov */
   function pgBosh() {
-    var d = pgData, t = pgT(), box = $("pg-hero"), tr = d.tour, zal = d.phase === "zal";
+    var d = pgData, t = pgT(), tp = tpT(), box = $("pg-bosh"), tr = d.tour, zal = d.phase === "zal", r = d.rules || {};
     box.innerHTML = "";
-    var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
-    chap.appendChild(drEl("small", "", t.nom + (d.test ? " · SINOV" : "")));
-    var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00"));
-    var iz = drEl("em", "", "");
-    chap.appendChild(iz);
-    tep.appendChild(chap);
-    box.appendChild(tep);
+    var holat = zal ? { matn: d.me && d.me["in"] ? t.kut : t.kech, ok: !!(d.me && d.me["in"]) }
+      : tpYozHolat(tr, t.bor, t.chiq, t.qat, t.yopiq || t.bor, pgYozil);
+    var hero = tpHero({ lab: zal ? tp.ketmoqda : tp.keyingi + (d.test ? " · SINOV" : ""), sar: zal ? t.zal : tpKun(tr.ts, t.kunlar), holat: holat });
     var qol0 = zal ? d.starts_in : tr.ts - tr.now, olingan = pgOlingan;
     var yoz = function () {
       var qol = Math.max(0, qol0 - (Date.now() - olingan) / 1000);
-      iz.textContent = zal ? t.zalS(d.total || 0) + " · " + t.bosh(pgQol(qol)) : pgQol(qol) + " " + t.qoldi + " · " + t.soni(tr.n);
+      hero.tpIz.textContent = zal ? t.zalS(d.total || 0) + " · " + t.bosh(pgQol(qol)) : pgQol(qol) + " " + t.qoldi + " · " + t.soni(tr.n);
     };
     yoz();
     pgSoat = setInterval(yoz, 1000);
-    if (zal) {
-      var kq = drEl("div", "du-yoz bor");
-      kq.appendChild(drEl("b", "", d.me && d.me["in"] ? t.kut : t.kech));
-      box.appendChild(kq);
-    } else if (tr.open) {
-      var yb = drEl("div", "du-yoz" + (tr.joined ? " bor" : ""));
-      if (tr.joined) {
-        yb.appendChild(drEl("b", "", t.bor));
-        var ch = drEl("button", "", t.chiq);
-        ch.type = "button";
-        ch.addEventListener("click", function () { pgYozil(false); });
-        yb.appendChild(ch);
-      } else {
-        var qb = drEl("button", "dr-btn", t.qat);
-        qb.type = "button";
-        qb.addEventListener("click", function () { pgYozil(true); });
-        yb.appendChild(qb);
-      }
-      box.appendChild(yb);
-    }
-    var q = $("pg-qoida"), r = d.rules || {}, pt = r.points || {};
-    q.innerHTML = "";
-    if (!zal) {                                   // mashq - startga oz qolganda chalg'itmasin
-      var mq = drEl("button", "pg-mashq");
-      mq.type = "button";
-      var mm = drEl("span", "");
-      mm.appendChild(drEl("b", "", t.mashq));
-      mm.appendChild(drEl("small", "", pgMashq ? t.mashqN(pgSek(pgMashq.ms)) : t.mashqS));
-      mq.appendChild(mm);
-      mq.appendChild(drEl("i", "", "›"));
-      mq.addEventListener("click", pgMashqUch);
-      q.appendChild(mq);
-    }
-    [t.q1, t.q2, t.q3(r.every || 10)].forEach(function (m, i) {
-      var b = drEl("div", "vk-q");
-      b.appendChild(drEl("u", "", String(i + 1)));
-      b.appendChild(drEl("span", "", m));
-      q.appendChild(b);
-    });
-    var sv = drEl("div", "vk-sov");
-    sv.appendChild(drEl("small", "", t.sov));
-    var qator = drEl("div", "vk-sov-r");
-    [1, 2, 3].forEach(function (o) {
-      var k = drEl("span", "vk-pz o" + o);
-      k.appendChild(drEl("b", "", "+" + (pt[String(o)] || 0)));
-      k.appendChild(drEl("small", "", t.orin(o)));
-      qator.appendChild(k);
-    });
-    sv.appendChild(qator);
-    sv.appendChild(drEl("p", "", t.keyinP(r.next_to || 6, r.next_pts || 5)));
-    q.appendChild(sv);
+    box.appendChild(hero);
     var gk = golibKarta(d.champs);                // so'nggi poyga g'oliblari: o'rin va ball (keyingi poygagacha turadi)
-    if (gk) { q.appendChild(gk); } else if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
+    if (gk) { box.appendChild(gk); }
+    if (!zal) {                                   // mashq - startga oz qolganda chalg'itmasin
+      box.appendChild(tpMashq(tp.ballsiz, [{ av: tpRasm(IMG_DIR + "hub/poyga.webp"), nom: t.mashq, sub: pgMashq ? t.mashqN(pgSek(pgMashq.ms)) : t.mashqS, keng: true, fn: pgMashqUch }]));
+    }
+    box.appendChild(tpQoida([t.q1, t.q2, t.q3(r.every || 10)], tpOrinSov(r.points), t.keyinP(r.next_to || 6, r.next_pts || 5)));
+    if (!zal) { box.appendChild(tpYoz(tr.players, tr.n)); }
     // Faqat adminga: sinov poygasi - kompyuter uchuvchilar bilan haqiqiy poyga oqimi (ballsiz)
     if (d.can_test && !zal) {
-      var sb = drEl("button", "pg-mashq pg-sinov");
-      sb.type = "button";
-      var sm = drEl("span", "");
-      sm.appendChild(drEl("b", "", "Sinov poygasi"));
-      sm.appendChild(drEl("small", "", "Faqat adminga ko'rinadi · 9 ta kompyuter uchuvchi · ballsiz · 20 soniyadan keyin start"));
-      sb.appendChild(sm);
-      sb.appendChild(drEl("i", "", "›"));
-      sb.addEventListener("click", function () { pgSinov(true); });
-      q.appendChild(sb);
+      box.appendChild(tpSinov("Sinov poygasi", "Faqat adminga ko'rinadi · 9 ta kompyuter uchuvchi · ballsiz · 20 soniyadan keyin start", function () { pgSinov(true); }));
     }
   }
 

@@ -249,109 +249,50 @@
     return Math.floor(sek / 60) + ":" + (sek % 60 < 10 ? "0" : "") + (sek % 60);
   }
   function mjRender() {
-    var d = mjData, t = mjT(), box = $("mj-home");
+    var d = mjData, t = mjT(), tp = tpT(), box = $("mj-home");
     box.innerHTML = "";
     clearInterval(mjSoat);
     if (!d) { return; }
-    var tr = d.tour, hero = drEl("div", "dr-hero du-hero vk-hero mj-hero"), tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
-    chap.appendChild(drEl("small", "", t.nom));
-    var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-    chap.appendChild(drEl("b", "", kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00"));
-    var iz = drEl("em", "", "");
-    chap.appendChild(iz);
-    tep.appendChild(chap);
-    hero.appendChild(tep);
-    var yoz = function () { var q = tr.ts - tr.now - (Date.now() - mjOlingan) / 1000; iz.textContent = (q > 0 ? mjQol(q) + " " + t.qoldi + " · " : "") + t.soni(tr.n); };
+    // YAGONA QOLIP (js/09-turnir-qolip.js): karta -> to'r -> g'oliblar -> mashq -> qoida -> kartalar -> yozilganlar -> sinov
+    var tr = d.tour, jonli = d.cup && d.cup.stages;
+    var hero = tpHero({ lab: jonli ? tp.ketmoqda : tp.keyingi, sar: tpKun(tr.ts, t.kunlar),
+      holat: tpYozHolat(tr, t.bor, t.chiq, t.qat, t.yopiq, function (on) {
+        mjPost({ join: on ? 1 : 0 }, function (r) { if (r && r.tour) { mjData = r; mjRender(); } else { showToast(t.aloqa, "err"); } });
+      }) });
+    var yoz = function () { var q = tr.ts - tr.now - (Date.now() - mjOlingan) / 1000; hero.tpIz.textContent = (q > 0 ? mjQol(q) + " " + t.qoldi + " · " : "") + t.soni(tr.n); };
     yoz();
     mjSoat = setInterval(yoz, 1000);
-    var yb = drEl("div", "du-yoz" + (tr.joined ? " bor" : ""));
-    if (!tr.open) { yb.classList.add("bor"); yb.appendChild(drEl("b", "", tr.joined ? t.bor : t.yopiq)); }
-    else if (tr.joined) {
-      yb.appendChild(drEl("b", "", t.bor));
-      var ch = drEl("button", "", t.chiq);
-      ch.type = "button";
-      ch.addEventListener("click", function () { mjPost({ join: 0 }, function (r) { if (r && r.tour) { mjData = r; mjRender(); } }); });
-      yb.appendChild(ch);
-    } else {
-      var qb = drEl("button", "dr-btn", t.qat);
-      qb.type = "button";
-      qb.addEventListener("click", function () { mjPost({ join: 1 }, function (r) { if (r && r.tour) { mjData = r; mjRender(); } else { showToast(t.aloqa, "err"); } }); });
-      yb.appendChild(qb);
-    }
-    hero.appendChild(yb);
     box.appendChild(hero);
-    if (d.cup && d.cup.stages) { box.appendChild(mjTor(d.cup.stages)); }
-    // mashq: uchta kompyuter raqib + do'st bilan
-    var mq = drEl("div", "gb-mq");
-    var mh = drEl("div", "dk-bosh");
-    mh.appendChild(drEl("b", "", t.mashq));
-    mh.appendChild(drEl("span", "", t.mashqS + (d.stats && d.stats.played ? " · " + t.stat(d.stats.played, d.stats.won) : "")));
-    mq.appendChild(mh);
-    var qator = drEl("div", "gb-bots mj-bots");
-    [1, 2, 3].forEach(function (k) {
-      var b = drEl("button", "gb-bot mj-bot mj-b" + k);
-      b.type = "button";
-      var r = drEl("span", "mj-bot-r"), im = document.createElement("img");
-      im.src = IMG_DIR + "qoriq/" + ["boyogli", "ajdar", "testral"][k - 1] + "-1.webp";
-      im.alt = "";
-      r.appendChild(im);
-      b.appendChild(r);
-      b.appendChild(drEl("b", "", (d.rules && d.rules.bots && d.rules.bots[String(k)]) || ""));
-      b.appendChild(drEl("small", "", t.daraja[k - 1]));
-      b.addEventListener("click", function () { mjBoshla({ mashq: k }); });
-      qator.appendChild(b);
+    if (jonli) { box.appendChild(mjTor(d.cup.stages)); }
+    var gk = golibKarta(d.champs);
+    if (gk) { box.appendChild(gk); }
+    var kat = [1, 2, 3].map(function (k) {
+      return { av: tpRasm(IMG_DIR + "qoriq/" + ["boyogli", "ajdar", "testral"][k - 1] + "-1.webp"), nom: (d.rules && d.rules.bots && d.rules.bots[String(k)]) || "",
+        sub: t.daraja[k - 1], fn: function () { mjBoshla({ mashq: k }); } };
     });
-    var db2 = drEl("button", "gb-bot gb-bd mj-bot");
-    db2.type = "button";
-    db2.appendChild(drEl("span", "gb-bot-t"));
-    db2.appendChild(drEl("b", "", t.dost));
-    db2.appendChild(drEl("small", "", t.dostS));
-    db2.addEventListener("click", function () { tkOyna("mjang"); });     // Telegram, Katta zal yoki fakultet xonasi
-    qator.appendChild(db2);
-    mq.appendChild(qator);
-    box.appendChild(mq);
-    // kartalar: 12 maxluq, o'zinikilar belgilangan
+    kat.push(tpDost(function () { tkOyna("mjang"); }));     // chat (Katta zal, fakultet, shaxsiy) yoki Telegram
+    box.appendChild(tpMashq(tp.ballsiz + (d.stats && d.stats.played ? " · " + t.stat(d.stats.played, d.stats.won) : ""), kat));
+    box.appendChild(tpQoida([t.q1, t.q2, t.q3], tpTorSov(d.rules && d.rules.points), tp.torIz));
+    // o'yin haqida: 12 maxluq kartasi, o'zinikilar belgilangan
     if (d.cards) {
       var kb = drEl("div", "mj-kb");
-      var kh = drEl("div", "dk-bosh");
-      kh.appendChild(drEl("b", "", t.kartalar));
-      kh.appendChild(drEl("span", "", t.kartalarS));
-      kb.appendChild(kh);
       var to = drEl("div", "mj-to");
       d.cards.forEach(function (c) {
         var el = mjKarta(c, { cls: c.st >= 0 ? "oz" : "" });
         el.appendChild(drEl("small", "mj-c-h", c.st === 2 ? t.katta : c.st === 1 ? t.osmir : c.st === 0 ? t.bola : t.yoq));
         to.appendChild(el);
       });
+      kb.appendChild(drEl("p", "tp-iz tp-iz0", t.kartalarS));
       kb.appendChild(to);
       var leg = drEl("div", "mj-leg");
       ["olov", "havo", "suv"].forEach(function (u) {
         leg.appendChild(drEl("span", "", MJ_U[u].e + " " + t.unsur[u] + " › " + MJ_U[MJ_USTUN[u]].e + " " + t.unsur[MJ_USTUN[u]]));
       });
       kb.appendChild(leg);
-      box.appendChild(kb);
+      box.appendChild(tpHaqida(t.kartalar, "", kb));
     }
-    var gk = golibKarta(d.champs);
-    if (gk) { box.appendChild(gk); }
-    var q = drEl("div", "vk-qoida");
-    [t.q1, t.q2, t.q3].forEach(function (m, i) {
-      var r2 = drEl("div", "vk-q");
-      r2.appendChild(drEl("u", "", String(i + 1)));
-      r2.appendChild(drEl("span", "", m));
-      q.appendChild(r2);
-    });
-    box.appendChild(q);
-    if (d.admin) {
-      var sb = drEl("button", "pg-mashq pg-sinov");
-      sb.type = "button";
-      var sm = drEl("span", "");
-      sm.appendChild(drEl("b", "", t.sinov));
-      sm.appendChild(drEl("small", "", t.sinovS));
-      sb.appendChild(sm);
-      sb.appendChild(drEl("i", "", "›"));
-      sb.addEventListener("click", function () { mjBoshla({ sinov: 1 }); });
-      box.appendChild(sb);
-    }
+    if (!jonli) { box.appendChild(tpYoz(tr.players, tr.n)); }
+    if (d.admin) { box.appendChild(tpSinov(t.sinov, t.sinovS, function () { mjBoshla({ sinov: 1 }); })); }
   }
   function mjTor(stages) {
     var t = mjT(), k = drEl("div", "gb-tor");

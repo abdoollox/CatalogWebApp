@@ -7,7 +7,7 @@
   var API_VIK = "https://bot.tizimshunos.uz/api/viktorina";
   var VK_T = {
     uz: { kick: "Juma turniri", ttl: "Viktorina", nom: "Oxirgi sehrgar", kunlar: ["yakshanba", "dushanba", "seshanba", "chorshanba", "payshanba", "juma", "shanba"], qoldi: "qoldi",
-          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Eslatma yoqilgan — boyo'g'li xabar beradi", chiq: "Bekor qilish",
+          soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Siz yozilgansiz — boyo'g'li eslatadi", chiq: "Chiqish",
           q1: "Hamma bir vaqtda bitta savolga javob beradi", q2: "Xato qilgan yoki ulgurmagan chiqib ketadi", q3: "Oxirida qolgan sehrgar — g'olib",
           sov: "Sovrinlar", orin: function (n) { return n + "-o'rin"; }, yaxshi: function (n, p) { return n + " ta to'g'ri javob — +" + p + " ball"; },
           otgan: function (n, k) { return "O'tgan safar g'olib: " + n + " (" + k + " kishi ichida)"; },
@@ -19,7 +19,7 @@
           ball: function (n) { return "+" + n + " ball kubokka"; }, bolmadi: "Bu safar ishtirokchi yetmadi — viktorina o'tmadi.", ortga: "Xogvartsga qaytish",
           togriN: function (n) { return n + " ta to'g'ri"; }, yoq: "Aloqa yo'q — qayta urinib ko'ring", m: " daq ", h: " soat ", kunQ: "kun" },
     ru: { kick: "Пятничный турнир", ttl: "Викторина", nom: "Последний волшебник", kunlar: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"], qoldi: "осталось",
-          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Напоминание включено — сова сообщит", chiq: "Отменить",
+          soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти",
           q1: "Все одновременно отвечают на один вопрос", q2: "Ошибся или не успел — выбыл", q3: "Побеждает тот, кто останется последним",
           sov: "Призы", orin: function (n) { return n + "-е место"; }, yaxshi: function (n, p) { return n + " верных ответов — +" + p + " очк."; },
           otgan: function (n, k) { return "Прошлый победитель: " + n + " (из " + k + ")"; },
@@ -31,7 +31,7 @@
           ball: function (n) { return "+" + n + " очков в кубок"; }, bolmadi: "В этот раз участников не хватило — викторина не состоялась.", ortga: "Вернуться в Хогвартс",
           togriN: function (n) { return "верных: " + n; }, yoq: "Нет связи — попробуйте ещё раз", m: " мин ", h: " ч ", kunQ: "дн." },
     en: { kick: "Friday tournament", ttl: "Quiz", nom: "The Last Wizard", kunlar: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], qoldi: "left",
-          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "Reminder on — an owl will let you know", chiq: "Cancel",
+          soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave",
           q1: "Everyone answers the same question at once", q2: "A wrong or late answer and you are out", q3: "The last wizard standing wins",
           sov: "Prizes", orin: function (n) { return ["", "1st", "2nd", "3rd"][n] + " place"; }, yaxshi: function (n, p) { return n + " correct answers — +" + p + " pts"; },
           otgan: function (n, k) { return "Last winner: " + n + " (out of " + k + ")"; },
@@ -145,68 +145,25 @@
     if (oyin) { vkOyin(); } else if (ph === "tugadi") { vkYakun(); } else { vkBosh(); }
   }
 
-  /* Bosh ko'rinish: turnir kartasi (qachon / zal), qoida va sovrinlar */
+  /* Bosh ko'rinish - YAGONA QOLIP (js/09-turnir-qolip.js): karta -> g'oliblar -> qoida va sovrinlar -> yozilganlar */
   function vkBosh() {
-    var d = vkData, t = vkT(), box = $("vk-hero"), tr = d.tour, zal = d.phase === "zal";
+    var d = vkData, t = vkT(), tp = tpT(), box = $("vk-bosh"), tr = d.tour, zal = d.phase === "zal", r = d.rules || {};
     box.innerHTML = "";
-    var tep = drEl("div", "du-h-t"), chap = drEl("span", "du-h-m");
-    chap.appendChild(drEl("small", "", t.nom));
-    var kun = t.kunlar[new Date((tr.ts + 5 * 3600) * 1000).getUTCDay()];
-    chap.appendChild(drEl("b", "", zal ? t.zal : kun.charAt(0).toUpperCase() + kun.slice(1) + ", 22:00"));
-    var iz = drEl("em", "", "");
-    chap.appendChild(iz);
-    tep.appendChild(chap);
-    box.appendChild(tep);
+    var holat = zal ? { matn: d.me && d.me["in"] ? t.kut : t.kech, ok: !!(d.me && d.me["in"]) }
+      : tpYozHolat(tr, t.bor, t.chiq, t.qat, t.bor, vkYozil);
+    var hero = tpHero({ lab: zal ? tp.ketmoqda : tp.keyingi, sar: zal ? t.zal : tpKun(tr.ts, t.kunlar), holat: holat });
     var qol0 = zal ? d.starts_in : tr.ts - tr.now, olingan = vkOlingan;
     var yoz = function () {
       var qol = Math.max(0, qol0 - (Date.now() - olingan) / 1000);
-      iz.textContent = zal ? t.zalS(d.total || 0) + " · " + t.bosh(vkQol(qol)) : vkQol(qol) + " " + t.qoldi + " · " + t.soni(tr.n);
+      hero.tpIz.textContent = zal ? t.zalS(d.total || 0) + " · " + t.bosh(vkQol(qol)) : vkQol(qol) + " " + t.qoldi + " · " + t.soni(tr.n);
     };
     yoz();
     vkSoat = setInterval(yoz, 1000);
-    if (zal) {
-      var kq = drEl("div", "du-yoz bor");
-      kq.appendChild(drEl("b", "", d.me && d.me["in"] ? t.kut : t.kech));
-      box.appendChild(kq);
-    } else if (tr.open) {
-      var yb = drEl("div", "du-yoz" + (tr.joined ? " bor" : ""));
-      if (tr.joined) {
-        yb.appendChild(drEl("b", "", t.bor));
-        var ch = drEl("button", "", t.chiq);
-        ch.type = "button";
-        ch.addEventListener("click", function () { vkYozil(false); });
-        yb.appendChild(ch);
-      } else {
-        var qb = drEl("button", "dr-btn", t.qat);
-        qb.type = "button";
-        qb.addEventListener("click", function () { vkYozil(true); });
-        yb.appendChild(qb);
-      }
-      box.appendChild(yb);
-    }
-    // Qoida: uch qisqa band + sovrinlar
-    var q = $("vk-qoida"), r = d.rules || {}, pt = r.points || {};
-    q.innerHTML = "";
-    [t.q1, t.q2, t.q3].forEach(function (m, i) {
-      var b = drEl("div", "vk-q");
-      b.appendChild(drEl("u", "", String(i + 1)));
-      b.appendChild(drEl("span", "", m));
-      q.appendChild(b);
-    });
-    var sv = drEl("div", "vk-sov");
-    sv.appendChild(drEl("small", "", t.sov));
-    var qator = drEl("div", "vk-sov-r");
-    [1, 2, 3].forEach(function (o) {
-      var k = drEl("span", "vk-pz o" + o);
-      k.appendChild(drEl("b", "", "+" + (pt[String(o)] || 0)));
-      k.appendChild(drEl("small", "", t.orin(o)));
-      qator.appendChild(k);
-    });
-    sv.appendChild(qator);
-    sv.appendChild(drEl("p", "", t.yaxshi(r.good || 5, r.good_pts || 5)));
-    q.appendChild(sv);
+    box.appendChild(hero);
     var gk = golibKarta(d.champs);                // so'nggi viktorina g'oliblari: o'rin va ball (keyingisigacha turadi)
-    if (gk) { q.appendChild(gk); } else if (d.last) { q.appendChild(drEl("p", "vk-otgan", t.otgan(d.last.name, d.last.n))); }
+    if (gk) { box.appendChild(gk); }
+    box.appendChild(tpQoida([t.q1, t.q2, t.q3], tpOrinSov(r.points), t.yaxshi(r.good || 5, r.good_pts || 5)));
+    if (!zal) { box.appendChild(tpYoz(tr.players, tr.n)); }
   }
 
   /* O'yin: savol, to'rt variant, vaqt chizig'i; natija - to'g'ri javob yashil, xato qizil */

@@ -1652,7 +1652,7 @@
     var i, els, th = chessTheme();
     if (!chessHubDrawn) {
       chessHubDrawn = true;
-      els = document.querySelectorAll("#scr-chess-hub [data-ic]");
+      els = document.querySelectorAll("#scr-chess-hub [data-ic], #ch-sh [data-ic]");
       for (i = 0; i < els.length; i++) { els[i].innerHTML = CHESS_IC[els[i].getAttribute("data-ic")] || ""; }
     }
     // Uslubga bog'liq qismlar har safar qayta chiziladi.
@@ -1660,7 +1660,7 @@
     els = document.querySelectorAll("#ch-mark i");
     for (i = 0; i < els.length; i++) { els[i].style.background = (i === 0 || i === 3) ? th.sq[0] : th.sq[1]; }
     $("ch-mark").style.borderColor = th.pieces === "marble" ? "rgba(var(--gold-rgb),.75)" : "rgba(155,89,182,.55)";
-    els = document.querySelectorAll("#scr-chess-hub [data-piece]");
+    els = document.querySelectorAll("#scr-chess-hub [data-piece], #ch-sh [data-piece]");
     for (i = 0; i < els.length; i++) {
       els[i].innerHTML = getPieceSVG(els[i].getAttribute("data-piece"));
       els[i].style.background = th.sq[0];
@@ -1678,7 +1678,7 @@
     $("ch-seekers").classList.toggle("hidden", !here);
     $("btn-announce-house").classList.toggle("hidden", !cupMe().house);
     // Botlar: daraja nuqtalari va tanlanganining ismi, darajasi, tavsifi.
-    els = document.querySelectorAll("#scr-chess-hub [data-lv]");
+    els = document.querySelectorAll("#scr-chess-hub [data-lv], #ch-sh [data-lv]");
     for (i = 0; i < els.length; i++) {
       var lv = +els[i].getAttribute("data-lv"), dots = "";
       for (var d = 1; d <= 5; d++) { dots += '<i' + (d <= lv ? ' class="on"' : "") + "></i>"; }
@@ -2266,7 +2266,7 @@
 
   function renderBotBadges(bots) {
     chessStats.bots = bots || chessStats.bots || {};
-    var els = document.querySelectorAll('#scr-chess-hub input[name="chess-bot-diff"]');
+    var els = document.querySelectorAll('#ch-sh input[name="chess-bot-diff"], #scr-chess-hub input[name="chess-bot-diff"]');
     for (var i = 0; i < els.length; i++) {
       var t = els[i].nextElementSibling, won = (chessStats.bots[els[i].value] || {}).w > 0;
       var mark = t.querySelector(".won");
