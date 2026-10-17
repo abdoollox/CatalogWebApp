@@ -405,7 +405,7 @@
       });
     });
     ["timeupdate", "progress", "loadedmetadata", "durationchange"].forEach(function (ev) { vid.addEventListener(ev, plChiz); });
-    vid.addEventListener("loadedmetadata", function () { plMeta(); plCta(); });
+    vid.addEventListener("loadedmetadata", function () { plShakl(); plMeta(); plCta(); });
     function nuqta(e) {
       var r = prog.getBoundingClientRect();
       return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (vid.duration || 0);
@@ -435,6 +435,17 @@
       var b = e.target.closest(".pl-rowb");
       if (b) { plSheet(b.getAttribute("data-k")); }
     });
+  }
+
+  /* Kadr shakli: filmlar kinoteatr formatida (≈2,4:1, masalan 1280x534) - 16:9 oynada tepa-pastda qora chiziq
+     qolardi (egasi, 2026-10-17). Film boshlangach oyna videoning o'z shakliga moslashadi; muqova paytida 16:9.
+     Juda keng/tor bo'lsa chegaralanadi; keng oynada tugmalar ixchamlashadi (.tor). */
+  function plShakl() {
+    var vid = $("pl-video"), box = $("pl-box"), w = vid.videoWidth, h = vid.videoHeight;
+    if (!w || !h) { return; }
+    var r = Math.max(4 / 3, Math.min(2.4, w / h));
+    box.style.setProperty("--pl-ar", String(r));
+    box.classList.toggle("tor", r > 2);
   }
 
   /* ---------- NUSXANI QO'YISH ---------- */
@@ -478,6 +489,8 @@
       vid.setAttribute("data-on", "1");
       vid.addEventListener("error", plXato);
       vid.addEventListener("waiting", function () { box.classList.add("kut"); });
+      // Yuklanish aylanasi: kadr tayyor bo'lsa yoki pauza qilinsa yo'qoladi (pauzada qolib ketardi)
+      ["canplay", "seeked", "pause"].forEach(function (ev) { vid.addEventListener(ev, function () { box.classList.remove("kut"); }); });
       vid.addEventListener("playing", function () {
         box.classList.remove("kut");
         var xx = plTx(), m = $("pl-msg").textContent;
@@ -499,7 +512,8 @@
     vid.removeAttribute("src");
     try { vid.load(); } catch (e) {}
     box.classList.add("bosh");
-    box.classList.remove("oyn", "ui-yoq", "kut");
+    box.classList.remove("oyn", "ui-yoq", "kut", "tor");
+    box.style.removeProperty("--pl-ar");
     $("pl-kick").textContent = plYorliq(id);
     $("pl-title").textContent = qsFilmName(id);
     $("pl-toptt").textContent = qsFilmName(id);
