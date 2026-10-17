@@ -458,9 +458,10 @@
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
   }
 
-  // til - pleyerdan (u yerda til ilova tilidan boshqa tanlangan bo'lishi mumkin); tugadi - natija nima bo'lsa ham chaqiriladi
+  // til - pleyerdan (u yerda til ilova tilidan boshqa tanlangan bo'lishi mumkin); tugadi(ok, javob) - natija nima bo'lsa
+  // ham chaqiriladi; muvaffaqiyatda true qaytarsa - oddiy «yuborildi» xabari chiqmaydi (pleyer o'zinikini ko'rsatadi)
   function playSend(id, q, dub, til, tugadi) {
-    var fin = function () { if (tugadi) { try { tugadi(); } catch (e) {} } };
+    var fin = function (ok, res) { if (tugadi) { try { return tugadi(ok, res); } catch (e) {} } };
     if (sending) { return; }
     var t = T[lang];
     var init = "";
@@ -476,7 +477,6 @@
       body: JSON.stringify({ movie_id: id, lang: til || lang, q: q, dub: dub || undefined })
     }).then(function (r) { return r.json(); }).then(function (res) {
       sending = false;
-      fin();
       dismissNote(pending);
 
       if (res && res.ok) {
@@ -485,11 +485,12 @@
         watched[key(id)] = true;
         renderCatalog();
         persist();
-        showToast("✅ " + t.sentTo(res.title || ""), "ok");
+        if (fin(true, res) !== true) { showToast("✅ " + t.sentTo(res.title || ""), "ok"); }
         yqHodisa("film");      // kutubxona yo'riqnomasi (09-yoriqnoma-kutubxona.js) film kelishini kutadi
         return;
       }
 
+      fin(false, res);
       kqFilmXato();
       var err = res && res.error;
       if (err === "not_ready") { showToast(t.notReadyMsg, "err"); return; }
@@ -505,7 +506,7 @@
       openInBot(id);   // qolgan xatolarda jim eski usulga o'tamiz
     })["catch"](function () {
       sending = false;
-      fin();
+      fin(false);
       dismissNote(pending);
       kqFilmXato();
       openInBot(id);

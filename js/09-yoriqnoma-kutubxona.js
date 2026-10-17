@@ -14,9 +14,9 @@
   var KQ_TX = {
     uz: { f1: ["Filmlar", "Garri Potterning sakkizta filmi shu yerda, pastroqda — Fantastik maxluqlar. Hammasi bepul."],
           f2: ["Filmni tanlang", "Ko'rmoqchi bo'lgan filmni bosing — masalan, birinchisini."],
-          p1: ["Ko'rish", "Film ilovaning o'zida, shu yerda boshlanadi. To'xtatib qo'ysangiz, keyingi safar o'sha joydan davom etadi."],
+          p1: ["Ilovada ko'rish", "Film shu yerda, ilovaning o'zida boshlanadi. To'xtatib qo'ysangiz, keyingi safar o'sha joydan davom etadi."],
           p2: ["Ovoz va sifat", "Tilni, dublyajni va sifatni shu yerda tanlaysiz — film to'xtamasdan o'sha daqiqadan davom etadi. Internet sekin bo'lsa — HD yoki SD."],
-          p3: ["Yuklab olish", "Yuqorida tanlangan til, dublyaj va sifatdagi film bot chatiga yuboriladi — keyin internetsiz ham ko'rasiz."],
+          p3: ["Telegram'da ko'rish", "Film bot chatiga yuboriladi — Telegram'ning o'zida ko'rasiz yoki yuklab olib, internetsiz tomosha qilasiz."],
           p4: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
           l1: ["Boshqa tilda", "Filmlarni rus yoki ingliz tilida ham olsa bo'ladi. Profilni oching."],
           l2: ["Til", "Shu yerda ilova tilini tanlaysiz. Til almashsa, filmlar ham o'sha tilda yuboriladi."],
@@ -34,9 +34,9 @@
           k5: ["Mundarija", "Boblar, xatcho'plar va qidiruv."] },
     ru: { f1: ["Фильмы", "Здесь восемь фильмов о Гарри Поттере, ниже — Фантастические твари. Всё бесплатно."],
           f2: ["Выберите фильм", "Нажмите на фильм, который хотите посмотреть, — например, первый."],
-          p1: ["Смотреть", "Фильм начинается прямо здесь, в приложении. Остановите — в следующий раз продолжится с того же места."],
+          p1: ["Смотреть здесь", "Фильм начинается прямо здесь, в приложении. Остановите — в следующий раз продолжится с того же места."],
           p2: ["Звук и качество", "Здесь выбираются язык, озвучка и качество — фильм продолжится с той же минуты. Медленный интернет — выберите HD или SD."],
-          p3: ["Скачать", "Фильм с выбранными выше языком, озвучкой и качеством придёт в чат с ботом — потом можно смотреть без интернета."],
+          p3: ["Смотреть в Telegram", "Фильм придёт в чат с ботом — смотрите прямо в Telegram или скачайте и смотрите без интернета."],
           p4: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
           l1: ["Другой язык", "Фильмы можно получить на узбекском или английском. Откройте профиль."],
           l2: ["Язык", "Здесь выбирается язык приложения. Сменится язык — фильмы будут приходить на нём."],
@@ -54,9 +54,9 @@
           k5: ["Оглавление", "Главы, закладки и поиск."] },
     en: { f1: ["Films", "All eight Harry Potter films are here, and Fantastic Beasts below. All free."],
           f2: ["Pick a film", "Tap the film you want to watch — the first one, for example."],
-          p1: ["Watch", "The film starts right here in the app. Stop it, and next time it picks up where you left off."],
+          p1: ["Watch here", "The film starts right here in the app. Stop it, and next time it picks up where you left off."],
           p2: ["Audio & quality", "Pick the language, dub and quality here — the film keeps playing from the same minute. Slow internet? Choose HD or SD."],
-          p3: ["Download", "The film in the language, dub and quality chosen above goes to your chat with the bot — then watch it offline."],
+          p3: ["Watch in Telegram", "The film goes to your chat with the bot — watch it right in Telegram or download it to watch offline."],
           p4: ["Back", "Tap to go back to the library."],
           l1: ["Other languages", "You can get the films in Uzbek or Russian too. Open your profile."],
           l2: ["Language", "Choose the app language here. Change it and the films come in that language."],
@@ -90,8 +90,8 @@
     if (n === 1) {
       // 2026-10-17: karta pleyerni ochadi - film ilovada ko'riladi, yuklab olish alohida tugma
       return [kqQ("#rows .rowsec .rowsec-h", "f1"), kqQ("#rows .card:not(.soon)", "f2", { tap: true }),
-              kqQ("#scr-pleyer .pl-cta-row", "p1"), kqQ("#scr-pleyer #pl-rows", "p2"),
-              kqQ("#scr-pleyer #pl-bot", "p3"), kqQ("#scr-pleyer #pl-back", "p4", { tap: true })];
+              kqQ("#scr-pleyer .pl-cta-row", "p1"), kqQ("#scr-pleyer #pl-bot", "p3"),
+              kqQ("#scr-pleyer #pl-rows", "p2"), kqQ("#scr-pleyer #pl-back", "p4", { tap: true })];
     }
     if (n === 2) {
       return [kqQ("#scr-cat #pm-btn", "l1", { tap: true }), kqQ("#pm #pm-langs", "l2"), kqQ("#pm #pm-close", "l3", { tap: true })];

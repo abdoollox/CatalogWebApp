@@ -12,32 +12,32 @@
 "use strict";
   var API_PL = "https://bot.tizimshunos.uz/api/pleyer";
   var PL_TX = {
-    uz: { hp: "Garri Potter", fb: "Fantastik maxluqlar", qism: "-qism", watch: "Ko'rish", resume: "Davom etish · %s",
+    uz: { hp: "Garri Potter", fb: "Fantastik maxluqlar", qism: "-qism", watch: "Ilovada ko'rish", resume: "Davom etish · %s",
           pause: "Pauza", left: "%s qoldi", seen: "%s ko'rildi", av: "Ovoz va sifat", rail: "Kolleksiya", now: "Hozir",
           lang: "Til", dub: "Dublyaj", q: "Sifat", chLang: "Qaysi tilda ko'rasiz?", chDub: "Qaysi dublyaj?", chQ: "Qaysi sifatda?",
           soon: "Tez orada", bad: "Bu qurilmada ochilmadi", band: "Hozir ko'ruvchilar juda ko'p — birozdan keyin urinib ko'ring yoki filmni yuklab oling.",
           note: "Internet sekin bo'lsa, HD yoki SD sifatni tanlang. Filmni yuklab olsangiz, internetsiz ham ko'rasiz.",
-          bot: "Bot chatiga yuklab olish", soat: "soat", daq: "daqiqa", til: "til", dubl: "dublyaj",
+          bot: "Telegram'da ko'rish", sent: "Film bot chatiga yuborildi", openChat: "Chatni ochish", soat: "soat", daq: "daqiqa", til: "til", dubl: "dublyaj",
           err: "Film ochilmadi. Boshqa sifatni tanlang yoki bot orqali yuklab oling.", wait: "Ulanmoqda…",
           alt: "Bu sifat qurilmangizda ochilmadi — %s ga o'tdik.", cant: "Bu qurilmada ochilmasligi mumkin",
           noLang: "Bu qurilma %s nusxani o'ynata olmaydi (fayl formati). Boshqa tilni tanlang yoki bot orqali yuklab oling.",
           notReady: "Pleyer hali Telegram'ga ulanmagan: botga ilova kaliti berilishi kerak (/pleyer)." },
-    ru: { hp: "Гарри Поттер", fb: "Фантастические твари", qism: "-я часть", watch: "Смотреть", resume: "Продолжить · %s",
+    ru: { hp: "Гарри Поттер", fb: "Фантастические твари", qism: "-я часть", watch: "Смотреть здесь", resume: "Продолжить · %s",
           pause: "Пауза", left: "Осталось %s", seen: "Просмотрено %s", av: "Звук и качество", rail: "Коллекция", now: "Сейчас",
           lang: "Язык", dub: "Дубляж", q: "Качество", chLang: "На каком языке смотреть?", chDub: "Какой дубляж?", chQ: "Какое качество?",
           soon: "Скоро", bad: "Не открылось на этом устройстве", band: "Сейчас слишком много зрителей — попробуйте чуть позже или скачайте фильм.",
           note: "Если интернет медленный, выберите HD или SD. Скачанный фильм можно смотреть без интернета.",
-          bot: "Скачать в чат с ботом", soat: "ч", daq: "мин", til: "языка", dubl: "дубляжа",
+          bot: "Смотреть в Telegram", sent: "Фильм отправлен в чат с ботом", openChat: "Открыть чат", soat: "ч", daq: "мин", til: "языка", dubl: "дубляжа",
           err: "Фильм не открылся. Выберите другое качество или скачайте через бота.", wait: "Подключение…",
           alt: "Это качество не открылось на вашем устройстве — переключили на %s.", cant: "Может не открыться на этом устройстве",
           noLang: "Это устройство не может воспроизвести версию «%s» (формат файла). Выберите другой язык или скачайте через бота.",
           notReady: "Плеер ещё не подключён к Telegram: боту нужен ключ приложения (/pleyer)." },
-    en: { hp: "Harry Potter", fb: "Fantastic Beasts", qism: "", part: "Part ", watch: "Watch", resume: "Resume · %s",
+    en: { hp: "Harry Potter", fb: "Fantastic Beasts", qism: "", part: "Part ", watch: "Watch here", resume: "Resume · %s",
           pause: "Pause", left: "%s left", seen: "%s watched", av: "Audio & quality", rail: "Collection", now: "Now",
           lang: "Language", dub: "Dubbing", q: "Quality", chLang: "Which language?", chDub: "Which dubbing?", chQ: "Which quality?",
           soon: "Coming soon", bad: "Didn't open on this device", band: "Too many viewers right now — try again a bit later or download the film.",
           note: "If your internet is slow, pick HD or SD. Download the film to watch it offline.",
-          bot: "Download to the bot chat", soat: "h", daq: "min", til: "languages", dubl: "dubs",
+          bot: "Watch in Telegram", sent: "The film is in your bot chat", openChat: "Open chat", soat: "h", daq: "min", til: "languages", dubl: "dubs",
           err: "The film didn't open. Pick another quality or download it via the bot.", wait: "Connecting…",
           alt: "This quality didn't open on your device — switched to %s.", cant: "May not open on this device",
           noLang: "This device can't play the %s version (file format). Pick another language or download it via the bot.",
@@ -258,7 +258,7 @@
     if (v && v.size) { var em = document.createElement("em"); em.textContent = "· " + plHajm(v.size); vq.appendChild(em); }
     // Yuklab olish: aynan shu tanlov (til · dublyaj · sifat · hajm)
     $("pl-bot-t").textContent = x.bot;
-    $("pl-bot-s").textContent = v ? [PL_LANG[pl.lang], pl.lang === "uz" && d ? d[1] : "", plQNom(pl.q), plHajm(v.size)]
+    $("pl-bot-s").textContent = v ? [pl.lang !== lang ? PL_LANG[pl.lang] : "", pl.lang === "uz" && d ? d[1] : "", plQNom(pl.q), plHajm(v.size)]
       .filter(Boolean).join(" · ") : x.soon;
     $("pl-bot").disabled = !v;
     plMeta();
@@ -684,14 +684,37 @@
     });
   }
 
-  /* Yuklab olish (egasi, 2026-10-17): sifat so'ralmaydi - «Ovoz va sifat»da tanlangan nusxa bot chatiga yuboriladi.
-     Pleyer yopilmaydi (film o'ynayotgan bo'lsa davom etadi). Natija xabari va xatolar - js/05 playSend. */
+  /* «Telegram'da ko'rish» (egasi, 2026-10-17/18): sifat so'ralmaydi - «Ovoz va sifat»da tanlangan nusxa bot chatiga
+     yuboriladi. Pleyer yopilmaydi. Yuborilgach xabarda «Chatni ochish» - bot chatiga o'tadi. Xatolar - js/05 playSend. */
   function plYukla() {
     var b = $("pl-bot"), v = plVer(pl.lang, pl.dub, pl.q);
     if (!v || b.classList.contains("yuk")) { return; }
     b.classList.add("yuk");
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
-    playSend(pl.id, pl.q, pl.lang === "uz" ? pl.dub : null, pl.lang, function () { b.classList.remove("yuk"); });
+    try { $("pl-video").pause(); } catch (e) {}          // Telegram'da ko'rmoqchi - bu yerdagisi to'xtab tursin
+    playSend(pl.id, pl.q, pl.lang === "uz" ? pl.dub : null, pl.lang, function (ok) {
+      b.classList.remove("yuk");
+      if (!ok) { return; }
+      plChatXabar();
+      return true;
+    });
+  }
+
+  function plChatXabar() {
+    var x = plTx(), el = document.createElement("div"), sp = document.createElement("span"), bt = document.createElement("button");
+    el.className = "note ok note-act";
+    sp.textContent = "✅ " + x.sent;
+    bt.type = "button";
+    bt.textContent = x.openChat;
+    bt.onclick = function () {
+      var link = "https://t.me/" + BOT;
+      try {
+        if (tg && tg.openTelegramLink) { tg.openTelegramLink(link); tg.close(); } else { window.open(link, "_blank"); }
+      } catch (e) {}
+    };
+    el.appendChild(sp);
+    el.appendChild(bt);
+    addNote(el, 7000);
   }
 
   // Brauzer nusxani o'ynata olmadi (masalan 10 bitli video Android'da): belgilab, shu til/dublyajdagi
