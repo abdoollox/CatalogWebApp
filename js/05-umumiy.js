@@ -458,7 +458,9 @@
     try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.selectionChanged(); } } catch (e) {}
   }
 
-  function playSend(id, q, dub) {
+  // til - pleyerdan (u yerda til ilova tilidan boshqa tanlangan bo'lishi mumkin); tugadi - natija nima bo'lsa ham chaqiriladi
+  function playSend(id, q, dub, til, tugadi) {
+    var fin = function () { if (tugadi) { try { tugadi(); } catch (e) {} } };
     if (sending) { return; }
     var t = T[lang];
     var init = "";
@@ -471,9 +473,10 @@
     window.fetch(API_SEND, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
-      body: JSON.stringify({ movie_id: id, lang: lang, q: q, dub: dub || undefined })
+      body: JSON.stringify({ movie_id: id, lang: til || lang, q: q, dub: dub || undefined })
     }).then(function (r) { return r.json(); }).then(function (res) {
       sending = false;
+      fin();
       dismissNote(pending);
 
       if (res && res.ok) {
@@ -502,6 +505,7 @@
       openInBot(id);   // qolgan xatolarda jim eski usulga o'tamiz
     })["catch"](function () {
       sending = false;
+      fin();
       dismissNote(pending);
       kqFilmXato();
       openInBot(id);

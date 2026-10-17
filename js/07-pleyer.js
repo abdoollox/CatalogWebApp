@@ -247,6 +247,11 @@
     var vq = $("pl-v-q");
     vq.textContent = pl.q ? plQNom(pl.q) + " " : "—";
     if (v && v.size) { var em = document.createElement("em"); em.textContent = "· " + plHajm(v.size); vq.appendChild(em); }
+    // Yuklab olish: aynan shu tanlov (til · dublyaj · sifat · hajm)
+    $("pl-bot-t").textContent = x.bot;
+    $("pl-bot-s").textContent = v ? [PL_LANG[pl.lang], pl.lang === "uz" && d ? d[1] : "", plQNom(pl.q), plHajm(v.size)]
+      .filter(Boolean).join(" · ") : x.soon;
+    $("pl-bot").disabled = !v;
     plMeta();
   }
 
@@ -612,7 +617,7 @@
         plPosSet(pl.id, vid.duration && vid.currentTime > vid.duration - 120 ? 0 : vid.currentTime);
       });
       $("pl-back").onclick = function (e) { e.stopPropagation(); plClose(); };
-      $("pl-bot").onclick = function () { var f = pl.id; plClose(); play(f); };
+      $("pl-bot").onclick = plYukla;
       plUiInit();
     }
     // Avvalgi film (kolleksiyadan o'tilganda) to'xtatiladi
@@ -626,8 +631,6 @@
     $("pl-title").textContent = qsFilmName(id);
     $("pl-toptt").textContent = qsFilmName(id);
     $("pl-note").textContent = x.note;
-    $("pl-bot").setAttribute("aria-label", x.bot);
-    $("pl-bot").title = x.bot;
     vid.poster = "img/wide/" + id + "_" + lang + ".jpg";
     $("scr-cat").classList.add("hidden");
     $("scr-pleyer").classList.remove("hidden");
@@ -670,6 +673,16 @@
       plGo(false);
       if (!plCan(plVer(pl.lang, pl.dub, pl.q))) { plNoLang(); }
     });
+  }
+
+  /* Yuklab olish (egasi, 2026-10-17): sifat so'ralmaydi - «Ovoz va sifat»da tanlangan nusxa bot chatiga yuboriladi.
+     Pleyer yopilmaydi (film o'ynayotgan bo'lsa davom etadi). Natija xabari va xatolar - js/05 playSend. */
+  function plYukla() {
+    var b = $("pl-bot"), v = plVer(pl.lang, pl.dub, pl.q);
+    if (!v || b.classList.contains("yuk")) { return; }
+    b.classList.add("yuk");
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+    playSend(pl.id, pl.q, pl.lang === "uz" ? pl.dub : null, pl.lang, function () { b.classList.remove("yuk"); });
   }
 
   // Brauzer nusxani o'ynata olmadi (masalan 10 bitli video Android'da): belgilab, shu til/dublyajdagi

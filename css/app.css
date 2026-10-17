@@ -4104,10 +4104,15 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .pl-cta .pl-cta-ic2,#scr-pleyer.oyn .pl-cta .pl-cta-ic{display:none}
 #scr-pleyer.oyn .pl-cta .pl-cta-ic2{display:grid}
 .pl-cta:active{transform:scale(.98)}
-.pl-dl{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text)}
-.pl-dl svg{width:24px;height:24px}
-.pl-dl:active{transform:scale(.95)}
+/* Yuklab olish - «Ovoz va sifat» ostida: tanlangan til/dublyaj/sifatdagi fayl so'ralmasdan bot chatiga (egasi, 2026-10-17) */
+.pl-dlrow{display:flex;align-items:center;gap:14px;width:100%;margin-top:10px;padding:13px 16px;border-radius:18px;
+  border:1px solid var(--line);background:var(--card);color:var(--text);text-align:left;cursor:pointer}
+.pl-dlrow:active{background:rgba(255,255,255,.04)}
+.pl-dlrow:disabled{opacity:.45;cursor:default}
+.pl-dlrow .pl-rtx b{font-size:14.5px}
+.pl-dlrow.yuk .pl-ric{border-color:transparent;background:conic-gradient(var(--gold) var(--pl-dlp,25%),rgba(255,255,255,.08) 0);
+  animation:plAyl 1s linear infinite}
+.pl-dlrow.yuk .pl-ric svg{opacity:0}
 .pl-resume{display:flex;align-items:center;gap:10px;margin-top:12px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
 .pl-resume i{position:relative;flex:none;width:92px;height:3px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
 .pl-resume b{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold)}
