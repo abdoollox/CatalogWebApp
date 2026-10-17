@@ -12,21 +12,21 @@
           note: "Sinov: film Telegram'dan serverimiz orqali keladi. Tilni yoki sifatni almashtirsangiz, o'sha daqiqadan davom etadi.",
           resume: "To'xtagan joyingizdan: ", bot: "Bot chatiga yuklab olish",
           err: "Film ochilmadi. Boshqa sifatni tanlang yoki bot orqali yuklab oling.",
-          wait: "Ulanmoqda…",
+          wait: "Ulanmoqda…", bad: "Ochilmadi", alt: "Bu sifat telefoningizda ochilmadi — %s ga o'tdik.",
           notReady: "Pleyer hali Telegram'ga ulanmagan: botga ilova kaliti berilishi kerak (/pleyer)." },
     ru: { kick: "Смотреть в приложении · тест", lang: "Язык", dub: "Дубляж", q: "Качество", soon: "Скоро",
           watch: "Смотреть в приложении", test: "Тест · видно только вам",
           note: "Тест: фильм идёт из Telegram через наш сервер. Если сменить язык или качество, просмотр продолжится с той же минуты.",
           resume: "С места остановки: ", bot: "Скачать в чат с ботом",
           err: "Фильм не открылся. Выберите другое качество или скачайте через бота.",
-          wait: "Подключение…",
+          wait: "Подключение…", bad: "Не открылось", alt: "Это качество не открылось на вашем устройстве — переключили на %s.",
           notReady: "Плеер ещё не подключён к Telegram: боту нужен ключ приложения (/pleyer)." },
     en: { kick: "Watch in the app · test", lang: "Language", dub: "Dubbing", q: "Quality", soon: "Coming soon",
           watch: "Watch in the app", test: "Test · only you can see it",
           note: "Test: the film streams from Telegram through our server. Switch the language or quality and it continues from the same minute.",
           resume: "Resuming from ", bot: "Download to the bot chat",
           err: "The film didn't open. Pick another quality or download it via the bot.",
-          wait: "Connecting…",
+          wait: "Connecting…", bad: "Didn't open", alt: "This quality didn't open on your device — switched to %s.",
           notReady: "The player isn't connected to Telegram yet: the bot needs an app key (/pleyer)." }
   };
   var PL_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
@@ -34,7 +34,7 @@
   var PL_DUBS = [["my5", "MY5 TV"], ["zor", "ZO'R TV"]];
   var PL_BOSH_Q = ["hd", "fhd", "sd"];            // sinovda HD dan boshlanadi - trafik kamroq
   var plInfo = {};                                // film -> {res, t}
-  var pl = { id: null, res: null, lang: null, dub: null, q: null, v: null, scroll: 0, saqT: 0 };
+  var pl = { id: null, res: null, lang: null, dub: null, q: null, v: null, scroll: 0, saqT: 0, t: 0, bad: {} };
 
   function plTx() { return PL_TX[lang] || PL_TX.uz; }
 
@@ -82,10 +82,13 @@
 
   function plHas(l, d) { return PL_Q.some(function (q) { return !!plVer(l, d, q[0]); }); }
 
+  // Shu qurilmada ochilmagan nusxa (brauzer o'ynata olmagan) - tanlovda tashlab o'tiladi
+  function plOk(l, d, q) { var v = plVer(l, d, q); return !!v && !pl.bad[v.v]; }
+
   // Tanlangan til/dublyajda eng mos sifat: avvalgisi, bo'lmasa navbat bo'yicha
   function plPickQ(l, d, avval) {
     var tartib = (avval ? [avval] : []).concat(PL_BOSH_Q);
-    for (var i = 0; i < tartib.length; i++) { if (plVer(l, d, tartib[i])) { return tartib[i]; } }
+    for (var i = 0; i < tartib.length; i++) { if (plOk(l, d, tartib[i])) { return tartib[i]; } }
     return null;
   }
 
@@ -165,9 +168,9 @@
       });
     }
     plChips($("pl-q"), PL_Q.map(function (q) {
-      var v = plVer(pl.lang, pl.dub, q[0]);
-      return { key: q[0], label: q[1], on: q[0] === pl.q, ok: !!v,
-               sub: v ? (v.size ? Math.round(v.size / 1048576) + " MB" : "") : x.soon };
+      var v = plVer(pl.lang, pl.dub, q[0]), bad = v && pl.bad[v.v];
+      return { key: q[0], label: q[1], on: q[0] === pl.q, ok: !!v && !bad,
+               sub: bad ? x.bad : v ? (v.size ? Math.round(v.size / 1048576) + " MB" : "") : x.soon };
     }), function (q) {
       pl.q = q;
       plGo(true);
@@ -180,7 +183,8 @@
     plRender();
     if (!v) { plMsg(plTx().err); return; }
     if (pl.v === v.v) { return; }
-    var t = davom ? vid.currentTime : plPosGet(pl.id), edi = davom && !vid.paused;
+    var t = davom ? (vid.currentTime || pl.t) : plPosGet(pl.id), edi = davom && (!vid.paused || pl.edi);
+    pl.edi = false;
     pl.v = v.v;
     plMsg("");
     vid.src = pl.res.base + encodeURIComponent(v.v) + "?k=" + encodeURIComponent(pl.res.key);
@@ -200,16 +204,23 @@
     var x = plTx(), vid = $("pl-video");
     pl.id = id;
     pl.v = null;
+    pl.t = 0;
+    pl.bad = {};
     pl.lang = lang;
     pl.dub = dub || "my5";
     pl.q = null;
     pl.scroll = window.scrollY || 0;
     if (!vid.getAttribute("data-on")) {
       vid.setAttribute("data-on", "1");
-      vid.addEventListener("error", function () { if (vid.getAttribute("src")) { plMsg(plTx().err); } });
+      vid.addEventListener("error", plXato);
       vid.addEventListener("waiting", function () { $("pl-box").classList.add("kut"); });
-      vid.addEventListener("playing", function () { $("pl-box").classList.remove("kut"); plMsg(""); });
+      vid.addEventListener("playing", function () {
+        $("pl-box").classList.remove("kut");
+        var x = plTx(), m = $("pl-msg").textContent;
+        if (m === x.wait || m === x.err) { plMsg(""); }       // "boshqa sifatga o'tdik" xabari o'z vaqtida yo'qoladi
+      });
       vid.addEventListener("timeupdate", function () {
+        if (vid.currentTime > 0) { pl.t = vid.currentTime; }
         if (!pl.id || vid.currentTime < 5 || Date.now() - pl.saqT < 5000) { return; }
         pl.saqT = Date.now();
         // Oxirigacha ko'rilgan bo'lsa keyingi safar boshidan
@@ -245,6 +256,21 @@
       pl.q = plPickQ(pl.lang, pl.dub, null);
       plGo(false);
     });
+  }
+
+  // Brauzer nusxani o'ynata olmadi (masalan 10 bitli video Android'da): belgilab, shu til/dublyajdagi
+  // boshqa sifatga o'zi o'tadi - o'sha daqiqadan. Boshqasi ham bo'lmasa - xabar.
+  function plXato() {
+    var vid = $("pl-video");
+    if (!vid.getAttribute("src") || !pl.v) { return; }
+    pl.bad[pl.v] = 1;
+    var eski = pl.q, q = plPickQ(pl.lang, pl.dub, null);
+    if (!q) { plRender(); plMsg(plTx().err); return; }
+    pl.q = q;
+    pl.edi = true;
+    plGo(true);
+    var nom = PL_Q.filter(function (x) { return x[0] === q; })[0];
+    if (eski !== q && nom) { plMsg(plTx().alt.replace("%s", nom[1])); setTimeout(function () { if ($("pl-msg").textContent.indexOf(nom[1]) > -1) { plMsg(""); } }, 6000); }
   }
 
   function plClose() {
