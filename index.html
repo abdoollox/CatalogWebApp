@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=84e0d89a">
+<link rel="stylesheet" href="css/app.css?v=de538677">
 </head>
 <body>
 <div class="shell">
@@ -98,33 +98,64 @@
 
   <!-- Ilova ichidagi pleyer - sinov, faqat adminlarga (js/07-pleyer.js, pl*) -->
   <div id="scr-pleyer" class="screen hidden">
-    <div class="pl-hero" id="pl-hero">
-      <button class="sr-back" id="pl-back" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="pl-tt"><span id="pl-kick"></span><b id="pl-title"></b><small id="pl-meta"></small></div>
-    </div>
-    <div class="pl-box" id="pl-box">
+    <div class="pl-box bosh" id="pl-box">
       <video id="pl-video" playsinline webkit-playsinline preload="metadata"></video>
       <div class="pl-ui" id="pl-ui">
-        <button class="pl-skip" id="pl-rw" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg><i>10</i></button>
-        <button class="pl-big" id="pl-big" type="button"><span class="pl-i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.2-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg></span><span class="pl-i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg></span></button>
-        <button class="pl-skip" id="pl-ff" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/></svg><i>10</i></button>
+        <div class="pl-topbar">
+          <button class="pl-glass" id="pl-back" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.41 16.58L10.83 12l4.58-4.59L14 6l-6 6l6 6z"/></svg></button>
+          <span class="pl-toptt" id="pl-toptt"></span>
+          <button class="pl-glass" id="pl-gear" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg></button>
+        </div>
+        <div class="pl-mid">
+          <button class="pl-skip" id="pl-rw" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.5 3c4.65 0 8.58 3.03 9.97 7.22L20.1 11c-1.05-3.19-4.06-5.5-7.6-5.5c-1.96 0-3.73.72-5.12 1.88L10 10H3V3l2.6 2.6C7.45 4 9.85 3 12.5 3M10 12v10H8v-8H6v-2zm8 2v6c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-4 0v6h2v-6z"/></svg></button>
+          <button class="pl-big" id="pl-big" type="button"><span class="pl-i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v14l11-7z"/></svg></span><span class="pl-i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 19h4V5h-4M6 19h4V5H6z"/></svg></span></button>
+          <button class="pl-skip" id="pl-ff" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 12v10H8v-8H6v-2zm8 2v6c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-4 0v6h2v-6zM11.5 3c2.65 0 5.05 1 6.9 2.6L21 3v7h-7l2.62-2.62C15.23 6.22 13.46 5.5 11.5 5.5c-3.54 0-6.55 2.31-7.6 5.5l-2.37-.78C2.92 6.03 6.85 3 11.5 3"/></svg></button>
+        </div>
         <div class="pl-bar">
           <span class="pl-t" id="pl-cur">0:00</span>
           <div class="pl-prog" id="pl-prog"><i class="pl-buf" id="pl-buf"></i><i class="pl-fill" id="pl-fill"></i><b class="pl-knob" id="pl-knob"></b></div>
           <span class="pl-t" id="pl-dur">0:00</span>
-          <button class="pl-fs" id="pl-fs" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+          <button class="pl-fs" id="pl-fs" type="button"><span class="pl-i-fs"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 5h5v2H7v3H5zm9 0h5v5h-2V7h-3zm3 9h2v5h-5v-2h3zm-7 3v2H5v-5h2v3z"/></svg></span><span class="pl-i-fsx"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 14h5v2h-3v3h-2zm-9 0h5v5H8v-3H5zm3-9h2v5H5V8h3zm11 3v2h-5V5h2v3z"/></svg></span></button>
         </div>
       </div>
+      <div class="pl-tap l" id="pl-tap-l"><b><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.5 3c4.65 0 8.58 3.03 9.97 7.22L20.1 11c-1.05-3.19-4.06-5.5-7.6-5.5c-1.96 0-3.73.72-5.12 1.88L10 10H3V3l2.6 2.6C7.45 4 9.85 3 12.5 3M10 12v10H8v-8H6v-2zm8 2v6c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-4 0v6h2v-6z"/></svg></b></div>
+      <div class="pl-tap r" id="pl-tap-r"><b><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 12v10H8v-8H6v-2zm8 2v6c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-4 0v6h2v-6zM11.5 3c2.65 0 5.05 1 6.9 2.6L21 3v7h-7l2.62-2.62C15.23 6.22 13.46 5.5 11.5 5.5c-3.54 0-6.55 2.31-7.6 5.5l-2.37-.78C2.92 6.03 6.85 3 11.5 3"/></svg></b></div>
       <div class="pl-spin"></div>
     </div>
-    <div class="pl-msg hidden" id="pl-msg"></div>
-    <div class="pl-sel">
-      <div class="pl-row"><span class="pl-lbl" id="pl-l-lang"></span><div class="pl-seg" id="pl-lang"></div></div>
-      <div class="pl-row hidden" id="pl-r-dub"><span class="pl-lbl" id="pl-l-dub"></span><div class="pl-seg" id="pl-dub"></div></div>
-      <div class="pl-row"><span class="pl-lbl" id="pl-l-q"></span><div class="pl-seg pl-seg-q" id="pl-q"></div></div>
+
+    <div class="pl-info">
+      <span class="pl-yorliq" id="pl-kick"></span>
+      <h1 class="pl-title" id="pl-title"></h1>
+      <div class="pl-meta" id="pl-meta"></div>
+      <div class="pl-msg hidden" id="pl-msg"></div>
+      <div class="pl-cta-row">
+        <button class="pl-cta" id="pl-cta" type="button"><span class="pl-cta-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v14l11-7z"/></svg></span><span class="pl-cta-ic2"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 19h4V5h-4M6 19h4V5H6z"/></svg></span><b id="pl-cta-t"></b></button>
+        <button class="pl-dl" id="pl-bot" type="button" aria-label=""><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg></button>
+      </div>
+      <div class="pl-resume hidden" id="pl-resume"><i><b id="pl-resume-f"></b></i><span id="pl-resume-t"></span></div>
     </div>
+
+    <span class="pl-sec" id="pl-l-av"></span>
+    <div class="pl-card" id="pl-rows">
+      <button class="pl-rowb" id="pl-r-lang" type="button" data-k="lang"><span class="pl-ric"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12.87 15.07l-2.54-2.51l.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35C8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5l3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7l1.62-4.33L19.12 17z"/></svg></span><span class="pl-rtx"><small id="pl-l-lang"></small><b id="pl-v-lang"></b></span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="pl-chev"><path d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z"/></svg></button>
+      <button class="pl-rowb" id="pl-r-dub" type="button" data-k="dub"><span class="pl-ric"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 5a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c2.67 0 8 1.34 8 4v2H1v-2c0-2.66 5.33-4 8-4m7.76-9.64c2.02 2.2 2.02 5.25 0 7.27l-1.68-1.69c.84-1.18.84-2.71 0-3.89zM20.07 2c3.93 4.05 3.9 10.11 0 14l-1.63-1.63c2.77-3.18 2.77-7.72 0-10.74z"/></svg></span><span class="pl-rtx"><small id="pl-l-dub"></small><b id="pl-v-dub"></b></span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="pl-chev"><path d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z"/></svg></button>
+      <button class="pl-rowb" id="pl-r-q" type="button" data-k="q"><span class="pl-ric"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-8 12H9.5v-2h-2v2H6V9h1.5v2.5h2V9H11zm2-6h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4zm1.5 4.5h2v-3h-2z"/></svg></span><span class="pl-rtx"><small id="pl-l-q"></small><b id="pl-v-q"></b></span><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="pl-chev"><path d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z"/></svg></button>
+    </div>
+
+    <span class="pl-sec" id="pl-l-rail"></span>
+    <div class="pl-rail" id="pl-rail"></div>
+
     <p class="pl-note" id="pl-note"></p>
-    <button class="pl-bot" id="pl-bot" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg><span id="pl-bot-t"></span></button>
+  </div>
+
+  <!-- Pleyer: til / dublyaj / sifat tanlash oynasi (js/07-pleyer.js plSheet) -->
+  <div id="pl-sheet" class="pl-sheet hidden">
+    <div class="pl-sheet-box">
+      <i class="pl-grab"></i>
+      <span class="pl-yorliq" id="pl-sh-kick"></span>
+      <h3 id="pl-sh-title"></h3>
+      <div class="pl-opts" id="pl-sh-opts"></div>
+    </div>
   </div>
 
   <!-- Film sifatini tanlash oynasi (js/05 play/qs*) -->
@@ -1828,7 +1859,7 @@
 <script src="js/04-kubok-oyna.js?v=461d7035"></script>
 <script src="js/05-umumiy.js?v=bbbf4b6b"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
-<script src="js/07-pleyer.js?v=eb1beb24"></script>
+<script src="js/07-pleyer.js?v=8ef2b90b"></script>
 <script src="js/07-kutubxona.js?v=74e06644"></script>
 <script src="js/07-kitoblar.js?v=01b6d032"></script>
 <script src="js/07-kitob-matn.js?v=5ad05696"></script>
@@ -1854,7 +1885,7 @@
 <script src="js/11-chat.js?v=44f503a5"></script>
 <script src="js/12-shaxmat.js?v=f052221d"></script>
 <script src="js/12-shaxmat-turnir.js?v=56f5998f"></script>
-<script src="js/13-orqaga.js?v=cb4e7565"></script>
+<script src="js/13-orqaga.js?v=7480dce7"></script>
 <script src="js/14-ishga-tushirish.js?v=a8f3aa81"></script>
 <script src="js/15-pochta.js?v=54d25573"></script>
 

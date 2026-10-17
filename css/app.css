@@ -4018,76 +4018,148 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .ch-sh.m-kod .ch-join{margin:6px 0 4px}
 .tp-haq .mj-to{margin:0 -6px}
 
-/* ===== ILOVA ICHIDAGI PLEYER - sinov (js/07-pleyer.js, egasi 2026-10-17). Kutubxona: zamonaviy uslub ===== */
-#scr-pleyer{padding-bottom:28px}
-/* Tepa: film rasmi fonida sarlavha */
-.pl-hero{position:relative;margin:-22px -18px 0;padding:18px 18px 16px;min-height:150px;display:flex;flex-direction:column;
-  justify-content:space-between;gap:18px;background:#0c0f14;overflow:hidden}
-/* Fon - film rasmining faqat RANGI (kuchli xira): muqova ostidagi videoda takrorlanmasin */
-.pl-hero::before{content:"";position:absolute;inset:-40px;background:var(--pl-art,none) center 40%/cover;filter:blur(34px) saturate(1.3);
-  transform:scale(1.15);opacity:.7}
-.pl-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,15,20,.2) 0%,rgba(12,15,20,.5) 55%,var(--bg) 100%)}
-.pl-hero > *{position:relative;z-index:1}
-.pl-tt{display:flex;flex-direction:column;gap:6px;min-width:0}
-.pl-tt span{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(238,241,245,.7)}
-.pl-tt b{font:800 26px/1.12 'Manrope',sans-serif;letter-spacing:-.01em;color:#fff}
-.pl-tt small{font:600 12px/1.3 'Manrope',sans-serif;color:rgba(238,241,245,.72)}
-/* Video va o'zimizning boshqaruv tugmalari */
-.pl-box{position:relative;margin:0 -18px;background:#000;aspect-ratio:16/9;overflow:hidden;user-select:none;-webkit-user-select:none}
+/* ===== ILOVA ICHIDAGI PLEYER - «Kino zali» (js/07-pleyer.js, egasi 2026-10-17). Kutubxona: zamonaviy uslub =====
+   Tuzilishi: kadr (video, tepada to'liq kenglikda) -> yorliq + sarlavha (Cormorant) + ma'lumot -> kumush asosiy tugma
+   -> «Ovoz va sifat» kartasi (bosilsa pastdan tanlov) -> kolleksiya qatori. Belgilar - MDI, to'la bo'yalgan. */
+#scr-pleyer{padding-bottom:34px}
+/* --- Kadr --- */
+.pl-box{position:relative;margin:-22px -18px 0;aspect-ratio:16/9;background:#000;overflow:hidden;user-select:none;-webkit-user-select:none}
 .pl-box video{display:block;width:100%;height:100%;background:#000;object-fit:contain}
+.pl-box.bosh video{object-fit:cover}
+.pl-box::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:46%;background:linear-gradient(rgba(12,15,20,0),var(--bg));
+  pointer-events:none;opacity:0;transition:opacity .4s}
+.pl-box.bosh::after{opacity:1}
 .pl-box:fullscreen,.pl-box:-webkit-full-screen{aspect-ratio:auto;width:100%;height:100%;margin:0}
-.pl-ui{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:34px;
-  background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 60%,rgba(0,0,0,.7));transition:opacity .25s}
+.pl-ui{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;
+  background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.72));transition:opacity .25s}
+.pl-box.bosh .pl-ui{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0) 30%)}
 .pl-box.ui-yoq .pl-ui{opacity:0;pointer-events:none}
 .pl-box.ui-yoq{cursor:none}
-.pl-big{width:62px;height:62px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;
-  background:rgba(255,255,255,.94);color:#0e1117;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-.pl-big svg{width:24px;height:24px}
-.pl-big .pl-i-play svg{margin-left:3px}
+.pl-topbar{display:flex;align-items:center;gap:10px;padding:12px 12px 0}
+.pl-glass{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#fff;
+  border:1px solid rgba(255,255,255,.16);background:rgba(10,12,16,.42);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.pl-glass svg{width:24px;height:24px}
+.pl-glass:active{transform:scale(.94)}
+.pl-toptt{flex:1;min-width:0;text-align:center;font:600 12.5px/1.2 'Manrope',sans-serif;color:rgba(255,255,255,.88);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .25s}
+.pl-box:not(.bosh) .pl-toptt{opacity:1}
+.pl-mid{display:flex;align-items:center;justify-content:center;gap:34px}
+.pl-big{position:relative;width:72px;height:72px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);
+  box-shadow:0 0 0 9px rgba(var(--gold-rgb),.16),0 14px 34px -14px rgba(0,0,0,.8)}
+.pl-big svg{width:34px;height:34px}
 .pl-big span{display:grid}
+.pl-big .pl-i-play svg{margin-left:4px}
 .pl-big .pl-i-pause,.pl-box.oyn .pl-big .pl-i-play{display:none}
 .pl-box.oyn .pl-big .pl-i-pause{display:grid}
-.pl-skip{position:relative;width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;
-  background:rgba(0,0,0,.35);color:#fff}
-.pl-skip svg{width:30px;height:30px}
-.pl-skip i{position:absolute;font:800 9.5px/1 'Manrope',sans-serif;font-style:normal;top:50%;left:50%;transform:translate(-50%,-38%)}
-.pl-bar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:0 10px 8px 14px}
-.pl-t{flex:none;min-width:34px;font:700 11px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;color:#fff}
-.pl-prog{position:relative;flex:1;height:24px;cursor:pointer;touch-action:none}
-.pl-prog::before,.pl-buf,.pl-fill{content:"";position:absolute;left:0;top:50%;height:4px;margin-top:-2px;border-radius:2px}
-.pl-prog::before{right:0;background:rgba(255,255,255,.25)}
-.pl-buf{width:0;background:rgba(255,255,255,.45)}
-.pl-fill{width:0;background:#fff}
-.pl-knob{position:absolute;left:0;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;
-  box-shadow:0 1px 6px rgba(0,0,0,.5)}
-.pl-fs{flex:none;width:34px;height:34px;border:0;background:none;color:#fff;display:grid;place-items:center;cursor:pointer}
-.pl-fs svg{width:20px;height:20px}
-.pl-spin{display:none;position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;
-  border:3px solid rgba(255,255,255,.2);border-top-color:#fff;animation:plAyl .8s linear infinite;pointer-events:none}
+.pl-big:active{transform:scale(.95)}
+.pl-skip{width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;color:#fff;
+  background:rgba(10,12,16,.36);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.pl-skip svg{width:28px;height:28px}
+.pl-box.bosh .pl-skip,.pl-box.bosh .pl-bar{opacity:0;pointer-events:none}
+.pl-bar{display:flex;align-items:center;gap:10px;padding:0 8px 4px 14px;transition:opacity .25s}
+.pl-t{flex:none;min-width:36px;font:700 11px/1 'Manrope',sans-serif;font-variant-numeric:tabular-nums;color:#fff}
+.pl-prog{position:relative;flex:1;height:28px;cursor:pointer;touch-action:none}
+.pl-prog::before,.pl-buf,.pl-fill{content:"";position:absolute;left:0;top:50%;height:3px;margin-top:-1.5px;border-radius:2px;transition:height .15s,margin .15s}
+.pl-prog::before{right:0;background:rgba(255,255,255,.24)}
+.pl-buf{width:0;background:rgba(255,255,255,.42)}
+.pl-fill{width:0;background:var(--gold-hi)}
+.pl-prog.drag::before,.pl-prog.drag .pl-buf,.pl-prog.drag .pl-fill{height:5px;margin-top:-2.5px}
+.pl-knob{position:absolute;left:0;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:var(--gold-hi);
+  box-shadow:0 0 0 4px rgba(var(--gold-rgb),.22);transition:transform .15s}
+.pl-prog.drag .pl-knob{transform:scale(1.35)}
+.pl-fs{flex:none;width:38px;height:38px;border:0;background:none;color:#fff;display:grid;place-items:center;cursor:pointer}
+.pl-fs svg{width:26px;height:26px}
+.pl-fs span{display:grid}
+.pl-fs .pl-i-fsx{display:none}
+.pl-box:fullscreen .pl-fs .pl-i-fs,.pl-box:-webkit-full-screen .pl-fs .pl-i-fs{display:none}
+.pl-box:fullscreen .pl-fs .pl-i-fsx,.pl-box:-webkit-full-screen .pl-fs .pl-i-fsx{display:grid}
+/* Ikki marta tegish: chap/o'ng yarmida 10 soniya */
+.pl-tap{position:absolute;top:0;bottom:0;z-index:1;width:40%;display:grid;place-items:center;pointer-events:none;opacity:0}
+.pl-tap.l{left:0;border-radius:0 50% 50% 0/0 50% 50% 0;background:rgba(255,255,255,.07)}
+.pl-tap.r{right:0;border-radius:50% 0 0 50%/50% 0 0 50%;background:rgba(255,255,255,.07)}
+.pl-tap b{display:grid;color:#fff}
+.pl-tap svg{width:34px;height:34px}
+.pl-tap.on{animation:plTap .55s ease}
+@keyframes plTap{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.pl-spin{display:none;position:absolute;z-index:3;left:50%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.16);border-top-color:var(--gold-hi);animation:plAyl .8s linear infinite;pointer-events:none}
 .pl-box.kut .pl-spin{display:block}
 .pl-box.kut .pl-big{opacity:0}
 @keyframes plAyl{to{transform:rotate(360deg)}}
-.pl-msg{margin:12px 0 0;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);
+/* --- Film haqida --- */
+.pl-info{position:relative;z-index:1;margin-top:-10px;transition:margin .3s}
+.pl-box:not(.bosh) + .pl-info{margin-top:20px}        /* film boshlangach kadr o'z chegarasida, matn ostida */
+.pl-yorliq{display:block;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.pl-title{margin:9px 0 0;font:500 36px/1 'Cormorant Garamond',serif;letter-spacing:-.005em;color:var(--text)}
+.pl-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;margin-top:11px;font:600 12px/1.3 'Manrope',sans-serif;color:var(--dim)}
+.pl-meta i{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.3)}
+.pl-meta u{text-decoration:none;padding:3px 6px 2px;border:1px solid rgba(255,255,255,.24);border-radius:5px;
+  font:800 9.5px/1.2 'Manrope',sans-serif;letter-spacing:.08em;color:var(--text)}
+.pl-msg{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--line);
   font:600 12.5px/1.45 'Manrope',sans-serif;color:var(--text)}
-/* Tanlov: til, dublyaj, sifat - bir tekis qatorlar */
-.pl-sel{display:flex;flex-direction:column;gap:16px;margin:20px 0 0}
-.pl-row{display:flex;flex-direction:column;gap:8px}
-.pl-lbl{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
-.pl-seg{display:grid;grid-auto-columns:1fr;grid-auto-flow:column;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.05);
-  border:1px solid var(--line)}
-.pl-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;padding:11px 6px;border-radius:10px;
-  border:0;background:none;color:var(--text);cursor:pointer;text-align:center;font:700 13.5px/1.1 'Manrope',sans-serif}
-.pl-chip small{font:600 10.5px/1 'Manrope',sans-serif;color:var(--dim);white-space:nowrap}
-.pl-chip.on{background:#eef1f5;color:#0e1117;box-shadow:0 2px 10px rgba(0,0,0,.25)}
-.pl-chip.on small{color:#4a5260}
-.pl-chip:disabled{opacity:.38;cursor:default}
-.pl-chip:not(:disabled):not(.on):active{background:rgba(255,255,255,.08)}
-.pl-seg-q .pl-chip{padding:12px 6px}
-.pl-note{margin:18px 0 0;font:500 11.5px/1.55 'Manrope',sans-serif;color:var(--dim)}
-.pl-bot{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin:14px 0 0;padding:14px;border-radius:14px;
-  border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer}
-.pl-bot svg{width:17px;height:17px}
-.pl-bot:active{opacity:.75}
+.pl-cta-row{display:flex;gap:10px;margin-top:20px}
+.pl-cta{flex:1;min-width:0;height:54px;border-radius:99px;border:0;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold-2));color:var(--gold-ink);font:700 14.5px/1 'Manrope',sans-serif;
+  box-shadow:0 14px 34px -20px rgba(var(--gold-rgb),.75)}
+.pl-cta b{font:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-cta span{display:grid}
+.pl-cta svg{width:24px;height:24px}
+.pl-cta .pl-cta-ic2,#scr-pleyer.oyn .pl-cta .pl-cta-ic{display:none}
+#scr-pleyer.oyn .pl-cta .pl-cta-ic2{display:grid}
+.pl-cta:active{transform:scale(.98)}
+.pl-dl{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text)}
+.pl-dl svg{width:24px;height:24px}
+.pl-dl:active{transform:scale(.95)}
+.pl-resume{display:flex;align-items:center;gap:10px;margin-top:12px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
+.pl-resume i{position:relative;flex:none;width:92px;height:3px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
+.pl-resume b{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold)}
+/* --- Ovoz va sifat --- */
+.pl-sec{display:block;margin:30px 0 10px;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.pl-card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.pl-rowb{display:flex;align-items:center;gap:14px;width:100%;padding:13px 14px 13px 16px;background:none;border:0;color:var(--text);
+  text-align:left;cursor:pointer}
+.pl-rowb + .pl-rowb{border-top:1px solid var(--line)}
+.pl-rowb:active{background:rgba(255,255,255,.04)}
+.pl-ric{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--gold)}
+.pl-ric svg{width:19px;height:19px}
+.pl-rtx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pl-rtx small{font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
+.pl-rtx b{font:700 15px/1.2 'Manrope',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-rtx b em{font-style:normal;font-weight:600;color:var(--dim)}
+.pl-chev{flex:none;margin-left:auto;width:22px;height:22px;color:var(--dim)}
+/* --- Kolleksiya --- */
+.pl-rail{display:flex;gap:10px;overflow-x:auto;margin:0 -18px;padding:4px 18px 6px;scroll-padding-left:18px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.pl-rail::-webkit-scrollbar{display:none}
+.pl-pos{flex:none;width:100px;padding:0;border:0;background:none;color:var(--text);text-align:left;cursor:pointer;scroll-snap-align:start}
+.pl-pos img{display:block;width:100px;height:150px;object-fit:cover;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.pl-pos small{display:block;margin-top:8px;font:600 11px/1.25 'Manrope',sans-serif;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-pos.on img{outline:2px solid var(--gold);outline-offset:2px}
+.pl-pos.on small{color:var(--gold)}
+.pl-pos:active img{transform:scale(.97)}
+.pl-note{margin:26px 0 0;font:500 11.5px/1.55 'Manrope',sans-serif;color:var(--dim);text-align:center}
+#scr-pleyer.pl-yuk .pl-card,#scr-pleyer.pl-yuk .pl-meta{opacity:.45}
+/* --- Tanlov oynasi (pastdan) --- */
+.pl-sheet{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;background:rgba(6,8,11,.62);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:plFade .2s ease}
+.pl-sheet-box{width:100%;max-width:440px;padding:10px 18px calc(20px + var(--sab,0px));background:var(--bg2);border-radius:20px 20px 0 0;
+  border-top:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.6);animation:plUp .26s cubic-bezier(.2,.8,.2,1)}
+.pl-grab{display:block;width:38px;height:4px;margin:0 auto 18px;border-radius:2px;background:rgba(255,255,255,.18)}
+.pl-sheet-box h3{margin:8px 0 0;font:500 26px/1.1 'Cormorant Garamond',serif;color:var(--text)}
+.pl-opts{display:flex;flex-direction:column;gap:8px;margin:16px 0 0}
+.pl-opt{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);
+  background:rgba(255,255,255,.03);color:var(--text);text-align:left;cursor:pointer}
+.pl-opt span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pl-opt b{font:700 15px/1.2 'Manrope',sans-serif}
+.pl-opt small{font:600 11.5px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.pl-opt svg{flex:none;margin-left:auto;width:22px;height:22px;color:var(--dim)}
+.pl-opt.on{border-color:rgba(var(--gold-rgb),.55);background:rgba(var(--gold-rgb),.08)}
+.pl-opt.on svg{color:var(--gold)}
+.pl-opt:disabled{opacity:.42;cursor:default}
+.pl-opt:not(:disabled):active{transform:scale(.985)}
+@keyframes plFade{from{opacity:0}to{opacity:1}}
+@keyframes plUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 /* Sifat oynasida: "Ilovada ko'rish" (faqat server ruxsat bergan odamga) */
 .qs-pl{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 0;padding:13px 16px;border-radius:14px;border:0;
   background:#eef1f5;color:#0e1117;text-align:left;cursor:pointer}
