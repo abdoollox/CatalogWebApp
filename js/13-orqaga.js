@@ -34,6 +34,7 @@
   var BACK_OF = {
     "scr-album": "ms-back",
     "scr-serial": "sr-back",
+    "scr-pleyer": "pl-back",
     "scr-kitob": "kt-back",
     "scr-oqish": "kr-back",
     "pm": "pm-close",

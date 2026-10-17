@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=5df1ae8f">
+<link rel="stylesheet" href="css/app.css?v=5f3d9050">
 </head>
 <body>
 <div class="shell">
@@ -96,6 +96,23 @@
     <div id="sr-list"></div>
   </div>
 
+  <!-- Ilova ichidagi pleyer - sinov, faqat adminlarga (js/07-pleyer.js, pl*) -->
+  <div id="scr-pleyer" class="screen hidden">
+    <div class="pl-top">
+      <button class="sr-back" id="pl-back" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="pl-tt"><span id="pl-kick"></span><b id="pl-title"></b></div>
+    </div>
+    <div class="pl-box" id="pl-box">
+      <video id="pl-video" playsinline webkit-playsinline controls preload="metadata"></video>
+      <div class="pl-msg hidden" id="pl-msg"></div>
+    </div>
+    <div class="pl-row"><span class="pl-lbl" id="pl-l-lang"></span><div class="pl-chips" id="pl-lang"></div></div>
+    <div class="pl-row hidden" id="pl-r-dub"><span class="pl-lbl" id="pl-l-dub"></span><div class="pl-chips" id="pl-dub"></div></div>
+    <div class="pl-row"><span class="pl-lbl" id="pl-l-q"></span><div class="pl-chips" id="pl-q"></div></div>
+    <p class="pl-note" id="pl-note"></p>
+    <button class="pl-bot" id="pl-bot" type="button"></button>
+  </div>
+
   <!-- Film sifatini tanlash oynasi (js/05 play/qs*) -->
   <div id="qs" class="hub-sheet hidden">
     <div class="hub-sheet-box">
@@ -103,6 +120,7 @@
       <h3 id="qs-title"></h3>
       <span class="qs-dub-l hidden" id="qs-dub-l"></span>
       <div class="qs-dubs hidden" id="qs-dubs"></div>
+      <button class="qs-pl hidden" id="qs-pl" type="button"><span class="qs-pl-ic"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.2-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg></span><span class="qs-tx"><b></b><small></small></span></button>
       <div class="qs-list" id="qs-list"></div>
       <p id="qs-note"></p>
       <button class="hub-sheet-close" type="button" id="qs-close"></button>
@@ -1794,14 +1812,15 @@
 <script src="js/02-saqlash-kubok.js?v=9780491e"></script>
 <script src="js/03-dostlar.js?v=b5f7bd48"></script>
 <script src="js/04-kubok-oyna.js?v=461d7035"></script>
-<script src="js/05-umumiy.js?v=9356eb9c"></script>
+<script src="js/05-umumiy.js?v=bbbf4b6b"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
+<script src="js/07-pleyer.js?v=11f46b42"></script>
 <script src="js/07-kutubxona.js?v=74e06644"></script>
 <script src="js/07-kitoblar.js?v=01b6d032"></script>
 <script src="js/07-kitob-matn.js?v=5ad05696"></script>
 <script src="js/07-odam.js?v=7fc9a356"></script>
 <script src="js/08-saralash.js?v=82409b83"></script>
-<script src="js/09-sehrli-olam.js?v=4c2e84a6"></script>
+<script src="js/09-sehrli-olam.js?v=45ccbda2"></script>
 <script src="js/09-darslar.js?v=433a1061"></script>
 <script src="js/09-issiqxona.js?v=2759b103"></script>
 <script src="js/09-duel.js?v=60a108dc"></script>
@@ -1821,7 +1840,7 @@
 <script src="js/11-chat.js?v=44f503a5"></script>
 <script src="js/12-shaxmat.js?v=f052221d"></script>
 <script src="js/12-shaxmat-turnir.js?v=56f5998f"></script>
-<script src="js/13-orqaga.js?v=c0374a00"></script>
+<script src="js/13-orqaga.js?v=cb4e7565"></script>
 <script src="js/14-ishga-tushirish.js?v=a8f3aa81"></script>
 <script src="js/15-pochta.js?v=54d25573"></script>
 

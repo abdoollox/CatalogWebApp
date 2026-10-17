@@ -474,6 +474,8 @@
     }
     $("qs-kick").textContent = x.ask;
     $("qs-title").textContent = qsFilmName(id);
+    el.setAttribute("data-film", id);
+    plQs(id);              // ilova ichidagi pleyer (js/07-pleyer.js) - server ruxsat bersa tugma chiqadi
     $("qs-note").textContent = x.note;
     $("qs-close").textContent = x.close;
     // Dublyaj tanlovi: filmda ikkalasi bo'lsa tepada ikki tugma

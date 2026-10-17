@@ -4017,3 +4017,42 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .ch-sh.m-kod #ch-pvp-k > .ch-note,.ch-sh.m-kod #ch-pvp-k > .ch-lbl,.ch-sh.m-kod #ch-time,.ch-sh.m-kod #ch-pvp-actions,.ch-sh.m-kod #ch-seek-panel,.ch-sh.m-kod .ch-or{display:none!important}
 .ch-sh.m-kod .ch-join{margin:6px 0 4px}
 .tp-haq .mj-to{margin:0 -6px}
+
+/* ===== ILOVA ICHIDAGI PLEYER - sinov (js/07-pleyer.js, egasi 2026-10-17). Kutubxona: zamonaviy uslub ===== */
+#scr-pleyer{padding-bottom:28px}
+.pl-top{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.pl-top .sr-back{flex:none}
+.pl-tt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pl-tt span{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.pl-tt b{font:700 19px/1.2 'Manrope',sans-serif;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-box{position:relative;margin:0 -18px;background:#000;aspect-ratio:16/9;overflow:hidden}
+.pl-box video{display:block;width:100%;height:100%;background:#000;object-fit:contain}
+.pl-box.kut::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.22);border-top-color:#fff;animation:plAyl .8s linear infinite;pointer-events:none}
+@keyframes plAyl{to{transform:rotate(360deg)}}
+.pl-msg{position:absolute;left:12px;right:12px;bottom:12px;padding:10px 12px;border-radius:10px;background:rgba(12,15,20,.88);
+  font:600 12.5px/1.45 'Manrope',sans-serif;color:var(--text);pointer-events:none}
+.pl-row{display:flex;flex-direction:column;gap:9px;margin:18px 0 0}
+.pl-lbl{font:700 10.5px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.pl-chips{display:flex;gap:8px;flex-wrap:wrap}
+.pl-chip{display:inline-flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:84px;padding:10px 14px;border-radius:12px;
+  border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;text-align:left;
+  font:700 13.5px/1.1 'Manrope',sans-serif}
+.pl-chip small{font:600 10.5px/1 'Manrope',sans-serif;color:var(--dim)}
+.pl-chip.on{background:#eef1f5;border-color:#eef1f5;color:#0e1117}
+.pl-chip.on small{color:#4a5260}
+.pl-chip:disabled{opacity:.42;cursor:default}
+.pl-chip:not(:disabled):not(.on):active{transform:scale(.97)}
+.pl-note{margin:18px 0 0;font:500 12px/1.55 'Manrope',sans-serif;color:var(--dim)}
+.pl-bot{display:block;width:100%;margin:16px 0 0;padding:14px;border-radius:12px;border:1px solid var(--line);background:none;
+  color:var(--text);font:700 13.5px/1 'Manrope',sans-serif;cursor:pointer}
+.pl-bot:active{opacity:.75}
+/* Sifat oynasida: "Ilovada ko'rish" (faqat server ruxsat bergan odamga) */
+.qs-pl{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 0;padding:13px 16px;border-radius:14px;border:0;
+  background:#eef1f5;color:#0e1117;text-align:left;cursor:pointer}
+.qs-pl:active{transform:scale(.985)}
+.qs-pl.hidden{display:none}
+.qs-pl-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#0e1117;color:#eef1f5}
+.qs-pl-ic svg{width:16px;height:16px;margin-left:2px}
+.qs-pl .qs-tx b{font:700 16px/1.1 'Manrope',sans-serif;color:#0e1117}
+.qs-pl .qs-tx small{font:600 11px/1 'Manrope',sans-serif;color:#4a5260}
