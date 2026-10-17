@@ -1,7 +1,9 @@
-/* Ilova ichidagi pleyer (egasi, 2026-10-17) - SINOV: hozircha faqat adminlarga ko'rinadi.
+/* Ilova ichidagi pleyer (egasi, 2026-10-17). Kutubxonadagi film kartasi shu sahifani ochadi (filmOch);
+   kartadagi kichik belgi va sahifadagi yuklab olish tugmasi - avvalgidek botga yuborish (js/05 play).
    Bitta film - ichida til, dublyaj va sifat tanlanadi (16 ta faylni yuklab olish shart emas).
    Fayllar Telegram'da qoladi; server (bot, hppleyer.py) ularni bo'lakma-bo'lak olib shu zahoti uzatadi.
-   Kim ko'rishini SERVER hal qiladi: /api/pleyer "yopiq" desa - sifat oynasida tugma chiqmaydi.
+   Kim ko'rishini SERVER hal qiladi (/pleyer ochiq|sinov): "yopiq" yoki xato bo'lsa - karta avvalgidek sifat oynasini
+   ochadi; kanalga a'zo bo'lmaganga - bot yuboradigan qoidaning o'zi (obuna taklifi).
    Ko'rinish «Kino zali»: kadr -> sarlavha -> kumush asosiy tugma -> «Ovoz va sifat» kartasi (pastdan tanlov,
    plSheet) -> kolleksiya qatori. Boshqaruv tugmalari o'zimizniki - har qurilmada bir xil.
    Almashtirganda film o'sha daqiqadan davom etadi; qayerda to'xtagani shu qurilmada eslanadi (hp_pl_pos).
@@ -13,8 +15,8 @@
     uz: { hp: "Garri Potter", fb: "Fantastik maxluqlar", qism: "-qism", watch: "Ko'rish", resume: "Davom etish · %s",
           pause: "Pauza", left: "Qolgan vaqt: %s", av: "Ovoz va sifat", rail: "Kolleksiya", now: "Hozir",
           lang: "Til", dub: "Dublyaj", q: "Sifat", chLang: "Qaysi tilda ko'rasiz?", chDub: "Qaysi dublyaj?", chQ: "Qaysi sifatda?",
-          soon: "Tez orada", bad: "Bu qurilmada ochilmadi", watchApp: "Ilovada ko'rish", test: "Sinov · faqat sizga ko'rinadi",
-          note: "Sinov rejimi — faqat sizga ko'rinadi. Film Telegram'dan serverimiz orqali keladi.",
+          soon: "Tez orada", bad: "Bu qurilmada ochilmadi", band: "Hozir ko'ruvchilar juda ko'p — birozdan keyin urinib ko'ring yoki filmni yuklab oling.",
+          note: "Internet sekin bo'lsa, HD yoki SD sifatni tanlang. Filmni yuklab olsangiz, internetsiz ham ko'rasiz.",
           bot: "Bot chatiga yuklab olish", soat: "soat", daq: "daqiqa", til: "til", dubl: "dublyaj",
           err: "Film ochilmadi. Boshqa sifatni tanlang yoki bot orqali yuklab oling.", wait: "Ulanmoqda…",
           alt: "Bu sifat qurilmangizda ochilmadi — %s ga o'tdik.", cant: "Bu qurilmada ochilmasligi mumkin",
@@ -23,8 +25,8 @@
     ru: { hp: "Гарри Поттер", fb: "Фантастические твари", qism: "-я часть", watch: "Смотреть", resume: "Продолжить · %s",
           pause: "Пауза", left: "Осталось: %s", av: "Звук и качество", rail: "Коллекция", now: "Сейчас",
           lang: "Язык", dub: "Дубляж", q: "Качество", chLang: "На каком языке смотреть?", chDub: "Какой дубляж?", chQ: "Какое качество?",
-          soon: "Скоро", bad: "Не открылось на этом устройстве", watchApp: "Смотреть в приложении", test: "Тест · видно только вам",
-          note: "Тестовый режим — видно только вам. Фильм идёт из Telegram через наш сервер.",
+          soon: "Скоро", bad: "Не открылось на этом устройстве", band: "Сейчас слишком много зрителей — попробуйте чуть позже или скачайте фильм.",
+          note: "Если интернет медленный, выберите HD или SD. Скачанный фильм можно смотреть без интернета.",
           bot: "Скачать в чат с ботом", soat: "ч", daq: "мин", til: "языка", dubl: "дубляжа",
           err: "Фильм не открылся. Выберите другое качество или скачайте через бота.", wait: "Подключение…",
           alt: "Это качество не открылось на вашем устройстве — переключили на %s.", cant: "Может не открыться на этом устройстве",
@@ -33,8 +35,8 @@
     en: { hp: "Harry Potter", fb: "Fantastic Beasts", qism: "", part: "Part ", watch: "Watch", resume: "Resume · %s",
           pause: "Pause", left: "%s left", av: "Audio & quality", rail: "Collection", now: "Now",
           lang: "Language", dub: "Dubbing", q: "Quality", chLang: "Which language?", chDub: "Which dubbing?", chQ: "Which quality?",
-          soon: "Coming soon", bad: "Didn't open on this device", watchApp: "Watch in the app", test: "Test · only you can see it",
-          note: "Test mode — only you can see it. The film streams from Telegram through our server.",
+          soon: "Coming soon", bad: "Didn't open on this device", band: "Too many viewers right now — try again a bit later or download the film.",
+          note: "If your internet is slow, pick HD or SD. Download the film to watch it offline.",
           bot: "Download to the bot chat", soat: "h", daq: "min", til: "languages", dubl: "dubs",
           err: "The film didn't open. Pick another quality or download it via the bot.", wait: "Connecting…",
           alt: "This quality didn't open on your device — switched to %s.", cant: "May not open on this device",
@@ -71,20 +73,16 @@
     })["catch"](function () { cb(null); });
   }
 
-  // Sifat oynasi ochilganda (js/05 play): server ruxsat bersa tepada "Ilovada ko'rish" tugmasi
-  function plQs(id) {
-    var b = $("qs-pl");
-    if (!b) { return; }
-    b.classList.add("hidden");
-    plLoad(id, function (res) {
-      if (!res || !res.ok) { return; }
-      if ($("qs").classList.contains("hidden") || $("qs").getAttribute("data-film") !== id) { return; }
-      var x = plTx();
-      b.querySelector("b").textContent = x.watchApp;
-      b.querySelector("small").textContent = x.test;
-      b.onclick = function () { qsClose(); plOpen(id, qsDub); };
-      b.classList.remove("hidden");
-    });
+  /* Kutubxonadagi film kartasi: pleyer. Server yopiq desa (rejim sinov) - 10 daqiqa so'ramasdan sifat oynasi. */
+  var PL_YOPIQ_KEY = "hp_pl_yopiq";
+  function plYopiq() {
+    try { return Date.now() - (parseInt(window.localStorage.getItem(PL_YOPIQ_KEY) || "0", 10) || 0) < 10 * 60 * 1000; } catch (e) { return false; }
+  }
+  function filmOch(id) {
+    var init = "";
+    try { init = (tg && tg.initData) || ""; } catch (e) {}
+    if (!init || plYopiq()) { play(id); return; }       // Telegram tashqarisi yoki pleyer yopiq - avvalgidek
+    plOpen(id, null);
   }
 
   /* ---------- NUSXALAR ---------- */
@@ -588,7 +586,7 @@
     pl.t = 0;
     pl.bad = {};
     pl.lang = lang;
-    pl.dub = dub || "my5";
+    pl.dub = dub || (typeof qsMain === "string" ? qsMain : "my5");
     pl.q = null;
     pl.drag = null;
     if (birinchi) { pl.scroll = window.scrollY || 0; }
@@ -601,6 +599,8 @@
       vid.addEventListener("playing", function () {
         box.classList.remove("kut");
         plRasmTekshir();
+        // Kutubxonada ✓ («ko'rilgan») va «keyingi film» - botdan olingandagidek
+        try { if (pl.id && !watched[key(pl.id)]) { watched[key(pl.id)] = true; persist(); } } catch (e) {}
         var xx = plTx(), m = $("pl-msg").textContent;
         if (m === xx.wait || m === xx.err) { plMsg(""); }       // "boshqa sifatga o'tdik" xabari o'z vaqtida yo'qoladi
       });
@@ -644,7 +644,20 @@
     plLoad(id, function (res) {
       if (pl.id !== id || $("scr-pleyer").classList.contains("hidden")) { return; }
       $("scr-pleyer").classList.remove("pl-yuk");
-      if (!res || !res.ok) { plMsg(plTx().err); return; }
+      if (res && res.error === "band") { plMsg(plTx().band); return; }
+      if (res && res.error === "not_subscribed") {
+        plClose();
+        showToast(T[lang].notSubscribed, "err");
+        openInBot(id, false);
+        return;
+      }
+      if (!res || !res.ok) {
+        // Pleyer yopiq (sinov rejimi) yoki server javob bermadi - film avvalgidek bot orqali
+        if (res && res.error === "yopiq") { try { window.localStorage.setItem(PL_YOPIQ_KEY, String(Date.now())); } catch (e) {} }
+        plClose();
+        play(id);
+        return;
+      }
       if (!res.ready) { plMsg(plTx().notReady); return; }
       pl.res = res;
       if (!plHas(pl.lang, pl.dub)) {
@@ -692,5 +705,6 @@
     $("scr-pleyer").classList.add("hidden");
     $("scr-pleyer").classList.remove("oyn");
     $("scr-cat").classList.remove("hidden");
+    try { renderCatalog(); } catch (e) {}
     try { window.scrollTo(0, pl.scroll); } catch (e) {}
   }

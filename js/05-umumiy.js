@@ -308,86 +308,8 @@
     return addNote(el, 3400);
   }
 
-  // Film yuborilgach chiqadigan xabar. Tasdiq oynasi o'rniga shu ishlatiladi:
-  // to'g'ri bosgan odam to'siqni sezmaydi, xato bosgan esa qaytara oladi.
-  // Bekor qilish muhlati. Aylana animatsiyasi ham shu vaqtga moslanadi:
-  // ikkalasi shu yerdan boshqariladi, shuning uchun ajralib qolmaydi.
-  var UNDO_LIFE = 5000;
-
-  // Strelka + atrofida bo'shab boruvchi aylana.
-  function undoIcon(ms) {
-    var wrap = document.createElement("span");
-    wrap.className = "u-ring";
-    wrap.innerHTML =
-      '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-        '<circle class="u-track" cx="12" cy="12" r="10"></circle>' +
-        '<circle class="u-prog" cx="12" cy="12" r="10" transform="rotate(-90 12 12)"></circle>' +
-        '<path class="u-arrow" transform="translate(6 6) scale(0.5)" ' +
-              'd="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 ' +
-                 '3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 ' +
-                 '11.03 17.15 8 12.5 8z"></path>' +
-      '</svg>';
-    var prog = wrap.querySelector(".u-prog");
-    if (prog) { prog.style.animationDuration = ms + "ms"; }
-    return wrap;
-  }
-
-  function showUndoNote(id, title, messageId) {
-    var t = T[lang];
-    var el = document.createElement("div");
-    el.className = "note ok note-undo";
-
-    var txt = document.createElement("span");
-    txt.className = "u-txt";
-    txt.textContent = "✅ " + t.sentTo(title);
-
-    var btn = document.createElement("button");
-    btn.className = "u-btn";
-    var ring = undoIcon(UNDO_LIFE);
-    var label = document.createElement("span");
-    label.textContent = t.undoBtn;
-    btn.appendChild(ring);
-    btn.appendChild(label);
-
-    btn.addEventListener("click", function () {
-      btn.disabled = true;
-      // Faqat yozuvni almashtiramiz - belgi joyida qoladi, aks holda
-      // tugma bosilgan zahoti "sakrab" ketardi.
-      label.textContent = "…";
-      var p = ring.querySelector(".u-prog");
-      if (p) { p.style.animationPlayState = "paused"; }
-      undoSend(id, messageId, el);
-    });
-
-    el.appendChild(txt);
-    el.appendChild(btn);
-    return addNote(el, UNDO_LIFE);
-  }
-
-  function undoSend(id, messageId, noteEl) {
-    var t = T[lang];
-    var init = "";
-    try { init = (tg && tg.initData) || ""; } catch (e) {}
-    if (!init || !window.fetch || !messageId) {
-      dismissNote(noteEl); showToast(t.undoFail, "err"); return;
-    }
-
-    window.fetch(API_UNDO, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": init },
-      body: JSON.stringify({ message_id: messageId })
-    }).then(function (r) { return r.json(); }).then(function (d) {
-      dismissNote(noteEl);
-      if (d && d.ok) {
-        // Xabar chatdan o'chdi, lekin ✓ qoladi: yuklab olingan film qaytib "olinmagan" bo'lmaydi.
-        showToast(t.undone);
-        return;
-      }
-      showToast(d && d.error === "expired" ? t.undoExpired : t.undoFail, "err");
-    })["catch"](function () {
-      dismissNote(noteEl); showToast(t.undoFail, "err");
-    });
-  }
+  /* «Bekor qilish» tugmasi (filmni chatdan qaytarish) 2026-10-17 da olib tashlandi (egasi): film kartasi endi
+     pleyerni ochadi, botga yuborish - alohida, ongli tugma (yuklab olish); behosdan bosilib ketmaydi. */
 
   /* ---------- FILM YUBORISH ---------- */
 
@@ -475,7 +397,6 @@
     $("qs-kick").textContent = x.ask;
     $("qs-title").textContent = qsFilmName(id);
     el.setAttribute("data-film", id);
-    plQs(id);              // ilova ichidagi pleyer (js/07-pleyer.js) - server ruxsat bersa tugma chiqadi
     $("qs-note").textContent = x.note;
     $("qs-close").textContent = x.close;
     // Dublyaj tanlovi: filmda ikkalasi bo'lsa tepada ikki tugma
@@ -561,7 +482,7 @@
         watched[key(id)] = true;
         renderCatalog();
         persist();
-        showUndoNote(id, res.title || "", res.message_id);
+        showToast("✅ " + t.sentTo(res.title || ""), "ok");
         yqHodisa("film");      // kutubxona yo'riqnomasi (09-yoriqnoma-kutubxona.js) film kelishini kutadi
         return;
       }

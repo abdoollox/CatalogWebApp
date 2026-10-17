@@ -71,7 +71,6 @@
   var API_SUBMIT_TASK = "https://bot.tizimshunos.uz/api/tasks/submit";
   var API_CHAT = "https://bot.tizimshunos.uz/api/chat";
   var API_SEND = "https://bot.tizimshunos.uz/api/send";
-  var API_UNDO = "https://bot.tizimshunos.uz/api/undo";
   var HOUSE_ORDER = ["gryffindor", "slytherin", "hufflepuff", "ravenclaw"];
   var cupData = null;
   var cupBusy = false;

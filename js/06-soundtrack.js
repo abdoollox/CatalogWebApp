@@ -758,7 +758,7 @@
       ticks.appendChild(s2);
     }
     $("hero-meta").textContent = SEEN_WORD[lang] + ": " + n + " / " + total;
-    hero.onclick = function () { play(m.id); };
+    hero.onclick = function () { filmOch(m.id); };
   }
 
   function rowSection(title, count) {
@@ -811,7 +811,8 @@
     var card = document.createElement("div");
     card.className = "card" + (!ready ? " soon" : (seen ? " seen" : "")) + (pending ? " exam" : "");
     card.style.background = CARD_BG;
-    if (ready) { card.addEventListener("click", function () { play(m.id); }); }
+    // Karta - pleyer (ilovada ko'rish); burchakdagi belgi - botga yuklab olish (2026-10-17)
+    if (ready) { card.addEventListener("click", function () { filmOch(m.id); }); }
 
     var img = document.createElement("img");
     img.className = "card-img";

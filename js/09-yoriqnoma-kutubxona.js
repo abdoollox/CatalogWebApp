@@ -2,7 +2,8 @@
    topadi, dublyaj va sifatni qanday tanlaydi, tilni o'zgartirib boshqa tildagi filmlar, soundtrack eshitish/yuklab olish, kitob o'qish»).
    Kutubxonaning O'ZIDA ko'rsatiladi. KO'RINISHI ZAMONAVIY (egasi, 2026-10-12: kutubxona Garri Potter uslubida emas, zamonaviy dizaynda —
    yo'riqnoma ham shunday): qahramon/rasm yo'q, qadamda qisqa sarlavha + matn (yqOch(.., {zamon: 1}), css «ZAMONAVIY KO'RINISH»). Bir o'tirishda ko'p narsa bo'lmasin (egasi) - TO'RT QISM, har biri alohida tashrifda:
-     1) filmlar - birinchi kirishda (hali film olmagan odamga): film -> dublyaj -> sifat -> o'zi bosadi -> film bot chatiga keldi;
+     1) filmlar - birinchi kirishda (hali film olmagan odamga): film kartasi -> pleyer: ko'rish, ovoz va sifat, yuklab olish -> ortga
+        (2026-10-17 gacha: dublyaj -> sifat -> film bot chatiga);
      2) til - keyingi safar kutubxona ochilganda; 3) soundtrack; 4) kitoblar.
    Qismlar orasida kamida KQ_ORA o'tadi; har qism kutubxona ochilgandan KY_KUT keyin boshlanadi. Belgi hp_kq (oxirgi tugagan qism).
    Kutubxona tuzilishi o'zgarsa - shu qadamlarni ham yangilang. Dvigatel: yqOch (09-yoriqnoma.js). */
@@ -13,11 +14,10 @@
   var KQ_TX = {
     uz: { f1: ["Filmlar", "Garri Potterning sakkizta filmi shu yerda, pastroqda — Fantastik maxluqlar. Hammasi bepul."],
           f2: ["Filmni tanlang", "Ko'rmoqchi bo'lgan filmni bosing — masalan, birinchisini."],
-          f3: ["Dublyaj", "O'zbek tilida ikki xil dublyaj bor. Qaysi biri yoqsa, o'shani tanlang."],
-          f4: ["Sifat", "Full HD — eng tiniq, hajmi katta. HD — o'rtacha. SD — eng yengil, internet sekin bo'lsa qulay. Raqam — fayl hajmi, qulf — bu sifat hali tayyor emas."],
-          f5: ["Yuborish", "Sifatni bosing — film shu zahoti bot chatiga yuboriladi."],
-          f6: ["Yuborilmoqda", "Film bot chatiga ketmoqda…"], f6b: "Kuting…",
-          f7: ["Tayyor", "Film bot chatida — Telegram'da botni ochib tomosha qiling. Keyingi film shu yerda turadi, uni ham xuddi shunday olasiz."],
+          p1: ["Ko'rish", "Film ilovaning o'zida, shu yerda boshlanadi. To'xtatib qo'ysangiz, keyingi safar o'sha joydan davom etadi."],
+          p2: ["Ovoz va sifat", "Tilni, dublyajni va sifatni shu yerda tanlaysiz — film to'xtamasdan o'sha daqiqadan davom etadi. Internet sekin bo'lsa — HD yoki SD."],
+          p3: ["Yuklab olish", "Filmni bot chatiga yuklab olsangiz, internetsiz ham ko'rasiz."],
+          p4: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
           l1: ["Boshqa tilda", "Filmlarni rus yoki ingliz tilida ham olsa bo'ladi. Profilni oching."],
           l2: ["Til", "Shu yerda ilova tilini tanlaysiz. Til almashsa, filmlar ham o'sha tilda yuboriladi."],
           l3: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
@@ -34,11 +34,10 @@
           k5: ["Mundarija", "Boblar, xatcho'plar va qidiruv."] },
     ru: { f1: ["Фильмы", "Здесь восемь фильмов о Гарри Поттере, ниже — Фантастические твари. Всё бесплатно."],
           f2: ["Выберите фильм", "Нажмите на фильм, который хотите посмотреть, — например, первый."],
-          f3: ["Озвучка", "На узбекском есть две озвучки. Выберите ту, что нравится."],
-          f4: ["Качество", "Full HD — самое чёткое, файл большой. HD — среднее. SD — самое лёгкое, удобно при медленном интернете. Число — размер файла, замок — качество ещё не готово."],
-          f5: ["Отправка", "Нажмите на качество — фильм сразу придёт в чат с ботом."],
-          f6: ["Отправляется", "Фильм отправляется в чат с ботом…"], f6b: "Подождите…",
-          f7: ["Готово", "Фильм в чате с ботом — откройте бота в Telegram и смотрите. Следующий фильм ждёт здесь, его можно взять так же."],
+          p1: ["Смотреть", "Фильм начинается прямо здесь, в приложении. Остановите — в следующий раз продолжится с того же места."],
+          p2: ["Звук и качество", "Здесь выбираются язык, озвучка и качество — фильм продолжится с той же минуты. Медленный интернет — выберите HD или SD."],
+          p3: ["Скачать", "Скачайте фильм в чат с ботом — тогда можно смотреть без интернета."],
+          p4: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
           l1: ["Другой язык", "Фильмы можно получить на узбекском или английском. Откройте профиль."],
           l2: ["Язык", "Здесь выбирается язык приложения. Сменится язык — фильмы будут приходить на нём."],
           l3: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
@@ -55,11 +54,10 @@
           k5: ["Оглавление", "Главы, закладки и поиск."] },
     en: { f1: ["Films", "All eight Harry Potter films are here, and Fantastic Beasts below. All free."],
           f2: ["Pick a film", "Tap the film you want to watch — the first one, for example."],
-          f3: ["Dub", "There are two Uzbek dubs. Pick the one you like."],
-          f4: ["Quality", "Full HD — sharpest, large file. HD — medium. SD — lightest, handy on slow internet. The number is the file size; a lock means that quality isn't ready yet."],
-          f5: ["Send", "Tap a quality — the film goes straight to your chat with the bot."],
-          f6: ["Sending", "The film is on its way to your chat with the bot…"], f6b: "Please wait…",
-          f7: ["Done", "The film is in your chat with the bot — open the bot in Telegram and enjoy. The next film waits right here; get it the same way."],
+          p1: ["Watch", "The film starts right here in the app. Stop it, and next time it picks up where you left off."],
+          p2: ["Audio & quality", "Pick the language, dub and quality here — the film keeps playing from the same minute. Slow internet? Choose HD or SD."],
+          p3: ["Download", "Download the film to your chat with the bot to watch it offline."],
+          p4: ["Back", "Tap to go back to the library."],
           l1: ["Other languages", "You can get the films in Uzbek or Russian too. Open your profile."],
           l2: ["Language", "Choose the app language here. Change it and the films come in that language."],
           l3: ["Back", "Tap to return to the library."],
@@ -90,14 +88,10 @@
 
   function kqQism(n) {
     if (n === 1) {
-      var q = [kqQ("#rows .rowsec .rowsec-h", "f1"), kqQ("#rows .card:not(.soon)", "f2", { tap: true })];
-      var ikki = false;
-      try { ikki = qsDubList(MOVIES[0].id).length > 1; } catch (e) {}
-      if (ikki) { q.push(kqQ("#qs #qs-dubs", "f3")); }
-      return q.concat([kqQ("#qs #qs-list", "f4"),
-                       kqQ("#qs #qs-list .qs-row:not(.lock)", "f5", { tap: true }),
-                       kqQ("#rows .card:not(.soon)", "f6", { kut: "film", b: kqT("f6b"), qolsiz: true }),     // tanlangan film kartasi
-                       kqQ(kqKeyingi, "f7")]);
+      // 2026-10-17: karta pleyerni ochadi - film ilovada ko'riladi, yuklab olish alohida tugma
+      return [kqQ("#rows .rowsec .rowsec-h", "f1"), kqQ("#rows .card:not(.soon)", "f2", { tap: true }),
+              kqQ("#scr-pleyer .pl-cta-row", "p1"), kqQ("#scr-pleyer #pl-rows", "p2"),
+              kqQ("#scr-pleyer #pl-bot", "p3"), kqQ("#scr-pleyer #pl-back", "p4", { tap: true })];
     }
     if (n === 2) {
       return [kqQ("#scr-cat #pm-btn", "l1", { tap: true }), kqQ("#pm #pm-langs", "l2"), kqQ("#pm #pm-close", "l3", { tap: true })];
@@ -109,11 +103,6 @@
     }
     return [kqQ("#rows .kt-shelf", "k1"), kqQ("#rows .kt-info .kt-go", "k2", { tap: true }),
             kqQ("#scr-kitob #kt-acts button", "k3", { tap: true }), kqQ("#scr-oqish #kr-aa", "k4"), kqQ("#scr-oqish #kr-nav", "k5")];
-  }
-  // «Keyingi film» kartasi (yo'q bo'lsa - birinchi film kartasi)
-  function kqKeyingi() {
-    var h = $("hero");
-    return h && h.getClientRects().length ? h : document.querySelector("#rows .card:not(.soon)");
   }
   // Qism boshlanishi uchun kerakli joy kutubxonada bormi (albomlar/kitoblar serverdan kelmagan bo'lsa - keyinroq)
   var KQ_BOSH = { 1: "#rows .card:not(.soon)", 2: "#scr-cat #pm-btn", 3: "#rows .ms-row .ms-card:not(.lock)", 4: "#rows .kt-info .kt-go" };

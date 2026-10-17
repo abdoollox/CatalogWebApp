@@ -799,38 +799,6 @@ button.glass:active .tube{transform:scale(.97)}
 .note.on{opacity:1;transform:translateY(0)}
 .note.ok{border-color:var(--ok)}
 .note.err{border-color:#c96a6a}
-/* Bekor qilish taklifi — tugmasi bosiladigan bo'lishi kerak */
-.note-undo{display:flex;align-items:center;gap:12px;pointer-events:auto;text-align:left}
-.note-undo .u-txt{flex:1}
-.note-undo .u-btn{
-  flex:none;border:0;background:transparent;cursor:pointer;
-  font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:.3px;
-  color:var(--ok);padding:4px 2px;white-space:nowrap;
-  display:flex;align-items:center;gap:7px;
-}
-.note-undo .u-btn:active{opacity:.6}
-.note-undo .u-btn:disabled{color:var(--dim);cursor:default}
-
-/* Bekor qilish belgisi: strelka atrofidagi aylana muhlat tugashi bilan
-   bo'shab boradi - vaqt ketayotgani ko'rinib turadi (Telegram uslubi).
-   Animatsiya davomiyligi JS dan beriladi, shunda muhlat bir joydan
-   boshqariladi va ikkisi bir-biridan ajralib qolmaydi. */
-.u-ring{display:block;width:19px;height:19px;flex:none}
-.u-ring svg{width:100%;height:100%;display:block;overflow:visible}
-.u-ring .u-track{fill:none;stroke:rgba(255,255,255,.16);stroke-width:2}
-.u-ring .u-prog{
-  fill:none;stroke:var(--ok);stroke-width:2;stroke-linecap:round;
-  stroke-dasharray:62.83;stroke-dashoffset:0;
-  animation:u-drain linear forwards;
-}
-.u-ring .u-arrow{fill:var(--ok)}
-.u-btn:disabled .u-ring .u-prog,
-.u-btn:disabled .u-ring .u-arrow{stroke:var(--dim);fill:var(--dim)}
-@keyframes u-drain{to{stroke-dashoffset:62.83}}
-/* Harakatni kamaytirish so'ralgan bo'lsa aylana to'liq turadi */
-@media (prefers-reduced-motion: reduce){
-  .u-ring .u-prog{animation:none}
-}
 /* --- CHAT (Telegramdek: o'z ichida suriladigan ro'yxat, pastda yozish maydoni) --- */
 #scr-chat{position:fixed;top:0;left:0;right:0;z-index:50;max-width:440px;margin:0 auto;
   height:var(--tg-viewport-height,100vh);display:flex;flex-direction:column;
@@ -4188,12 +4156,3 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .pl-opt:not(:disabled):active{transform:scale(.985)}
 @keyframes plFade{from{opacity:0}to{opacity:1}}
 @keyframes plUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
-/* Sifat oynasida: "Ilovada ko'rish" (faqat server ruxsat bergan odamga) */
-.qs-pl{display:flex;align-items:center;gap:12px;width:100%;margin:14px 0 0;padding:13px 16px;border-radius:14px;border:0;
-  background:#eef1f5;color:#0e1117;text-align:left;cursor:pointer}
-.qs-pl:active{transform:scale(.985)}
-.qs-pl.hidden{display:none}
-.qs-pl-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#0e1117;color:#eef1f5}
-.qs-pl-ic svg{width:16px;height:16px;margin-left:2px}
-.qs-pl .qs-tx b{font:700 16px/1.1 'Manrope',sans-serif;color:#0e1117}
-.qs-pl .qs-tx small{font:600 11px/1 'Manrope',sans-serif;color:#4a5260}
