@@ -138,7 +138,7 @@
   // Holatni so'rash: poyga oqshomida har 1,5 soniyada, start yaqinlashganda 5 s, boshqa payt daqiqada bir
   function pgLoad() {
     clearTimeout(pgTm);
-    if ($("scr-poyga").classList.contains("hidden")) { return; }
+    if ($("scr-poyga").classList.contains("hidden") || pgD) { return; }
     pgPost({}, function (res) {
       if ($("scr-poyga").classList.contains("hidden")) { return; }
       if (res && res.tour) { pgApply(res); }
@@ -245,6 +245,7 @@
 
   function pgRender() {
     var d = pgData, ph = d ? d.phase : "kutish", oyin = ph === "poyga";
+    if (pgD) { return; }                         // do'st bilan poyga ochiq - u o'z sahifasini chizadi (#pg-dost)
     $("pg-info-b").classList.toggle("hidden", !!oyin);
     $("pg-home").classList.toggle("hidden", !!oyin || ph === "tugadi");
     $("pg-oyin").classList.toggle("hidden", !oyin);
@@ -272,7 +273,9 @@
     var gk = golibKarta(d.champs);                // so'nggi poyga g'oliblari: o'rin va ball (keyingi poygagacha turadi)
     if (gk) { box.appendChild(gk); }
     if (!zal) {                                   // mashq - startga oz qolganda chalg'itmasin
-      box.appendChild(tpMashq(tp.ballsiz, [{ av: tpRasm(IMG_DIR + "hub/poyga.webp"), nom: t.mashq, sub: pgMashq ? t.mashqN(pgSek(pgMashq.ms)) : t.mashqS, keng: true, fn: pgMashqUch }]));
+      var dk = tpDost(function () { tkOyna("poyga"); });           // do'st bilan poyga (o'quvchi taklifi, 2026-10-17)
+      dk.keng = true;
+      box.appendChild(tpMashq(tp.ballsiz, [{ av: tpRasm(IMG_DIR + "hub/poyga.webp"), nom: t.mashq, sub: pgMashq ? t.mashqN(pgSek(pgMashq.ms)) : t.mashqS, keng: true, fn: pgMashqUch }, dk]));
     }
     box.appendChild(tpQoida([t.q1, t.q2, t.q3(r.every || 10)], tpOrinSov(r.points), t.keyinP(r.next_to || 6, r.next_pts || 5)));
     if (!zal) { box.appendChild(tpYoz(tr.players, tr.n)); }
@@ -425,8 +428,196 @@
     document.body.appendChild(orqa);
   }
 
+  /* ================= DO'ST BILAN POYGA (o'quvchi taklifi, 2026-10-17; Toshchalar/Maxluqlar jangi qolipida) =================
+     Taklif: «Do'st bilan» katagi -> tkOyna("poyga") (chat yoki Telegram). Server: {dost: 1}, {dqabul}, {dbekor}, {doyin, dpos | dfin | dtashla}.
+     Qabul qilingach ikkalasi DOST_SANOQ soniyadan keyin BIR XIL yo'ldan (30 halqa) uchadi; marraga tezroq yetgan yutadi; ball yo'q.
+     Uchish paytida raqib joyi maydonning o'ng chetidagi poyga chizig'ida ko'rinadi (uchPoygaTaxta). Sahifa: #pg-dost. */
+  var PGD_T = {
+    uz: { lab: "Do'stona poyga", dost: "Do'st bilan", kutT: "Do'stingizni kutyapmiz", kutS: "Taklif chatda turibdi — do'stingiz qabul qilishi bilan poyga boshlanadi",
+          muddat: function (v) { return "Taklif yana " + v + " amal qiladi"; }, kutB: "Raqib kutilmoqda", tg: "Telegram chatiga yuborish", bekor: "Bekor qilish",
+          start: function (s) { return "Start " + s + " soniyadan keyin"; }, ketmoqda: "Poyga ketmoqda", qayt: "Poygaga qaytish", qaytS: "Vaqt to'xtamaydi — tezroq qayting!",
+          marra: "Marraga yetdingiz! Raqib kutilmoqda…", yutdi: "G'alaba!", yutqazdi: "Mag'lubiyat", durang: "Durang", golib: function (n) { return n + " yutdi"; },
+          why: { kelmadi: "Raqib uchmadi", tashladi: "Raqib poygani tark etdi", vaqt: "Vaqt tugadi — ko'proq halqa o'tgan yutdi", ikkalasi: "Hech kim uchmadi" },
+          yana: "Yana o'ynash", ortga: "Ortga", siz: "siz", uchT: "Uchuvchilar", halqaS: function (n) { return n + " halqa"; }, halqa: function (n, m) { return n + " / " + m; },
+          oldinda: function (q) { return "Siz oldindasiz · marragacha " + q; }, ortda: function (q) { return "Raqib oldinda · marragacha " + q; },
+          eBand: "Bu taklifni boshqa sehrgar qabul qilib bo'ldi", eMuddat: "Taklif muddati tugagan", aloqa: "Aloqa yo'q — qayta urinib ko'ring" },
+    ru: { lab: "Дружеская гонка", dost: "С другом", kutT: "Ждём вашего друга", kutS: "Приглашение в чате — гонка начнётся, как только друг его примет",
+          muddat: function (v) { return "Приглашение действует ещё " + v; }, kutB: "Ждём соперника", tg: "Отправить в чат Telegram", bekor: "Отменить",
+          start: function (s) { return "Старт через " + s + " с"; }, ketmoqda: "Гонка идёт", qayt: "Вернуться в гонку", qaytS: "Время идёт — возвращайтесь скорее!",
+          marra: "Вы на финише! Ждём соперника…", yutdi: "Победа!", yutqazdi: "Поражение", durang: "Ничья", golib: function (n) { return "Победил " + n; },
+          why: { kelmadi: "Соперник не взлетел", tashladi: "Соперник покинул гонку", vaqt: "Время вышло — победил тот, кто пролетел больше колец", ikkalasi: "Никто не взлетел" },
+          yana: "Ещё раз", ortga: "Назад", siz: "вы", uchT: "Пилоты", halqaS: function (n) { return n + " колец"; }, halqa: function (n, m) { return n + " / " + m; },
+          oldinda: function (q) { return "Вы впереди · до финиша " + q; }, ortda: function (q) { return "Соперник впереди · до финиша " + q; },
+          eBand: "Это приглашение уже принял другой", eMuddat: "Срок приглашения истёк", aloqa: "Нет связи — попробуйте ещё раз" },
+    en: { lab: "Friendly race", dost: "With a friend", kutT: "Waiting for your friend", kutS: "The invite is in the chat — the race starts as soon as your friend accepts",
+          muddat: function (v) { return "The invite is valid for " + v + " more"; }, kutB: "Waiting for a rival", tg: "Send to a Telegram chat", bekor: "Cancel",
+          start: function (s) { return "Start in " + s + " s"; }, ketmoqda: "Race in progress", qayt: "Back to the race", qaytS: "The clock is running — hurry back!",
+          marra: "You reached the finish! Waiting for your rival…", yutdi: "Victory!", yutqazdi: "Defeat", durang: "Draw", golib: function (n) { return n + " won"; },
+          why: { kelmadi: "Your rival never took off", tashladi: "Your rival left the race", vaqt: "Time is up — more hoops wins", ikkalasi: "Nobody took off" },
+          yana: "Play again", ortga: "Back", siz: "you", uchT: "Flyers", halqaS: function (n) { return n + " hoops"; }, halqa: function (n, m) { return n + " / " + m; },
+          oldinda: function (q) { return "You are ahead · " + q + " to the finish"; }, ortda: function (q) { return "Rival ahead · " + q + " to the finish"; },
+          eBand: "Someone else has already accepted this invite", eMuddat: "The invite has expired", aloqa: "No connection — please try again" }
+  };
+  function pgdT() { return PGD_T[lang] || PGD_T.uz; }
+  var pgD = null;          // {id, g, tm, olingan, uch (uchyapti), ortga (uchishdan chiqdi), marra (o'z vaqti yuborildi)}
+  var pgdLocal = null;
+  function pgdSample(body) {
+    var h = Date.now() / 1000;
+    if (!pgdLocal || body.dost || body.dqabul) { pgdLocal = { t0: h, st: body.dqabul ? "ketmoqda" : "kutmoqda", me: body.dqabul ? "b" : "a" }; }
+    var L2 = pgdLocal, g = { id: 9, state: L2.st, me: L2.me, friend: true, rings: 30, every: 10, a: { uid: 1, name: "Garri", house: "gryffindor" },
+      b: L2.st === "kutmoqda" ? null : { uid: 2, name: "Draco", house: "slytherin" }, pos: [0, 0], ms: [null, null], winner: null, why: null };
+    if (L2.st === "kutmoqda") { g.expires_in = 1700; } else { g.seed = 4242; g.start_in = 8 - (h - L2.t0); g.pos = [Math.min(30, Math.max(0, h - L2.t0 - 8) * 0.55), body.dpos || 0]; }
+    if (body.dfin != null) { L2.st = "tugadi"; L2.fin = body.dfin; }
+    if (L2.st === "tugadi") { g.state = "tugadi"; g.ms = [L2.fin ? L2.fin + 2100 : 47300, L2.fin || 44900]; g.pos = [30, 30]; g.winner = L2.me === "b" ? "b" : "a"; g.why = "oyin"; }
+    return { ok: true, dost: g };
+  }
+  function pgdPost(body, cb) {
+    body = body || {};
+    body.lang = lang;
+    if (!window.fetch) { return; }
+    window.fetch(API_POYGA, { method: "POST", headers: { "Content-Type": "application/json", "X-Telegram-Init-Data": drInit() }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) { cb(res && (res.dost || res.ok === false || res.bekor_ok != null) ? res : (MS_LOCAL ? pgdSample(body) : res)); })
+      ["catch"](function () { cb(MS_LOCAL ? pgdSample(body) : null); });
+  }
+  // «Do'st bilan» -> tkOyna("poyga"): Telegram tanlansa shu yerga (tgga), chat tanlansa server taklifni o'zi yaratadi (tkInvite)
+  function pgDostBoshla(tgga) {
+    pgdPost({ dost: 1 }, function (res) {
+      if (!res || !res.dost) { showToast(pgdT().aloqa, "err"); return; }
+      pgDostOch(res.dost.id, res.dost);
+      if (tgga) { tgTaklif("poyga", res.dost.id); }
+    });
+  }
+  // Chatdagi kartadan yoki Telegram havolasidan: qabul qilib, poygaga kiradi
+  function pgDostQabul(id) {
+    var t = pgdT();
+    try { $("scr-cat").classList.add("hidden"); $("scr-hub").classList.add("hidden"); } catch (e) {}
+    pgdPost({ dqabul: id }, function (res) {
+      if (res && res.dost) { pgDostOch(res.dost.id, res.dost); return; }
+      showToast(res && res.error === "band" ? t.eBand : res && res.error === "muddat" ? t.eMuddat : t.aloqa, "err");
+      pgKorsat();
+    });
+  }
+  function pgDostOch(id, g0) {
+    pgdStop();
+    clearTimeout(pgTm);
+    clearInterval(pgSoat);
+    pgD = { id: id, g: null, tm: null, olingan: 0, uch: false, ortga: false, marra: false };
+    pgdKorsat();
+    if (g0) { pgdQabul(g0); }
+    pgdSor();
+  }
+  function pgdKorsat() {
+    drShowGame("scr-poyga");
+    $("pg-kick").textContent = pgdT().lab;
+    $("pg-ttl").textContent = pgT().ttl;
+    ["pg-home", "pg-oyin", "pg-end", "pg-info-b"].forEach(function (k) { $(k).classList.add("hidden"); });
+    $("pg-dost").classList.remove("hidden");
+  }
+  function pgdStop() { if (pgD) { clearTimeout(pgD.tm); } }
+  function pgdYop() {
+    if (pgD && pgD.uch) { uchPoygaToxta(); }
+    pgdStop();
+    pgD = null;
+    $("pg-dost").classList.add("hidden");
+    $("pg-dost").innerHTML = "";
+    pgKorsat();
+  }
+  function pgdSor() {
+    if (!pgD) { return; }
+    var me = pgD, body = { doyin: pgD.id };
+    clearTimeout(pgD.tm);
+    if (pgD.uch) { body.dpos = uchPoygaPos(); }
+    pgdPost(body, function (res) {
+      if (pgD !== me) { return; }
+      if (res && res.dost) { pgdQabul(res.dost); }
+      var g = pgD.g;
+      if (!g || g.state !== "tugadi" || pgD.uch) { pgD.tm = setTimeout(pgdSor, pgD.uch ? 1000 : 1500); }
+    });
+  }
+  function pgdMen(g) { return g && g.me ? (g.me === "a" ? 0 : 1) : -1; }
+  function pgdQabul(g) {
+    if (!pgD) { return; }
+    pgD.g = g;
+    pgD.olingan = Date.now();
+    var i = pgdMen(g);
+    if (pgD.uch) {
+      if (g.state === "tugadi" && g.ms[i] == null) { pgD.uch = false; uchPoygaToxta(); pgdKorsat(); pgdChiz(); return; }
+      var r = g.me === "a" ? g.b : g.a, rp = g.pos[1 - i] || 0, men = uchPoygaPos(), oldin = men >= rp, q = Math.max(0, Math.ceil(g.rings - men));
+      uchPoygaTaxta({ orin: oldin ? 1 : 2, tirik: 2, qoldi: q, oxirgi: !oldin, cpPos: g.rings, yoz: oldin ? pgdT().oldinda(q) : pgdT().ortda(q),
+                      raqib: r ? [{ k: "r", ism: r.name, uy: r.house, pos: rp }] : [] });
+      return;
+    }
+    if (g.state === "ketmoqda" && i >= 0 && g.ms[i] == null && !pgD.ortga && !pgD.marra) { pgdUch(); return; }
+    pgdChiz();
+  }
+  function pgdUch() {
+    var g = pgD.g, t = pgdT(), i = pgdMen(g), qol = g.start_in - (Date.now() - pgD.olingan) / 1000, raq = g.me === "a" ? g.b : g.a;
+    pgD.uch = true; pgD.ortga = false;
+    if (dkDaraja("supurgi")) { dkXabar("supurgi", "supurgi", dkFoiz("supurgi", "speed")); }
+    uchPoyga({ urug: g.seed, halqa: g.rings, har: g.every || 10, mashq: true, joy: qol < 0 ? (g.pos[i] || 0) : 0,
+      kut: Math.max(0, qol * 1000), otdi: Math.max(0, -qol * 1000), sarlavha: t.lab, ost: raq ? "⚔ " + raq.name : pgT().ttl,
+      tugadi: function (nat) {
+        if (!pgD) { return; }
+        pgD.uch = false; pgD.marra = true;
+        pgdKorsat(); pgdChiz();
+        pgdPost({ doyin: pgD.id, dfin: Math.round(nat.ms) }, function (res) { if (pgD && res && res.dost) { pgdQabul(res.dost); pgdSor(); } });
+      },
+      ortga: function () { if (!pgD) { return; } pgD.uch = false; pgD.ortga = true; pgdKorsat(); pgdChiz(); pgdSor(); } });
+  }
+  function pgdSek(ms) { return ms == null ? null : (Math.round(ms / 100) / 10).toFixed(1).replace(".", lang === "en" ? "." : ",") + " s"; }
+  // Sahifa: holat kartasi (kutish / start / natija) va ikkala uchuvchining yo'li
+  function pgdChiz() {
+    var box = $("pg-dost"), g = pgD && pgD.g, t = pgdT();
+    if (!g) { return; }
+    box.innerHTML = "";
+    var i = pgdMen(g), o = { lab: t.dost }, tug = [];
+    if (g.state === "kutmoqda") {
+      o.sar = i === 0 ? t.kutT : t.kutB;
+      o.iz = i === 0 ? t.kutS + " · " + t.muddat(pgQol(g.expires_in || 0)) : "";
+      if (i === 0) {
+        tug.push([t.tg, function () { tgTaklif("poyga", g.id); }, ""]);
+        tug.push([t.bekor, function () { pgdPost({ dbekor: g.id }, function () {}); pgdYop(); }, "gb-ikki"]);
+      }
+    } else if (g.state === "ketmoqda") {
+      var qol = g.start_in - (Date.now() - pgD.olingan) / 1000;
+      o.sar = qol > 0 ? t.start(Math.ceil(qol)) : pgD.marra || (i >= 0 && g.ms[i] != null) ? t.marra : t.ketmoqda;
+      if (i >= 0 && g.ms[i] == null && pgD.ortga) { o.iz = t.qaytS; tug.push([t.qayt, function () { pgD.ortga = false; pgdUch(); }, ""]); }
+    } else {
+      var yut = g.winner ? (g.winner === "a" ? 0 : 1) : -1, raqNomi = (g.winner === "a" ? g.a : g.b || {}).name || "";
+      o.sar = i < 0 ? (yut < 0 ? t.durang : t.golib(raqNomi)) : yut < 0 ? t.durang : yut === i ? t.yutdi : t.yutqazdi;
+      o.iz = g.why && g.why !== "oyin" && t.why[g.why] ? (g.why === "tashladi" && yut !== i && i >= 0 ? "" : t.why[g.why]) : "";
+      if (i >= 0) { tug.push([t.yana, function () { pgdYop(); tkOyna("poyga"); }, ""]); }
+      tug.push([t.ortga, pgdYop, "gb-ikki"]);
+    }
+    box.appendChild(tpHero(o));
+    // ikkala uchuvchi: yo'l chizig'i, vaqt
+    var k = drEl("div", "tp-card pgd-k");
+    [[g.a, 0], [g.b, 1]].forEach(function (p) {
+      var u = p[0], j = p[1];
+      if (!u) { return; }
+      var r = drEl("div", "pgd-r" + (g.winner && g.winner === (j ? "b" : "a") ? " g" : "") + (j === i ? " men" : ""));
+      var bosh = drEl("div", "pgd-h"), cr = cupCrestImg(u.house, 18);
+      if (cr) { bosh.appendChild(cr); }
+      bosh.appendChild(drEl("b", "", u.name + (j === i ? " (" + t.siz + ")" : "")));
+      bosh.appendChild(drEl("em", "", pgdSek(g.ms[j]) || t.halqa(Math.floor(g.pos[j] || 0), g.rings)));
+      r.appendChild(bosh);
+      var ch = drEl("span", "pgd-ch"), ic = drEl("i", "");
+      ic.style.width = Math.min(100, 100 * (g.pos[j] || 0) / (g.rings || 30)) + "%";
+      ch.appendChild(ic);
+      r.appendChild(ch);
+      k.appendChild(r);
+    });
+    if (g.b) { box.appendChild(tpSek(t.uchT, t.halqaS(g.rings))); box.appendChild(k); }
+    if (tug.length) {
+      var tb = drEl("div", "gb-e-b pgd-b");
+      tug.forEach(function (q) { var b = drEl("button", "dr-btn" + (q[2] ? " " + q[2] : ""), q[0]); b.type = "button"; b.addEventListener("click", q[1]); tb.appendChild(b); });
+      box.appendChild(tb);
+    }
+  }
+
   function pgSetup() {
-    $("pg-back").addEventListener("click", pgYop);
+    $("pg-back").addEventListener("click", function () { if (pgD) { pgdYop(); return; } pgYop(); });
     $("pg-info-b").addEventListener("click", pgInfo);
   }
 

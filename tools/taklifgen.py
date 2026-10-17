@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Do'stni Telegram chatidan chaqirish kartalari (duel, toshchalar, maxluqlar jangi) uchun 16:9 rasm: img/<tur>_<til>.jpg.
+"""Do'stni Telegram chatidan chaqirish kartalari (duel, toshchalar, maxluqlar jangi, poyga) uchun 16:9 rasm: img/<tur>_<til>.jpg.
 
 Uslub shaxmat kartasidagidek (chessgen.py): qorong'i fon, oq serif sarlavha, oltin bosh harflar;
 o'ngda - o'yin rasmi oltin ramkali «qasr darchasi» ichida (bosh sahifa kataklari kabi).
 
 ISHLATISH (CatalogWebApp papkasida, faqat macOS)
     swiftc -O tools/wksnap.swift -o /tmp/wksnap
-    python3 tools/taklifgen.py <duel rasmi> <toshchalar rasmi> [maxluqlar jangi rasmi]
+    python3 tools/taklifgen.py <duel rasmi> <toshchalar rasmi> [maxluqlar jangi rasmi] [poyga rasmi]
     (asl rasmlar: dizayn-tizimi/hub/hub-2.png ning pastki chap choragi, dizayn-tizimi/toshchalar/katak.jpeg,
-     dizayn-tizimi/kartalar/katak.jpeg)
+     dizayn-tizimi/kartalar/katak.jpeg, dizayn-tizimi/hub/hub-5-poyga.jpeg)
+    Faqat bittasini qayta yasash: TAKLIF_FAQAT=poyga python3 tools/taklifgen.py ...
 """
 
 import base64
@@ -40,6 +41,11 @@ TEXT = {
         "uz": ("Garri Potter kolleksiyasi", "Maxluqlar", "JANGI", "Do'stingiz sizni jangga chaqirmoqda", ["har raundda bitta karta", "kuchlisi raundni oladi"]),
         "ru": ("Коллекция «Гарри Поттер»", "Битва", "СУЩЕСТВ", "Друг зовёт вас на битву", ["одна карта за раунд", "сильнейшая берёт раунд"]),
         "en": ("Harry Potter Collection", "Creature", "BATTLE", "A friend challenges you to a battle", ["one card per round", "the stronger card takes it"]),
+    },
+    "poyga": {
+        "uz": ("Garri Potter kolleksiyasi", "Supurgi", "POYGASI", "Do'stingiz sizni poygaga chaqirmoqda", ["halqalar o'rtasidan uching", "marraga birinchi yeting"]),
+        "ru": ("Коллекция «Гарри Поттер»", "Гонка", "НА МЁТЛАХ", "Друг вызывает вас на гонку", ["летите через центр колец", "будьте первым на финише"]),
+        "en": ("Harry Potter Collection", "Broom", "RACE", "A friend challenges you to a race", ["fly through the centre of the hoops", "be first to the finish"]),
     },
 }
 
@@ -103,6 +109,11 @@ def main():
     arts = {"duel": data_url(duel_src, duel_crop), "tosh": data_url(sys.argv[2])}
     if len(sys.argv) > 3:
         arts["mjang"] = data_url(sys.argv[3])
+    if len(sys.argv) > 4:
+        arts["poyga"] = data_url(sys.argv[4])
+    faqat = os.getenv("TAKLIF_FAQAT")
+    if faqat:
+        arts = {k: v for k, v in arts.items() if k == faqat}
     tmp = tempfile.mkdtemp()
     for tur in arts:
         for lang in TEXT[tur]:

@@ -10,6 +10,7 @@
   var TK_T = {
     uz: { tosh: { cT: "Toshchalar", sh: "Kimni Toshchalar o'yiniga chaqirasiz?", peer: "Toshchalarga chaqirish" },
           mjang: { cT: "Maxluqlar jangi", sh: "Kimni Maxluqlar jangiga chaqirasiz?", peer: "Maxluqlar jangiga chaqirish" },
+          poyga: { cT: "Supurgi poygasi", sh: "Kimni poygaga chaqirasiz?", peer: "Poygaga chaqirish" },
           cSub: "Do'stona · ballsiz", cMine: "Siz chaqirdingiz — raqib kutilmoqda", cCalls: function (n) { return n + " o'yinga chaqirmoqda!"; },
           cAccept: "Qabul qilish", cOpen: "O'yinga kirish", cWatch: "Tomosha qilish", cPlaying: "o'yin ketmoqda", cWon: function (n) { return n + " yutdi"; },
           cDraw: "durang", cView: "Natijani ko'rish", cExp: "Taklif muddati tugadi",
@@ -19,6 +20,7 @@
           yubordi: "Taklif chatga yuborildi", eTaken: "Bu taklifni boshqa sehrgar qabul qilib bo'ldi", eExp: "Taklif muddati tugagan" },
     ru: { tosh: { cT: "Плюй-камни", sh: "Кого позвать сыграть в плюй-камни?", peer: "Позвать в плюй-камни" },
           mjang: { cT: "Битва существ", sh: "Кого позвать на Битву существ?", peer: "Позвать на Битву существ" },
+          poyga: { cT: "Гонка на мётлах", sh: "Кого позвать на гонку?", peer: "Позвать на гонку" },
           cSub: "Дружеская · без очков", cMine: "Вы позвали — ждём соперника", cCalls: function (n) { return n + " зовёт сыграть!"; },
           cAccept: "Принять", cOpen: "Войти в игру", cWatch: "Смотреть", cPlaying: "идёт игра", cWon: function (n) { return "победил " + n; },
           cDraw: "ничья", cView: "Посмотреть итог", cExp: "Срок приглашения истёк",
@@ -28,6 +30,7 @@
           yubordi: "Приглашение отправлено в чат", eTaken: "Это приглашение уже принял другой", eExp: "Срок приглашения истёк" },
     en: { tosh: { cT: "Gobstones", sh: "Who do you challenge to Gobstones?", peer: "Challenge to Gobstones" },
           mjang: { cT: "Creature Battle", sh: "Who do you challenge to a Creature Battle?", peer: "Challenge to a Creature Battle" },
+          poyga: { cT: "Broom race", sh: "Who do you challenge to a race?", peer: "Challenge to a race" },
           cSub: "Friendly · no points", cMine: "You sent a challenge — waiting for a rival", cCalls: function (n) { return n + " is calling for a game!"; },
           cAccept: "Accept", cOpen: "Enter the game", cWatch: "Watch", cPlaying: "game in progress", cWon: function (n) { return n + " won"; },
           cDraw: "draw", cView: "See the result", cExp: "The invite has expired",
@@ -64,6 +67,7 @@
         yop();
         if (q[0] !== "tg") { tkInvite(kind, q[0]); }
         else if (kind === "tosh") { gbBoshla({ dost: 1 }, true); }
+        else if (kind === "poyga") { pgDostBoshla(true); }
         else { mjBoshla({ dost: 1 }, true); }
       });
       tana.appendChild(b);
@@ -93,6 +97,7 @@
   function tkOch(kind, id) {
     try { if (!$("scr-chat").classList.contains("hidden")) { closeChat(); } } catch (e) {}
     ["scr-cup", "scr-hub", "scr-cat"].forEach(function (s2) { var e = $(s2); if (e) { e.classList.add("hidden"); } });
+    if (kind === "poyga") { pgDostOch(id); return; }
     if (kind === "tosh") {
       drShowGame("scr-tosh");
       $("gb-kick").textContent = gbT().kick;
@@ -111,12 +116,12 @@
     if (!qabul) { tkOch(kind, id); return; }
     try { if (!$("scr-chat").classList.contains("hidden")) { closeChat(); } } catch (e) {}
     try { $("scr-hub").classList.add("hidden"); } catch (e) {}
-    if (kind === "tosh") { gbQabul2(id); } else { mjQabul2(id); }
+    if (kind === "tosh") { gbQabul2(id); } else if (kind === "poyga") { pgDostQabul(id); } else { mjQabul2(id); }
   }
 
   // Chat xabari o'rnidagi karta (holati jonli)
   function tkChatCard(m) {
-    var kind = m.tosh ? "tosh" : "mjang", c = m[kind], t = tkT(), me = (tgUser() || {}).id || 0;
+    var kind = m.tosh ? "tosh" : m.poyga ? "poyga" : "mjang", c = m[kind], t = tkT(), me = (tgUser() || {}).id || 0;
     var el = drEl("div", "cmc cmc-tk cmc-" + kind);
     var an = (c.a && c.a.name) || "Sehrgar", bn = (c.b && c.b.name) || "Sehrgar", menda = me && (me === c.a.uid || (c.b && me === c.b.uid));
     var bosh = drEl("div", "cmc-h"), ic = drEl("span", "cmc-ic"), im = document.createElement("img"), tx = document.createElement("div");
@@ -128,10 +133,13 @@
     bosh.appendChild(ic); bosh.appendChild(tx);
     el.appendChild(bosh);
     var st = "", tugma = null, sc = c.score || [0, 0];
+    if (kind === "poyga") {                            // poygada hisob - marraga yetish vaqti (ms)
+      sc = sc.map(function (v) { return v == null ? "—" : (Math.round(v / 100) / 10).toFixed(1) + " s"; });
+    }
     if (c.status === "waiting") {
       if (me === c.a.uid) { st = t.cMine; tugma = [t.cOpen, 1, false]; } else { st = t.cCalls(an); tugma = [t.cAccept, 1, true]; }
     } else if (c.status === "active") {
-      st = an + " ⚔ " + bn + " — " + t.cPlaying + " (" + sc[0] + " : " + sc[1] + ")";
+      st = an + " ⚔ " + bn + " — " + t.cPlaying + (kind === "poyga" ? "" : " (" + sc[0] + " : " + sc[1] + ")");
       tugma = [menda ? t.cOpen : t.cWatch, 0, false];
     } else if (c.status === "finished" && c.b) {
       st = an + " ⚔ " + bn + " — " + (c.winner ? t.cWon(c.winner === c.a.uid ? an : bn) : t.cDraw) + " (" + sc[0] + " : " + sc[1] + ")";

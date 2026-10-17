@@ -2969,7 +2969,7 @@
     g.beginPath(); g.moveTo(22, 10); g.arcTo(96, 10, 96, 62, 12); g.arcTo(96, 62, 10, 62, 12); g.arcTo(10, 62, 10, 10, 12); g.arcTo(10, 10, 96, 10, 12); g.closePath(); g.fill();
     uchYozuv(g, String(info.orin), 46, 37, "700 40px 'Cormorant Garamond', serif", rang, "right");
     uchYozuv(g, "/ " + info.tirik, 52, 41, "800 14px Manrope, sans-serif", "#aeb6c2", "left");
-    uchYozuv(g, info.oxirgi ? x.pgOxir(info.qoldi) : info.qoldi <= 0 ? x.pgOtdi : x.pgNaz(info.qoldi), 12, 78,
+    uchYozuv(g, info.yoz || (info.oxirgi ? x.pgOxir(info.qoldi) : info.qoldi <= 0 ? x.pgOtdi : x.pgNaz(info.qoldi)), 12, 78,
              "800 12px Manrope, sans-serif", info.oxirgi ? "#ff8f84" : info.qoldi <= 0 ? "#8ff0b6" : "#eef2f7", "left");
     // o'ng chetda: poyga chizig'i - yetakchi tepada, oxirgi pastda, o'zi katta nuqta
     var men = uchPoygaPos(), pos = [men], eng = men, kam = men;

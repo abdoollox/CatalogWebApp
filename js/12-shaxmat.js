@@ -2091,7 +2091,7 @@
   // do'st katalog ochilishi bilan to'g'ridan-to'g'ri o'yinga tushadi.
   var pendingChess = null;
   var pendingWorld = false;     // ?startapp=olam bilan kelinganmi
-  var pendingTaklif = null;     // ?startapp=duel_<id> / tosh_<id> / mjang_<id> - do'st Telegram chatidan chaqirgan
+  var pendingTaklif = null;     // ?startapp=duel_<id> / tosh_<id> / mjang_<id> / poyga_<id> - do'st Telegram chatidan chaqirgan
   try {
     var sp = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
     if (!sp) {
@@ -2100,7 +2100,7 @@
     }
     var cm = /^chess_([0-9a-f]{8})$/i.exec(sp);
     if (cm) { pendingChess = cm[1].toLowerCase(); }
-    var tk = /^(duel|tosh|mjang)_(\d{1,10})$/i.exec(sp);
+    var tk = /^(duel|tosh|mjang|poyga)_(\d{1,10})$/i.exec(sp);
     if (tk) { pendingTaklif = { k: tk[1].toLowerCase(), id: parseInt(tk[2], 10) }; }
     if (/^(olam|world)$/i.test(sp)) { pendingWorld = true; }
   } catch (e) { pendingChess = null; pendingWorld = false; }
@@ -2110,7 +2110,7 @@
     if (!pendingTaklif) { return; }
     var p = pendingTaklif;
     pendingTaklif = null;
-    if (p.k === "duel") { duFromChat(p.id); } else if (p.k === "mjang") { mjQabul2(p.id); } else { gbQabul2(p.id); }
+    if (p.k === "duel") { duFromChat(p.id); } else if (p.k === "mjang") { mjQabul2(p.id); } else if (p.k === "poyga") { pgDostQabul(p.id); } else { gbQabul2(p.id); }
   }
   function maybeChessLink() {
     if (!pendingChess) { return; }
