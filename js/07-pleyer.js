@@ -17,7 +17,8 @@
           note: "Sinov rejimi — faqat sizga ko'rinadi. Film Telegram'dan serverimiz orqali keladi.",
           bot: "Bot chatiga yuklab olish", soat: "soat", daq: "daqiqa", til: "til", dubl: "dublyaj",
           err: "Film ochilmadi. Boshqa sifatni tanlang yoki bot orqali yuklab oling.", wait: "Ulanmoqda…",
-          alt: "Bu sifat qurilmangizda ochilmadi — %s ga o'tdik.",
+          alt: "Bu sifat qurilmangizda ochilmadi — %s ga o'tdik.", cant: "Bu qurilmada ochilmasligi mumkin",
+          noLang: "Bu qurilma %s nusxani o'ynata olmaydi (fayl formati). Boshqa tilni tanlang yoki bot orqali yuklab oling.",
           notReady: "Pleyer hali Telegram'ga ulanmagan: botga ilova kaliti berilishi kerak (/pleyer)." },
     ru: { hp: "Гарри Поттер", fb: "Фантастические твари", qism: "-я часть", watch: "Смотреть", resume: "Продолжить · %s",
           pause: "Пауза", left: "Осталось: %s", av: "Звук и качество", rail: "Коллекция", now: "Сейчас",
@@ -26,7 +27,8 @@
           note: "Тестовый режим — видно только вам. Фильм идёт из Telegram через наш сервер.",
           bot: "Скачать в чат с ботом", soat: "ч", daq: "мин", til: "языка", dubl: "дубляжа",
           err: "Фильм не открылся. Выберите другое качество или скачайте через бота.", wait: "Подключение…",
-          alt: "Это качество не открылось на вашем устройстве — переключили на %s.",
+          alt: "Это качество не открылось на вашем устройстве — переключили на %s.", cant: "Может не открыться на этом устройстве",
+          noLang: "Это устройство не может воспроизвести версию «%s» (формат файла). Выберите другой язык или скачайте через бота.",
           notReady: "Плеер ещё не подключён к Telegram: боту нужен ключ приложения (/pleyer)." },
     en: { hp: "Harry Potter", fb: "Fantastic Beasts", qism: "", part: "Part ", watch: "Watch", resume: "Resume · %s",
           pause: "Pause", left: "%s left", av: "Audio & quality", rail: "Collection", now: "Now",
@@ -35,7 +37,8 @@
           note: "Test mode — only you can see it. The film streams from Telegram through our server.",
           bot: "Download to the bot chat", soat: "h", daq: "min", til: "languages", dubl: "dubs",
           err: "The film didn't open. Pick another quality or download it via the bot.", wait: "Connecting…",
-          alt: "This quality didn't open on your device — switched to %s.",
+          alt: "This quality didn't open on your device — switched to %s.", cant: "May not open on this device",
+          noLang: "This device can't play the %s version (file format). Pick another language or download it via the bot.",
           notReady: "The player isn't connected to Telegram yet: the bot needs an app key (/pleyer)." }
   };
   var PL_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
@@ -101,11 +104,48 @@
   // Shu qurilmada ochilmagan nusxa (brauzer o'ynata olmagan) - tanlovda tashlab o'tiladi
   function plOk(l, d, q) { var v = plVer(l, d, q); return !!v && !pl.bad[v.v]; }
 
-  // Tanlangan til/dublyajda eng mos sifat: avvalgisi, bo'lmasa navbat bo'yicha
+  /* Qurilma bu nusxani o'ynata oladimi (2026-10-17: Windows Telegram'da o'zbekcha HD/SD - HEVC - ovoz bilan, lekin
+     rasmsiz o'ynardi). Server nusxaning video turini aytadi (codec, p10); brauzerdan oldindan so'raymiz. */
+  var plCanK = {};
+  function plCan(v) {
+    if (!v || !v.codec) { return true; }
+    var t = v.codec === "hev1" || v.codec === "hvc1" ? 'video/mp4; codecs="hvc1.1.6.L93.B0"'
+          : v.p10 ? 'video/mp4; codecs="avc1.6E0028"' : "";
+    if (!t) { return true; }
+    if (!Object.prototype.hasOwnProperty.call(plCanK, t)) {
+      try { plCanK[t] = !!document.createElement("video").canPlayType(t); } catch (e) { plCanK[t] = true; }
+    }
+    return plCanK[t];
+  }
+
+  // Tanlangan til/dublyajda eng mos sifat: avvalgisi, bo'lmasa navbat bo'yicha; qurilma o'ynata oladiganlari birinchi
   function plPickQ(l, d, avval) {
-    var tartib = (avval ? [avval] : []).concat(PL_BOSH_Q);
-    for (var i = 0; i < tartib.length; i++) { if (plOk(l, d, tartib[i])) { return tartib[i]; } }
+    var tartib = (avval ? [avval] : []).concat(PL_BOSH_Q), i;
+    for (i = 0; i < tartib.length; i++) { if (plOk(l, d, tartib[i]) && plCan(plVer(l, d, tartib[i]))) { return tartib[i]; } }
+    for (i = 0; i < tartib.length; i++) { if (plOk(l, d, tartib[i])) { return tartib[i]; } }
     return null;
+  }
+
+  function plNoLang() {
+    var nom = PL_LANG[pl.lang] || "";
+    if (lang === "uz") { nom = nom.charAt(0).toLowerCase() + nom.slice(1); }       // gap o'rtasida: «o'zbekcha nusxani»
+    plMsg(plTx().noLang.replace("%s", nom));
+  }
+
+  /* Ovoz bor, rasm yo'q: ba'zi brauzerlar video turini o'qiy olmasa xato bermaydi - faqat ovozni o'ynatadi.
+     O'ynay boshlagach 2,5 s da birorta kadr chizilmagan bo'lsa - shu nusxa ochilmadi deb, boshqasiga o'tamiz. */
+  function plRasmTekshir() {
+    var vid = $("pl-video"), v0 = pl.v, t0 = vid.currentTime;
+    clearTimeout(pl.rtT);
+    pl.rtT = setTimeout(function () {
+      if (pl.v !== v0 || vid.paused || vid.currentTime - t0 < 1) { return; }
+      var fr = -1;
+      try {
+        if (vid.getVideoPlaybackQuality) { fr = vid.getVideoPlaybackQuality().totalVideoFrames; }
+        else if ("webkitDecodedFrameCount" in vid) { fr = vid.webkitDecodedFrameCount; }
+      } catch (e) {}
+      if (fr === 0 || (fr < 0 && !vid.videoWidth)) { plXato(); }
+    }, 2500);
   }
 
   function plQNom(q) { var r = PL_Q.filter(function (x) { return x[0] === q; })[0]; return r ? r[1] : ""; }
@@ -239,7 +279,7 @@
       items = PL_Q.map(function (q) {
         var v = plVer(pl.lang, pl.dub, q[0]), bad = v && pl.bad[v.v];
         return { key: q[0], label: q[1], ok: !!v && !bad, on: q[0] === pl.q,
-                 sub: bad ? x.bad : v ? q[2] + (v.size ? " · " + plHajm(v.size) : "") : x.soon };
+                 sub: bad ? x.bad : v ? (plCan(v) ? q[2] + (v.size ? " · " + plHajm(v.size) : "") : x.cant) : x.soon };
       });
     }
     box.innerHTML = "";
@@ -493,6 +533,7 @@
       ["canplay", "seeked", "pause"].forEach(function (ev) { vid.addEventListener(ev, function () { box.classList.remove("kut"); }); });
       vid.addEventListener("playing", function () {
         box.classList.remove("kut");
+        plRasmTekshir();
         var xx = plTx(), m = $("pl-msg").textContent;
         if (m === xx.wait || m === xx.err) { plMsg(""); }       // "boshqa sifatga o'tdik" xabari o'z vaqtida yo'qoladi
       });
@@ -547,6 +588,7 @@
       }
       pl.q = plPickQ(pl.lang, pl.dub, null);
       plGo(false);
+      if (!plCan(plVer(pl.lang, pl.dub, pl.q))) { plNoLang(); }
     });
   }
 
@@ -557,7 +599,7 @@
     if (!vid.getAttribute("src") || !pl.v) { return; }
     pl.bad[pl.v] = 1;
     var eski = pl.q, q = plPickQ(pl.lang, pl.dub, null);
-    if (!q) { plRender(); plMsg(plTx().err); return; }
+    if (!q) { plRender(); try { vid.pause(); } catch (e) {} plNoLang(); return; }
     pl.q = q;
     pl.edi = true;
     plGo(true);
