@@ -39,6 +39,7 @@
       cupNone: "🏆 Hafta yakunlandi", cupNoneB: "Bu hafta g'olib aniqlanmadi.",
       cupMe: "Siz %s ball qo'shdingiz.", cupZero: "Siz bu hafta ball to'plamadingiz — yangi haftada fakultetingizga yordam bering.",
       cupBadge: "Yangi nishon: %s", cupGo: "Kubokni ko'rish", cupGal: "Mukofot: +%s galleon hamyoningizga tushdi.",
+      galB: "%s ball → %s galleon", galW: "fakultet yutdi, ikki baravar → %s", galT: "eng yaxshi uchlik +%s", galJ: "Jami +%s galleon hamyoningizga tushdi.",
       houses: { gryffindor: "Grifindor", slytherin: "Sliterin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
       badges: { all_films: "Sakkiz qism", flawless_exam: "Benuqson imtihon", perfect_week: "Mukammal hafta", streak_7: "Yetti kun ketma-ket" },
       steps: {
@@ -69,6 +70,7 @@
       cupNone: "🏆 Неделя завершена", cupNoneB: "На этой неделе победитель не определён.",
       cupMe: "Вы принесли %s очков.", cupZero: "На этой неделе у вас нет очков — помогите факультету в новой неделе.",
       cupBadge: "Новый значок: %s", cupGo: "Открыть кубок", cupGal: "Награда: +%s галлеонов в ваш кошелёк.",
+      galB: "%s очков → %s галл.", galW: "факультет победил, вдвое → %s", galT: "тройка лучших +%s", galJ: "Всего +%s галлеонов в ваш кошелёк.",
       houses: { gryffindor: "Гриффиндор", slytherin: "Слизерин", ravenclaw: "Когтевран", hufflepuff: "Пуффендуй" },
       badges: { all_films: "Восемь частей", flawless_exam: "Безупречный экзамен", perfect_week: "Идеальная неделя", streak_7: "Семь дней подряд" },
       steps: {
@@ -99,6 +101,7 @@
       cupNone: "🏆 The week is over", cupNoneB: "No winner this week.",
       cupMe: "You earned %s points.", cupZero: "You earned no points this week — help your house in the new one.",
       cupBadge: "New badge: %s", cupGo: "Open the Cup", cupGal: "Reward: +%s Galleons added to your wallet.",
+      galB: "%s points → %s Galleons", galW: "your house won, doubled → %s", galT: "top three +%s", galJ: "In total +%s Galleons added to your wallet.",
       houses: { gryffindor: "Gryffindor", slytherin: "Slytherin", ravenclaw: "Ravenclaw", hufflepuff: "Hufflepuff" },
       badges: { all_films: "All eight parts", flawless_exam: "Flawless exam", perfect_week: "Perfect week", streak_7: "Seven days in a row" },
       steps: {
@@ -118,6 +121,14 @@
   function owlSon(n) { return String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
 
   // Kubok xati: bot ham xuddi shu qoida bilan yozadi (hppochta.kubok_matni)
+  // Galleon qanday hisoblangani (hppochta._gal_qator bilan bir xil; eski xatlarda hisob yo'q - qisqa qator)
+  function owlGalQator(t, d) {
+    if (d.gb == null) { return t.cupGal.replace("%s", owlSon(d.gal)); }
+    var q = [t.galB.replace("%s", owlSon(d.gbl != null ? d.gbl : d.ball)).replace("%s", owlSon(d.gb))];
+    if (d.gw) { q.push(t.galW.replace("%s", owlSon(d.gb * 2))); }
+    if (d.gt) { q.push(t.galT.replace("%s", owlSon(d.gt))); }
+    return q.join(" · ") + ". " + t.galJ.replace("%s", owlSon(d.gal));
+  }
   function owlCupText(d) {
     var t = owlTx(), uy = t.houses[d.uy] || d.uy || "", sar, q;
     if (!d.g) { sar = t.cupNone; q = [t.cupNoneB]; }
@@ -128,7 +139,7 @@
     }
     q.push(d.ball ? t.cupMe.replace("%s", owlSon(d.ball)) : t.cupZero);
     (d.nish || []).forEach(function (b) { q.push("🎖 " + t.cupBadge.replace("%s", t.badges[b] || b)); });
-    if (d.gal) { q.push("🪙 " + t.cupGal.replace("%s", owlSon(d.gal))); }
+    if (d.gal) { q.push("🪙 " + owlGalQator(t, d)); }
     return [sar, q.join("\n")];
   }
 

@@ -412,6 +412,7 @@
     $("pm-house").textContent = h ? HOUSES[h][lang] : x.noHouse;
     $("pm-wal-n").textContent = x.gal(pmGal());
     $("pm-wal-s").textContent = x.walS;
+    try { var kut = gxKutilMatn(); if (kut) { $("pm-wal-s").textContent = kut; } } catch (e) {}     // js/09-galleon.js
     $("pm-sec2").textContent = x.sec2;
     try { testPm(); } catch (e) {}           // sinov o'quvchisi boshqaruvi (js/09-sehrli-olam.js)
     // Fakultet va tayoqcha panellari (ilgari "Sehrgar" sahifasida edi)

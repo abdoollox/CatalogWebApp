@@ -3587,7 +3587,7 @@
         var bb = drEl("button", "qr-b", x.qrBuy(P.gal, P.n));
         bb.type = "button";
         bb.addEventListener("click", function () {
-          if (qrData.gal < P.gal) { showToast(x.qrPoor, "err"); qrDe(x.qrPoor, "xafa"); return; }
+          if (qrData.gal < P.gal) { qrDe(x.qrPoor, "xafa"); gxOch({ narx: P.gal, bor: qrData.gal }); return; }
           testAsk(x.qrAsk(t[1], P.gal, P.n, qrData.gal), function () { qrAct({ buy: q.kod }, q.kod); });
         });
         bt.appendChild(bb);

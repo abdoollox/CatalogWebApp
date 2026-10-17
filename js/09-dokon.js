@@ -169,7 +169,7 @@
   }
   function dkSotibOl(kod, nom, narx) {
     var t = dkT(), bor = dkGalleon() || 0;
-    if (bor < narx) { showToast(t.pul(narx - bor), "err"); return; }
+    if (bor < narx) { gxOch({ narx: narx, bor: bor }); return; }
     testAsk(t.so(nom, narx), function () {
       dkPost({ buy: kod }, function (res) {
         if (!res || !res.gear) { showToast(t.aloqa, "err"); return; }
@@ -194,7 +194,10 @@
     var ham = drEl("div", "dk-ham");
     ham.appendChild(drEl("small", "", t.hamyon));
     ham.appendChild(drEl("b", "", t.gal(d && d.galleons != null ? d.galleons : "…")));
-    ham.appendChild(drEl("p", "", t.galQ));
+    var gq = drEl("button", "dk-galq", t.galQ + " ›");
+    gq.type = "button";
+    gq.addEventListener("click", function () { gxOch(); });
+    ham.appendChild(gq);
     box.appendChild(ham);
     if (!d || !d.gear) { return; }
     var bosh = function (a, b) { var h = drEl("div", "dk-bosh"); h.appendChild(drEl("b", "", a)); h.appendChild(drEl("span", "", b)); box.appendChild(h); };

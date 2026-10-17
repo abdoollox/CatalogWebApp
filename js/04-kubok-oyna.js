@@ -795,6 +795,8 @@
     gt.appendChild(cupEl("b", "", g ? c.galGet.replace("%d", g) : c.galNone.replace("%d", 10 - (me.points || 0) % 10)));
     gt.appendChild(cupEl("small", "", c.galNote));
     gal.appendChild(gt);
+    gal.appendChild(cupEl("i", "you-gal-i", "›"));
+    gal.addEventListener("click", function () { gxOch(); });      // «Galleon qanday yig'iladi?»
     box.appendChild(gal);
 
     // Har manba: qancha oldingiz, chegarasi, qanday olinadi - bosilsa o'sha joyga

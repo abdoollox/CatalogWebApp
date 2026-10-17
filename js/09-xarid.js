@@ -167,7 +167,7 @@
 
   function xrSetup() {
     $("xr-back").addEventListener("click", function () { xrYop(); pmOpen(); });
-    $("xr-how").addEventListener("click", function () { xrYop(); try { openCup(); } catch (e) {} });
+    $("xr-how").addEventListener("click", function () { gxOch(); });
     pu2Kuzat();
   }
 

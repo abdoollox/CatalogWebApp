@@ -27,7 +27,8 @@
     ["pl-sheet", function () { plSheetClose(); }],
     ["km-set", "km-set-close"],
     ["km-nav", "km-nav-close"],
-    ["w-set", "w-set-close"]
+    ["w-set", "w-set-close"],
+    ["gx", function () { gxYop(); }]
   ];
 
   // Ekran -> uning "Ortga" tugmasi (id) yoki qaytish funksiyasi.

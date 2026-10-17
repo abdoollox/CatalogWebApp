@@ -53,10 +53,7 @@
           bar: function (n) { return "Kitobni ochish · " + n + " galleon"; }, chip: function (n) { return n + " galleon"; },
           have: function (n) { return "Hamyoningizda " + n + " galleon"; },
           ask: function (nom, n, bor) { return "Kitob ochilsinmi?\n\n«" + nom + "» — " + n + " galleon. Sizda " + bor + " galleon bor. Kitob doim ochiq qoladi."; },
-          yes: "Ochish", no: "Hozir emas", done: "Kitob ochildi", close: "Yopish", cup: "Kubokni ko'rish", letter: "Maktubni ochish",
-          poorT: "Galleon yetmaydi", outT: "Kitob galleonga ochiladi",
-          poor: function (n, bor) { return "Kitob " + n + " galleon turadi, sizda " + bor + " galleon bor.\n\nGalleon shunday yig'iladi:\n1. Fakultetingizga ball to'plang: kunlik savol, filmlar, shokolad qurbaqa, shaxmat.\n2. Hafta yakunida har 10 ball uchun 1 galleon beriladi.\n3. Fakultetingiz kubokni yutsa — ikki baravar."; },
-          out: function (n) { return "Galleon — Xogvarts puli. Uni shunday olasiz:\n\n1. Boyo'g'li keltirgan Xogvarts maktubini oching va fakultetga tushing (5 daqiqa).\n2. Fakultetingizga ball to'plang.\n3. Har hafta yakunida 10 ball uchun 1 galleon beriladi.\n\nBitta kitob " + n + " galleon turadi va doim ochiq qoladi. Birinchi kitob bepul."; },
+          yes: "Ochish", no: "Hozir emas", done: "Kitob ochildi",
           swipe: "Varaqlash uchun betni suring yoki chetini bosing", loading: "Kitob ochilmoqda…", rfail: "Kitob ochilmadi. Internetni tekshirib, qayta urinib ko'ring.", retry: "Qayta urinish",
           pg: function (a, b) { return a + " / " + b; } },
     ru: { shelf: "Книги", cnt: function (n) { return n + " книг"; }, kick: "Библиотека", ttl: "Книга",
@@ -69,10 +66,7 @@
           bar: function (n) { return "Открыть книгу · " + n + " галлеонов"; }, chip: function (n) { return n + " галлеонов"; },
           have: function (n) { return "В кошельке " + n + " галлеонов"; },
           ask: function (nom, n, bor) { return "Открыть книгу?\n\n«" + nom + "» — " + n + " галлеонов. У вас " + bor + ". Книга останется открытой навсегда."; },
-          yes: "Открыть", no: "Не сейчас", done: "Книга открыта", close: "Закрыть", cup: "Открыть кубок", letter: "Открыть письмо",
-          poorT: "Не хватает галлеонов", outT: "Книга открывается за галлеоны",
-          poor: function (n, bor) { return "Книга стоит " + n + " галлеонов, у вас " + bor + ".\n\nКак накопить:\n1. Набирайте очки для факультета: вопрос дня, фильмы, шоколадная лягушка, шахматы.\n2. В конце недели за каждые 10 очков выдаётся 1 галлеон.\n3. Если ваш факультет выиграет Кубок — вдвое больше."; },
-          out: function (n) { return "Галлеоны — деньги Хогвартса. Получить их можно так:\n\n1. Откройте письмо из Хогвартса, которое принесла сова, и пройдите распределение (5 минут).\n2. Набирайте очки для факультета.\n3. В конце каждой недели за 10 очков выдаётся 1 галлеон.\n\nОдна книга стоит " + n + " галлеонов и остаётся открытой навсегда. Первая книга бесплатная."; },
+          yes: "Открыть", no: "Не сейчас", done: "Книга открыта",
           swipe: "Листайте: проведите по странице или нажмите на её край", loading: "Книга открывается…", rfail: "Книга не открылась. Проверьте интернет и попробуйте ещё раз.", retry: "Повторить",
           pg: function (a, b) { return a + " / " + b; } },
     en: { shelf: "Books", cnt: function (n) { return n + " books"; }, kick: "Library", ttl: "Book",
@@ -85,10 +79,7 @@
           bar: function (n) { return "Unlock book · " + n + " Galleons"; }, chip: function (n) { return n + " Galleons"; },
           have: function (n) { return n + " Galleons in your wallet"; },
           ask: function (nom, n, bor) { return "Unlock this book?\n\n“" + nom + "” — " + n + " Galleons. You have " + bor + ". It stays unlocked forever."; },
-          yes: "Unlock", no: "Not now", done: "Book unlocked", close: "Close", cup: "Open the Cup", letter: "Open the letter",
-          poorT: "Not enough Galleons", outT: "Books are unlocked with Galleons",
-          poor: function (n, bor) { return "The book costs " + n + " Galleons, you have " + bor + ".\n\nHow to save up:\n1. Earn points for your house: the daily question, films, the Chocolate Frog, chess.\n2. At the end of the week you get 1 Galleon per 10 points.\n3. If your house wins the Cup you get double."; },
-          out: function (n) { return "Galleons are Hogwarts money. Here is how to get them:\n\n1. Open the Hogwarts letter the owl brought and get sorted into a house (5 minutes).\n2. Earn points for your house.\n3. At the end of every week you get 1 Galleon per 10 points.\n\nOne book costs " + n + " Galleons and stays unlocked forever. The first book is free."; },
+          yes: "Unlock", no: "Not now", done: "Book unlocked",
           swipe: "Swipe the page or tap its edge to turn it", loading: "Opening the book…", rfail: "The book didn't open. Check your connection and try again.", retry: "Try again",
           pg: function (a, b) { return a + " / " + b; } }
   };
@@ -401,13 +392,7 @@
     var x = ktX();
     if (!ktInit() && !MS_LOCAL) { showToast(x.fail, "err"); return; }
     if (ktGal < ktPrice) {
-      var ichkarida = false;
-      try { ichkarida = hasHouse(); } catch (e) {}
-      if (ichkarida) {
-        testAsk(x.poor(ktPrice, ktGal), function () { try { openCup(); } catch (e) {} }, { title: x.poorT, ok: x.cup, no: x.close, left: true });
-      } else {
-        testAsk(x.out(ktPrice), function () { try { goWorld(); } catch (e) {} }, { title: x.outT, ok: x.letter, no: x.close, left: true });
-      }
+      gxOch({ narx: ktPrice, bor: ktGal });       // «Galleon qanday yig'iladi?» (js/09-galleon.js)
       return;
     }
     testAsk(x.ask(ktName(id), ktPrice, ktGal), function () { ktBuy(id); }, { ok: x.yes, no: x.no });
