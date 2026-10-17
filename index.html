@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Manrope:wght@500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css?v=5f3d9050">
+<link rel="stylesheet" href="css/app.css?v=84e0d89a">
 </head>
 <body>
 <div class="shell">
@@ -98,19 +98,33 @@
 
   <!-- Ilova ichidagi pleyer - sinov, faqat adminlarga (js/07-pleyer.js, pl*) -->
   <div id="scr-pleyer" class="screen hidden">
-    <div class="pl-top">
+    <div class="pl-hero" id="pl-hero">
       <button class="sr-back" id="pl-back" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <div class="pl-tt"><span id="pl-kick"></span><b id="pl-title"></b></div>
+      <div class="pl-tt"><span id="pl-kick"></span><b id="pl-title"></b><small id="pl-meta"></small></div>
     </div>
     <div class="pl-box" id="pl-box">
-      <video id="pl-video" playsinline webkit-playsinline controls preload="metadata"></video>
-      <div class="pl-msg hidden" id="pl-msg"></div>
+      <video id="pl-video" playsinline webkit-playsinline preload="metadata"></video>
+      <div class="pl-ui" id="pl-ui">
+        <button class="pl-skip" id="pl-rw" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg><i>10</i></button>
+        <button class="pl-big" id="pl-big" type="button"><span class="pl-i-play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.2-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6z"/></svg></span><span class="pl-i-pause"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.2v14H7zM13.8 5H17v14h-3.2z"/></svg></span></button>
+        <button class="pl-skip" id="pl-ff" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.5h-4.5"/></svg><i>10</i></button>
+        <div class="pl-bar">
+          <span class="pl-t" id="pl-cur">0:00</span>
+          <div class="pl-prog" id="pl-prog"><i class="pl-buf" id="pl-buf"></i><i class="pl-fill" id="pl-fill"></i><b class="pl-knob" id="pl-knob"></b></div>
+          <span class="pl-t" id="pl-dur">0:00</span>
+          <button class="pl-fs" id="pl-fs" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+        </div>
+      </div>
+      <div class="pl-spin"></div>
     </div>
-    <div class="pl-row"><span class="pl-lbl" id="pl-l-lang"></span><div class="pl-chips" id="pl-lang"></div></div>
-    <div class="pl-row hidden" id="pl-r-dub"><span class="pl-lbl" id="pl-l-dub"></span><div class="pl-chips" id="pl-dub"></div></div>
-    <div class="pl-row"><span class="pl-lbl" id="pl-l-q"></span><div class="pl-chips" id="pl-q"></div></div>
+    <div class="pl-msg hidden" id="pl-msg"></div>
+    <div class="pl-sel">
+      <div class="pl-row"><span class="pl-lbl" id="pl-l-lang"></span><div class="pl-seg" id="pl-lang"></div></div>
+      <div class="pl-row hidden" id="pl-r-dub"><span class="pl-lbl" id="pl-l-dub"></span><div class="pl-seg" id="pl-dub"></div></div>
+      <div class="pl-row"><span class="pl-lbl" id="pl-l-q"></span><div class="pl-seg pl-seg-q" id="pl-q"></div></div>
+    </div>
     <p class="pl-note" id="pl-note"></p>
-    <button class="pl-bot" id="pl-bot" type="button"></button>
+    <button class="pl-bot" id="pl-bot" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6.5 11l5.5 5.5 5.5-5.5M5 20h14"/></svg><span id="pl-bot-t"></span></button>
   </div>
 
   <!-- Film sifatini tanlash oynasi (js/05 play/qs*) -->
@@ -1814,7 +1828,7 @@
 <script src="js/04-kubok-oyna.js?v=461d7035"></script>
 <script src="js/05-umumiy.js?v=bbbf4b6b"></script>
 <script src="js/06-soundtrack.js?v=2f23168c"></script>
-<script src="js/07-pleyer.js?v=b406c6eb"></script>
+<script src="js/07-pleyer.js?v=eb1beb24"></script>
 <script src="js/07-kutubxona.js?v=74e06644"></script>
 <script src="js/07-kitoblar.js?v=01b6d032"></script>
 <script src="js/07-kitob-matn.js?v=5ad05696"></script>

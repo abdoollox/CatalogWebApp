@@ -12,6 +12,7 @@
           note: "Sinov: film Telegram'dan serverimiz orqali keladi. Tilni yoki sifatni almashtirsangiz, o'sha daqiqadan davom etadi.",
           resume: "To'xtagan joyingizdan: ", bot: "Bot chatiga yuklab olish",
           err: "Film ochilmadi. Boshqa sifatni tanlang yoki bot orqali yuklab oling.",
+          soat: "soat", daq: "daqiqa", til: "til", dubl: "dublyaj",
           wait: "Ulanmoqda…", bad: "Ochilmadi", alt: "Bu sifat telefoningizda ochilmadi — %s ga o'tdik.",
           notReady: "Pleyer hali Telegram'ga ulanmagan: botga ilova kaliti berilishi kerak (/pleyer)." },
     ru: { kick: "Смотреть в приложении · тест", lang: "Язык", dub: "Дубляж", q: "Качество", soon: "Скоро",
@@ -19,6 +20,7 @@
           note: "Тест: фильм идёт из Telegram через наш сервер. Если сменить язык или качество, просмотр продолжится с той же минуты.",
           resume: "С места остановки: ", bot: "Скачать в чат с ботом",
           err: "Фильм не открылся. Выберите другое качество или скачайте через бота.",
+          soat: "ч", daq: "мин", til: "языка", dubl: "дубляжа",
           wait: "Подключение…", bad: "Не открылось", alt: "Это качество не открылось на вашем устройстве — переключили на %s.",
           notReady: "Плеер ещё не подключён к Telegram: боту нужен ключ приложения (/pleyer)." },
     en: { kick: "Watch in the app · test", lang: "Language", dub: "Dubbing", q: "Quality", soon: "Coming soon",
@@ -26,12 +28,15 @@
           note: "Test: the film streams from Telegram through our server. Switch the language or quality and it continues from the same minute.",
           resume: "Resuming from ", bot: "Download to the bot chat",
           err: "The film didn't open. Pick another quality or download it via the bot.",
+          soat: "h", daq: "min", til: "languages", dubl: "dubs",
           wait: "Connecting…", bad: "Didn't open", alt: "This quality didn't open on your device — switched to %s.",
           notReady: "The player isn't connected to Telegram yet: the bot needs an app key (/pleyer)." }
   };
   var PL_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
   var PL_Q = [["fhd", "Full HD"], ["hd", "HD"], ["sd", "SD"]];
   var PL_DUBS = [["my5", "MY5 TV"], ["zor", "ZO'R TV"]];
+  var PL_YIL = { hp1: 2001, hp2: 2002, hp3: 2004, hp4: 2005, hp5: 2007, hp6: 2009, hp7: 2010, hp8: 2011,
+                 fb1: 2016, fb2: 2018, fb3: 2022 };
   var PL_BOSH_Q = ["hd", "fhd", "sd"];            // sinovda HD dan boshlanadi - trafik kamroq
   var plInfo = {};                                // film -> {res, t}
   var pl = { id: null, res: null, lang: null, dub: null, q: null, v: null, scroll: 0, saqT: 0, t: 0, bad: {} };
@@ -108,6 +113,112 @@
       d[id] = Math.floor(t);
       window.localStorage.setItem("hp_pl_pos", JSON.stringify(d));
     } catch (e) {}
+  }
+
+  // Sarlavha ostidagi qator: yil · davomiyligi · nechta til va dublyaj
+  function plMeta() {
+    var x = plTx(), qism = [], vs = (pl.res && pl.res.versions) || [];
+    if (PL_YIL[pl.id]) { qism.push(PL_YIL[pl.id]); }
+    var dur = 0;
+    vs.forEach(function (v) { if (v.dur > dur) { dur = v.dur; } });
+    if (dur) {
+      var h = Math.floor(dur / 3600), m = Math.round(dur % 3600 / 60);
+      qism.push((h ? h + " " + x.soat + " " : "") + m + " " + x.daq);
+    }
+    var tillar = {}, dublar = {};
+    vs.forEach(function (v) { tillar[v.lang] = 1; if (v.lang === "uz" && v.dub) { dublar[v.dub] = 1; } });
+    var nt = Object.keys(tillar).length, nd = Object.keys(dublar).length;
+    if (nt > 1) { qism.push(nt + " " + x.til + (nd > 1 ? ", " + nd + " " + x.dubl : "")); }
+    $("pl-meta").textContent = qism.join("  ·  ");
+  }
+
+  /* O'zimizning boshqaruv tugmalari: har qurilmada bir xil ko'rinadi (Telegram Desktop, iPhone, Android).
+     Ekranga tegilsa ko'rinadi, o'ynayotganda 3 soniyadan keyin yashirinadi. */
+  var plUiT = 0;
+  function plUiKor() {
+    var box = $("pl-box"), vid = $("pl-video");
+    box.classList.remove("ui-yoq");
+    clearTimeout(plUiT);
+    if (!vid.paused) { plUiT = setTimeout(function () { if (!vid.paused) { box.classList.add("ui-yoq"); } }, 3000); }
+  }
+
+  function plPP() {
+    var vid = $("pl-video");
+    if (!vid.getAttribute("src")) { return; }
+    if (vid.paused) { var p = vid.play(); if (p && p["catch"]) { p["catch"](function () {}); } } else { vid.pause(); }
+    try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.impactOccurred("light"); } } catch (e) {}
+  }
+
+  function plSur(dt) {
+    var vid = $("pl-video");
+    if (!vid.duration) { return; }
+    vid.currentTime = Math.max(0, Math.min(vid.duration - 1, vid.currentTime + dt));
+    plUiKor();
+  }
+
+  function plChiz() {
+    var vid = $("pl-video"), d = vid.duration || 0, t = pl.drag != null ? pl.drag : vid.currentTime, f = d ? t / d : 0;
+    $("pl-fill").style.width = (f * 100) + "%";
+    $("pl-knob").style.left = (f * 100) + "%";
+    $("pl-cur").textContent = plVaqt(t);
+    $("pl-dur").textContent = d ? plVaqt(d) : "0:00";
+    var bufer = 0;
+    try {
+      for (var i = 0; i < vid.buffered.length; i++) {
+        if (vid.buffered.start(i) <= vid.currentTime + 1) { bufer = Math.max(bufer, vid.buffered.end(i)); }
+      }
+    } catch (e) {}
+    $("pl-buf").style.width = (d ? Math.min(1, bufer / d) * 100 : 0) + "%";
+  }
+
+  function plUiInit() {
+    var box = $("pl-box"), vid = $("pl-video"), prog = $("pl-prog");
+    $("pl-big").onclick = function (e) { e.stopPropagation(); plPP(); plUiKor(); };
+    $("pl-rw").onclick = function (e) { e.stopPropagation(); plSur(-10); };
+    $("pl-ff").onclick = function (e) { e.stopPropagation(); plSur(10); };
+    $("pl-fs").onclick = function (e) {
+      e.stopPropagation();
+      try {
+        var fe = document.fullscreenElement || document.webkitFullscreenElement;
+        if (fe) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+        if (box.requestFullscreen) { box.requestFullscreen(); }
+        else if (box.webkitRequestFullscreen) { box.webkitRequestFullscreen(); }
+        else if (vid.webkitEnterFullscreen) { vid.webkitEnterFullscreen(); }        // iPhone: tizimning o'z pleyeri
+      } catch (er) {}
+    };
+    // Bo'sh joyga tegilsa: tugmalar ko'rinmasa - ko'rsatadi, ko'rinsa - o'ynatadi/to'xtatadi
+    box.addEventListener("click", function (e) {
+      if (e.target.closest(".pl-bar")) { return; }
+      if (box.classList.contains("ui-yoq")) { plUiKor(); return; }
+      plPP();
+    });
+    ["play", "pause"].forEach(function (ev) {
+      vid.addEventListener(ev, function () { box.classList.toggle("oyn", !vid.paused); plUiKor(); });
+    });
+    ["timeupdate", "progress", "loadedmetadata", "durationchange"].forEach(function (ev) { vid.addEventListener(ev, plChiz); });
+    function nuqta(e) {
+      var r = prog.getBoundingClientRect(), x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      return Math.max(0, Math.min(1, x / r.width)) * (vid.duration || 0);
+    }
+    prog.addEventListener("pointerdown", function (e) {
+      if (!vid.duration) { return; }
+      e.stopPropagation();
+      pl.drag = nuqta(e);
+      try { prog.setPointerCapture(e.pointerId); } catch (er) {}
+      plChiz();
+      clearTimeout(plUiT);
+    });
+    prog.addEventListener("pointermove", function (e) { if (pl.drag != null) { pl.drag = nuqta(e); plChiz(); } });
+    function qoyib(e) {
+      if (pl.drag == null) { return; }
+      vid.currentTime = pl.drag;
+      pl.drag = null;
+      plChiz();
+      plUiKor();
+    }
+    prog.addEventListener("pointerup", qoyib);
+    prog.addEventListener("pointercancel", qoyib);
+    prog.addEventListener("click", function (e) { e.stopPropagation(); });
   }
 
   function plMsg(text) {
@@ -228,12 +339,18 @@
       });
       $("pl-back").onclick = plClose;
       $("pl-bot").onclick = function () { var f = pl.id; plClose(); play(f); };
+      plUiInit();
     }
     $("pl-kick").textContent = x.kick;
     $("pl-title").textContent = qsFilmName(id);
     $("pl-note").textContent = x.note;
-    $("pl-bot").textContent = x.bot;
+    $("pl-bot-t").textContent = x.bot;
     vid.poster = "img/hero/" + id + "_" + lang + ".jpg";
+    $("pl-hero").style.setProperty("--pl-art", "url('img/hero/" + id + "_" + lang + ".jpg')");
+    $("pl-box").classList.remove("oyn", "ui-yoq");
+    pl.drag = null;
+    plChiz();
+    plMeta();
     $("scr-cat").classList.add("hidden");
     $("scr-pleyer").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
@@ -254,6 +371,7 @@
         pl.dub = bor.dub || pl.dub;
       }
       pl.q = plPickQ(pl.lang, pl.dub, null);
+      plMeta();
       plGo(false);
     });
   }
