@@ -13,7 +13,7 @@
   var API_PL = "https://bot.tizimshunos.uz/api/pleyer";
   var PL_TX = {
     uz: { hp: "Garri Potter", fb: "Fantastik maxluqlar", qism: "-qism", watch: "Ko'rish", resume: "Davom etish · %s",
-          pause: "Pauza", left: "Qolgan vaqt: %s", av: "Ovoz va sifat", rail: "Kolleksiya", now: "Hozir",
+          pause: "Pauza", left: "%s qoldi", seen: "%s ko'rildi", av: "Ovoz va sifat", rail: "Kolleksiya", now: "Hozir",
           lang: "Til", dub: "Dublyaj", q: "Sifat", chLang: "Qaysi tilda ko'rasiz?", chDub: "Qaysi dublyaj?", chQ: "Qaysi sifatda?",
           soon: "Tez orada", bad: "Bu qurilmada ochilmadi", band: "Hozir ko'ruvchilar juda ko'p — birozdan keyin urinib ko'ring yoki filmni yuklab oling.",
           note: "Internet sekin bo'lsa, HD yoki SD sifatni tanlang. Filmni yuklab olsangiz, internetsiz ham ko'rasiz.",
@@ -23,7 +23,7 @@
           noLang: "Bu qurilma %s nusxani o'ynata olmaydi (fayl formati). Boshqa tilni tanlang yoki bot orqali yuklab oling.",
           notReady: "Pleyer hali Telegram'ga ulanmagan: botga ilova kaliti berilishi kerak (/pleyer)." },
     ru: { hp: "Гарри Поттер", fb: "Фантастические твари", qism: "-я часть", watch: "Смотреть", resume: "Продолжить · %s",
-          pause: "Пауза", left: "Осталось: %s", av: "Звук и качество", rail: "Коллекция", now: "Сейчас",
+          pause: "Пауза", left: "Осталось %s", seen: "Просмотрено %s", av: "Звук и качество", rail: "Коллекция", now: "Сейчас",
           lang: "Язык", dub: "Дубляж", q: "Качество", chLang: "На каком языке смотреть?", chDub: "Какой дубляж?", chQ: "Какое качество?",
           soon: "Скоро", bad: "Не открылось на этом устройстве", band: "Сейчас слишком много зрителей — попробуйте чуть позже или скачайте фильм.",
           note: "Если интернет медленный, выберите HD или SD. Скачанный фильм можно смотреть без интернета.",
@@ -33,7 +33,7 @@
           noLang: "Это устройство не может воспроизвести версию «%s» (формат файла). Выберите другой язык или скачайте через бота.",
           notReady: "Плеер ещё не подключён к Telegram: боту нужен ключ приложения (/pleyer)." },
     en: { hp: "Harry Potter", fb: "Fantastic Beasts", qism: "", part: "Part ", watch: "Watch", resume: "Resume · %s",
-          pause: "Pause", left: "%s left", av: "Audio & quality", rail: "Collection", now: "Now",
+          pause: "Pause", left: "%s left", seen: "%s watched", av: "Audio & quality", rail: "Collection", now: "Now",
           lang: "Language", dub: "Dubbing", q: "Quality", chLang: "Which language?", chDub: "Which dubbing?", chQ: "Which quality?",
           soon: "Coming soon", bad: "Didn't open on this device", band: "Too many viewers right now — try again a bit later or download the film.",
           note: "If your internet is slow, pick HD or SD. Download the film to watch it offline.",
@@ -227,7 +227,16 @@
     var dur = plDur(), r = $("pl-resume");
     r.classList.toggle("hidden", !(saq > 30 && dur));
     if (saq > 30 && dur) {
-      $("pl-resume-f").style.width = Math.min(100, saq / dur * 100) + "%";
+      var f = Math.min(100, saq / dur * 100) + "%", k = $("pl-resume-k"), ch = x.seen.split("%s");
+      $("pl-resume-f").style.width = f;
+      $("pl-resume-d").style.left = f;
+      // «55:20 ko'rildi» - vaqt qalin
+      k.textContent = "";
+      k.appendChild(document.createTextNode(ch[0]));
+      var bv = document.createElement("b");
+      bv.textContent = plVaqt(saq);
+      k.appendChild(bv);
+      k.appendChild(document.createTextNode(ch[1] || ""));
       $("pl-resume-t").textContent = x.left.replace("%s", plUzun(Math.max(0, dur - saq)));
     }
   }

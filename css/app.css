@@ -4113,9 +4113,15 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .pl-dlrow.yuk .pl-ric{border-color:transparent;background:conic-gradient(var(--gold) var(--pl-dlp,25%),rgba(255,255,255,.08) 0);
   animation:plAyl 1s linear infinite}
 .pl-dlrow.yuk .pl-ric svg{opacity:0}
-.pl-resume{display:flex;align-items:center;gap:10px;margin-top:12px;font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim)}
-.pl-resume i{position:relative;flex:none;width:92px;height:3px;border-radius:2px;background:rgba(255,255,255,.14);overflow:hidden}
-.pl-resume b{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold)}
+/* To'xtagan joy: butun enli chiziq, to'xtagan nuqtada yorqin nuqta, ostida «ko'rildi» va «qoldi» (egasi, 2026-10-17) */
+.pl-resume{margin-top:16px;padding:0 2px}
+.pl-res-bar{position:relative;height:4px;border-radius:2px;background:rgba(255,255,255,.1)}
+.pl-res-bar b{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--gold-2),var(--gold-hi));box-shadow:0 0 12px rgba(var(--gold-rgb),.35)}
+.pl-res-bar i{position:absolute;left:0;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--gold-hi);
+  box-shadow:0 0 0 4px rgba(var(--gold-rgb),.18),0 0 14px rgba(var(--gold-rgb),.55)}
+.pl-res-tx{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font:600 11.5px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.pl-res-tx span:first-child b{font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
 /* --- Ovoz va sifat --- */
 .pl-sec{display:block;margin:30px 0 10px;font:600 10px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
 .pl-card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
