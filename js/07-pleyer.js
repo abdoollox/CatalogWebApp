@@ -354,12 +354,66 @@
 
   /* ---------- BOSHQARUV TUGMALARI ---------- */
   /* Ekranga tegilsa ko'rinadi, o'ynayotganda 3 soniyadan keyin yashirinadi; ikki marta tegish - 10 soniya. */
-  var plUiT = 0, plTapT = 0, plTapX = 0;
+  var plUiT = 0, plTapT = 0, plTapX = 0, plMoveT = 0;
+  var plSichqon = !!(window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches);
   function plUiKor() {
     var box = $("pl-box"), vid = $("pl-video");
     box.classList.remove("ui-yoq");
     clearTimeout(plUiT);
-    if (!vid.paused) { plUiT = setTimeout(function () { if (!vid.paused && pl.drag == null) { box.classList.add("ui-yoq"); } }, 3000); }
+    if (!vid.paused) {
+      plUiT = setTimeout(function () {
+        if (vid.paused || pl.drag != null) { return; }
+        // Kompyuterda sichqoncha tugmalar ustida tursa - yashirmaymiz
+        if (plSichqon && box.querySelector(".pl-bar:hover, .pl-topbar:hover, .pl-mid:hover")) { plUiKor(); return; }
+        box.classList.add("ui-yoq");
+      }, 3000);
+    }
+  }
+
+  /* To'liq ekran (egasi, 2026-10-17: kompyuterda video faqat ilova oynasi kengligida kattalashardi).
+     Kompyuterdagi Telegram'da avval ilovaning o'zi butun ekranga chiqadi (tg.requestFullscreen, Bot API 8.0),
+     keyin kadr uni to'liq egallaydi. Chiqishda ikkalasi birga qaytadi. Elementni to'liq ekran qila olmaydigan
+     joyda - CSS bilan (.tolik). Telefonlarda ilova allaqachon butun ekranda - avvalgidek. */
+  function plKompyuter() { return !!tg && /^(tdesktop|macos|weba|webk|web|unigram)$/.test(tg.platform || ""); }
+  function plFsBor() { return !!(document.fullscreenElement || document.webkitFullscreenElement) || $("pl-box").classList.contains("tolik"); }
+
+  // Zaxira to'liq ekran: sahifaning ochilish animatsiyasi «ramka» yaratadi - u paytda o'chiriladi
+  function plTolik(on) {
+    $("pl-box").classList.toggle("tolik", on);
+    $("scr-pleyer").classList.toggle("fs-ota", on);
+  }
+
+  function plFsKir() {
+    var box = $("pl-box"), vid = $("pl-video");
+    try {
+      if (plKompyuter() && tg.requestFullscreen && tg.isVersionAtLeast && tg.isVersionAtLeast("8.0") && !tg.isFullscreen) {
+        tg.requestFullscreen();
+        pl.tgFs = true;
+      }
+    } catch (e) {}
+    try {
+      if (box.requestFullscreen) {
+        var va = box.requestFullscreen();
+        if (va && va["catch"]) { va["catch"](function () { plTolik(true); }); }
+      }
+      else if (box.webkitRequestFullscreen) { box.webkitRequestFullscreen(); }
+      else if (vid.webkitEnterFullscreen && !pl.tgFs) { vid.webkitEnterFullscreen(); }       // iPhone: tizimning o'z pleyeri
+      else { plTolik(true); }
+    } catch (e) { plTolik(true); }
+    plUiKor();
+  }
+
+  function plFsChiq() {
+    plTolik(false);
+    try {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      }
+    } catch (e) {}
+    if (pl.tgFs) {
+      pl.tgFs = false;
+      try { if (tg.exitFullscreen) { tg.exitFullscreen(); } } catch (e) {}
+    }
   }
 
   function plPP() {
@@ -405,22 +459,35 @@
     $("pl-ff").onclick = function (e) { e.stopPropagation(); plSur(10, "r"); };
     $("pl-gear").onclick = function (e) {
       e.stopPropagation();
-      try {
-        var fe = document.fullscreenElement || document.webkitFullscreenElement;
-        if (fe) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
-      } catch (er) {}
+      if (plFsBor() || pl.tgFs) { plFsChiq(); }
       plSheet("q");
     };
     $("pl-fs").onclick = function (e) {
       e.stopPropagation();
-      try {
-        var fe = document.fullscreenElement || document.webkitFullscreenElement;
-        if (fe) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
-        if (box.requestFullscreen) { box.requestFullscreen(); }
-        else if (box.webkitRequestFullscreen) { box.webkitRequestFullscreen(); }
-        else if (vid.webkitEnterFullscreen) { vid.webkitEnterFullscreen(); }        // iPhone: tizimning o'z pleyeri
-      } catch (er) {}
+      if (plFsBor() || pl.tgFs) { plFsChiq(); } else { plFsKir(); }
     };
+    // Esc yoki tizim bilan chiqilsa - Telegram'ning to'liq ekrani ham qaytsin
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(function (ev) {
+      document.addEventListener(ev, function () {
+        if (!(document.fullscreenElement || document.webkitFullscreenElement) && pl.tgFs) { plFsChiq(); }
+      });
+    });
+    try {
+      if (tg && tg.onEvent) {
+        tg.onEvent("fullscreenChanged", function () {
+          if (pl.tgFs && !tg.isFullscreen) { pl.tgFs = false; plFsChiq(); }
+        });
+      }
+    } catch (er) {}
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && box.classList.contains("tolik")) { plFsChiq(); }
+    });
+    // Kompyuter: sichqoncha qimirlasa ko'rsatkich va tugmalar qaytadi, 3 s tinch tursa yana yashirinadi
+    box.addEventListener("mousemove", function () {
+      if (!plSichqon || Date.now() - plMoveT < 150) { return; }
+      plMoveT = Date.now();
+      plUiKor();
+    });
     // Bo'sh joyga tegish: tugmalarni ko'rsatadi/yashiradi; tez ikki marta - chap/o'ng chetda 10 soniya
     box.addEventListener("click", function (e) {
       if (e.target.closest(".pl-bar, .pl-topbar, .pl-mid button")) { return; }
@@ -617,10 +684,7 @@
     try { vid.pause(); } catch (e) {}
     vid.removeAttribute("src");
     try { vid.load(); } catch (e) {}
-    try {
-      var fe = document.fullscreenElement || document.webkitFullscreenElement;
-      if (fe) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
-    } catch (e) {}
+    plFsChiq();
     plSheetClose();
     pl.id = null;
     pl.v = null;

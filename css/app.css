@@ -4029,22 +4029,35 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 /* Film boshlangach oyna videoning o'z shaklida (plShakl: --pl-ar) - qora chiziqlarsiz */
 .pl-box:not(.bosh){aspect-ratio:var(--pl-ar,16/9)}
 /* Keng (kinoteatr) kadrda oyna past - tugmalar ixchamroq */
-.pl-box.tor:not(.bosh) .pl-topbar{padding:8px 10px 0}
-.pl-box.tor:not(.bosh) .pl-glass{width:36px;height:36px}
-.pl-box.tor:not(.bosh) .pl-glass svg{width:21px;height:21px}
-.pl-box.tor:not(.bosh) .pl-mid{gap:28px}
-.pl-box.tor:not(.bosh) .pl-big{width:54px;height:54px;box-shadow:0 0 0 6px rgba(var(--gold-rgb),.16),0 10px 26px -12px rgba(0,0,0,.8)}
-.pl-box.tor:not(.bosh) .pl-big svg{width:28px;height:28px}
-.pl-box.tor:not(.bosh) .pl-skip{width:38px;height:38px}
-.pl-box.tor:not(.bosh) .pl-skip svg{width:24px;height:24px}
-.pl-box.tor:not(.bosh) .pl-bar{padding-bottom:0}
-.pl-box.tor:not(.bosh) .pl-prog{height:24px}
-.pl-box.tor:not(.bosh) .pl-fs{width:34px;height:34px}
-.pl-box.tor:not(.bosh) .pl-fs svg{width:22px;height:22px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-topbar{padding:8px 10px 0}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-glass{width:36px;height:36px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-glass svg{width:21px;height:21px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-mid{gap:28px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-big{width:54px;height:54px;box-shadow:0 0 0 6px rgba(var(--gold-rgb),.16),0 10px 26px -12px rgba(0,0,0,.8)}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-big svg{width:28px;height:28px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-skip{width:38px;height:38px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-skip svg{width:24px;height:24px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-bar{padding-bottom:0}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-prog{height:24px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-fs{width:34px;height:34px}
+.pl-box.tor:not(.bosh):not(.tolik):not(:fullscreen) .pl-fs svg{width:22px;height:22px}
 .pl-box::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:46%;background:linear-gradient(rgba(12,15,20,0),var(--bg));
   pointer-events:none;opacity:0;transition:opacity .4s}
 .pl-box.bosh::after{opacity:1}
 .pl-box:fullscreen,.pl-box:-webkit-full-screen,.pl-box:not(.bosh):fullscreen{aspect-ratio:auto;width:100%;height:100%;margin:0}
+/* Element to'liq ekran bo'la olmaydigan joyda - butun oynani egallaydi (plFsKir) */
+.pl-box.tolik,.pl-box.tolik:not(.bosh){position:fixed;inset:0;z-index:300;margin:0;aspect-ratio:auto;width:100%;height:100%}
+#scr-pleyer.fs-ota{animation:none;transform:none}
+/* To'liq ekranda tugmalar kattaroq (katta ekran) */
+.pl-box.tolik .pl-topbar,.pl-box:fullscreen .pl-topbar{padding:18px 20px 0}
+.pl-box.tolik .pl-mid,.pl-box:fullscreen .pl-mid{gap:48px}
+.pl-box.tolik .pl-big,.pl-box:fullscreen .pl-big{width:84px;height:84px}
+.pl-box.tolik .pl-big svg,.pl-box:fullscreen .pl-big svg{width:40px;height:40px}
+.pl-box.tolik .pl-skip,.pl-box:fullscreen .pl-skip{width:56px;height:56px}
+.pl-box.tolik .pl-skip svg,.pl-box:fullscreen .pl-skip svg{width:34px;height:34px}
+.pl-box.tolik .pl-bar,.pl-box:fullscreen .pl-bar{gap:14px;padding:0 18px 14px 24px}
+.pl-box.tolik .pl-t,.pl-box:fullscreen .pl-t{font-size:13px;min-width:44px}
+.pl-box.tolik .pl-fs svg,.pl-box:fullscreen .pl-fs svg{width:30px;height:30px}
 .pl-ui{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;
   background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,0) 28%,rgba(0,0,0,0) 62%,rgba(0,0,0,.72));transition:opacity .25s}
 .pl-box.bosh .pl-ui{background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0) 30%)}
@@ -4087,8 +4100,8 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .pl-fs svg{width:26px;height:26px}
 .pl-fs span{display:grid}
 .pl-fs .pl-i-fsx{display:none}
-.pl-box:fullscreen .pl-fs .pl-i-fs,.pl-box:-webkit-full-screen .pl-fs .pl-i-fs{display:none}
-.pl-box:fullscreen .pl-fs .pl-i-fsx,.pl-box:-webkit-full-screen .pl-fs .pl-i-fsx{display:grid}
+.pl-box:fullscreen .pl-fs .pl-i-fs,.pl-box:-webkit-full-screen .pl-fs .pl-i-fs,.pl-box.tolik .pl-fs .pl-i-fs{display:none}
+.pl-box:fullscreen .pl-fs .pl-i-fsx,.pl-box:-webkit-full-screen .pl-fs .pl-i-fsx,.pl-box.tolik .pl-fs .pl-i-fsx{display:grid}
 /* Ikki marta tegish: chap/o'ng yarmida 10 soniya */
 .pl-tap{position:absolute;top:0;bottom:0;z-index:1;width:40%;display:grid;place-items:center;pointer-events:none;opacity:0}
 .pl-tap.l{left:0;border-radius:0 50% 50% 0/0 50% 50% 0;background:rgba(255,255,255,.07)}
