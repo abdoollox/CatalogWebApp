@@ -957,7 +957,7 @@
                    { name: "Neville", house: "gryffindor", points: Math.round(best.points * .6) }];
         return { id: n, number: n, starts_at: a, ends_at: b, status: st, winner: win, houses: hs, best: best, top: top };
       };
-      cupHistory = { wins: { gryffindor: 2, slytherin: 0, ravenclaw: 0, hufflepuff: 4 }, seasons: [
+      cupHistory = { me: { "6": { ball: 85, gal: 17 }, "5": { ball: 40, gal: 8 } }, wins: { gryffindor: 2, slytherin: 0, ravenclaw: 0, hufflepuff: 4 }, seasons: [
         W(7, "2026-09-27T19:00:00Z", "2026-10-04T18:59:00Z", "active", null, [895, 675, 500, 270], { name: "Draco", house: "slytherin", points: 250 }),
         W(6, "2026-09-20T19:00:00Z", "2026-09-27T18:59:00Z", "closed", "hufflepuff", [580, 385, 200, 270], { name: "Cedric", house: "hufflepuff", points: 130 }),
         W(5, "2026-09-13T19:00:00Z", "2026-09-20T18:59:00Z", "closed", "hufflepuff", [790, 605, 405, 200], { name: "Cedric", house: "hufflepuff", points: 180 }),
@@ -1078,6 +1078,10 @@
       }
       hero.appendChild(txt);
       if (win && !live) { hero.appendChild(svgNode(CUP_MINI)); hero.lastChild.classList.add("hist-cup"); }
+      if (win && !live && hasHouse()) {                // yopilgan hafta - bosilsa kubok marosimi (o'quvchi taklifi, 2026-10-19)
+        hero.classList.add("kbm-och");
+        hero.addEventListener("click", (function (sid) { return function () { kbmHafta(sid); }; })(s.id));
+      }
       card.appendChild(hero);
 
       // Yakuniy jadval

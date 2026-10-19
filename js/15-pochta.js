@@ -366,7 +366,7 @@
       if (x.tur === "kubok") {
         var cb = owlEl("button", "owl-cta", t.cupGo);
         cb.type = "button";
-        cb.addEventListener("click", owlGoCup);
+        cb.addEventListener("click", function () { owlGoCup(x.cup && x.cup.s); });
         c.appendChild(cb);
       } else if (x.tur === "dm") {
         if (x.done) { c.appendChild(owlEl("span", "owl-ok", "✓ " + t.seen)); }
@@ -442,7 +442,7 @@
   }
 
   // "Kubokni ko'rish": kubok sahifasi. Ortga - 9¾ ga.
-  function owlGoCup() {
+  function owlGoCup(raqam) {
     owlFresh = {};
     function och() {
       ["scr-owl", "scr-hub"].forEach(function (id) { $(id).classList.add("hidden"); });
@@ -450,6 +450,8 @@
       openCup();
       // Xat YAKUNLANGAN hafta haqida - joriy hafta emas, tarixdagi o'sha hafta ochiladi (egasi, 2026-10-05)
       try { histFocus = true; openCupHistory(); } catch (e) {}
+      // ustidan - o'sha haftaning kubok marosimi (o'quvchi taklifi, 2026-10-19)
+      try { kbmHafta(null, typeof raqam === "number" ? raqam : null); } catch (e) {}
     }
     if (cupData) { och(); } else { fetchCup(och); }
   }

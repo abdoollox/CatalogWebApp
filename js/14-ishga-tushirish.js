@@ -78,7 +78,9 @@
     $("cup-back").addEventListener("click", worldGuard(closeCup));
     $("house-back").addEventListener("click", closeHouse);
     $("hall-about").addEventListener("click", function () { openHouse(cupMe().house); });
-    $("cup-prev").addEventListener("click", openCupHistory);
+    $("cup-prev").addEventListener("click", function () {      // o'tgan hafta g'olibi bor bo'lsa - kubok marosimi
+      if (cupData && cupData.season && cupData.season.prev_winner && hasHouse()) { kbmHafta(null); } else { openCupHistory(); }
+    });
     $("cup-hist-btn").addEventListener("click", openCupHistory);
     $("hist-back").addEventListener("click", closeCupHistory);
     $("hall-back").addEventListener("click", function() {

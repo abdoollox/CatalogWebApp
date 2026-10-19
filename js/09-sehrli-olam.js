@@ -512,7 +512,8 @@
     try { chatRefreshCounts(); } catch (e) {}
     try { jrAdminCheck(); } catch (e) {}
     setTimeout(function () { try { yqBosh(); } catch (e) {} }, 800);     // tugallanmagan bosh sahifa yo'riqnomasi (09-yoriqnoma.js)
-    setTimeout(function () { try { yqKursDavom(); } catch (e) {} }, KY_KUT);     // kurs yo'riqnomasining davomi - biroz kutib (egasi: «birdaniga emas»)     // tugallanmagan yo'riqnoma va kurs yo'riqnomasining 2-qismi (09-yoriqnoma.js)
+    setTimeout(function () { try { yqKursDavom(); } catch (e) {} }, KY_KUT);
+    setTimeout(function () { try { kbmAvto(); } catch (e) {} }, 2600);     // hafta yopilgach - kubok marosimi (bir marta)     // kurs yo'riqnomasining davomi - biroz kutib (egasi: «birdaniga emas»)     // tugallanmagan yo'riqnoma va kurs yo'riqnomasining 2-qismi (09-yoriqnoma.js)
   }
 
   function leaveHub() {
