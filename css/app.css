@@ -4295,3 +4295,8 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .kbm-och{cursor:pointer}
 .kbm-och:active{opacity:.85}
 .kbm-ul{background:linear-gradient(135deg,var(--ka),rgba(var(--kr),.75))!important;color:#0b0e14!important;border:0!important}
+
+/* Yo'riqnoma: so'rov qadami («Ko'rsating» / «Kerak emas») - 2026-10-19 */
+.yq-yoq{display:none}
+.yq.savol .yq-yoq{display:block;margin-left:auto;border:none;background:none;color:var(--dim);font:600 13.5px/1 'Manrope',system-ui,sans-serif;padding:10px 6px;cursor:pointer}
+.yq.savol .yq-n{display:none}

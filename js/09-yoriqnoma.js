@@ -72,7 +72,9 @@
 
   /* Istalgan sahifa uchun yo'riqnoma: qadamlar = [{el: funksiya, t: YQ_TX kaliti yoki m: tayyor matn, tap, kut}],
      qadamda yana (ixtiyoriy): on - qadam boshlanganda bir marta chaqiriladi; b - kutish qadamidagi tugma matni;
-     nuqta - barmoq ishorasi joyi (funksiya -> [x, y], ekran koordinatasi).
+     nuqta - barmoq ishorasi joyi (funksiya -> [x, y], ekran koordinatasi);
+     savol: {ha, yoq} - so'rov qadami: ikki tugma, «ha» keyingi qadamga o'tadi, «yo'q» yo'riqnomani tugatadi (egasi, 2026-10-19:
+     kutubxonada til/soundtrack/kitob yo'riqnomasi avval so'raladi).
      o = {kim: sarlavha, rasm: doiradagi rasm, kalit: tugaganda o'chiriladigan belgi (ixtiyoriy), tugash: funksiya (ixtiyoriy),
           ekran: sahifa id si - o'quvchi undan chiqib ketsa yo'riqnoma darhol yopiladi}. */
   function yqOch(qadamlar, o2) {
@@ -80,13 +82,14 @@
     var o = document.createElement("div");
     o.className = "yq";
     o.innerHTML = '<div class="yq-teshik"></div><div class="yq-qol"><svg viewBox="0 0 24 24" fill="#fff" stroke="#10141a" stroke-width="1.1" stroke-linejoin="round"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10l5.2 1.1A2.3 2.3 0 0 1 19 13.4l-.6 4.3A3.8 3.8 0 0 1 14.6 21h-2.9a3.8 3.8 0 0 1-3-1.5L5.3 15a1.4 1.4 0 0 1 2.1-1.8L9 14.6z"/></svg></div><div class="yq-box"><div class="yq-bosh"><img class="yq-rasm" alt=""><div><b class="yq-kim"></b><b class="yq-s"></b><p class="yq-m"></p></div></div>'
-      + '<div class="yq-btm"><span class="yq-n"></span><button type="button" class="yq-nx"></button></div></div>';
+      + '<div class="yq-btm"><span class="yq-n"></span><button type="button" class="yq-yoq"></button><button type="button" class="yq-nx"></button></div></div>';
     document.body.appendChild(o);
     yq = { i: 0, o: o, kut: 0, sur: -1, iv: 0, t0: 0, q: qadamlar, kalit: o2.kalit || "", tugash: o2.tugash || null, ekran: o2.ekran || "", onI: -1, zamon: !!o2.zamon };
     // zamon: kutubxona uchun zamonaviy ko'rinish (egasi, 2026-10-12) - qahramon va rasm yo'q, qadamda sarlavha (s), nuqtalar, ko'rsatkich
     if (o2.zamon) { o.classList.add("zamon"); } else { o.querySelector(".yq-rasm").src = o2.rasm; }
     o.querySelector(".yq-kim").textContent = o2.kim || "";
     o.querySelector(".yq-nx").onclick = function () { yqKeyingi(); };
+    o.querySelector(".yq-yoq").onclick = function () { yqTugat(); };
     document.addEventListener("click", yqBosildi, true);
     yq.iv = setInterval(yqJoy, 200);
     yqJoy();
@@ -156,10 +159,16 @@
       for (var di = 0; di < yq.q.length; di++) { nq0 += '<i class="' + (di === yq.i ? "on" : di < yq.i ? "ot" : "") + '"></i>'; }
       o.querySelector(".yq-n").innerHTML = nq0;
     } else { o.querySelector(".yq-n").textContent = (yq.i + 1) + " / " + yq.q.length; }
-    var nx = o.querySelector(".yq-nx");
+    var nx = o.querySelector(".yq-nx"), yoq = o.querySelector(".yq-yoq");
+    o.classList.toggle("savol", !!q.savol);
+    if (q.savol) {                          // so'rov: «Ko'rsating» / «Kerak emas»
+      yoq.textContent = q.savol.yoq; nx.textContent = q.savol.ha; nx.disabled = false;
+      o.querySelector(".yq-qol").style.display = "none";
+    }
     // «O'tkazib yuborish» yo'q (egasi, 2026-10-11). Yozish qadamida odam tiqilib qolmasin: 40 soniyadan keyin «Keyingi» ochiladi.
     if (yq.t0i !== yq.i) { yq.t0i = yq.i; yq.t0 = Date.now(); }
     var ochiq = q.kut && Date.now() - yq.t0 > 40000;
+    if (!q.savol) {
     nx.textContent = q.tap ? yqT("bos") : q.kut && !ochiq ? (q.b || yqT("yoz")) : yqT("nx");
     nx.disabled = !!q.tap || (!!q.kut && !ochiq);
     // Bosiladigan joyga barmoq ishorasi
@@ -169,6 +178,7 @@
     if (q.nuqta) { try { nq = q.nuqta(); } catch (x1) {} }
     qol.style.left = (nq ? nq[0] - 6 : r.left + r.width / 2 - 6) + "px";
     qol.style.top = (nq ? nq[1] : r.top + Math.min(r.height * 0.55, r.height - 14)) + "px";
+    }
     box.style.left = Math.max(12, Math.min(vw - box.offsetWidth - 12, r.left + r.width / 2 - box.offsetWidth / 2)) + "px";
     var past = r.bottom + p + 12, tepa = r.top - p - 12 - box.offsetHeight;
     // sig'masa (masalan, katta o'yin maydoni) - ko'proq joy qolgan tomonda, ekran chetida turadi

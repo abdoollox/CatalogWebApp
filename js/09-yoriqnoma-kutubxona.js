@@ -5,6 +5,7 @@
      1) filmlar - birinchi kirishda (hali film olmagan odamga): film kartasi -> pleyer: ko'rish, ovoz va sifat, yuklab olish -> ortga
         (2026-10-17 gacha: dublyaj -> sifat -> film bot chatiga);
      2) til - keyingi safar kutubxona ochilganda; 3) soundtrack; 4) kitoblar.
+   1-qism o'zi boshlanadi; 2–4-qism AVVAL SO'RALADI (egasi, 2026-10-19): «Ko'rsating» - yo'riqnoma, «Kerak emas» - shu qism o'tkazib yuboriladi.
    Qismlar orasida kamida KQ_ORA o'tadi; har qism kutubxona ochilgandan KY_KUT keyin boshlanadi. Belgi hp_kq (oxirgi tugagan qism).
    Kutubxona tuzilishi o'zgarsa - shu qadamlarni ham yangilang. Dvigatel: yqOch (09-yoriqnoma.js). */
 "use strict";
@@ -18,16 +19,18 @@
           p2: ["Ovoz va sifat", "Tilni, dublyajni va sifatni shu yerda tanlaysiz — film to'xtamasdan o'sha daqiqadan davom etadi. Internet sekin bo'lsa — HD yoki SD."],
           p3: ["Telegram'da ko'rish", "Film bot chatiga yuboriladi — Telegram'ning o'zida ko'rasiz yoki yuklab olib, internetsiz tomosha qilasiz."],
           p4: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
-          l1: ["Boshqa tilda", "Filmlarni rus yoki ingliz tilida ham olsa bo'ladi. Profilni oching."],
+          s2: ["Boshqa tilda", "Filmlarni rus yoki ingliz tilida ham ko'rsa bo'ladi. Tilni qanday almashtirishni ko'rsataymi?"],
+          l1: ["Profil", "Profilni oching."],
           l2: ["Til", "Shu yerda ilova tilini tanlaysiz. Til almashsa, filmlar ham o'sha tilda yuboriladi."],
           l3: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
-          m1: ["Soundtrack", "Filmlar musiqasi — albomlar. Birinchi albom bepul, qolganlari galleonga ochiladi."],
+          s3: ["Soundtrack", "Filmlar musiqasi — albomlar. Birinchi albom bepul, qolganlari galleonga ochiladi. Qanday tinglash va yuklab olishni ko'rsataymi?"],
           m2: ["Albom", "Albomni oching."],
           m3: ["Tinglash", "Ilovaning o'zida tinglash."],
           m4: ["Yuklab olish", "Albom bot chatiga yuboriladi — keyin internetsiz ham eshitasiz."],
           m5: ["Treklar", "Istalgan trekni bosib tinglang."],
           m6: ["Ortga", "Kutubxonaga qaytish uchun shu tugmani bosing."],
-          k1: ["Kitoblar", "Yettita kitob. Birinchisi bepul va tanlab qo'yilgan, qolganlari galleonga ochiladi."],
+          s4: ["Kitoblar", "Yettita kitob. Birinchisi bepul, qolganlari galleonga ochiladi. Kitobni ilovada qanday o'qishni ko'rsataymi?"],
+          ha: "Ko'rsating", yoq: "Kerak emas",
           k2: ["Kitobni ochish", "Tanlangan kitobni oching."],
           k3: ["O'qish", "Kitob ilovaning o'zida ochiladi, to'xtagan joyingiz eslab qolinadi."],
           k4: ["Ko'rinish", "Harf kattaligi, fon va o'qish usuli."],
@@ -38,16 +41,18 @@
           p2: ["Звук и качество", "Здесь выбираются язык, озвучка и качество — фильм продолжится с той же минуты. Медленный интернет — выберите HD или SD."],
           p3: ["Смотреть в Telegram", "Фильм придёт в чат с ботом — смотрите прямо в Telegram или скачайте и смотрите без интернета."],
           p4: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
-          l1: ["Другой язык", "Фильмы можно получить на узбекском или английском. Откройте профиль."],
+          s2: ["Другой язык", "Фильмы можно смотреть на узбекском или английском. Показать, как сменить язык?"],
+          l1: ["Профиль", "Откройте профиль."],
           l2: ["Язык", "Здесь выбирается язык приложения. Сменится язык — фильмы будут приходить на нём."],
           l3: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
-          m1: ["Саундтреки", "Музыка из фильмов — альбомы. Первый бесплатный, остальные открываются за галлеоны."],
+          s3: ["Саундтреки", "Музыка из фильмов — альбомы. Первый бесплатный, остальные за галлеоны. Показать, как слушать и скачивать?"],
           m2: ["Альбом", "Откройте альбом."],
           m3: ["Слушать", "Прямо в приложении."],
           m4: ["Скачать", "Альбом придёт в чат с ботом — потом можно слушать без интернета."],
           m5: ["Треки", "Нажмите на любой трек."],
           m6: ["Назад", "Нажмите, чтобы вернуться в библиотеку."],
-          k1: ["Книги", "Семь книг. Первая бесплатна и уже выбрана, остальные открываются за галлеоны."],
+          s4: ["Книги", "Семь книг. Первая бесплатна, остальные за галлеоны. Показать, как читать книгу в приложении?"],
+          ha: "Покажите", yoq: "Не нужно",
           k2: ["Открыть книгу", "Откройте выбранную книгу."],
           k3: ["Читать", "Книга откроется прямо в приложении, место остановки запомнится."],
           k4: ["Вид", "Размер шрифта, фон и способ чтения."],
@@ -58,22 +63,26 @@
           p2: ["Audio & quality", "Pick the language, dub and quality here — the film keeps playing from the same minute. Slow internet? Choose HD or SD."],
           p3: ["Watch in Telegram", "The film goes to your chat with the bot — watch it right in Telegram or download it to watch offline."],
           p4: ["Back", "Tap to go back to the library."],
-          l1: ["Other languages", "You can get the films in Uzbek or Russian too. Open your profile."],
+          s2: ["Other languages", "You can watch the films in Uzbek or Russian too. Want me to show how to switch?"],
+          l1: ["Profile", "Open your profile."],
           l2: ["Language", "Choose the app language here. Change it and the films come in that language."],
           l3: ["Back", "Tap to return to the library."],
-          m1: ["Soundtracks", "The films' music as albums. The first one is free, the rest open for galleons."],
+          s3: ["Soundtracks", "The films' music as albums. The first is free, the rest open for galleons. Want me to show how to listen and download?"],
           m2: ["Album", "Open the album."],
           m3: ["Listen", "Right here in the app."],
           m4: ["Download", "The album goes to your chat with the bot — listen offline later."],
           m5: ["Tracks", "Tap any track to listen."],
           m6: ["Back", "Tap to return to the library."],
-          k1: ["Books", "Seven books. The first is free and already selected; the rest open for galleons."],
+          s4: ["Books", "Seven books. The first is free, the rest open for galleons. Want me to show how to read in the app?"],
+          ha: "Show me", yoq: "No thanks",
           k2: ["Open the book", "Open the selected book."],
           k3: ["Read", "The book opens right in the app, and your place is remembered."],
           k4: ["Display", "Font size, background and reading mode."],
           k5: ["Contents", "Chapters, bookmarks and search."] }
   };
   function kqT(k) { return (KQ_TX[lang] || KQ_TX.uz)[k] || ""; }
+  // So'rov qadami (2–4-qism boshida): element yoritiladi, «Ko'rsating» / «Kerak emas»
+  function kqSavol(sel, k) { return kqQ(sel, k, { savol: { ha: kqT("ha"), yoq: kqT("yoq") } }); }
   // Qadam: sarlavha + matn (+ boshqa maydonlar)
   function kqQ(sel, k, x) {
     var t = kqT(k), q = { el: typeof sel === "function" ? sel : yqQ(sel), s: t[0], m: t[1] };
@@ -94,14 +103,14 @@
               kqQ("#scr-pleyer #pl-rows", "p2"), kqQ("#scr-pleyer #pl-back", "p4", { tap: true })];
     }
     if (n === 2) {
-      return [kqQ("#scr-cat #pm-btn", "l1", { tap: true }), kqQ("#pm #pm-langs", "l2"), kqQ("#pm #pm-close", "l3", { tap: true })];
+      return [kqSavol("#scr-cat #pm-btn", "s2"), kqQ("#scr-cat #pm-btn", "l1", { tap: true }), kqQ("#pm #pm-langs", "l2"), kqQ("#pm #pm-close", "l3", { tap: true })];
     }
     if (n === 3) {
-      return [kqQ("#rows .ms-row", "m1"), kqQ("#rows .ms-row .ms-card:not(.lock)", "m2", { tap: true }),
+      return [kqSavol("#rows .ms-row", "s3"), kqQ("#rows .ms-row .ms-card:not(.lock)", "m2", { tap: true }),
               kqQ("#scr-album #ms-play", "m3"), kqQ("#scr-album #ms-dl", "m4"), kqQ("#scr-album #ms-list", "m5"),
               kqQ("#scr-album #ms-back", "m6", { tap: true })];
     }
-    return [kqQ("#rows .kt-shelf", "k1"), kqQ("#rows .kt-info .kt-go", "k2", { tap: true }),
+    return [kqSavol("#rows .kt-shelf", "s4"), kqQ("#rows .kt-info .kt-go", "k2", { tap: true }),
             kqQ("#scr-kitob #kt-acts button", "k3", { tap: true }), kqQ("#scr-oqish #kr-aa", "k4"), kqQ("#scr-oqish #kr-nav", "k5")];
   }
   // Qism boshlanishi uchun kerakli joy kutubxonada bormi (albomlar/kitoblar serverdan kelmagan bo'lsa - keyinroq)
