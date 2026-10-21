@@ -22,7 +22,11 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + " toshcha!" : "Toshcha chiqmadi"; }, otkazdi: "Zarba yonib ketdi — vaqt tugadi",
           yutdi: "Siz yutdingiz!", yutqazdi: "Siz yutqazdingiz", durang: "Durang", golibi: function (n) { return n + " yutdi"; }, sepdi: function (n) { return "Toshchalar " + n + "ga sassiq suyuqlik sepdi!"; }, sepSiz: "Toshchalar sizga sassiq suyuqlik sepdi!",
           kelmadi: "Raqib kelmadi", teng: "Teng — to'rda yuqori turgan o'tdi", yana: "Yana o'ynash", ortga: "Ortga", aloqa: "Aloqa yo'q — qayta urinib ko'ring",
-          qoshimcha: "Teng! Qo'shimcha zarbalar", galaba: "G'alaba", maglub: "Mag'lubiyat", yakunK: "O'yin tugadi",
+          qoshimcha: "Teng! Qo'shimcha zarbalar",
+          r2: ["1-RAUND", "2-RAUND", "PENALTI"], r2X: ["", "2-raund — yangi toshchalar", "Teng! Penalti"],
+          q3v2: function (z, n) { return "Ikki raund: har raundda " + n + " ta yangi toshcha, har kimga " + z + " tadan zarba. 2-raundni raqib boshlaydi"; },
+          infoV2: function (n, z, v) { return ["Ikki raund", "Har raundda doira o'rtasiga " + n + " ta yangi toshcha qo'yiladi, har kimga " + z + " tadan zarba. 1-raundni bir o'yinchi, 2-raundni ikkinchisi boshlaydi — birinchi otishning ustunligi teng bo'linadi. Ikki raund ballari qo'shiladi. Teng bo'lsa — penalti: navbat bilan har kim to'liq yangi taxtaga bittadan zarba beradi. Har zarbaga " + v + " soniya."]; },
+          galaba: "G'alaba", maglub: "Mag'lubiyat", yakunK: "O'yin tugadi",
           dost: "Do'st bilan", dostS: "Telegram orqali", kutT: "Do'stingizni kutyapmiz", kutS: "Kartani Telegram chatiga yuboring — do'stingiz bosishi bilan o'yin boshlanadi",
           muddat: function (v) { return "Taklif yana " + v + " amal qiladi"; }, tgB: "Telegram chatiga yuborish", bekorB: "Bekor qilish",
           eBand: "Bu taklifni boshqa odam qabul qilib bo'lgan", eMuddat: "Taklif muddati tugagan" },
@@ -39,7 +43,11 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "Мимо"; }, otkazdi: "Удар сгорел — время вышло",
           yutdi: "Вы победили!", yutqazdi: "Вы проиграли", durang: "Ничья", golibi: function (n) { return "Победил " + n; }, sepdi: function (n) { return "Камни обрызгали " + n + " вонючей жидкостью!"; }, sepSiz: "Камни обрызгали вас вонючей жидкостью!",
           kelmadi: "Соперник не пришёл", teng: "Ничья — прошёл тот, кто выше в сетке", yana: "Ещё раз", ortga: "Назад", aloqa: "Нет связи — попробуйте ещё раз",
-          qoshimcha: "Ничья! Дополнительные удары", galaba: "Победа", maglub: "Поражение", yakunK: "Игра окончена",
+          qoshimcha: "Ничья! Дополнительные удары",
+          r2: ["1-Й РАУНД", "2-Й РАУНД", "ПЕНАЛЬТИ"], r2X: ["", "2-й раунд — новые камешки", "Ничья! Пенальти"],
+          q3v2: function (z, n) { return "Два раунда: в каждом " + n + " новых камешков и по " + z + " удара. Второй раунд начинает соперник"; },
+          infoV2: function (n, z, v) { return ["Два раунда", "В каждом раунде в центр круга кладут " + n + " новых камешков, у каждого по " + z + " удара. Первый раунд начинает один игрок, второй — другой: преимущество первого удара делится поровну. Очки двух раундов складываются. Ничья — пенальти: по очереди каждый бьёт по одному разу по полному новому кругу. На удар " + v + " секунд."]; },
+          galaba: "Победа", maglub: "Поражение", yakunK: "Игра окончена",
           dost: "С другом", dostS: "через Telegram", kutT: "Ждём вашего друга", kutS: "Отправьте карточку в чат Telegram — друг нажмёт, и игра начнётся",
           muddat: function (v) { return "Приглашение действует ещё " + v; }, tgB: "Отправить в чат Telegram", bekorB: "Отменить",
           eBand: "Это приглашение уже принял другой", eMuddat: "Срок приглашения истёк" },
@@ -56,7 +64,11 @@
           chiqdi: function (n) { return n > 0 ? "+" + n + "!" : "No stone out"; }, otkazdi: "Shot lost — time ran out",
           yutdi: "You won!", yutqazdi: "You lost", durang: "Draw", golibi: function (n) { return n + " won"; }, sepdi: function (n) { return "The Gobstones squirted " + n + " with stinky liquid!"; }, sepSiz: "The Gobstones squirted you with stinky liquid!",
           kelmadi: "The opponent did not come", teng: "Tie — the higher seed goes through", yana: "Play again", ortga: "Back", aloqa: "No connection — please try again",
-          qoshimcha: "Tie! Extra shots", galaba: "Victory", maglub: "Defeat", yakunK: "Game over",
+          qoshimcha: "Tie! Extra shots",
+          r2: ["ROUND 1", "ROUND 2", "PENALTIES"], r2X: ["", "Round 2 — new stones", "Tie! Penalties"],
+          q3v2: function (z, n) { return "Two rounds: " + n + " new stones and " + z + " shots each per round. Your rival starts round 2"; },
+          infoV2: function (n, z, v) { return ["Two rounds", "Each round " + n + " new stones are placed in the ring, " + z + " shots each. One player starts round 1, the other starts round 2 — the first-shot advantage is shared. Points from both rounds add up. On a tie — penalties: taking turns, each shoots once at a full new ring. " + v + " seconds per shot."]; },
+          galaba: "Victory", maglub: "Defeat", yakunK: "Game over",
           dost: "With a friend", dostS: "via Telegram", kutT: "Waiting for your friend", kutS: "Send the card to a Telegram chat — the game starts as soon as your friend taps it",
           muddat: function (v) { return "The invite is valid for " + v + " more"; }, tgB: "Send to a Telegram chat", bekorB: "Cancel",
           eBand: "Someone else has already accepted this invite", eMuddat: "The invite has expired" }
@@ -251,7 +263,8 @@
     });
     kat.push(tpDost(function () { tkOyna("tosh"); }));      // chat (Katta zal, fakultet, shaxsiy) yoki Telegram
     box.appendChild(tpMashq(tp.ballsiz + (d.stats && d.stats.played ? " · " + t.stat(d.stats.played, d.stats.won) : ""), kat));
-    box.appendChild(tpQoida([t.q1, t.q2, t.q3((d.rules && d.rules.shots) || 5)], tpTorSov(d.rules && d.rules.points), tp.torIz));
+    var r0 = d.rules || {};       // ikki raundli qoida (2026-10-21) - hozircha faqat adminga (sinov)
+    box.appendChild(tpQoida([t.q1, t.q2, r0.v2 ? t.q3v2(r0.rshots || 3, r0.rstones || 6) : t.q3(r0.shots || 5)], tpTorSov(d.rules && d.rules.points), tp.torIz));
     if (!jonli) { box.appendChild(tpYoz(tr.players, tr.n)); }
     if (d.admin) { box.appendChild(tpSinov(t.sinov, t.sinovS, function () { gbBoshla({ sinov: 1 }); })); }
   }
@@ -389,7 +402,8 @@
     gb.rang = {};
     gb.rang[men] = gbUyRang(g[men] && g[men].house, false);
     gb.rang[u] = gbUyRang(g[u] && g[u].house, !!(g[u] && g[men] && g[u].house === g[men].house));
-    var otdi = function (k) { return k === "a" ? Math.ceil(g.shots / 2) : Math.floor(g.shots / 2); };
+    var v2 = g.rule === 2 && g.taken;
+    var otdi = function (k) { return v2 ? g.taken[k === "a" ? 0 : 1] : k === "a" ? Math.ceil(g.shots / 2) : Math.floor(g.shots / 2); };
     var yon = function (k, el) {
       var p = g[k];
       el.innerHTML = "";
@@ -411,7 +425,12 @@
     };
     yon(men, $("gb-p1"));
     yon(u, $("gb-p2"));
-    $("gb-z").textContent = g.shots >= g.per * 2 && g.state === "ketmoqda" ? t.qoshimcha : "VS";
+    $("gb-z").textContent = v2 ? (g.state === "ketmoqda" ? t.r2[g.round] || "VS" : "VS") : g.shots >= g.per * 2 && g.state === "ketmoqda" ? t.qoshimcha : "VS";
+    // ikki raundli qoida: raund almashganda (zarba manzarasi tugagach) xabar - «2-raund», «Penalti»
+    if (v2 && !gb.anim) {
+      if (gb.raund != null && g.round > gb.raund && g.state === "ketmoqda") { gbXabar(t.r2X[g.round]); }
+      gb.raund = g.round;
+    }
     var eb = $("gb-end");
     if (g.kind === "dost" && g.state === "kutmoqda") { gbKutish(); return; }
     if (eb.getAttribute("data-k") === "kut") { eb.setAttribute("data-k", ""); eb.classList.add("hidden"); eb.innerHTML = ""; }      // do'st keldi
@@ -665,26 +684,27 @@
   function gbInfo() {
     var eski = $("du-info"), t = gbT(), r = (gbData && gbData.rules) || {}, pt = r.points || {};
     if (eski) { eski.parentNode.removeChild(eski); }
+    var nT = r.v2 ? (r.rstones || 6) : (r.stones || 9);
     var bandlar = lang === "ru" ? [
-      ["Игра", "В центре круга лежат 9 камешков. По очереди вы бьёте своим камнем с края круга. Каждый камешек, вылетевший за круг, — ваше очко."],
+      ["Игра", "В центре круга лежат " + nT + " камешков. По очереди вы бьёте своим камнем с края круга. Каждый камешек, вылетевший за круг, — ваше очко."],
       ["Как бить", "Сначала передвиньте свой камень по нижней дуге — выберите место. Затем оттяните палец на поле в обратную сторону и отпустите: чем дальше оттянули, тем сильнее удар."],
-      ["Сколько ударов", "У каждого по " + (r.shots || 5) + " ударов. Ничья — ещё до " + (r.extra || 3) + " пар ударов. Время на удар — " + (r.turn || 30) + " секунд, иначе удар сгорает."],
+      r.v2 ? t.infoV2(r.rstones || 6, r.rshots || 3, r.turn || 30) : ["Сколько ударов", "У каждого по " + (r.shots || 5) + " ударов. Ничья — ещё до " + (r.extra || 3) + " пар ударов. Время на удар — " + (r.turn || 30) + " секунд, иначе удар сгорает."],
       ["Тренировка", "Три соперника-компьютера: Невилл (легко), Рон (средне), Джордж Уизли (сложно). Очков не дают."],
       ["Турнир", "Каждый вторник в 22:00. Нажмите «Участвую». Сетка, как в дуэли и шахматах; чаще побеждавшие на тренировке получают место выше."],
       ["Очки", "За победу: 1/8 финала +" + (pt["16"] || 5) + ", четвертьфинал +" + (pt["8"] || 10) + ", полуфинал +" + (pt["4"] || 20) + ", финал +" + (pt["2"] || 30) + "."],
       ["Как в книге", "Проигравшего камешки обрызгивают вонючей жидкостью."]]
       : lang === "en" ? [
-      ["The game", "Nine stones lie in the middle of the ring. Taking turns, you shoot your own stone from the edge of the ring. Every stone knocked out of the ring is a point for you."],
+      ["The game", nT + " stones lie in the middle of the ring. Taking turns, you shoot your own stone from the edge of the ring. Every stone knocked out of the ring is a point for you."],
       ["How to shoot", "First slide your stone along the lower arc to choose a spot. Then pull your finger back on the field and let go: the further you pull, the harder the shot."],
-      ["How many shots", (r.shots || 5) + " shots each. On a tie — up to " + (r.extra || 3) + " extra pairs. " + (r.turn || 30) + " seconds per shot, or it is lost."],
+      r.v2 ? t.infoV2(r.rstones || 6, r.rshots || 3, r.turn || 30) : ["How many shots", (r.shots || 5) + " shots each. On a tie — up to " + (r.extra || 3) + " extra pairs. " + (r.turn || 30) + " seconds per shot, or it is lost."],
       ["Practice", "Three computer rivals: Neville (easy), Ron (medium), George Weasley (hard). No points."],
       ["Tournament", "Every Tuesday at 22:00. Tap “I'm in”. A bracket like in duels and chess; those who won more practice games are seeded higher."],
       ["Points", "For a win: round of 16 +" + (pt["16"] || 5) + ", quarter-final +" + (pt["8"] || 10) + ", semi-final +" + (pt["4"] || 20) + ", final +" + (pt["2"] || 30) + "."],
       ["Like in the books", "The loser gets squirted with stinky liquid by the stones."]]
       : [
-      ["O'yin", "Doiraning o'rtasida 9 ta toshcha turadi. Navbat bilan o'z toshingizni doira chetidan otasiz. Doiradan chiqib ketgan har bir toshcha — sizga ochko."],
+      ["O'yin", "Doiraning o'rtasida " + nT + " ta toshcha turadi. Navbat bilan o'z toshingizni doira chetidan otasiz. Doiradan chiqib ketgan har bir toshcha — sizga ochko."],
       ["Qanday otiladi", "Avval toshingizni pastki yoy bo'ylab surib, joy tanlang. Keyin maydonda barmoqni orqaga torting va qo'yib yuboring: qancha uzoq tortsangiz, zarba shuncha kuchli."],
-      ["Nechta zarba", "Har kimga " + (r.shots || 5) + " tadan zarba. Teng bo'lsa — yana " + (r.extra || 3) + " juftgacha qo'shimcha zarba. Har zarbaga " + (r.turn || 30) + " soniya, ulgurmasangiz zarba yonib ketadi."],
+      r.v2 ? t.infoV2(r.rstones || 6, r.rshots || 3, r.turn || 30) : ["Nechta zarba", "Har kimga " + (r.shots || 5) + " tadan zarba. Teng bo'lsa — yana " + (r.extra || 3) + " juftgacha qo'shimcha zarba. Har zarbaga " + (r.turn || 30) + " soniya, ulgurmasangiz zarba yonib ketadi."],
       ["Mashq", "Uchta kompyuter raqib: Nevill (oson), Ron (o'rta), Jorj Uizli (qiyin). Ball berilmaydi."],
       ["Turnir", "Har seshanba 22:00 da. «Qatnashaman»ni bosing. To'r duel va shaxmatdagidek; mashqda ko'p yutganlar to'rda yuqoriroq turadi."],
       ["Ballar", "G'alaba uchun: 1/8 final +" + (pt["16"] || 5) + ", chorak final +" + (pt["8"] || 10) + ", yarim final +" + (pt["4"] || 20) + ", final +" + (pt["2"] || 30) + "."],
