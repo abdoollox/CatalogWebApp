@@ -157,7 +157,8 @@
   var CUP_SRC = [
     { key: "film",    color: "#3987e5" },
     // "exam" (kino imtihoni) 2026-10-04 da olib tashlandi - kubok muvozanatini buzardi
-    { key: "daily",   color: "#199e70" },
+    // Kunlik savol 2026-10-07 da olib tashlangan: eski haftalarda ball bor, yangilarida 0 - nol bo'lsa ko'rsatilmaydi (eski: 1)
+    { key: "daily",   color: "#199e70", eski: 1 },
     { key: "lesson",  color: "#5fb3d9" },      // darslar: afsunlar, iksirlar... (2026-10-07)
     { key: "chess",   color: "#9085e9" },
     { key: "chest",   color: "#d9568c" },      // kunlik sandiq (2026-10-05)
@@ -354,6 +355,7 @@
     var row = cupEl("div", "src-legend");
     var c = cupT();
     CUP_SRC.forEach(function (x) {
+      if (x.eski) { return; }
       var cell = cupEl("span", "src-leg");
       var dot = cupEl("i");
       dot.style.background = x.color;
@@ -804,6 +806,7 @@
     var rows = cupEl("div", "you-src");
     CUP_SRC.forEach(function (x) {
       var v = by[x.key] || 0;
+      if (x.eski && !v) { return; }
       var cap = caps[x.key];
       var row = cupEl("button", "you-src-row");
       row.type = "button";
@@ -1269,6 +1272,7 @@
         var tbl = cupEl("div", "hc-src");
         CUP_SRC.forEach(function (x) {
           var v = by[x.key] || 0;
+          if (x.eski && !v) { return; }
           var r2 = cupEl("div", "hc-src-row" + (v ? "" : " zero"));
           var ic = cupEl("span", "hc-src-ic");
           ic.innerHTML = svgIcon(SRC_ICON[x.key]);
