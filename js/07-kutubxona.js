@@ -1513,7 +1513,7 @@
     // Fakulteti borlar uni rasm qilib ulasha oladi (uyShare, js/09)
     var ush = $("house-share");
     ush.textContent = al("uyShare");
-    ush.classList.toggle("hidden", house === "none");
+    ush.classList.toggle("hidden", house === "none" || !!h.direktor);
     if (!ush.onclick) { ush.onclick = function () { uyShare(); }; }
     // Kichik "i" tugmasi: fakultet sahifasi (asoschisi, mudiri, a'zolari) - qaytganda yana profil
     var hi = $("house-info");
@@ -1521,6 +1521,7 @@
     // Avval qisqa oyna: shu fakultet odamining xarakteri; "Batafsil" - fakultet sahifasi (egasi, 2026-10-05)
     hi.onclick = function () {
       var hx = UY_XAR[lang] || UY_XAR.uz, hh = HOUSES[house] || {};
+      if (hh.direktor) { nshBox({ codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: hh[lang], title: DIREKTOR_ISM, text: hh["note_" + lang] || hh.note_uz }); return; }
       nshBox({ codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "",
                text: hx[house] || "",
                more: { label: hx.more, fn: function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } } } });

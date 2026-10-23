@@ -1285,6 +1285,8 @@
     // Fakultet
     var hh = HOUSES[house], hx = UY_XAR[lang] || UY_XAR.uz;
     katak(t.houseLbl, IMG_DIR + hh.img, hh[lang], "gerb", function () {
+      // Direktor (egasi, 2026-10-24): fakultet emas - sahifasi va ulashish yo'q
+      if (hh.direktor) { nshBox({ x: true, codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: hh[lang], title: DIREKTOR_ISM, text: hh["note_" + lang] || hh.note_uz }); return; }
       nshBox({ x: true, codes: ["x"], srcs: [IMG_DIR + hh.img], crest: true, kick: t.houseLbl, title: hh[lang] || "", text: hx[house] || "",
                more: { label: hx.more, fn: function () { pmUy = true; pmHide(); try { openHouse(house); } catch (e) { pmUy = false; pmShow(); } } },
                more2: { label: al("uyShare"), fn: function () { uyShare(); } } });

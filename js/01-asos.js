@@ -696,11 +696,26 @@
                   uz:"Xaffelpaff", ru:"Пуффендуй", en:"Hufflepuff",
                   note_uz:"Sadoqat, mehnatsevarlik va adolat — sizning tayanchingiz.",
                   note_ru:"Верность, трудолюбие и справедливость — ваша опора.",
-                  note_en:"Loyalty, hard work and fairness — these hold you up." }
+                  note_en:"Loyalty, hard work and fairness — these hold you up." },
+    // Xogvarts direktori - egasining hisobi (2026-10-24). Fakultet emas: bali kubokka qo'shilmaydi,
+    // gerb o'rnida Dambldor portreti, urg'u kumush.
+    direktor:   { accent:"#cfd6e0", accent2:"#8d97a6", rgb:"207,214,224", ink:"#10141a", hi:"#eef2f7",
+                  crest:"🧙", img:"Direktor_crest.webp", direktor:true,
+                  uz:"Xogvarts direktori", ru:"Директор Хогвартса", en:"Headmaster of Hogwarts",
+                  note_uz:"Xogvarts direktori. Fakultetlar kubogida qatnashmaydi.",
+                  note_ru:"Директор Хогвартса. Не участвует в Кубке факультетов.",
+                  note_en:"Headmaster of Hogwarts. Takes no part in the House Cup." }
   };
+
+  var DIREKTOR_ISM = "Albus Dambldor";
 
   function applyHouse(id) {
     var h = HOUSES[id] || HOUSES.none;
+    // Direktor: ilovaning hamma joyida (profil, chat, shaxmat...) Telegram ismi o'rnida «Albus Dambldor».
+    // Server initData ning o'zini tekshiradi - bu obyekt faqat ko'rinish uchun.
+    if (h.direktor) {
+      try { var du = tg.initDataUnsafe.user; if (du) { du.first_name = DIREKTOR_ISM; du.last_name = ""; } } catch (e) {}
+    }
     var root = document.documentElement;
     if (!root || !root.style || !root.style.setProperty) { return; }
     root.style.setProperty("--accent", h.accent);
