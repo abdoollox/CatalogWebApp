@@ -66,7 +66,7 @@
           bellOf: function (f) { return f + " bellashuvi"; }, bellNone: "Hali qatnashmadingiz", bellGo: "Boshlash", bellNo: "Bugungi urinishlar tugadi",
           tries: function (n) { return n + " ta urinish qoldi"; }, place: function (n, j) { return n + "-o'rin · " + j + " kishidan"; },
           prizes: function (a, b, c, d) { return "1-o'rin +" + a + " · 2-o'rin +" + b + " · 3-o'rin +" + c + " · 4–10-o'rin +" + d + " ball"; },
-          rule: "Vaqt «Boshlash» bosilgandan hisoblanadi. Har xato +3 soniya. Eng yaxshi urinishingiz hisobga olinadi.",
+          rule: function (s) { return "Vaqt «Boshlash» bosilgandan hisoblanadi. Har xato +" + s + " soniya. Eng yaxshi urinishingiz hisobga olinadi."; },
           topT: "Bugungi jadval", topNone: "Hali hech kim qatnashmadi — birinchi bo'ling!", yest: "Kechagi g'oliblar",
           yestMe: function (n, p) { return "Siz kecha " + n + "-o'rin" + (p ? " · +" + p + " ball" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
           leftT: function (h, m) { return "Tugashiga " + (h ? h + " soat " : "") + m + " daqiqa qoldi"; }, ptsW: "ball", meK: "Sizning natijangiz", meBest: "Eng yaxshi natijangiz",
@@ -168,7 +168,7 @@
           bellOf: function (f) { return f + ": состязание"; }, bellNone: "Вы ещё не участвовали", bellGo: "Начать", bellNo: "Попытки на сегодня закончились",
           tries: function (n) { return "Осталось попыток: " + n; }, place: function (n, j) { return n + "-е место из " + j; },
           prizes: function (a, b, c, d) { return "1-е место +" + a + " · 2-е +" + b + " · 3-е +" + c + " · 4–10-е +" + d + " очков"; },
-          rule: "Время идёт с нажатия «Начать». Каждая ошибка +3 секунды. Засчитывается лучшая попытка.",
+          rule: function (s) { return "Время идёт с нажатия «Начать». Каждая ошибка +" + s + " с. Засчитывается лучшая попытка."; },
           topT: "Таблица дня", topNone: "Пока никто не участвовал — будьте первым!", yest: "Вчерашние победители",
           yestMe: function (n, p) { return "Вчера вы на " + n + "-м месте" + (p ? " · +" + p + " очков" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " с"; },
           leftT: function (h, m) { return "До конца " + (h ? h + " ч " : "") + m + " мин"; }, ptsW: "очков", meK: "Ваш результат", meBest: "Ваш лучший результат",
@@ -268,7 +268,7 @@
           bellOf: function (f) { return f + " contest"; }, bellNone: "You have not taken part yet", bellGo: "Start", bellNo: "No attempts left today",
           tries: function (n) { return n + " attempts left"; }, place: function (n, j) { return "Place " + n + " of " + j; },
           prizes: function (a, b, c, d) { return "1st +" + a + " · 2nd +" + b + " · 3rd +" + c + " · 4th–10th +" + d + " points"; },
-          rule: "The clock starts when you press Start. Each mistake adds 3 seconds. Your best attempt counts.",
+          rule: function (s) { return "The clock starts when you press Start. Each mistake adds " + s + " seconds. Your best attempt counts."; },
           topT: "Today's table", topNone: "Nobody has taken part yet — be the first!", yest: "Yesterday's winners",
           yestMe: function (n, p) { return "Yesterday you were " + n + (p ? " · +" + p + " points" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
           leftT: function (h, m) { return "Ends in " + (h ? h + " h " : "") + m + " min"; }, ptsW: "points", meK: "Your result", meBest: "Your best result",
@@ -998,7 +998,7 @@
     var go = $("bl-go");
     go.textContent = qoldi > 0 ? x.bellGo : x.bellNo;
     go.disabled = qoldi < 1;
-    $("bl-rule").textContent = x.rule;
+    $("bl-rule").textContent = x.rule(Math.round(((c && c.penalty) || 3000) / 100) / 10);      // jarima serverdan (tarixda 10 s)
 
     // Jadval: birinchi uchlik shohsupada, qolganlari ro'yxatda
     $("bl-top-t").textContent = x.topT + (c.n ? " · " + c.n : "");
@@ -3231,14 +3231,14 @@
     }
     return a;
   }
-  function mxPlan(n, urug) {
+  function mxPlan(n, urug, sh) {
     var bell = urug != null, T = MX_TARTIB, juft = bell ? 6 : n <= 4 ? 3 : n <= 12 ? 4 : n <= 24 ? 6 : 8;
     var pool = bell ? T.slice() : T.slice(0, Math.min(T.length, n + 2)), yangi = bell ? [] : n === 1 ? T.slice(0, 3) : n + 1 < T.length ? [T[n + 1]] : [];
     var tan = yangi.slice(0, juft), g = 0, s0 = bell ? urug : n * 37;
     while (tan.length < juft && g < 500) { var c = pool[Math.floor(afRnd(s0 + g++) * pool.length)]; if (tan.indexOf(c) < 0) { tan.push(c); } }
     var cards = [];
     tan.forEach(function (k) { cards.push({ k: k, f: false }); cards.push({ k: k, f: true }); });
-    mxArala(cards, bell ? urug + 99 : null);
+    mxArala(cards, bell ? (sh != null ? sh : urug + 99) : null);
     return { cards: cards, juft: juft, yangi: yangi, peek: bell || n > 24 ? 0 : n > 12 ? 2500 : 4000,
              lim: bell ? 0 : Math.round(juft * (n <= 12 ? 7 : n <= 24 ? 5.5 : 4.5) * 1000) };
   }
@@ -3252,7 +3252,7 @@
   function mxOpen(bell, n) {
     var st = drData && drData.maxluq, x = drX(), f = drFan("maxluq"), urug = null, i;
     if (bell === true) { var it = String((st && st.contest && st.contest.item) || "m1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 11); } }
-    var plan = mxPlan(n || 1, urug);
+    var plan = mxPlan(n || 1, urug, bell === true ? blShaxs("maxluq") : null);
     mxStop();
     mx = { n: n || 1, bell: bell === true, rek: bell === "rek", rekJami: 0, rekR: 0, cards: plan.cards, pairs: plan.juft, yangi: plan.yangi, peek: plan.peek, lim: plan.lim,
            sel: null, lock: false, mism: 0, found: 0, t0: 0, pct: 1, tm: 0, pk: 0 };
@@ -3658,7 +3658,15 @@
     var k = 1 + Math.floor(r1 * (P.length - 2)), a = r2 * Math.PI * 2;
     return P.map(function (p, j) { return j === k ? [p[0] + Math.cos(a) * 0.2, p[1] + Math.sin(a) * 0.2] : p; });
   }
-  function ylPlan(n, urug, rek) {
+  /* Bellashuvda variantlar / kartalar tartibi har o'quvchiga va har urinishga ALOHIDA (chat tahlili, 2026-10-23: Astronomiya,
+     Transfiguratsiya va Maxluqlar bellashuvi hammaga bir xil tartibda edi - fakultet xonalarida har kuni «javoblar: B A A C…»
+     tarqatilardi). Savollarning o'zi (turkum, afsun, juftliklar) hammaga bir xil qoladi - faqat joylashuvi boshqa. */
+  function blShaxs(fan) {
+    var u = 0, c = drData && drData[fan] && drData[fan].contest;
+    try { u = Number(chatUser().id) || 0; } catch (e) {}
+    return (Math.abs(u) % 99991) * 7 + (((c && c.tries) || 0) + 1) * 131 + 17;
+  }
+  function ylPlan(n, urug, rek, sh) {
     var bell = urug != null, T = YL_TARTIB, L = T.length, s0 = rek ? Math.floor(Math.random() * 90000) : bell ? urug : n * 61, soni = rek ? 150 : bell ? 8 : 5 + Math.min(3, Math.floor((n - 1) / 9));
     var bosq = bell ? 1 : n <= 12 ? 0 : n <= 24 ? 1 : 2, var_ = bosq === 2 ? 6 : 4, savol = [], i, g;
     var rnd = function (k) { return afRnd(s0 + k * 7.31); };
@@ -3677,7 +3685,7 @@
         g++;
         if (band.indexOf(boshqa) < 0) { band.push(boshqa); opts.push({ p: YL[boshqa].p, rot: Math.floor(rnd(i * 13 + 40 + g) * 360), aks: rnd(i * 13 + 50 + g) < 0.5 }); }
       }
-      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor(rnd(i * 13 + 70 + g) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
+      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor((sh != null ? afRnd(sh + i * 13.7 + g * 1.91) : rnd(i * 13 + 70 + g)) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
       savol.push({ id: id, opts: opts });
     }
     return { savol: savol, lim: bell ? 0 : Math.round(Math.max(5000, 10000 - n * 130)) };
@@ -3686,7 +3694,7 @@
   function ylOpen(bell, n) {
     var st = drData && drData.astro, x = drX(), f = drFan("astro"), urug = null, i;
     if (bell === true) { var it = String((st && st.contest && st.contest.item) || "a1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 3); } }
-    var plan = ylPlan(n || 1, urug, bell === "rek");
+    var plan = ylPlan(n || 1, urug, bell === "rek", bell === true ? blShaxs("astro") : null);
     ylStop();
     yl = { n: n || 1, bell: bell === true, rek: bell === "rek", savol: plan.savol, lim: plan.lim, i: 0, ok: 0, t0: 0, tm: 0, lock: false };
     drShowGame("scr-astro");
@@ -4028,7 +4036,7 @@
      1-3: SONI (ko'payadi / kamayadi), 4-6: HAJMI (kattalashadi / kichrayadi), 7-8: NURINING RANGI, 9-10: BURILISHI, 11-12: boshqa BUYUMGA aylanishi.
      13-darsdan ikki, 25-darsdan uch o'zgarish birdan (hamma tur aralash). Har yangi turning birinchi darsida yo'riqnoma chiqadi (tfYoriq). */
   function tfTur(n) { return n <= 3 ? "n" : n <= 6 ? "s" : n <= 8 ? "c" : n <= 10 ? "r" : n <= 12 ? "o" : ""; }
-  function tfPlan(n, urug, rek) {
+  function tfPlan(n, urug, rek, sh) {
     var bell = urug != null, s0 = rek ? Math.floor(Math.random() * 90000) : bell ? urug : n * 83, soni = rek ? 150 : bell ? 8 : 5 + Math.min(3, Math.floor((n - 1) / 9));
     var m = bell ? 2 : n <= 12 ? 1 : n <= 24 ? 2 : 3, var_ = !bell && n > 24 ? 6 : 4, savol = [], i, g, k;
     var tur = !bell && !rek ? tfTur(n) : "", havza = tur ? TF_OP.filter(function (op0) { return op0.k === tur; }) : TF_OP;
@@ -4052,7 +4060,7 @@
         nomzod.push(tfQolla(togri, [{ k: bel, d: rnd(z + 901 + k * 2) < 0.5 ? 1 : -1 }]));
       }
       nomzod.forEach(function (q) { if (opts.length < var_ && tfYaroqli(q) && !bor[tfKalit(q)]) { bor[tfKalit(q)] = 1; opts.push(q); } });
-      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor(rnd(z + 1200 + g) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
+      for (g = opts.length - 1; g > 0; g--) { var j = Math.floor((sh != null ? afRnd(sh + i * 11.3 + g * 2.07) : rnd(z + 1200 + g)) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
       savol.push({ a: a, a2: tfQolla(a, qoida), b: b, opts: opts, ok: opts.indexOf(togri) });
     }
     return { savol: savol, lim: bell ? 0 : Math.round(Math.max(7000, 15000 - n * 200)) };
@@ -4060,7 +4068,7 @@
   function tfOpen(bell, n) {
     var st = drData && drData.trans, x = drX(), f = drFan("trans"), urug = null, i;
     if (bell === true) { var it = String((st && st.contest && st.contest.item) || "t1"); urug = 0; for (i = 0; i < it.length; i++) { urug += it.charCodeAt(i) * (i + 17); } }
-    var plan = tfPlan(n || 1, urug, bell === "rek");
+    var plan = tfPlan(n || 1, urug, bell === "rek", bell === true ? blShaxs("trans") : null);
     tfStop();
     tf = { n: n || 1, bell: bell === true, rek: bell === "rek", savol: plan.savol, lim: plan.lim, i: 0, ok: 0, t0: 0, tm: 0, lock: false };
     drShowGame("scr-trans");
