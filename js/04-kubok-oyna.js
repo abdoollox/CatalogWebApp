@@ -215,8 +215,8 @@
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
               "Hafta yakunida har 10 ball uchun 1 galleon beriladi. G'olib fakultet a'zolariga ikki baravar, eng ko'p ball to'plagan uch o'quvchiga yana +15, +10 va +5.",
-              "Do'st taklifidan boshqa manbalarning mavsumdagi chegarasi bor — jami 230 ball.",
-              "Bot bilan shaxmat ball bermaydi — faqat jonli raqib bilan o'yin."]
+              "Ball beradi: har kungi bellashuvlar (o'ringa qarab, +15 gacha), rekordlar (kunlik uchlik), haftalik turnirlar, Shokolad qurbaqa qutisi (+10), har bir film qismi (haftada bir marta +5), jonli shaxmat (haftada 5 ta natija), do'st taklifi (+20).",
+              "Ball BERMAYDI: chatda yozish, darslar (bu mashq) va bot bilan shaxmat."]
     },
     ru: {
       src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", lesson: "Состязания", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
@@ -251,8 +251,8 @@
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
               "В конце недели за каждые 10 очков выдаётся 1 галлеон. Участникам факультета-победителя — вдвое больше, трём лучшим ученикам ещё +15, +10 и +5.",
-              "У всех источников, кроме приглашений, есть лимит за сезон — всего 230 очков.",
-              "Игра с ботом очков не даёт — только партии с живым соперником."]
+              "Очки дают: ежедневные состязания (по месту, до +15), рекорды (дневная тройка), еженедельные турниры, коробка Шоколадной лягушки (+10), каждая часть фильма (раз в неделю +5), живые шахматы (5 результатов в неделю), приглашение друга (+20).",
+              "Очки НЕ дают: сообщения в чате, уроки (это тренировка) и шахматы с ботом."]
     },
     en: {
       src: { film: "Films", exam: "Exams", daily: "Daily", lesson: "Contests", chess: "Chess", chest: "Frog", friends: "Friends" },
@@ -287,8 +287,8 @@
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
               "At the end of the week you get 1 Galleon for every 10 points. Members of the winning house get double, and the top three students get +15, +10 and +5 more.",
-              "Every source except inviting friends has a season cap — 230 points in total.",
-              "Chess against a bot gives no points — only live games do."]
+              "Points come from: daily contests (by place, up to +15), records (daily top three), weekly tournaments, the Chocolate Frog box (+10), each film part (once a week, +5), live chess (5 results a week), inviting a friend (+20).",
+              "NO points for: chat messages, lessons (they are practice) or chess against a bot."]
     }
   };
 

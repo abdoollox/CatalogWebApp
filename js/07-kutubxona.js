@@ -932,7 +932,7 @@
           chess: ["Shaxmatda bir o'yin o'ynang", "Bot bilan ham bo'ladi"], rek: ["Rekord rejimida urinib ko'ring", "Istalgan fanda — xatosiz qancha uzoqqa borasiz"],
           kitob: ["Kitob o'qing", "Kutubxonadagi istalgan kitobni oching"], duel_yut: ["Duelda g'alaba qozoning", "Kompyuter raqib yoki jonli duel"],
           bell_top: ["Bellashuvda o'ntalikka kiring", "Bugungi istalgan fanda birinchi o'n kishi ichida bo'ling"],
-          alo: ["Darsni «A'lo» bahoga o'ting", "Baho qo'yiladigan istalgan fanda"], rek_yangi: ["O'z rekordingizni yangilang", "Istalgan fanning rekord rejimida"] },
+          alo: ["Darsni «A'lo» bahoga o'ting", "Sehrgarlik tarixidan boshqa istalgan fanda; o'tilgan darsni qayta o'ynasangiz ham bo'ladi"], rek_yangi: ["O'z rekordingizni yangilang", "Istalgan fanning rekord rejimida"] },
     ru: { tier: ["", "Лёгкое", "Среднее", "Трудное"],
           parvarish: ["Позаботьтесь о растении или существе", "Полейте в Теплице или покормите в Заповеднике"], chat: ["Напишите в чат или поставьте реакцию", "Большой зал или гостиная факультета"],
           share: ["Поделитесь с другом", "Приглашение, факультет или Патронус"], dars: ["Пройдите один урок", "Любой предмет — можно и уже пройденный"],
@@ -940,7 +940,7 @@
           chess: ["Сыграйте партию в шахматы", "Можно и с ботом"], rek: ["Попробуйте режим рекорда", "Любой предмет — как далеко вы пройдёте без ошибок"],
           kitob: ["Почитайте книгу", "Откройте любую книгу в библиотеке"], duel_yut: ["Победите в дуэли", "Компьютерный соперник или живая дуэль"],
           bell_top: ["Войдите в десятку состязания", "Будьте среди первых десяти по любому предмету сегодня"],
-          alo: ["Пройдите урок на «Превосходно»", "Любой предмет, где ставится оценка"], rek_yangi: ["Побейте свой рекорд", "В режиме рекорда по любому предмету"] },
+          alo: ["Пройдите урок на «Превосходно»", "Любой предмет, кроме Истории магии; можно переиграть пройденный урок"], rek_yangi: ["Побейте свой рекорд", "В режиме рекорда по любому предмету"] },
     en: { tier: ["", "Easy", "Medium", "Hard"],
           parvarish: ["Care for a plant or a creature", "Water in the Greenhouse or feed in the Reserve"], chat: ["Write in the chat or react", "The Great Hall or your common room"],
           share: ["Share with a friend", "Invite link, house or Patronus"], dars: ["Pass one lesson", "Any subject — replaying a passed one counts"],
@@ -948,7 +948,7 @@
           chess: ["Play a game of chess", "A bot game counts too"], rek: ["Try record mode", "Any subject — how far can you go without a mistake"],
           kitob: ["Read a book", "Open any book in the library"], duel_yut: ["Win a duel", "A computer opponent or a live duel"],
           bell_top: ["Reach a contest top ten", "Be among the first ten in any subject today"],
-          alo: ["Pass a lesson with “Outstanding”", "Any graded subject"], rek_yangi: ["Beat your own record", "In record mode of any subject"] }
+          alo: ["Pass a lesson with “Outstanding”", "Any subject except History of Magic; replaying a passed lesson counts too"], rek_yangi: ["Beat your own record", "In record mode of any subject"] }
   };
   function sqT2() { return SQ_T2[lang] || SQ_T2.uz; }
   function sqMatn(t) { return (t.tier ? sqT2()[t.code] : null) || sqX().t[t.code] || sqT2()[t.code]; }
