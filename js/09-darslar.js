@@ -70,7 +70,7 @@
           topT: "Bugungi jadval", topNone: "Hali hech kim qatnashmadi — birinchi bo'ling!", yest: "Kechagi g'oliblar",
           yestMe: function (n, p) { return "Siz kecha " + n + "-o'rin" + (p ? " · +" + p + " ball" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
           leftT: function (h, m) { return "Tugashiga " + (h ? h + " soat " : "") + m + " daqiqa qoldi"; }, ptsW: "ball", meK: "Sizning natijangiz", meBest: "Eng yaxshi natijangiz",
-          you: "siz", resT: function (t) { return "Natijangiz: " + t; }, resBest: function (t) { return "Eng yaxshi natijangiz: " + t; },
+          you: "siz", resT: function (t) { return "Natijangiz: " + t; }, resBest: function (t) { return "Eng yaxshi natijangiz: " + t; }, saqlandi: "Natijangiz saqlandi",
           bellBack: "Jadvalga qaytish", timer: "Vaqt ketyapti",
           today: "Bugungi mavzu", back: "Darslarga qaytish", got: function (n) { return "Fakultetingizga +" + n + " ball"; },
           practice: "Bu dars bugun bajarilgan — mashq uchun ball berilmaydi.", fail: "Hozir bo'lmadi, birozdan keyin urinib ko'ring",
@@ -172,7 +172,7 @@
           topT: "Таблица дня", topNone: "Пока никто не участвовал — будьте первым!", yest: "Вчерашние победители",
           yestMe: function (n, p) { return "Вчера вы на " + n + "-м месте" + (p ? " · +" + p + " очков" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " с"; },
           leftT: function (h, m) { return "До конца " + (h ? h + " ч " : "") + m + " мин"; }, ptsW: "очков", meK: "Ваш результат", meBest: "Ваш лучший результат",
-          you: "вы", resT: function (t) { return "Ваш результат: " + t; }, resBest: function (t) { return "Лучший результат: " + t; },
+          you: "вы", resT: function (t) { return "Ваш результат: " + t; }, resBest: function (t) { return "Лучший результат: " + t; }, saqlandi: "Результат сохранён",
           bellBack: "К таблице", timer: "Время идёт",
           today: "Тема дня", back: "К урокам", got: function (n) { return "+" + n + " очков вашему факультету"; },
           practice: "Этот урок сегодня уже сделан — за тренировку очки не даются.", fail: "Не получилось, попробуйте чуть позже",
@@ -272,7 +272,7 @@
           topT: "Today's table", topNone: "Nobody has taken part yet — be the first!", yest: "Yesterday's winners",
           yestMe: function (n, p) { return "Yesterday you were " + n + (p ? " · +" + p + " points" : ""); }, sec: function (ms) { return (ms / 1000).toFixed(1) + " s"; },
           leftT: function (h, m) { return "Ends in " + (h ? h + " h " : "") + m + " min"; }, ptsW: "points", meK: "Your result", meBest: "Your best result",
-          you: "you", resT: function (t) { return "Your result: " + t; }, resBest: function (t) { return "Your best: " + t; },
+          you: "you", resT: function (t) { return "Your result: " + t; }, resBest: function (t) { return "Your best: " + t; }, saqlandi: "Your result was saved",
           bellBack: "Back to the table", timer: "The clock is running",
           today: "Today's topic", back: "Back to classes", got: function (n) { return "+" + n + " points for your house"; },
           practice: "This class is already done today — practice gives no points.", fail: "That didn't work, please try again shortly",
@@ -1041,22 +1041,43 @@
 
   function blTick() {
     if (!bl) { return; }
-    if (bl.fan === "iksir") { $("ik-timer").textContent = drX().timer + " · " + drX().sec(Date.now() - bl.t0 + bl.xato * 3000); }
+    if (bl.fan === "iksir") { $("ik-timer").textContent = drX().timer + " · " + drX().sec(Date.now() - bl.t0 + bl.xato * blJarima("iksir")); }
     else if (bl.fan === "tarix") { $("tr-timer").textContent = drX().timer + " · " + drX().sec(Date.now() - bl.t0); }
     else if (af && !af.done) { afPaint(); }
     bl.tm = setTimeout(blTick, 100);
   }
 
-  // Urinish tugadi: natija serverda hisoblanadi
+  // Bellashuvda bitta xato necha ms (server aytadi: fan jihozi, tarix jarimasi)
+  function blJarima(fan) { var c = drData && drData[fan] && drData[fan].contest; return (c && c.penalty) || 3000; }
+
+  // Urinish tugadi: natija serverda hisoblanadi. Ilova o'z vaqtini ham yuboradi (cms) - server internet kechikishini
+  // shu bilan ayiradi (hpdars.KECHIKISH_MS). Aloqa uzilsa natija 3 martagacha qayta yuboriladi (chat tahlili 2026-10-23:
+  // «eng yaxshi urinishim tasdiqlanmadi»).
   function blFinish(box) {
     var x = drX(), b = bl;
     if (!b) { return; }
     bl = null;
     clearTimeout(b.tm);
-    drPost({ finish: b.fan, xato: b.xato, answers: b.answers }, function (res) {
+    var body = { finish: b.fan, xato: b.xato, answers: b.answers, cms: Date.now() - b.t0 }, urindi = 0;
+    function yubor() {
+      urindi++;
+      drPost(body, function (res) {
+        if (!res && urindi < 3) { setTimeout(yubor, 1500 * urindi); return; }
+        // Qayta yuborishda «boshlanmagan» - demak birinchi so'rov serverga yetgan, natija saqlangan
+        if (res && !res.ok && res.error === "not_started" && urindi > 1) { res = { ok: true, saved: true, lessons: res.lessons }; }
+        tayyor(res);
+      });
+    }
+    function tayyor(res) {
       if (res && res.lessons) { drData = res.lessons; }
       box.innerHTML = "";
       if (!res || !res.ok) { box.appendChild(drEl("p", "dr-res-t", x.fail)); }
+      else if (res.saved) {
+        var c0 = drData[b.fan].contest;
+        box.appendChild(drEl("p", "dr-res-t", x.saqlandi));
+        if (c0.ms) { box.appendChild(drEl("small", "dr-res-s", x.resBest(x.sec(c0.ms)))); }
+        box.appendChild(drEl("b", "dr-res-p", x.place(c0.place, c0.n)));
+      }
       else {
         var c = drData[b.fan].contest;
         box.appendChild(drEl("p", "dr-res-t", x.resT(x.sec(res.ms))));
@@ -1073,7 +1094,8 @@
       box.classList.remove("hidden");
       if (res && res.ok) { try { kyBellTugadi(box); } catch (e) {} }      // birinchi bellashuvdan keyin sardor (js/09-yoriqnoma.js)
       if (res && res.ok && b.fan === "tarix") { try { kyVazTugadi("daily"); } catch (e) {} }      // birinchi kun qurbaqa topshirig'i
-    });
+    }
+    yubor();
   }
 
   // Bellashuv paytida o'yindan chiqib ketilsa urinish yonadi (server vaqti o'tib ketadi)
@@ -1901,7 +1923,7 @@
       }
     }
     var ko = afR(), jami = af.steps.length;
-    $("af-step").textContent = (af.rek ? x.rekT + " · " + af.round : (af.mode === "vaz" || af.mode === "zan" ? x.afNth : x.afStep)(Math.min(af.round + 1, jami), jami)) + (bl && af.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
+    $("af-step").textContent = (af.rek ? x.rekT + " · " + af.round : (af.mode === "vaz" || af.mode === "zan" ? x.afNth : x.afStep)(Math.min(af.round + 1, jami), jami)) + (bl && af.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "") +
       (!af.bell && af.pct <= 0 && !af.done ? " · " + x.afKech : "");
     $("af-hint").textContent = af.msg || x.afR[ko >= 1 ? 0 : ko > 0 ? 1 : 2];
     $("af-hint").classList.toggle("bad", !!af.bad);
@@ -2684,7 +2706,7 @@
   }
   function hmHead() {
     var x = drX();
-    $("hm-step").textContent = (hm.rek ? x.rekT + " · " + hm.i : x.hmStep(Math.min(hm.i + 1, hm.waves.length), hm.waves.length)) + (bl && hm.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("hm-step").textContent = (hm.rek ? x.rekT + " · " + hm.i : x.hmStep(Math.min(hm.i + 1, hm.waves.length), hm.waves.length)) + (bl && hm.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "");
   }
 
   // Navbatdagi xavf: rasm uzoqdan yaqinlashadi, sham yonadi, variantlar chiqadi
@@ -3017,7 +3039,7 @@
     el.innerHTML = "";
     for (var i = 0; i < (uch.jon || 3); i++) { el.appendChild(drEl("i", i < uch.lives ? "on" : "")); }
     $("uc-step").textContent = (uch.rek ? x.rekT + " · " + uch.pass : (uch.poyga && !uch.poyga.mashq ? x.pgHalqa(uch.seen) : x.ucStep(Math.min(uch.seen + 1, uch.R), uch.R)) + (mult > 1.02 || mult < 1 ? " · ×" + mult.toFixed(2) : "")) +
-      (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "") +
+      (bl && uch.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "") +
       (uch.poyga ? " · " + x.sec(uch.t0 ? Date.now() - uch.t0 : 0) : "");
   }
   function uchDe(matn, kayf, bad) {
@@ -3330,7 +3352,7 @@
   }
   function mxHead() {
     var x = drX();
-    $("mx-prog").textContent = (mx.rek ? x.rekT + " · " + mx.rekJami : x.mxStep(mx.found, mx.pairs)) + (bl && mx.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("mx-prog").textContent = (mx.rek ? x.rekT + " · " + mx.rekJami : x.mxStep(mx.found, mx.pairs)) + (bl && mx.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "");
   }
   function mxRender() {
     var grid = $("mx-grid");
@@ -3724,7 +3746,7 @@
   }
   function ylHead() {
     var x = drX();
-    $("yl-step").textContent = (yl.rek ? x.rekT + " · " + yl.ok : x.ylStep(Math.min(yl.i + 1, yl.savol.length), yl.savol.length)) + (bl && yl.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("yl-step").textContent = (yl.rek ? x.rekT + " · " + yl.ok : x.ylStep(Math.min(yl.i + 1, yl.savol.length), yl.savol.length)) + (bl && yl.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "");
   }
   // Navbatdagi savol: namuna va variantlar
   function ylStep() {
@@ -3905,7 +3927,7 @@
     var x = drX(), el = $("os-lives");
     el.innerHTML = "";
     for (var i = 0; i < 3; i++) { el.appendChild(drEl("i", i < os.lives ? "on" : "")); }
-    $("os-step").textContent = (os.rek ? x.rekT + " · " + os.served : x.osStep(os.served + os.wilt, os.jami)) + (bl && os.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("os-step").textContent = (os.rek ? x.rekT + " · " + os.served : x.osStep(os.served + os.wilt, os.jami)) + (bl && os.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "");
   }
   function osTick() {
     var x = drX(), me = os, P = os.plan, now = Date.now(), ochiq = 0;
@@ -4167,7 +4189,7 @@
   }
   function tfHead() {
     var x = drX();
-    $("tf-step").textContent = (tf.rek ? x.rekT + " · " + tf.ok : x.tfStep(Math.min(tf.i + 1, tf.savol.length), tf.savol.length)) + (bl && tf.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * 3000) : "");
+    $("tf-step").textContent = (tf.rek ? x.rekT + " · " + tf.ok : x.tfStep(Math.min(tf.i + 1, tf.savol.length), tf.savol.length)) + (bl && tf.bell ? " · " + x.sec(Date.now() - bl.t0 + bl.xato * blJarima(bl.fan)) : "");
   }
   function tfStep() {
     var x = drX(), me = tf, q = tf.savol[tf.i], qoida = $("tf-qoida"), box = $("tf-opts");
