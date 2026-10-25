@@ -4321,3 +4321,6 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .srd-nm b{display:block;font:700 14px/1.25 'Manrope',system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .srd-nm small{display:block;font-size:11.5px;color:var(--dim)}
 .srd-ball{font:700 13px/1 'Manrope',system-ui,sans-serif;color:var(--dim);white-space:nowrap}
+
+/* Toshchalar: maydon ekran kengligida (2026-10-26) - kanvas qutidan ikki tomonga teng chiqadi */
+.gb-box{overflow:visible}

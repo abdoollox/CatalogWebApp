@@ -353,9 +353,13 @@
     $("gb-game").classList.remove("hidden");
     $("gb-info-b").classList.add("hidden");
     $("gb-end").classList.add("hidden");
-    var c = $("gb-canvas"), w = Math.min((c.parentNode.clientWidth || 340), 380), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Maydon ekranning bir chetidan ikkinchisigacha (chat tahlili 2026-10-23: «toshchalar o'yinida ekran torlik qilyapti»):
+    // telefonda sahifa chetidagi bo'sh joy ham maydonga qo'shiladi (kanvas qutidan ikki tomonga teng chiqadi)
+    var c = $("gb-canvas"), w = Math.min(Math.max(c.parentNode.clientWidth || 340, window.innerWidth || 0), 420), dpr = Math.min(window.devicePixelRatio || 1, 2);
     c.style.width = w + "px"; c.style.height = w + "px";
     c.width = Math.round(w * dpr); c.height = Math.round(w * dpr);
+    var chet = Math.min(0, ((c.parentNode.clientWidth || w) - w) / 2) + "px";      // yakun oynasi ham maydon kengligida
+    $("gb-end").style.left = chet; $("gb-end").style.right = chet;
     gb = { id: id, g: null, seen: null, anim: null, s: -90, aim: null, raf: 0, tm: 0, w: w, dpr: dpr, splash: [] };
     if (g0) { gbQabul(g0); }
     gbSor();
@@ -440,7 +444,7 @@
 
   // dunyo (doira markazi 0,0; y tepaga) <-> kanvas. Doira (R = 1) taxta rasmidagi runa halqasining ichki chetiga to'g'ri keladi.
   // Taxta rasmida runa halqasining ichki cheti rasm yarim kengligining 0,645 qismida - rasm kattalashtirib chiziladi, doira maydonning 84% ini egallaydi
-  var GB_HALQA = 0.645, GB_DOIRA = 0.84;
+  var GB_HALQA = 0.645, GB_DOIRA = 0.86;
   function gbKoord() { var w = gb.w; return { cx: w / 2, cy: w / 2, sc: w / 2 * GB_DOIRA }; }
   function gbJoy(s) { var r = (s * Math.PI) / 180; return [Math.cos(r) * (GB_R - GB_OR * 1.2), Math.sin(r) * (GB_R - GB_OR * 1.2)]; }
 
@@ -599,7 +603,7 @@
     }
     if (bosqich === "bosh") {
       var p = gbJoy(gb.s);
-      gb.tutish = Math.hypot(x - p[0], y - p[1]) < 0.17 ? "joy" : "ot";
+      gb.tutish = Math.hypot(x - p[0], y - p[1]) < 0.22 ? "joy" : "ot";
       gb.b0 = [x, y];
       gb.aim = null;
     } else if (bosqich === "yur" && gb.tutish) {
