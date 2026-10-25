@@ -760,6 +760,7 @@
     chessState.selectedSq = null;
     chessState.legalMoves = [];
     chessNet.busy = true;
+    chessNet.busyAt = Date.now();
     renderChessBoard();
     updateChessClocks();
     var tries = 0;
@@ -1289,6 +1290,40 @@
     return true;
   }
 
+  // Yurish qabul qilinmadi: sababini aytamiz, tiqilib qolgan bo'lsa tiklaymiz va serverga yozamiz
+  // (chat tahlili 2026-10-23: «donalarim yurmayapti» - bir o'quvchida 4 o'yin ketma-ket, sababi noma'lum qolgan)
+  var chessBlokT = 0;
+  function chessBlok() {
+    var g = chessNet.game, why = "", matn = "";
+    if (chessState.gameMode !== "pvp" || !g || !g.you || chessNet.review || chessState.gameOver) { return; }
+    if (g.status !== "active") { matn = g.status === "waiting" ? L("blokWait") : ""; }
+    else if (chessNet.busy) {
+      if (Date.now() - (chessNet.busyAt || 0) > 12000) { why = "stuck"; chessNet.busy = false; pvpRefresh(); matn = L("blokFix"); }
+      else { matn = L("blokSend"); }
+    } else if (chessState.turn !== chessState.myColor) {
+      if (g.turn === g.you) { why = "turn"; pvpRefresh(); matn = L("blokFix"); }
+      else { matn = L("blokOpp"); }
+    }
+    if (why) { chessDiag(why); }
+    if (matn && Date.now() - chessBlokT > 2500) { chessBlokT = Date.now(); showToast(matn); }
+  }
+
+  function chessDiag(why) {
+    var g = chessNet.game;
+    if (!g || !g.you) { return; }
+    chessApi("diag", { game_id: g.id, why: why })["catch"](function () {});
+  }
+
+  // Taxta ustini boshqa narsa (yopilmay qolgan oyna) qoplab tursa - bosish taxtaga yetmaydi; buni ham yozamiz
+  document.addEventListener("pointerdown", function (e) {
+    var ekran = $("scr-chess-game"), b = $("chess-board");
+    if (!ekran || ekran.classList.contains("hidden") || chessState.gameMode !== "pvp" || chessNet.review) { return; }
+    var r = b.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) { return; }
+    if (ekran.contains(e.target)) { return; }
+    if (chessNet.game && chessNet.game.status === "active") { chessDiag("cover"); }
+  }, true);
+
   function selectSquare(r, c) {
     chessState.selectedSq = { r: r, c: c };
     chessState.legalMoves = chessState.gameMode === "pvp" ? pvpLegalFor(r, c)
@@ -1320,7 +1355,7 @@
     if (!sq) { return; }
     e.preventDefault();
     if (chessHist.view !== null) { chessBrowse(null); return; }
-    if (!chessCanAct()) { return; }
+    if (!chessCanAct()) { chessBlok(); return; }
     if (chessState.selectedSq && tryChessMove(sq.r, sq.c, false)) { return; }
     var p = chessState.board[sq.r][sq.c];
     if (p && getPieceColor(p) === chessState.myColor) {
