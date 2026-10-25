@@ -86,7 +86,7 @@
     var L2 = pgLocal, hozir = Date.now() / 1000;
     if (body && body.join != null) { L2.joined = !!body.join; }
     var res = { ok: true, now: hozir, tour: { ts: hozir + 6 * 86400 + 5 * 3600, now: hozir, open: true, n: 11, joined: L2.joined },
-      rules: { count: 6, every: 10, hall: 120, wait: 20, next_pts: 5, next_to: 6, points: { "1": 30, "2": 20, "3": 10 } },
+      rules: { count: 6, every: 10, hall: 300, wait: 20, next_pts: 5, next_to: 6, points: { "1": 30, "2": 20, "3": 10 } },
       last: { uid: 5, name: "Garri", house: "gryffindor", n: 14 }, me: { "in": false, alive: false, out: null, place: null }, phase: L2.rej, can_test: true };
     var odam = [["Garri", "gryffindor", 47], ["Jinni", "gryffindor", 46], ["Draco", "slytherin", 44], ["Sehrgar", "ravenclaw", 43], ["Sedrik", "hufflepuff", 43],
                 ["Chjou", "ravenclaw", 41], ["Anjelina", "gryffindor", 30], ["Markus", "slytherin", 20], ["Nevill", "gryffindor", 10]]
