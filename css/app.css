@@ -4300,3 +4300,24 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .yq-yoq{display:none}
 .yq.savol .yq-yoq{display:block;margin-left:auto;border:none;background:none;color:var(--dim);font:600 13.5px/1 'Manrope',system-ui,sans-serif;padding:10px 6px;cursor:pointer}
 .yq.savol .yq-n{display:none}
+
+
+/* HAFTA SARDORI (2026-10-25): belgi (chat, ro'yxatlar, profil) va kubok sahifasidagi karta - kumush urg'u */
+.srd-b{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:1px 7px 1px 5px;border-radius:999px;font:700 10px/1.6 'Manrope',system-ui,sans-serif;letter-spacing:.02em;color:#eef2f7;background:rgba(226,232,240,.13);border:1px solid rgba(226,232,240,.32);vertical-align:middle;white-space:nowrap;text-transform:none}
+.srd-b svg{width:11px;height:11px;flex:none}
+.od-srd{text-align:center;margin:-2px 0 10px}
+.od-srd .srd-b{margin-left:0;font-size:11px;padding:2px 10px 2px 7px}
+#pm-kick .srd-b{font-size:9.5px}
+.cup-card.srd{padding:14px}
+.srd-h{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.srd-h b{display:block;font:700 15px/1.25 'Manrope',system-ui,sans-serif;color:var(--text)}
+.srd-h small{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+.srd-ic{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;color:#eef2f7;background:rgba(226,232,240,.1);border:1px solid rgba(226,232,240,.28)}
+.srd-ic svg{width:18px;height:18px}
+.srd-row{display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid rgba(255,255,255,.06)}
+.srd-row img{width:28px;height:28px;object-fit:contain;flex:none}
+.srd-row.bosh{opacity:.45}
+.srd-nm{flex:1;min-width:0}
+.srd-nm b{display:block;font:700 14px/1.25 'Manrope',system-ui,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srd-nm small{display:block;font-size:11.5px;color:var(--dim)}
+.srd-ball{font:700 13px/1 'Manrope',system-ui,sans-serif;color:var(--dim);white-space:nowrap}

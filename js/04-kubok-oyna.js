@@ -294,6 +294,55 @@
 
   function cupT() { return CUP_T[lang] || CUP_T.uz; }
 
+  // HAFTA SARDORI (egasi, 2026-10-25): o'tgan haftada fakultetida eng ko'p ball to'plagan o'quvchi - bir hafta belgi bilan.
+  // Server: hpcup.sardorlar (kubok javobida `sardors`, o'zida `me.sardor`, chat xabari/a'zolar/profilda `sardor`).
+  var SRD_TX = {
+    uz: { q: "Sardor", t: "Hafta sardori", ttl: "Hafta sardorlari", iz: "O'tgan hafta fakultetida eng ko'p ball to'plaganlar", ball: "ball", yoq: "Hali yo'q" },
+    ru: { q: "Старшина", t: "Старшина недели", ttl: "Старшины недели", iz: "Набрали больше всех очков на факультете за прошлую неделю", ball: "очков", yoq: "Пока нет" },
+    en: { q: "Prefect", t: "Prefect of the week", ttl: "Prefects of the week", iz: "Top scorers of their house last week", ball: "points", yoq: "Not yet" }
+  };
+  var SRD_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5l-8-3Zm0 5.2 1.4 2.9 3.2.4-2.3 2.2.6 3.2L12 14.4l-2.9 1.5.6-3.2-2.3-2.2 3.2-.4L12 7.2Z"/></svg>';
+  function srdT() { return SRD_TX[lang] || SRD_TX.uz; }
+  // Kichik belgi: qisqa - chat va ro'yxatlarda («Sardor»), aks holda to'liq («Hafta sardori»)
+  function srdBelgi(qisqa) {
+    var b = cupEl("span", "srd-b");
+    b.innerHTML = SRD_SVG;
+    b.appendChild(document.createTextNode(qisqa ? srdT().q : srdT().t));
+    return b;
+  }
+
+  // Kubok sahifasi: to'rt fakultetning hafta sardori
+  function renderSardor() {
+    var box = $("cup-srd"), s = (cupData && cupData.sardors) || {}, t = srdT();
+    if (!box) { return; }
+    box.innerHTML = "";
+    if (!Object.keys(s).length) { box.classList.add("hidden"); return; }
+    box.classList.remove("hidden");
+    var bosh = cupEl("div", "srd-h");
+    var ic = cupEl("span", "srd-ic");
+    ic.innerHTML = SRD_SVG;
+    bosh.appendChild(ic);
+    var tx = cupEl("div", "");
+    tx.appendChild(cupEl("b", "", t.ttl));
+    tx.appendChild(cupEl("small", "", t.iz));
+    bosh.appendChild(tx);
+    box.appendChild(bosh);
+    HOUSE_ORDER.forEach(function (h) {
+      var x = s[h], hh = HOUSES[h] || {};
+      var row = cupEl("div", "srd-row" + (x ? "" : " bosh"));
+      var cr = cupCrestImg(h, 28);
+      if (cr) { row.appendChild(cr); }
+      var nm = cupEl("div", "srd-nm");
+      var b = cupEl("b", "", x ? x.name : t.yoq);
+      if (x) { b.style.color = hh.accent || "var(--text)"; }
+      nm.appendChild(b);
+      nm.appendChild(cupEl("small", "", cupHouseName(h)));
+      row.appendChild(nm);
+      if (x) { row.appendChild(cupEl("span", "srd-ball", x.ball + " " + t.ball)); }
+      box.appendChild(x ? odamLink(row, x, h) : row);
+    });
+  }
+
   // "#3987e5" -> "rgba(57,135,229,.16)" (color-mix eski Android'da yo'q)
   function hexA(hex, a) {
     var n = parseInt(String(hex).slice(1), 16);
@@ -537,6 +586,7 @@
 
     var who = cupEl("div", "hall-nm");
     var nm = cupEl("span", "hall-nm-t", m.name || "");
+    if (m.sardor) { nm.appendChild(srdBelgi(true)); }
     if (m.me) {
       var tag = cupEl("i", "", t.hallYou);
       tag.style.color = hh.accent || "var(--accent)";
@@ -889,6 +939,7 @@
     $("cup-hist-btn").textContent = c.histAll + " ›";
 
     renderGlasses(list, me);
+    renderSardor();
     renderSources(list);
     renderYou(me);
     renderCupTiles();

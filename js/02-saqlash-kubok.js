@@ -92,6 +92,9 @@
           {house: "ravenclaw", total_points: 270, active_members: 8, qualified: true, by: {film: 150, daily: 100, chess: 0, friends: 20}}
         ],
         // Mahalliy namuna: raqamlar 2026-10-04 dagi haqiqiy haftaga yaqin
+        // Hafta sardorlari (mahalliy namuna)
+        sardors: {hufflepuff: {uid: 11, name: "Sedrik", ball: 240}, gryffindor: {uid: 12, name: "Germiona", ball: 210},
+                  slytherin: {uid: 13, name: "Draco", ball: 180}, ravenclaw: {uid: 14, name: "Luna", ball: 150}},
         season: {prev_winner: "hufflepuff", ends_at: new Date(Date.now() + 3 * 864e5 + 5 * 36e5).toISOString()},
         // Sinov rejimida mahalliy sinov ham saralanmagan odamdan boshlanadi
         me: HP_TEST ? {house: null, can_resort: true} :

@@ -460,7 +460,7 @@
     try { pmDarsRows(); } catch (e) {}
     try { puRender(); } catch (e) {}
     try { pu2Render(); } catch (e) {}
-    try { $("pm-kick").textContent = $("pm-name").textContent; } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
+    try { $("pm-kick").textContent = $("pm-name").textContent; if (cupMe().sardor) { $("pm-kick").appendChild(srdBelgi(false)); } } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
     $("pm").classList.remove("hidden");
   }
 
@@ -502,7 +502,7 @@
      Boshqa odamning nishonlari chatdan ochiladi (nshPeer). Galleon berilmaydi. */
   var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
   var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "streak_7",
-                   "perfect_week", "kubok_golib", "top_3", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1",
+                   "perfect_week", "kubok_golib", "top_3", "sardor", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1",
                    "maxluq_1", "maxluq_katta", "maxluq_12", "issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12", "kitob_1", "kitob_7", "duel_golib", "rekord_top"];
   var NSH_TX = {
     uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
@@ -523,6 +523,7 @@
                perfect_week: ["Bexato hafta", "Bir hafta ichida 5 kun Sehrgarlik tarixi bellashuvini xatosiz yakunlang"],
                kubok_golib: ["Kubok g'olibi", "Fakultetingiz haftalik kubokni yutsin, siz ham ball qo'shgan bo'ling"],
                top_3: ["Eng yaxshi uchlik", "Hafta yakunida eng ko'p ball to'plagan 3 o'quvchidan biri bo'ling"],
+               sardor: ["Hafta sardori", "Bir hafta fakultetingizda eng ko'p ball to'plang — keyingi haftaga sardor bo'lasiz"],
                dost_1: ["Birinchi do'st", "Taklifingiz bilan 1 do'st qo'shilsin"],
                dost_5: ["Do'stlar davrasi", "Taklifingiz bilan 5 do'st qo'shilsin"],
                shaxmat: ["Sehrgarlar shaxmati", "Shaxmatda bir o'quvchini yuting"],
@@ -552,6 +553,7 @@
                perfect_week: ["Неделя без ошибок", "За одну неделю 5 дней пройдите состязание по Истории магии без ошибок"],
                kubok_golib: ["Обладатель Кубка", "Ваш факультет выиграл Кубок недели, и вы принесли очки"],
                top_3: ["Лучшая тройка", "Войдите в тройку учеников с наибольшим числом очков за неделю"],
+               sardor: ["Старшина недели", "Наберите больше всех очков на своём факультете за неделю — станете старшиной на следующую"],
                dost_1: ["Первый друг", "По вашему приглашению пришёл 1 друг"],
                dost_5: ["Круг друзей", "По вашему приглашению пришли 5 друзей"],
                shaxmat: ["Волшебные шахматы", "Победите ученика в шахматах"],
@@ -581,6 +583,7 @@
                perfect_week: ["Flawless Week", "In one week, finish the History of Magic contest without mistakes on 5 days"],
                kubok_golib: ["Cup Winner", "Your house wins the weekly Cup and you earned points for it"],
                top_3: ["Top Three", "Be one of the 3 students with the most points in a week"],
+               sardor: ["Prefect of the Week", "Score the most points in your house in a week — you become prefect for the next one"],
                dost_1: ["First Friend", "1 friend joins by your invitation"],
                dost_5: ["Circle of Friends", "5 friends join by your invitation"],
                shaxmat: ["Wizard's Chess", "Beat a student at chess"],
@@ -597,7 +600,7 @@
   var NSH_GROUPS = [
     ["kino", ["film_1", "film_8", "fb_3", "poliglot", "serial_1"], { uz: "Kino", ru: "Кино", en: "Films" }],
     ["xogvarts", ["oquvchi", "tayoqcha", "patronus"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
-    ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
+    ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3", "sardor"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
     ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }],
