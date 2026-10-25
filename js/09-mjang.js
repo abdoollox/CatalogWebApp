@@ -14,6 +14,8 @@
           qoldi: "qoldi", soni: function (n) { return n + " kishi yozildi"; }, qat: "Qatnashaman", bor: "Siz yozilgansiz — boyo'g'li eslatadi", chiq: "Chiqish", yopiq: "Yozilish yopildi",
           q1: "Har kimga 5 ta maxluq kartasi — ikkala qo'l ham ochiq", q2: "Hujumda karta va kuchni tanlaysiz, raqib javob kartasini beradi",
           q3: "Raundni yutgan keyingi hujumni qiladi — 3 raund yutgan g'olib",
+          q1v2: "Har kimga 6 ta maxluq kartasi — ikkala qo'l ham ochiq",
+          q3v2: "Hujum navbat bilan: siz, raqib, raqib, siz, siz, raqib — 4 raund yutgan g'olib",
           mashq: "Mashq", mashqS: "Ball berilmaydi", daraja: ["Oson", "O'rta", "Qiyin"], stat: function (a, b) { return a + " jang · " + b + " g'alaba"; },
           dost: "Do'st bilan", dostS: "Telegram orqali", kartalar: "Kartalar", kartalarS: "O'z maxluqingiz eng kuchli tomoniga qo'shimcha oladi: o'smir +½ (teng bo'lsa yutadi), katta +1",
           ozim: "Sizniki", osmir: "o'smir · +½", katta: "katta · +1", bola: "bola", yoq: "sizda yo'q",
@@ -37,6 +39,8 @@
           qoldi: "осталось", soni: function (n) { return "Записалось: " + n; }, qat: "Участвую", bor: "Вы записаны — сова напомнит", chiq: "Выйти", yopiq: "Запись закрыта",
           q1: "У каждого 5 карт существ — обе руки открыты", q2: "В атаке вы выбираете карту и силу, соперник отвечает своей картой",
           q3: "Кто взял раунд, тот атакует дальше — 3 раунда для победы",
+          q1v2: "У каждого 6 карт существ — обе руки открыты",
+          q3v2: "Атака по очереди: вы, соперник, соперник, вы, вы, соперник — 4 раунда для победы",
           mashq: "Тренировка", mashqS: "Без очков", daraja: ["Легко", "Средне", "Сложно"], stat: function (a, b) { return "Битв: " + a + " · побед: " + b; },
           dost: "С другом", dostS: "через Telegram", kartalar: "Карты", kartalarS: "Ваше существо получает прибавку к самой сильной стороне: подросток +½ (побеждает при равенстве), взрослое +1",
           ozim: "Ваше", osmir: "подросток · +½", katta: "взрослое · +1", bola: "малыш", yoq: "нет у вас",
@@ -60,6 +64,8 @@
           qoldi: "left", soni: function (n) { return n + " signed up"; }, qat: "I'm in", bor: "You are signed up — an owl will remind you", chiq: "Leave", yopiq: "Sign-up closed",
           q1: "5 creature cards each — both hands are open", q2: "When attacking you choose a card and a power, the rival answers with a card",
           q3: "Whoever takes a round attacks next — 3 rounds to win",
+          q1v2: "6 creature cards each — both hands are open",
+          q3v2: "Attacks take turns: you, rival, rival, you, you, rival — 4 rounds to win",
           mashq: "Practice", mashqS: "No points", daraja: ["Easy", "Medium", "Hard"], stat: function (a, b) { return a + " battles · " + b + " wins"; },
           dost: "With a friend", dostS: "via Telegram", kartalar: "Cards", kartalarS: "Your own creature gets a bonus on its strongest side: young +½ (wins ties), adult +1",
           ozim: "Yours", osmir: "young · +½", katta: "adult · +1", bola: "baby", yoq: "not yours",
@@ -144,7 +150,7 @@
     kartalar.forEach(function (c) { ozing[c.k] = c; });
     var yur = function (g) {      // kompyuter navbati
       var men = g.hand.b, tarix = g.hist, bor = [];
-      for (var i = 0; i < 5; i++) { if (!tarix.some(function (h) { return h.b.i === i; })) { bor.push(i); } }
+      for (var i = 0; i < men.length; i++) { if (!tarix.some(function (h) { return h.b.i === i; })) { bor.push(i); } }
       if (g.turn === "b" && !g.attack && bor.length) {
         var eng = null;
         bor.forEach(function (i) { MJ_S.forEach(function (s) { var v = mjKuch(men[i], s); if (!eng || v > eng.v) { eng = { i: i, s: s, v: v }; } }); });
@@ -160,7 +166,8 @@
       var qol = function (q, mi) { return q.map(function (k) { return { k: k, o: mi && ozing[k].o ? ozing[k].o : 0, st: mi ? ozing[k].st : -1 }; }); };
       L2.g = { id: 7, kind: body.dost ? "dost" : body.sinov ? "sinov" : "mashq", state: body.dost ? "kutmoqda" : "ketmoqda", me: "a",
                a: { uid: 1, name: "Sehrgar", house: "gryffindor" }, b: body.dost ? null : { uid: null, name: ["Luna Lavgud", "Charli Uizli", "Nyut Skamander"][(body.mashq || 2) - 1], house: "ravenclaw", bot: body.mashq || 2 },
-               hand: { a: qol(kod.slice(0, 5), true), b: qol(kod.slice(5, 10), false) }, turn: "a", attack: null, phase: "attack", hist: [], wins: [0, 0], "in": 0, left: 20,
+               hand: { a: qol(kod.slice(0, 6), true), b: qol(kod.slice(6, 12), false) }, turn: "a", attack: null, phase: "attack", hist: [], wins: [0, 0], "in": 0, left: 20,
+               rule: 2, need: 4, rounds: 6,
                winner: null, why: null, expires_in: body.dost ? 1790 : null };
     }
     if (L2.g && body.oyin != null) {
@@ -174,7 +181,7 @@
     }
     return { ok: true, now: hozir, admin: true, stats: { played: 3, won: 2 }, cards: kartalar,
       tour: { ts: hozir + 3 * 86400, now: hozir, open: true, joined: L2.joined, n: 4, players: [] },
-      rules: { hand: 5, win: 3, turn: 20, edge: 2, grow: { "1": 0.5, "2": 1 }, points: { "2": 30, "4": 20, "8": 10, "16": 5 }, bots: { "1": "Luna Lavgud", "2": "Charli Uizli", "3": "Nyut Skamander" } },
+      rules: { hand: 5, win: 3, turn: 20, v2: true, edge: 2, grow: { "1": 0.5, "2": 1 }, points: { "2": 30, "4": 20, "8": 10, "16": 5 }, bots: { "1": "Luna Lavgud", "2": "Charli Uizli", "3": "Nyut Skamander" } },
       cup: { size: null }, champs: null };
   }
   function mjSampleRaund(g, hi, ji) {
@@ -182,8 +189,9 @@
     var va = mjKuch(ka, s, kb), vb = mjKuch(kb, s, ka), w = va > vb ? "a" : vb > va ? "b" : null;
     g.hist.push({ r: g.hist.length, by: nav, s: s, w: w, a: { i: ia, k: ka.k, v: va }, b: { i: ib, k: kb.k, v: vb } });
     if (w) { g.wins[w === "a" ? 0 : 1]++; }
-    g.turn = w || (nav === "a" ? "b" : "a"); g.attack = null; g.phase = "wait"; g["in"] = 3;
-    if (g.wins[0] >= 3 || g.wins[1] >= 3 || g.hist.length >= 5) { g.state = "tugadi"; g.phase = "over"; g.winner = g.wins[0] > g.wins[1] ? "a" : g.wins[1] > g.wins[0] ? "b" : null; }
+    var r2 = [0, 1, 1, 0, 0, 1][g.hist.length], f = g.hist[0].by;
+    g.turn = r2 == null ? nav : r2 === 0 ? f : (f === "a" ? "b" : "a"); g.attack = null; g.phase = "wait"; g["in"] = 3;
+    if (g.wins[0] >= 4 || g.wins[1] >= 4 || g.hist.length >= 6) { g.state = "tugadi"; g.phase = "over"; g.winner = g.wins[0] > g.wins[1] ? "a" : g.wins[1] > g.wins[0] ? "b" : null; }
   }
 
   /* ---------- sahifa ---------- */
@@ -295,7 +303,8 @@
     });
     kat.push(tpDost(function () { tkOyna("mjang"); }));     // chat (Katta zal, fakultet, shaxsiy) yoki Telegram
     box.appendChild(tpMashq(tp.ballsiz + (d.stats && d.stats.played ? " · " + t.stat(d.stats.played, d.stats.won) : ""), kat));
-    box.appendChild(tpQoida([t.q1, t.q2, t.q3], tpTorSov(d.rules && d.rules.points), tp.torIz));
+    var v2 = d.rules && d.rules.v2;           // 2-qoida - navbatli hujum (server aytadi: hozircha faqat adminga)
+    box.appendChild(tpQoida([v2 ? t.q1v2 : t.q1, t.q2, v2 ? t.q3v2 : t.q3], tpTorSov(d.rules && d.rules.points), tp.torIz));
     // o'yin haqida: 12 maxluq kartasi, o'zinikilar belgilangan
     if (d.cards) {
       var kb = drEl("div", "mj-kb");
@@ -459,17 +468,18 @@
       tep.appendChild(drEl("b", "", p ? (g.me && k === g.me ? t.siz : p.name) : "—"));
       el.appendChild(tep);
       var past = drEl("div", "gb-p-b"), pips = drEl("span", "gb-pips mj-pips"), n = g.wins[k === "a" ? 0 : 1];
-      for (var i = 0; i < 3; i++) { pips.appendChild(drEl("i", i < n ? "on" : "")); }
+      for (var i = 0; i < (g.need || 3); i++) { pips.appendChild(drEl("i", i < n ? "on" : "")); }
       past.appendChild(pips);
       if (hujumchi) { past.appendChild(drEl("small", "mj-hj", "⚔️")); }
       el.appendChild(past);
     };
     oyinchi(men, $("mj-p1"));
     oyinchi(u, $("mj-p2"));
-    $("mj-z").textContent = t.raund(Math.min(5, g.hist.length + (g.state === "ketmoqda" && !(mj.rev && Date.now() - mj.rev.t < 4000) ? 1 : 0)) || 1);
+    $("mj-z").textContent = t.raund(Math.min(g.rounds || 5, g.hist.length + (g.state === "ketmoqda" && !(mj.rev && Date.now() - mj.rev.t < 4000) ? 1 : 0)) || 1);
     // raqib qo'li
     var oq = $("mj-opp");
     oq.innerHTML = "";
+    oq.style.gridTemplateColumns = "repeat(" + ((g.hand[u] || []).length || 5) + ",minmax(0,1fr))";   // 2-qoidada 6 karta
     (g.hand[u] || []).forEach(function (c, i) {
       var ish = g.hist.some(function (h) { return h[u].i === i; }), hj = g.attack && g.turn === u && g.attack.i === i;
       oq.appendChild(mjKarta(c, { cls: "kich" + (ish ? " ish" : "") + (hj ? " hj" : ""), ism0: true, s: hj ? g.attack.s : null }));
@@ -550,6 +560,7 @@
   function mjQolChiz() {
     var g = mj.g, t = mjT(), men = g.me || "a", q = $("mj-hand"), act = $("mj-act");
     q.innerHTML = "";
+    q.style.gridTemplateColumns = "repeat(" + ((g.hand[men] || []).length || 5) + ",minmax(0,1fr))";
     act.innerHTML = "";
     var rev = mj.rev && Date.now() - mj.rev.t < 4200;
     var navMen = g.me && g.state === "ketmoqda" && !rev && g["in"] - (Date.now() - mj.olingan) / 1000 <= 0.2 &&
@@ -711,6 +722,18 @@
       ["O'z maxluqlaringiz", "Qo'lingizga Qo'riqxonadagi o'z maxluqingiz tushsa, uning eng kuchli tomoni kuchliroq: o'smir teng holatda yutadi, katta +1. Maxluqlarni boqing — ular yordam beradi."],
       ["Vaqt", "Har tanlovga " + (r.turn || 20) + " soniya. Ulgurmasangiz karta o'zi tanlanadi."],
       ["Turnir", "Har shanba 22:00 da. G'alaba uchun: 1/8 final +" + (pt["16"] || 5) + ", chorak final +" + (pt["8"] || 10) + ", yarim final +" + (pt["4"] || 20) + ", final +" + (pt["2"] || 30) + "."]];
+    if (r.v2) {           // 2-qoida: tarqatish, kim hujum qiladi, g'alaba bandlari boshqacha
+      var V2 = { ru: [["Раздача", "Каждому 6 карт — все 12 существ в игре. Обе руки открыты: вы видите карты соперника и какие он уже сыграл."],
+                      ["Кто атакует", "Первым — случайно, дальше строго по очереди: А, Б, Б, А, А, Б. Каждый атакует 3 раза — у первого нет преимущества. Каждая карта — один раз."],
+                      ["Победа", "Кто первым взял 4 раунда. После 6 раундов при равенстве — по сумме сил."]],
+                 en: [["The deal", "Everyone gets 6 cards — all 12 creatures are in play. Both hands are open: you see the rival's cards and which ones are already played."],
+                      ["Who attacks", "The first attacker is random, then strictly in turns: A, B, B, A, A, B. Each attacks 3 times — going first gives no edge. Every card is played once."],
+                      ["Victory", "First to 4 rounds. After 6 rounds, a tie is decided by the sum of powers."]],
+                 uz: [["Tarqatish", "Har kimga 6 ta karta — 12 maxluqning hammasi o'yinda. Ikkala qo'l ham ochiq: raqibning kartalarini va qaysilarini ishlatib bo'lganini ko'rib turasiz."],
+                      ["Kim hujum qiladi", "Birinchi — tasodifiy, keyin qat'iy navbat bilan: A, B, B, A, A, B. Har kim 3 marta hujum qiladi — birinchi boshlaganga ustunlik yo'q. Har karta bir marta."],
+                      ["G'alaba", "Birinchi bo'lib 4 raund yutgan. 6 raunddan keyin teng bo'lsa — kuchlar yig'indisi."]] }[lang] || null;
+      if (V2) { bandlar[1] = V2[0]; bandlar[3] = V2[1]; bandlar[4] = V2[2]; }
+    }
     var orqa = drEl("div", "du-info"), oyna = drEl("div", "du-info-p"), yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); } };
     orqa.id = "du-info";
     var bosh = drEl("div", "du-info-h");
