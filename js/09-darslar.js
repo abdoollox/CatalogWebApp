@@ -127,7 +127,7 @@
           osB: ["Issiqxona xarob bo'ldi. Qo'lqopni kiying va qaytadan.", "O'simliklar sizdan xafa. Yana bir urinib ko'ring.", "Qoniqarli. O'simliklar tirik — bu yaxshi boshlanish.", "Juda yaxshi! Qo'lingiz yengil ekan.", "A'lo! Mandragoralar ham sizni tinglaydi."],
           tfStep: function (a, b) { return "Savol " + a + " / " + b; }, tfGo: "Boshlash", tfHint: "Afsun birinchi buyumni qanday o'zgartirdi? Ikkinchisiga ham shuni qo'llang",
           tfI: ["Tepada afsun bitta buyumni qanday o'zgartirgani ko'rinadi. Qoidani toping va xuddi shu afsun ikkinchi buyumni nimaga aylantirishini tanlang.", "Endi afsun bir vaqtda IKKI narsani o'zgartiradi — masalan, hajmini ham, sonini ham.", "Uchta o'zgarish birdan va oltita variant. Har belgini alohida tekshiring: turi, soni, hajmi, burilishi, nuri."],
-          tfOk: ["To'g'ri!", "Aynan shunday!", "Qoidani topdingiz!"], tfBad: "Yo'q. Qoidaga yana bir qarang.", tfLate: "Vaqt tugadi.", tfMgN: "Professor Makgonagall",
+          tfOk: ["To'g'ri!", "Aynan shunday!", "Qoidani topdingiz!"], tfBad: "Yo'q.", tfLate: "Vaqt tugadi.", tfMgN: "Professor Makgonagall",
           tfStat: function (a, b) { return "To'g'ri: " + a + " / " + b; },
           tfB: ["Bu transfiguratsiya emas, tasodif. Qaytadan.", "Qoidani ko'rmayapsiz. Diqqatni jamlang va yana urining.", "Qoniqarli. Qoidani topishni boshladingiz.", "Yaxshi ish. Fikrlashingiz tartibli.", "A'lo. Bunday aniq fikrlashni kam uchrataman."],
           qobT: "Qobiliyatlar", qobK: "Mening darajam", qobS: "Har fan boshqa qobiliyatni mashq qildiradi. Daraja o'tilgan darslar va baholaringizdan hisoblanadi.",
@@ -226,7 +226,7 @@
           osB: ["Теплица в плачевном виде. Наденьте перчатки — и заново.", "Растения на вас обижены. Попробуйте ещё раз.", "Удовлетворительно. Растения живы — хорошее начало.", "Очень хорошо! У вас лёгкая рука.", "Превосходно! Вас слушаются даже мандрагоры."],
           tfStep: function (a, b) { return "Вопрос " + a + " / " + b; }, tfGo: "Начать", tfHint: "Как заклинание изменило первый предмет? Примените то же ко второму",
           tfI: ["Наверху видно, как заклинание изменило один предмет. Найдите правило и выберите, во что то же заклинание превратит второй предмет.", "Теперь заклинание меняет сразу ДВА признака — например, и размер, и количество.", "Три изменения сразу и шесть вариантов. Проверяйте каждый признак отдельно: вид, количество, размер, поворот, сияние."],
-          tfOk: ["Верно!", "Именно так!", "Вы нашли правило!"], tfBad: "Нет. Посмотрите на правило ещё раз.", tfLate: "Время вышло.", tfMgN: "Профессор Макгонагалл",
+          tfOk: ["Верно!", "Именно так!", "Вы нашли правило!"], tfBad: "Нет.", tfLate: "Время вышло.", tfMgN: "Профессор Макгонагалл",
           tfStat: function (a, b) { return "Верно: " + a + " / " + b; },
           tfB: ["Это не трансфигурация, а случайность. Заново.", "Вы не видите правила. Соберитесь и попробуйте ещё раз.", "Удовлетворительно. Вы начали находить правило.", "Хорошая работа. Вы мыслите последовательно.", "Превосходно. Такую ясность мысли я встречаю редко."],
           qobT: "Способности", qobK: "Мой уровень", qobS: "Каждый предмет тренирует свою способность. Уровень считается по пройденным урокам и вашим оценкам.",
@@ -326,7 +326,7 @@
           osB: ["The greenhouse is a wreck. Gloves on, and start again.", "The plants are cross with you. Try once more.", "Acceptable. The plants are alive — a good start.", "Very good! You have green fingers.", "Outstanding! Even the Mandrakes listen to you."],
           tfStep: function (a, b) { return "Question " + a + " / " + b; }, tfGo: "Begin", tfHint: "How did the spell change the first object? Do the same to the second",
           tfI: ["The top row shows how the spell changed one object. Work out the rule and pick what the same spell turns the second object into.", "Now the spell changes TWO things at once — size and number, for example.", "Three changes at once and six options. Check each feature separately: kind, number, size, turn, glow."],
-          tfOk: ["Correct!", "Exactly!", "You found the rule!"], tfBad: "No. Look at the rule again.", tfLate: "Time's up.", tfMgN: "Professor McGonagall",
+          tfOk: ["Correct!", "Exactly!", "You found the rule!"], tfBad: "No.", tfLate: "Time's up.", tfMgN: "Professor McGonagall",
           tfStat: function (a, b) { return "Correct: " + a + " / " + b; },
           tfB: ["That is not Transfiguration, that is chance. Again.", "You are not seeing the rule. Concentrate and try once more.", "Acceptable. You are beginning to find the rule.", "Good work. Your thinking is orderly.", "Outstanding. I rarely meet such clear reasoning."],
           qobT: "Abilities", qobK: "My level", qobS: "Each subject trains a different ability. Your level comes from the lessons you have passed and your grades.",
@@ -4087,7 +4087,10 @@
       for (g = opts.length - 1; g > 0; g--) { var j = Math.floor((sh != null ? afRnd(sh + i * 11.3 + g * 2.07) : rnd(z + 1200 + g)) * (g + 1)), t = opts[g]; opts[g] = opts[j]; opts[j] = t; }
       savol.push({ a: a, a2: tfQolla(a, qoida), b: b, opts: opts, ok: opts.indexOf(togri) });
     }
-    return { savol: savol, lim: bell ? 0 : Math.round(Math.max(7000, 15000 - n * 200)) };
+    // Vaqt (2026-10-26, «transfiguratsiya juda qiyin»): ilgari 15 s dan har darsda 0,2 s kamayib 7 s gacha tushardi - 36-darsda
+    // uchta o'zgarishli, 6 variantli savolga 7,8 s qolardi. Endi sekinroq kamayadi va har qo'shimcha o'zgarishga +3 s.
+    // Rekord rejimi avvalgi vaqtda qoladi (doimiy jadval - natijalar solishtiriladigan bo'lsin).
+    return { savol: savol, lim: bell ? 0 : rek ? Math.round(Math.max(7000, 15000 - n * 200)) : Math.round(Math.max(9000, 15000 - n * 120) + (m - 1) * 3000) };
   }
   function tfOpen(bell, n) {
     var st = drData && drData.trans, x = drX(), f = drFan("trans"), urug = null, i;
@@ -4244,7 +4247,7 @@
     } else {
       if (btn) { btn.classList.add("xato"); }
       if (bl && tf.bell) { bl.xato++; }
-      $("tf-hint").textContent = k < 0 ? x.tfLate : x.tfBad;
+      $("tf-hint").textContent = (k < 0 ? x.tfLate : x.tfBad) + (tf.bell || tf.rek ? "" : " " + tfFarqMatn(q));
       $("tf-hint").classList.add("bad");
       tfKayf("xafa");
       try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("error"); } } catch (e) {}
@@ -4255,7 +4258,12 @@
       tf.i++;
       if (tf.i >= tf.savol.length) { tfEnd(); return; }
       tfStep();
-    }, tf.bell ? 500 : togri ? 1000 : 1700);
+    }, tf.bell ? 500 : togri ? 1000 : tf.rek ? 1700 : 3200);
+  }
+  // Xatodan keyin: afsun yuqoridagi buyumni aslida qanday o'zgartirgani («Afsun: buyum kattalashdi va burildi»)
+  function tfFarqMatn(q) {
+    var z = tfFarq(q), b = { uz: "Afsun: ", ru: "Заклинание: ", en: "The spell: " }[lang] || "Afsun: ";
+    return z ? b + z + "." : "";
   }
   function tfEnd() {
     var x = drX(), me = tf, daraja = tf.n, box = $("tf-res"), jami = tf.savol.length;
