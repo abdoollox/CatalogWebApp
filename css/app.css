@@ -2859,6 +2859,7 @@ body.kr-on .mp{display:none!important}
 /* ============ ISSIQXONA (js/09-issiqxona.js): tuvaklar to'ri ============ */
 #is-all{margin:10px 0 0}
 #is-all:disabled{opacity:.55;cursor:default}
+#is-sot{margin:8px 0 0;background:transparent;color:var(--gold-hi);border:1px solid rgba(var(--gold-rgb),.45);box-shadow:none}
 .is-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
 .is-c{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;padding:7px 7px 9px;border-radius:18px;text-align:center;cursor:pointer;color:var(--text);
   border:1px solid rgba(110,170,120,.4);background:linear-gradient(170deg,rgba(110,170,120,.14),rgba(18,20,26,.4));-webkit-tap-highlight-color:transparent}

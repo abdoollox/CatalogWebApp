@@ -3,7 +3,7 @@
    Xaridlar sahifasidagi «Galleon qanday olinadi?», do'kon va kubokdagi galleon qatori SHU oynani ochadi.
    Galleon manbalari (server): hafta yakuni - har 10 ballga 1, g'olib fakultetga ikki baravar, eng yaxshi uchtaga
    +15/10/5 (hpcup.GAL_*); Shokolad qurbaqa qutisi +1, har 7-kun ketma-ket +3 (hpsandiq); Niffler 1, Ajdar bolasi 2
-   galleon har 7-boqishda (hpqoriq.SOVGALAR). Yangi manba qo'shilsa - shu oynaga ham bo'lim qo'shing.
+   galleon har 7-boqishda (hpqoriq.SOVGALAR); Issiqxona hosili: 5 hosil = 1 galleon (hpissiq.HOSIL_NARX). Yangi manba qo'shilsa - shu oynaga ham bo'lim qo'shing.
    Ilova kodi bir necha faylga bo'lingan; hammasi BIR umumiy maydonda ishlaydi
    va index.html dagi TARTIBDA yuklanadi. Yuklanish paytida keyingi fayldagi
    narsani chaqirmang - tekshiruv: tools/tartib.js */
@@ -28,6 +28,7 @@
           m3: "Qo'riqxonada ularni har kuni boqing: har 7-boqishda Niffler 1 galleon, Ajdar bolasi 2 galleon olib keladi.",
           nif: "Niffler", ajd: "Ajdar bolasi", bor: "sizda bor ✓", dars: function (n) { return n + "-darsdan keyin"; },
           ajdQ: "Maxluqlar bellashuvida birinchi uchlikka kiring", b3: "Qo'riqxona",
+          k4: "O'simliklaringiz", t4: "Issiqxona hosili", m4: "Yetilgan o'simliklar hosil beradi. 5 ta hosilni 1 galleonga almashtirsa bo'ladi.", h4: function (n) { return "Hosil: " + n; }, b4: "Issiqxona",
           kurs: function (n) { return n + "-kursda ochiladi"; },
           oxir: "Galleonga: soundtrack albomlari, kitoblar, maxluqlarga yemish va do'kondagi jihozlar.",
           kut: function (g) { return "Yakshanba kechasi: yana ~" + g + " galleon keladi"; } },
@@ -50,6 +51,7 @@
           m3: "Кормите их в Питомнике каждый день: на каждое 7-е кормление нюхлер приносит 1 галлеон, дракончик — 2.",
           nif: "Нюхлер", ajd: "Дракончик", bor: "уже есть ✓", dars: function (n) { return "после урока " + n; },
           ajdQ: "войдите в тройку лучших в состязании по существам", b3: "Питомник",
+          k4: "Ваши растения", t4: "Урожай теплицы", m4: "Взрослые растения дают урожай. 5 единиц урожая можно обменять на 1 галлеон.", h4: function (n) { return "Урожай: " + n; }, b4: "Теплица",
           kurs: function (n) { return "Откроется на " + n + "-м курсе"; },
           oxir: "За галлеоны: альбомы саундтреков, книги, корм для существ и снаряжение в лавке.",
           kut: function (g) { return "В ночь на понедельник: ещё ~" + g + " галл."; } },
@@ -72,6 +74,7 @@
           m3: "Feed them in the Sanctuary every day: every 7th feeding the Niffler brings 1 Galleon, the baby dragon brings 2.",
           nif: "Niffler", ajd: "Baby dragon", bor: "yours ✓", dars: function (n) { return "after lesson " + n; },
           ajdQ: "finish top three in the Creatures contest", b3: "Sanctuary",
+          k4: "Your plants", t4: "Greenhouse harvest", m4: "Grown plants give a harvest. Trade 5 harvest for 1 Galleon.", h4: function (n) { return "Harvest: " + n; }, b4: "Greenhouse",
           kurs: function (n) { return "Opens in year " + n; },
           oxir: "Spend Galleons on soundtrack albums, books, creature food and gear in the shop.",
           kut: function (g) { return "Sunday night: ~" + g + " more Galleons"; } }
@@ -203,6 +206,14 @@
     }
     karta({ rasm: IMG_DIR + "qoriq/niffler-2.webp", kick: x.k3, ttl: x.t3, matn: x.m3, hol: hol3, xira: ich && kurs < 3,
             tugma: ich && kurs >= 3 ? x.b3 : "", fn: qrHubOpen });
+
+    // 4. Issiqxona hosili (Issiqxona ham 3-kursdan)
+    var hol4 = [], isd = null;
+    try { isd = isData; } catch (e) {}
+    if (ich && kurs < 3) { hol4.push({ t: x.kurs(3) }); }
+    else if (ich && isd && isd.list) { hol4.push({ t: x.h4(isd.hosil || 0) }); }
+    karta({ rasm: IMG_DIR + "issiq/mandragora-2.webp", kick: x.k4, ttl: x.t4, matn: x.m4, hol: hol4, xira: ich && kurs < 3,
+            tugma: ich && kurs >= 3 ? x.b4 : "", fn: isHubOpen });
 
     box.appendChild(gxEl("p", "gx-oxir", x.oxir));
   }

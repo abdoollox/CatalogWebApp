@@ -20,7 +20,10 @@
   var IS_X = {
     uz: { ttl: "Issiqxona", sum: function (a, b) { return a + " / " + b + " o'simlik"; }, hosil: function (n) { return "Hosil: " + n; },
           all: "Hammasini sug'orish", allDone: "Bugun hammasi sug'orildi", st: ["Nihol", "O'smir", "Yetilgan"],
-          tip: "Har o'simlikni kuniga bir marta sug'oring. Yetilgani hosil beradi — hosil Qo'riqxonadagi maxluqlarga yemish bo'ladi.",
+          tip: "Har o'simlikni kuniga bir marta sug'oring. Yetilgani hosil beradi: u maxluqlarga yemish bo'ladi, 5 tasini esa 1 galleonga almashtirsa bo'ladi.",
+          sot: function (h, g) { return h + " hosil → " + g + " galleon"; }, sotQ: "Hosilni galleonga almashtirasizmi?",
+          sotM: function (h, g) { return h + " hosil o'rniga " + g + " galleon olasiz. Hosil Qo'riqxonada maxluqlarni boqishga ham ketadi."; },
+          sotOk: function (g) { return "+" + g + " galleon hamyoningizga tushdi"; },
           tip0: "Hali urug' yo'q. Birinchi urug' O'simlikshunoslikning 3-darsidan keyin beriladi.",
           next: function (n) { return "Yana " + n + " marta"; }, crop: function (n) { return "Hosilgacha " + n; }, lock: function (n) { return n + "-darsdan keyin"; },
           done: "Sug'orildi", water: "Sug'orish", grew: function (nom, st) { return nom + " o'sdi: endi " + st.toLowerCase() + "!"; },
@@ -28,7 +31,10 @@
           qrHosil: function (n) { return "Hosil bilan boqish (" + n + ")"; }, fanS: function (n) { return n ? n + " ta o'simlik sizni kutmoqda" : "Har uch darsda bitta urug'"; } },
     ru: { ttl: "Теплица", sum: function (a, b) { return "Растений: " + a + " / " + b; }, hosil: function (n) { return "Урожай: " + n; },
           all: "Полить все", allDone: "Сегодня всё полито", st: ["Росток", "Подросток", "Зрелое"],
-          tip: "Поливайте каждое растение раз в день. Зрелое даёт урожай — им можно кормить существ в Питомнике.",
+          tip: "Поливайте каждое растение раз в день. Зрелое даёт урожай: им можно кормить существ, а 5 единиц обменять на 1 галлеон.",
+          sot: function (h, g) { return "Урожай " + h + " → галлеонов: " + g; }, sotQ: "Обменять урожай на галлеоны?",
+          sotM: function (h, g) { return "Вы получите галлеонов: " + g + " за " + h + " ед. урожая. Урожаем также можно кормить существ в Питомнике."; },
+          sotOk: function (g) { return "+" + g + " галл. в вашем кошельке"; },
           tip0: "Семян пока нет. Первое семя вы получите после 3-го урока травологии.",
           next: function (n) { return "Ещё " + n + " раз"; }, crop: function (n) { return "До урожая: " + n; }, lock: function (n) { return "После урока " + n; },
           done: "Полито", water: "Полить", grew: function (nom, st) { return nom + " подросло: теперь " + st.toLowerCase() + "!"; },
@@ -36,7 +42,10 @@
           qrHosil: function (n) { return "Покормить урожаем (" + n + ")"; }, fanS: function (n) { return n ? "Вас ждут растения: " + n : "Новое семя каждые три урока"; } },
     en: { ttl: "Greenhouse", sum: function (a, b) { return a + " / " + b + " plants"; }, hosil: function (n) { return "Harvest: " + n; },
           all: "Water them all", allDone: "All watered for today", st: ["Seedling", "Young", "Mature"],
-          tip: "Water each plant once a day. A mature plant gives a harvest — use it to feed your creatures in the Sanctuary.",
+          tip: "Water each plant once a day. A mature plant gives a harvest: feed your creatures with it, or trade 5 for 1 Galleon.",
+          sot: function (h, g) { return h + " harvest → " + g + " Galleon" + (g > 1 ? "s" : ""); }, sotQ: "Trade your harvest for Galleons?",
+          sotM: function (h, g) { return "You get " + g + " Galleon" + (g > 1 ? "s" : "") + " for " + h + " harvest. Harvest can also feed your creatures in the Sanctuary."; },
+          sotOk: function (g) { return "+" + g + " Galleon" + (g > 1 ? "s" : "") + " added to your purse"; },
           tip0: "No seeds yet. You get your first seed after Herbology lesson 3.",
           next: function (n) { return n + " more"; }, crop: function (n) { return n + " to harvest"; }, lock: function (n) { return "After lesson " + n; },
           done: "Watered", water: "Water", grew: function (nom, st) { return nom + " has grown: now " + st.toLowerCase() + "!"; },
@@ -77,6 +86,8 @@
       });
       L.hosil += res.crop;
     }
+    if (body && body.sell) { res.sold = Math.floor(L.hosil / 5); L.hosil -= res.sold * 5; L.gal = (L.gal || 0) + res.sold; }
+    res.gal = L.gal || 0; res.rate = 5;
     res.hosil = L.hosil;
     res.list = IS_TARTIB.map(function (kod, i) {
       var q = L.m[kod], b = q ? q.w : 0, s = st(b);
@@ -138,9 +149,36 @@
     });
   }
 
+  // Hosilni galleonga: faqat butun beshliklar, qoldiq zaxirada qoladi (egasi, 2026-10-31)
+  function isSot() {
+    var x = isX(), r = isData.rate || 5, g = Math.floor((isData.hosil || 0) / r);
+    if (isBusy || g < 1) { return; }
+    testAsk(x.sotQ + "\n\n" + x.sotM(g * r, g), function () {
+      isBusy = true;
+      isPost({ sell: 1 }, function (res) {
+        isBusy = false;
+        if (!res || !res.list) { showToast(drX().fail, "err"); return; }
+        isData = res;
+        isAt = Date.now();
+        try { if (wal && typeof res.gal === "number") { wal.galleons = res.gal; } } catch (e) {}
+        try { if (qrData && typeof res.gal === "number") { qrData.gal = res.gal; qrData.hosil = res.hosil; } } catch (e) {}
+        try { msGal = res.gal; } catch (e) {}
+        isRender();
+        if (res.sold) {
+          try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
+          isDe(x.sotOk(res.sold), "zor");
+          showToast(x.sotOk(res.sold));
+        }
+      });
+    });
+  }
+
   function isRender() {
     var x = isX(), box = $("is-grid"), d = isData, all = $("is-all");
     box.innerHTML = "";
+    var sot = $("is-sot"), sg = d ? Math.floor((d.hosil || 0) / (d.rate || 5)) : 0;
+    sot.classList.toggle("hidden", sg < 1);
+    if (sg > 0) { sot.textContent = x.sot(sg * (d.rate || 5), sg); }
     if (!d) { $("is-sum").textContent = ""; $("is-hosil").textContent = ""; all.classList.add("hidden"); $("is-tip").textContent = x.tip; return; }
     var bor = isSoni(), kut = isKutmoqda();
     $("is-sum").textContent = x.sum(bor, d.list.length);
@@ -189,6 +227,7 @@
       if (isKel === "fan") { isKel = "hub"; fanOpen("osimlik"); } else { openHub(); }
     });
     $("is-all").addEventListener("click", function () { isAct("all"); });
+    $("is-sot").addEventListener("click", isSot);
   }
 
   isSetup();
