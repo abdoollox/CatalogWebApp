@@ -97,6 +97,8 @@
           hmBad: "Bu yordam bermaydi!", hmLate: "Kech qoldingiz!", hmLpN: "Professor Lyupin", hmStat: function (w, l) { return "Xato: " + w + " · Kechikish: " + l; },
           hmLpB: ["Hechqisi yo'q. Shokolad yeng va qaytadan urinib ko'ring.", "Hali tayyor emassiz, lekin buni o'rgansa bo'ladi. Yana bir marta.", "Qoniqarli. Xavf oldida o'zingizni yo'qotmadingiz.", "Juda yaxshi! Tezligingiz oshyapti.", "A'lo! Bunday himoyani kam ko'rganman."],
           ucStep: function (a, b) { return "Halqa " + a + " / " + b; }, ucGo: "Uchish!", ucHint: "Barmog'ingizni o'ngga-chapga suring",
+          ucMz: { tun: "Tungi parvoz: halqalar oy nurida yaltiraydi", boron: "Bo'ron: shamol supurgini yonga suradi — qarshi turing", qish: "Qishki parvoz: supurgi sirpanadi — oldinroq buriling" },
+          ucMzI: { tun: "Bugundan qasr ustida tungi parvoz! Oy va yulduzlar yo'lni yoritadi, halqalar oy nurida yaltiraydi.", boron: "Bo'ron boshlandi — lekin haqiqiy uchuvchi ob-havoni tanlamaydi. Shamol supurgini yonga suradi: barmog'ingiz bilan qarshi turing. Tepadagi o'q shamol qayoqqa esayotganini ko'rsatadi.", qish: "Qish keldi! Muzdek havoda supurgi sirpanadi — siz burilsangiz, u biroz kechikib buriladi. Halqaga oldinroq buriling." },
           ucIntro: ["Supurgini barmog'ingiz bilan o'ngga-chapga boshqaring va oltin halqalardan o'ting. Halqaning qanchalik O'RTASIDAN o'tsangiz, supurgi shunchalik tezlashadi.", "Bugun maydonda bladjerlar bor. Ularga urilmang — uchta zarbadan keyin dars tugaydi.", "Oltin Snitch ham uchib o'tadi. Tutib olsangiz, bahoyingiz oshadi.", "Supurgiga! Halqalar torayib, tezlik oshib boradi."],
           ucOk: ["Yaxshi!", "Shunday!", "Ajoyib!"], ucAniq: ["Chetidan o'tdingiz — tezlik kam qo'shildi", "Yaxshi! O'rtaga yaqinroq uching", "Aniq o'rtasidan — tezlashdingiz!"], ucSnT: "Snitch tutildi — katta tezlik!", pgSanoq: function (n) { return "Tayyorlaning…"; }, pgUch: "Uchdik!", pgNaz: function (q) { return "nazoratgacha " + q; }, pgOtdi: "nazoratdan o'tdingiz",
           pgOxir: function (q) { return q > 0 ? "SIZ OXIRGISIZ · " + q : "SIZ OXIRGISIZ"; }, pgNazT: "NAZORAT", pgHalqa: function (n) { return n + " halqa"; }, ucMiss: "Halqa o'tib ketdi!", ucHit: "Bladjer! Ehtiyot bo'ling!", ucSn: "Snitch tutildi!", ucXcN: "Xuch xonim",
@@ -196,6 +198,8 @@
           hmBad: "Это не поможет!", hmLate: "Слишком поздно!", hmLpN: "Профессор Люпин", hmStat: function (w, l) { return "Ошибок: " + w + " · Опозданий: " + l; },
           hmLpB: ["Ничего страшного. Съешьте шоколад и попробуйте снова.", "Вы пока не готовы, но этому можно научиться. Ещё раз.", "Удовлетворительно. Вы не растерялись перед опасностью.", "Очень хорошо! Вы становитесь быстрее.", "Превосходно! Такую защиту я вижу редко."],
           ucStep: function (a, b) { return "Кольцо " + a + " / " + b; }, ucGo: "В полёт!", ucHint: "Ведите пальцем влево и вправо",
+          ucMz: { tun: "Ночной полёт: кольца блестят в лунном свете", boron: "Буря: ветер сносит метлу — сопротивляйтесь", qish: "Зимний полёт: метла скользит — поворачивайте заранее" },
+          ucMzI: { tun: "С сегодняшнего дня — ночной полёт над замком! Луна и звёзды освещают путь, кольца блестят в лунном свете.", boron: "Началась буря — но настоящий ловец не выбирает погоду. Ветер сносит метлу в сторону: сопротивляйтесь пальцем. Стрелка вверху показывает, куда дует ветер.", qish: "Пришла зима! В морозном воздухе метла скользит — она поворачивает с опозданием. Поворачивайте к кольцу заранее." },
           ucIntro: ["Управляйте метлой пальцем влево-вправо и пролетайте через золотые кольца. Чем ближе к ЦЕНТРУ кольца — тем сильнее ускоряется метла.", "Сегодня на поле бладжеры. Не сталкивайтесь с ними — после трёх ударов урок окончен.", "Мимо пролетит золотой снитч. Поймаете — оценка будет выше.", "На метлу! Кольца сужаются, скорость растёт."],
           ucOk: ["Хорошо!", "Вот так!", "Отлично!"], ucAniq: ["По краю — скорости прибавилось мало", "Хорошо! Держитесь ближе к центру", "Точно в центр — ускорение!"], ucSnT: "Снитч пойман — большое ускорение!", pgSanoq: function (n) { return "Приготовьтесь…"; }, pgUch: "Полетели!", pgNaz: function (q) { return "до рубежа " + q; }, pgOtdi: "рубеж пройден",
           pgOxir: function (q) { return q > 0 ? "ВЫ ПОСЛЕДНИЙ · " + q : "ВЫ ПОСЛЕДНИЙ"; }, pgNazT: "РУБЕЖ", pgHalqa: function (n) { return "Колец: " + n; }, ucMiss: "Кольцо пропущено!", ucHit: "Бладжер! Осторожнее!", ucSn: "Снитч пойман!", ucXcN: "Мадам Трюк",
@@ -296,6 +300,8 @@
           hmBad: "That won't help!", hmLate: "Too late!", hmLpN: "Professor Lupin", hmStat: function (w, l) { return "Mistakes: " + w + " · Too late: " + l; },
           hmLpB: ["Never mind. Eat some chocolate and try again.", "You are not ready yet, but this can be learnt. Once more.", "Acceptable. You kept your head in the face of danger.", "Very good! You are getting quicker.", "Outstanding! I rarely see a defence like that."],
           ucStep: function (a, b) { return "Hoop " + a + " / " + b; }, ucGo: "Take off!", ucHint: "Slide your finger left and right",
+          ucMz: { tun: "Night flight: the hoops shine in the moonlight", boron: "Storm: the wind pushes your broom — fight it", qish: "Winter flight: the broom slides — turn early" },
+          ucMzI: { tun: "From today we fly at night over the castle! The moon and stars light the way and the hoops shine in the moonlight.", boron: "A storm has started — but a real flyer doesn't choose the weather. The wind pushes your broom sideways: fight it with your finger. The arrow at the top shows where the wind blows.", qish: "Winter is here! In the frosty air the broom slides — it turns a little late. Turn towards the hoop early." },
           ucIntro: ["Steer the broom left and right with your finger and fly through the golden hoops. The closer to the CENTRE of a hoop you pass, the faster your broom goes.", "There are Bludgers on the pitch today. Don't hit them — three knocks and the lesson is over.", "The Golden Snitch will fly past too. Catch it and your grade goes up.", "Mount your broom! The hoops get narrower and the pace quicker."],
           ucOk: ["Good!", "That's it!", "Splendid!"], ucAniq: ["Through the edge — little speed gained", "Good! Aim closer to the centre", "Dead centre — speeding up!"], ucSnT: "Snitch caught — big boost!", pgSanoq: function (n) { return "Get ready…"; }, pgUch: "Go!", pgNaz: function (q) { return q + " to checkpoint"; }, pgOtdi: "checkpoint passed",
           pgOxir: function (q) { return q > 0 ? "YOU ARE LAST · " + q : "YOU ARE LAST"; }, pgNazT: "CHECKPOINT", pgHalqa: function (n) { return n + " hoops"; }, ucMiss: "Missed the hoop!", ucHit: "Bludger! Watch out!", ucSn: "Snitch caught!", ucXcN: "Madam Hooch",
@@ -2822,10 +2828,15 @@
      tez uchgan (ketma-ket halqalar) vaqtdan yutadi. */
   var uch = null, UCH_IM = {};
   function uchImg(k) {
-    if (!UCH_IM[k]) { var i = new Image(); i.src = IMG_DIR + "uchish/" + k + (k === "fon" ? ".jpg" : ".webp"); UCH_IM[k] = i; }
+    if (!UCH_IM[k]) { var i = new Image(); i.src = IMG_DIR + "uchish/" + k + (k.indexOf("fon") === 0 ? ".jpg" : ".webp"); UCH_IM[k] = i; }
     return UCH_IM[k];
   }
   function uchBor(im) { return im && im.complete && im.naturalWidth > 0; }
+  /* MANZARALAR (egasi, 2026-10-26; chat tahlili: «Uchish darsi qiziq emas»): darslar bosqichma-bosqich boshqa manzarada o'tadi.
+     1-9 - Kviddich maydoni (quyosh botishi), 10-18 - tungi parvoz (yulduzlar), 19-27 - bo'ron (yomg'ir, chaqmoq, SHAMOL supurgini
+     yonga suradi), 28-36 - qish (qor, supurgi SIRPANADI - burilish kechikadi). Bellashuv, rekord va poyga - doim Kviddich maydoni.
+     Rasmlar img/uchish/fon-<manzara>.jpg (Gemini, asl fon.jpg namunasida; asl - dizayn-tizimi/uchish/manzara/). */
+  function uchManzara(n) { return n >= 28 ? "qish" : n >= 19 ? "boron" : n >= 10 ? "tun" : ""; }
   function uchXcImg(k) { return IMG_DIR + "xuch/" + k + ".webp"; }
   function uchKayf(k) { ["uc-xc-im", "uc-xc-im2"].forEach(function (id) { var el = $(id); if (el && el.getAttribute("data-k") !== k) { el.setAttribute("data-k", k); el.src = uchXcImg(k); } }); }
   /* UCHISH MEXANIZMI (egasi, 2026-10-12: bellashuvda hamma 20,05-20,15 soniyada tugatardi - farq faqat internetdan edi).
@@ -2876,13 +2887,16 @@
             gaz: 0, gmax: plan.gmax, aniq: 0, eski: !!plan.eski,
             dist: 0, rx: 0.5, tx: 0.5, combo: 0, slow: 0, pass: 0, miss: 0, hits: 0, lives: 3, snitch: false, seen: 0,
             ts: 0, raf: 0, over: false, hitAt: 0, snAt: 0, w: 320, h: 400, dpr: 1 };
+    uch.mz = bell ? "" : uchManzara(uch.n);
+    uch.fon = uch.mz ? "fon-" + uch.mz : "fon";
+    uch.wo = 0;
     if (qrYordam(["gippo"], uch.bell || uch.rek).gippo) { uch.lives = uch.jon = 4; }
     drShowGame("scr-uchish");
     // uchuvchining kiyimi o'z fakulteti rangida (egasi, 2026-10-08)
     var uy = "gryffindor";
     try { uy = validHouse(cupMe().house || house) || uy; } catch (e) {}
     uch.rider = "rider-" + uy;
-    [uch.rider, "snitch", "bludger", "fon"].forEach(uchImg);
+    [uch.rider, "snitch", "bludger", uch.fon].forEach(uchImg);
     ["zor", "yaxshi", "maslahat", "xafa"].forEach(function (k) { var im = new Image(); im.src = uchXcImg(k); });
     $("uc-kick").textContent = f.nom[lang];
     $("uc-ttl").textContent = f.ust[lang];
@@ -2892,7 +2906,7 @@
     $("uc-intro").classList.toggle("hidden", uch.bell || uch.rek);
     if (uch.bell && !uch.eski) { dkXabar("supurgi", "supurgi", dkFoiz("supurgi", "speed")); }
     if (uch.bell || uch.rek) { uchGo(); return; }
-    $("uc-intro-t").textContent = x.ucIntro[uch.n === 1 ? 0 : uch.n === 4 ? 1 : uch.n === 7 ? 2 : 3];
+    $("uc-intro-t").textContent = (uch.n === 10 || uch.n === 19 || uch.n === 28) ? x.ucMzI[uch.mz] : x.ucIntro[uch.n === 1 ? 0 : uch.n === 4 ? 1 : uch.n === 7 ? 2 : 3];
     $("uc-go").textContent = x.ucGo;
     uchKayf("maslahat");
   }
@@ -3027,7 +3041,7 @@
     uch.w = w; uch.h = h; uch.dpr = dpr;
     uch.over = false;
     uch.ts = 0;
-    $("uc-hint").textContent = x.ucHint;
+    $("uc-hint").textContent = uch.mz ? x.ucMz[uch.mz] : x.ucHint;
     $("uc-hint").classList.remove("bad");
     uchKayf("maslahat");
     uchHud();
@@ -3053,7 +3067,14 @@
     if ($("scr-uchish").classList.contains("hidden")) { uch.over = true; return; }
     var x = drX(), me = uch, dt = uch.ts ? Math.min(0.05, (ts - uch.ts) / 1000) : 0;
     uch.ts = ts;
-    uch.rx += (uch.tx - uch.rx) * Math.min(1, dt * 11);
+    var nishon = uch.tx;
+    if (uch.mz === "boron" && !uch.yoriq) {            // shamol to'lqin-to'lqin esadi; supurgini yonga suradi, o'quvchi barmog'i bilan qarshi turadi
+      uch.shamol = 0.12 * Math.sin(uch.dist * 0.8 + 1.3) * (0.55 + 0.45 * Math.sin(uch.dist * 0.31));
+      uch.wo = (uch.wo || 0) + uch.shamol * dt * 1.6;
+      uch.wo -= uch.wo * Math.min(1, dt * 0.9);
+      nishon = Math.max(0.05, Math.min(0.95, uch.tx + uch.wo));
+    }
+    uch.rx += (nishon - uch.rx) * Math.min(1, dt * (uch.mz === "qish" ? 4.5 : 11));      // qishda supurgi sirpanadi
     uch.slow -= dt;
     if (!uch.yoriq) {
       if (uch.eski) { uch.gaz = Math.min(uch.combo, 6) * 0.08; }                      // 12-oktabr bellashuvi: eski tezlik qoidasi
@@ -3116,7 +3137,7 @@
     var px = function (o) { return w / 2 + (o.cx - 0.5) * W * sc(o.y); };
     g.setTransform(uch.dpr, 0, 0, uch.dpr, 0, 0);
     // fon (ozgina siljiydi) va tezlik chiziqlari
-    im = uchImg("fon");
+    im = uchImg(uch.fon || "fon");
     if (uchBor(im)) {
       var k = Math.max((w + 40) / im.naturalWidth, h / im.naturalHeight), fw = im.naturalWidth * k, fh = im.naturalHeight * k;
       g.drawImage(im, (w - fw) / 2 + (0.5 - uch.rx) * 28, (h - fh) / 2, fw, fh);
@@ -3124,7 +3145,8 @@
       var gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "#1b1f3a"); gr.addColorStop(0.7, "#5a3a5e"); gr.addColorStop(1, "#1a2a22");
       g.fillStyle = gr; g.fillRect(0, 0, w, h);
     }
-    g.fillStyle = "rgba(8,10,16,.3)"; g.fillRect(0, 0, w, h);
+    g.fillStyle = uch.mz === "qish" ? "rgba(8,10,16,.42)" : "rgba(8,10,16,.3)"; g.fillRect(0, 0, w, h);
+    if (uch.mz) { uchHavo(g, w, h, ts); }
     var tez = uch.slow > 0 ? 0.6 : 1 + Math.min(uch.gaz, 1) * 0.6;
     g.lineCap = "round";
     for (i = 0; i < 14; i++) {
@@ -3195,6 +3217,38 @@
     if (ts - uch.hitAt < 320) { g.fillStyle = "rgba(240,80,70," + (0.45 * (1 - (ts - uch.hitAt) / 320)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
     if (uch.snAt && ts - uch.snAt < 500) { g.fillStyle = "rgba(243,213,143," + (0.5 * (1 - (ts - uch.snAt) / 500)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
     if (uch.poyga) { uchPoygaHud(g, w, h, ts); }
+  }
+
+  // Manzara effektlari: tunda miltillagan yulduzlar, bo'ronda qiya yomg'ir va chaqmoq, qishda qor
+  function uchHavo(g, w, h, ts) {
+    var i, t = ts / 1000;
+    if (uch.mz === "tun") {
+      for (i = 0; i < 22; i++) {
+        var a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(t * (1.3 + afRnd(i + 5)) + i * 2.1));
+        g.fillStyle = "rgba(235,240,255," + a.toFixed(3) + ")";
+        g.beginPath(); g.arc(afRnd(i) * w, afRnd(i + 40) * h * 0.42, 0.8 + afRnd(i + 80) * 1.4, 0, Math.PI * 2); g.fill();
+      }
+    } else if (uch.mz === "boron") {
+      var qiya = (uch.shamol || 0) * 140;
+      g.strokeStyle = "rgba(190,210,235,.32)"; g.lineWidth = 1.3; g.lineCap = "round";
+      for (i = 0; i < 70; i++) {
+        var ry0 = ((afRnd(i + 7) * h + t * (520 + afRnd(i + 9) * 220)) % (h + 40)) - 20, rx0 = ((afRnd(i) * (w + 80) + t * qiya) % (w + 80) + w + 80) % (w + 80) - 40;
+        g.beginPath(); g.moveTo(rx0, ry0); g.lineTo(rx0 + qiya * 0.08, ry0 + 16); g.stroke();
+      }
+      var ch = (t % 7.3);                                 // chaqmoq: har ~7 soniyada qisqa chaqnash
+      if (ch < 0.18) { g.fillStyle = "rgba(225,235,255," + (0.35 * (1 - ch / 0.18)).toFixed(3) + ")"; g.fillRect(0, 0, w, h); }
+      if (Math.abs(uch.shamol || 0) > 0.06) {             // shamol yo'nalishi - yuqorida o'qcha
+        var o = uch.shamol > 0 ? 1 : -1, cx = w / 2;
+        g.strokeStyle = "rgba(207,233,255,.75)"; g.lineWidth = 3;
+        g.beginPath(); g.moveTo(cx - 22 * o, 18); g.lineTo(cx + 18 * o, 18); g.moveTo(cx + 8 * o, 11); g.lineTo(cx + 18 * o, 18); g.lineTo(cx + 8 * o, 25); g.stroke();
+      }
+    } else if (uch.mz === "qish") {
+      for (i = 0; i < 55; i++) {
+        var sy = ((afRnd(i + 3) * h + t * (35 + afRnd(i + 6) * 45)) % (h + 20)) - 10, sx = afRnd(i) * w + Math.sin(t * 0.9 + i) * 14;
+        g.fillStyle = "rgba(255,255,255," + (0.55 + afRnd(i + 11) * 0.4).toFixed(2) + ")";
+        g.beginPath(); g.arc(sx, sy, 1.2 + afRnd(i + 13) * 2.2, 0, Math.PI * 2); g.fill();
+      }
+    }
   }
 
   // Dars oxiri: baho = o'tilgan halqalar ulushi - zarbalar (har biri 8) + Snitch (8); o'tish - kamida «Qoniqarli» (60)
