@@ -346,10 +346,10 @@
     en: { ask: "Choose the quality", soon: "Coming soon", close: "Close", note: "The film is sent to your bot chat." }
   };
   var qsData = null, qsAsked = false;
-  /* Dublyaj (egasi, 2026-10-07): o'zbekcha filmlar ikki xil dublyajda - MY5 TV va ZO'R TV. Sifat oynasining
+  /* Dublyaj (egasi, 2026-10-07): o'zbekcha filmlar uch xil dublyajda - MY5 TV, ZO'R TV va Yoshlar TV. Sifat oynasining
      tepasida tanlanadi; faqat filmda ikkalasi ham bo'lsa ko'rinadi. Serverda asosiy dublyaj kaliti "hp1_uz",
      boshqasi "hp1_uz~zor" (hpfilms.py). Har safar asosiysidan boshlanadi. */
-  var qsDubs = { my5: "MY5 TV", zor: "ZO'R TV" }, qsMain = "my5", qsDub = null;
+  var qsDubs = { my5: "MY5 TV", zor: "ZO'R TV", yoshlar: "Yoshlar TV" }, qsMain = "my5", qsDub = null;
   var QS_DUB_TX = { uz: "Dublyaj", ru: "Дубляж", en: "Dubbing" };
 
   function qsKey(id, dub) { return id + "_" + lang + (dub && dub !== qsMain ? "~" + dub : ""); }

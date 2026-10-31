@@ -45,7 +45,7 @@
   };
   var PL_LANG = { uz: "O'zbekcha", ru: "Русский", en: "English" };
   var PL_Q = [["fhd", "Full HD", "1080p"], ["hd", "HD", "720p"], ["sd", "SD", "480p"]];
-  var PL_DUBS = [["my5", "MY5 TV"], ["zor", "ZO'R TV"]];
+  var PL_DUBS = [["my5", "MY5 TV"], ["zor", "ZO'R TV"], ["yoshlar", "Yoshlar TV"]];
   var PL_YIL = { hp1: 2001, hp2: 2002, hp3: 2004, hp4: 2005, hp5: 2007, hp6: 2009, hp7: 2010, hp8: 2011,
                  fb1: 2016, fb2: 2018, fb3: 2022 };
   var PL_BOSH_Q = ["hd", "fhd", "sd"];            // sinovda HD dan boshlanadi - trafik kamroq
