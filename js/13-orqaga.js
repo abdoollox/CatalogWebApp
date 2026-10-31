@@ -58,6 +58,7 @@
     "scr-vik": "vk-back",
     "scr-poyga": "pg-back",
     "scr-dokon": "dk-back",
+    "scr-gazeta": "gzt-bk",
     "scr-tosh": "gb-back",
     "scr-mjang": "mj-back",
     "scr-xarid": "xr-back",

@@ -4329,3 +4329,57 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 
 /* Toshchalar: maydon ekran kengligida (2026-10-26) - kanvas qutidan ikki tomonga teng chiqadi */
 .gb-box{overflow:visible}
+
+/* ===== KUNDALIK XABARNOMA (js/09-gazeta.js): eski gazeta. Sarg'ish qog'oz - egasi B namunani tanladi (2026-11-01), maktubdan tashqari yagona istisno ===== */
+#scr-gazeta{--gq:#e9e2cf;--gs:#1d1a15;--gr:#6b2a20;position:relative;min-height:100vh;margin:-22px -18px -28px;background:radial-gradient(ellipse at 50% 0,#f2ecdc,transparent 70%),radial-gradient(ellipse at 0 100%,rgba(90,70,40,.16),transparent 55%),var(--gq);color:var(--gs);padding:6px 16px calc(28px + var(--sab,0px))}
+#scr-gazeta.hidden{display:none}
+.gzt-hdr{display:flex;align-items:center;margin-bottom:8px}
+.gzt-hdr .back-btn{color:var(--gs);border-color:rgba(29,26,21,.4);background:transparent}
+.gzt-top{display:flex;justify-content:space-between;gap:8px;font:600 10px/1.3 'Manrope',sans-serif;padding-bottom:7px;border-bottom:1px solid var(--gs)}
+.gzt-nom{font:700 clamp(24px,7.7vw,30px)/1 'Cormorant Garamond',serif;text-transform:uppercase;text-align:center;white-space:nowrap;padding-top:10px;margin:0}
+.gzt-sub{font:500 10.5px/1 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-top:7px;padding-bottom:12px;border-bottom:3px double var(--gs)}
+.gzt-kick{font:800 10px/1.2 'Manrope',sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--gr);margin-bottom:5px}
+.gzt-lead{margin-top:14px}
+.gzt-lead h2{font:700 30px/1.06 'Cormorant Garamond',serif;margin:0 0 8px}
+#scr-gazeta p{font:500 15.5px/1.28 'Cormorant Garamond',serif;margin:0}
+.gzt-jon{position:relative;overflow:hidden;background:#2a261f}
+.gzt-jon img{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(1.2) sepia(.3);transform-origin:50% 40%;animation:gztSur 16s ease-in-out infinite alternate,gztMil 5.5s steps(1) infinite}
+.gzt-jon::before{content:"";position:absolute;inset:-30%;z-index:1;pointer-events:none;background:radial-gradient(circle,rgba(255,250,235,.95) 0 1px,transparent 2px) 0 0/46px 58px,radial-gradient(circle,rgba(255,250,235,.7) 0 1px,transparent 2px) 19px 23px/71px 83px;animation:gztUch 11s linear infinite;opacity:.8}
+.gzt-jon::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,rgba(255,244,214,.35),transparent 62%);mix-blend-mode:screen;animation:gztNur 3.8s ease-in-out infinite}
+.gzt-jon.kubok{width:170px;height:170px;margin:0 auto 10px;border-radius:50%;background:transparent;-webkit-mask-image:radial-gradient(circle,#000 58%,transparent 72%);mask-image:radial-gradient(circle,#000 58%,transparent 72%)}
+.gzt-two .gzt-jon{height:96px;margin-bottom:8px;border:1px solid var(--gs)}
+@keyframes gztSur{0%{transform:scale(1.02) translate(-1.5%,0)}100%{transform:scale(1.17) translate(1.5%,-2.5%)}}
+@keyframes gztMil{0%,100%{opacity:1}38%{opacity:.93}40%{opacity:1}71%{opacity:.88}73%{opacity:.97}}
+@keyframes gztUch{0%{transform:translateY(0)}100%{transform:translateY(-58px) translateX(14px)}}
+@keyframes gztNur{0%,100%{opacity:.35}50%{opacity:.9}}
+.gzt-uy{list-style:none;margin:14px 0;padding:10px 0;border-top:1px solid var(--gs);border-bottom:1px solid var(--gs)}
+.gzt-uy li{display:flex;align-items:center;gap:8px;height:27px;font:600 12px/1 'Manrope',sans-serif}
+.gzt-gerb{width:20px;height:20px;object-fit:contain;flex:none}
+.gzt-uy span{width:70px}
+.gzt-uy i{flex:1;height:5px;border-radius:3px;background:rgba(29,26,21,.13);overflow:hidden}
+.gzt-uy u{display:block;height:100%;border-radius:3px;background:var(--gs)}
+.gzt-uy b{width:44px;text-align:right}
+.gzt-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.gzt-two.bitta{grid-template-columns:1fr}
+.gzt-two.bitta .gzt-jon{height:150px}
+.gzt-two article+article{border-left:1px solid var(--gs);padding-left:14px}
+.gzt-two h3{font:600 20px/1.08 'Cormorant Garamond',serif;margin:0 0 5px}
+#scr-gazeta .gzt-two p{font-size:14.5px}
+.gzt-btn{margin-top:9px;width:100%;height:36px;border:0;background:var(--gs);color:var(--gq);font:800 12px 'Manrope',sans-serif;cursor:pointer}
+.gzt-win{margin-top:16px;padding-top:12px;border-top:1px solid var(--gs)}
+.gzt-win ul{list-style:none;margin:0;padding:0}
+.gzt-win li{display:flex;align-items:center;gap:8px;height:30px;font:500 12.5px/1 'Manrope',sans-serif;cursor:pointer}
+.gzt-win li+li{border-top:1px dotted rgba(29,26,21,.4)}
+.gzt-win li span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gzt-win li b{font-weight:700}
+.gzt-win .gzt-gerb{width:17px;height:17px}
+.gzt-fan{width:22px;height:22px;border-radius:50%;object-fit:cover;filter:grayscale(1) sepia(.2);flex:none}
+.gzt-foot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--gs)}
+.gzt-foot.bitta{grid-template-columns:1fr}
+.gzt-son{display:block;font:600 30px/1 'Cormorant Garamond',serif;margin-bottom:2px}
+.gzt-yoq{padding:40px 0;text-align:center}
+.hub-gzt{display:block;width:100%;margin-top:14px;padding:12px 14px;text-align:left;border:0;border-radius:6px;cursor:pointer;color:#1d1a15;background:radial-gradient(ellipse at 50% 0,#f2ecdc,transparent 70%),#e9e2cf}
+.hub-gzt.hidden{display:none}
+.gzt-k-nom{display:block;font:700 15px/1 'Cormorant Garamond',serif;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid #1d1a15}
+.gzt-k-h{display:block;font:700 20px/1.1 'Cormorant Garamond',serif;margin-top:7px}
+.gzt-k-no{display:block;font:800 9.5px/1 'Manrope',sans-serif;letter-spacing:.11em;text-transform:uppercase;color:#6b2a20;margin-top:7px}
