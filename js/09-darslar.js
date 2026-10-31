@@ -136,7 +136,7 @@
           qobBtn: "Qobiliyatlarim", qobBtnS: "Sakkiz soha bo'yicha darajangiz", qobUn: ["Yangi boshlovchi", "Shogird", "Mohir", "Usta", "Buyuk sehrgar"],
           qobZaif: function (nom) { return "Eng ko'p o'sish imkoni: " + nom; }, qobGo: function (fan) { return "«" + fan + "» darsiga o'tish"; }, qobEsl: "Qobiliyatlaringiz profilingizda boshqa sehrgarlarga ham ko'rinadi.",
           rekTileS: "Xatosiz kim uzoqqa boradi", rekHomeS: "Fanni tanlang. Bu yerda tezlik emas, chidam muhim: birinchi xatoda o'yin tugaydi. Kun oxirida har fanning birinchi uch rekordchisi ball oladi.", rekPrize: function (p) { return "Har kuni yarim tunda rekordchilarga ball: 1-o'rin +" + p[0] + ", 2-o'rin +" + p[1] + ", 3-o'rin +" + p[2] + "."; }, fnBell: "Bugungi bellashuv", fnRek: "Rekord", navHome: "Bosh sahifa", navMen: "Men", navChat: "Chat", pmQrS: function (n) { return n ? n + " ta maxluq" : "Maxluqlar darsidan olinadi"; },
-          rekTag: "Xatosiz kim uzoqqa boradi?", rekQ1: "Birinchi xatoda o'yin tugaydi", rekQ2: "Eng yaxshi natijangiz jadvalda doim qoladi",
+          rekTag: "Xatosiz kim uzoqqa boradi?", rekQ1: "Birinchi xatoda o'yin tugaydi", rekQ2: "Eng yaxshi natijangiz jadvalda qoladi. Natija teng bo'lsa, oxirgi yetgan yuqorida turadi",
           rekPzT: "Kunlik sovrin · har kuni yarim tunda", rekPzO: "-o'rin", rekPzB: "ball",
           bhKut: "bugun kutilayotgan ball", bhQat: "qatnashdingiz", bhVaqt: function (s, d) { return "Tugashiga " + s + " soat " + d + " daqiqa"; },
           bhYana: function (n) { return "Yana " + n + " ta bellashuv kutmoqda — har biri +15 gacha"; }, bhHamma: "Bugun hamma bellashuvda qatnashdingiz",
@@ -237,7 +237,7 @@
           qobBtn: "Мои способности", qobBtnS: "Ваш уровень в восьми областях", qobUn: ["Новичок", "Ученик", "Умелец", "Мастер", "Великий волшебник"],
           qobZaif: function (nom) { return "Больше всего можно вырасти: " + nom; }, qobGo: function (fan) { return "К уроку «" + fan + "»"; }, qobEsl: "Ваши способности видны другим волшебникам в вашем профиле.",
           rekTileS: "Кто пройдёт дальше без ошибок", rekHomeS: "Выберите предмет. Здесь важна не скорость, а выдержка: игра заканчивается на первой ошибке. В конце дня трое лучших по каждому предмету получают очки.", rekPrize: function (p) { return "Каждую полночь рекордсмены получают очки: 1-е место +" + p[0] + ", 2-е +" + p[1] + ", 3-е +" + p[2] + "."; }, fnBell: "Состязание дня", fnRek: "Рекорд", navHome: "Главная", navMen: "Я", navChat: "Чат", pmQrS: function (n) { return n ? "Существ: " + n : "Появляются на уроках ухода"; },
-          rekTag: "Кто пройдёт дальше без ошибок?", rekQ1: "Игра заканчивается на первой ошибке", rekQ2: "Ваш лучший результат остаётся в таблице навсегда",
+          rekTag: "Кто пройдёт дальше без ошибок?", rekQ1: "Игра заканчивается на первой ошибке", rekQ2: "Ваш лучший результат остаётся в таблице. При равном результате выше тот, кто достиг его последним",
           rekPzT: "Ежедневный приз · каждый день в полночь", rekPzO: " место", rekPzB: "очк.",
           bhKut: "ожидаемые очки за сегодня", bhQat: "участий", bhVaqt: function (s, d) { return "До конца " + s + " ч " + d + " мин"; },
           bhYana: function (n) { return "Ещё состязаний: " + n + " — в каждом до +15"; }, bhHamma: "Сегодня вы участвовали во всех состязаниях",
@@ -339,7 +339,7 @@
           qobBtn: "My abilities", qobBtnS: "Your level in eight areas", qobUn: ["Beginner", "Apprentice", "Skilled", "Master", "Great wizard"],
           qobZaif: function (nom) { return "Most room to grow: " + nom; }, qobGo: function (fan) { return "Go to " + fan; }, qobEsl: "Other wizards can see your abilities in your profile.",
           rekTileS: "Who gets furthest without a mistake", rekHomeS: "Pick a subject. This is about endurance, not speed: the game ends on your first mistake. At the end of each day the top three in every subject earn points.", rekPrize: function (p) { return "Every midnight the record holders earn points: 1st +" + p[0] + ", 2nd +" + p[1] + ", 3rd +" + p[2] + "."; }, fnBell: "Today's contest", fnRek: "Record", navHome: "Home", navMen: "Me", navChat: "Chat", pmQrS: function (n) { return n ? n + " creatures" : "Earned in Care of Magical Creatures"; },
-          rekTag: "Who gets furthest without a mistake?", rekQ1: "The game ends on your first mistake", rekQ2: "Your best result stays on the table for good",
+          rekTag: "Who gets furthest without a mistake?", rekQ1: "The game ends on your first mistake", rekQ2: "Your best result stays on the table. On a tie, whoever reached it last ranks higher",
           rekPzT: "Daily prize · every day at midnight", rekPzO: " place", rekPzB: "pts",
           bhKut: "points expected today", bhQat: "entered", bhVaqt: function (s, d) { return s + " h " + d + " min left"; },
           bhYana: function (n) { return n + " more contests waiting — up to +15 each"; }, bhHamma: "You entered every contest today",
@@ -1750,10 +1750,10 @@
       plan = { mode: "bell", steps: [1, 0.3, 0].map(function (r) { return { id: bid, r: r }; }) };
     } else if (bell === "rek") {
       var rs = [];
-      for (var ri = 0; ri < 80; ri++) {
+      for (var ri = 0; ri < 3000; ri++) {       // amalda chegara yo'q (egasi, 2026-11-01): 80 dan keyin chiziqsiz va sham qisqaradi
         var rid = AF_TARTIB[Math.floor(Math.random() * AF_TARTIB.length)];
         if (ri && rs[ri - 1].id === rid) { rid = AF_TARTIB[(AF_TARTIB.indexOf(rid) + 5) % AF_TARTIB.length]; }
-        rs.push({ id: rid, r: 0.3 });
+        rs.push({ id: rid, r: ri < 80 ? 0.3 : 0 });
       }
       plan = { mode: "rek", steps: rs };
     } else { plan = afPlan(n || 1); }
@@ -1786,7 +1786,7 @@
     var x = drX(), q = af.steps[af.round], a = AF[q.id][lang] || AF[q.id].uz;
     af.id = q.id;
     af.ask = !!q.ask;
-    if (af.mode !== "zan") { af.lim = Math.round(afLim(q.id, af.rek ? Math.min(24, 4 + af.round * 2) : af.n) * af.kx); }
+    if (af.mode !== "zan") { af.lim = Math.round(afLim(q.id, af.rek ? Math.min(24, 4 + af.round * 2) : af.n) * af.kx * (af.rek ? Math.max(0.35, 1 - Math.max(0, af.round - 80) * 0.01) : 1)); }
     $("af-stage").classList.toggle("sorov", af.ask);
     $("af-name").textContent = af.ask ? x.afVazT : a[0];
     $("af-desc").textContent = af.ask ? (AF_VAZ[q.id] || [a[1], a[1], a[1]])[lang === "ru" ? 1 : lang === "en" ? 2 : 0] : a[1];
@@ -2853,8 +2853,8 @@
   function uchPlan(n, urug, rek, poyga, uzun) {
     var bell = urug != null, pg = poyga || 0, eski = bell && !pg && !rek && uchEskiKun(), mus = (bell || !!poyga) && !eski;
     var s0 = rek ? Math.floor(Math.random() * 90000) : bell ? urug : n * 71;
-    var R = uzun ? uzun : rek ? 300 : eski ? 14 : pg ? 22 + pg * 4 : bell ? 24 : 10 + Math.floor((n - 1) / 3);
-    var bld = uzun ? Math.round(uzun / 3.6) : rek ? 70 : eski ? 5 : pg ? 6 + pg * 2 : bell ? 7 : n < 4 ? 0 : Math.min(8, 1 + Math.floor((n - 4) / 4));
+    var R = uzun ? uzun : rek ? 3000 : eski ? 14 : pg ? 22 + pg * 4 : bell ? 24 : 10 + Math.floor((n - 1) / 3);
+    var bld = uzun ? Math.round(uzun / 3.6) : rek ? 700 : eski ? 5 : pg ? 6 + pg * 2 : bell ? 7 : n < 4 ? 0 : Math.min(8, 1 + Math.floor((n - 4) / 4));
     var qadam = rek ? 0.4 : eski ? 0.42 : mus ? 0.5 : Math.min(0.5, 0.26 + n * 0.008);
     var objs = [], x = 0.5, i, k;
     for (i = 0; i < R; i++) {
@@ -3079,7 +3079,7 @@
     if (!uch.yoriq) {
       if (uch.eski) { uch.gaz = Math.min(uch.combo, 6) * 0.08; }                      // 12-oktabr bellashuvi: eski tezlik qoidasi
       else { uch.gaz = Math.max(0, uch.gaz - uch.gaz * UCH_GAZ.sonish * dt); }        // tezlik asta so'nadi - aniq uchib turish kerak
-      uch.dist += (uch.rek ? 0.5 + Math.min(0.55, uch.pass * 0.012) : uch.v0 * (uch.slow > 0 ? 0.6 : 1 + uch.gaz)) * dt;
+      uch.dist += (uch.rek ? 0.5 + Math.min(0.55, uch.pass * 0.012) + Math.min(0.85, Math.max(0, uch.pass - 300) * 0.003) : uch.v0 * (uch.slow > 0 ? 0.6 : 1 + uch.gaz)) * dt;
     }       // yo'riqnoma paytida supurgi joyida turadi (boshqarsa bo'ladi)
     if (!uch.fyd && uch.dist >= 0.5) { uch.fyd = true; fyUchish(); }     // birinchi halqa ko'ringach - yo'riqnoma (birinchi darsda)
     var ozgardi = false;
