@@ -460,7 +460,7 @@
     try { pmDarsRows(); } catch (e) {}
     try { puRender(); } catch (e) {}
     try { pu2Render(); } catch (e) {}
-    try { $("pm-kick").textContent = $("pm-name").textContent; if (cupMe().sardor) { $("pm-kick").appendChild(srdBelgi(false)); } } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
+    try { $("pm-kick").textContent = $("pm-name").textContent; if (cupMe().sardor) { $("pm-kick").appendChild(srdBelgi(false)); } pmKursQoy(); } catch (e) {}      // ism - sarlavha tepasida (alohida qator olib tashlandi)
     $("pm").classList.remove("hidden");
   }
 

@@ -511,6 +511,14 @@
   function kursEsda() { try { return parseInt(localStorage.getItem(TK("hp_kurs")) || "0", 10) || 0; } catch (e) { return 0; } }
   function kursYoz(n) { try { localStorage.setItem(TK("hp_kurs"), String(n)); } catch (e) {} }
   function kursN() { return (drKurs && drKurs.n) || kursEsda() || 4; }
+  // Profilda ism yonida kurs (egasi, 2026-10-31): hamma saralanganga, eski o'quvchilarga ham; direktorga yo'q
+  function pmKursQoy() {
+    var k = $("pm-kick"), el = $("pm-kurs"), n = (drKurs && drKurs.n) || kursEsda();
+    if (!hasHouse() || cupMe().house === "direktor") { if (el) { el.remove(); } return; }
+    if (!n) { drLoad(); return; }       // hali ma'lum emas: javob kelgach drApply qayta chaqiradi
+    if (!el) { el = drEl("span", "", ""); el.id = "pm-kurs"; k.insertBefore(el, k.firstElementChild); }
+    el.textContent = " · " + (KURS_TX[lang] || KURS_TX.uz).kurs(n);
+  }
   function kursBosh() { drKurs = null; kursKutmoqda = 0; kursYoz(1); drAt = 0; }
   function kursOl(res) {
     if (!res || !res.kurs || !res.kurs.n) { return; }
@@ -525,6 +533,7 @@
     var oldin = drPending();
     drData = res.lessons || {};
     if (!$("scr-dars").classList.contains("hidden")) { drRender(); }
+    if (!$("pm").classList.contains("hidden")) { try { pmKursQoy(); } catch (e) {} }
     // kurs o'zgargan bo'lsa bosh sahifa qayta chiziladi (bir marta: kursChizilgan renderHub da yangilanadi - halqa bo'lmaydi)
     if (kursN() !== kursChizilgan) { try { if (hubVisible()) { renderHub(); return; } } catch (e) {} }
     // Bosh sahifa FAQAT kartadagi son o'zgargan bo'lsa qayta chiziladi. DIQQAT (2026-10-07 xatosi): renderHub
