@@ -4180,9 +4180,10 @@
       savol.push({ a: a, a2: tfQolla(a, qoida), b: b, opts: opts, ok: opts.indexOf(togri) });
     }
     // Vaqt (2026-10-26, «transfiguratsiya juda qiyin»): ilgari 15 s dan har darsda 0,2 s kamayib 7 s gacha tushardi - 36-darsda
-    // uchta o'zgarishli, 6 variantli savolga 7,8 s qolardi. Endi sekinroq kamayadi va har qo'shimcha o'zgarishga +3 s.
+    // uchta o'zgarishli, 6 variantli savolga 7,8 s qolardi. Endi sekinroq kamayadi va har qo'shimcha o'zgarishga +4 s
+    // (2026-10-31: hamma darslarda vaqt yana ≈ uchdan birga uzaydi; 1-dars ≈ 20 s, 25-dars ≈ 24 s).
     // Rekord rejimi avvalgi vaqtda qoladi (doimiy jadval - natijalar solishtiriladigan bo'lsin).
-    return { savol: savol, lim: bell ? 0 : rek ? Math.round(Math.max(7000, 15000 - n * 200)) : Math.round(Math.max(9000, 15000 - n * 120) + (m - 1) * 3000) };
+    return { savol: savol, lim: bell ? 0 : rek ? Math.round(Math.max(7000, 15000 - n * 200)) : Math.round(Math.max(12000, 20000 - n * 150) + (m - 1) * 4000) };
   }
   function tfOpen(bell, n) {
     var st = drData && drData.trans, x = drX(), f = drFan("trans"), urug = null, i;
