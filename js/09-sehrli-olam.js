@@ -150,7 +150,7 @@
 
     var kn = hid === "none" ? 4 : kursN();
     kursChizilgan = kn;
-    root.classList.remove("k1", "k2", "k3", "k4");
+    root.classList.remove("k1", "k2", "k3", "k4", "k5", "k6", "k7");
     root.classList.add("k" + kn);
     try { kySq(); } catch (e) {}          // 2-kurs yo'riqnomasi paytida qurbaqa kartasi yashirin (js/09-yoriqnoma.js)
     try { hubJadval(JD_ON && hid !== "none" && kn >= 4); } catch (e) {}
@@ -308,18 +308,21 @@
     uz: { kurs: function (n) { return n + "-kurs"; }, k: "Xogvartsdagi yo'lingiz", vazifa: function (k, n) { return k + "-kursga o'tish uchun har bir fandan " + n + " tadan dars o'ting"; }, tayyor: function (a, b) { return a + " / " + b + " fan tayyor"; }, bell: "Bitta bellashuvda qatnashing",
           gacha: function (n) { return n + "-kursgacha"; }, ochiladi: "ochiladi", bDars: "Darslarga o'tish", bBell: "Bellashuvga o'tish",
           och: { 2: "Bellashuv, Shokolad qurbaqa va Xogvarts kubogi", 3: "Rekordlar, Qo'riqxona, Issiqxona va Patronus", 4: "Maydon — Poyga, Toshchalar, Shaxmat, Viktorina, Duel — Jadval va Do'stlar" },
+          vz6: function (n) { return "6-kursga o'tish uchun haftalik turnirlarda " + n + " marta g'alaba qozoning"; }, vz6i: "Turnir to'ridagi har yutilgan uchrashuv yoki poyga va viktorinada 1-o'rin", gal: function (a, b) { return a + " / " + b + " g'alaba"; }, vz7: "7-kursga o'tish uchun hamma darslarni tugating", ochN: "yangi nishon", nish: "Yangi nishon:",
           tabrik: function (n) { return "Siz " + n + "-kursga o'tdingiz!"; }, tabrikS: "Yangi xonalar ochildi:", ok: "Davom etish",
           sh3: "3-kursga o'tish uchun uchta shartni bajaring", s1: function (n) { return "Har bir fandan " + n + " tadan dars"; }, s2: "Shokolad qurbaqadan bitta karta oching", s3: "To'qqiz fanning har birida bellashuvda qatnashing",
           sFan: function (a, b) { return a + " / " + b + " fan"; }, bQurb: "Shokolad qurbaqaga o'tish" },
     ru: { kurs: function (n) { return n + "-й курс"; }, k: "Ваш путь в Хогвартсе", vazifa: function (k, n) { return "Чтобы перейти на " + k + "-й курс, пройдите по " + n + " урока по каждому предмету"; }, tayyor: function (a, b) { return "Готово: " + a + " / " + b; }, bell: "Поучаствуйте в одном состязании",
           gacha: function (n) { return "До " + n + "-го курса"; }, ochiladi: "откроется", bDars: "К урокам", bBell: "К состязаниям",
           och: { 2: "Состязания, Шоколадная лягушка и Кубок школы", 3: "Рекорды, Заповедник, Теплица и Патронус", 4: "Арена — Дуэль, Шахматы, Викторина — Расписание и Друзья" },
+          vz6: function (n) { return "Чтобы перейти на 6-й курс, победите в недельных турнирах: " + n + " раза"; }, vz6i: "Каждая выигранная встреча в сетке или 1-е место в гонке и викторине", gal: function (a, b) { return "Побед: " + a + " / " + b; }, vz7: "Чтобы перейти на 7-й курс, завершите все уроки", ochN: "новый значок", nish: "Новый значок:",
           tabrik: function (n) { return "Вы перешли на " + n + "-й курс!"; }, tabrikS: "Открылись новые комнаты:", ok: "Продолжить",
           sh3: "Чтобы перейти на 3-й курс, выполните три условия", s1: function (n) { return "По " + n + " уроков по каждому предмету"; }, s2: "Откройте одну карточку Шоколадной лягушки", s3: "Поучаствуйте в состязании по каждому из девяти предметов",
           sFan: function (a, b) { return a + " / " + b + " предм."; }, bQurb: "К Шоколадной лягушке" },
     en: { kurs: function (n) { return "Year " + n; }, k: "Your path at Hogwarts", vazifa: function (k, n) { return "To reach year " + k + ", pass " + n + " lessons in every subject"; }, tayyor: function (a, b) { return a + " / " + b + " subjects done"; }, bell: "Take part in one contest",
           gacha: function (n) { return "Until year " + n; }, ochiladi: "unlocks", bDars: "Go to lessons", bBell: "Go to contests",
           och: { 2: "Contests, the Chocolate Frog and the House Cup", 3: "Records, the Reserve, the Greenhouse and the Patronus", 4: "The Arena — Duel, Chess, Quiz — the Schedule and Friends" },
+          vz6: function (n) { return "To reach year 6, win " + n + " times in weekly tournaments"; }, vz6i: "Each match won in a bracket, or 1st place in the race or quiz", gal: function (a, b) { return a + " / " + b + " wins"; }, vz7: "To reach year 7, finish every lesson", ochN: "a new badge", nish: "New badge:",
           tabrik: function (n) { return "You are now in year " + n + "!"; }, tabrikS: "New rooms have opened:", ok: "Continue",
           sh3: "To reach year 3, meet three conditions", s1: function (n) { return n + " lessons in every subject"; }, s2: "Open one Chocolate Frog card", s3: "Enter the contest in each of the nine subjects",
           sFan: function (a, b) { return a + " / " + b + " subjects"; }, bQurb: "Go to the Chocolate Frog" }
@@ -328,7 +331,7 @@
     var eski = $("hub-kurs"), x = KURS_TX[lang] || KURS_TX.uz;
     if (eski) { eski.parentNode.removeChild(eski); }
     if (kursKutmoqda && hid !== "none") { var yangi = kursKutmoqda; kursKutmoqda = 0; setTimeout(function () { kursTabrik(yangi); }, 350); }
-    if (hid === "none" || kn >= 4) { return; }
+    if (hid === "none" || kn >= 7) { return; }
     var mk = function (tag, cls, tx) { var e = document.createElement(tag); if (cls) { e.className = cls; } if (tx != null) { e.textContent = tx; } return e; };
     // Kurs sharti faqat DARSLAR, HAR FANDAN (egasi, 2026-10-11): 2-kursga 3 tadan, 3-kursga 9 tadan, 4-kursga 15 tadan. fanN - shartni bajargan fanlar soni.
     var k = drKurs || { fans: 9, fan2: 0, fan3: 0, fan4: 0, need2: 3, need3: 9, need4: 15 }, keyin = kn + 1, har = k["need" + keyin] || [0, 0, 3, 9, 15][keyin];
@@ -341,13 +344,14 @@
     chap.appendChild(mk("b", "", x.kurs(kn)));
     tep.appendChild(chap);
     var pog = mk("span", "hub-kurs-p");
-    [1, 2, 3, 4].forEach(function (i) { pog.appendChild(mk("i", i <= kn ? "on" : "", String(i))); });
+    [1, 2, 3, 4, 5, 6, 7].forEach(function (i) { pog.appendChild(mk("i", i <= kn ? "on" : "", String(i))); });
     tep.appendChild(pog);
     card.appendChild(tep);
     // Nima qilish kerakligi ANIQ yoziladi va to'qqiz fan alohida ko'rsatiladi (egasi, 2026-10-11: «tushunarli bo'lmay qolibdi»)
-    var qat = mk("div", "hub-kurs-q"), uch = kn === 2;
-    qat.appendChild(mk("b", "", uch ? x.sh3 : x.vazifa(kn + 1, har)));
-    if (!uch) { qat.appendChild(mk("span", "", x.tayyor(bor, kerak))); }
+    var qat = mk("div", "hub-kurs-q"), uch = kn === 2, gal6 = kn === 5, hammasi = kn === 6;
+    qat.appendChild(mk("b", "", gal6 ? x.vz6(k.need6 || 3) : hammasi ? x.vz7 : uch ? x.sh3 : x.vazifa(kn + 1, har)));
+    if (gal6) { qat.appendChild(mk("span", "", x.gal(Math.min(k.galaba || 0, k.need6 || 3), k.need6 || 3))); qat.appendChild(mk("span", "", x.vz6i)); }
+    else if (!uch) { qat.appendChild(mk("span", "", x.tayyor(bor, kerak))); }
     card.appendChild(qat);
     /* 3-kurs sharti (egasi, 2026-10-11): darslar + bitta Shokolad qurbaqa kartasi + to'qqiz fanning har birida bellashuv.
        Har shart alohida qator: raqam, matn, holat; bajarilgani yashil ✓. Sonlar serverdan (hpdars.kurs: qurb, bellf). */
@@ -364,30 +368,30 @@
     if (uch) { shart(1, x.s1(har), x.sFan(bor, kerak), darsOk, null); }
     var fq = mk("div", "hub-kurs-f");
     DR_FANLAR.forEach(function (f) {
-      var lv = Math.min(har, (drData && drData[f.id] && drData[f.id].level) || 0), ok = lv >= har;
+      var fd = (drData && drData[f.id]) || {}, fHar = hammasi ? (fd.total || 36) : har, lv = Math.min(fHar, fd.level || 0), ok = lv >= fHar;
       var fb = mk("button", "hub-kurs-fb" + (ok ? " ok" : ""));
       fb.type = "button";
       fb.style.setProperty("--dr-rgb", f.rgb);
       var fi = document.createElement("img");
       fi.src = IMG_DIR + "dars/" + f.id + ".webp"; fi.alt = "";
       fb.appendChild(fi);
-      fb.appendChild(mk("small", "", ok ? "✓" : lv + " / " + har));
+      fb.appendChild(mk("small", "", ok ? "✓" : lv + " / " + fHar));
       fb.setAttribute("aria-label", f.nom[lang] || f.nom.uz);
       fb.onclick = hubGo(function () { fanOpen(f.id); });
       fq.appendChild(fb);
     });
-    card.appendChild(fq);
+    if (!gal6) { card.appendChild(fq); }
     if (uch) {
       shart(2, x.s2, Math.min(qurb, needq) + " / " + needq, qurb >= needq, sqOpen);
       shart(3, x.s3, x.sFan(bellf, kerak), bellf >= kerak, function () { blHomeOpen("bell"); });
     }
-    card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + x.och[kn + 1]));
+    card.appendChild(mk("p", "", x.kurs(kn + 1) + " — " + x.ochiladi + ": " + (x.och[kn + 1] || x.ochN)));
     // asosiy tugma - birinchi bajarilmagan shartga olib boradi
     var bq = uch && darsOk && qurb < needq, bb = uch && darsOk && qurb >= needq && bellf < kerak;
     var b = mk("button", "dr-btn", bq ? x.bQurb : bb ? x.bBell : x.bDars);
     b.type = "button";
     b.onclick = hubGo(bq ? sqOpen : bb ? function () { blHomeOpen("bell"); } : drOpen);
-    card.appendChild(b);
+    if (!gal6) { card.appendChild(b); }
     grid.parentNode.insertBefore(card, grid);
   }
   /* KURS TABRIGI (egasi, 2026-10-11: «vizual jihatdan yaxshilash»): yonib turgan kurs muhri, to'rt pog'onali yo'l
@@ -396,19 +400,28 @@
     uz: { kick: "Xogvarts · yangi kurs", muhr: "kurs", mg: "Professor Makgonagall",
           gap: { 2: "Tabriklayman! Birinchi kursni sharaf bilan tugatdingiz. Endi fakultetingiz uchun bellashish vaqti.",
                  3: "Ajoyib! Endi rekord qo'yasiz, maxluq va o'simliklaringizni o'zingiz parvarish qilasiz.",
-                 4: "Barakalla! Siz eng yuqori kursdasiz. Maydon sizni kutmoqda: duel, shaxmat va viktorina." },
+                 4: "Barakalla! Maydon sizni kutmoqda: duel, shaxmat va viktorina.",
+                 5: "Beshinchi kurs! Har bir fanda ancha yo'l bosdingiz. Endi mahoratingizni turnirlarda ko'rsating.",
+                 6: "Oltinchi kurs — turnirlarda o'zingizni ko'rsatdingiz. Endi faqat bitta narsa qoldi: hamma darslarni tugatish.",
+                 7: "Yettinchi kurs! Hamma darslarni tugatdingiz. Xogvarts siz bilan faxrlanadi." },
           xona: { bell: "Bellashuv", sq: "Shokolad qurbaqa", cup: "Xogvarts kubogi", rek: "Rekordlar", qoriq: "Qo'riqxona", issiq: "Issiqxona", duel: "Duel", chess: "Shaxmat", vik: "Viktorina" },
           qosh: { 3: "va Patronus", 4: "va Hafta jadvali, Do'stlar" } },
     ru: { kick: "Хогвартс · новый курс", muhr: "курс", mg: "Профессор Макгонагалл",
           gap: { 2: "Поздравляю! Первый курс пройден с честью. Теперь пора состязаться за свой факультет.",
                  3: "Превосходно! Теперь вы ставите рекорды и сами ухаживаете за существами и растениями.",
-                 4: "Браво! Вы на старшем курсе. Арена ждёт вас: дуэль, шахматы и викторина." },
+                 4: "Браво! Арена ждёт вас: дуэль, шахматы и викторина.",
+                 5: "Пятый курс! Вы далеко продвинулись в каждом предмете. Теперь покажите мастерство на турнирах.",
+                 6: "Шестой курс — вы проявили себя на турнирах. Осталось одно: завершить все уроки.",
+                 7: "Седьмой курс! Вы завершили все уроки. Хогвартс гордится вами." },
           xona: { bell: "Состязания", sq: "Шоколадная лягушка", cup: "Кубок школы", rek: "Рекорды", qoriq: "Заповедник", issiq: "Теплица", duel: "Дуэль", chess: "Шахматы", vik: "Викторина" },
           qosh: { 3: "и Патронус", 4: "и Расписание недели, Друзья" } },
     en: { kick: "Hogwarts · new year", muhr: "year", mg: "Professor McGonagall",
           gap: { 2: "Congratulations! You finished your first year with honour. Now it is time to compete for your house.",
                  3: "Splendid! Now you set records and look after your own creatures and plants.",
-                 4: "Well done! You are in the top year. The Arena awaits: duels, chess and the quiz." },
+                 4: "Well done! The Arena awaits: duels, chess and the quiz.",
+                 5: "Fifth year! You have come far in every subject. Now show your skill in the tournaments.",
+                 6: "Sixth year — you have proved yourself in the tournaments. One thing is left: finish every lesson.",
+                 7: "Seventh year! You have finished every lesson. Hogwarts is proud of you." },
           xona: { bell: "Contests", sq: "Chocolate Frog", cup: "House Cup", rek: "Records", qoriq: "Reserve", issiq: "Greenhouse", duel: "Duel", chess: "Chess", vik: "Quiz" },
           qosh: { 3: "and the Patronus", 4: "and the Weekly schedule, Friends" } }
   };
@@ -422,8 +435,9 @@
     if (eski) { eski.parentNode.removeChild(eski); }
     var orqa = document.createElement("div"), oyna = document.createElement("div");
     // tabrik yopilgach - yangi ochilgan narsalar bo'yicha yo'riqnoma (yqKurs, js/09-yoriqnoma.js)
-    var yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); try { kyTabrikYopildi(n); } catch (e) {} } };
-    try { kyTabrikOchildi(n); } catch (e) {}
+    // 5-7-kurslar bo'lim ochmaydi: yo'riqnoma ham, yashirish ham yo'q
+    var yop = function () { if (orqa.parentNode) { orqa.parentNode.removeChild(orqa); if (n <= 4) { try { kyTabrikYopildi(n); } catch (e) {} } } };
+    if (n <= 4) { try { kyTabrikOchildi(n); } catch (e) {} }
     orqa.className = "du-info kurs-tb";
     orqa.id = "du-info";
     oyna.className = "du-info-p";
@@ -443,7 +457,7 @@
     ich.appendChild(drEl("b", "ktb-t", x.tabrik(n)));
     // to'rt pog'onali yo'l
     var yol = drEl("div", "ktb-yol");
-    for (i = 1; i <= 4; i++) {
+    for (i = 1; i <= 7; i++) {
       var pg = drEl("span", "ktb-pg" + (i < n ? " otdi" : i === n ? " hoz" : ""));
       pg.appendChild(drEl("i", "", i < n ? "✓" : String(i)));
       pg.appendChild(drEl("small", "", x.kurs(i)));
@@ -460,7 +474,8 @@
     mg.appendChild(mt);
     ich.appendChild(mg);
     // ochilgan xonalar
-    ich.appendChild(drEl("small", "ktb-kick", x.tabrikS));
+    ich.appendChild(drEl("small", "ktb-kick", n >= 5 ? x.nish : x.tabrikS));
+    if (n >= 5) { var kn_ = document.createElement("img"); kn_.className = "ktb-nish"; kn_.alt = ""; kn_.src = IMG_DIR + "nishon/kurs_" + n + ".webp"; ich.appendChild(kn_); }
     var xs = drEl("div", "ktb-xona");
     (KURS_XONA[n] || []).forEach(function (k) {
       var c = drEl("span", "ktb-x" + (k === "cup" ? " gerb" : "")), r = drEl("span", "ktb-x-r");
@@ -499,7 +514,7 @@
     $("hub-set").classList.add("hidden");
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
-    try { dkLoad(function () { if (hubVisible()) { var el = document.querySelector('#hub-grid .hx[data-k="dokon"] small'); if (el && dkGalleon() != null && !el.getAttribute("data-q")) { el.textContent = HT("dokonG").replace("%a", dkGalleon()); } } }); } catch (e) {}      // do'kon: jihozlar holati (daqiqada bir), bosh sahifani qayta chizmaydi
+    try { dkLoad(function () { if (hubVisible()) { var el = document.querySelector('#hub-grid .hx[data-k="dokon"] small'); if (el && dkGalleon() != null && !el.getAttribute("data-q")) { el.textContent = HUB_TX.dokonG[lang].replace("%a", dkGalleon()); } } }); } catch (e) {}      // do'kon: jihozlar holati (daqiqada bir), bosh sahifani qayta chizmaydi
     try { snLoad(); } catch (e) {}          // so'rovnoma kartasi (daqiqada bir martadan ko'p so'ramaydi, bosh sahifani qayta chizmaydi)
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
     try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)

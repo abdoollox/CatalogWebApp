@@ -503,7 +503,7 @@
   var API_NISHON = "https://bot.tizimshunos.uz/api/nishon";
   var NSH_ORDER = ["film_1", "film_8", "fb_3", "poliglot", "oquvchi", "tayoqcha", "patronus", "ball_1", "streak_7",
                    "perfect_week", "kubok_golib", "top_3", "sardor", "sandiq_1", "sandiq_7", "dost_1", "dost_5", "shaxmat", "albom", "serial_1",
-                   "maxluq_1", "maxluq_katta", "maxluq_12", "issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12", "kitob_1", "kitob_7", "duel_golib", "rekord_top"];
+                   "maxluq_1", "maxluq_katta", "maxluq_12", "issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12", "kitob_1", "kitob_7", "duel_golib", "rekord_top", "shogird", "kurs_5", "kurs_6", "kurs_7"];
   var NSH_TX = {
     uz: { sec: "Nishonlar", got: "Olingan", lock: "Hali olinmagan", close: "Yopish", fresh: "Yangi nishon",
           freshN: function (n) { return n + " ta yangi nishon"; }, freshP: "Hammasi profilingizda turadi.",
@@ -523,6 +523,10 @@
                perfect_week: ["Bexato hafta", "Bir hafta ichida 5 kun Sehrgarlik tarixi bellashuvini xatosiz yakunlang"],
                kubok_golib: ["Kubok g'olibi", "Fakultetingiz haftalik kubokni yutsin, siz ham ball qo'shgan bo'ling"],
                top_3: ["Eng yaxshi uchlik", "Hafta yakunida eng ko'p ball to'plagan 3 o'quvchidan biri bo'ling"],
+               shogird: ["Professor shogirdi", "Bir hafta biror fan bellashuvida eng ko'p ball oling — keyingi haftaga shu professorning shogirdi bo'lasiz"],
+               kurs_5: ["5-kurs", "Har bir fandan 24 tadan dars o'ting"],
+               kurs_6: ["6-kurs", "Haftalik turnirlarda 3 marta g'alaba qozoning"],
+               kurs_7: ["7-kurs", "Hamma darslarni tugating"],
                sardor: ["Hafta sardori", "Bir hafta fakultetingizda eng ko'p ball to'plang — keyingi haftaga sardor bo'lasiz"],
                dost_1: ["Birinchi do'st", "Taklifingiz bilan 1 do'st qo'shilsin"],
                dost_5: ["Do'stlar davrasi", "Taklifingiz bilan 5 do'st qo'shilsin"],
@@ -553,6 +557,10 @@
                perfect_week: ["Неделя без ошибок", "За одну неделю 5 дней пройдите состязание по Истории магии без ошибок"],
                kubok_golib: ["Обладатель Кубка", "Ваш факультет выиграл Кубок недели, и вы принесли очки"],
                top_3: ["Лучшая тройка", "Войдите в тройку учеников с наибольшим числом очков за неделю"],
+               shogird: ["Ученик профессора", "Наберите больше всех очков в состязании по предмету за неделю — станете учеником этого профессора"],
+               kurs_5: ["5-й курс", "Пройдите по 24 урока по каждому предмету"],
+               kurs_6: ["6-й курс", "Победите в недельных турнирах 3 раза"],
+               kurs_7: ["7-й курс", "Завершите все уроки"],
                sardor: ["Старшина недели", "Наберите больше всех очков на своём факультете за неделю — станете старшиной на следующую"],
                dost_1: ["Первый друг", "По вашему приглашению пришёл 1 друг"],
                dost_5: ["Круг друзей", "По вашему приглашению пришли 5 друзей"],
@@ -583,6 +591,10 @@
                perfect_week: ["Flawless Week", "In one week, finish the History of Magic contest without mistakes on 5 days"],
                kubok_golib: ["Cup Winner", "Your house wins the weekly Cup and you earned points for it"],
                top_3: ["Top Three", "Be one of the 3 students with the most points in a week"],
+               shogird: ["Professor's apprentice", "Score the most in a subject's contest in a week — you become that professor's apprentice"],
+               kurs_5: ["Year 5", "Pass 24 lessons in every subject"],
+               kurs_6: ["Year 6", "Win 3 times in weekly tournaments"],
+               kurs_7: ["Year 7", "Finish every lesson"],
                sardor: ["Prefect of the Week", "Score the most points in your house in a week — you become prefect for the next one"],
                dost_1: ["First Friend", "1 friend joins by your invitation"],
                dost_5: ["Circle of Friends", "5 friends join by your invitation"],
@@ -600,14 +612,15 @@
   var NSH_GROUPS = [
     ["kino", ["film_1", "film_8", "fb_3", "poliglot", "serial_1"], { uz: "Kino", ru: "Кино", en: "Films" }],
     ["xogvarts", ["oquvchi", "tayoqcha", "patronus"], { uz: "Xogvarts yo'li", ru: "Путь в Хогвартс", en: "Road to Hogwarts" }],
-    ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3", "sardor"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
+    ["kubok", ["ball_1", "sandiq_1", "sandiq_7", "streak_7", "perfect_week", "kubok_golib", "top_3", "sardor", "shogird"], { uz: "Fakultetlar kubogi", ru: "Кубок школы", en: "House Cup" }],
     ["shaxmat", ["shaxmat"], { uz: "Shaxmat", ru: "Шахматы", en: "Chess" }],
     ["musiqa", ["albom"], { uz: "Musiqa", ru: "Музыка", en: "Music" }],
     ["dostlik", ["dost_1", "dost_5"], { uz: "Do'stlik", ru: "Дружба", en: "Friendship" }],
     ["maxluq", ["maxluq_1", "maxluq_katta", "maxluq_12"], { uz: "Qo'riqxona", ru: "Питомник", en: "Menagerie" }],
     ["issiq", ["issiq_1", "issiq_yetilgan", "issiq_hosil", "issiq_12"], { uz: "Issiqxona", ru: "Теплица", en: "Greenhouse" }],
     ["kitob", ["kitob_1", "kitob_7"], { uz: "Kitoblar", ru: "Книги", en: "Books" }],
-    ["maydon", ["duel_golib", "rekord_top"], { uz: "Duel va rekordlar", ru: "Дуэль и рекорды", en: "Duel and records" }]
+    ["maydon", ["duel_golib", "rekord_top"], { uz: "Duel va rekordlar", ru: "Дуэль и рекорды", en: "Duel and records" }],
+    ["kurslar", ["kurs_5", "kurs_6", "kurs_7"], { uz: "Yuqori kurslar", ru: "Старшие курсы", en: "Senior years" }]
   ];
   var NSH_SUM = { uz: "nishon olingan", ru: "значков получено", en: "badges earned" };
   var nshData = null, nshAsked = false, nshSampleSeen = false;
