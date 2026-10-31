@@ -311,6 +311,30 @@
     return b;
   }
 
+  // PROFESSOR SHOGIRDI (egasi, 2026-10-31): har fan bellashuvida o'tgan hafta eng ko'p ball olgan - bir hafta belgi bilan.
+  // Server: hpcup.shogirdlar (dars javobida `shogirds`, me/chat/a'zolar/profilda `shogird: [fan]`). Nomlar hppochta.SHOGIRD_NOM bilan bir xil.
+  var SHG_TX = {
+    uz: { ttl: "Hafta shogirdlari", iz: "Har fan bellashuvida hafta davomida eng ko'p ball olgan o'quvchi keyingi haftaga shu professorning shogirdi bo'ladi", yoq: "Birinchi shogirdlar yakshanba kechasi aniqlanadi", ball: "ball",
+          n: { tarix: "Binns shogirdi", afsun: "Flitvik shogirdi", iksir: "Sneyp shogirdi", himoya: "Lyupin shogirdi", uchish: "Xuch shogirdi", maxluq: "Xagrid shogirdi", astro: "Sinistra shogirdi", osimlik: "Sprout shogirdi", trans: "Makgonagall shogirdi" } },
+    ru: { ttl: "Ученики недели", iz: "Кто за неделю набрал больше всех очков в состязании по предмету, на следующую неделю становится учеником этого профессора", yoq: "Первые ученики определятся в воскресенье ночью", ball: "очк.",
+          n: { tarix: "Ученик Биннса", afsun: "Ученик Флитвика", iksir: "Ученик Снейпа", himoya: "Ученик Люпина", uchish: "Ученик мадам Трюк", maxluq: "Ученик Хагрида", astro: "Ученик Синистры", osimlik: "Ученик Спраут", trans: "Ученик Макгонагалл" } },
+    en: { ttl: "Apprentices of the week", iz: "Whoever scores the most in a subject's contest during the week becomes that professor's apprentice for the next week", yoq: "The first apprentices are named on Sunday night", ball: "pts",
+          n: { tarix: "Binns's apprentice", afsun: "Flitwick's apprentice", iksir: "Snape's apprentice", himoya: "Lupin's apprentice", uchish: "Madam Hooch's apprentice", maxluq: "Hagrid's apprentice", astro: "Sinistra's apprentice", osimlik: "Sprout's apprentice", trans: "McGonagall's apprentice" } }
+  };
+  var SHG_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-7 10.18v4L12 21l7-3.82v-4L12 17l-7-3.82Z"/></svg>';
+  function shgT() { return SHG_TX[lang] || SHG_TX.uz; }
+  function shgBelgi(fan) {
+    var b = cupEl("span", "srd-b");
+    b.innerHTML = SHG_SVG;
+    b.appendChild(document.createTextNode(shgT().n[fan] || fan));
+    return b;
+  }
+  // Ism yonida bitta belgi: joy tor, sardor bo'lsa - sardor, aks holda birinchi fan (hammasi boshqa odam profilida)
+  function unvonBelgi(el, m) {
+    if (m.sardor) { el.appendChild(srdBelgi(true)); }
+    else if (m.shogird && m.shogird[0]) { el.appendChild(shgBelgi(m.shogird[0])); }
+  }
+
   // Kubok sahifasi: to'rt fakultetning hafta sardori
   function renderSardor() {
     var box = $("cup-srd"), s = (cupData && cupData.sardors) || {}, t = srdT();
@@ -586,7 +610,7 @@
 
     var who = cupEl("div", "hall-nm");
     var nm = cupEl("span", "hall-nm-t", m.name || "");
-    if (m.sardor) { nm.appendChild(srdBelgi(true)); }
+    unvonBelgi(nm, m);
     if (m.me) {
       var tag = cupEl("i", "", t.hallYou);
       tag.style.color = hh.accent || "var(--accent)";

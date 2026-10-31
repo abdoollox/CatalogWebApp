@@ -157,6 +157,7 @@
     if (!h) { qism.push(x.noHouse); }
     if (qism.length) { box.appendChild(odamEl("p", "od-holat" + (d.online && !d.me ? " on" : ""), qism.join(" · "))); }
     if (d.sardor) { var sp = odamEl("p", "od-srd", ""); sp.appendChild(srdBelgi(false)); box.appendChild(sp); }
+    (d.shogird || []).forEach(function (fan) { var sg = odamEl("p", "od-srd", ""); sg.appendChild(shgBelgi(fan)); box.appendChild(sg); });
 
     // 1-qator: Fakultet / Tayoqcha / Patronus
     var q1 = odamEl("div", "pu");

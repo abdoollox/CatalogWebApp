@@ -491,6 +491,7 @@
       astro: { level: drLocalLvl.astro, total: 36, contest: bell("astro", "a4") },
       osimlik: { level: drLocalLvl.osimlik, total: 36, contest: bell("osimlik", "o5") },
       trans: { level: drLocalLvl.trans, total: 36, contest: bell("trans", "t7") } };
+    res.shogirds = { himoya: { uid: 11, name: "Sedrik", house: "hufflepuff", ball: 52 }, iksir: { uid: 12, name: "Germiona", house: "gryffindor", ball: 45 } };
     return res;
   }
 
@@ -520,7 +521,9 @@
     el.textContent = " · " + (KURS_TX[lang] || KURS_TX.uz).kurs(n);
   }
   function kursBosh() { drKurs = null; kursKutmoqda = 0; kursYoz(1); drAt = 0; }
+  var drShogird = null;       // {fan: {uid, name, house, ball}} - dars javobidan
   function kursOl(res) {
+    if (res && res.shogirds) { drShogird = res.shogirds; }
     if (!res || !res.kurs || !res.kurs.n) { return; }
     var esda = kursEsda();
     drKurs = res.kurs;
@@ -720,6 +723,32 @@
       card.addEventListener("click", function () { blOpen(f.id, "list"); });
       bb.appendChild(card);
     });
+    blhShogird(bb);
+  }
+  // «Hafta shogirdlari» kartasi (hpcup.shogirdlar); hali bo'lmasa - qoida va qachon aniqlanishi
+  function blhShogird(bb) {
+    var t = shgT(), s = drShogird || {}, box = drEl("div", "cup-card srd shg");
+    var bosh = drEl("div", "srd-h"), ic = drEl("span", "srd-ic"), tx = drEl("div", "");
+    ic.innerHTML = SHG_SVG;
+    bosh.appendChild(ic);
+    tx.appendChild(drEl("b", "", t.ttl));
+    tx.appendChild(drEl("small", "", t.iz));
+    bosh.appendChild(tx);
+    box.appendChild(bosh);
+    var bor = DR_FANLAR.filter(function (f) { return s[f.id]; });
+    if (!bor.length) { box.appendChild(drEl("p", "shg-yoq", t.yoq)); }
+    bor.forEach(function (f) {
+      var q = s[f.id], row = drEl("div", "srd-row"), im = document.createElement("img"), nm = drEl("div", "srd-nm"), b = drEl("b", "", q.name);
+      im.alt = ""; im.loading = "lazy"; im.src = IMG_DIR + DR_PROF[f.id] + "/zor.webp";
+      row.appendChild(im);
+      if (HOUSES[q.house]) { b.style.color = HOUSES[q.house].accent || ""; }
+      nm.appendChild(b);
+      nm.appendChild(drEl("small", "", t.n[f.id] || f.id));
+      row.appendChild(nm);
+      row.appendChild(drEl("span", "srd-ball", q.ball + " " + t.ball));
+      box.appendChild(odamLink(row, q, q.house));
+    });
+    bb.appendChild(box);
   }
   // Rekord o'rinlari shu qurilmada eslab qolinadi (hp_rek_orin) - uchlikdan tushib qolgani shundan bilinadi
   var rhTushgan = {};

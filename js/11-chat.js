@@ -280,7 +280,7 @@
         nm.textContent = m.name || "Sehrgar";
         nm.style.color = chatColor(m.house);
         name.appendChild(nm);
-        if (m.sardor) { name.appendChild(srdBelgi(true)); }
+        unvonBelgi(name, m);
         var hh = HOUSES[m.house];
         if (hh && m.house !== "none" && (chatRoom === "global" || m.house !== chatRoomHouse(chatRoom))) {
           var badge = document.createElement("span");
@@ -1325,7 +1325,7 @@
     var nm = document.createElement("b");
     nm.textContent = p.name || "Sehrgar";
     nm.style.color = hh.accent || "var(--text)";
-    if (p.sardor) { nm.appendChild(srdBelgi(true)); }
+    unvonBelgi(nm, p);
     var sb = document.createElement("span");
     sb.textContent = sub;
     if (subOn) sb.className = "on";
