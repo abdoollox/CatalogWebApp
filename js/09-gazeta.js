@@ -19,7 +19,7 @@
           bugunH: function (t) { return t + " bugun kechqurun"; }, bugunP: "Yozilish turnir sahifasida.", kir: "Turnir sahifasi",
           tez: "Kecha fanlarning eng tezlari", yangi: "Qasrga yangi kelganlar", yangiP: "sehrgar kecha Saralovchi qalpoq oldiga chiqdi.",
           star: "Kunning sehrgari", starP: function (g) { return g + " bir kunda shuncha fanda birinchi bo'ldi."; },
-          yoq: "Aloqa yo'q. Keyinroq qayta oching.", karta: "Bugungi son" },
+          yoq: "Aloqa yo'q. Keyinroq qayta oching.", oqi: "Gazetani o'qish" },
     ru: { nom: "Ежедневный пророк", sub: "Вчерашние события в замке", owl: "Доставила сова", kun: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
           oy: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"],
           sana: function (k, o, h) { return k + " " + o + ", " + h; },
@@ -33,7 +33,7 @@
           bugunH: function (t) { return t + " сегодня вечером"; }, bugunP: "Запись на странице турнира.", kir: "Страница турнира",
           tez: "Самые быстрые вчера", yangi: "Новички в замке", yangiP: "волшебников вчера вышли к Распределяющей шляпе.",
           star: "Волшебник дня", starP: function (g) { return g + ": столько первых мест за день."; },
-          yoq: "Нет связи. Откройте позже.", karta: "Сегодняшний номер" },
+          yoq: "Нет связи. Откройте позже.", oqi: "Читать газету" },
     en: { nom: "The Daily Prophet", sub: "Yesterday at the castle", owl: "Delivered by owl", kun: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
           oy: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
           sana: function (k, o, h) { return h + ", " + k + " " + o; },
@@ -47,7 +47,7 @@
           bugunH: function (t) { return t + " tonight"; }, bugunP: "Sign up on the tournament page.", kir: "Tournament page",
           tez: "Yesterday's fastest", yangi: "New at the castle", yangiP: "wizards met the Sorting Hat yesterday.",
           star: "Wizard of the day", starP: function (g) { return g + ": that many first places in a day."; },
-          yoq: "No connection. Please open it later.", karta: "Today's issue" }
+          yoq: "No connection. Please open it later.", oqi: "Read the paper" }
   };
   function gztT() { return GZT_T[lang] || GZT_T.uz; }
   var GZT_RASM = { poyga: "poyga", tosh: "tosh", chess: "chess", vik: "vik", mjang: "mjang", duel: "duel" };
@@ -225,18 +225,26 @@
       }
     });
   }
+  // Boshqa xatlar qolipida (owl-card); gazeta ekanini belgi, nomi va qo'sh chiziq bildiradi. O'chirilmaydi: ertaga yangisi keladi.
+  var GZT_BELGI = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 11H4V8H20M20 15H13V13H20M20 19H13V17H20M11 19H4V13H11M20.33 4.67L18.67 3L17 4.67L15.33 3L13.67 4.67L12 3L10.33 4.67L8.67 3L7 4.67L5.33 3L3.67 4.67L2 3V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V3L20.33 4.67Z"/></svg>';
   function gztXat() {
     if (!gztBor()) { return null; }
-    var x = gztT(), c = drEl("button", "gzt-xat"), yangi = !gztOqilgan();
-    c.type = "button";
-    var top = drEl("span", "gzt-xat-top");
+    var x = gztT(), yangi = !gztOqilgan(), bosh = gztBosh(gztData);
+    var c = drEl("div", "owl-card gzt-xat" + (yangi ? " owl-new" : ""));
+    var top = drEl("div", "owl-top gzt-xat-top");
+    var ic = drEl("span", "owl-ic gzt-xat-ic");
+    ic.innerHTML = GZT_BELGI;
+    top.appendChild(ic);
     top.appendChild(drEl("span", "gzt-xat-nom", x.nom));
-    top.appendChild(drEl("span", "gzt-xat-no", "№ " + gztData.no));
+    top.appendChild(drEl("span", "owl-when", "№ " + gztData.no));
     if (yangi) { top.appendChild(drEl("span", "owl-seal")); }
     c.appendChild(top);
-    c.appendChild(drEl("span", "gzt-xat-h", gztBosh(gztData).h));
-    c.appendChild(drEl("span", "gzt-xat-o", x.karta));
-    c.addEventListener("click", gztOpen);
+    c.appendChild(drEl("b", "owl-h", bosh.h));
+    if (bosh.p) { c.appendChild(drEl("p", "owl-p", bosh.p)); }
+    var b = drEl("button", "owl-cta", x.oqi);
+    b.type = "button";
+    b.addEventListener("click", gztOpen);
+    c.appendChild(b);
     return c;
   }
   function gztOpen() {
