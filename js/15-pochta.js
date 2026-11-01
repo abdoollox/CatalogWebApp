@@ -195,6 +195,7 @@
   }
 
   function owlSet(res) {
+    try { gztLoad(); } catch (e) {}
     owlData = { items: res.items || [], unread: res.unread || 0, bot: res.bot !== false };
     owlBadge();
     if (owlVisible()) { owlRender(); }
@@ -240,7 +241,7 @@
       if (!b) { return; }
       // Xogvarts maktubi ochilmagan bo'lsa - u ham o'qilmagan xat (faqat kutubxonadagi belgida)
       // Hali film olmagan odamda maktub belgisi ham chiqmaydi (maktub pochta ichida turadi)
-      var n = n0 + (id === "owl-cat" && hog === "new" && filmOlgan() ? 1 : 0) + (owlEsdYangi() ? 1 : 0);
+      var n = n0 + (id === "owl-cat" && hog === "new" && filmOlgan() ? 1 : 0) + (owlEsdYangi() ? 1 : 0) + (gztYangi() ? 1 : 0);
       b.classList.toggle("owl-yol", id === "owl-cat" && hog === "letter");
       var dot = b.querySelector(".owl-n");
       // Ilova ishga tushayotganda (owlInit hali belgini chizmagan) - o'tkazib yuboramiz.
@@ -333,7 +334,9 @@
     var items = (owlData && owlData.items) || [];
     var hogC = owlHogCard(t), hogO = owlHogOld(t);
     if (hogC) { box.appendChild(hogC); }
-    if (!items.length && !hogC && !hogO) {
+    var gzt = gztXat();
+    if (gzt) { box.appendChild(gzt); }
+    if (!items.length && !hogC && !hogO && !gzt) {
       var em = owlEl("div", "owl-empty");
       em.innerHTML = OWL_SVG;
       em.appendChild(owlEl("p", "", t.empty));

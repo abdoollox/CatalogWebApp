@@ -515,7 +515,6 @@
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     try { dkLoad(function () { if (hubVisible()) { var el = document.querySelector('#hub-grid .hx[data-k="dokon"] small'); if (el && dkGalleon() != null && !el.getAttribute("data-q")) { el.textContent = HUB_TX.dokonG[lang].replace("%a", dkGalleon()); } } }); } catch (e) {}      // do'kon: jihozlar holati (daqiqada bir), bosh sahifani qayta chizmaydi
-    try { gztLoad(); } catch (e) {}
     try { snLoad(); } catch (e) {}          // so'rovnoma kartasi (daqiqada bir martadan ko'p so'ramaydi, bosh sahifani qayta chizmaydi)
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
     try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)

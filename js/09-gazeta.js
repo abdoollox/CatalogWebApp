@@ -207,40 +207,52 @@
     }
   }
 
-  // Bosh sahifa kartasi. 2-kursdan (kubok ham shu kursdan). Javob faqat o'z kartasini chizadi, bosh sahifani qayta chizmaydi.
-  function gztKarta() {
-    var el = $("hub-gzt");
-    if (!el) { return; }
-    var kor = !!gztData && kursN() >= 2;
-    el.classList.toggle("hidden", !kor);
-    if (!kor) { return; }
-    var x = gztT();
-    el.innerHTML = "";
-    el.appendChild(drEl("span", "gzt-k-nom", x.nom));
-    el.appendChild(drEl("span", "gzt-k-h", gztBosh(gztData).h));
-    el.appendChild(drEl("span", "gzt-k-no", x.karta + " · № " + gztData.no));
-  }
+  // Gazeta boyo'g'li pochtasida keladi (egasi, 2026-11-01): 2-kursdan (kubok ham shu kursdan), botdan xabar yubormaydi.
+  // O'qilmagan son boyo'g'li belgisida 1 bo'lib ko'rinadi. O'qilgani shu qurilmada eslanadi.
+  function gztBor() { return !!gztData && hasHouse() && kursN() >= 2; }
+  function gztOqilgan() { try { return window.localStorage.getItem(TK("hp_gzt_kun")) === gztData.day; } catch (e) { return false; } }
+  function gztYangi() { return gztBor() && !gztOqilgan(); }
   function gztLoad() {
-    gztKarta();
-    if (gztKut || Date.now() - gztVaqt < 300000) { return; }
+    if (gztKut || !hasHouse() || Date.now() - gztVaqt < 300000) { return; }
     gztKut = true;
     gztPost({}, function (res) {
       gztKut = false;
       gztVaqt = Date.now();
-      if (res) { gztData = res; gztKarta(); }
+      if (res) {
+        gztData = res;
+        owlBadge();
+        if (owlVisible()) { owlRender(); }
+      }
     });
   }
+  function gztXat() {
+    if (!gztBor()) { return null; }
+    var x = gztT(), c = drEl("button", "gzt-xat"), yangi = !gztOqilgan();
+    c.type = "button";
+    var top = drEl("span", "gzt-xat-top");
+    top.appendChild(drEl("span", "gzt-xat-nom", x.nom));
+    top.appendChild(drEl("span", "gzt-xat-no", "№ " + gztData.no));
+    if (yangi) { top.appendChild(drEl("span", "owl-seal")); }
+    c.appendChild(top);
+    c.appendChild(drEl("span", "gzt-xat-h", gztBosh(gztData).h));
+    c.appendChild(drEl("span", "gzt-xat-o", x.karta));
+    c.addEventListener("click", gztOpen);
+    return c;
+  }
   function gztOpen() {
-    try { $("scr-hub").classList.add("hidden"); } catch (e) {}
+    ["scr-owl", "scr-hub", "scr-cat"].forEach(function (id) { try { $(id).classList.add("hidden"); } catch (e) {} });
     drShowGame("scr-gazeta");
     try { window.scrollTo(0, 0); } catch (e) {}
     gztRender();
-    gztPost({ read: 1 }, function (res) { if (res) { gztData = res; gztRender(); gztKarta(); } });
+    try { window.localStorage.setItem(TK("hp_gzt_kun"), gztData.day); } catch (e) {}
+    owlBadge();
+    gztPost({ read: 1 }, function (res) { if (res) { gztData = res; gztRender(); } });
   }
   function gztYop() {
     $("scr-gazeta").classList.add("hidden");
-    openHub();
+    $("scr-owl").classList.remove("hidden");
+    owlRender();
+    try { window.scrollTo(0, 0); } catch (e) {}
   }
 
   $("gzt-bk").addEventListener("click", gztYop);
-  $("hub-gzt").addEventListener("click", gztOpen);
