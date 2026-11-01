@@ -50,6 +50,9 @@
           yoq: "No connection. Please open it later.", oqi: "Read the paper" }
   };
   function gztT() { return GZT_T[lang] || GZT_T.uz; }
+  var GZT_OLAM_S = { uz: "Sehrli olamda", ru: "В магическом мире", en: "Around the wizarding world" };
+  var GZT_ELON_S = { uz: "E'lon", ru: "Объявление", en: "Notice" };
+  function gztMatn(o) { return o[lang] || o.uz; }
   var GZT_RASM = { poyga: "poyga", tosh: "tosh", chess: "chess", vik: "vik", mjang: "mjang", duel: "duel" };
 
   var gztData = null, gztVaqt = 0, gztKut = false;
@@ -121,13 +124,14 @@
     top.appendChild(drEl("span", "", x.sana(sana.getDate(), x.oy[sana.getMonth()], x.kun[sana.getDay()])));
     top.appendChild(drEl("span", "", x.owl));
     box.appendChild(top);
-    box.appendChild(drEl("h1", "gzt-nom", x.nom));
+    box.appendChild(drEl("h1", "gzt-nom gzt-nom-" + lang, x.nom));
     box.appendChild(drEl("div", "gzt-sub", x.sub));
 
-    var bosh = gztBosh(d), lead = drEl("article", "gzt-lead");
+    var bosh = gztBosh(d), lead = drEl("article", "gzt-lead"), yon = drEl("div", "gzt-lead-m");
     lead.appendChild(gztJonli(IMG_DIR + "kubok/kubok.webp", true));
-    lead.appendChild(drEl("div", "gzt-kick", x.kubok));
-    lead.appendChild(drEl("h2", "", bosh.h));
+    yon.appendChild(drEl("div", "gzt-kick", x.kubok));
+    yon.appendChild(drEl("h2", "", bosh.h));
+    lead.appendChild(yon);
     lead.appendChild(drEl("p", "", bosh.p));
     box.appendChild(lead);
 
@@ -138,6 +142,7 @@
         li.appendChild(gztGerb(r.h));
         li.appendChild(drEl("span", "", gztUy(r.h)));
         var bar = document.createElement("i"), q = document.createElement("u");
+        bar.style.gridColumn = "1 / -1";
         q.style.width = Math.round(r.p / eng * 100) + "%";
         bar.appendChild(q); li.appendChild(bar);
         li.appendChild(drEl("b", "", gztSon(r.p)));
@@ -168,6 +173,23 @@
       ikki.appendChild(t);
     }
     if (d.tour || d.today) { box.appendChild(ikki); }
+
+    var ol = drEl("section", "gzt-olam");
+    ol.appendChild(drEl("div", "gzt-kick", gztMatn(GZT_OLAM_S)));
+    var ust = drEl("div", "gzt-olam-u"), bir = (d.no - 1) * 2;
+    var ti = { uz: 0, ru: 1, en: 2 }[lang] || 0;
+    [GZT_OLAM[bir % GZT_OLAM.length], GZT_OLAM[(bir + 1) % GZT_OLAM.length]].forEach(function (m) {
+      var a = document.createElement("article");
+      a.appendChild(drEl("h3", "", m[ti * 2]));
+      a.appendChild(drEl("p", "", m[ti * 2 + 1]));
+      ust.appendChild(a);
+    });
+    ol.appendChild(ust);
+    var el = drEl("div", "gzt-elon");
+    el.appendChild(drEl("b", "", gztMatn(GZT_ELON_S)));
+    el.appendChild(drEl("span", "", GZT_ELON[(d.no - 1) % GZT_ELON.length][ti]));
+    ol.appendChild(el);
+    box.appendChild(ol);
 
     if (d.bell && d.bell.length) {
       var sek = drEl("section", "gzt-win");
