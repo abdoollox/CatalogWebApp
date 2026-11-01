@@ -64,6 +64,7 @@
   function gztOch(k) {
     var f = { poyga: pgOpen, tosh: gbOpen, chess: openChessHub, vik: vkOpen, mjang: mjOpen, duel: duOpen }[k];
     if (!f) { return; }
+    gztToxtat();
     $("scr-gazeta").classList.add("hidden");
     try { $("scr-hub").classList.add("hidden"); } catch (e) {}
     f();
@@ -102,11 +103,27 @@
     return { h: x.tinch, p: x.tinchP };
   }
 
-  function gztJonli(src, kubok) {
-    var w = drEl("div", "gzt-jon" + (kubok ? " kubok" : "")), im = document.createElement("img");
+  // Tayyor video bor rasmlar (img/gazeta/, oq-qora, oxiri boshiga ulanadi). Qolganlari hozircha CSS harakati bilan.
+  // Qolgan videolar tayyor bo'lsa shu ro'yxatga kaliti yoziladi. Kaliti: kubok va GZT_RASM dagi nom.
+  var GZT_VIDEO = { kubok: 1, mjang: 1 };
+  function gztJonli(src, kubok, kalit) {
+    var w = drEl("div", "gzt-jon" + (kubok ? " kubok" : ""));
+    if (kalit && GZT_VIDEO[kalit]) {
+      var v = document.createElement("video");
+      v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = "auto";
+      v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("webkit-playsinline", "");
+      v.poster = IMG_DIR + "gazeta/" + kalit + ".jpg";
+      v.src = IMG_DIR + "gazeta/" + kalit + ".mp4";
+      w.classList.add("vid");
+      w.appendChild(v);
+      try { var p = v.play(); if (p && p["catch"]) { p["catch"](function () {}); } } catch (e) {}
+      return w;
+    }
+    var im = document.createElement("img");
     im.alt = ""; im.src = src; w.appendChild(im);
     return w;
   }
+  function gztToxtat() { Array.prototype.forEach.call($("gzt-body").querySelectorAll("video"), function (v) { try { v.pause(); } catch (e) {} }); }
   function gztGerb(h) {
     var im = document.createElement("img");
     im.alt = ""; im.className = "gzt-gerb";
@@ -128,7 +145,7 @@
     box.appendChild(drEl("div", "gzt-sub", x.sub));
 
     var bosh = gztBosh(d), lead = drEl("article", "gzt-lead"), yon = drEl("div", "gzt-lead-m");
-    lead.appendChild(gztJonli(IMG_DIR + "kubok/kubok.webp", true));
+    lead.appendChild(gztJonli(IMG_DIR + "kubok/kubok.webp", true, "kubok"));
     yon.appendChild(drEl("div", "gzt-kick", x.kubok));
     yon.appendChild(drEl("h2", "", bosh.h));
     lead.appendChild(yon);
@@ -154,7 +171,7 @@
     var ikki = drEl("section", "gzt-two" + (d.tour && d.today ? "" : " bitta"));
     if (d.tour) {
       var a = document.createElement("article");
-      a.appendChild(gztJonli(IMG_DIR + "hub/" + GZT_RASM[d.tour.kind] + ".webp"));
+      a.appendChild(gztJonli(IMG_DIR + "hub/" + GZT_RASM[d.tour.kind] + ".webp", false, d.tour.kind));
       a.appendChild(drEl("div", "gzt-kick", x.kechaT));
       a.appendChild(drEl("h3", "", x.golib(gztTurNom(d.tour.kind), d.tour.winner.name)));
       a.appendChild(drEl("p", "", x.golibP(d.tour.n, d.tour.points)));
@@ -162,7 +179,7 @@
     }
     if (d.today) {
       var t = document.createElement("article");
-      t.appendChild(gztJonli(IMG_DIR + "hub/" + GZT_RASM[d.today.kind] + ".webp"));
+      t.appendChild(gztJonli(IMG_DIR + "hub/" + GZT_RASM[d.today.kind] + ".webp", false, d.today.kind));
       t.appendChild(drEl("div", "gzt-kick", x.bugunT(d.today.at)));
       t.appendChild(drEl("h3", "", x.bugunH(gztTurNom(d.today.kind))));
       t.appendChild(drEl("p", "", x.bugunP));
@@ -276,9 +293,10 @@
     gztRender();
     try { window.localStorage.setItem(TK("hp_gzt_kun"), gztData.day); } catch (e) {}
     owlBadge();
-    gztPost({ read: 1 }, function (res) { if (res) { gztData = res; gztRender(); } });
+    gztPost({ read: 1 }, function (res) { if (res && (!gztData || res.day !== gztData.day)) { gztData = res; gztRender(); } });
   }
   function gztYop() {
+    gztToxtat();
     $("scr-gazeta").classList.add("hidden");
     $("scr-owl").classList.remove("hidden");
     owlRender();
