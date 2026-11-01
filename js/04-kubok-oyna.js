@@ -150,6 +150,9 @@
     exam: '<path d="M7 3.5h8l3.5 3.5v13.5h-11.5z M15 3.5v3.5h3.5 M10 11h5.5 M10 14.5h5.5 M10 18h3"/>',
     daily: '<path d="M4.5 6h15v14h-15z M4.5 10h15 M8.5 3.5v4 M15.5 3.5v4"/><circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none"/>',
     lesson: '<path d="M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13"/>',
+    bell: '<path d="M12 6.5c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5c2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z M12 6.5v13"/>',
+    rek: '<path d="M12 4l2.4 5 5.6.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.6-.8z"/>',
+    tur: '<path d="M5 19L19 5 M14 5h5v5 M19 19L5 5 M5 10V5h5"/>',
     chest: '<path d="M4 10V8.5a4.5 4.5 0 0 1 4.5-4.5h7A4.5 4.5 0 0 1 20 8.5V10 M3.5 10h17v9.5h-17z M10.2 13h3.6v3.2h-3.6z"/>',
     chess: '<path d="M12 3.8a2.4 2.4 0 1 1 0 4.8a2.4 2.4 0 1 1 0-4.8z M9.6 10.8h4.8 M10.4 10.8l-.9 5.6h5l-.9-5.6 M7.3 20.3h9.4l-1.1-3.9H8.4z"/>',
     friends: '<circle cx="9" cy="8.5" r="3"/><path d="M3.5 19.5c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5 M15.8 6.2a2.6 2.6 0 1 1 0 5.2 M17 14.2c2.3.5 3.8 2.6 3.8 5"/>'
@@ -159,7 +162,11 @@
     // "exam" (kino imtihoni) 2026-10-04 da olib tashlandi - kubok muvozanatini buzardi
     // Kunlik savol 2026-10-07 da olib tashlangan: eski haftalarda ball bor, yangilarida 0 - nol bo'lsa ko'rsatilmaydi (eski: 1)
     { key: "daily",   color: "#199e70", eski: 1 },
-    { key: "lesson",  color: "#5fb3d9" },      // darslar: afsunlar, iksirlar... (2026-10-07)
+    // «Bellashuv» uchga bo'lindi (egasi, 2026-11-01). lesson - faqat eski haftalardagi dars ballari.
+    { key: "bell",    color: "#5fb3d9" },      // kunlik bellashuv
+    { key: "rek",     color: "#2fb8a6" },      // rekord
+    { key: "tur",     color: "#d95926" },      // haftalik turnirlar
+    { key: "lesson",  color: "#7d8ea3", eski: 1 },
     { key: "chess",   color: "#9085e9" },
     { key: "chest",   color: "#d9568c" },      // kunlik sandiq (2026-10-05)
     { key: "friends", color: "#c98500" }
@@ -183,10 +190,10 @@
 
   var CUP_T = {
     uz: {
-      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", lesson: "Bellashuv", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
+      src: { film: "Kino", exam: "Imtihon", daily: "Kunlik savol", bell: "Kunlik bellashuv", rek: "Rekord", tur: "Turnirlar", lesson: "Darslar", chess: "Shaxmat", chest: "Qurbaqa", friends: "Do'stlar" },
       rule: { film: "Har film uchun +5 · mavsumda bir marta", exam: "Har to'g'ri javob uchun +10",
               daily: "Kuniga bitta savol · +10", chess: "Jonli g'alaba +10 · durang +5 · 5 o'yin",
-              lesson: "Kunlik bellashuv: 1–10-o'rinlar",
+              bell: "Har kuni, har fanda: 1–10-o'rinlar", rek: "Har kuni, har fanda: 1–3-o'rinlar", tur: "Haftalik turnirlar g'oliblari",
               chest: "Kuniga 6 ta topshiriq · quti +10",
               friends: "Har do'st uchun +20 · cheklanmagan" },
       histKick: "Xogvarts kubogi", histTitle: "Kubok tarixi", histLink: "Kubok tarixi", histAll: "Barcha haftalar tarixi",
@@ -215,14 +222,14 @@
               "Fakultet bali — a'zolari to'plagan barcha ballar yig'indisi: har bir ball hisobga kiradi.",
               "Hafta oxirida eng ko'p ball to'plagan fakultet kubokni oladi.",
               "Hafta yakunida har 10 ball uchun 1 galleon beriladi. G'olib fakultet a'zolariga ikki baravar, eng ko'p ball to'plagan uch o'quvchiga yana +15, +10 va +5.",
-              "Ball beradi: har kungi bellashuvlar (o'ringa qarab, +15 gacha), rekordlar (kunlik uchlik), haftalik turnirlar, Shokolad qurbaqa qutisi (+10), har bir film qismi (haftada bir marta +5), jonli shaxmat (haftada 5 ta natija), do'st taklifi (+20).",
+              "Ball beradi: har kungi bellashuvlar (o'ringa qarab), rekordlar (kunlik uchlik), haftalik turnirlar, Shokolad qurbaqa qutisi (+10), har bir film qismi (haftada bir marta +5), jonli shaxmat (haftada 5 ta natija), do'st taklifi (+20).",
               "Ball BERMAYDI: chatda yozish, darslar (bu mashq) va bot bilan shaxmat."]
     },
     ru: {
-      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", lesson: "Состязания", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
+      src: { film: "Кино", exam: "Экзамены", daily: "Вопрос дня", bell: "Состязание дня", rek: "Рекорд", tur: "Турниры", lesson: "Уроки", chess: "Шахматы", chest: "Лягушка", friends: "Друзья" },
       rule: { film: "+5 за каждый фильм · раз в сезон", exam: "+10 за каждый верный ответ",
               daily: "Один вопрос в день · +10", chess: "Победа +10 · ничья +5 · 5 партий",
-              lesson: "Состязание дня: 1–10-е места",
+              bell: "Каждый день, в каждом предмете: 1–10-е места", rek: "Каждый день, в каждом предмете: 1–3-е места", tur: "Победители недельных турниров",
               chest: "6 заданий в день · коробка +10",
               friends: "+20 за каждого друга · без лимита" },
       histKick: "Кубок Хогвартса", histTitle: "История кубка", histLink: "История кубка", histAll: "История всех недель",
@@ -251,14 +258,14 @@
               "Очки факультета — сумма очков всех его участников: засчитывается каждое очко.",
               "В конце недели кубок получает факультет с наибольшей суммой.",
               "В конце недели за каждые 10 очков выдаётся 1 галлеон. Участникам факультета-победителя — вдвое больше, трём лучшим ученикам ещё +15, +10 и +5.",
-              "Очки дают: ежедневные состязания (по месту, до +15), рекорды (дневная тройка), еженедельные турниры, коробка Шоколадной лягушки (+10), каждая часть фильма (раз в неделю +5), живые шахматы (5 результатов в неделю), приглашение друга (+20).",
+              "Очки дают: ежедневные состязания (по месту), рекорды (дневная тройка), еженедельные турниры, коробка Шоколадной лягушки (+10), каждая часть фильма (раз в неделю +5), живые шахматы (5 результатов в неделю), приглашение друга (+20).",
               "Очки НЕ дают: сообщения в чате, уроки (это тренировка) и шахматы с ботом."]
     },
     en: {
-      src: { film: "Films", exam: "Exams", daily: "Daily", lesson: "Contests", chess: "Chess", chest: "Frog", friends: "Friends" },
+      src: { film: "Films", exam: "Exams", daily: "Daily", bell: "Daily contest", rek: "Record", tur: "Tournaments", lesson: "Lessons", chess: "Chess", chest: "Frog", friends: "Friends" },
       rule: { film: "+5 per film · once a season", exam: "+10 per correct answer",
               daily: "One question a day · +10", chess: "Live win +10 · draw +5 · 5 games",
-              lesson: "Daily contest: places 1–10",
+              bell: "Every day, every subject: places 1–10", rek: "Every day, every subject: places 1–3", tur: "Weekly tournament winners",
               chest: "6 tasks a day · box +10",
               friends: "+20 per friend · no limit" },
       histKick: "The Hogwarts Cup", histTitle: "Cup history", histLink: "Cup history", histAll: "Every week's results",
@@ -287,7 +294,7 @@
               "A house's score is the sum of all its members' points — every point counts.",
               "At the end of the week the house with the most points wins the cup.",
               "At the end of the week you get 1 Galleon for every 10 points. Members of the winning house get double, and the top three students get +15, +10 and +5 more.",
-              "Points come from: daily contests (by place, up to +15), records (daily top three), weekly tournaments, the Chocolate Frog box (+10), each film part (once a week, +5), live chess (5 results a week), inviting a friend (+20).",
+              "Points come from: daily contests (by place), records (daily top three), weekly tournaments, the Chocolate Frog box (+10), each film part (once a week, +5), live chess (5 results a week), inviting a friend (+20).",
               "NO points for: chat messages, lessons (they are practice) or chess against a bot."]
     }
   };
@@ -822,7 +829,8 @@
 
   // Manba qatorini bosganda - o'sha ballni olish joyiga
   function srcGo(key) {
-    if (key === "exam" || key === "daily" || key === "lesson") { blHomeOpen(); }     // ball endi «Bellashuv» bo'limida
+    if (key === "exam" || key === "daily" || key === "lesson" || key === "bell") { blHomeOpen(); }     // «Bellashuv» bo'limi
+    else if (key === "rek") { rekHomeOpen(); }
     else if (key === "chess") { openChessHub(); }
     else if (key === "friends") { openRefs(); }
     else if (key === "chest") { sqOpen(); }

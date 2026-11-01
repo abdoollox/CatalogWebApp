@@ -139,7 +139,7 @@
           rekTag: "Xatosiz kim uzoqqa boradi?", rekQ1: "Birinchi xatoda o'yin tugaydi", rekQ2: "Eng yaxshi natijangiz jadvalda qoladi. Natija teng bo'lsa, oxirgi yetgan yuqorida turadi",
           rekPzT: "Kunlik sovrin · har kuni yarim tunda", rekPzO: "-o'rin", rekPzB: "ball",
           bhKut: "bugun kutilayotgan ball", bhQat: "qatnashdingiz", bhVaqt: function (s, d) { return "Tugashiga " + s + " soat " + d + " daqiqa"; },
-          bhYana: function (n) { return "Yana " + n + " ta bellashuv kutmoqda — har biri +15 gacha"; }, bhHamma: "Bugun hamma bellashuvda qatnashdingiz",
+          bhYana: function (n, m) { return "Yana " + n + " ta bellashuv kutmoqda — har biri +" + m + " gacha"; }, bhHamma: "Bugun hamma bellashuvda qatnashdingiz",
           bhYaqin: function (fan, n) { return fan + ": ballga " + n + " pog'ona qoldi"; }, bhGacha: "gacha", bhHozir: "hozircha",
           bhKecha: function (n) { return "Kecha bellashuvlardan +" + n + " ball oldingiz"; },
           rhTush: function (fan, a, b) { return fan + ": " + a + "-o'rindan " + b + "-o'ringa tushdingiz"; }, rhTushYana: function (n) { return " (yana " + n + " fanda)"; },
@@ -240,7 +240,7 @@
           rekTag: "Кто пройдёт дальше без ошибок?", rekQ1: "Игра заканчивается на первой ошибке", rekQ2: "Ваш лучший результат остаётся в таблице. При равном результате выше тот, кто достиг его последним",
           rekPzT: "Ежедневный приз · каждый день в полночь", rekPzO: " место", rekPzB: "очк.",
           bhKut: "ожидаемые очки за сегодня", bhQat: "участий", bhVaqt: function (s, d) { return "До конца " + s + " ч " + d + " мин"; },
-          bhYana: function (n) { return "Ещё состязаний: " + n + " — в каждом до +15"; }, bhHamma: "Сегодня вы участвовали во всех состязаниях",
+          bhYana: function (n, m) { return "Ещё состязаний: " + n + " — в каждом до +" + m; }, bhHamma: "Сегодня вы участвовали во всех состязаниях",
           bhYaqin: function (fan, n) { return fan + ": до очков " + n + " мест"; }, bhGacha: "до", bhHozir: "пока",
           bhKecha: function (n) { return "Вчера за состязания вы получили +" + n; },
           rhTush: function (fan, a, b) { return fan + ": вы опустились с " + a + "-го на " + b + "-е место"; }, rhTushYana: function (n) { return " (и ещё в " + n + ")"; },
@@ -342,7 +342,7 @@
           rekTag: "Who gets furthest without a mistake?", rekQ1: "The game ends on your first mistake", rekQ2: "Your best result stays on the table. On a tie, whoever reached it last ranks higher",
           rekPzT: "Daily prize · every day at midnight", rekPzO: " place", rekPzB: "pts",
           bhKut: "points expected today", bhQat: "entered", bhVaqt: function (s, d) { return s + " h " + d + " min left"; },
-          bhYana: function (n) { return n + " more contests waiting — up to +15 each"; }, bhHamma: "You entered every contest today",
+          bhYana: function (n, m) { return n + " more contests waiting — up to +" + m + " each"; }, bhHamma: "You entered every contest today",
           bhYaqin: function (fan, n) { return fan + ": " + n + " places from points"; }, bhGacha: "up to", bhHozir: "so far",
           bhKecha: function (n) { return "Yesterday you won +" + n + " points in contests"; },
           rhTush: function (fan, a, b) { return fan + ": you dropped from place " + a + " to " + b; }, rhTushYana: function (n) { return " (and " + n + " more)"; },
@@ -478,7 +478,7 @@
       var orin = null;
       top.forEach(function (t, i) { if (t.me) { orin = i + 1; } });
       return { item: item, top: top, n: top.length, place: orin, ms: drLocalBest[id] || null, tries: drLocalBest[id] ? 1 : 0, max: 3,
-               prizes: { top: [15, 10, 7], ten: 3 },
+               prizes: { top: [5, 3, 2], ten: 1 },
                yesterday: { top: top.slice(0, 3), n: 9, place: 4, pts: 3 } };
     };
     res.lessons = {
@@ -755,6 +755,11 @@
   function rhOrinOl() { try { return JSON.parse(window.localStorage.getItem("hp_rek_orin") || "{}") || {}; } catch (e) { return {}; } }
   function rhOrinYoz(o) { try { window.localStorage.setItem("hp_rek_orin", JSON.stringify(o)); } catch (e) {} }
   // Bellashuvda hozirgi o'rin bo'yicha kutilayotgan ball (kun yakunida beriladi; o'rin o'zgarsa - ball ham)
+  // Bugungi bellashuvda 1-o'rin bali (serverdan; 2026-11-02 dan +5)
+  function drBellEng() {
+    for (var k in drData) { var c = drData[k] && drData[k].contest; if (c && c.prizes) { return c.prizes.top[0]; } }
+    return 5;
+  }
   function blBall(c) {
     if (!c || !c.ms || !c.place) { return 0; }
     return c.place <= 3 ? c.prizes.top[c.place - 1] : c.place <= 10 ? c.prizes.ten : 0;
@@ -794,7 +799,7 @@
       tep.appendChild(orta);
       var v = blLeft();
       ost.appendChild(drEl("span", "blh-v", x.bhVaqt(v[0], v[1])));
-      ost.appendChild(drEl("span", "blh-m", jami - qat > 0 ? x.bhYana(jami - qat) : yaqin ? x.bhYaqin(yaqin.fan, yaqin.n) : x.bhHamma));
+      ost.appendChild(drEl("span", "blh-m", jami - qat > 0 ? x.bhYana(jami - qat, drBellEng()) : yaqin ? x.bhYaqin(yaqin.fan, yaqin.n) : x.bhHamma));
       if (kecha > 0) { ost.appendChild(drEl("span", "blh-k", x.bhKecha(kecha))); }
     } else {
       var med = [0, 0, 0], kun = 0, bor = 0, maq = null, fanlar = 0, eski = rhOrinOl(), yangi = {};
