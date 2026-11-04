@@ -1418,6 +1418,7 @@
     maybeChessLink();
     maybeTaklifLink();
     maybeWorldLink();
+    maybeYolLink();    // kanal postidan kelgan: kerakli joyga o'zi olib boradi (09-yol-havola.js)
     msMaybeOst();
     srMaybeOpen();
     kqTekshir();       // kutubxona yo'riqnomasi (09-yoriqnoma-kutubxona.js)

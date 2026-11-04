@@ -122,7 +122,7 @@
     clearTimeout(kqTm);
     kqQayta = qayta ? kqQayta + 1 : 0;
     kqTm = setTimeout(function () {
-      if (yq || !kqKatalog() || document.hidden) { return; }
+      if (yq || yhIshladi || !kqKatalog() || document.hidden) { return; }
       // ustida oyna turibdi (nishon tabrigi, sifat tanlovi va h.k.) - yopilishini kutamiz
       if (!$("qs").classList.contains("hidden") || document.querySelector(".hpask:not(.hidden)")) {
         if (kqQayta < 40) { kqTekshir(true); }

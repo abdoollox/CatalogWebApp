@@ -4395,3 +4395,9 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 .gzt-nom-ru{font-size:clamp(22px,7.1vw,28px)}
 .gzt-jon.vid video{display:block;width:100%;height:100%;object-fit:cover}
 .gzt-jon.vid::before,.gzt-jon.vid::after{display:none}
+
+/* ===================== KANAL POSTIDAN YO'L KO'RSATISH (js/09-yol-havola.js) ===================== */
+.yh-rg{position:fixed;z-index:3200;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:11px solid rgba(238,242,247,.78);pointer-events:none;animation:yhRg .85s ease-out forwards}
+@keyframes yhRg{0%{opacity:0;transform:scale(1.5)}30%{opacity:1;transform:scale(.85)}60%{opacity:1;transform:scale(.8)}100%{opacity:0;transform:scale(1.25)}}
+.yh-hl{position:fixed;z-index:3200;border:2.5px solid rgba(238,242,247,.92);border-radius:16px;pointer-events:none;box-shadow:0 0 0 0 rgba(238,242,247,.5),0 0 22px rgba(238,242,247,.45);animation:yhHl 1.4s ease-in-out infinite}
+@keyframes yhHl{0%,100%{box-shadow:0 0 0 0 rgba(238,242,247,.45),0 0 18px rgba(238,242,247,.35)}50%{box-shadow:0 0 0 8px rgba(238,242,247,0),0 0 28px rgba(238,242,247,.6)}}
