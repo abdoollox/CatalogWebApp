@@ -1,5 +1,5 @@
 /* DIREKTOR XONASI - g'oyalar qutisi (egasi, 2026-11-05): Notion'dagi g'oya so'rovnomasi o'rniga, Xogvarts sahifasida xona.
-   Xonada: Dambldor salomi, Xotiralar kosasi (g'oya yozish), Direktor stoli (qabul qilingan - ustida ishlanmoqda),
+   Xonada: Dambldor salomi, G'oyalar kosasi (g'oya yozish; «Xotiralar kosasi» EMAS - egasi: unutish ma'nosi), Direktor stoli (qabul qilingan - ustida ishlanmoqda),
    Amalga oshgan g'oyalar devori (muallif ismi bilan - egasi rozi), Mening g'oyalarim (holat va javob).
    Ovoz berish YO'Q (egasi rad etgan). Maxfiy so'z o'yini YO'Q (egasi: kerak emas).
    Xogvarts katagi - barcha xonalar ochiladigan kursdan (GOY_KURS). Kanal videosi tugmasi (startapp=goya) va so'rovnoma
@@ -17,13 +17,13 @@
   var GOY_RASM = { xona: "img/goya/xona.webp", kosa: "img/goya/kosa.webp" };
   var GOY_T = {
     uz: {
-      kick: "Xogvarts", egasi: "Albus Dambldor", ttl: "Direktor xonasi", korik: "Faqat sizga ko'rinadi", meningN: function (n) { return "Sizniki: " + n; }, bajN: function (n) { return n + " g'oya bajarildi"; },
-      salom: "Xonamga xush kelibsiz! Ilovani birga yaxshilaymiz: g'oyangizni Xotiralar kosasiga qoldiring — har birini o'qiyman, javobini shu yerda ko'rasiz.",
-      kosa: "Xotiralar kosasi", kosaS: "Ilovaga nima qo'shilsin yoki o'zgarsin?", yoz: "G'oya yozish",
+      kick: "Xogvarts", egasi: "Albus Dambldor", ttl: "Direktor xonasi", korik: "Faqat sizga ko'rinadi", meningN: function (n) { return "Sizniki: " + n; }, foksNom: "Foks xati", foksGo: "Direktor xonasiga", bajN: function (n) { return n + " g'oya bajarildi"; },
+      salom: "Xonamga xush kelibsiz! Ilovani birga yaxshilaymiz: g'oyangizni G'oyalar kosasiga yozing — har birini ko'rib chiqaman, javobini Foks olib boradi.",
+      kosa: "G'oyalar kosasi", kosaS: "Ilovaga nima qo'shilsin yoki o'zgarsin?", yoz: "G'oya yozish",
       nom: "Qisqacha", nomP: "Masalan: kitoblarni ovozli qilish",
       bat: "Bu sizga qachon kerak bo'ldi?", batP: "Oxirgi marta nima qilmoqchi edingiz va nima xalaqit berdi? (ixtiyoriy)",
       bolim: "Qaysi bo'lim", b: { filmlar: "Filmlar", kutubxona: "Kutubxona", xogvarts: "Xogvarts", boshqa: "Boshqa" },
-      yubor: "Kosaga tashlash", bekor: "Bekor qilish", yuborildi: "G'oyangiz kosaga tushdi — Dambldor o'qib chiqadi",
+      yubor: "Kosaga yozish", bekor: "Bekor qilish", yuborildi: "G'oyangiz kosaga yozildi — Dambldor ko'rib chiqadi",
       stol: "Direktor stoli", stolS: "Ustida ishlanmoqda", stolB: "Hozircha stol bo'sh",
       devor: "Amalga oshgan g'oyalar", devorB: "Devor hali bo'sh. Birinchi bo'lib g'oyangiz shu yerga osilsin!",
       mening: "Mening g'oyalarim", bosh: "Hali g'oya yubormagansiz",
@@ -33,13 +33,13 @@
       tileS: function (n) { return n ? n + " g'oya bajarildi" : "G'oya yozish"; }
     },
     ru: {
-      kick: "Хогвартс", egasi: "Альбус Дамблдор", ttl: "Кабинет директора", korik: "Видно только вам", meningN: function (n) { return "Ваших: " + n; }, bajN: function (n) { return "Воплощено: " + n; },
-      salom: "Добро пожаловать в мой кабинет! Давайте улучшать приложение вместе: оставьте идею в Омуте памяти — я прочту каждую, ответ появится здесь.",
-      kosa: "Омут памяти", kosaS: "Что добавить или изменить в приложении?", yoz: "Написать идею",
+      kick: "Хогвартс", egasi: "Альбус Дамблдор", ttl: "Кабинет директора", korik: "Видно только вам", meningN: function (n) { return "Ваших: " + n; }, foksNom: "Письмо от Фоукса", foksGo: "В кабинет директора", bajN: function (n) { return "Воплощено: " + n; },
+      salom: "Добро пожаловать в мой кабинет! Давайте улучшать приложение вместе: запишите идею в Чашу идей — я рассмотрю каждую, ответ принесёт Фоукс.",
+      kosa: "Чаша идей", kosaS: "Что добавить или изменить в приложении?", yoz: "Написать идею",
       nom: "Кратко", nomP: "Например: озвучить книги",
       bat: "Когда вам это понадобилось?", batP: "Что вы хотели сделать в последний раз и что помешало? (необязательно)",
       bolim: "Раздел", b: { filmlar: "Фильмы", kutubxona: "Библиотека", xogvarts: "Хогвартс", boshqa: "Другое" },
-      yubor: "Опустить в Омут", bekor: "Отмена", yuborildi: "Идея в Омуте — Дамблдор её прочтёт",
+      yubor: "Записать в чашу", bekor: "Отмена", yuborildi: "Идея записана в чашу — Дамблдор её рассмотрит",
       stol: "Стол директора", stolS: "В работе", stolB: "Пока на столе пусто",
       devor: "Воплощённые идеи", devorB: "Стена пока пуста. Пусть ваша идея будет первой!",
       mening: "Мои идеи", bosh: "Вы ещё не отправляли идей",
@@ -49,13 +49,13 @@
       tileS: function (n) { return n ? "Воплощено: " + n : "Написать идею"; }
     },
     en: {
-      kick: "Hogwarts", egasi: "Albus Dumbledore", ttl: "Headmaster's office", korik: "Only you can see this", meningN: function (n) { return "Yours: " + n; }, bajN: function (n) { return n + " ideas done"; },
-      salom: "Welcome to my office! Let's make the app better together: leave your idea in the Pensieve — I read every one, and the reply will appear here.",
-      kosa: "The Pensieve", kosaS: "What should the app add or change?", yoz: "Write an idea",
+      kick: "Hogwarts", egasi: "Albus Dumbledore", ttl: "Headmaster's office", korik: "Only you can see this", meningN: function (n) { return "Yours: " + n; }, foksNom: "Letter from Fawkes", foksGo: "To the Headmaster's office", bajN: function (n) { return n + " ideas done"; },
+      salom: "Welcome to my office! Let's make the app better together: write your idea in the Idea Bowl — I review every one, and Fawkes will bring my reply.",
+      kosa: "The Idea Bowl", kosaS: "What should the app add or change?", yoz: "Write an idea",
       nom: "In short", nomP: "E.g. audio versions of the books",
       bat: "When did you need it?", batP: "What were you trying to do last time, and what got in the way? (optional)",
       bolim: "Section", b: { filmlar: "Films", kutubxona: "Library", xogvarts: "Hogwarts", boshqa: "Other" },
-      yubor: "Drop into the Pensieve", bekor: "Cancel", yuborildi: "Your idea is in the Pensieve — Dumbledore will read it",
+      yubor: "Write into the bowl", bekor: "Cancel", yuborildi: "Your idea is in the bowl — Dumbledore will review it",
       stol: "Headmaster's desk", stolS: "In progress", stolB: "The desk is empty for now",
       devor: "Ideas come true", devorB: "The wall is still empty. Let your idea be the first!",
       mening: "My ideas", bosh: "You haven't sent any ideas yet",
@@ -230,7 +230,7 @@
       iz.classList.remove("hidden");
     });
   }
-  // Kumush ip kosaga tushadi (g'oya yuborilganda)
+  // Kumush ip kosaga tushadi (g'oya yuborilganda). Holat o'zgarsa javobni Foks olib boradi (hppochta.foks_xat, js/15-pochta.js owlFoks)
   function goyIp() {
     var k = $("goy-kosa");
     k.classList.remove("ochiq");

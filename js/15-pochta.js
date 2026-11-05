@@ -344,6 +344,7 @@
       return;
     }
     items.forEach(function (x) {
+      if (x.tur === "foks") { if (x.foks) { box.appendChild(owlFoks(x)); } return; }      // Direktor xonasi - xatni Foks olib keldi
       // Turlar: onb - yo'l eslatmasi (matn ilovada), xabar - egasi paneldan yozgan xat
       // dm - chatda shaxsiy xabar keldi (o'qilmagan)
       var st = x.tur === "onb" ? t.steps[x.qadam] : (x.tur === "xabar" && x.title ? [x.title, x.text || ""] : null);
@@ -392,6 +393,36 @@
       box.appendChild(c);
     });
     if (hogO) { box.appendChild(hogO); }
+  }
+
+  // Foks xati (egasi, 2026-11-05): g'oya holati o'zgardi yoki Dambldor javob yozdi. Pochtada, lekin feniks
+  // ranglarida (gazeta kartasi kabi alohida ko'rinish). Matn ilova tilida - js/09-goya.js GOY_T.
+  var FOKS_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.7 3.3c-4.8.2-9.4 2.4-12 6.2-1.2 1.8-1.9 3.8-2.1 5.9L4 17.9l1.2 1.2 2.4-2.5c2.1-.2 4.1-.9 5.9-2.1 3.8-2.6 6-7.2 6.2-12zM9.4 14.6l-1.5.2.2-1.5 7.5-7.5-6.2 8.8z"/></svg>';
+  function owlFoks(x) {
+    var t = owlTx(), g = x.foks || {}, ft = null, yangi = !x.read || owlFresh[x.id];
+    try { ft = goyT(); } catch (e) {}
+    var c = owlEl("div", "owl-card foks-xat" + (yangi ? " owl-new" : ""));
+    var top = owlEl("div", "owl-top foks-top");
+    var ic = owlEl("span", "owl-ic foks-ic"); ic.innerHTML = FOKS_SVG;
+    top.appendChild(ic);
+    top.appendChild(owlEl("span", "foks-nom", ft ? ft.foksNom : "Foks"));
+    top.appendChild(owlEl("span", "owl-when", owlWhen(x.t)));
+    if (yangi) { top.appendChild(owlEl("span", "owl-seal")); }
+    top.appendChild(owlDelBtn(x, c));
+    c.appendChild(top);
+    c.appendChild(owlEl("b", "owl-h", "«" + (g.nom || "") + "»"));
+    if (ft && ft.h[g.holat]) { c.appendChild(owlEl("span", "goy-hl " + g.holat, ft.h[g.holat])); }
+    if (g.javob) {
+      var j = owlEl("div", "goy-c-j");
+      j.appendChild(owlEl("span", "", ft ? ft.javob : ""));
+      j.appendChild(owlEl("p", "", g.javob));
+      c.appendChild(j);
+    }
+    var b = owlEl("button", "owl-cta", ft ? ft.foksGo : "→");
+    b.type = "button";
+    b.addEventListener("click", function () { try { goyOch(); } catch (e) {} });
+    c.appendChild(b);
+    return c;
   }
 
   function openOwl() {

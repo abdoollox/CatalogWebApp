@@ -4585,3 +4585,12 @@ body.ank-ochiq{overflow:hidden}
 /* xonaQur() oynasi: sahifa (.shell) kabi o'lcham va chekkalar */
 .xona-o{position:fixed;inset:0;z-index:2300;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);animation:riseIn .35s ease both}
 .xona-o .xona{max-width:440px;margin:0 auto;box-sizing:border-box;padding:calc(var(--fs, 0px) + 22px) 18px calc(var(--sab, 0px) + 28px)}
+
+/* Foks xati - boyo'g'li pochtasida, feniks ranglarida (js/15-pochta.js owlFoks) */
+.foks-xat{border-color:rgba(232,120,60,.45)!important;background:radial-gradient(130% 120% at 0% 0%,rgba(214,72,40,.16),transparent 60%),#15110f!important}
+.foks-top{padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid rgba(240,150,80,.3)}
+.foks-ic{color:#fff3d6!important;background:linear-gradient(135deg,#d8462a,#f0a33b)!important;box-shadow:0 0 14px rgba(240,120,50,.45)}
+.foks-ic svg{width:58%;height:58%;display:block}
+.foks-nom{flex:1;min-width:0;color:#f6c27a;font:600 14px/1.1 'Cormorant Garamond',serif;letter-spacing:.06em;text-transform:uppercase}
+.foks-xat .goy-hl{display:inline-block;margin:6px 0 2px}
+.foks-xat .goy-c-j{margin-top:10px;background:rgba(240,140,70,.08);border-left-color:rgba(240,150,80,.6)}

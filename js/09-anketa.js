@@ -64,7 +64,7 @@
         "12": "12 yoshgacha", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 va undan katta"
       },
       oxirgi_v: { soundtrack: "Musiqa", kitob: "Kitob" },
-      goyaga: "Yana bir gap: ilova uchun g'oyangiz bo'lsa, G'oyalar qutisiga yozing — har birini o'qib chiqaman.", goyaB: "G'oya yozish",
+      goyaga: "Yana bir gap: ilova uchun g'oyangiz bo'lsa, xonamdagi G'oyalar kosasiga yozing — har birini ko'rib chiqaman.", goyaB: "G'oya yozish",
       rahmat: function (n, g) { return g ? "Rahmat, " + n + ". Javoblaringizni yozib oldim. Va'da qilinganidek — " + g + " galleon." : "Rahmat, " + n + ". Javoblaringizni yozib oldim."; },
       oldin_bergan: "Siz bu savollarga javob bergansiz. Rahmat!",
       xato: "Aloqa yo'q — qayta urinib ko'ring",
@@ -105,7 +105,7 @@
         "12": "До 12 лет", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 и старше"
       },
       oxirgi_v: { soundtrack: "Музыка", kitob: "Книга" },
-      goyaga: "И ещё: если у вас есть идея для приложения, напишите её в Ящик идей — я читаю каждую.", goyaB: "Написать идею",
+      goyaga: "И ещё: если у вас есть идея для приложения, запишите её в Чашу идей в моём кабинете — я рассмотрю каждую.", goyaB: "Написать идею",
       rahmat: function (n, g) { return g ? "Спасибо, " + n + ". Я записал ваши ответы. Как и обещал — " + g + " галлеонов." : "Спасибо, " + n + ". Я записал ваши ответы."; },
       oldin_bergan: "Вы уже ответили на эти вопросы. Спасибо!",
       xato: "Нет связи — попробуйте ещё раз",
@@ -146,7 +146,7 @@
         "12": "Under 12", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 or older"
       },
       oxirgi_v: { soundtrack: "Music", kitob: "Book" },
-      goyaga: "One more thing: if you have an idea for the app, write it in the Idea box — I read every one.", goyaB: "Write an idea",
+      goyaga: "One more thing: if you have an idea for the app, write it in the Idea Bowl in my office — I review every one.", goyaB: "Write an idea",
       rahmat: function (n, g) { return g ? "Thank you, " + n + ". I've noted your answers. As promised — " + g + " galleons." : "Thank you, " + n + ". I've noted your answers."; },
       oldin_bergan: "You have already answered these questions. Thank you!",
       xato: "No connection — please try again",
