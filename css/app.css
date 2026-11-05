@@ -4594,3 +4594,8 @@ body.ank-ochiq{overflow:hidden}
 .foks-nom{flex:1;min-width:0;color:#f6c27a;font:600 14px/1.1 'Cormorant Garamond',serif;letter-spacing:.06em;text-transform:uppercase}
 .foks-xat .goy-hl{display:inline-block;margin:6px 0 2px}
 .foks-xat .goy-c-j{margin-top:10px;background:rgba(240,140,70,.08);border-left-color:rgba(240,150,80,.6)}
+/* xona qolipi: egasi rasm ustida (xonaQur egasi.ustida) - portret rasmning pastki chetiga chiqadi, pufak yonida */
+.xona.ustma .xona-egasi{position:relative;align-items:flex-start;margin:-40px 8px 4px}
+.xona.ustma .xona-egasi img{position:relative;z-index:1;width:72px;height:72px;box-shadow:0 8px 20px -8px rgba(0,0,0,.9)}
+.xona.ustma .xona-egasi .dr-hint{margin-top:40px}
+.xona.ustma .xona-egasi .dr-hint::before{top:22px}

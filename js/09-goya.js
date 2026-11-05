@@ -18,7 +18,7 @@
   var GOY_T = {
     uz: {
       kick: "Xogvarts", egasi: "Albus Dambldor", ttl: "Direktor xonasi", korik: "Faqat sizga ko'rinadi", meningN: function (n) { return "Sizniki: " + n; }, foksNom: "Foks xati", foksGo: "Direktor xonasiga", bajN: function (n) { return n + " g'oya bajarildi"; },
-      salom: "Xonamga xush kelibsiz! Ilovani birga yaxshilaymiz: g'oyangizni G'oyalar kosasiga yozing — har birini ko'rib chiqaman, javobini Foks olib boradi.",
+      salom: "Xush kelibsiz! G'oyangizni kosaga yozing — javobimni Foks olib boradi.",
       kosa: "G'oyalar kosasi", kosaS: "Ilovaga nima qo'shilsin yoki o'zgarsin?", yoz: "G'oya yozish",
       nom: "Qisqacha", nomP: "Masalan: kitoblarni ovozli qilish",
       bat: "Bu sizga qachon kerak bo'ldi?", batP: "Oxirgi marta nima qilmoqchi edingiz va nima xalaqit berdi? (ixtiyoriy)",
@@ -34,7 +34,7 @@
     },
     ru: {
       kick: "Хогвартс", egasi: "Альбус Дамблдор", ttl: "Кабинет директора", korik: "Видно только вам", meningN: function (n) { return "Ваших: " + n; }, foksNom: "Письмо от Фоукса", foksGo: "В кабинет директора", bajN: function (n) { return "Воплощено: " + n; },
-      salom: "Добро пожаловать в мой кабинет! Давайте улучшать приложение вместе: запишите идею в Чашу идей — я рассмотрю каждую, ответ принесёт Фоукс.",
+      salom: "Добро пожаловать! Запишите идею в чашу — мой ответ принесёт Фоукс.",
       kosa: "Чаша идей", kosaS: "Что добавить или изменить в приложении?", yoz: "Написать идею",
       nom: "Кратко", nomP: "Например: озвучить книги",
       bat: "Когда вам это понадобилось?", batP: "Что вы хотели сделать в последний раз и что помешало? (необязательно)",
@@ -50,7 +50,7 @@
     },
     en: {
       kick: "Hogwarts", egasi: "Albus Dumbledore", ttl: "Headmaster's office", korik: "Only you can see this", meningN: function (n) { return "Yours: " + n; }, foksNom: "Letter from Fawkes", foksGo: "To the Headmaster's office", bajN: function (n) { return n + " ideas done"; },
-      salom: "Welcome to my office! Let's make the app better together: write your idea in the Idea Bowl — I review every one, and Fawkes will bring my reply.",
+      salom: "Welcome! Write your idea in the bowl — Fawkes will bring my reply.",
       kosa: "The Idea Bowl", kosaS: "What should the app add or change?", yoz: "Write an idea",
       nom: "In short", nomP: "E.g. audio versions of the books",
       bat: "When did you need it?", batP: "What were you trying to do last time, and what got in the way? (optional)",
@@ -136,13 +136,13 @@
     if (!goyX) { return; }
     var t = goyT(), d = goyData || {};
     goyX.kick(d.preview ? t.korik : t.egasi);
-    goyX.holat(t.bajN((d.devor || []).length), (d.list || []).length ? t.meningN((d.list || []).length) : "");
+    goyX.holat("", "");      // egasi, 2026-11-05: bu xonada holat qatori kerak emas
   }
   function goyOch() {
     try { ankYop(); } catch (e) {}
     var t = goyT();
     goyX = xonaQur({ id: "goy", kick: t.egasi, ttl: t.ttl, ortga: goyYop, rasm: GOY_RASM.xona,
-                     egasi: { matn: t.salom, rasm: ANK_RASM.salom } });
+                     egasi: { matn: t.salom, rasm: ANK_RASM.salom, ustida: true } });
     goyHolatYoz();
     xonaOch(goyX);
     goyChiz();

@@ -4,8 +4,8 @@
      1. Sarlavha - markazda: ustida kichik yozuv (xona egasi: «Xagrid», «Professor Sprout», «Albus Dambldor»),
         ostida xona nomi; chapda «‹» ortga, o'ngda bo'sh joy (yoki «i»).
      2. Xona rasmi - IXTIYORIY (keng, burchaklari yumaloq).
-     3. Holat qatori - chapda asosiy son (Cormorant, kumush), o'ngda kichik yorliq.
-     4. Egasining maslahati - doira portret + pufakdagi gap.
+     3. Holat qatori - IXTIYORIY (ko'rsatadigan son bo'lsa): chapda asosiy son (Cormorant, kumush), o'ngda kichik yorliq.
+     4. Egasining maslahati - doira portret + pufakdagi qisqa gap (1-2 jumla); rasm bo'lsa portret rasm ustiga chiqishi mumkin (egasi.ustida).
      5. Asosiy harakat tugmasi - IXTIYORIY.
      6. Tarkib - xonaning o'z narsalari (to'r, ro'yxat, kartalar); bo'lim sarlavhasi - xonaSek().
    Uslublar - css «XONA QOLIPI» (.xona). Mavjud .screen xonalariga faqat «xona» klassi qo'shilgan (index.html).
@@ -14,7 +14,8 @@
    narsani chaqirmang - tekshiruv: tools/tartib.js */
 "use strict";
 
-  // Xona yasaydi (to'liq ekranli oyna, body ga qo'shiladi). o: {id, kick, ttl, ortga, rasm, holat: [chap, ong], egasi: {rasm, matn}, tugma: {matn, fn}}
+  // Xona yasaydi (to'liq ekranli oyna, body ga qo'shiladi). o: {id, kick, ttl, ortga, rasm, holat: [chap, ong], egasi: {rasm, matn, ustida}, tugma: {matn, fn}}
+  // egasi.ustida - portret xona rasmining pastki chetiga chiqib turadi (Direktor xonasi; egasi, 2026-11-05)
   // Qaytaradi: {el, ich, kick(t), ttl(t), holat(chap, ong), egasi(matn, rasm), tugma(matn, fn)}. Orqaga tugmasi uchun 13-orqaga.js BACK_PANELS ga [id, yopish] yozing.
   function xonaQur(o) {
     var el = $(o.id);
@@ -61,6 +62,7 @@
     x.kick(o.kick); x.ttl(o.ttl);
     x.holat(o.holat && o.holat[0], o.holat && o.holat[1]);
     x.egasi(o.egasi && o.egasi.matn, o.egasi && o.egasi.rasm);
+    q(".xona").classList.toggle("ustma", !!(o.rasm && o.egasi && o.egasi.ustida));
     x.tugma(o.tugma && o.tugma.matn, o.tugma && o.tugma.fn);
     return x;
   }
