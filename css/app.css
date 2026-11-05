@@ -4606,3 +4606,6 @@ body.ank-ochiq{overflow:hidden}
 .goy-r.ochiq .goy-r-ich{display:flex;flex-direction:column;gap:8px}
 .goy-r.ochiq .goy-r-nuqta{display:none}
 .goy-yana{display:block;width:100%;margin-top:4px}
+.goy-r-och{flex:none;color:var(--dim);font-size:18px;line-height:1;transition:transform .2s}
+.goy-r.ochiq .goy-r-och{transform:rotate(90deg)}
+.goy-izoh{margin:2px 0 0;font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim)}

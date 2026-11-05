@@ -23,7 +23,7 @@
       nom: "Qisqacha", nomP: "Masalan: kitoblarni ovozli qilish",
       bat: "Bu sizga qachon kerak bo'ldi?", batP: "Oxirgi marta nima qilmoqchi edingiz va nima xalaqit berdi? (ixtiyoriy)",
       bolim: "Qaysi bo'lim", b: { filmlar: "Filmlar", kutubxona: "Kutubxona", xogvarts: "Xogvarts", boshqa: "Boshqa" },
-      yubor: "Kosaga yozish", bekor: "Bekor qilish", yuborildi: "G'oyangiz kosaga yozildi — Dambldor ko'rib chiqadi",
+      yubor: "Kosaga yozish", ochiq: "Qabul qilingan g'oyalar ismingiz bilan boshqalarga ham ko'rinadi.", bekor: "Bekor qilish", yuborildi: "G'oyangiz kosaga yozildi — Dambldor ko'rib chiqadi",
       stol: "Direktor stoli", stolS: "Ustida ishlanmoqda", stolB: "Hozircha ustida ishlanayotgan g'oya yo'q",
       tabStol: "Jarayonda", tabDevor: "Bajarildi", tabMening: "Mening", yana: function (n) { return "Yana ko'rsatish (" + n + ")"; },
       devor: "Amalga oshgan g'oyalar", devorB: "Hali bajarilgan g'oya yo'q. Birinchisi sizniki bo'lishi mumkin!",
@@ -40,7 +40,7 @@
       nom: "Кратко", nomP: "Например: озвучить книги",
       bat: "Когда вам это понадобилось?", batP: "Что вы хотели сделать в последний раз и что помешало? (необязательно)",
       bolim: "Раздел", b: { filmlar: "Фильмы", kutubxona: "Библиотека", xogvarts: "Хогвартс", boshqa: "Другое" },
-      yubor: "Записать в чашу", bekor: "Отмена", yuborildi: "Идея записана в чашу — Дамблдор её рассмотрит",
+      yubor: "Записать в чашу", ochiq: "Принятые идеи видны другим вместе с вашим именем.", bekor: "Отмена", yuborildi: "Идея записана в чашу — Дамблдор её рассмотрит",
       stol: "Стол директора", stolS: "В работе", stolB: "Пока нет идей в работе",
       tabStol: "В работе", tabDevor: "Готово", tabMening: "Мои", yana: function (n) { return "Показать ещё (" + n + ")"; },
       devor: "Воплощённые идеи", devorB: "Пока нет воплощённых идей. Первой может стать ваша!",
@@ -57,7 +57,7 @@
       nom: "In short", nomP: "E.g. audio versions of the books",
       bat: "When did you need it?", batP: "What were you trying to do last time, and what got in the way? (optional)",
       bolim: "Section", b: { filmlar: "Films", kutubxona: "Library", xogvarts: "Hogwarts", boshqa: "Other" },
-      yubor: "Write into the bowl", bekor: "Cancel", yuborildi: "Your idea is in the bowl — Dumbledore will review it",
+      yubor: "Write into the bowl", ochiq: "Accepted ideas are visible to others with your name.", bekor: "Cancel", yuborildi: "Your idea is in the bowl — Dumbledore will review it",
       stol: "Headmaster's desk", stolS: "In progress", stolB: "No ideas in progress yet",
       tabStol: "In progress", tabDevor: "Done", tabMening: "Mine", yana: function (n) { return "Show more (" + n + ")"; },
       devor: "Ideas come true", devorB: "No ideas done yet. Yours could be the first!",
@@ -192,6 +192,7 @@
     bat.id = "goy-bat"; bat.maxLength = 1500; bat.rows = 3; bat.placeholder = t.batP; bat.className = "goy-in";
     f.appendChild(bat);
     // Bo'lim tanlovi yo'q (egasi, 2026-11-05) - g'oya «boshqa» bo'lib boradi, kerak bo'lsa panelda ajratiladi
+    f.appendChild(drEl("p", "goy-izoh", t.ochiq));
     var iz = drEl("p", "ank-iz hidden");
     iz.id = "goy-iz";
     f.appendChild(iz);
@@ -290,10 +291,12 @@
     h.appendChild(tx);
     if (tab === "mening") { h.appendChild(drEl("span", "goy-hl " + holat, t.h[holat] || holat)); }      // umumiy tablarda holat tab nomida
     c.appendChild(h);
-    if (tab === "mening" && (g.batafsil || g.javob)) {
+    if (g.batafsil || g.javob) {      // bosilsa batafsil (egasi, 2026-11-05: boshqalarning g'oyasi ham)
       c.classList.add("ochiladi");
-      if (g.javob) { h.appendChild(drEl("span", "goy-r-nuqta", "")); }
+      if (g.javob && tab === "mening") { h.appendChild(drEl("span", "goy-r-nuqta", "")); }
+      if (tab !== "mening") { h.appendChild(drEl("span", "goy-r-och", "›")); }
       var ich = drEl("div", "goy-r-ich");
+      if (tab !== "mening" && g.vaqt) { ich.appendChild(drEl("span", "goy-c-m", goySana(g.vaqt))); }
       if (g.batafsil) { ich.appendChild(drEl("p", "goy-c-b", g.batafsil)); }
       if (g.javob) {
         var j = drEl("div", "goy-c-j");
