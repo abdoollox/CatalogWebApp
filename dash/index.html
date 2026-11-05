@@ -468,6 +468,21 @@ td.tar-td{width:1%; padding-block:4px}
   .sq-iz{display:none}
 }
 /* Izohlar */
+.goyp-seg{flex-wrap:wrap; margin:14px 0 4px; display:inline-flex}
+.goyp-list{display:flex; flex-direction:column; gap:12px; margin-top:12px}
+.goyp{background:var(--panel-2); border-radius:12px; padding:14px 16px; border:1px solid var(--line)}
+.goyp-bosh{display:flex; align-items:flex-start; gap:10px}
+.goyp-bosh b{flex:1; font-size:15px; line-height:1.35; overflow-wrap:anywhere}
+.goyp-hl{flex:none; font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; color:var(--hl); background:color-mix(in srgb, var(--hl) 16%, transparent)}
+.goyp-bat{margin:8px 0 0; font-size:13px; line-height:1.5; color:var(--ink-2); white-space:pre-wrap; overflow-wrap:anywhere}
+.goyp-meta{margin-top:8px; font-size:12px; color:var(--ink-3)}
+.goyp-h{display:inline-flex; flex-wrap:wrap; margin-top:12px}
+.goyp-h button{padding:5px 10px; font-size:11.5px}
+.goyp .goyp-javob{width:100%; box-sizing:border-box; min-height:58px; height:58px; margin-top:10px}
+.goyp .pf-oxir{margin-top:10px}
+.goyp .pf-holat{margin:0 auto 0 0}
+.ankp-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:18px 28px; margin-top:18px}
+.ankp-q .pf-lab{margin-bottom:4px}
 .izohlar{display:flex; flex-direction:column; gap:10px; margin-top:10px; overflow-y:auto; max-height:min(64vh, 620px); padding-right:4px}
 .card.cho-teng .izohlar{flex:1 1 0; min-height:180px; max-height:none}
 .izoh{
@@ -757,6 +772,9 @@ var BOLIMLAR = [
   {id:"pochta",  nom:"Pochta",
    ic:'<rect x="6.5" y="8" width="11" height="8.5" rx="1"></rect><path d="M6.8 8.4l5.2 4.3 5.2-4.3"></path>' +
       '<path d="M6.5 10.2C4.6 9.6 3 8 2.3 6c1.9.1 3.4.7 4.2 1.7"></path><path d="M17.5 10.2c1.9-.6 3.5-2.2 4.2-4.2-1.9.1-3.4.7-4.2 1.7"></path>'},
+  {id:"fikr",    nom:"Fikrlar",
+   ic:'<path d="M9 18h6"></path><path d="M10 21h4"></path>' +
+      '<path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2V16h5.2v-.2c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"></path>'},
   {id:"lenta",   nom:"Lenta",
    ic:'<path d="M8.5 6.5H21"></path><path d="M8.5 12H21"></path><path d="M8.5 17.5H21"></path>' +
       '<circle cx="4" cy="6.5" r="1.1"></circle><circle cx="4" cy="12" r="1.1"></circle>' +
@@ -2826,6 +2844,13 @@ function kanalKunOxiri(kh, dk){
 /* ───────── Kartalar haqida ma'lumot (ⓘ tugmasi) ─────────
    Kalit — karta sarlavhasi. Matn: nima ko'rsatiladi va qanday sanaladi. */
 var KARTA_INFO = {
+  "G'oyalar": "Direktor xonasidagi «G'oyalar kosasi»ga yozilgan g'oyalar. Holatni tanlab, ixtiyoriy javob yozing va «Saqlash» ni bosing — " +
+    "muallifga boyo'g'li pochtasida Foks xati boradi. «Qabul qilindi» va «Bajarildi» g'oyalar Direktor xonasida hammaga ko'rinadi " +
+    "(nomi, muallif ismi, batafsil va javob); «Yangi», «Ko'rib chiqilmoqda» va «Rad etildi» — faqat muallifga.",
+  "So'rovnoma": "«Bizni qanday topdingiz?» — Dambldor bilan suhbat. Savollar «The Mom Test» bo'yicha: fikr emas, o'tgan aniq voqealar. " +
+    "Bir odam bir marta javob beradi; javob uchun 20 galleon (yozma javobi 3 harfdan kam bo'lsa — yo'q). Adminlar sanalmaydi.",
+  "So'rovnoma: yozma javoblar": "Odamlarning o'z so'zlari: qaysi kanal/kim aytgani, botni birovga qanday ta'riflagani, nega hali aytmagani. " +
+    "Reklama matni uchun eng foydali qism. Odam ismi ko'rsatilmaydi.",
   "Qaysi dublyajda": "O'zbekcha filmlar qaysi studiya dublyajida olingani: MY5 TV yoki ZO'R TV. Faqat o'zbek tilidagi yuborishlar sanaladi (rus va ingliz tilida dublyaj tanlovi yo'q). Dublyaj tanlovi 2026-yil 7-oktabrda qo'shilgan — undan oldingi hamma o'zbekcha yuborishlar MY5 TV, chunki o'shanda faqat shu dublyaj bor edi. ZO'R TV fayllari yuklanmaguncha u nol bo'lib turadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
   "Qaysi sifatda": "Odamlar filmni qaysi sifatda olgani: Full HD (1080p), HD (720p) yoki SD (480p, 2026-yil 7-oktabrdan). Sifat 2026-yil 4-oktabrdan yoziladi — undan oldingi yuborishlar «Eski ma'lumot» bo'lib ko'rinadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
   "Sehrli yo'l": "Yangi odamning botdan fakultetgacha yo'li: botni ochish, kanalga a'zo bo'lish, film olish, ilovada film olish, keyin 9¾ dagi yo'l — xat, Gringotts (kirish va galleon olish), Olivander, 9¾ platforma (bilet va poyezd) va Katta zalda saralanish. Qadam nomini bosib yoqing yoki o'chiring: voronka shu davrda BIRINCHI yoniq qadamni birinchi marta qilganlardan boshlanadi, har keyingi yoniq qadam oldingisidan o'tganlar ichidan bugungacha sanaladi. Yuqoridagi to'rt raqam esa doim shu davrda xatni ochganlar bo'yicha. Kanalga a'zo — film olgan ham a'zo hisoblanadi. 9¾ qadamlari 23-sentabrdan beri, xatdan keyin bajarilganlari sanaladi. Sinov o'quvchisi sanalmaydi.",
@@ -5074,6 +5099,13 @@ function render(){
   put("pochta", ST.tarqK);
   tarqatmaChiz();
 
+  /* ═══════════════ FIKRLAR: g'oyalar qutisi (Direktor xonasi) va so'rovnoma ═══════════════ */
+  // G'oyalar kartasi BIR MARTA quriladi (pochta xati kabi): javob yozilayotganda fon yangilanishi uni buzmasin.
+  if(!ST.goyK) ST.goyK = goyaKarta();
+  put("fikr", ST.goyK);
+  ST.goyK._chiz();
+  anketaKartalar().forEach(function(k){ put("fikr", k); });
+
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
   var LTUR = [
@@ -5199,6 +5231,7 @@ function render(){
     kitob: ktO.length + ktY.length + ktS.length,
     dars: drO.length + drB.length,
     chat: chSon,
+    fikr: ST.goya ? ST.goya.rows.filter(function(r){ return r.holat === "yangi"; }).length : 0,
     lenta: rows.length
   });
   selectTab(BOLIMLAR.some(function(b){ return b.id === ST.tab; }) ? ST.tab : "umumiy");
@@ -5686,7 +5719,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat(); loadPochta(); loadTarqatma();
+    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat(); loadPochta(); loadTarqatma(); loadGoya(); loadAnketa();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -5758,6 +5791,207 @@ function loadTarqatma(){
     clearTimeout(TARQ_KUZAT);
     if(j.band) TARQ_KUZAT = setTimeout(loadTarqatma, 4000);
   }).catch(function(){});
+}
+
+/* ───────── Fikrlar: g'oyalar qutisi va so'rovnoma (bot: hpgoya, hpanketa) ───────── */
+function fikrUrl(yol){
+  var u = ST.src.url.replace(/\/api\/loglar\b/, "/api/" + yol);
+  if(u === ST.src.url) u = ST.src.url.replace(/[^\/]*$/, yol);
+  return u;
+}
+function goyaSo(body){
+  if(!ST.src || ST.src.kind !== "api") return Promise.reject(new Error("ulanmagan"));
+  return fetch(fikrUrl("goya/panel"), {method:"POST", cache:"no-store",
+      headers:{"X-Dash-Token": ST.src.token, "Content-Type":"application/json"}, body:JSON.stringify(body || {})})
+    .then(function(r){ return r.json().catch(function(){ return {ok:false, error:"javob " + r.status}; }); });
+}
+function loadGoya(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.goya = null; return; }
+  goyaSo({}).then(function(j){
+    if(!j || !j.ok) return;
+    ST.goya = {rows:j.rows || []}; ST.goyaV = (ST.goyaV || 0) + 1;
+    ST.jim = true; render(); ST.jim = false;
+  }).catch(function(){ /* eski bot bo'lsa karta ma'lumotsiz chiqadi */ });
+}
+function loadAnketa(){
+  if(!ST.src || ST.src.kind !== "api"){ ST.anketa = null; return; }
+  fetch(fikrUrl("anketa/panel"), {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ if(!j || !j.ok) return; ST.anketa = j; ST.jim = true; render(); ST.jim = false; })
+    .catch(function(){});
+}
+var GOY_H = {yangi:["Yangi","#3987e5"], korildi:["Ko'rib chiqilmoqda","#9085e9"], qabul:["Qabul qilindi","#199e70"],
+             bajarildi:["Bajarildi","#c98500"], rad:["Rad etildi","#d03b3b"]};
+var GOY_TARTIB = ["yangi", "korildi", "qabul", "bajarildi", "rad"];
+function goyaVaqt(iso){ var d = new Date(iso); return isNaN(d) ? "" : fmtDay(dayKey(d)) + " " + fmtTime(d); }
+function goyaKarta(){
+  var c = card("G'oyalar", "Direktor xonasidan · holat yoki javob saqlansa muallifga Foks xati boradi", "");
+  var kp = document.createElement("div"); kp.className = "tarq-kpi";
+  var seg = document.createElement("div"); seg.className = "seg goyp-seg";
+  var list = document.createElement("div"); list.className = "goyp-list";
+  c.appendChild(kp); c.appendChild(seg); c.appendChild(list);
+  var filtr = null, ver = -1;
+  c._chiz = function(majbur){
+    if(!ST.goya){
+      kp.innerHTML = ""; seg.innerHTML = ""; list.innerHTML = "";
+      list.appendChild(emptyNote(ST.demo || !ST.src || ST.src.kind !== "api"
+        ? "G'oyalar bot bazasidan keladi — «Ma'lumot manbai» da bot serveriga ulanish kerak." : "G'oyalar yuklanmoqda…"));
+      return;
+    }
+    if(!majbur && ver === ST.goyaV) return;
+    if(!majbur && list.contains(document.activeElement)) return;      // javob yozilayotgan bo'lsa - tegmaymiz
+    ver = ST.goyaV;
+    var rows = ST.goya.rows, son = {hammasi:rows.length};
+    GOY_TARTIB.forEach(function(h){ son[h] = rows.filter(function(r){ return r.holat === h; }).length; });
+    if(filtr === null) filtr = son.yangi ? "yangi" : "hammasi";
+    kp.innerHTML = "";
+    [["Jami", son.hammasi, "yuborilgan g'oya"], ["Yangi", son.yangi, "javob kutmoqda"],
+     ["Qabul qilindi", son.qabul, "ustida ishlanmoqda"], ["Bajarildi", son.bajarildi, "ilovada"]].forEach(function(m){
+      var d = document.createElement("div"); d.className = "tk";
+      d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + fmtNum(m[1]) +
+        '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+      kp.appendChild(d);
+    });
+    seg.innerHTML = "";
+    GOY_TARTIB.concat(["hammasi"]).forEach(function(h){
+      var b = document.createElement("button"); b.type = "button";
+      b.setAttribute("aria-pressed", String(filtr === h));
+      b.textContent = (h === "hammasi" ? "Hammasi" : GOY_H[h][0]) + " · " + son[h];
+      b.addEventListener("click", function(){ filtr = h; c._chiz(true); });
+      seg.appendChild(b);
+    });
+    list.innerHTML = "";
+    var korsat = rows.filter(function(r){ return filtr === "hammasi" || r.holat === filtr; });
+    if(!korsat.length){ list.appendChild(emptyNote(son.hammasi ? "Bu holatda g'oya yo'q." : "Hali hech kim g'oya yubormagan.")); return; }
+    korsat.forEach(function(r){ list.appendChild(goypQator(r)); });
+  };
+  return c;
+}
+function goypQator(r){
+  var d = document.createElement("div"); d.className = "goyp";
+  var h = GOY_H[r.holat] || [r.holat, "#6d7f99"];
+  var hn = HOUSES[r.house];
+  d.innerHTML = '<div class="goyp-bosh"><b>' + esc(r.nom) + '</b><span class="goyp-hl" style="--hl:' + h[1] + '">' + esc(h[0]) + '</span></div>' +
+    (r.batafsil ? '<p class="goyp-bat">' + esc(r.batafsil) + '</p>' : '') +
+    '<div class="goyp-meta">' + odamHavola(r.uid, r.ism) + (r.username ? ' <span class="uname">@' + esc(r.username) + '</span>' : '') +
+    (hn ? ' · ' + hn.crest + ' ' + esc(hn.n) : '') + ' · ' + esc(goyaVaqt(r.vaqt)) + (r.til ? ' · ' + esc(r.til.toUpperCase()) : '') +
+    (r.admin ? ' · <span class="uname">admin</span>' : '') + '</div>';
+  var tanlov = r.holat;
+  var hs = document.createElement("div"); hs.className = "seg goyp-h";
+  GOY_TARTIB.forEach(function(k){
+    var b = document.createElement("button"); b.type = "button"; b.textContent = GOY_H[k][0];
+    b.setAttribute("aria-pressed", String(k === tanlov));
+    b.addEventListener("click", function(){
+      tanlov = k;
+      Array.prototype.forEach.call(hs.children, function(x, i){ x.setAttribute("aria-pressed", String(GOY_TARTIB[i] === k)); });
+    });
+    hs.appendChild(b);
+  });
+  d.appendChild(hs);
+  var ta = document.createElement("textarea"); ta.className = "pf-matn goyp-javob"; ta.maxLength = 600;
+  ta.placeholder = "Dambldor javobi (ixtiyoriy) — o'quvchi Foks xatida va Direktor xonasida ko'radi";
+  ta.value = r.javob || "";
+  d.appendChild(ta);
+  var oxir = document.createElement("div"); oxir.className = "pf-oxir";
+  var hol = document.createElement("span"); hol.className = "pf-holat";
+  var sb = document.createElement("button"); sb.type = "button"; sb.className = "btn pf-asosiy"; sb.textContent = "Saqlash";
+  sb.addEventListener("click", function(){
+    var body = {id:r.id};
+    if(tanlov !== r.holat) body.holat = tanlov;
+    if(ta.value.trim() !== (r.javob || "")) body.javob = ta.value.trim();
+    if(!("holat" in body) && !("javob" in body)){ hol.className = "pf-holat"; hol.textContent = "O'zgarish yo'q"; return; }
+    sb.disabled = true; hol.className = "pf-holat"; hol.textContent = "Saqlanmoqda…";
+    goyaSo(body).then(function(j){
+      sb.disabled = false;
+      if(!j || !j.ok){ hol.className = "pf-holat xato"; hol.textContent = "Saqlanmadi: " + ((j && j.error) || "xato"); return; }
+      ST.goya = {rows:j.rows || []}; ST.goyaV = (ST.goyaV || 0) + 1;
+      hol.className = "pf-holat ok"; hol.textContent = "Saqlandi — muallifga Foks xati ketdi";
+      setTimeout(function(){ ST.goyK._chiz(true); ST.jim = true; render(); ST.jim = false; }, 900);
+    }).catch(function(){ sb.disabled = false; hol.className = "pf-holat xato"; hol.textContent = "Aloqa yo'q"; });
+  });
+  oxir.appendChild(hol); oxir.appendChild(sb);
+  d.appendChild(oxir);
+  return d;
+}
+// So'rovnoma «Bizni qanday topdingiz?» (hpanketa.ANKETA bilan bir xil kalitlar)
+var ANK_P = [
+  {k:"qayerdan", s:"Bot haqida birinchi marta qayerda bildi", v:{dost:"Do'sti aytdi", tg_kanal:"Telegram kanal", tg_guruh:"Telegram guruh",
+     tg_qidiruv:"Telegram qidiruvi", eslay_olmayman:"Eslay olmaydi", boshqa:"Boshqa"}},
+  {k:"oldin", s:"Bizdan oldin filmlarni qayerda ko'rardi", v:{tv:"Televizor", tg_boshqa:"Boshqa kanal yoki bot", sayt:"Internet sayti",
+     youtube:"YouTube", kinoteatr:"Kinoteatr", korilmagan:"Ko'rmagan", boshqa:"Boshqa"}},
+  {k:"maqsad", s:"Birinchi kuni nima qilmoqchi edi", v:{film_korish:"Film ko'rish", film_yuklash:"Film yuklab olish", farzandim:"Farzandiga qo'yish",
+     soundtrack:"Musiqa tinglash", kitob:"Kitob o'qish", xogvarts:"Xogvartsga kirish", qiziqdim:"Shunchaki qiziqdi", boshqa:"Boshqa"}},
+  {k:"oxirgi", s:"Oxirgi kirganda nima qildi (bir nechta)", v:{film:"Film", darslar:"Dars", bellashuv:"Bellashuv", turnir:"Turnir", chat:"Chat",
+     qurbaqa:"Shokolad qurbaqa", soundtrack:"Musiqa", kitob:"Kitob", maxluqlar:"Maxluq yoki o'simlik", eslay_olmayman:"Eslay olmaydi"}},
+  {k:"aytdimi", s:"Bot haqida birovga aytganmi", v:{ha:"Ha, aytgan", yoq:"Yo'q"}},
+  {k:"aytmadi_sabab", s:"Nega aytmagan", v:{eslamadim:"Eslamagan", qiziqmaydi:"Tanishlari qiziqmaydi", yangiman:"O'zi hali tanishmagan",
+     ishonch_yoq:"Tavsiya qiladigan darajada emas", boshqa:"Boshqa"}},
+  {k:"yosh", s:"Yoshi (ixtiyoriy)", v:{"12":"12 gacha", "13_17":"13–17", "18_24":"18–24", "25_34":"25–34", "35":"35 va katta"}}
+];
+var ANK_MATN = {qayerdan_kim:"Qaysi kanal yoki kim", aytdi_matn:"Nima deb aytgan", aytmadi_matn:"Nima yetishmaydi"};
+var ANK_RANG = ["#3987e5", "#199e70", "#c98500", "#9085e9", "#2fa3a3", "#6d7f99", "#a0785a"];      // qizil ataylab yo'q - «yomon» degan ma'no beradi
+function anketaKartalar(){
+  var a = ST.anketa;
+  var c1 = card("So'rovnoma", "«Bizni qanday topdingiz?» · Dambldor bilan suhbat · javob uchun 20 galleon", "");
+  if(!a){
+    c1.appendChild(emptyNote(ST.demo || !ST.src || ST.src.kind !== "api"
+      ? "So'rovnoma natijalari bot bazasidan keladi — «Ma'lumot manbai» da bot serveriga ulanish kerak." : "Natijalar yuklanmoqda…"));
+    return [c1];
+  }
+  var kp = document.createElement("div"); kp.className = "tarq-kpi";
+  [["Javob berdi", fmtNum(a.n), "adminlarsiz"], ["Saralangan", fmtNum(a.saralangan), a.n ? Math.round(a.saralangan / a.n * 100) + "% javob berganlardan" : "—"],
+   ["20 galleon olgan", fmtNum(a.sovga_olgan || 0), "qolganining yozma javobi juda qisqa"],
+   ["Holati", a.on ? "Ochiq" : "Yopiq", a.on ? "hammaga ko'rinadi" : "hozircha faqat adminlarga"]].forEach(function(m){
+    var d = document.createElement("div"); d.className = "tk";
+    d.innerHTML = '<span class="k-lab">' + esc(m[0]) + '</span><span class="tk-val">' + m[1] + '</span><span class="tk-sub">' + esc(m[2]) + '</span>';
+    kp.appendChild(d);
+  });
+  c1.appendChild(kp);
+  if(!a.n){ c1.appendChild(emptyNote("Hali hech kim javob bermagan.")); return [c1]; }
+  var g = document.createElement("div"); g.className = "ankp-grid";
+  ANK_P.forEach(function(q, qi){
+    // Har savol bitta rangda (variantlar tartib bo'yicha emas, soni bo'yicha saralanadi); nol javobli variant ko'rsatilmaydi
+    var son = (a.son || {})[q.k] || {}, items = [], jami = 0, rang = ANK_RANG[qi % ANK_RANG.length];
+    Object.keys(q.v).forEach(function(v){ var n = son[v] || 0; jami += n; if(n) items.push({lab:q.v[v], val:n, color:rang}); });
+    Object.keys(son).forEach(function(v){ if(!(v in q.v) && son[v]){ jami += son[v]; items.push({lab:v, val:son[v], color:rang}); } });
+    if(!jami) return;
+    items.sort(function(x, y){ return y.val - x.val; });
+    var b = document.createElement("div"); b.className = "ankp-q";
+    var h = document.createElement("div"); h.className = "pf-lab"; h.textContent = q.s;
+    b.appendChild(h);
+    b.appendChild(barList(items, "#3987e5", q.k === "oxirgi" ? a.n : jami));
+    g.appendChild(b);
+  });
+  c1.appendChild(g);
+  // Yozma javoblar - reklama matni uchun odamlarning o'z so'zlari
+  var c2 = card("So'rovnoma: yozma javoblar", "odamlarning o'z so'zlari · eng yangisi yuqorida", "");
+  var matn = a.matn || [];
+  if(!matn.length){ c2.appendChild(emptyNote("Yozma javob yo'q.")); return [c1, c2]; }
+  if(!ST.ankF || !matn.some(function(x){ return x.k === ST.ankF; })) ST.ankF = "hammasi";
+  var seg = document.createElement("div"); seg.className = "seg goyp-seg";
+  [["hammasi", "Hammasi"]].concat(Object.keys(ANK_MATN).map(function(k){ return [k, ANK_MATN[k]]; })).forEach(function(x){
+    var n = x[0] === "hammasi" ? matn.length : matn.filter(function(m){ return m.k === x[0]; }).length;
+    if(!n) return;
+    var b = document.createElement("button"); b.type = "button";
+    b.setAttribute("aria-pressed", String(ST.ankF === x[0]));
+    b.textContent = x[1] + " · " + n;
+    b.addEventListener("click", function(){ ST.ankF = x[0]; ST.jim = true; render(); ST.jim = false; });
+    seg.appendChild(b);
+  });
+  c2.appendChild(seg);
+  var box = document.createElement("div"); box.className = "izohlar";
+  var qq = ANK_P[0].v, yy = ANK_P[6].v;
+  matn.filter(function(m){ return ST.ankF === "hammasi" || m.k === ST.ankF; }).forEach(function(m){
+    var iz = document.createElement("div"); iz.className = "izoh";
+    iz.innerHTML = '<div class="izoh-bosh"><span class="izoh-ism">' + esc(ANK_MATN[m.k] || m.k) + '</span>' +
+      '<span class="izoh-vaqt">' + esc(goyaVaqt(m.vaqt)) + '</span></div>' +
+      '<div class="izoh-matn">«' + esc(m.t) + '»</div>' +
+      '<span class="izoh-sabab">' + esc([m.qayerdan ? (qq[m.qayerdan] || m.qayerdan) : "", m.yosh ? (yy[m.yosh] || m.yosh) + " yosh" : "",
+        m.sar ? "saralangan" : "saralanmagan", (m.til || "").toUpperCase()].filter(Boolean).join(" · ")) + '</span>';
+    box.appendChild(iz);
+  });
+  c2.appendChild(box);
+  return [c1, c2];
 }
 
 /* Boyo'g'li pochtasi: eslatmalar va ularning natijasi — bot bazasidan. */
