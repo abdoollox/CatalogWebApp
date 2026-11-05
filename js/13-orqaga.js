@@ -29,6 +29,7 @@
     ["km-nav", "km-nav-close"],
     ["w-set", "w-set-close"],
     ["gx", function () { gxYop(); }],
+    ["goy", function () { goyYop(); }],
     ["ank", function () { ankYop(); }]
   ];
 

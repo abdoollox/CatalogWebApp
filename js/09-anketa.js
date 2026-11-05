@@ -23,6 +23,9 @@
     { k: "oxirgi", tur: "kop", v: ["film", "darslar", "bellashuv", "turnir", "chat", "qurbaqa", "soundtrack", "kitob", "maxluqlar", "eslay_olmayman"] },
     { k: "aytdimi", tur: "bir", v: ["ha", "yoq"] },
     { k: "aytdi_matn", tur: "matn", agar: function (j) { return j.aytdimi === "ha"; } },
+    // «Yo'q» desa - nega (o'tgan holat; «nima qilsak» emas, chunki bu xayoliy javob beradi - The Mom Test)
+    { k: "aytmadi_sabab", tur: "bir", v: ["eslamadim", "qiziqmaydi", "yangiman", "ishonch_yoq", "boshqa"], agar: function (j) { return j.aytdimi === "yoq"; } },
+    { k: "aytmadi_matn", tur: "matn", ixt: true, dan: "aytmadi_sabab", agar: function (j) { return j.aytmadi_sabab === "ishonch_yoq" || j.aytmadi_sabab === "boshqa"; } },
     { k: "yosh", tur: "bir", ixt: true, v: ["12", "13_17", "18_24", "25_34", "35"] }
   ];
 
@@ -44,6 +47,8 @@
         oxirgi: "Oxirgi marta ilovaga kirganingizda nima qildingiz?",
         aytdimi: "Bot haqida biror kishiga aytganmisiz?",
         aytdi_matn: "Unga aynan nima deb aytgan edingiz? O'z so'zlaringiz bilan, eslaganingizcha yozing.",
+        aytmadi_sabab: "Nega hali hech kimga aytmagansiz? Rostini ayting — bu biz uchun muhim.",
+        aytmadi_matn: { ishonch_yoq: "Nima yetishmayapti? Bir-ikki so'z bilan yozing.", boshqa: "Qanday sabab? Bir-ikki so'z bilan yozing." },
         yosh: "Oxirgisi: yoshingizni aytsangiz bo'ladi, aytmasangiz ham mayli."
       },
       v: {
@@ -55,9 +60,11 @@
         film: "Film", darslar: "Dars", bellashuv: "Bellashuv", turnir: "Turnir", chat: "Chat",
         qurbaqa: "Shokolad qurbaqa", maxluqlar: "Maxluq yoki o'simlik",
         ha: "Ha, aytganman", yoq: "Yo'q, hali aytmaganman",
+        eslamadim: "Shunchaki eslamadim", qiziqmaydi: "Tanishlarim Garri Potterga qiziqmaydi", yangiman: "Hali o'zim yaxshi tanishmadim", ishonch_yoq: "Tavsiya qiladigan darajada emas",
         "12": "12 yoshgacha", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 va undan katta"
       },
       oxirgi_v: { soundtrack: "Musiqa", kitob: "Kitob" },
+      goyaga: "Yana bir gap: ilova uchun g'oyangiz bo'lsa, G'oyalar qutisiga yozing — har birini o'qib chiqaman.", goyaB: "G'oya yozish",
       rahmat: function (n, g) { return g ? "Rahmat, " + n + ". Javoblaringizni yozib oldim. Va'da qilinganidek — " + g + " galleon." : "Rahmat, " + n + ". Javoblaringizni yozib oldim."; },
       oldin_bergan: "Siz bu savollarga javob bergansiz. Rahmat!",
       xato: "Aloqa yo'q — qayta urinib ko'ring",
@@ -81,6 +88,8 @@
         oxirgi: "Что вы делали, когда в последний раз заходили в приложение?",
         aytdimi: "Вы рассказывали кому-нибудь о боте?",
         aytdi_matn: "Что именно вы сказали? Своими словами, как помните.",
+        aytmadi_sabab: "Почему вы пока никому не рассказали? Честно — для нас это важно.",
+        aytmadi_matn: { ishonch_yoq: "Чего не хватает? В двух словах.", boshqa: "Какая причина? В двух словах." },
         yosh: "И последнее: можете указать возраст, а можете и не указывать."
       },
       v: {
@@ -92,9 +101,11 @@
         film: "Фильм", darslar: "Урок", bellashuv: "Состязание", turnir: "Турнир", chat: "Чат",
         qurbaqa: "Шоколадная лягушка", maxluqlar: "Существа и растения",
         ha: "Да, рассказывал(а)", yoq: "Нет, пока не рассказывал(а)",
+        eslamadim: "Просто не вспомнил(а)", qiziqmaydi: "Знакомым не интересен Гарри Поттер", yangiman: "Сам(а) ещё не разобрался(лась)", ishonch_yoq: "Пока не настолько хорошо, чтобы советовать",
         "12": "До 12 лет", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 и старше"
       },
       oxirgi_v: { soundtrack: "Музыка", kitob: "Книга" },
+      goyaga: "И ещё: если у вас есть идея для приложения, напишите её в Ящик идей — я читаю каждую.", goyaB: "Написать идею",
       rahmat: function (n, g) { return g ? "Спасибо, " + n + ". Я записал ваши ответы. Как и обещал — " + g + " галлеонов." : "Спасибо, " + n + ". Я записал ваши ответы."; },
       oldin_bergan: "Вы уже ответили на эти вопросы. Спасибо!",
       xato: "Нет связи — попробуйте ещё раз",
@@ -118,6 +129,8 @@
         oxirgi: "The last time you opened the app, what did you do?",
         aytdimi: "Have you told anyone about the bot?",
         aytdi_matn: "What exactly did you tell them? In your own words, as you remember it.",
+        aytmadi_sabab: "Why haven't you told anyone yet? Be honest — it matters to us.",
+        aytmadi_matn: { ishonch_yoq: "What's missing? A word or two.", boshqa: "What's the reason? A word or two." },
         yosh: "Last one: you may tell me your age, or not — either is fine."
       },
       v: {
@@ -129,9 +142,11 @@
         film: "Film", darslar: "Lesson", bellashuv: "Contest", turnir: "Tournament", chat: "Chat",
         qurbaqa: "Chocolate Frog", maxluqlar: "Creatures and plants",
         ha: "Yes, I have", yoq: "No, not yet",
+        eslamadim: "I just didn't think of it", qiziqmaydi: "My friends aren't into Harry Potter", yangiman: "I'm still exploring it myself", ishonch_yoq: "Not good enough to recommend yet",
         "12": "Under 12", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 or older"
       },
       oxirgi_v: { soundtrack: "Music", kitob: "Book" },
+      goyaga: "One more thing: if you have an idea for the app, write it in the Idea box — I read every one.", goyaB: "Write an idea",
       rahmat: function (n, g) { return g ? "Thank you, " + n + ". I've noted your answers. As promised — " + g + " galleons." : "Thank you, " + n + ". I've noted your answers."; },
       oldin_bergan: "You have already answered these questions. Thank you!",
       xato: "No connection — please try again",
@@ -242,6 +257,7 @@
   }
   function ankOch() {
     var o = ankEl(), t = ankT();
+    try { goyLoad(); } catch (e) {}
     ankTok++;
     ankJ = {}; ankI = -1; ankBand = false; ankIz = [];
     $("ank-k").textContent = t.kick;
@@ -290,14 +306,14 @@
     return q;
   }
   // Bir nechta xabar - birin-ketin, orasida «yozmoqda» nuqtalari (egasi, 2026-11-05)
-  function ankKetma(royxat, cb, birinchiTez) {
+  function ankKetma(royxat, cb, birinchiTez, kayf) {
     var tok = ankTok, i = 0;
     (function navbat() {
       if (tok !== ankTok) { return; }
       if (i >= royxat.length) { cb && cb(); return; }
       var m = royxat[i++];
       if (i === 1 && birinchiTez) { ankGap(m); setTimeout(navbat, 350); return; }
-      ankYozmoqda(function () { ankKayf("salom"); ankGap(m); navbat(); }, Math.min(1400, 450 + m.length * 9));
+      ankYozmoqda(function () { ankKayf(kayf || "salom"); ankGap(m); navbat(); }, Math.min(1400, 450 + m.length * 9));
     })();
   }
   function ankMen(matn, p) {
@@ -336,7 +352,7 @@
     for (var i = 0; i < n; i++) { box.appendChild(drEl("i", i < joriy - 1 ? "on" : i === joriy - 1 ? "cur" : "")); }
   }
 
-  function ankSavolMatni(q) { var t = ankT(); return q.k === "qayerdan_kim" ? t.q.qayerdan_kim[ankJ.qayerdan] : t.q[q.k]; }
+  function ankSavolMatni(q) { var t = ankT(), m = t.q[q.k]; return typeof m === "object" ? m[ankJ[q.dan || "qayerdan"]] : m; }
   function ankKeyin() {
     var i = ankI + 1;
     while (i < ANK_Q.length && ANK_Q[i].agar && !ANK_Q[i].agar(ankJ)) { i++; }
@@ -489,7 +505,11 @@
         if (g) { setTimeout(function () { ankTanga(g); }, 350); }
         try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
         try { walLoad(function () { try { pmRender(); } catch (e) {} }); } catch (e) {}
-        ankTugma([[t.yop, ankYop]]);
+        // G'oyalar qutisi ochiq bo'lsa - Dambldor o'sha yerga yo'llaydi (egasi, 2026-11-05)
+        var goyaOn = false;
+        try { goyaOn = goyOn(); } catch (e) {}
+        if (!goyaOn) { ankTugma([[t.yop, ankYop]]); return; }
+        ankKetma([t.goyaga], function () { ankTugma([[t.yop, ankYop], [t.goyaB, function () { goyOch(); }, 1]]); }, false, "rahmat");
       });
     }, 700);
   }
@@ -497,7 +517,8 @@
     var pas = $("ank-pas");
     pas.innerHTML = "";
     royxat.forEach(function (r, i) {
-      var b = drEl("button", i === royxat.length - 1 ? "ank-ok" : "ank-skip", r[0]);
+      var asosiy = royxat.some(function (x) { return x[2]; }) ? !!r[2] : i === royxat.length - 1;
+      var b = drEl("button", asosiy ? "ank-ok" : "ank-skip", r[0]);
       b.type = "button"; b.onclick = r[1];
       pas.appendChild(b);
     });

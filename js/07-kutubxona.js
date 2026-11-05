@@ -405,6 +405,7 @@
 
   function pmFill() {
     var x = PM_TX[lang] || PM_TX.uz;
+    try { goyLoad(); } catch (e) {}      // g'oyalar qutisi qatori (js/09-goya.js)
     var u = tgUser(), h = validHouse(cupMe().house || house);
     pmAvatar($("pm-av2"));
     $("pm-title").textContent = x.prof;

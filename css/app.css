@@ -4506,3 +4506,47 @@ body.ank-ochiq{overflow:hidden}
   box-shadow:0 8px 24px -8px rgba(243,213,143,.6);animation:ankPuf .4s ease-out}
 .ank-gal .pm-coin{width:14px;height:14px}
 .ankc-g .pm-coin{width:12px;height:12px}
+
+/* ===================== G'OYALAR QUTISI (js/09-goya.js) - zamonaviy, qahramonsiz ===================== */
+.goy-pm{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;margin:12px 0 22px;padding:12px 14px;border-radius:16px;
+  background:#1c222c;border:1px solid rgba(255,255,255,.12);color:var(--text);text-align:left;cursor:pointer}
+.goy-pm:active{transform:scale(.99)}
+.goy-pm-ic{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(var(--gold-rgb),.14);color:var(--gold-hi)}
+.goy-pm-ic svg{width:19px;height:19px}
+.goy-pm-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.goy-pm-tx b{font:700 13.5px/1.2 'Manrope',sans-serif}
+.goy-pm-tx span{font:500 11.5px/1.35 'Manrope',sans-serif;color:var(--dim)}
+.goy-pm-ch{flex:none;color:var(--dim);font-size:20px}
+.goy{position:fixed;inset:0;z-index:2300;display:flex;flex-direction:column;box-sizing:border-box;padding:calc(var(--fs, 0px) + 10px) 16px 0;
+  color:var(--text);background:#0b0d12;animation:ankKir .3s ease-out}
+.goy-top{position:relative;flex:none;display:flex;align-items:center;min-height:44px;padding-right:52px}
+.goy-top .ank-x{position:absolute;top:0;right:0}
+.goy-id{display:flex;flex-direction:column;gap:3px}
+.goy-k{font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.goy-n{font:800 22px/1.1 'Manrope',sans-serif}
+.goy-ich{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 0 calc(var(--sab, 0px) + 24px)}
+.goy-kir{margin:0 0 16px;font:500 14px/1.5 'Manrope',sans-serif;color:var(--dim)}
+.goy-f{display:flex;flex-direction:column;gap:8px;padding:14px;border-radius:18px;background:#141922;border:1px solid var(--line);margin-bottom:24px}
+.goy-l{font:700 12px/1.2 'Manrope',sans-serif;color:var(--text);margin-top:6px}
+.goy-l:first-child{margin-top:0}
+.goy-in{width:100%;box-sizing:border-box;border:1px solid var(--line);border-radius:13px;padding:12px 13px;background:rgba(255,255,255,.05);
+  color:var(--text);font:500 15px/1.4 'Manrope',sans-serif;outline:none;resize:vertical}
+.goy-in:focus{border-color:rgba(var(--gold-rgb),.55)}
+.goy-ch{display:flex;flex-wrap:wrap;gap:7px}
+.goy-f .ank-ok{margin-top:8px}
+.goy-ml{margin:0 4px 10px}
+.goy-list{display:flex;flex-direction:column;gap:10px}
+.goy-bosh{margin:0;padding:18px;text-align:center;font:500 13px/1.4 'Manrope',sans-serif;color:var(--dim);border:1px dashed var(--line);border-radius:16px}
+.goy-c{padding:13px 14px;border-radius:16px;background:#141922;border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.goy-c-h{display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
+.goy-c-h b{font:700 14.5px/1.3 'Manrope',sans-serif;overflow-wrap:anywhere}
+.goy-c-m{font:500 11.5px/1.2 'Manrope',sans-serif;color:var(--dim)}
+.goy-c-b{margin:0;font:500 13px/1.45 'Manrope',sans-serif;color:#c9d0da;white-space:pre-wrap;overflow-wrap:anywhere}
+.goy-hl{flex:none;padding:5px 9px;border-radius:99px;font:700 10.5px/1 'Manrope',sans-serif;background:rgba(255,255,255,.08);color:var(--dim)}
+.goy-hl.korildi{background:rgba(120,160,255,.14);color:#a9c1ff}
+.goy-hl.qabul{background:rgba(90,200,140,.15);color:#8fe0b2}
+.goy-hl.bajarildi{background:rgba(var(--gold-rgb),.2);color:var(--gold-hi)}
+.goy-hl.rad{background:rgba(240,120,110,.13);color:#f0a8a0}
+.goy-c-j{margin-top:2px;padding:10px 12px;border-radius:12px;background:rgba(var(--gold-rgb),.08);border-left:2px solid rgba(var(--gold-rgb),.5)}
+.goy-c-j span{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.goy-c-j p{margin:5px 0 0;font:500 13px/1.45 'Manrope',sans-serif;white-space:pre-wrap}
