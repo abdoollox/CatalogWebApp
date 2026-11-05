@@ -28,7 +28,8 @@
     ["km-set", "km-set-close"],
     ["km-nav", "km-nav-close"],
     ["w-set", "w-set-close"],
-    ["gx", function () { gxYop(); }]
+    ["gx", function () { gxYop(); }],
+    ["ank", function () { ankYop(); }]
   ];
 
   // Ekran -> uning "Ortga" tugmasi (id) yoki qaytish funksiyasi.

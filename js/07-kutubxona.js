@@ -1392,6 +1392,7 @@
     btn.classList.remove("yangi");
     btn.setAttribute("aria-label", "Xogvarts");
     renderHogCard(stage);
+    try { ankLoad(); } catch (e) {}      // so'rovnoma kartasi (js/09-anketa.js)
     try { if (typeof owlBadge === "function") { owlBadge(); } } catch (e) {}
   }
 
