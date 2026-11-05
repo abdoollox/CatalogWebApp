@@ -1,5 +1,5 @@
 /* DIREKTOR XONASI - g'oyalar qutisi (egasi, 2026-11-05): Notion'dagi g'oya so'rovnomasi o'rniga, Xogvarts sahifasida xona.
-   Xonada: Dambldor salomi, G'oyalar kosasi (g'oya yozish; «Xotiralar kosasi» EMAS - egasi: unutish ma'nosi), Direktor stoli (qabul qilingan - ustida ishlanmoqda),
+   Xonada (ro'yxatlar uch tabda - Ishlanmoqda/Bajarildi/Mening, ixcham qatorlar): Dambldor salomi, G'oyalar kosasi (g'oya yozish; «Xotiralar kosasi» EMAS - egasi: unutish ma'nosi), Direktor stoli (qabul qilingan - ustida ishlanmoqda),
    Amalga oshgan g'oyalar devori (muallif ismi bilan - egasi rozi), Mening g'oyalarim (holat va javob).
    Ovoz berish YO'Q (egasi rad etgan). Maxfiy so'z o'yini YO'Q (egasi: kerak emas).
    Xogvarts katagi - barcha xonalar ochiladigan kursdan (GOY_KURS). Kanal videosi tugmasi (startapp=goya) va so'rovnoma
@@ -24,8 +24,9 @@
       bat: "Bu sizga qachon kerak bo'ldi?", batP: "Oxirgi marta nima qilmoqchi edingiz va nima xalaqit berdi? (ixtiyoriy)",
       bolim: "Qaysi bo'lim", b: { filmlar: "Filmlar", kutubxona: "Kutubxona", xogvarts: "Xogvarts", boshqa: "Boshqa" },
       yubor: "Kosaga yozish", bekor: "Bekor qilish", yuborildi: "G'oyangiz kosaga yozildi — Dambldor ko'rib chiqadi",
-      stol: "Direktor stoli", stolS: "Ustida ishlanmoqda", stolB: "Hozircha stol bo'sh",
-      devor: "Amalga oshgan g'oyalar", devorB: "Devor hali bo'sh. Birinchi bo'lib g'oyangiz shu yerga osilsin!",
+      stol: "Direktor stoli", stolS: "Ustida ishlanmoqda", stolB: "Hozircha ustida ishlanayotgan g'oya yo'q",
+      tabStol: "Jarayonda", tabDevor: "Bajarildi", tabMening: "Mening", yana: function (n) { return "Yana ko'rsatish (" + n + ")"; },
+      devor: "Amalga oshgan g'oyalar", devorB: "Hali bajarilgan g'oya yo'q. Birinchisi sizniki bo'lishi mumkin!",
       mening: "Mening g'oyalarim", bosh: "Hali g'oya yubormagansiz",
       h: { yangi: "Yangi", korildi: "Ko'rib chiqilmoqda", qabul: "Qabul qilindi", rad: "Hozircha qabul qilinmadi", bajarildi: "Bajarildi" },
       javob: "Dambldor javobi", xNom: "Kamida 3 harf yozing", xKop: function (n) { return "Bugun " + n + " ta g'oya yubordingiz — ertaga yana yozing"; },
@@ -40,8 +41,9 @@
       bat: "Когда вам это понадобилось?", batP: "Что вы хотели сделать в последний раз и что помешало? (необязательно)",
       bolim: "Раздел", b: { filmlar: "Фильмы", kutubxona: "Библиотека", xogvarts: "Хогвартс", boshqa: "Другое" },
       yubor: "Записать в чашу", bekor: "Отмена", yuborildi: "Идея записана в чашу — Дамблдор её рассмотрит",
-      stol: "Стол директора", stolS: "В работе", stolB: "Пока на столе пусто",
-      devor: "Воплощённые идеи", devorB: "Стена пока пуста. Пусть ваша идея будет первой!",
+      stol: "Стол директора", stolS: "В работе", stolB: "Пока нет идей в работе",
+      tabStol: "В работе", tabDevor: "Готово", tabMening: "Мои", yana: function (n) { return "Показать ещё (" + n + ")"; },
+      devor: "Воплощённые идеи", devorB: "Пока нет воплощённых идей. Первой может стать ваша!",
       mening: "Мои идеи", bosh: "Вы ещё не отправляли идей",
       h: { yangi: "Новая", korildi: "На рассмотрении", qabul: "Принята", rad: "Пока не принята", bajarildi: "Реализована" },
       javob: "Ответ Дамблдора", xNom: "Напишите хотя бы 3 буквы", xKop: function (n) { return "Сегодня вы отправили " + n + " идей — напишите завтра"; },
@@ -56,8 +58,9 @@
       bat: "When did you need it?", batP: "What were you trying to do last time, and what got in the way? (optional)",
       bolim: "Section", b: { filmlar: "Films", kutubxona: "Library", xogvarts: "Hogwarts", boshqa: "Other" },
       yubor: "Write into the bowl", bekor: "Cancel", yuborildi: "Your idea is in the bowl — Dumbledore will review it",
-      stol: "Headmaster's desk", stolS: "In progress", stolB: "The desk is empty for now",
-      devor: "Ideas come true", devorB: "The wall is still empty. Let your idea be the first!",
+      stol: "Headmaster's desk", stolS: "In progress", stolB: "No ideas in progress yet",
+      tabStol: "In progress", tabDevor: "Done", tabMening: "Mine", yana: function (n) { return "Show more (" + n + ")"; },
+      devor: "Ideas come true", devorB: "No ideas done yet. Yours could be the first!",
       mening: "My ideas", bosh: "You haven't sent any ideas yet",
       h: { yangi: "New", korildi: "Under review", qabul: "Accepted", rad: "Not accepted for now", bajarildi: "Done" },
       javob: "Dumbledore's reply", xNom: "Please write at least 3 letters", xKop: function (n) { return "You sent " + n + " ideas today — write again tomorrow"; },
@@ -239,58 +242,67 @@
     try { if (h && HOUSES[h] && HOUSES[h].img) { i.src = IMG_DIR + HOUSES[h].img; return i; } } catch (e) {}
     return null;
   }
+  // G'oyalar ro'yxati (egasi, 2026-11-05: g'oyalar ko'payganda ham ixcham bo'lsin): uch tab - Ishlanmoqda, Bajarildi, Mening;
+  // hammasi bir xil ixcham qatorda (oltin ramkalar yo'q), avval GOY_KORSAT tasi, keyin «Yana ko'rsatish».
+  var GOY_KORSAT = 5;
+  var goyTab = null, goyKop = 0;
   function goyBolimlar() {
     var bl = $("goy-bl"), t = goyT(), d = goyData || {};
     if (!bl) { return; }
+    var r = { stol: d.stol || [], devor: d.devor || [], mening: d.list || [] };
+    if (!goyTab) { goyTab = r.mening.length ? "mening" : "devor"; }
     bl.innerHTML = "";
-    // Direktor stoli
-    xonaSek(bl, t.stol, t.stolS);
-    var stol = drEl("div", "goy-stol");
-    if (!(d.stol || []).length) { stol.appendChild(drEl("p", "goy-bosh", t.stolB)); }
-    (d.stol || []).forEach(function (g) {
-      var c = drEl("div", "goy-st");
-      c.appendChild(drEl("b", "", g.nom));
-      var m = drEl("span", "goy-mu");
-      var gr = goyGerb(g.house); if (gr) { m.appendChild(gr); }
-      m.appendChild(document.createTextNode(g.ism));
-      c.appendChild(m);
-      stol.appendChild(c);
+    var tb = drEl("div", "goy-tabs");
+    [["stol", t.tabStol], ["devor", t.tabDevor], ["mening", t.tabMening]].forEach(function (x) {
+      var b = drEl("button", "goy-tab" + (goyTab === x[0] ? " on" : ""));
+      b.type = "button";
+      b.appendChild(drEl("span", "", x[1]));
+      b.appendChild(drEl("i", "", String(r[x[0]].length)));
+      b.onclick = function () { goyTab = x[0]; goyKop = 0; goyBolimlar(); };
+      tb.appendChild(b);
     });
-    bl.appendChild(stol);
-    // Amalga oshgan g'oyalar devori - portret ramkalari
-    xonaSek(bl, t.devor);
-    var dv = drEl("div", "goy-devor");
-    if (!(d.devor || []).length) { dv.appendChild(drEl("p", "goy-bosh", t.devorB)); dv.classList.add("bosh"); }
-    (d.devor || []).forEach(function (g) {
-      var r = drEl("div", "goy-ramka");
-      r.appendChild(drEl("b", "", g.nom));
-      var m = drEl("span", "goy-mu");
-      var gr = goyGerb(g.house); if (gr) { m.appendChild(gr); }
-      m.appendChild(document.createTextNode(g.ism));
-      r.appendChild(m);
-      dv.appendChild(r);
-    });
-    bl.appendChild(dv);
-    // Mening g'oyalarim
-    xonaSek(bl, t.mening);
-    var l = drEl("div", "goy-list");
-    var r0 = d.list || [];
-    if (!r0.length) { l.appendChild(drEl("p", "goy-bosh", t.bosh)); }
-    r0.forEach(function (g) {
-      var c = drEl("div", "goy-c");
-      var bosh = drEl("div", "goy-c-h");
-      bosh.appendChild(drEl("b", "", g.nom));
-      bosh.appendChild(drEl("span", "goy-hl " + g.holat, t.h[g.holat] || g.holat));
-      c.appendChild(bosh);
-      c.appendChild(drEl("span", "goy-c-m", goySana(g.vaqt)));
-      if (g.batafsil) { c.appendChild(drEl("p", "goy-c-b", g.batafsil)); }
+    bl.appendChild(tb);
+    var royxat = r[goyTab], l = drEl("div", "goy-list");
+    if (!royxat.length) {
+      l.appendChild(drEl("p", "goy-bosh", goyTab === "stol" ? t.stolB : goyTab === "devor" ? t.devorB : t.bosh));
+    }
+    var n = GOY_KORSAT + goyKop;
+    royxat.slice(0, n).forEach(function (g) { l.appendChild(goyQator(g, goyTab)); });
+    bl.appendChild(l);
+    if (royxat.length > n) {
+      var y = drEl("button", "ank-skip goy-yana", t.yana(royxat.length - n));
+      y.type = "button";
+      y.onclick = function () { goyKop += 10; goyBolimlar(); };
+      bl.appendChild(y);
+    }
+  }
+  // Bitta ixcham qator: nomi, ostida muallif (gerb + ism) yoki sana, o'ngda holat. O'z g'oyasi bosilsa ochiladi.
+  function goyQator(g, tab) {
+    var t = goyT(), holat = tab === "stol" ? "qabul" : tab === "devor" ? "bajarildi" : g.holat;
+    var c = drEl("div", "goy-r");
+    var h = drEl("div", "goy-r-h");
+    var tx = drEl("div", "goy-r-tx");
+    tx.appendChild(drEl("b", "", g.nom));
+    var m = drEl("span", "goy-mu");
+    if (tab === "mening") { m.textContent = goySana(g.vaqt); }
+    else { var gr = goyGerb(g.house); if (gr) { m.appendChild(gr); } m.appendChild(document.createTextNode(g.ism)); }
+    tx.appendChild(m);
+    h.appendChild(tx);
+    if (tab === "mening") { h.appendChild(drEl("span", "goy-hl " + holat, t.h[holat] || holat)); }      // umumiy tablarda holat tab nomida
+    c.appendChild(h);
+    if (tab === "mening" && (g.batafsil || g.javob)) {
+      c.classList.add("ochiladi");
+      if (g.javob) { h.appendChild(drEl("span", "goy-r-nuqta", "")); }
+      var ich = drEl("div", "goy-r-ich");
+      if (g.batafsil) { ich.appendChild(drEl("p", "goy-c-b", g.batafsil)); }
       if (g.javob) {
         var j = drEl("div", "goy-c-j");
         j.appendChild(drEl("span", "", t.javob));
         j.appendChild(drEl("p", "", g.javob));
-        c.appendChild(j);
+        ich.appendChild(j);
       }
-      l.appendChild(c);
-    });
-    bl.appendChild(l);
+      c.appendChild(ich);
+      c.onclick = function () { c.classList.toggle("ochiq"); };
+    }
+    return c;
   }

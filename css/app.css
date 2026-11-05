@@ -4537,17 +4537,6 @@ body.ank-ochiq{overflow:hidden}
 .goy-bosh{margin:0;padding:16px;text-align:center;font:500 13px/1.45 'Manrope',sans-serif;color:var(--dim);border:1px dashed var(--line);border-radius:16px}
 .goy-mu{display:flex;align-items:center;gap:6px;font:600 12px/1.2 'Manrope',sans-serif;color:var(--dim)}
 .goy-gerb{width:18px;height:18px;object-fit:contain}
-.goy-stol{display:flex;flex-direction:column;gap:8px;margin-bottom:26px}
-.goy-st{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:#171b24;border:1px solid var(--line);border-left:3px solid rgba(var(--gold-rgb),.6)}
-.goy-st b{font:700 14px/1.35 'Manrope',sans-serif}
-/* Amalga oshgan g'oyalar - direktorlar portretlari kabi oltin ramkalar (oltin - ma'noli joy: shon-sharaf) */
-.goy-devor{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px}
-.goy-devor.bosh{display:block}
-.goy-ramka{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:118px;padding:16px 12px 12px;
-  border-radius:6px;background:radial-gradient(120% 90% at 50% 0%,#2a2233,#15121a);
-  border:3px solid #b9893a;box-shadow:inset 0 0 0 2px #2a1f0e,inset 0 0 0 3px rgba(243,213,143,.45),0 10px 24px -14px rgba(0,0,0,.9)}
-.goy-ramka b{font:500 17px/1.2 'Cormorant Garamond',serif;color:#f3e6c4;text-align:center}
-.goy-ramka .goy-mu{justify-content:center;color:#cbb88f}
 .goy-list{display:flex;flex-direction:column;gap:10px}
 .goy-c{padding:13px 14px;border-radius:16px;background:#141922;border:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
 .goy-c-h{display:flex;align-items:flex-start;gap:10px;justify-content:space-between}
@@ -4599,3 +4588,21 @@ body.ank-ochiq{overflow:hidden}
 .xona.ustma .xona-egasi img{position:relative;z-index:1;width:72px;height:72px;box-shadow:0 8px 20px -8px rgba(0,0,0,.9)}
 .xona.ustma .xona-egasi .dr-hint{margin-top:40px}
 .xona.ustma .xona-egasi .dr-hint::before{top:22px}
+/* Direktor xonasi - g'oyalar ro'yxati: tablar va ixcham qatorlar (oltin ramkalar o'rniga; egasi, 2026-11-05) */
+.goy-tabs{display:flex;gap:4px;padding:4px;margin:0 0 12px;border-radius:14px;background:#141922;border:1px solid var(--line)}
+.goy-tab{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;padding:9px 4px;border:0;border-radius:10px;background:none;
+  color:var(--dim);font:700 12.5px/1 'Manrope',sans-serif;cursor:pointer;transition:background .15s,color .15s}
+.goy-tab span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goy-tab i{font-style:normal;font-size:11px;padding:3px 6px;border-radius:99px;background:rgba(255,255,255,.08)}
+.goy-tab.on{background:rgba(var(--gold-rgb),.16);color:var(--text)}
+.goy-tab.on i{background:rgba(var(--gold-rgb),.3);color:var(--gold-hi)}
+.goy-r{padding:12px 14px;border-radius:14px;background:#141922;border:1px solid var(--line)}
+.goy-r.ochiladi{cursor:pointer}
+.goy-r-h{display:flex;align-items:center;gap:10px}
+.goy-r-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.goy-r-tx b{font:700 14px/1.3 'Manrope',sans-serif;overflow-wrap:anywhere}
+.goy-r-nuqta{flex:none;width:7px;height:7px;border-radius:50%;background:var(--gold-hi);box-shadow:0 0 6px rgba(var(--gold-rgb),.8)}
+.goy-r-ich{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.goy-r.ochiq .goy-r-ich{display:flex;flex-direction:column;gap:8px}
+.goy-r.ochiq .goy-r-nuqta{display:none}
+.goy-yana{display:block;width:100%;margin-top:4px}
