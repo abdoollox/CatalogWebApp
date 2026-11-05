@@ -162,7 +162,7 @@
   try {
     var ankS = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
     if (!ankS) { var ankM = /[?&#]tgWebAppStartParam=([^&#]+)/.exec((window.location.search || "") + (window.location.hash || "")); if (ankM) { ankS = decodeURIComponent(ankM[1]); } }
-    ankSp = ankS === "anketa";
+    ankSp = ankS === "anketa" || /[?&]anketa=1\b/.test(window.location.search || "");      // bot xabari tugmasi (hppochta «anketa»)
   } catch (e) { ankSp = false; }
 
   function ankIsm() {

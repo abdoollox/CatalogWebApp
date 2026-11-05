@@ -5265,7 +5265,7 @@ function pfKimgaMatn(k){
 }
 
 function pfKarta(){
-  var H = {tur:"hamma", fakultet:"gryffindor", til:"", uid:null, sarlavha:"", matn:"", bot:true};
+  var H = {tur:"hamma", fakultet:"gryffindor", til:"", uid:null, sarlavha:"", matn:"", bot:true, tugma:"open"};
   var c = card("Xat yozish", "ilovadagi 🦉 pochtaga · xohlasa Telegramga ham", "twothird");
   var kor = card("Ilovada shunday ko'rinadi", "", "third");
   ST.pfKor = kor;
@@ -5341,6 +5341,10 @@ function pfKarta(){
   qator("Matn", matBox);
   [sar, mat].forEach(function(x){ x.addEventListener("input", function(){ H.sarlavha = sar.value; H.matn = mat.value; chiz(); }); });
 
+  // Bot xabaridagi tugma: pochtani ochadi yoki to'g'ridan-to'g'ri so'rovnomani (egasi, 2026-11-05)
+  var sTug = seg([{k:"open", n:"🦉 Xatni o'qish"}, {k:"anketa", n:"🪄 So'rovnomani ochish"}], "tugma", function(){ sTug._yangila(); });
+  qator("Telegram xabaridagi tugma", sTug);
+  sTug._yangila();
   var chk = document.createElement("label"); chk.className = "pf-check";
   var chkI = document.createElement("input"); chkI.type = "checkbox"; chkI.checked = true;
   chk.appendChild(chkI); chk.appendChild(document.createTextNode("Telegram'da ham yuborilsin (bot xabarini o'chirib qo'yganlarga bormaydi)"));
@@ -5384,7 +5388,7 @@ function pfKarta(){
     }
     bSin.disabled = bYub.disabled = true;
     holat("Yuborilmoqda…");
-    tarqatmaSo({action:"yubor", sarlavha:H.sarlavha, matn:H.matn, kimga:k, bot:sinov ? true : H.bot}).then(function(j){
+    tarqatmaSo({action:"yubor", sarlavha:H.sarlavha, matn:H.matn, kimga:k, bot:sinov ? true : H.bot, tugma:H.tugma}).then(function(j){
       bSin.disabled = bYub.disabled = false;
       if(j && j.ok){
         holat(sinov ? "Sinov xati sizga yuborildi — Telegram va ilovadagi pochtani tekshiring."
