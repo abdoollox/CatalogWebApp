@@ -31,7 +31,7 @@
       kick: "Xogvarts direktori", ism: "Albus Dambldor",
       kirish: function (n, g) { return ["Salom, " + n + "! Men Albus Dambldor, Xogvarts direktoriman.", "Maktabimizga qanday yo'l topganingizni bilmoqchiman. Bir necha savol, ikki daqiqa.",
         "To'g'ri yoki noto'g'ri javob yo'q — bilganingizni rost yozing. Faqat shoshmang: rahmat tariqasidagi " + g + " galleon o'ylab yozilgan javobga beriladi."]; },
-      bitta: "Bittasini tanlang", kopi: "Bir nechtasini tanlash mumkin", ozgar: "Javobni o'zgartirish", qayta: "Qaytadan sinash (javobim o'chadi)",
+      yana: "Yana ↓", bitta: "Bittasini tanlang", kopi: "Bir nechtasini tanlash mumkin", ozgar: "Javobni o'zgartirish", qayta: "Qaytadan sinash (javobim o'chadi)",
       boshla: "Boshladik", tayyor: "Tayyor", yubor: "Yuborish", otkaz: "O'tkazib yuborish", aytmayman: "Aytmayman", yop: "Yopish",
       yoz: "Yozing…", kam: "Biroz batafsilroq yozing — kamida bir-ikki so'z.",
       xolis: ["Tushunarli.", "Yozib oldim.", "Hm, qiziq.", "Shunday deng.", "Bilib oldim."],
@@ -47,17 +47,17 @@
         yosh: "Oxirgisi: yoshingizni aytsangiz bo'ladi, aytmasangiz ham mayli."
       },
       v: {
-        dost: "Do'stim yoki tanishim aytdi", tg_kanal: "Telegram kanalda ko'rdim", tg_guruh: "Telegram guruhda ko'rdim", tg_qidiruv: "Telegram qidiruvida topdim",
+        dost: "Do'stim aytdi", tg_kanal: "Telegram kanal", tg_guruh: "Telegram guruh", tg_qidiruv: "Telegram qidiruvi",
         eslay_olmayman: "Eslay olmayman", boshqa: "Boshqa",
-        tv: "Televizorda", tg_boshqa: "Boshqa Telegram kanal yoki botda", sayt: "Internet saytida", kinoteatr: "Kinoteatrda", korilmagan: "Oldin ko'rmaganman",
-        film_korish: "Filmni ko'rmoqchi edim", film_yuklash: "Filmni yuklab olmoqchi edim", farzandim: "Farzandimga qo'yib bermoqchi edim",
-        soundtrack: "Musiqasini eshitmoqchi edim", kitob: "Kitobini o'qimoqchi edim", xogvarts: "Xogvartsga kirmoqchi edim", qiziqdim: "Shunchaki qiziqdim",
-        film: "Film ko'rdim yoki oldim", darslar: "Dars o'tdim", bellashuv: "Bellashuvda qatnashdim", turnir: "Turnirda o'ynadim", chat: "Chatda yozishdim",
-        qurbaqa: "Shokolad qurbaqani ochdim", maxluqlar: "Maxluq yoki o'simlik boqdim",
+        tv: "Televizor", tg_boshqa: "Boshqa kanal yoki bot", sayt: "Internet sayti", youtube: "YouTube", kinoteatr: "Kinoteatr", korilmagan: "Ko'rmaganman",
+        film_korish: "Film ko'rish", film_yuklash: "Film yuklab olish", farzandim: "Farzandimga qo'yish",
+        soundtrack: "Musiqa tinglash", kitob: "Kitob o'qish", xogvarts: "Xogvartsga kirish", qiziqdim: "Shunchaki qiziqdim",
+        film: "Film", darslar: "Dars", bellashuv: "Bellashuv", turnir: "Turnir", chat: "Chat",
+        qurbaqa: "Shokolad qurbaqa", maxluqlar: "Maxluq yoki o'simlik",
         ha: "Ha, aytganman", yoq: "Yo'q, hali aytmaganman",
         "12": "12 yoshgacha", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 va undan katta"
       },
-      oxirgi_v: { soundtrack: "Musiqa tingladim", kitob: "Kitob o'qidim" },
+      oxirgi_v: { soundtrack: "Musiqa", kitob: "Kitob" },
       rahmat: function (n, g) { return g ? "Rahmat, " + n + ". Javoblaringizni yozib oldim. Va'da qilinganidek — " + g + " galleon." : "Rahmat, " + n + ". Javoblaringizni yozib oldim."; },
       oldin_bergan: "Siz bu savollarga javob bergansiz. Rahmat!",
       xato: "Aloqa yo'q — qayta urinib ko'ring",
@@ -68,7 +68,7 @@
       kick: "Директор Хогвартса", ism: "Альбус Дамблдор",
       kirish: function (n, g) { return ["Привет, " + n + "! Я Альбус Дамблдор, директор Хогвартса.", "Хочу узнать, как вы нашли дорогу в нашу школу. Несколько вопросов, две минуты.",
         "Правильных и неправильных ответов нет — пишите как было. Только не спешите: " + g + " галлеонов в благодарность даются за обдуманные ответы."]; },
-      bitta: "Выберите один вариант", kopi: "Можно выбрать несколько", ozgar: "Изменить ответ", qayta: "Пройти заново (ответ удалится)",
+      yana: "Ещё ↓", bitta: "Выберите один вариант", kopi: "Можно выбрать несколько", ozgar: "Изменить ответ", qayta: "Пройти заново (ответ удалится)",
       boshla: "Начнём", tayyor: "Готово", yubor: "Отправить", otkaz: "Пропустить", aytmayman: "Не скажу", yop: "Закрыть",
       yoz: "Напишите…", kam: "Напишите чуть подробнее — хотя бы пару слов.",
       xolis: ["Понятно.", "Записал.", "Хм, интересно.", "Вот как.", "Принято."],
@@ -84,17 +84,17 @@
         yosh: "И последнее: можете указать возраст, а можете и не указывать."
       },
       v: {
-        dost: "Рассказал друг или знакомый", tg_kanal: "Увидел(а) в Telegram-канале", tg_guruh: "Увидел(а) в Telegram-группе", tg_qidiruv: "Нашёл(ла) через поиск Telegram",
+        dost: "Друг рассказал", tg_kanal: "Telegram-канал", tg_guruh: "Telegram-группа", tg_qidiruv: "Поиск Telegram",
         eslay_olmayman: "Не помню", boshqa: "Другое",
-        tv: "По телевизору", tg_boshqa: "В другом Telegram-канале или боте", sayt: "На сайте в интернете", kinoteatr: "В кинотеатре", korilmagan: "Раньше не смотрел(а)",
-        film_korish: "Хотел(а) посмотреть фильм", film_yuklash: "Хотел(а) скачать фильм", farzandim: "Хотел(а) включить ребёнку",
-        soundtrack: "Хотел(а) послушать музыку", kitob: "Хотел(а) почитать книгу", xogvarts: "Хотел(а) попасть в Хогвартс", qiziqdim: "Просто стало интересно",
-        film: "Смотрел(а) или скачал(а) фильм", darslar: "Прошёл(ла) урок", bellashuv: "Участвовал(а) в состязании", turnir: "Играл(а) в турнире", chat: "Переписывался(ась) в чате",
-        qurbaqa: "Открыл(а) шоколадную лягушку", maxluqlar: "Кормил(а) существо или растение",
+        tv: "Телевизор", tg_boshqa: "Другой канал или бот", sayt: "Сайт", youtube: "YouTube", kinoteatr: "Кинотеатр", korilmagan: "Не смотрел(а)",
+        film_korish: "Посмотреть фильм", film_yuklash: "Скачать фильм", farzandim: "Включить ребёнку",
+        soundtrack: "Послушать музыку", kitob: "Почитать книгу", xogvarts: "Попасть в Хогвартс", qiziqdim: "Просто интересно",
+        film: "Фильм", darslar: "Урок", bellashuv: "Состязание", turnir: "Турнир", chat: "Чат",
+        qurbaqa: "Шоколадная лягушка", maxluqlar: "Существа и растения",
         ha: "Да, рассказывал(а)", yoq: "Нет, пока не рассказывал(а)",
         "12": "До 12 лет", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 и старше"
       },
-      oxirgi_v: { soundtrack: "Слушал(а) музыку", kitob: "Читал(а) книгу" },
+      oxirgi_v: { soundtrack: "Музыка", kitob: "Книга" },
       rahmat: function (n, g) { return g ? "Спасибо, " + n + ". Я записал ваши ответы. Как и обещал — " + g + " галлеонов." : "Спасибо, " + n + ". Я записал ваши ответы."; },
       oldin_bergan: "Вы уже ответили на эти вопросы. Спасибо!",
       xato: "Нет связи — попробуйте ещё раз",
@@ -105,7 +105,7 @@
       kick: "Headmaster of Hogwarts", ism: "Albus Dumbledore",
       kirish: function (n, g) { return ["Hi, " + n + "! I am Albus Dumbledore, Headmaster of Hogwarts.", "I'd like to know how you found your way to our school. A few questions, two minutes.",
         "There are no right or wrong answers — just tell it as it was. Only, take your time: the " + g + " galleons of thanks go to thoughtful answers."]; },
-      bitta: "Pick one", kopi: "You can pick several", ozgar: "Change answer", qayta: "Try again (my answer is deleted)",
+      yana: "More ↓", bitta: "Pick one", kopi: "You can pick several", ozgar: "Change answer", qayta: "Try again (my answer is deleted)",
       boshla: "Let's begin", tayyor: "Done", yubor: "Send", otkaz: "Skip", aytmayman: "Rather not say", yop: "Close",
       yoz: "Type here…", kam: "Please write a little more — at least a couple of words.",
       xolis: ["I see.", "Noted.", "Hm, interesting.", "Is that so.", "Understood."],
@@ -121,17 +121,17 @@
         yosh: "Last one: you may tell me your age, or not — either is fine."
       },
       v: {
-        dost: "A friend or someone I know told me", tg_kanal: "Saw it in a Telegram channel", tg_guruh: "Saw it in a Telegram group", tg_qidiruv: "Found it in Telegram search",
+        dost: "A friend told me", tg_kanal: "Telegram channel", tg_guruh: "Telegram group", tg_qidiruv: "Telegram search",
         eslay_olmayman: "I don't remember", boshqa: "Somewhere else",
-        tv: "On TV", tg_boshqa: "In another Telegram channel or bot", sayt: "On a website", kinoteatr: "At the cinema", korilmagan: "I hadn't seen them before",
-        film_korish: "Watch a film", film_yuklash: "Download a film", farzandim: "Put a film on for my child",
-        soundtrack: "Listen to the music", kitob: "Read the book", xogvarts: "Get into Hogwarts", qiziqdim: "I was just curious",
-        film: "Watched or got a film", darslar: "Took a lesson", bellashuv: "Joined a contest", turnir: "Played in a tournament", chat: "Chatted",
-        qurbaqa: "Opened the Chocolate Frog", maxluqlar: "Fed a creature or plant",
+        tv: "TV", tg_boshqa: "Another channel or bot", sayt: "A website", youtube: "YouTube", kinoteatr: "Cinema", korilmagan: "Hadn't seen them",
+        film_korish: "Watch a film", film_yuklash: "Download a film", farzandim: "Put on for my child",
+        soundtrack: "Listen to music", kitob: "Read the book", xogvarts: "Get into Hogwarts", qiziqdim: "Just curious",
+        film: "Film", darslar: "Lesson", bellashuv: "Contest", turnir: "Tournament", chat: "Chat",
+        qurbaqa: "Chocolate Frog", maxluqlar: "Creatures and plants",
         ha: "Yes, I have", yoq: "No, not yet",
         "12": "Under 12", "13_17": "13–17", "18_24": "18–24", "25_34": "25–34", "35": "35 or older"
       },
-      oxirgi_v: { soundtrack: "Listened to music", kitob: "Read a book" },
+      oxirgi_v: { soundtrack: "Music", kitob: "Book" },
       rahmat: function (n, g) { return g ? "Thank you, " + n + ". I've noted your answers. As promised — " + g + " galleons." : "Thank you, " + n + ". I've noted your answers."; },
       oldin_bergan: "You have already answered these questions. Thank you!",
       xato: "No connection — please try again",
@@ -408,7 +408,17 @@
       };
       g.appendChild(b);
     });
-    pas.appendChild(g);
+    var qut = drEl("div", "ank-vsw");
+    qut.appendChild(g);
+    var yana = drEl("button", "ank-yana", t.yana);
+    yana.type = "button";
+    yana.onclick = function () { try { g.scrollBy({ top: g.clientHeight * 0.7, behavior: "smooth" }); } catch (e) { g.scrollTop += 120; } };
+    qut.appendChild(yana);
+    pas.appendChild(qut);
+    // Ro'yxat sig'masa: pasti xiralashadi va «Yana» belgisi chiqadi; oxirigacha surilsa yo'qoladi
+    var tekshir = function () { qut.classList.toggle("ortiq", g.scrollHeight - g.scrollTop - g.clientHeight > 6); };
+    g.addEventListener("scroll", tekshir, { passive: true });
+    setTimeout(tekshir, 60);
     if (kop) {
       ok = drEl("button", "ank-ok", t.tayyor);
       ok.type = "button"; ok.disabled = true;

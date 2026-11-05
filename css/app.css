@@ -4463,7 +4463,12 @@ body.ank-ochiq{overflow:hidden}
 @keyframes ankDot{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-3px)}}
 .ank-pas{flex:none;display:flex;flex-direction:column;gap:8px;padding-top:6px}
 .ank-pas:empty{display:none}
-.ank-vs{display:flex;flex-wrap:wrap;gap:7px;max-height:38vh;overflow-y:auto}
+.ank-vsw{position:relative}
+.ank-vs{display:flex;flex-wrap:wrap;gap:7px;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.ank-vsw.ortiq .ank-vs{-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.ank-yana{display:none;position:absolute;left:50%;bottom:4px;transform:translateX(-50%);border:1px solid rgba(var(--gold-rgb),.5);background:#14181f;color:var(--gold-hi);border-radius:99px;padding:6px 12px;font:700 12px/1 'Manrope',sans-serif;cursor:pointer;animation:ankYana 1.6s ease-in-out infinite}
+.ank-vsw.ortiq .ank-yana{display:block}
+@keyframes ankYana{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,3px)}}
 .ank-v{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);border-radius:14px;padding:10px 13px 10px 10px;
   font:600 13.5px/1.25 'Manrope',sans-serif;text-align:left;cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
 .ank-v:active{transform:scale(.97)}
