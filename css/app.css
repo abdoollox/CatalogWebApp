@@ -4508,19 +4508,6 @@ body.ank-ochiq{overflow:hidden}
 .ankc-g .pm-coin{width:12px;height:12px}
 
 /* ===================== DIREKTOR XONASI - g'oyalar qutisi (js/09-goya.js) ===================== */
-.goy{position:fixed;inset:0;z-index:2300;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;
-  padding:calc(var(--fs, 0px) + 12px) 16px calc(var(--sab, 0px) + 28px);color:var(--text);
-  background:radial-gradient(90% 40% at 50% 0%,rgba(150,120,200,.16),transparent 70%),var(--bg);animation:ankKir .3s ease-out}
-.goy-hdr{margin-bottom:14px}
-.goy-hero{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/10;background:#120f18;border:1px solid rgba(var(--gold-rgb),.25)}
-.goy-hero img{width:100%;height:100%;object-fit:cover;display:block}
-.goy-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,12,17,.85))}
-.goy-hero.rasmsiz{aspect-ratio:auto;height:0;border:0}
-.goy-sal{position:relative;display:flex;gap:12px;align-items:flex-start;margin:-34px 6px 20px}
-.goy-sal img{flex:none;width:64px;height:64px;border-radius:50%;box-shadow:0 8px 20px -8px rgba(0,0,0,.9);position:relative;z-index:1}
-.goy-hero.rasmsiz+.goy-sal{margin-top:0}
-.goy-sal p{margin:30px 0 0;padding:11px 14px;border-radius:6px 18px 18px 18px;background:#171b24;border:1px solid var(--line);
-  font:500 13.5px/1.5 'Manrope',sans-serif}
 .goy-kosa{position:relative;padding:14px;border-radius:20px;background:linear-gradient(180deg,rgba(190,200,230,.07),rgba(255,255,255,.02));
   border:1px solid rgba(200,210,235,.22);margin-bottom:26px;overflow:hidden}
 .goy-kosa-b{display:flex;align-items:center;gap:14px;margin-bottom:12px}
@@ -4547,9 +4534,6 @@ body.ank-ochiq{overflow:hidden}
 .goy-in:focus{border-color:rgba(var(--gold-rgb),.55)}
 .goy-ch{display:flex;flex-wrap:wrap;gap:7px}
 .goy-f .ank-ok{margin-top:8px}
-.goy-sh{display:flex;align-items:baseline;justify-content:space-between;margin:0 4px 10px}
-.goy-sh .pm-lbl{margin:0}
-.goy-sh small{font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
 .goy-bosh{margin:0;padding:16px;text-align:center;font:500 13px/1.45 'Manrope',sans-serif;color:var(--dim);border:1px dashed var(--line);border-radius:16px}
 .goy-mu{display:flex;align-items:center;gap:6px;font:600 12px/1.2 'Manrope',sans-serif;color:var(--dim)}
 .goy-gerb{width:18px;height:18px;object-fit:contain}
@@ -4579,3 +4563,25 @@ body.ank-ochiq{overflow:hidden}
 .goy-c-j span{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .goy-c-j p{margin:5px 0 0;font:500 13px/1.45 'Manrope',sans-serif;white-space:pre-wrap}
 .goy-kosa .ank-ok,.goy-kosa .ank-skip{width:100%}
+
+/* ===================== XONA QOLIPI (js/09-xona-qolip.js, dizayn-tizimi/xona-qolipi.md) =====================
+   Har xona: .screen.xona (index.html) yoki xonaQur() yasagan .xona-o > .xona. Sarlavha markazda, holat qatori,
+   egasining maslahati, ixtiyoriy tugma, tarkib. Yangi xona uchun alohida id ro'yxatiga qo'shish SHART EMAS. */
+.xona .kb-hdr{display:grid;grid-template-columns:var(--btn) 1fr var(--btn);align-items:center;gap:10px;margin-bottom:14px}
+.xona .kb-ttl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+.xona .kb-ttl .cup-kick{color:var(--gold)}
+.xona .kb-ttl .cup-title{margin:0;font-size:clamp(18px,5.6vw,24px)!important;white-space:nowrap}
+.xona-holat,.xona .qr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 0}
+.xona-holat b{font:600 22px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.xona-holat span{padding:7px 12px;border-radius:99px;border:1px solid rgba(var(--gold-rgb),.45);background:rgba(var(--gold-rgb),.1);font:800 12px/1 'Manrope',sans-serif;color:var(--gold-hi)}
+.xona .af-fl{max-width:none;margin:14px 0 4px}
+.xona .af-fl .dr-hint{font-size:12.5px}
+.xona-rasm{margin:0 0 14px;border-radius:18px;overflow:hidden;aspect-ratio:16/9;border:1px solid rgba(var(--gold-rgb),.22);background:#120f18}
+.xona-rasm img{width:100%;height:100%;object-fit:cover;display:block}
+.xona-ich{margin-top:18px}
+.xona-sek{display:flex;align-items:baseline;justify-content:space-between;margin:0 4px 10px}
+.xona-sek span{font:700 10px/1 'Manrope',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.xona-sek small{font:600 11px/1 'Manrope',sans-serif;color:var(--dim)}
+/* xonaQur() oynasi: sahifa (.shell) kabi o'lcham va chekkalar */
+.xona-o{position:fixed;inset:0;z-index:2300;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);animation:riseIn .35s ease both}
+.xona-o .xona{max-width:440px;margin:0 auto;box-sizing:border-box;padding:calc(var(--fs, 0px) + 22px) 18px calc(var(--sab, 0px) + 28px)}

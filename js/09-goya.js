@@ -17,7 +17,7 @@
   var GOY_RASM = { xona: "img/goya/xona.webp", kosa: "img/goya/kosa.webp" };
   var GOY_T = {
     uz: {
-      kick: "Xogvarts", ttl: "Direktor xonasi", korik: "Faqat sizga ko'rinadi",
+      kick: "Xogvarts", egasi: "Albus Dambldor", ttl: "Direktor xonasi", korik: "Faqat sizga ko'rinadi", meningN: function (n) { return "Sizniki: " + n; }, bajN: function (n) { return n + " g'oya bajarildi"; },
       salom: "Xonamga xush kelibsiz! Ilovani birga yaxshilaymiz: g'oyangizni Xotiralar kosasiga qoldiring — har birini o'qiyman, javobini shu yerda ko'rasiz.",
       kosa: "Xotiralar kosasi", kosaS: "Ilovaga nima qo'shilsin yoki o'zgarsin?", yoz: "G'oya yozish",
       nom: "Qisqacha", nomP: "Masalan: kitoblarni ovozli qilish",
@@ -33,7 +33,7 @@
       tileS: function (n) { return n ? n + " g'oya bajarildi" : "G'oya yozish"; }
     },
     ru: {
-      kick: "Хогвартс", ttl: "Кабинет директора", korik: "Видно только вам",
+      kick: "Хогвартс", egasi: "Альбус Дамблдор", ttl: "Кабинет директора", korik: "Видно только вам", meningN: function (n) { return "Ваших: " + n; }, bajN: function (n) { return "Воплощено: " + n; },
       salom: "Добро пожаловать в мой кабинет! Давайте улучшать приложение вместе: оставьте идею в Омуте памяти — я прочту каждую, ответ появится здесь.",
       kosa: "Омут памяти", kosaS: "Что добавить или изменить в приложении?", yoz: "Написать идею",
       nom: "Кратко", nomP: "Например: озвучить книги",
@@ -49,7 +49,7 @@
       tileS: function (n) { return n ? "Воплощено: " + n : "Написать идею"; }
     },
     en: {
-      kick: "Hogwarts", ttl: "Headmaster's office", korik: "Only you can see this",
+      kick: "Hogwarts", egasi: "Albus Dumbledore", ttl: "Headmaster's office", korik: "Only you can see this", meningN: function (n) { return "Yours: " + n; }, bajN: function (n) { return n + " ideas done"; },
       salom: "Welcome to my office! Let's make the app better together: leave your idea in the Pensieve — I read every one, and the reply will appear here.",
       kosa: "The Pensieve", kosaS: "What should the app add or change?", yoz: "Write an idea",
       nom: "In short", nomP: "E.g. audio versions of the books",
@@ -130,56 +130,29 @@
     goyLoad(function () { if (goyOn()) { setTimeout(goyOch, 500); } });
   }
 
-  // ---------- Xona ----------
-  function goyEl() {
-    var o = $("goy");
-    if (o) { return o; }
-    o = document.createElement("div");
-    o.id = "goy"; o.className = "goy hidden";
-    o.innerHTML = '<div class="cup-hdr kb-hdr goy-hdr"><button class="back-btn" id="goy-back" type="button"><span style="font-size:13px">‹</span> <span>Ortga</span></button>' +
-      '<div class="kb-ttl"><span class="cup-kick" id="goy-k"></span><span class="cup-title" id="goy-n"></span></div><span class="kb-sp" aria-hidden="true"></span></div>' +
-      '<div class="goy-ich" id="goy-ich"></div>';
-    document.body.appendChild(o);
-    $("goy-back").onclick = goyYop;
-    return o;
+  // ---------- Xona (xona qolipi - js/09-xona-qolip.js) ----------
+  var goyX = null;
+  function goyHolatYoz() {
+    if (!goyX) { return; }
+    var t = goyT(), d = goyData || {};
+    goyX.kick(d.preview ? t.korik : t.egasi);
+    goyX.holat(t.bajN((d.devor || []).length), (d.list || []).length ? t.meningN((d.list || []).length) : "");
   }
   function goyOch() {
     try { ankYop(); } catch (e) {}
-    var o = goyEl(), t = goyT();
-    $("goy-k").textContent = goyData && goyData.preview ? t.korik : t.kick;
-    $("goy-n").textContent = t.ttl;
-    o.classList.remove("hidden");
-    o.scrollTop = 0;
-    document.body.classList.add("ank-ochiq");
+    var t = goyT();
+    goyX = xonaQur({ id: "goy", kick: t.egasi, ttl: t.ttl, ortga: goyYop, rasm: GOY_RASM.xona,
+                     egasi: { matn: t.salom, rasm: ANK_RASM.salom } });
+    goyHolatYoz();
+    xonaOch(goyX);
     goyChiz();
-    goyPost({}, function (res) { if (res && res.ok) { goyData = res; goyVaqt = Date.now(); goyBolimlar(); } });
+    goyPost({}, function (res) { if (res && res.ok) { goyData = res; goyVaqt = Date.now(); goyHolatYoz(); goyBolimlar(); } });
   }
-  function goyYop() {
-    var o = $("goy");
-    if (o) { o.classList.add("hidden"); }
-    document.body.classList.remove("ank-ochiq");
-  }
-  function goySek(ich, sarlavha, ost) {
-    var h = drEl("div", "goy-sh");
-    h.appendChild(drEl("span", "pm-lbl", sarlavha));
-    if (ost) { h.appendChild(drEl("small", "", ost)); }
-    ich.appendChild(h);
-  }
+  function goyYop() { xonaYop(goyX); }
   function goyChiz() {
-    var ich = $("goy-ich"), t = goyT();
+    var ich = goyX.ich, t = goyT();
     ich.innerHTML = "";
-    // Xona rasmi + Dambldor salomi
-    var hero = drEl("div", "goy-hero");
-    var hi = document.createElement("img"); hi.alt = ""; hi.src = GOY_RASM.xona;
-    hi.onerror = function () { hero.classList.add("rasmsiz"); hi.remove(); };
-    hero.appendChild(hi);
-    ich.appendChild(hero);
-    var sal = drEl("div", "goy-sal");
-    var dim = document.createElement("img"); dim.alt = ""; dim.src = ANK_RASM.salom;
-    sal.appendChild(dim);
-    sal.appendChild(drEl("p", "", t.salom));
-    ich.appendChild(sal);
-    // Xotiralar kosasi
+    // Xotiralar kosasi - asosiy harakat
     var k = drEl("div", "goy-kosa");
     k.id = "goy-kosa";
     var kb = drEl("div", "goy-kosa-b");
@@ -193,7 +166,7 @@
     kt.appendChild(drEl("span", "", t.kosaS));
     kb.appendChild(kt);
     k.appendChild(kb);
-    var och = drEl("button", "ank-ok", t.yoz);
+    var och = drEl("button", "dr-btn", t.yoz);
     och.type = "button"; och.id = "goy-och";
     och.onclick = function () { k.classList.add("ochiq"); setTimeout(function () { try { $("goy-nom").focus(); } catch (e) {} }, 200); };
     k.appendChild(och);
@@ -247,6 +220,7 @@
         goyData = res; goyVaqt = Date.now();
         $("goy-nom").value = ""; $("goy-bat").value = ""; iz.classList.add("hidden");
         goyIp();
+        goyHolatYoz();
         showToast(t.yuborildi, "ok");
         try { if (tg && tg.HapticFeedback) { tg.HapticFeedback.notificationOccurred("success"); } } catch (e) {}
         goyBolimlar();
@@ -278,7 +252,7 @@
     if (!bl) { return; }
     bl.innerHTML = "";
     // Direktor stoli
-    goySek(bl, t.stol, t.stolS);
+    xonaSek(bl, t.stol, t.stolS);
     var stol = drEl("div", "goy-stol");
     if (!(d.stol || []).length) { stol.appendChild(drEl("p", "goy-bosh", t.stolB)); }
     (d.stol || []).forEach(function (g) {
@@ -292,7 +266,7 @@
     });
     bl.appendChild(stol);
     // Amalga oshgan g'oyalar devori - portret ramkalari
-    goySek(bl, t.devor);
+    xonaSek(bl, t.devor);
     var dv = drEl("div", "goy-devor");
     if (!(d.devor || []).length) { dv.appendChild(drEl("p", "goy-bosh", t.devorB)); dv.classList.add("bosh"); }
     (d.devor || []).forEach(function (g) {
@@ -306,7 +280,7 @@
     });
     bl.appendChild(dv);
     // Mening g'oyalarim
-    goySek(bl, t.mening);
+    xonaSek(bl, t.mening);
     var l = drEl("div", "goy-list");
     var r0 = d.list || [];
     if (!r0.length) { l.appendChild(drEl("p", "goy-bosh", t.bosh)); }
