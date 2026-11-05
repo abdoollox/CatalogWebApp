@@ -67,7 +67,7 @@
   };
   function goyT() { return GOY_T[lang] || GOY_T.uz; }
 
-  var goyData = null, goyVaqt = 0, goyKut = false, goyLocal = null, goyBolim = "boshqa", goyHubOn = false;
+  var goyData = null, goyVaqt = 0, goyKut = false, goyLocal = null, goyHubOn = false;
   var goySp = false;
   try {
     var goyS = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || "";
@@ -188,15 +188,7 @@
     var bat = document.createElement("textarea");
     bat.id = "goy-bat"; bat.maxLength = 1500; bat.rows = 3; bat.placeholder = t.batP; bat.className = "goy-in";
     f.appendChild(bat);
-    f.appendChild(drEl("label", "goy-l", t.bolim));
-    var ch = drEl("div", "goy-ch");
-    GOY_BOLIM.forEach(function (b) {
-      var x = drEl("button", "ank-v" + (b === goyBolim ? " on" : ""), t.b[b]);
-      x.type = "button";
-      x.onclick = function () { goyBolim = b; Array.prototype.forEach.call(ch.children, function (c, i) { c.classList.toggle("on", GOY_BOLIM[i] === b); }); };
-      ch.appendChild(x);
-    });
-    f.appendChild(ch);
+    // Bo'lim tanlovi yo'q (egasi, 2026-11-05) - g'oya «boshqa» bo'lib boradi, kerak bo'lsa panelda ajratiladi
     var iz = drEl("p", "ank-iz hidden");
     iz.id = "goy-iz";
     f.appendChild(iz);
@@ -214,7 +206,7 @@
     var t = goyT(), nom = $("goy-nom").value.trim(), iz = $("goy-iz"), ok = $("goy-ok");
     if (nom.replace(/[^\p{L}]/gu, "").length < 3) { iz.textContent = t.xNom; iz.classList.remove("hidden"); $("goy-nom").focus(); return; }
     ok.disabled = true;
-    goyPost({ yangi: { nom: nom, batafsil: $("goy-bat").value.trim(), bolim: goyBolim }, lang: lang }, function (res) {
+    goyPost({ yangi: { nom: nom, batafsil: $("goy-bat").value.trim(), bolim: "boshqa" }, lang: lang }, function (res) {
       ok.disabled = false;
       if (res && res.ok) {
         goyData = res; goyVaqt = Date.now();
@@ -290,7 +282,7 @@
       bosh.appendChild(drEl("b", "", g.nom));
       bosh.appendChild(drEl("span", "goy-hl " + g.holat, t.h[g.holat] || g.holat));
       c.appendChild(bosh);
-      c.appendChild(drEl("span", "goy-c-m", (t.b[g.bolim] || "") + " · " + goySana(g.vaqt)));
+      c.appendChild(drEl("span", "goy-c-m", goySana(g.vaqt)));
       if (g.batafsil) { c.appendChild(drEl("p", "goy-c-b", g.batafsil)); }
       if (g.javob) {
         var j = drEl("div", "goy-c-j");
