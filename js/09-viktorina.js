@@ -64,7 +64,7 @@
     var res = { ok: true, now: hozir, tour: { ts: hozir + 4 * 86400 + 3 * 3600, now: hozir, open: true, n: 14, joined: L2.joined },
       rules: { q: 15, show: 7, max: 30, hall: 120, good: 5, good_pts: 5, points: { "1": 30, "2": 20, "3": 10 } },
       last: { uid: 5, name: "Germiona", house: "gryffindor", n: 23 }, me: { "in": false, alive: false, out: null, right: 0, place: null }, phase: L2.rej };
-    var savol = { n: 6, q: "Reyvenklo fakultetining asoschisi kim?", a: ["Xelga Xaffelpaff", "Rovena Reyvenklo", "Godrik Grifindor", "Salazar Sliterin"], mine: L2.mine };
+    var savol = { n: 6, q: "Reyvenklo fakultetining asoschisi kim?", a: ["Xelga Xaffelpaff", "Rovena Reyvenklo", "Godrik Grifindor", "Salazar Slizerin"], mine: L2.mine };
     if (L2.rej === "zal") { res.total = 17; res.alive = 17; res.starts_in = 74; res.me = { "in": true, alive: true, right: 0 }; }
     if (L2.rej === "savol") { res.total = 23; res.alive = 9; res.left = 11; res.question = savol; res.me = { "in": true, alive: true, right: 6 }; }
     if (L2.rej === "natija") { res.total = 23; res.alive = 6; res.next_in = 5; savol.c = 1; savol.mine = L2.mine == null ? 1 : L2.mine; res.question = savol; res.me = { "in": true, alive: savol.mine === 1, out: savol.mine === 1 ? null : 6, right: 7 }; }

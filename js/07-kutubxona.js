@@ -405,7 +405,6 @@
 
   function pmFill() {
     var x = PM_TX[lang] || PM_TX.uz;
-    try { goyLoad(); } catch (e) {}      // g'oyalar qutisi qatori (js/09-goya.js)
     var u = tgUser(), h = validHouse(cupMe().house || house);
     pmAvatar($("pm-av2"));
     $("pm-title").textContent = x.prof;
@@ -823,7 +822,7 @@
           morgana: ["Morgana", "Qirol Arturning o'gay singlisi, qudratli sehrgar ayol va Merlinning raqibi."],
           flamel: ["Nikolas Flamel", "Hikmatlar toshini yaratgan yagona alkimyogar. 665 yil yashagan."],
           gryffindor: ["Godrik Grifindor", "Xogvartsning to'rt asoschisidan biri. Jasorati va qilichi bilan mashhur."],
-          slytherin: ["Salazar Sliterin", "Xogvarts asoschisi. Ilonlar tilida gapira olgan va Sirlar xonasini qurgan."],
+          slytherin: ["Salazar Slizerin", "Xogvarts asoschisi. Ilonlar tilida gapira olgan va Sirlar xonasini qurgan."],
           ravenclaw: ["Rovena Reyvenklo", "Xogvarts asoschisi. O'z davrining eng aqlli sehrgar ayoli, diademasi mashhur."],
           hufflepuff: ["Xelga Xaffelpaff", "Xogvarts asoschisi. Mehribonligi va oshxona afsunlari bilan tanilgan."],
           circe: ["Sirseya", "Qadimgi yunon sehrgar ayoli. Adashgan dengizchilarni cho'chqaga aylantirgan."],
@@ -1394,6 +1393,7 @@
     btn.setAttribute("aria-label", "Xogvarts");
     renderHogCard(stage);
     try { ankLoad(); } catch (e) {}      // so'rovnoma kartasi (js/09-anketa.js)
+    try { goyStart(); } catch (e) {}     // startapp=goya - Direktor xonasi (js/09-goya.js)
     try { if (typeof owlBadge === "function") { owlBadge(); } } catch (e) {}
   }
 
@@ -1681,7 +1681,7 @@
   var UY_XAR = {
     uz: { more: "Fakultet haqida batafsil",
           gryffindor: "Grifindorliklar jasur, dadil va olijanob. Qo'rquvga qaramay oldinga chiqadi, do'stlari uchun o'zini xavfga qo'yadi va adolatsizlikka jim qarab turolmaydi.",
-          slytherin: "Sliterinliklar maqsadli, zukko va topqir. Nima istashini aniq biladi, unga yetish yo'lini topadi va o'z odamlariga sodiq qoladi.",
+          slytherin: "Slizerinliklar maqsadli, zukko va topqir. Nima istashini aniq biladi, unga yetish yo'lini topadi va o'z odamlariga sodiq qoladi.",
           ravenclaw: "Reyvenkloliklar aqlli, qiziquvchan va ijodkor. Bilimni hamma narsadan ustun qo'yadi, savol berishdan charchamaydi va har narsaga o'zgacha nazar bilan qaraydi.",
           hufflepuff: "Xaffelpaffliklar sodiq, mehnatkash va adolatli. Sabr bilan ishlaydi, hech kimni ajratmaydi va qiyin kunda birinchi bo'lib yordamga keladi." },
     ru: { more: "Подробнее о факультете",

@@ -230,11 +230,12 @@
         { key: "dars", title: dx.tile, sub: drJami() ? HT("darsP").replace("%a", drJami()[0]).replace("%b", drJami()[1]) : "", go: drOpen },
         { key: "bell", kurs: 2, title: dx.blTile, sub: hs.bellJ ? HT("bellP").replace("%a", hs.bellJ - Math.max(0, drPending())).replace("%b", hs.bellJ) : "", badge: Math.max(0, drPending()), go: blHomeOpen },
         { key: "rek", kurs: 3, title: dx.rekSec, sub: hs.fanJ ? HT("rekP").replace("%a", hs.rekN).replace("%b", hs.fanJ) : "", go: rekHomeOpen }] },
-      { t: HT("g2"), k: [
-        { key: "qoriq", kurs: 3, title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
-        { key: "issiq", kurs: 3, title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen },
+      // Tartib (egasi, 2026-11-05): tepada Direktor xonasi, Do'kon, Umumiy xona; pastda Qo'riqxona va Issiqxona
+      { t: HT("g2"), k: (function () { try { return goyTile(); } catch (e) { return []; } })().concat([
+        { key: "dokon", kurs: 2, title: HT("dokon"), sub: dkGalleon() != null ? HT("dokonG").replace("%a", dkGalleon()) : HT("dokonS"), go: dkOpen },
         { key: "chat", title: c.chatT, sub: chatN > 0 ? HT("chatP").replace("%a", chatN > 99 ? "99+" : chatN) : HT("chatP0"), badge: chatN, go: openChat },
-        { key: "dokon", kurs: 2, title: HT("dokon"), sub: dkGalleon() != null ? HT("dokonG").replace("%a", dkGalleon()) : HT("dokonS"), go: dkOpen }] },
+        { key: "qoriq", kurs: 3, title: dx.qrT, sub: HT("qoriqP").replace("%a", qrSoni()).replace("%b", 12), go: qrHubOpen },
+        { key: "issiq", kurs: 3, title: HT("issiq"), sub: HT("issiqP").replace("%a", isSoni()).replace("%b", 12), badge: isKutmoqda(), go: isHubOpen }]) },
       { t: HT("g3"), k: [
         { key: "poyga", kurs: 4, title: HT("poyga"), sub: HT("poygaS"), go: pgOpen },
         { key: "tosh", kurs: 4, title: HT("tosh"), sub: HT("toshS"), go: gbOpen },
@@ -515,6 +516,7 @@
     $("scr-hub").classList.remove("hidden");
     try { window.scrollTo(0, 0); } catch (e) {}
     try { dkLoad(function () { if (hubVisible()) { var el = document.querySelector('#hub-grid .hx[data-k="dokon"] small'); if (el && dkGalleon() != null && !el.getAttribute("data-q")) { el.textContent = HUB_TX.dokonG[lang].replace("%a", dkGalleon()); } } }); } catch (e) {}      // do'kon: jihozlar holati (daqiqada bir), bosh sahifani qayta chizmaydi
+    try { goyHub(); } catch (e) {}          // Direktor xonasi katagi (ko'rinishi o'zgarsagina qayta chizadi)
     try { snLoad(); } catch (e) {}          // so'rovnoma kartasi (daqiqada bir martadan ko'p so'ramaydi, bosh sahifani qayta chizmaydi)
     try { qrLoad(); } catch (e) {}          // Qo'riqxona katagidagi son (5 daqiqada bir marta so'raydi)
     try { isLoad(function () { if (hubVisible()) { renderHub(); } }); } catch (e) {}   // Issiqxona: sug'orilmaganlar soni (5 daqiqada bir)

@@ -681,7 +681,7 @@
                   note_en:"Courage, nerve and following your heart — that is your way." },
     slytherin:  { accent:"#2fa36b", accent2:"#15533a", rgb:"47,163,107",  ink:"#04180e", hi:"#74d3a3",
                   crest:"🐍", img:"Slytherin_crest.png",
-                  uz:"Sliterin", ru:"Слизерин", en:"Slytherin",
+                  uz:"Slizerin", ru:"Слизерин", en:"Slytherin",
                   note_uz:"Maqsad, zukkolik va o'z yo'lini topa bilish — sizning kuchingiz.",
                   note_ru:"Амбиции, хитрость и умение найти свой путь — ваша сила.",
                   note_en:"Ambition, cunning and finding your own path — that is your strength." },

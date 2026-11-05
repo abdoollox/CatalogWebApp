@@ -40,7 +40,7 @@
       cupMe: "Siz %s ball qo'shdingiz.", cupZero: "Siz bu hafta ball to'plamadingiz — yangi haftada fakultetingizga yordam bering.",
       cupBadge: "Yangi nishon: %s", cupGo: "Kubokni ko'rish", cupGal: "Mukofot: +%s galleon hamyoningizga tushdi.",
       galB: "%s ball → %s galleon", galW: "fakultet yutdi, ikki baravar → %s", galT: "eng yaxshi uchlik +%s", galJ: "Jami +%s galleon hamyoningizga tushdi.",
-      houses: { gryffindor: "Grifindor", slytherin: "Sliterin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
+      houses: { gryffindor: "Grifindor", slytherin: "Slizerin", ravenclaw: "Reyvenklo", hufflepuff: "Xaffelpaff" },
       badges: { all_films: "Sakkiz qism", flawless_exam: "Benuqson imtihon", perfect_week: "Mukammal hafta", streak_7: "Yetti kun ketma-ket" },
       steps: {
         alley: ["Gringotts sizni kutmoqda", "Xogvartsga yo'l sehrgarlar bankidan boshlanadi: goblin kalitingizni ko'zdan kechirmoqchi."],
@@ -160,7 +160,7 @@
         { id: 4, tur: "dm", n: 2, from: 7100000037, name: "Hermiona", text: "Ertaga shaxmatda revansh?",
           t: new Date(t - 120e3).toISOString(), read: false, done: false },
         { id: 3, tur: "xabar", n: 1, t: new Date(t - 600e3).toISOString(), read: false, done: false,
-          title: "Grifindor, bu hafta kubokda oldindasiz!", text: "Yakshanbagacha 120 ball farq.\nSliterin yaqinlashyapti - bo'sh kelmang." },
+          title: "Grifindor, bu hafta kubokda oldindasiz!", text: "Yakshanbagacha 120 ball farq.\nSlizerin yaqinlashyapti - bo'sh kelmang." },
         { id: 2, tur: "onb", qadam: "wand", n: 2, t: new Date(t - 3600e3).toISOString(), read: false, done: false },
         { id: 1, tur: "onb", qadam: "alley", n: 1, t: new Date(t - 3 * 864e5).toISOString(), read: true, done: true }
       ] };
