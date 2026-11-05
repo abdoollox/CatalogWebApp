@@ -4406,12 +4406,11 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
    Kutubxona kartasi zamonaviy, qahramonsiz; suhbat oynasi - Dambldor bilan (HP ruhi faqat shu oynada). */
 .ankc{
   position:relative;display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;height:64px;margin:0 0 14px;
-  padding:0 14px;border:1px solid var(--line);border-radius:20px;cursor:pointer;color:var(--text);
+  padding:0 14px 0 10px;border:1px solid var(--line);border-radius:20px;cursor:pointer;color:var(--text);
   background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));-webkit-user-select:none;user-select:none;transition:transform .14s;
 }
 .ankc:active{transform:scale(.99)}
-.ankc-b{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(var(--gold-rgb),.14);color:var(--gold-hi)}
-.ankc-b svg{width:20px;height:20px}
+.ankc-im{flex:none;width:44px;height:44px;border-radius:50%;object-fit:cover;box-shadow:0 4px 12px -4px rgba(0,0,0,.8)}
 .ankc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .ankc-k{font:600 10px/1.2 'Manrope',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .ankc-t{font:600 14.5px/1.2 'Manrope',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -4426,21 +4425,27 @@ body #scr-poyga .tp-qoida .vk-q u{background:rgba(126,200,160,.16);color:#9fe0bd
 }
 @keyframes ankKir{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 body.ank-ochiq{overflow:hidden}
-.ank-top{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;flex:none}
+.ank-top{position:relative;flex:none;display:flex;flex-direction:column-reverse;align-items:center;gap:12px;padding:4px 0 0;transition:gap .35s}
 .ank-id{text-align:center;display:flex;flex-direction:column;gap:2px}
+.ank-top .ank-x{position:absolute;top:0;right:0}
+/* suhbat boshlangach: portret kichrayib sarlavha yoniga o'tadi, suhbatga joy bo'shaydi */
+.ank.ixcham .ank-top{flex-direction:row;justify-content:flex-start;gap:12px;padding:0 52px 0 0}
+.ank.ixcham .ank-id{text-align:left}
+.ank.ixcham .ank-por,.ank.yoz .ank-por{width:52px;height:52px;margin:0}
+.ank.ixcham .ank-halo{inset:-6px}
 .ank-k{font:600 9.5px/1.2 'Manrope',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
 .ank-n{font:500 21px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
 .ank-x{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--dim);display:grid;place-items:center;cursor:pointer}
 .ank-x svg{width:18px;height:18px}
-.ank-por{position:relative;flex:none;width:128px;height:128px;margin:8px auto 4px;transition:width .25s,height .25s}
-.ank.yoz .ank-por{width:64px;height:64px}
-.ank.yoz .ank-gal{display:none}
+.ank-por{position:relative;flex:none;width:128px;height:128px;transition:width .35s ease,height .35s ease}
+.ank.yoz .ank-gal,.ank.ixcham .ank-gal{display:none}
 .ank-por img{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;object-fit:cover;box-shadow:0 18px 40px -16px rgba(0,0,0,.9)}
 .ank-por img.ank-al{animation:ankAl .45s ease-out}
 @keyframes ankAl{from{opacity:.25;transform:scale(.96)}to{opacity:1;transform:none}}
 .ank-halo{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(closest-side,rgba(190,170,255,.28),transparent);animation:ankNafas 3.2s ease-in-out infinite}
 @keyframes ankNafas{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
-.ank-dots{display:flex;justify-content:center;gap:6px;margin:18px 0 6px;flex:none}
+.ank-dots{display:flex;justify-content:center;gap:6px;margin:18px 0 4px;flex:none}
+.ank.ixcham .ank-dots{margin:12px 0 2px}
 .ank-dots i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.16);transition:all .3s}
 .ank-dots i.on{background:rgba(var(--gold-rgb),.6)}
 .ank-dots i.cur{width:18px;background:var(--gold-hi)}
@@ -4459,10 +4464,22 @@ body.ank-ochiq{overflow:hidden}
 .ank-pas{flex:none;display:flex;flex-direction:column;gap:8px;padding-top:6px}
 .ank-pas:empty{display:none}
 .ank-vs{display:flex;flex-wrap:wrap;gap:7px;max-height:38vh;overflow-y:auto}
-.ank-v{border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);border-radius:14px;padding:10px 13px;
+.ank-v{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);border-radius:14px;padding:10px 13px 10px 10px;
   font:600 13.5px/1.25 'Manrope',sans-serif;text-align:left;cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
 .ank-v:active{transform:scale(.97)}
 .ank-v.on{background:rgba(var(--gold-rgb),.2);border-color:rgba(var(--gold-rgb),.6)}
+.ank-v svg{flex:none;width:18px;height:18px;color:var(--dim)}
+.ank-v.on svg{color:var(--gold-hi)}
+.ank-v .ank-tik{opacity:0;transition:opacity .15s}
+.ank-v.on .ank-tik{opacity:1}
+.ank-v.on circle{fill:currentColor}
+.ank-tur{margin:0 2px;font:600 10.5px/1.2 'Manrope',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.ank-a.ozgar{cursor:pointer;display:flex;align-items:flex-start;gap:8px}
+.ank-ed{flex:none;width:22px;height:22px;margin:-1px -4px 0 0;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:var(--dim);display:grid;place-items:center;cursor:pointer;padding:0}
+.ank-ed svg{width:12px;height:12px}
+.ank.yuborildi .ank-ed{display:none}
+.ank.yuborildi .ank-a.ozgar{cursor:default}
+
 .ank-ok{height:48px;border:0;border-radius:15px;background:var(--gold);color:var(--gold-ink);font:700 15px/1 'Manrope',sans-serif;cursor:pointer;flex:none}
 .ank-ok:disabled{opacity:.35}
 .ank-skip{border:0;background:none;color:var(--dim);font:600 13px/1 'Manrope',sans-serif;padding:8px;cursor:pointer}
