@@ -789,6 +789,13 @@ svg.ik{display:inline-block; overflow:visible; width:1.1em; height:1.1em; flex:n
 
 .ik-q{display:inline}
 
+/* Yakka belgi (yozuvsiz) katak o'rtasida; lenta belgisi katagi - faqat fon */
+.ik-q.yolgiz{display:inline-flex; align-items:center; justify-content:center; line-height:0}
+.ik-q.yolgiz > *{margin:0}
+.ik-q.yolgiz svg.ik{vertical-align:0; width:15px; height:15px}
+.fe .ic{border:0; background:var(--ich-2); width:28px; height:28px; color:var(--ink-2)}
+.fe .ic .ik-nuqta{width:9px; height:9px}
+
 </style>
 </head>
 <body>
@@ -865,6 +872,7 @@ var IK_YOL = {
   bilet:'<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
   poyezd:'<path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/>',
   qalpoq:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  sehrqalpoq:'<path d="M3.5 19.5h17"/><path d="M6.5 19.5 10.9 5.3a1.2 1.2 0 0 1 2.24-.16L16 11l1.5 8.5"/><path d="M8.6 13.2c2.3.9 4.8.9 7.1 0"/><path d="M13.8 7.4 16 6"/>',
   qalqon:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   kompas:'<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>',
   kitob:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
@@ -889,7 +897,7 @@ var IK_YOL = {
 };
 var EMO_IK = {
   "🤖":"bot", "📣":"megafon", "🎬":"film", "📱":"tel", "✉":"xat", "🦉":"xat", "🏦":"bino", "🏛":"bino",
-  "🪙":"tanga", "🪄":"tayoq", "🎫":"bilet", "🚂":"poyezd", "🎩":"qalpoq", "🎓":"qalpoq", "🏰":"qalqon",
+  "🪙":"tanga", "🪄":"tayoq", "🎫":"bilet", "🚂":"poyezd", "🎩":"sehrqalpoq", "🎓":"qalpoq", "🏰":"qalqon",
   "🧭":"kompas", "📖":"kitob", "📥":"yukla", "🎵":"nota", "🎧":"quloqchin", "💿":"disk", "🏆":"kubok",
   "🤝":"odamlar", "🎁":"sovga", "🔗":"havola", "↩":"qaytar", "⚡":"chaqmoq", "✨":"uchqun", "🦌":"uchqun",
   "✍":"qalam", "🐌":"soat", "🔕":"ovozsiz", "🎭":"aralash", "🤷":"savol", "🧳":"jomadon", "♟":"toj"
@@ -903,7 +911,7 @@ function emoBelgi(e){
   if(EMO_NUQTA[k]){ var d = document.createElement("span"); d.className = "ik-nuqta"; d.style.background = EMO_NUQTA[k]; return d; }
   if(IK_YOL[EMO_IK[k]]){
     var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "ik"); s.setAttribute("aria-hidden", "true");
+    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "ik"); s.setAttribute("aria-hidden", "true"); s.setAttribute("data-ik", EMO_IK[k]);
     s.innerHTML = IK_YOL[EMO_IK[k]];
     return s;
   }
@@ -941,7 +949,18 @@ function emoTozala(root){
       if(b) while(q.charAt(i) === " ") i++;      // belgidan keyingi bo'sh joy - oraliqni CSS beradi
     }
     if(i < q.length) f.appendChild(document.createTextNode(q.slice(i)));
+    if(!f.textContent.trim()) f.classList.add("yolgiz");
     ota.replaceChild(f, t);
+    // Fakultet qalqoni - qatordagi fakultet rangida (masalan, «Xaffelpaff fakultetiga tushdi»)
+    var qq = f.querySelector('svg[data-ik="qalqon"]');
+    if(qq){
+      var e = f.closest(".fe, tr, li"), uy = null;      // faqat bitta hodisa qatori ichidan
+      if(e){
+        uy = /Grifindor/.test(e.textContent) ? "#d9524a" : /Slizerin/.test(e.textContent) ? "#2fa36b"
+           : /Reyvenklo/.test(e.textContent) ? "#5b8fd9" : /Xaffelpaff/.test(e.textContent) ? "#e8b93c" : null;
+      }
+      if(uy){ qq.style.color = uy; qq.style.opacity = "1"; }
+    }
   });
 }
 /* Bosh sahifa kartalari: Bosh sahifa ochiq bo'lsa o'sha yerda, aks holda o'z bo'limida */
