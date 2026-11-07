@@ -796,6 +796,12 @@ svg.ik{display:inline-block; overflow:visible; width:1.1em; height:1.1em; flex:n
 .fe .ic{border:0; background:var(--ich-2); width:28px; height:28px; color:var(--ink-2)}
 .fe .ic .ik-nuqta{width:9px; height:9px}
 
+/* Fakultet bayrog'i (emoji gerb o'rnida) */
+svg.ik-bayroq{display:inline-block; width:.95em; height:1.05em; flex:none; vertical-align:-.16em; margin-right:.42em; overflow:visible}
+.ik-q.yolgiz svg.ik-bayroq{width:14px; height:16px; vertical-align:0}
+.bayroqli{position:relative; overflow:visible; display:inline-grid!important; place-items:center}
+.bayroqli > svg.ik-bayroq{position:absolute; left:50%; top:50%; width:11px; height:13px; margin:0; transform:translate(-50%,-50%)}
+
 </style>
 </head>
 <body>
@@ -902,12 +908,19 @@ var EMO_IK = {
   "🤝":"odamlar", "🎁":"sovga", "🔗":"havola", "↩":"qaytar", "⚡":"chaqmoq", "✨":"uchqun", "🦌":"uchqun",
   "✍":"qalam", "🐌":"soat", "🔕":"ovozsiz", "🎭":"aralash", "🤷":"savol", "🧳":"jomadon", "♟":"toj"
 };
-var EMO_NUQTA = {"🦁":"#d9524a", "🐍":"#2fa36b", "🦅":"#5b8fd9", "🦡":"#e8b93c",
-                 "🔵":"#3987e5", "🟢":"#199e70", "🔴":"#d03b3b", "⚪":"#a3abb7"};
+// Fakultet - o'z rangidagi bayroq (holat nuqtalari bilan adashmasin; egasi, 2026-11-07)
+var EMO_BAYROQ = {"🦁":"#d9524a", "🐍":"#2fa36b", "🦅":"#5b8fd9", "🦡":"#e8b93c"};
+var EMO_NUQTA = {"🔵":"#3987e5", "🟢":"#199e70", "🔴":"#d03b3b", "⚪":"#a3abb7"};
 var EMO_TIL = {"🇺🇿":"UZ", "🇷🇺":"RU", "🇬🇧":"EN"};
 function emoBelgi(e){
   var k = e.replace(/[️\s]/g, "");
   if(EMO_TIL[k]){ var t = document.createElement("span"); t.className = "ik-til"; t.textContent = EMO_TIL[k]; return t; }
+  if(EMO_BAYROQ[k]){
+    var bq = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    bq.setAttribute("viewBox", "0 0 24 24"); bq.setAttribute("class", "ik-bayroq"); bq.setAttribute("aria-hidden", "true");
+    bq.innerHTML = '<path d="M5 2.5h14V21l-7-4.4L5 21z" fill="' + EMO_BAYROQ[k] + '"/><path d="M5 6.5h14" stroke="rgba(0,0,0,.28)" stroke-width="1.6"/>';
+    return bq;
+  }
   if(EMO_NUQTA[k]){ var d = document.createElement("span"); d.className = "ik-nuqta"; d.style.background = EMO_NUQTA[k]; return d; }
   if(IK_YOL[EMO_IK[k]]){
     var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -936,14 +949,23 @@ function emoTozala(root){
     }
     // Belgi va yozuv bitta qatorda tursin: hammasi bitta qobiqda (ota flex/grid bo'lsa ham)
     // Yonida rang belgisi allaqachon bo'lsa (diagramma izohi, jadval), rangli nuqta takrorlanmaydi
-    var rangBor = [ota, ota.parentNode].some(function(e){ return e && e.querySelector && e.querySelector(":scope > .swatch, :scope > .sw, :scope > .dot"); });
+    var rangEl = null;
+    [ota, ota.parentNode].forEach(function(e){ if(!rangEl && e && e.querySelector) rangEl = e.querySelector(":scope > .swatch, :scope > .sw, :scope > .dot"); });
+    var rangBor = !!rangEl;
     var f = document.createElement("span"), q = t.nodeValue, i = 0, m;
     f.className = "ik-q";
     EMO_RE.lastIndex = 0;
     while((m = EMO_RE.exec(q))){
       if(m.index > i) f.appendChild(document.createTextNode(q.slice(i, m.index)));
       var b = emoBelgi(m[0]);
-      if(b && rangBor && b.className === "ik-nuqta") b = null;
+      // Fakultet: bayroq qo'yiladi, yonidagi oddiy rang doirachasi yashiriladi (bir xil ma'no ikki marta turmasin)
+      if(b && rangBor && b.getAttribute && b.getAttribute("class") === "ik-bayroq"){
+        // bayroq doirachaning o'z joyiga qo'yiladi - jadval ustunlari siljimaydi
+        rangEl.style.background = "none"; rangEl.style.borderRadius = "0"; rangEl.classList.add("bayroqli");
+        if(!rangEl.querySelector(".ik-bayroq")) rangEl.appendChild(b);
+        b = null;
+      }
+      else if(b && rangBor && b.className === "ik-nuqta") b = null;
       if(b) f.appendChild(b);
       i = m.index + m[0].length;
       if(b) while(q.charAt(i) === " ") i++;      // belgidan keyingi bo'sh joy - oraliqni CSS beradi
