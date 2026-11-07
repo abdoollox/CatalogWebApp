@@ -1008,84 +1008,104 @@ function emoTozala(root){
     }
   });
 }
-/* ═════ «Nima o'zgardi» (egasi, 2026-11-07): kechagi kun oldingi 7 kunning o'rtachasi bilan
-   solishtiriladi; odatdagidan sezilarli farq qilganlari yuqorida. AI'siz, bepul, raqamlar aniq. ═════ */
+/* ═════ «Nima o'zgardi» (egasi, 2026-11-07): tanlangan davr xuddi shuncha oldingi davr bilan
+   solishtiriladi (7 kun - oldingi 7 kun, 30 - oldingi 30, oraliq - oldingi teng oraliq);
+   «Bugun» - bugun hozirgacha va kechaning shu soatigacha; «Butun tarix» - oxirgi 7 kun.
+   Bugungi tugallanmagan kun davrga qo'shilmaydi. AI'siz, raqamlar aniq. ═════ */
 var OZG_YOQ = '<path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>', OZG_PAST = '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>';
-function ozgKunlar(){
-  // kecha va undan oldingi 7 kun kalitlari
-  var bugun = new Date(); bugun.setHours(0, 0, 0, 0);
-  var k = [];
-  for(var i = 1; i <= 8; i++){ var d = new Date(bugun.getTime() - i * 86400000); k.push(dayKey(d)); }
-  return {kecha:k[0], oldin:k.slice(1)};
+function ozgOynalar(){
+  var hozir = new Date(), bugun = new Date(hozir); bugun.setHours(0, 0, 0, 0);
+  var KUN = 86400000, izoh = "";
+  function q(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  if(ST.oraliq){
+    var w = windowOf(ST.days);
+    var a = q(w.from), b = new Date(q(w.to).getTime() + KUN);
+    if(b > bugun) b = bugun;                            // bugun hali tugamagan
+    var uz = b - a;
+    if(uz > 0) return {A:[a, b], B:[new Date(a - uz), a], nom:"tanlangan oraliq", kun:Math.round(uz / KUN)};
+  }
+  if(ST.days === 1){
+    var shu = hozir - bugun;
+    return {A:[bugun, hozir], B:[new Date(bugun - KUN), new Date(bugun - KUN + shu)], bugun:true, kun:1};
+  }
+  var n = ST.days || 7;
+  if(!ST.days) izoh = "butun tarix uchun oldingi davr yo'q — oxirgi 7 kun ko'rsatildi";
+  var A = [new Date(bugun - n * KUN), bugun];
+  return {A:A, B:[new Date(bugun - 2 * n * KUN), A[0]], kun:n, izoh:izoh};
 }
 function ozgHisob(){
-  var K = ozgKunlar(), kerak = {}; kerak[K.kecha] = 1; K.oldin.forEach(function(x){ kerak[x] = 1; });
-  var M = {};       // ko'rsatkich -> kun -> son (yoki odamlar to'plami)
-  function qosh(m, kun, uid){
-    if(!kerak[kun]) return;
-    var a = M[m] = M[m] || {}; var b = a[kun] = a[kun] || {};
-    b[uid == null ? Math.random() : uid] = 1;
-  }
+  var O = ozgOynalar();
+  var b0 = O.B[0], a1 = O.A[1];
+  function qaysi(t){ return t >= O.A[0] && t < O.A[1] ? "A" : (t >= O.B[0] && t < O.B[1] ? "B" : null); }
+  var M = {};
+  function qosh(m, o, id){ if(!o) return; var x = M[m] = M[m] || {A:{}, B:{}}; x[o][id] = 1; }
   var birinchi = firstSeen();
-  Object.keys(birinchi).forEach(function(u){ qosh("yangi", dayKey(birinchi[u]), u); });
+  Object.keys(birinchi).forEach(function(u){ qosh("yangi", qaysi(birinchi[u]), u); });
+  var fi = 0;
   ST.rows.forEach(function(r){
-    var kun = dayKey(r.t); if(!kerak[kun]) return;
+    if(r.t < b0 || r.t >= a1) return;
+    var o = qaysi(r.t); if(!o) return;
     var e = r.ev;
-    qosh("faol", kun, r.uid);
-    if(e.t === "blocked") qosh("blok", kun, r.uid);
-    else if(e.t === "film") qosh("film", kun, null);
-    else if(e.t === "dars") qosh("dars", kun, r.uid);
-    else if(e.t === "bell") qosh("bell", kun, r.uid);
-    var q = yolQadam(e); if(q) qosh("y_" + q, kun, r.uid);
+    qosh("faol", o, r.uid);
+    if(e.t === "blocked") qosh("blok", o, r.uid);
+    else if(e.t === "film") qosh("film", o, fi++);
+    else if(e.t === "dars") qosh("dars", o, r.uid);
+    else if(e.t === "bell") qosh("bell", o, r.uid);
+    var y = yolQadam(e); if(y) qosh("y_" + y, o, r.uid);
   });
-  kanalHajmi().ozg.forEach(function(x){ qosh(x.d > 0 ? "kqosh" : "kchiq", dayKey(x.t), x.uid); });
-  (ST.leave || []).forEach(function(x){ if(x.reason && LEAVE[x.reason] && LEAVE[x.reason].bad) qosh("sabab", dayKey(x.t), x.uid); });
+  var ki = 0;
+  kanalHajmi().ozg.forEach(function(x){ qosh(x.d > 0 ? "kqosh" : "kchiq", qaysi(x.t), ki++); });
+  (ST.leave || []).forEach(function(x, i){ if(x.reason && LEAVE[x.reason] && LEAVE[x.reason].bad) qosh("sabab", qaysi(x.t), i); });
 
   var R = [
     {k:"yangi", n:"Yangi odamlar", yax:1, bol:"odamlar"},
     {k:"faol",  n:"Faol odamlar", yax:1, bol:"umumiy"},
-    {k:"kqosh", n:"Kanalga qo'shilganlar", yax:1, bol:"kanal"},
-    {k:"kchiq", n:"Kanaldan chiqqanlar", yax:-1, bol:"kanal"},
-    {k:"sabab", n:"Bot yoki kanaldan norozi bo'lib chiqqanlar", yax:-1, bol:"kanal"},
+    {k:"kqosh", n:"Kanalga qo'shilishlar", yax:1, bol:"kanal"},
+    {k:"kchiq", n:"Kanaldan chiqishlar", yax:-1, bol:"kanal"},
+    {k:"sabab", n:"Norozi bo'lib chiqqanlar", yax:-1, bol:"kanal"},
     {k:"blok",  n:"Botni bloklaganlar", yax:-1, bol:"kanal"},
     {k:"film",  n:"Olingan filmlar", yax:1, bol:"kino"},
     {k:"dars",  n:"Dars o'tganlar", yax:1, bol:"dars"},
     {k:"bell",  n:"Bellashuvda qatnashganlar", yax:1, bol:"dars"}
   ].concat(YOL.map(function(x){ return {k:"y_" + x.k, n:"Sehrli yo'l: " + x.n, yax:1, bol:"yol"}; }));
+  var kunlik = O.kun <= 1;
   R.forEach(function(m){
-    var son = function(kun){ return Object.keys((M[m.k] || {})[kun] || {}).length; };
-    m.y = son(K.kecha);
-    m.o = K.oldin.map(son);
-    m.mu = m.o.reduce(function(a, b){ return a + b; }, 0) / m.o.length;
-    m.min = Math.min.apply(null, m.o); m.max = Math.max.apply(null, m.o);
-    var farq = m.y - m.mu;
-    m.farq = farq;
-    m.belgi = (m.mu >= 4 && Math.abs(farq) / m.mu >= .35 && Math.abs(farq) >= 3) || (m.mu < 4 && Math.abs(farq) >= 4);
+    var x = M[m.k] || {A:{}, B:{}};
+    m.y = Object.keys(x.A).length; m.mu = Object.keys(x.B).length;
+    var farq = m.y - m.mu; m.farq = farq;
+    // Kun uchun: ≥35 % va ≥3 (kichik sonda ≥4); uzun davr uchun: ≥20 % va ≥5 (kichik sonda ≥8)
+    m.belgi = kunlik ? ((m.mu >= 4 && Math.abs(farq) / m.mu >= .35 && Math.abs(farq) >= 3) || (m.mu < 4 && Math.abs(farq) >= 4))
+                     : ((m.mu >= 10 && Math.abs(farq) / m.mu >= .2 && Math.abs(farq) >= 5) || (m.mu < 10 && Math.abs(farq) >= 8));
     m.kuch = Math.abs(farq) / Math.max(m.mu, 2);
     m.yaxshi = (farq > 0) === (m.yax > 0);
   });
-  // Yo'lning eng ko'p odam yo'qotadigan qadami (8 kun ichida qadamni qilganlar bo'yicha)
-  var qadam = YOL.map(function(x){
-    var u = {}; Object.keys(M["y_" + x.k] || {}).forEach(function(kun){ Object.assign(u, M["y_" + x.k][kun]); });
-    return {n:x.n, s:Object.keys(u).length};
-  });
+  // Shu davrda yo'lning eng ko'p odam yo'qotadigan qadami
+  var qadam = YOL.map(function(y){ return {n:y.n, s:Object.keys((M["y_" + y.k] || {A:{}}).A).length}; });
   var eng = null;
   for(var i = 1; i < qadam.length; i++){
     if(qadam[i-1].s < 5) continue;
     var yoq = 1 - qadam[i].s / qadam[i-1].s;
     if(!eng || yoq > eng.yoq) eng = {dan:qadam[i-1], ga:qadam[i], yoq:yoq};
   }
-  return {K:K, R:R, eng:eng};
+  return {O:O, R:R, eng:eng};
+}
+function ozgSana(a, b){
+  // [a, b) oraliq odam tilida: «31 okt – 6 noy» yoki «6 noy»
+  var oxir = new Date(b.getTime() - 1);
+  var x = fmtDay(dayKey(a)), y = fmtDay(dayKey(oxir));
+  return x === y ? x : x + " – " + y;
 }
 function ozgKarta(){
   var c = card("Nima o'zgardi", "", "");
   c.classList.add("ozg");
   var H;
   try{ H = ozgHisob(); }catch(e){ c.appendChild(emptyNote("Hisoblab bo'lmadi: " + e.message)); return c; }
-  var hint = c.querySelector(".c-head .hint");
-  var hs = document.createElement("span"); hs.className = "hint";
-  hs.textContent = "kecha, " + fmtDay(H.K.kecha) + " · oldingi 7 kunning o'rtachasi bilan solishtirildi";
+  var O = H.O, hs = document.createElement("span"); hs.className = "hint";
+  hs.textContent = O.bugun
+    ? "bugun soat " + String(O.A[1].getHours()).padStart(2, "0") + ":" + String(O.A[1].getMinutes()).padStart(2, "0") + " gacha · kechaning shu vaqtigacha bilan solishtirildi"
+    : ozgSana(O.A[0], O.A[1]) + " · oldingi " + O.kun + " kun (" + ozgSana(O.B[0], O.B[1]) + ") bilan solishtirildi" + (O.izoh ? " · " + O.izoh : "");
   c.querySelector(".c-head").insertBefore(hs, c._head);
+  var oldin = O.bugun ? "kecha shu vaqtgacha" : "oldingi davrda";
 
   function qator(ic, matn, izoh, chip, chipKls, bol){
     var d = document.createElement(bol ? "button" : "div"); d.className = "ozg-q";
@@ -1096,16 +1116,13 @@ function ozgKarta(){
     return d;
   }
   var royxat = document.createElement("div"); royxat.className = "ozg-list";
-  var belgili = H.R.filter(function(m){ return m.belgi; }).sort(function(a, b){ return b.kuch - a.kuch; });
-  belgili.forEach(function(m){
+  H.R.filter(function(m){ return m.belgi; }).sort(function(a, b){ return b.kuch - a.kuch; }).forEach(function(m){
     var foiz = m.mu ? Math.round(m.farq / m.mu * 100) : null;
     royxat.appendChild(qator(m.farq > 0 ? OZG_YOQ : OZG_PAST,
-      esc(m.n) + ": <b>" + fmtNum(m.y) + "</b>",
-      "odatda ≈" + fmtNum(Math.round(m.mu)) + " (" + fmtNum(m.min) + "–" + fmtNum(m.max) + ")",
+      esc(m.n) + ": <b>" + fmtNum(m.y) + "</b>", oldin + " " + fmtNum(m.mu),
       foiz == null ? "yangi" : (foiz > 0 ? "+" : "−") + Math.abs(foiz) + "%",
       m.yaxshi ? "yaxshi" : "yomon", m.bol));
   });
-  // Javob kutayotganlar
   if(ST.goya && ST.goya.rows){
     var yangi = ST.goya.rows.filter(function(r){ return r.holat === "yangi"; });
     if(yangi.length){
@@ -1119,17 +1136,17 @@ function ozgKarta(){
   if(H.eng && H.eng.yoq > .2){
     royxat.appendChild(qator('<path d="M3 3h18l-7 9v6l-4 3v-9z"/>',
       "Yo'lda eng ko'p odam yo'qotiladigan joy: <b>" + esc(H.eng.dan.n) + " → " + esc(H.eng.ga.n) + "</b>",
-      "oxirgi 8 kunda " + fmtNum(H.eng.dan.s) + " kishidan " + fmtNum(H.eng.ga.s) + " kishi o'tgan", "−" + Math.round(H.eng.yoq * 100) + "%", "yomon", "yol"));
+      "shu davrda " + fmtNum(H.eng.dan.s) + " kishidan " + fmtNum(H.eng.ga.s) + " kishi o'tgan", "−" + Math.round(H.eng.yoq * 100) + "%", "yomon", "yol"));
   }
   if(!royxat.children.length){
-    royxat.appendChild(qator('<path d="M20 6 9 17l-5-5"/>', "Kecha hammasi odatdagidek edi", "hech bir ko'rsatkich odatdagidan sezilarli farq qilmadi", null, "yaxshi"));
+    royxat.appendChild(qator('<path d="M20 6 9 17l-5-5"/>', "Hammasi odatdagidek",
+      "hech bir ko'rsatkich " + (O.bugun ? "kechagidan" : "oldingi davrdan") + " sezilarli farq qilmadi", null, "yaxshi"));
   }
   c.appendChild(royxat);
-  // Odatdagidek qolganlar - bitta qator
   var oddiy = H.R.filter(function(m){ return !m.belgi && (m.y || m.mu); });
   if(oddiy.length){
     var p = document.createElement("p"); p.className = "ozg-oddiy";
-    p.innerHTML = "<span>Odatdagidek:</span> " + oddiy.map(function(m){ return esc(m.n.replace("Sehrli yo'l: ", "")) + " " + fmtNum(m.y); }).join(" · ");
+    p.innerHTML = "<span>O'zgarishsiz:</span> " + oddiy.map(function(m){ return esc(m.n.replace("Sehrli yo'l: ", "")) + " " + fmtNum(m.y); }).join(" · ");
     c.appendChild(p);
   }
   return c;
