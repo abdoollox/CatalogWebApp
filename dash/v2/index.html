@@ -648,7 +648,8 @@ h1,h2,h3{font-family:'Manrope',system-ui,sans-serif; letter-spacing:-.01em}
 .yon .tabs button[aria-selected="true"]{background:var(--panel-2); color:var(--ink); font-weight:600}
 .yon .tabs button .n{margin-left:auto; font-size:11.5px; font-weight:600; color:var(--ink-3)}
 .yon .tabs button[aria-selected="true"] .n{color:var(--ink-2)}
-.yon-eski{margin-top:auto; font-size:12.5px; color:var(--ink-3); text-decoration:none; padding:10px}
+.yon-eski{margin-top:auto; display:flex; align-items:center; gap:10px; height:var(--boy); font-size:12.5px; color:var(--ink-3); text-decoration:none; padding:0 10px; border-radius:8px; position:relative}
+.yon-eski svg{width:16px; height:16px; flex:none}
 .yon-eski:hover{color:var(--ink)}
 
 /* Ish maydoni */
@@ -733,15 +734,54 @@ h1,h2,h3{font-family:'Manrope',system-ui,sans-serif; letter-spacing:-.01em}
 #sec-asosiy > .card[style*="order: 4"]{grid-column:span 4}
 #sec-asosiy:not(:has(> [style*="order: 4"])) > .card[style*="order: 3"]{grid-column:span 12}
 
+/* Yig'ish tugmasi */
+.yon-bosh{position:relative}
+.yon-tugma{
+  order:3; margin-left:auto; width:28px; height:28px; flex:none; display:grid; place-items:center;
+  border:0; border-radius:7px; background:transparent; color:var(--ink-3); cursor:pointer; padding:0;
+  transition:background-color .18s var(--ease), color .18s var(--ease);
+}
+.yon-tugma svg{width:17px; height:17px}
+.yon-tugma:hover{background:var(--ich); color:var(--ink)}
+.yon, .wrap{transition:width .2s var(--ease), margin-left .2s var(--ease)}
+
+/* Yig'iq holat: 64 px, faqat belgilar; nom - ko'rsatmada */
+body.yon-yigiq{--yon:64px}
+body.yon-yigiq .yon{padding-inline:10px; overflow:visible}
+body.yon-yigiq .yon-bosh{flex-direction:column; gap:12px; padding:0 0 10px}
+body.yon-yigiq .yon-nom{display:none}
+body.yon-yigiq .yon-tugma{margin:0; order:2}
+body.yon-yigiq .yon-bosh{align-items:center}
+body.yon-yigiq .yon .tabs{align-items:center}
+body.yon-yigiq .yon-eski{align-self:center}
+body.yon-yigiq .yon-tugma svg{transform:scaleX(-1)}
+body.yon-yigiq .nav-grp{font-size:0; height:1px; padding:0; margin:10px 8px; background:var(--line-2)}
+body.yon-yigiq .yon .tabs button, body.yon-yigiq .yon-eski{width:44px; padding:0; justify-content:center; font-size:0; gap:0; position:relative}
+body.yon-yigiq .yon-eski span{display:none}
+body.yon-yigiq .yon .tabs .tab-ic{width:18px; height:18px}
+body.yon-yigiq .yon .tabs button .n{
+  position:absolute; top:3px; right:2px; margin:0; font-size:9.5px; line-height:14px; min-width:14px; padding:0 3px;
+  border-radius:7px; background:var(--panel-2); color:var(--ink-2); text-align:center;
+}
+body.yon-yigiq .yon .tabs button[aria-selected="true"] .n{background:var(--bg)}
+body.yon-yigiq .yon .tabs button::after, body.yon-yigiq .yon-eski::after{
+  content:attr(data-nom); position:absolute; left:calc(100% + 10px); top:50%; transform:translateY(-50%);
+  white-space:nowrap; font-size:12.5px; font-weight:600; color:var(--ink); background:var(--panel-2);
+  padding:6px 10px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.45);
+  opacity:0; pointer-events:none; transition:opacity .12s var(--ease); z-index:50;
+}
+body.yon-yigiq .yon .tabs button:hover::after, body.yon-yigiq .yon .tabs button:focus-visible::after,
+body.yon-yigiq .yon-eski:hover::after{opacity:1}
+
 </style>
 </head>
 <body>
 
 
 <aside class="yon">
-  <div class="yon-bosh"><svg class="yon-belgi" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#e9ebee"/><rect x="8" y="17" width="4" height="7" rx="1.5" fill="#a3abb7"/><rect x="14" y="12" width="4" height="12" rx="1.5" fill="#5b6370"/><rect x="20" y="8" width="4" height="16" rx="1.5" fill="#151a21"/></svg><span>Kuzatuv paneli</span></div>
+  <div class="yon-bosh"><button type="button" class="yon-tugma" id="yon-tugma" aria-label="Menyuni yig'ish" title="Menyuni yig'ish ( [ )" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"></rect><path d="M9.5 4.5v15"></path><path d="M15.5 10l-2 2 2 2"></path></svg></button><svg class="yon-belgi" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#e9ebee"/><rect x="8" y="17" width="4" height="7" rx="1.5" fill="#a3abb7"/><rect x="14" y="12" width="4" height="12" rx="1.5" fill="#5b6370"/><rect x="20" y="8" width="4" height="16" rx="1.5" fill="#151a21"/></svg><span class="yon-nom">Kuzatuv paneli</span></div>
   <nav class="tabs" id="tabs" role="tablist" aria-orientation="vertical"></nav>
-  <a class="yon-eski" href="../">Eski panelga qaytish</a>
+  <a class="yon-eski" href="../" data-nom="Eski panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 7l-5 5 5 5"></path><path d="M5 12h10a4 4 0 0 1 4 4v1"></path></svg><span>Eski panelga qaytish</span></a>
 </aside>
 <div class="wrap">
   <header class="top">
@@ -806,6 +846,28 @@ function emoTozala(root){
   }
   rr.forEach(function(t){ t.nodeValue = t.nodeValue.replace(EMO_RE, ""); });
 }
+/* Yon menyuni yig'ish: faqat belgilar qoladi; tanlov shu brauzerda eslanadi (egasi, 2026-11-07) */
+function yonYigiq(yiq){
+  document.body.classList.toggle("yon-yigiq", yiq);
+  var t = document.getElementById("yon-tugma");
+  if(t){
+    var y = yiq ? "Menyuni ochish" : "Menyuni yig'ish";
+    t.setAttribute("aria-label", y); t.title = y + " ( [ )"; t.setAttribute("aria-expanded", String(!yiq));
+  }
+  try{ localStorage.setItem("hp_dash_v2_yon", yiq ? "1" : "0"); }catch(e){}
+}
+document.addEventListener("DOMContentLoaded", function(){
+  var y = false; try{ y = localStorage.getItem("hp_dash_v2_yon") === "1"; }catch(e){}
+  yonYigiq(y);
+  var t = document.getElementById("yon-tugma");
+  if(t) t.addEventListener("click", function(){ yonYigiq(!document.body.classList.contains("yon-yigiq")); });
+  document.addEventListener("keydown", function(e){
+    if(e.key !== "[" || e.ctrlKey || e.metaKey || e.altKey) return;
+    var a = document.activeElement;
+    if(a && (a.tagName === "INPUT" || a.tagName === "TEXTAREA" || a.isContentEditable)) return;
+    yonYigiq(!document.body.classList.contains("yon-yigiq"));
+  });
+});
 (function(){
   var kut = false;
   var mo = new MutationObserver(function(){
@@ -5665,6 +5727,7 @@ function drawTabs(sonlar){
   BOLIMLAR.forEach(function(b){
     if(b.grp){ var gl = document.createElement("div"); gl.className = "nav-grp"; gl.textContent = b.grp; nav.appendChild(gl); }
     var btn = document.createElement("button");
+    btn.setAttribute("data-nom", b.nom);
     btn.setAttribute("role", "tab");
     btn.setAttribute("aria-selected", String(b.id === ST.tab));
     btn.setAttribute("aria-controls", "sec-" + b.id);
