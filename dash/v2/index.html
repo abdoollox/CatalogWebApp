@@ -773,6 +773,15 @@ body.yon-yigiq .yon .tabs button::after, body.yon-yigiq .yon-eski::after{
 body.yon-yigiq .yon .tabs button:hover::after, body.yon-yigiq .yon .tabs button:focus-visible::after,
 body.yon-yigiq .yon-eski:hover::after{opacity:1}
 
+/* Menyuda raqamlar ko'rsatilmaydi (egasi) */
+.yon .tabs button .n{display:none!important}
+
+/* Zich joylashuv: qator 4 px, kartalar bo'sh joyni to'ldiradi */
+@media (min-width:861px){
+  .grid{grid-auto-rows:4px; row-gap:0; grid-auto-flow:row dense; align-items:start}
+  .grid > .card{margin-bottom:16px}
+}
+
 </style>
 </head>
 <body>
@@ -846,6 +855,63 @@ function emoTozala(root){
   }
   rr.forEach(function(t){ t.nodeValue = t.nodeValue.replace(EMO_RE, ""); });
 }
+/* Bosh sahifa kartalari: Bosh sahifa ochiq bo'lsa o'sha yerda, aks holda o'z bo'limida */
+function boshKochir(id){
+  var bosh = document.getElementById("sec-asosiy");
+  (ST.boshK || []).forEach(function(k){
+    if(!k._iz || !k._iz.parentNode) return;
+    if(id === "asosiy"){ if(k.parentNode !== bosh){ k.style.order = k._tartib; bosh.appendChild(k); } }
+    else if(k.previousSibling !== k._iz){ k.style.order = ""; k._iz.parentNode.insertBefore(k, k._iz.nextSibling); }
+  });
+}
+/* Kartalar zich joylashadi: har karta balandligiga qarab qator egallaydi, qisqa karta ostiga
+   keyingisi kiradi (egasi: bo'sh joylar qolmasin). Qator birligi 4 px. */
+var ZICH_KUT = {};
+var ZICH_RO = window.ResizeObserver ? new ResizeObserver(function(ee){
+  ee.forEach(function(e){ var g = e.target.parentNode; if(g && g.id) zichNavbat(g); });
+}) : null;
+function zichNavbat(g){
+  if(ZICH_KUT[g.id]) return;
+  ZICH_KUT[g.id] = requestAnimationFrame(function(){ ZICH_KUT[g.id] = 0; zichPas(g); });
+}
+// 1) har karta tabiiy balandligicha qator oladi; 2) ostida bo'sh joy qolgan karta keyingi
+// karta (yoki ustunlar oxiri)gacha cho'ziladi - ustunlar pasti tekislanadi
+function zichPas(g){
+  if(g.hidden || window.innerWidth <= 860) return;
+  var cs = [].filter.call(g.children, function(k){ return k.classList.contains("card") && !k.classList.contains("katta"); });
+  if(!cs.length) return;
+  cs.forEach(function(k){ k.style.alignSelf = "start"; });
+  var hs = cs.map(function(k){ return k.getBoundingClientRect().height; });
+  if(hs.some(function(h){ return !h; })) return;
+  cs.forEach(function(k, i){ k.style.gridRowEnd = "span " + Math.ceil((hs[i] + 16) / 4); });
+  var rr = cs.map(function(k){ return k.getBoundingClientRect(); });
+  var past = Math.max.apply(null, rr.map(function(r){ return r.bottom; }));
+  cs.forEach(function(k, i){
+    var a = rr[i], eng = null;
+    rr.forEach(function(b, j){
+      if(j === i || b.top < a.bottom - 1 || b.left >= a.right - 4 || b.right <= a.left + 4) return;
+      if(eng === null || b.top < eng) eng = b.top;
+    });
+    var oxir = (eng === null ? past : eng - 16);
+    var bosh = oxir - a.bottom;
+    if(bosh >= 8){
+      k.style.gridRowEnd = "span " + Math.ceil((hs[i] + 16) / 4 + Math.floor(bosh / 4));
+      k.style.alignSelf = "stretch";
+    }
+  });
+}
+function zichKuzat(){
+  if(!ZICH_RO) return;
+  document.querySelectorAll("#app .grid > .card").forEach(function(k){
+    if(k._zich) return; k._zich = true; ZICH_RO.observe(k);
+  });
+  document.querySelectorAll("#app .grid").forEach(zichNavbat);
+}
+(function(){
+  var kut = false;
+  var mo = new MutationObserver(function(){ if(kut) return; kut = true; requestAnimationFrame(function(){ kut = false; zichKuzat(); }); });
+  document.addEventListener("DOMContentLoaded", function(){ var app = document.getElementById("app"); if(app){ zichKuzat(); mo.observe(app, {childList:true, subtree:true}); } });
+})();
 /* Yon menyuni yig'ish: faqat belgilar qoladi; tanlov shu brauzerda eslanadi (egasi, 2026-11-07) */
 function yonYigiq(yiq){
   document.body.classList.toggle("yon-yigiq", yiq);
@@ -3268,24 +3334,20 @@ function render(){
     app.appendChild(g);
   });
   // Bosh sahifa (egasi, 2026-11-07): har kuni kuzatadigan narsalar - voronka, kanal harakati,
-  // chiqib ketganlar sababi, yangi g'oyalar. Karta o'z bo'limidan ko'chadi, u yerda havola qoladi.
+  // chiqib ketganlar sababi, yangi g'oyalar. Karta IKKI JOYDA ko'rinadi: o'z bo'limida turadi,
+  // Bosh sahifa ochilganda o'sha yerga ko'chib o'tadi (boshKochir) - bitta karta, bitta holat.
   var BOSH = {"Sehrli yo'l":1, "Kanal harakati":2, "Nega chiqib ketishdi":3, "Ularning so'zlari":4, "G'oyalar":5};
+  ST.boshK = [];
   function put(bolim, karta){
     var h = karta.querySelector && karta.querySelector(".c-head h2");
     var nom = h ? h.textContent : "";
-    if(BOSH[nom] && bolim !== "asosiy"){
-      karta.style.order = BOSH[nom];
-      SEC.asosiy.appendChild(karta);
-      if(!SEC[bolim].querySelector('[data-kochdi="' + nom + '"]')){
-        var l = document.createElement("button");
-        l.type = "button"; l.className = "kochdi"; l.setAttribute("data-kochdi", nom);
-        l.innerHTML = "<b>" + esc(nom) + "</b><span>Bosh sahifada</span>";
-        l.addEventListener("click", function(){ selectTab("asosiy"); });
-        SEC[bolim].insertBefore(l, SEC[bolim].firstChild);
-      }
-      return;
-    }
     (SEC[bolim] || SEC.umumiy).appendChild(karta);
+    if(BOSH[nom] && bolim !== "asosiy"){
+      var iz = document.createElement("i"); iz.hidden = true; iz.className = "bosh-iz";
+      karta.parentNode.insertBefore(iz, karta);
+      karta._iz = iz; karta._tartib = BOSH[nom];
+      ST.boshK.push(karta);
+    }
   }
 
   SEC.asosiy.insertAdjacentElement("beforebegin", kp);
@@ -5783,6 +5845,8 @@ function selectTab(id, joyida){
     b.tabIndex = faol ? 0 : -1;
   });
   tabKorin();
+  boshKochir(id);
+  var gz = document.getElementById("sec-" + id); if(gz && window.zichNavbat) zichNavbat(gz);
   var sar = document.getElementById("bolim-nom");
   if(sar){ var bb = BOLIMLAR.filter(function(b){ return b.id === id; })[0]; sar.textContent = bb ? bb.nom : ""; document.title = (bb ? bb.nom + " · " : "") + "Kuzatuv"; }
   BOLIMLAR.forEach(function(b){
