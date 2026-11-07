@@ -782,6 +782,13 @@ body.yon-yigiq .yon-eski:hover::after{opacity:1}
   .grid > .card{margin-bottom:16px}
 }
 
+/* Emoji o'rnidagi belgilar: bitta oila, chiziqli, matn rangida */
+svg.ik{display:inline-block; overflow:visible; width:1.1em; height:1.1em; flex:none; vertical-align:-.18em; margin-right:.4em; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; opacity:.85}
+.ik-nuqta{display:inline-block; width:8px; height:8px; flex:none; border-radius:50%; margin-right:.5em; vertical-align:.08em}
+.ik-til{display:inline-block; font-size:.72em; font-weight:700; line-height:1.5; padding:0 4px; border-radius:4px; background:var(--ich-2); color:var(--ink-2); margin-right:.45em; vertical-align:.12em; letter-spacing:.02em}
+
+.ik-q{display:inline}
+
 </style>
 </head>
 <body>
@@ -844,6 +851,64 @@ body.yon-yigiq .yon-eski:hover::after{opacity:1}
 <script>
 /* Emoji yangi panelda ko'rsatilmaydi: matn tugunlaridan olib tashlanadi (ma'lumot o'zgarmaydi) */
 var EMO_RE = /(?:[\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)\uFE0F?\s?/gu;
+/* Emoji o'rniga bitta oiladagi chiziqli belgilar (Lucide, ISC), fakultet va holat - rangli nuqta,
+   bayroq - til yozuvi (egasi, 2026-11-07: emojini olib, o'rniga yechim kerak) */
+var IK_YOL = {
+  bot:'<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  megafon:'<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  film:'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/>',
+  tel:'<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>',
+  xat:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  bino:'<path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="M12 2 20 7H4z"/>',
+  tanga:'<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>',
+  tayoq:'<path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/>',
+  bilet:'<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
+  poyezd:'<path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/>',
+  qalpoq:'<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  qalqon:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  kompas:'<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/>',
+  kitob:'<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  yukla:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+  nota:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  quloqchin:'<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+  disk:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="2"/>',
+  kubok:'<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  odamlar:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  sovga:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>',
+  havola:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  qaytar:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  chaqmoq:'<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  uchqun:'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
+  qalam:'<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>',
+  soat:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  ovozsiz:'<path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"/><path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="m2 2 20 20"/>',
+  aralash:'<path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="M2 6h1.4c1.3 0 2.5.6 3.3 1.7l.5.7"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/>',
+  savol:'<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  jomadon:'<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  toj:'<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>'
+};
+var EMO_IK = {
+  "🤖":"bot", "📣":"megafon", "🎬":"film", "📱":"tel", "✉":"xat", "🦉":"xat", "🏦":"bino", "🏛":"bino",
+  "🪙":"tanga", "🪄":"tayoq", "🎫":"bilet", "🚂":"poyezd", "🎩":"qalpoq", "🎓":"qalpoq", "🏰":"qalqon",
+  "🧭":"kompas", "📖":"kitob", "📥":"yukla", "🎵":"nota", "🎧":"quloqchin", "💿":"disk", "🏆":"kubok",
+  "🤝":"odamlar", "🎁":"sovga", "🔗":"havola", "↩":"qaytar", "⚡":"chaqmoq", "✨":"uchqun", "🦌":"uchqun",
+  "✍":"qalam", "🐌":"soat", "🔕":"ovozsiz", "🎭":"aralash", "🤷":"savol", "🧳":"jomadon", "♟":"toj"
+};
+var EMO_NUQTA = {"🦁":"#d9524a", "🐍":"#2fa36b", "🦅":"#5b8fd9", "🦡":"#e8b93c",
+                 "🔵":"#3987e5", "🟢":"#199e70", "🔴":"#d03b3b", "⚪":"#a3abb7"};
+var EMO_TIL = {"🇺🇿":"UZ", "🇷🇺":"RU", "🇬🇧":"EN"};
+function emoBelgi(e){
+  var k = e.replace(/[️\s]/g, "");
+  if(EMO_TIL[k]){ var t = document.createElement("span"); t.className = "ik-til"; t.textContent = EMO_TIL[k]; return t; }
+  if(EMO_NUQTA[k]){ var d = document.createElement("span"); d.className = "ik-nuqta"; d.style.background = EMO_NUQTA[k]; return d; }
+  if(IK_YOL[EMO_IK[k]]){
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "ik"); s.setAttribute("aria-hidden", "true");
+    s.innerHTML = IK_YOL[EMO_IK[k]];
+    return s;
+  }
+  return null;
+}
 function emoTozala(root){
   if(!root) return;
   var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, rr = [];
@@ -853,7 +918,31 @@ function emoTozala(root){
     if(EMO_RE.test(n.nodeValue)) rr.push(n);
     EMO_RE.lastIndex = 0;
   }
-  rr.forEach(function(t){ t.nodeValue = t.nodeValue.replace(EMO_RE, ""); });
+  rr.forEach(function(t){
+    var ota = t.parentNode;
+    // SVG chizma, ro'yxat tanlovi, sarlavha ichida element qo'yib bo'lmaydi - u yerda til yozuvi yoki olib tashlash
+    var oddiy = ota && ota.namespaceURI !== "http://www.w3.org/2000/svg" && ota.nodeName !== "OPTION" && ota.nodeName !== "TITLE";
+    if(!oddiy){
+      t.nodeValue = t.nodeValue.replace(EMO_RE, function(e){ var k = e.replace(/[\uFE0F\s]/g, ""); return EMO_TIL[k] ? EMO_TIL[k] + " " : ""; });
+      return;
+    }
+    // Belgi va yozuv bitta qatorda tursin: hammasi bitta qobiqda (ota flex/grid bo'lsa ham)
+    // Yonida rang belgisi allaqachon bo'lsa (diagramma izohi, jadval), rangli nuqta takrorlanmaydi
+    var rangBor = [ota, ota.parentNode].some(function(e){ return e && e.querySelector && e.querySelector(":scope > .swatch, :scope > .sw, :scope > .dot"); });
+    var f = document.createElement("span"), q = t.nodeValue, i = 0, m;
+    f.className = "ik-q";
+    EMO_RE.lastIndex = 0;
+    while((m = EMO_RE.exec(q))){
+      if(m.index > i) f.appendChild(document.createTextNode(q.slice(i, m.index)));
+      var b = emoBelgi(m[0]);
+      if(b && rangBor && b.className === "ik-nuqta") b = null;
+      if(b) f.appendChild(b);
+      i = m.index + m[0].length;
+      if(b) while(q.charAt(i) === " ") i++;      // belgidan keyingi bo'sh joy - oraliqni CSS beradi
+    }
+    if(i < q.length) f.appendChild(document.createTextNode(q.slice(i)));
+    ota.replaceChild(f, t);
+  });
 }
 /* Bosh sahifa kartalari: Bosh sahifa ochiq bo'lsa o'sha yerda, aks holda o'z bo'limida */
 function boshKochir(id){
