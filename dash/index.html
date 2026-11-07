@@ -5235,10 +5235,12 @@ function render(){
     fikr: ST.goya ? ST.goya.rows.filter(function(r){ return r.holat === "yangi"; }).length : 0,
     lenta: rows.length
   });
-  selectTab(BOLIMLAR.some(function(b){ return b.id === ST.tab; }) ? ST.tab : "umumiy");
-  // Fonda yangilanish yozilayotgan xatni buzmasin: kursor ham, sahifa joyi ham qaytadi
+  var tabBor = BOLIMLAR.some(function(b){ return b.id === ST.tab; });
+  selectTab(tabBor ? ST.tab : "umumiy", tabBor);
+  // Ma'lumot yangilansa ham o'qib turgan joyingiz saqlanadi (sahifa tepaga sakramaydi)
+  if(tabBor) window.scrollTo({top:pfY, behavior:"instant"});
+  // Fonda yangilanish yozilayotgan xatni buzmasin: kursor ham qaytadi
   if(pfFaol){
-    window.scrollTo({top:pfY, behavior:"instant"});
     try{ pfFaol.focus({preventScroll:true}); if(pfJoy) pfFaol.setSelectionRange(pfJoy[0], pfJoy[1]); }catch(e){}
   }
 }
@@ -5527,7 +5529,8 @@ function tabKorin(){
   if(nav._chet) nav._chet();
 }
 
-function selectTab(id){
+// joyida = true: fonda qayta chizish (yangilanish) - sahifa tepaga sakramaydi (egasi, 2026-11-07)
+function selectTab(id, joyida){
   ST.tab = id;
   saveCfg();
   [].forEach.call(document.querySelectorAll("#tabs button"), function(b, i){
@@ -5542,7 +5545,7 @@ function selectTab(id){
   });
   var kp = document.querySelector(".kpis");
   if(kp) kp.hidden = (id !== "umumiy");
-  window.scrollTo({top:0, behavior:"instant"});
+  if(!joyida) window.scrollTo({top:0, behavior:"instant"});
 }
 
 /* ───────── Manba qatori ───────── */
