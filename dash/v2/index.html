@@ -805,6 +805,26 @@ svg.ik-bayroq{display:inline-block; width:.95em; height:1.05em; flex:none; verti
 /* Diagramma o'rtasidagi son - panelning raqam shrifti (Manrope, KPI raqamlari kabi) */
 .donut-son{font-family:'Manrope',system-ui,sans-serif; font-weight:700; font-size:30px; letter-spacing:-.04em; font-variant-numeric:tabular-nums}
 
+/* «Nima o'zgardi» */
+#sec-asosiy > .card.ozg{grid-column:span 12}
+.ozg-list{display:flex; flex-direction:column; gap:6px; margin-top:12px}
+.ozg-q{display:flex; align-items:center; gap:12px; width:100%; min-height:48px; padding:8px 14px 8px 10px; border:0; border-radius:10px; background:var(--ich); color:var(--ink); text-align:left; font:inherit; font-size:13.5px}
+button.ozg-q{cursor:pointer; transition:background-color .18s var(--ease)}
+button.ozg-q:hover{background:var(--ich-2)}
+.ozg-ic{width:30px; height:30px; flex:none; display:grid; place-items:center; border-radius:8px; background:var(--ich-2); color:var(--ink-2)}
+.ozg-ic svg{width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.ozg-ic.yaxshi{color:#3fbf6a; background:rgba(63,191,106,.12)}
+.ozg-ic.yomon{color:#e0796f; background:rgba(224,121,111,.12)}
+.ozg-m{flex:1 1 auto; min-width:0; display:flex; flex-wrap:wrap; align-items:baseline; gap:2px 10px}
+.ozg-m b{font-weight:700; font-variant-numeric:tabular-nums}
+.ozg-iz{font-size:12.5px; color:var(--ink-3)}
+.ozg-chip{flex:none; font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums; padding:3px 9px; border-radius:11px; background:var(--ich-2); color:var(--ink-2)}
+.ozg-chip.yaxshi{color:#3fbf6a; background:rgba(63,191,106,.12)}
+.ozg-chip.yomon{color:#e0796f; background:rgba(224,121,111,.12)}
+.ozg-ch{flex:none; color:var(--ink-3); font-size:16px}
+.ozg-oddiy{margin:12px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.6}
+.ozg-oddiy span{color:var(--ink-2); font-weight:600}
+
 </style>
 </head>
 <body>
@@ -988,6 +1008,133 @@ function emoTozala(root){
     }
   });
 }
+/* ═════ «Nima o'zgardi» (egasi, 2026-11-07): kechagi kun oldingi 7 kunning o'rtachasi bilan
+   solishtiriladi; odatdagidan sezilarli farq qilganlari yuqorida. AI'siz, bepul, raqamlar aniq. ═════ */
+var OZG_YOQ = '<path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>', OZG_PAST = '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>';
+function ozgKunlar(){
+  // kecha va undan oldingi 7 kun kalitlari
+  var bugun = new Date(); bugun.setHours(0, 0, 0, 0);
+  var k = [];
+  for(var i = 1; i <= 8; i++){ var d = new Date(bugun.getTime() - i * 86400000); k.push(dayKey(d)); }
+  return {kecha:k[0], oldin:k.slice(1)};
+}
+function ozgHisob(){
+  var K = ozgKunlar(), kerak = {}; kerak[K.kecha] = 1; K.oldin.forEach(function(x){ kerak[x] = 1; });
+  var M = {};       // ko'rsatkich -> kun -> son (yoki odamlar to'plami)
+  function qosh(m, kun, uid){
+    if(!kerak[kun]) return;
+    var a = M[m] = M[m] || {}; var b = a[kun] = a[kun] || {};
+    b[uid == null ? Math.random() : uid] = 1;
+  }
+  var birinchi = firstSeen();
+  Object.keys(birinchi).forEach(function(u){ qosh("yangi", dayKey(birinchi[u]), u); });
+  ST.rows.forEach(function(r){
+    var kun = dayKey(r.t); if(!kerak[kun]) return;
+    var e = r.ev;
+    qosh("faol", kun, r.uid);
+    if(e.t === "blocked") qosh("blok", kun, r.uid);
+    else if(e.t === "film") qosh("film", kun, null);
+    else if(e.t === "dars") qosh("dars", kun, r.uid);
+    else if(e.t === "bell") qosh("bell", kun, r.uid);
+    var q = yolQadam(e); if(q) qosh("y_" + q, kun, r.uid);
+  });
+  kanalHajmi().ozg.forEach(function(x){ qosh(x.d > 0 ? "kqosh" : "kchiq", dayKey(x.t), x.uid); });
+  (ST.leave || []).forEach(function(x){ if(x.reason && LEAVE[x.reason] && LEAVE[x.reason].bad) qosh("sabab", dayKey(x.t), x.uid); });
+
+  var R = [
+    {k:"yangi", n:"Yangi odamlar", yax:1, bol:"odamlar"},
+    {k:"faol",  n:"Faol odamlar", yax:1, bol:"umumiy"},
+    {k:"kqosh", n:"Kanalga qo'shilganlar", yax:1, bol:"kanal"},
+    {k:"kchiq", n:"Kanaldan chiqqanlar", yax:-1, bol:"kanal"},
+    {k:"sabab", n:"Bot yoki kanaldan norozi bo'lib chiqqanlar", yax:-1, bol:"kanal"},
+    {k:"blok",  n:"Botni bloklaganlar", yax:-1, bol:"kanal"},
+    {k:"film",  n:"Olingan filmlar", yax:1, bol:"kino"},
+    {k:"dars",  n:"Dars o'tganlar", yax:1, bol:"dars"},
+    {k:"bell",  n:"Bellashuvda qatnashganlar", yax:1, bol:"dars"}
+  ].concat(YOL.map(function(x){ return {k:"y_" + x.k, n:"Sehrli yo'l: " + x.n, yax:1, bol:"yol"}; }));
+  R.forEach(function(m){
+    var son = function(kun){ return Object.keys((M[m.k] || {})[kun] || {}).length; };
+    m.y = son(K.kecha);
+    m.o = K.oldin.map(son);
+    m.mu = m.o.reduce(function(a, b){ return a + b; }, 0) / m.o.length;
+    m.min = Math.min.apply(null, m.o); m.max = Math.max.apply(null, m.o);
+    var farq = m.y - m.mu;
+    m.farq = farq;
+    m.belgi = (m.mu >= 4 && Math.abs(farq) / m.mu >= .35 && Math.abs(farq) >= 3) || (m.mu < 4 && Math.abs(farq) >= 4);
+    m.kuch = Math.abs(farq) / Math.max(m.mu, 2);
+    m.yaxshi = (farq > 0) === (m.yax > 0);
+  });
+  // Yo'lning eng ko'p odam yo'qotadigan qadami (8 kun ichida qadamni qilganlar bo'yicha)
+  var qadam = YOL.map(function(x){
+    var u = {}; Object.keys(M["y_" + x.k] || {}).forEach(function(kun){ Object.assign(u, M["y_" + x.k][kun]); });
+    return {n:x.n, s:Object.keys(u).length};
+  });
+  var eng = null;
+  for(var i = 1; i < qadam.length; i++){
+    if(qadam[i-1].s < 5) continue;
+    var yoq = 1 - qadam[i].s / qadam[i-1].s;
+    if(!eng || yoq > eng.yoq) eng = {dan:qadam[i-1], ga:qadam[i], yoq:yoq};
+  }
+  return {K:K, R:R, eng:eng};
+}
+function ozgKarta(){
+  var c = card("Nima o'zgardi", "", "");
+  c.classList.add("ozg");
+  var H;
+  try{ H = ozgHisob(); }catch(e){ c.appendChild(emptyNote("Hisoblab bo'lmadi: " + e.message)); return c; }
+  var hint = c.querySelector(".c-head .hint");
+  var hs = document.createElement("span"); hs.className = "hint";
+  hs.textContent = "kecha, " + fmtDay(H.K.kecha) + " · oldingi 7 kunning o'rtachasi bilan solishtirildi";
+  c.querySelector(".c-head").insertBefore(hs, c._head);
+
+  function qator(ic, matn, izoh, chip, chipKls, bol){
+    var d = document.createElement(bol ? "button" : "div"); d.className = "ozg-q";
+    if(bol){ d.type = "button"; d.addEventListener("click", function(){ selectTab(bol); }); }
+    d.innerHTML = '<span class="ozg-ic ' + (chipKls || "") + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + ic + '</svg></span>' +
+      '<span class="ozg-m">' + matn + (izoh ? '<span class="ozg-iz">' + izoh + '</span>' : '') + '</span>' +
+      (chip ? '<span class="ozg-chip ' + (chipKls || "") + '">' + chip + '</span>' : '') + (bol ? '<span class="ozg-ch">›</span>' : '');
+    return d;
+  }
+  var royxat = document.createElement("div"); royxat.className = "ozg-list";
+  var belgili = H.R.filter(function(m){ return m.belgi; }).sort(function(a, b){ return b.kuch - a.kuch; });
+  belgili.forEach(function(m){
+    var foiz = m.mu ? Math.round(m.farq / m.mu * 100) : null;
+    royxat.appendChild(qator(m.farq > 0 ? OZG_YOQ : OZG_PAST,
+      esc(m.n) + ": <b>" + fmtNum(m.y) + "</b>",
+      "odatda ≈" + fmtNum(Math.round(m.mu)) + " (" + fmtNum(m.min) + "–" + fmtNum(m.max) + ")",
+      foiz == null ? "yangi" : (foiz > 0 ? "+" : "−") + Math.abs(foiz) + "%",
+      m.yaxshi ? "yaxshi" : "yomon", m.bol));
+  });
+  // Javob kutayotganlar
+  if(ST.goya && ST.goya.rows){
+    var yangi = ST.goya.rows.filter(function(r){ return r.holat === "yangi"; });
+    if(yangi.length){
+      var eski = yangi.reduce(function(a, r){ return !a || r.vaqt < a ? r.vaqt : a; }, null);
+      var kun = eski ? Math.floor((Date.now() - new Date(eski).getTime()) / 86400000) : 0;
+      royxat.appendChild(qator('<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+        "Javob kutayotgan g'oyalar: <b>" + fmtNum(yangi.length) + "</b>",
+        kun ? "eng eskisi " + kun + " kunlik" : "bugun kelgan", null, "", "fikr"));
+    }
+  }
+  if(H.eng && H.eng.yoq > .2){
+    royxat.appendChild(qator('<path d="M3 3h18l-7 9v6l-4 3v-9z"/>',
+      "Yo'lda eng ko'p odam yo'qotiladigan joy: <b>" + esc(H.eng.dan.n) + " → " + esc(H.eng.ga.n) + "</b>",
+      "oxirgi 8 kunda " + fmtNum(H.eng.dan.s) + " kishidan " + fmtNum(H.eng.ga.s) + " kishi o'tgan", "−" + Math.round(H.eng.yoq * 100) + "%", "yomon", "yol"));
+  }
+  if(!royxat.children.length){
+    royxat.appendChild(qator('<path d="M20 6 9 17l-5-5"/>', "Kecha hammasi odatdagidek edi", "hech bir ko'rsatkich odatdagidan sezilarli farq qilmadi", null, "yaxshi"));
+  }
+  c.appendChild(royxat);
+  // Odatdagidek qolganlar - bitta qator
+  var oddiy = H.R.filter(function(m){ return !m.belgi && (m.y || m.mu); });
+  if(oddiy.length){
+    var p = document.createElement("p"); p.className = "ozg-oddiy";
+    p.innerHTML = "<span>Odatdagidek:</span> " + oddiy.map(function(m){ return esc(m.n.replace("Sehrli yo'l: ", "")) + " " + fmtNum(m.y); }).join(" · ");
+    c.appendChild(p);
+  }
+  return c;
+}
+
 /* Bosh sahifa kartalari: Bosh sahifa ochiq bo'lsa o'sha yerda, aks holda o'z bo'limida */
 function boshKochir(id){
   var bosh = document.getElementById("sec-asosiy");
@@ -3484,6 +3631,7 @@ function render(){
   }
 
   SEC.asosiy.insertAdjacentElement("beforebegin", kp);
+  var ozgK = ozgKarta(); ozgK.style.order = "0"; SEC.asosiy.appendChild(ozgK);
   kp.hidden = (ST.tab !== "asosiy");
   var bs = document.getElementById("bolim-nom");
   if(bs){ var bb0 = BOLIMLAR.filter(function(b){ return b.id === ST.tab; })[0]; bs.textContent = bb0 ? bb0.nom : ""; document.title = (bb0 ? bb0.nom + " · " : "") + "Kuzatuv"; }
