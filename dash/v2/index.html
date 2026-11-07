@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Kuzatuv paneli · yangi</title>
+<title>Kuzatuv</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e9ebee'/><rect x='8' y='17' width='4' height='7' rx='1.5' fill='%23a3abb7'/><rect x='14' y='12' width='4' height='12' rx='1.5' fill='%235b6370'/><rect x='20' y='8' width='4' height='16' rx='1.5' fill='%23151a21'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap">
@@ -632,8 +633,7 @@ h1,h2,h3{font-family:'Manrope',system-ui,sans-serif; letter-spacing:-.01em}
   background:var(--bg); overflow-y:auto;
 }
 .yon-bosh{display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; color:var(--ink); padding:0 10px 14px}
-.yon-belgi{width:22px; height:22px; border-radius:6px; background:var(--panel-2); position:relative}
-.yon-belgi::after{content:""; position:absolute; inset:6px; border-radius:2px; background:var(--ink-2)}
+.yon-belgi{width:24px; height:24px; flex:none; display:block}
 .yon .tabs{
   display:flex; flex-direction:column; gap:1px; overflow:visible; background:none; border:0; padding:0;
   -webkit-mask-image:none; mask-image:none; flex:none;
@@ -739,7 +739,7 @@ h1,h2,h3{font-family:'Manrope',system-ui,sans-serif; letter-spacing:-.01em}
 
 
 <aside class="yon">
-  <div class="yon-bosh"><span class="yon-belgi" aria-hidden="true"></span><span>Kuzatuv paneli</span></div>
+  <div class="yon-bosh"><svg class="yon-belgi" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#e9ebee"/><rect x="8" y="17" width="4" height="7" rx="1.5" fill="#a3abb7"/><rect x="14" y="12" width="4" height="12" rx="1.5" fill="#5b6370"/><rect x="20" y="8" width="4" height="16" rx="1.5" fill="#151a21"/></svg><span>Kuzatuv paneli</span></div>
   <nav class="tabs" id="tabs" role="tablist" aria-orientation="vertical"></nav>
   <a class="yon-eski" href="../">Eski panelga qaytish</a>
 </aside>
@@ -3229,7 +3229,7 @@ function render(){
   SEC.asosiy.insertAdjacentElement("beforebegin", kp);
   kp.hidden = (ST.tab !== "asosiy");
   var bs = document.getElementById("bolim-nom");
-  if(bs){ var bb0 = BOLIMLAR.filter(function(b){ return b.id === ST.tab; })[0]; bs.textContent = bb0 ? bb0.nom : ""; }
+  if(bs){ var bb0 = BOLIMLAR.filter(function(b){ return b.id === ST.tab; })[0]; bs.textContent = bb0 ? bb0.nom : ""; document.title = (bb0 ? bb0.nom + " · " : "") + "Kuzatuv"; }
 
 
   /* — Kunlik faollik — */
@@ -5718,7 +5718,7 @@ function selectTab(id){
   });
   tabKorin();
   var sar = document.getElementById("bolim-nom");
-  if(sar){ var bb = BOLIMLAR.filter(function(b){ return b.id === id; })[0]; sar.textContent = bb ? bb.nom : ""; }
+  if(sar){ var bb = BOLIMLAR.filter(function(b){ return b.id === id; })[0]; sar.textContent = bb ? bb.nom : ""; document.title = (bb ? bb.nom + " · " : "") + "Kuzatuv"; }
   BOLIMLAR.forEach(function(b){
     var g = document.getElementById("sec-" + b.id);
     if(g) g.hidden = (b.id !== id);
