@@ -196,12 +196,17 @@
       if (res && res.ok) {
         ankData = res;
         ankKarta();
-        if (ankSp && res.on && !res.done) { ankSp = false; setTimeout(ankOch, 600); }
+        // Bot tugmasi yoki startapp=anketa: suhbat o'zi ochiladi. Javob bergan bo'lsa ham ochiladi -
+        // «Siz bu savollarga javob bergansiz» deydi (aks holda tugma hech narsa qilmagandek tuyuladi; egasi, 2026-11-07)
+        if (ankSp && res.on) { ankSp = false; setTimeout(ankOch, 600); }
       }
     });
   }
 
   // Kutubxonadagi karta (egasi, 2026-11-05: chap tomonda Dambldor rasmi); javob berilgach yo'qoladi
+  // Bot tugmasidan kirilganda kutubxona chizilishini kutmaymiz (ilova Xogvartsdan ochilsa ham ishlasin)
+  if (ankSp) { setTimeout(function () { try { ankLoad(); } catch (e) {} }, 1200); }
+
   function ankKarta() {
     var hog = $("hogc"), c = $("ankc"), d = ankData, t = ankT();
     if (!hog) { return; }
