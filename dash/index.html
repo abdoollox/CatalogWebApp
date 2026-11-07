@@ -469,6 +469,17 @@ td.tar-td{width:1%; padding-block:4px}
 }
 /* Izohlar */
 .goyp-seg{flex-wrap:wrap; margin:14px 0 4px; display:inline-flex}
+.goyp-mseg{display:flex; width:fit-content; max-width:100%; margin-top:6px}
+.goyp-ai{display:flex; align-items:center; gap:12px; margin-top:14px; font-size:12.5px; color:var(--ink-2)}
+.goyp-ai-m{display:flex; align-items:center; gap:8px; flex:1; min-width:0}
+.goyp-ai-m svg{width:15px; height:15px; flex:none; fill:none; stroke:#9085e9; stroke-width:1.8; stroke-linejoin:round}
+.goyp-ai-t{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.goyp-ai-t span{font-size:11.5px; font-weight:600; padding:3px 9px; border-radius:11px; background:rgba(255,255,255,.06); color:var(--ink-2)}
+.goyp-ai-t .goyp-tk{background:rgba(250,178,25,.12); color:#e8b93c}
+.goyp-ai-t .goyp-ox{background:rgba(144,133,233,.14); color:#b3aaf5}
+.goyp-qor{margin-top:10px; padding:10px 12px; border-radius:10px; background:rgba(144,133,233,.08)}
+.goyp-qor-l{display:block; font-size:11.5px; font-weight:600; color:#b3aaf5}
+.goyp-qor p{margin:5px 0 8px; font-size:13px; line-height:1.5; color:var(--ink)}
 .goyp-list{display:flex; flex-direction:column; gap:12px; margin-top:12px}
 .goyp{background:var(--panel-2); border-radius:12px; padding:14px 16px; border:1px solid var(--line)}
 .goyp-bosh{display:flex; align-items:flex-start; gap:10px}
@@ -5727,7 +5738,7 @@ function loadData(jim){
     if(!rows.length) throw new Error("yozuv topilmadi");
     ST.rows = rows; ST.demo = false; ST.err = null; ST.loadedAt = new Date();
     ST.people = null;
-    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat(); loadPochta(); loadTarqatma(); loadGoya(); loadAnketa();
+    done(); render(); loadReasons(); loadKanal(); loadMusiqa(); loadChat(); loadPochta(); loadTarqatma(); loadGoya(); loadGoyaAI(); loadAnketa();
   }).catch(function(e){
     ST.err = "Ulanmadi: " + e.message + ". «Ma'lumot manbai» dan tekshiring yoki CSV faylni tashlang.";
     if(!ST.rows.length || ST.demo){ ST.rows = demoRows(); ST.demo = true; }
@@ -5821,6 +5832,23 @@ function loadGoya(){
     ST.jim = true; render(); ST.jim = false;
   }).catch(function(){ /* eski bot bo'lsa karta ma'lumotsiz chiqadi */ });
 }
+// G'oyalar AI tahlili (bot hpgoyaai): mavzu, takror, Dambldor javobi qoralamasi
+function goyaAISo(body){
+  if(!ST.src || ST.src.kind !== "api") return Promise.reject(new Error("ulanmagan"));
+  return fetch(fikrUrl("goya/ai"), {method:"POST", cache:"no-store",
+      headers:{"X-Dash-Token": ST.src.token, "Content-Type":"application/json"}, body:JSON.stringify(body || {})})
+    .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); });
+}
+function loadGoyaAI(yangila){
+  if(!ST.src || ST.src.kind !== "api") return;
+  goyaAISo(yangila ? {yangila:1} : {}).then(function(j){
+    if(!j || !j.ok) return;
+    ST.goyaAI = j; ST.goyaV = (ST.goyaV || 0) + 1;
+    if(ST.goyK) ST.goyK._chiz();
+    // tahlil ketayotgan bo'lsa - tugaguncha har 8 soniyada qaraymiz
+    if(j.ishlamoqda){ clearTimeout(ST.goyaAIt); ST.goyaAIt = setTimeout(function(){ loadGoyaAI(); }, 8000); }
+  }).catch(function(){});
+}
 function loadAnketa(){
   if(!ST.src || ST.src.kind !== "api"){ ST.anketa = null; return; }
   fetch(fikrUrl("anketa/panel"), {cache:"no-store", headers:{"X-Dash-Token": ST.src.token}})
@@ -5837,8 +5865,10 @@ function goyaKarta(){
   var kp = document.createElement("div"); kp.className = "tarq-kpi";
   var seg = document.createElement("div"); seg.className = "seg goyp-seg";
   var list = document.createElement("div"); list.className = "goyp-list";
-  c.appendChild(kp); c.appendChild(seg); c.appendChild(list);
-  var filtr = null, ver = -1;
+  var aiq = document.createElement("div"); aiq.className = "goyp-ai";
+  var mseg = document.createElement("div"); mseg.className = "seg goyp-seg goyp-mseg";
+  c.appendChild(kp); c.appendChild(aiq); c.appendChild(seg); c.appendChild(mseg); c.appendChild(list);
+  var filtr = null, ver = -1, mavzu = "hammasi";
   c._chiz = function(majbur){
     if(!ST.goya){
       kp.innerHTML = ""; seg.innerHTML = ""; list.innerHTML = "";
@@ -5849,6 +5879,25 @@ function goyaKarta(){
     if(!majbur && ver === ST.goyaV) return;
     if(!majbur && list.contains(document.activeElement)) return;      // javob yozilayotgan bo'lsa - tegmaymiz
     ver = ST.goyaV;
+    var AIg = (ST.goyaAI && ST.goyaAI.goyalar) || {};
+    // AI qatori: holat, vaqt, «Yangilash»
+    aiq.innerHTML = "";
+    var aiM = document.createElement("span"); aiM.className = "goyp-ai-m";
+    var A = ST.goyaAI;
+    aiM.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0L14.06 8.5a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></svg>' +
+      (!A ? "AI tahlili yuklanmoqda…" : !A.kalit ? "AI kaliti yo'q — botga /ai kalit KALIT deb yozing"
+        : A.ishlamoqda ? "AI g'oyalarni tahlil qilmoqda… (≈30 soniya)"
+        : A.xato ? "AI tahlilida xato: " + esc(A.xato)
+        : A.vaqt ? "AI tahlili: " + esc(fmtDay(A.vaqt.slice(0, 10))) + ", " + esc(A.vaqt.slice(11, 16)) + " · " + (A.mavzular || []).length + " mavzu · qoralama faqat siz «Saqlash» bossangiz yuboriladi"
+        : "AI hali tahlil qilmagan");
+    aiq.appendChild(aiM);
+    if(A && A.kalit){
+      var aib = document.createElement("button"); aib.type = "button"; aib.className = "btn ghost";
+      aib.textContent = A.ishlamoqda ? "Kutilmoqda…" : "AI bilan qayta tahlil";
+      aib.disabled = !!A.ishlamoqda;
+      aib.addEventListener("click", function(){ aib.disabled = true; aib.textContent = "Boshlanmoqda…"; loadGoyaAI(true); });
+      aiq.appendChild(aib);
+    }
     var rows = ST.goya.rows, son = {hammasi:rows.length};
     GOY_TARTIB.forEach(function(h){ son[h] = rows.filter(function(r){ return r.holat === h; }).length; });
     if(filtr === null) filtr = son.yangi ? "yangi" : "hammasi";
@@ -5868,10 +5917,30 @@ function goyaKarta(){
       b.addEventListener("click", function(){ filtr = h; c._chiz(true); });
       seg.appendChild(b);
     });
+    // Mavzu bo'yicha saralash (AI tahlili bo'lsa)
+    mseg.innerHTML = "";
+    var mz = (A && A.mavzular) || [];
+    var holatda = rows.filter(function(r){ return filtr === "hammasi" || r.holat === filtr; });
+    if(mz.length){
+      var msn = {};
+      holatda.forEach(function(r){ var m = (AIg[r.id] || {}).mavzu || "Tahlil qilinmagan"; msn[m] = (msn[m] || 0) + 1; });
+      var mlar = ["hammasi"].concat(mz.map(function(m){ return m.nom; }).filter(function(n){ return msn[n]; }));
+      if(msn["Tahlil qilinmagan"]) mlar.push("Tahlil qilinmagan");
+      if(mlar.indexOf(mavzu) < 0) mavzu = "hammasi";
+      mlar.forEach(function(m){
+        var b = document.createElement("button"); b.type = "button";
+        b.setAttribute("aria-pressed", String(mavzu === m));
+        b.textContent = (m === "hammasi" ? "Barcha mavzular" : m) + " · " + (m === "hammasi" ? holatda.length : msn[m]);
+        b.addEventListener("click", function(){ mavzu = m; c._chiz(true); });
+        mseg.appendChild(b);
+      });
+    }
+    mseg.hidden = !mz.length;
     list.innerHTML = "";
-    var korsat = rows.filter(function(r){ return filtr === "hammasi" || r.holat === filtr; });
+    var korsat = holatda.filter(function(r){ return mavzu === "hammasi" || ((AIg[r.id] || {}).mavzu || "Tahlil qilinmagan") === mavzu; });
     if(!korsat.length){ list.appendChild(emptyNote(son.hammasi ? "Bu holatda g'oya yo'q." : "Hali hech kim g'oya yubormagan.")); return; }
-    korsat.forEach(function(r){ list.appendChild(goypQator(r)); });
+    var byId = {}; rows.forEach(function(r){ byId[r.id] = r; });
+    korsat.forEach(function(r){ list.appendChild(goypQator(r, AIg, byId)); });
   };
   return c;
 }
@@ -5887,7 +5956,9 @@ function goyQorYoz(id, q){
   if(q) Q[id] = q; else delete Q[id];
   try{ localStorage.setItem(GOY_QK, JSON.stringify(Q)); }catch(e){}
 }
-function goypQator(r){
+function goypQator(r, AIg, byId){
+  AIg = AIg || {}; byId = byId || {};
+  var ai = AIg[r.id] || null;
   var d = document.createElement("div"); d.className = "goyp";
   var qor = goyQor()[r.id] || null;
   var h = GOY_H[r.holat] || [r.holat, "#6d7f99"];
@@ -5897,6 +5968,16 @@ function goypQator(r){
     '<div class="goyp-meta">' + odamHavola(r.uid, r.ism) + (r.username ? ' <span class="uname">@' + esc(r.username) + '</span>' : '') +
     (hn ? ' · ' + hn.crest + ' ' + esc(hn.n) : '') + ' · ' + esc(goyaVaqt(r.vaqt)) + (r.til ? ' · ' + esc(r.til.toUpperCase()) : '') +
     (r.admin ? ' · <span class="uname">admin</span>' : '') + '</div>';
+  if(ai){
+    var tg = document.createElement("div"); tg.className = "goyp-ai-t";
+    var asos = ai.asosiy && byId[ai.asosiy];
+    var oxs = Object.keys(AIg).filter(function(k){ return AIg[k].asosiy === r.id && byId[k]; });
+    tg.innerHTML = '<span class="goyp-mz">' + esc(ai.mavzu || "") + '</span>' +
+      (asos ? '<span class="goyp-tk">Takror: «' + esc(asos.nom) + '»</span>' : '') +
+      (oxs.length ? '<span class="goyp-ox">' + oxs.length + ' ta o\'xshash g\'oya</span>' : '');
+    d.appendChild(tg);
+    d._oxs = oxs.map(function(k){ return byId[k]; });
+  }
   var tanlov = (qor && qor.holat) || r.holat;
   var hs = document.createElement("div"); hs.className = "seg goyp-h";
   GOY_TARTIB.forEach(function(k){
@@ -5922,6 +6003,15 @@ function goypQator(r){
     else if(!ozg && hol.textContent === "Saqlanmagan o'zgarish bor"){ hol.textContent = ""; }
   }
   ta.addEventListener("input", qorSaqla);
+  if(ai && ai.qoralama && !(r.javob || "").trim()){
+    var qb = document.createElement("div"); qb.className = "goyp-qor";
+    var qm = document.createElement("p"); qm.textContent = ai.qoralama;
+    var qk = document.createElement("button"); qk.type = "button"; qk.className = "btn ghost"; qk.textContent = "Qoralamani javobga qo'yish";
+    qk.addEventListener("click", function(){ ta.value = ai.qoralama; ta.dispatchEvent(new Event("input")); ta.focus(); });
+    var ql = document.createElement("span"); ql.className = "goyp-qor-l"; ql.textContent = "AI qoralamasi — o'zgartirib, keyin «Saqlash»";
+    qb.appendChild(ql); qb.appendChild(qm); qb.appendChild(qk);
+    d.insertBefore(qb, ta);
+  }
   var oxir = document.createElement("div"); oxir.className = "pf-oxir";
   var hol = document.createElement("span"); hol.className = "pf-holat";
   var sb = document.createElement("button"); sb.type = "button"; sb.className = "btn pf-asosiy"; sb.textContent = "Saqlash";
@@ -5940,7 +6030,25 @@ function goypQator(r){
       setTimeout(function(){ ST.goyK._chiz(true); ST.jim = true; render(); ST.jim = false; }, 900);
     }).catch(function(){ sb.disabled = false; hol.className = "pf-holat xato"; hol.textContent = "Aloqa yo'q"; });
   });
-  oxir.appendChild(hol); oxir.appendChild(sb);
+  oxir.appendChild(hol);
+  var oxs = (d._oxs || []).filter(function(x){ return x.holat === "yangi"; });
+  if(oxs.length && r.holat !== "yangi"){
+    var ob = document.createElement("button"); ob.type = "button"; ob.className = "btn ghost";
+    ob.textContent = "Javobni " + oxs.length + " ta o'xshashga ham yuborish";
+    ob.title = "Shu g'oyaning saqlangan holati va javobi o'xshash g'oyalarga ham qo'yiladi — har muallifga Foks xati boradi";
+    ob.addEventListener("click", function(){
+      if(!confirm(oxs.length + " ta o'xshash g'oyaga shu holat («" + (GOY_H[r.holat] || [r.holat])[0] + "») va javob qo'yiladi.\nHar bir muallifga Foks xati boradi. Davom etamizmi?")) return;
+      ob.disabled = true; var i = 0;
+      (function keyingi(){
+        if(i >= oxs.length){ hol.className = "pf-holat ok"; hol.textContent = oxs.length + " ta o'xshash g'oyaga yuborildi"; loadGoya(); return; }
+        var x = oxs[i++];
+        goyaSo({id:x.id, holat:r.holat, javob:r.javob || ""}).then(function(){ ob.textContent = i + " / " + oxs.length + "…"; keyingi(); })
+          .catch(function(){ hol.className = "pf-holat xato"; hol.textContent = "Aloqa yo'q — " + (i - 1) + " tasi yuborildi"; ob.disabled = false; });
+      })();
+    });
+    oxir.appendChild(ob);
+  }
+  oxir.appendChild(sb);
   d.appendChild(oxir);
   if(qor) qorSaqla();
   return d;
