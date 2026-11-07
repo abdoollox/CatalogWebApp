@@ -478,6 +478,7 @@ td.tar-td{width:1%; padding-block:4px}
 .goyp-meta{margin-top:8px; font-size:12px; color:var(--ink-3)}
 .goyp-h{display:inline-flex; flex-wrap:wrap; margin-top:12px}
 .goyp-h button{padding:5px 10px; font-size:11.5px}
+.goyp.qoralama{box-shadow:inset 3px 0 0 #c98500}
 .goyp .goyp-javob{width:100%; box-sizing:border-box; min-height:58px; height:58px; margin-top:10px}
 .goyp .pf-oxir{margin-top:10px}
 .goyp .pf-holat{margin:0 auto 0 0}
@@ -5871,8 +5872,21 @@ function goyaKarta(){
   };
   return c;
 }
+// Javob qoralamalari: panel o'zi yangilansa ham, sahifa qayta ochilsa ham yozilgan javob yo'qolmaydi
+// (egasi, 2026-11-07). Faqat «Saqlash» muvaffaqiyatli bo'lganda o'chadi. Shu brauzerda saqlanadi.
+var GOY_QK = "hp_dash_goy_qoralama";
+function goyQor(){
+  if(!ST.goyQor){ try{ ST.goyQor = JSON.parse(localStorage.getItem(GOY_QK) || "{}") || {}; }catch(e){ ST.goyQor = {}; } }
+  return ST.goyQor;
+}
+function goyQorYoz(id, q){
+  var Q = goyQor();
+  if(q) Q[id] = q; else delete Q[id];
+  try{ localStorage.setItem(GOY_QK, JSON.stringify(Q)); }catch(e){}
+}
 function goypQator(r){
   var d = document.createElement("div"); d.className = "goyp";
+  var qor = goyQor()[r.id] || null;
   var h = GOY_H[r.holat] || [r.holat, "#6d7f99"];
   var hn = HOUSES[r.house];
   d.innerHTML = '<div class="goyp-bosh"><b>' + esc(r.nom) + '</b><span class="goyp-hl" style="--hl:' + h[1] + '">' + esc(h[0]) + '</span></div>' +
@@ -5880,7 +5894,7 @@ function goypQator(r){
     '<div class="goyp-meta">' + odamHavola(r.uid, r.ism) + (r.username ? ' <span class="uname">@' + esc(r.username) + '</span>' : '') +
     (hn ? ' · ' + hn.crest + ' ' + esc(hn.n) : '') + ' · ' + esc(goyaVaqt(r.vaqt)) + (r.til ? ' · ' + esc(r.til.toUpperCase()) : '') +
     (r.admin ? ' · <span class="uname">admin</span>' : '') + '</div>';
-  var tanlov = r.holat;
+  var tanlov = (qor && qor.holat) || r.holat;
   var hs = document.createElement("div"); hs.className = "seg goyp-h";
   GOY_TARTIB.forEach(function(k){
     var b = document.createElement("button"); b.type = "button"; b.textContent = GOY_H[k][0];
@@ -5888,14 +5902,23 @@ function goypQator(r){
     b.addEventListener("click", function(){
       tanlov = k;
       Array.prototype.forEach.call(hs.children, function(x, i){ x.setAttribute("aria-pressed", String(GOY_TARTIB[i] === k)); });
+      qorSaqla();
     });
     hs.appendChild(b);
   });
   d.appendChild(hs);
   var ta = document.createElement("textarea"); ta.className = "pf-matn goyp-javob"; ta.maxLength = 600;
   ta.placeholder = "Dambldor javobi (ixtiyoriy) — o'quvchi Foks xatida va Direktor xonasida ko'radi";
-  ta.value = r.javob || "";
+  ta.value = (qor && typeof qor.javob === "string") ? qor.javob : (r.javob || "");
   d.appendChild(ta);
+  function qorSaqla(){
+    var ozg = tanlov !== r.holat || ta.value.trim() !== (r.javob || "");
+    goyQorYoz(r.id, ozg ? {holat:tanlov, javob:ta.value} : null);
+    d.classList.toggle("qoralama", ozg);
+    if(ozg && !sb.disabled){ hol.className = "pf-holat"; hol.textContent = "Saqlanmagan o'zgarish bor"; }
+    else if(!ozg && hol.textContent === "Saqlanmagan o'zgarish bor"){ hol.textContent = ""; }
+  }
+  ta.addEventListener("input", qorSaqla);
   var oxir = document.createElement("div"); oxir.className = "pf-oxir";
   var hol = document.createElement("span"); hol.className = "pf-holat";
   var sb = document.createElement("button"); sb.type = "button"; sb.className = "btn pf-asosiy"; sb.textContent = "Saqlash";
@@ -5908,6 +5931,7 @@ function goypQator(r){
     goyaSo(body).then(function(j){
       sb.disabled = false;
       if(!j || !j.ok){ hol.className = "pf-holat xato"; hol.textContent = "Saqlanmadi: " + ((j && j.error) || "xato"); return; }
+      goyQorYoz(r.id, null);
       ST.goya = {rows:j.rows || []}; ST.goyaV = (ST.goyaV || 0) + 1;
       hol.className = "pf-holat ok"; hol.textContent = "Saqlandi — muallifga Foks xati ketdi";
       setTimeout(function(){ ST.goyK._chiz(true); ST.jim = true; render(); ST.jim = false; }, 900);
@@ -5915,6 +5939,7 @@ function goypQator(r){
   });
   oxir.appendChild(hol); oxir.appendChild(sb);
   d.appendChild(oxir);
+  if(qor) qorSaqla();
   return d;
 }
 // So'rovnoma «Bizni qanday topdingiz?» (hpanketa.ANKETA bilan bir xil kalitlar)
