@@ -527,7 +527,7 @@
                kurs_5: ["5-kurs", "Har bir fandan 24 tadan dars o'ting"],
                kurs_6: ["6-kurs", "Haftalik turnirlarda 3 marta g'alaba qozoning"],
                kurs_7: ["7-kurs", "Hamma darslarni tugating"],
-               homiy: ["Xogvarts homiysi", "Loyihani qo'llab-quvvatlagani uchun — Dambldordan rahmat"],
+               homiy: ["Xogvarts homiysi", "Direktor xonasida g'oyalarni amalga oshirishga hissa qo'shing"],
                sardor: ["Hafta sardori", "Bir hafta fakultetingizda eng ko'p ball to'plang — keyingi haftaga sardor bo'lasiz"],
                dost_1: ["Birinchi do'st", "Taklifingiz bilan 1 do'st qo'shilsin"],
                dost_5: ["Do'stlar davrasi", "Taklifingiz bilan 5 do'st qo'shilsin"],
@@ -562,7 +562,7 @@
                kurs_5: ["5-й курс", "Пройдите по 24 урока по каждому предмету"],
                kurs_6: ["6-й курс", "Победите в недельных турнирах 3 раза"],
                kurs_7: ["7-й курс", "Завершите все уроки"],
-               homiy: ["Покровитель Хогвартса", "За поддержку проекта — благодарность от Дамблдора"],
+               homiy: ["Покровитель Хогвартса", "Помогите воплотить идеи в кабинете директора"],
                sardor: ["Старшина недели", "Наберите больше всех очков на своём факультете за неделю — станете старшиной на следующую"],
                dost_1: ["Первый друг", "По вашему приглашению пришёл 1 друг"],
                dost_5: ["Круг друзей", "По вашему приглашению пришли 5 друзей"],
@@ -597,7 +597,7 @@
                kurs_5: ["Year 5", "Pass 24 lessons in every subject"],
                kurs_6: ["Year 6", "Win 3 times in weekly tournaments"],
                kurs_7: ["Year 7", "Finish every lesson"],
-               homiy: ["Patron of Hogwarts", "For supporting the project — with thanks from Dumbledore"],
+               homiy: ["Patron of Hogwarts", "Help bring ideas to life in the Headmaster's office"],
                sardor: ["Prefect of the Week", "Score the most points in your house in a week — you become prefect for the next one"],
                dost_1: ["First Friend", "1 friend joins by your invitation"],
                dost_5: ["Circle of Friends", "5 friends join by your invitation"],
@@ -624,7 +624,7 @@
     ["kitob", ["kitob_1", "kitob_7"], { uz: "Kitoblar", ru: "Книги", en: "Books" }],
     ["maydon", ["duel_golib", "rekord_top"], { uz: "Duel va rekordlar", ru: "Дуэль и рекорды", en: "Duel and records" }],
     ["kurslar", ["kurs_5", "kurs_6", "kurs_7"], { uz: "Yuqori kurslar", ru: "Старшие курсы", en: "Senior years" }],
-    // Donat (2026-11-08): olinmaguncha server ro'yxatga qo'shmaydi - guruh ham ko'rinmaydi
+    // Donat (2026-11-08): olinmaganlarda qulflangan nishon bo'lib turadi (egasi)
     ["homiy", ["homiy"], { uz: "Homiylar", ru: "Покровители", en: "Patrons" }]
   ];
   var NSH_SUM = { uz: "nishon olingan", ru: "значков получено", en: "badges earned" };
