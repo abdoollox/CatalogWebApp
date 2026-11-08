@@ -2861,6 +2861,7 @@ var KARTA_INFO = {
     "(nomi, muallif ismi, batafsil va javob); «Yangi», «Ko'rib chiqilmoqda» va «Rad etildi» — faqat muallifga.",
   "So'rovnoma": "«Bizni qanday topdingiz?» — Dambldor bilan suhbat. Savollar «The Mom Test» bo'yicha: fikr emas, o'tgan aniq voqealar. " +
     "Bir odam bir marta javob beradi; javob uchun 20 galleon (yozma javobi 3 harfdan kam bo'lsa — yo'q). Adminlar sanalmaydi.",
+  "Homiylar": "Donat qilgan odamni @username yoki ID bilan yozing — unga «Xogvarts homiysi» nishoni beriladi va Dambldordan rahmat xati (pochta + bot) boradi. Kim to'laganini taps.uz dagi to'lov izohidan bilasiz. Xat faqat birinchi marta boradi.",
   "So'rovnoma: yozma javoblar": "Odamlarning o'z so'zlari: qaysi kanal/kim aytgani, botni birovga qanday ta'riflagani, nega hali aytmagani. " +
     "Reklama matni uchun eng foydali qism. Odam ismi ko'rsatilmaydi.",
   "Qaysi dublyajda": "O'zbekcha filmlar qaysi studiya dublyajida olingani: MY5 TV yoki ZO'R TV. Faqat o'zbek tilidagi yuborishlar sanaladi (rus va ingliz tilida dublyaj tanlovi yo'q). Dublyaj tanlovi 2026-yil 7-oktabrda qo'shilgan — undan oldingi hamma o'zbekcha yuborishlar MY5 TV, chunki o'shanda faqat shu dublyaj bor edi. ZO'R TV fayllari yuklanmaguncha u nol bo'lib turadi. Bo'lakni bosib yoqib-o'chirsa bo'ladi.",
@@ -5117,6 +5118,8 @@ function render(){
   put("fikr", ST.goyK);
   ST.goyK._chiz();
   anketaKartalar().forEach(function(k){ put("fikr", k); });
+  if(!ST.homK) ST.homK = homiyKarta();
+  put("fikr", ST.homK);
 
   /* — Lenta — */
   var c11 = card("Oxirgi hodisalar", "eng yangisi yuqorida · kunlar bo'yicha", "");
@@ -5855,6 +5858,70 @@ function loadAnketa(){
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(j){ if(!j || !j.ok) return; ST.anketa = j; ST.jim = true; render(); ST.jim = false; })
     .catch(function(){});
+}
+// Homiylar (bot hpdonat): donat qilgan odamga «Xogvarts homiysi» nishoni + Dambldordan rahmat xati
+function homiySo(body){
+  if(!ST.src || ST.src.kind !== "api") return Promise.reject(new Error("ulanmagan"));
+  return fetch(fikrUrl("donat/panel"), {method:"POST", cache:"no-store",
+      headers:{"X-Dash-Token": ST.src.token, "Content-Type":"application/json"}, body:JSON.stringify(body || {})})
+    .then(function(r){ return r.json().catch(function(){ return {ok:false, error:"javob " + r.status}; }); });
+}
+function homiyKarta(){
+  var c = card("Homiylar", "donat qilganlarga nishon · to'lov taps.uz da, kim to'lagani izohdan ko'rinadi", "");
+  function qator(lab, el){
+    var q = document.createElement("div"); q.className = "pf-qator";
+    var l = document.createElement("span"); l.className = "pf-lab"; l.textContent = lab;
+    q.appendChild(l); q.appendChild(el); c.appendChild(q);
+  }
+  var kim = document.createElement("input"); kim.className = "pf-kirit"; kim.maxLength = 60;
+  kim.placeholder = "@username yoki Telegram ID"; kim.spellcheck = false;
+  var iz = document.createElement("input"); iz.className = "pf-kirit"; iz.maxLength = 200;
+  iz.placeholder = "Izoh (ixtiyoriy): summa, sana";
+  qator("Kimga", kim); qator("Izoh", iz);
+  var ox = document.createElement("div"); ox.className = "pf-oxir";
+  var b = document.createElement("button"); b.type = "button"; b.className = "btn pf-asosiy"; b.textContent = "Nishon berish va rahmat xati";
+  ox.appendChild(b); c.appendChild(ox);
+  var hol = document.createElement("div"); hol.className = "pf-holat"; c.appendChild(hol);
+  var list = document.createElement("div"); c.appendChild(list);
+  function holat(m, tur){ hol.textContent = m; hol.className = "pf-holat " + (tur || ""); }
+  function chiz(j){
+    list.innerHTML = "";
+    if(!j || !j.ok){ list.appendChild(emptyNote(!ST.src || ST.src.kind !== "api" ? "Bot serveriga ulanish kerak." : "Yuklanmoqda…")); return; }
+    if(!j.havola) list.appendChild(emptyNote("Donat havolasi hali yo'q — botga /donat havola https://... deb yozing. Ungacha Direktor xonasida tugma ko'rinmaydi."));
+    if(!(j.rows || []).length){ list.appendChild(emptyNote("Hali homiy yo'q.")); return; }
+    var t = document.createElement("table");
+    t.innerHTML = "<thead><tr><th>Homiy</th><th>Sana</th><th>Izoh</th><th></th></tr></thead>";
+    var tb = document.createElement("tbody");
+    j.rows.forEach(function(r){
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + odamHavola(r.uid, r.ism || r.username) + (r.username ? " <span class='hint'>@" + esc(r.username) + "</span>" : "") +
+        "</td><td>" + esc(goyaVaqt(r.vaqt)) + "</td><td>" + esc(r.izoh || "") + "</td>";
+      var td = document.createElement("td");
+      var x = document.createElement("button"); x.type = "button"; x.className = "btn ghost"; x.textContent = "Olib tashlash";
+      x.addEventListener("click", function(){
+        if(!confirm("Nishonni olib tashlaymi? (rahmat xati qaytarilmaydi)")) return;
+        homiySo({olib: r.uid}).then(chiz).catch(function(){ holat("Aloqa yo'q", "xato"); });
+      });
+      td.appendChild(x); tr.appendChild(td); tb.appendChild(tr);
+    });
+    t.appendChild(tb); var tw = document.createElement("div"); tw.className = "tbl-wrap"; tw.appendChild(t); list.appendChild(tw);
+  }
+  b.addEventListener("click", function(){
+    var k = kim.value.trim();
+    if(!k){ holat("@username yoki ID yozing", "xato"); return; }
+    b.disabled = true; holat("Yuborilmoqda…");
+    homiySo({kim: k, izoh: iz.value.trim()}).then(function(j){
+      b.disabled = false;
+      if(!j || !j.ok){ holat(j && j.error === "topilmadi" ? "Bunday odam botda topilmadi" : "Xato: " + ((j && j.error) || "?"), "xato"); return; }
+      var n = j.berildi.ism || ("@" + j.berildi.username) || j.berildi.uid;
+      holat(j.yangi ? n + " — nishon berildi, rahmat xati yuborildi" : n + " — oldin ham homiy edi, xat qayta yuborilmadi", "ok");
+      if(j.yangi){ kim.value = ""; iz.value = ""; }
+      chiz(j);
+    }).catch(function(){ b.disabled = false; holat("Aloqa yo'q", "xato"); });
+  });
+  chiz(null);
+  homiySo({}).then(chiz).catch(function(){ chiz(null); });
+  return c;
 }
 var GOY_H = {yangi:["Yangi","#3987e5"], korildi:["Ko'rib chiqilmoqda","#9085e9"], qabul:["Qabul qilindi","#199e70"],
              bajarildi:["Bajarildi","#c98500"], rad:["Rad etildi","#d03b3b"]};

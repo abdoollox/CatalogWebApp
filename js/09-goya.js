@@ -31,6 +31,7 @@
       h: { yangi: "Yangi", korildi: "Ko'rib chiqilmoqda", qabul: "Qabul qilindi", rad: "Hozircha qabul qilinmadi", bajarildi: "Bajarildi" },
       javob: "Dambldor javobi", xNom: "Kamida 3 harf yozing", xKop: function (n) { return "Bugun " + n + " ta g'oya yubordingiz — ertaga yana yozing"; },
       xato: "Aloqa yo'q — qayta urinib ko'ring",
+      hissa: "G'oyalarni amalga oshirishga hissa", hissaS: "Ixtiyoriy. Hissa qo'shganlarga «Xogvarts homiysi» nishoni va Dambldordan rahmat xati.", hissaIz: "To'lov izohiga Telegram nomingizni yozing — nishonni shunga beramiz.", hissaB: "Hissa qo'shish",
       tileS: function (n) { return n ? n + " g'oya bajarildi" : "G'oya yozish"; }
     },
     ru: {
@@ -48,6 +49,7 @@
       h: { yangi: "Новая", korildi: "На рассмотрении", qabul: "Принята", rad: "Пока не принята", bajarildi: "Реализована" },
       javob: "Ответ Дамблдора", xNom: "Напишите хотя бы 3 буквы", xKop: function (n) { return "Сегодня вы отправили " + n + " идей — напишите завтра"; },
       xato: "Нет связи — попробуйте ещё раз",
+      hissa: "Помочь воплотить идеи", hissaS: "Добровольно. Помогающим — значок «Покровитель Хогвартса» и письмо с благодарностью от Дамблдора.", hissaIz: "В комментарии к платежу укажите свой ник в Telegram — по нему мы выдадим значок.", hissaB: "Поддержать",
       tileS: function (n) { return n ? "Воплощено: " + n : "Написать идею"; }
     },
     en: {
@@ -65,6 +67,7 @@
       h: { yangi: "New", korildi: "Under review", qabul: "Accepted", rad: "Not accepted for now", bajarildi: "Done" },
       javob: "Dumbledore's reply", xNom: "Please write at least 3 letters", xKop: function (n) { return "You sent " + n + " ideas today — write again tomorrow"; },
       xato: "No connection — please try again",
+      hissa: "Help bring the ideas to life", hissaS: "Optional. Supporters get the «Patron of Hogwarts» badge and a thank-you letter from Dumbledore.", hissaIz: "Put your Telegram username in the payment comment so we can give you the badge.", hissaB: "Support",
       tileS: function (n) { return n ? n + " ideas done" : "Write an idea"; }
     }
   };
@@ -94,7 +97,7 @@
       if (String(body.yangi.nom || "").trim().length < 3) { return { ok: false, error: "nom" }; }
       goyLocal.list.unshift({ id: goyLocal.list.length + 10, nom: body.yangi.nom, batafsil: body.yangi.batafsil || "", bolim: body.yangi.bolim, holat: "yangi", javob: "", vaqt: new Date().toISOString() });
     }
-    return { ok: true, on: true, preview: true, list: goyLocal.list, stol: goyLocal.stol, devor: goyLocal.devor, kuniga: 5 };
+    return { ok: true, on: true, preview: true, list: goyLocal.list, stol: goyLocal.stol, devor: goyLocal.devor, kuniga: 5, donat: "https://taps.uz/namuna" };
   }
   function goyPost(body, cb) {
     if (!window.fetch) { cb(null); return; }
@@ -175,6 +178,10 @@
     k.appendChild(och);
     k.appendChild(goyForma());
     ich.appendChild(k);
+    // Donat (hpdonat): havola bo'lsa ko'rinadi; to'lov tashqi sahifada (Click / Payme / Uzum)
+    var dn = drEl("div", "goy-donat hidden");
+    dn.id = "goy-donat";
+    ich.appendChild(dn);
     // Stol, devor, mening g'oyalarim
     var bl = drEl("div", "");
     bl.id = "goy-bl";
@@ -247,8 +254,27 @@
   // hammasi bir xil ixcham qatorda (oltin ramkalar yo'q), avval GOY_KORSAT tasi, keyin «Yana ko'rsatish».
   var GOY_KORSAT = 5;
   var goyTab = null, goyKop = 0;
+  function goyDonat() {
+    var dn = $("goy-donat"), t = goyT(), url = goyData && goyData.donat;
+    if (!dn) { return; }
+    if (!url) { dn.classList.add("hidden"); return; }
+    dn.innerHTML = "";
+    var tx = drEl("div", "goy-donat-tx");
+    tx.appendChild(drEl("b", "", t.hissa));
+    tx.appendChild(drEl("span", "", t.hissaS));
+    dn.appendChild(tx);
+    var b = drEl("button", "goy-donat-b", t.hissaB);
+    b.type = "button";
+    b.onclick = function () {
+      try { tg.openLink ? tg.openLink(url) : window.open(url, "_blank"); } catch (e) { window.open(url, "_blank"); }
+    };
+    dn.appendChild(b);
+    dn.appendChild(drEl("small", "", t.hissaIz));
+    dn.classList.remove("hidden");
+  }
   function goyBolimlar() {
     var bl = $("goy-bl"), t = goyT(), d = goyData || {};
+    goyDonat();
     if (!bl) { return; }
     var r = { stol: d.stol || [], devor: d.devor || [], mening: d.list || [] };
     if (!goyTab) { goyTab = r.mening.length ? "mening" : "devor"; }

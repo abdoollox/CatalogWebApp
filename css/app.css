@@ -4517,6 +4517,16 @@ body.ank-ochiq{overflow:hidden}
 .goy-kosa-tx b{font:500 22px/1.1 'Cormorant Garamond',serif;color:var(--gold-hi)}
 .goy-kosa-tx span{font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
 .goy-kosa .goy-f{display:none}
+.goy-donat{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:20px;margin:-12px 0 26px;
+  background:linear-gradient(180deg,rgba(226,232,240,.07),rgba(255,255,255,.02));border:1px solid rgba(226,232,240,.2)}
+.goy-donat.hidden{display:none}
+.goy-donat-tx{display:flex;flex-direction:column;gap:4px}
+.goy-donat-tx b{font:500 19px/1.15 'Cormorant Garamond',serif;color:var(--gold-hi)}
+.goy-donat-tx span{font:500 12.5px/1.4 'Manrope',sans-serif;color:var(--dim)}
+.goy-donat-b{height:44px;border-radius:14px;border:1px solid rgba(226,232,240,.45);background:rgba(226,232,240,.08);color:#eef2f7;
+  font:700 14px/1 'Manrope',sans-serif;cursor:pointer}
+.goy-donat-b:active{transform:scale(.98)}
+.goy-donat small{font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim);opacity:.8}
 .goy-kosa.ochiq .goy-f{display:flex;animation:ankPuf .3s ease-out}
 .goy-kosa.ochiq #goy-och{display:none}
 /* g'oya yuborilganda: kumush ip kosaga tushadi, kosa yorishadi */
