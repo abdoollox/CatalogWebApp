@@ -4526,6 +4526,19 @@ body.ank-ochiq{overflow:hidden}
 .goy-donat-b{height:44px;border-radius:14px;border:1px solid rgba(226,232,240,.45);background:rgba(226,232,240,.08);color:#eef2f7;
   font:700 14px/1 'Manrope',sans-serif;cursor:pointer}
 .goy-donat-b:active{transform:scale(.98)}
+.goy-sum-l{font:600 11.5px/1 'Manrope',sans-serif;color:var(--dim);letter-spacing:.02em;margin-top:2px}
+.goy-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.goy-sum-c{min-width:0;padding:0 2px;height:40px;border-radius:12px;border:1px solid rgba(226,232,240,.18);background:rgba(255,255,255,.03);color:var(--dim);
+  font:700 13px/1 'Manrope',sans-serif;cursor:pointer;font-variant-numeric:tabular-nums}
+.goy-sum-c.on{border-color:rgba(226,232,240,.6);background:rgba(226,232,240,.12);color:#eef2f7}
+.goy-sum-in{height:42px;border-radius:12px;border:1px solid rgba(226,232,240,.3);background:rgba(0,0,0,.25);color:#eef2f7;
+  padding:0 12px;font:600 15px/1 'Manrope',sans-serif;width:100%;box-sizing:border-box}
+.goy-sum-in.hidden,.goy-sum-x.hidden{display:none}
+.goy-sum-x{color:#e0796f!important;opacity:1!important}
+.goy-kim{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.22);border:1px dashed rgba(226,232,240,.25)}
+.goy-kim code{flex:1;font:700 14px/1.2 'Manrope',sans-serif;color:#eef2f7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.goy-kim-b{flex:none;height:30px;padding:0 12px;border-radius:9px;border:1px solid rgba(226,232,240,.35);background:transparent;color:#eef2f7;
+  font:700 12px/1 'Manrope',sans-serif;cursor:pointer}
 .goy-donat small{font:500 11.5px/1.4 'Manrope',sans-serif;color:var(--dim);opacity:.8}
 .goy-kosa.ochiq .goy-f{display:flex;animation:ankPuf .3s ease-out}
 .goy-kosa.ochiq #goy-och{display:none}

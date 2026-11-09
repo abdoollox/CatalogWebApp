@@ -31,7 +31,7 @@
       h: { yangi: "Yangi", korildi: "Ko'rib chiqilmoqda", qabul: "Qabul qilindi", rad: "Hozircha qabul qilinmadi", bajarildi: "Bajarildi" },
       javob: "Dambldor javobi", xNom: "Kamida 3 harf yozing", xKop: function (n) { return "Bugun " + n + " ta g'oya yubordingiz — ertaga yana yozing"; },
       xato: "Aloqa yo'q — qayta urinib ko'ring",
-      hissa: "G'oyalarni amalga oshirishga hissa", hissaS: "Ixtiyoriy. Hissa qo'shganlarga «Xogvarts homiysi» nishoni va Dambldordan rahmat xati.", hissaIz: "To'lov izohiga Telegram nomingizni yozing — nishonni shunga beramiz.", hissaB: "Hissa qo'shish",
+      hissa: "G'oyalarni amalga oshirishga hissa", hissaS: "Ixtiyoriy. Hissa qo'shganlarga «Xogvarts homiysi» nishoni va Dambldordan rahmat xati.", hissaIz: "To'lov sahifasidagi «Xabar» qatoriga Telegram nomingizni yozing — nishonni shunga beramiz:", hissaB: "Hissa qo'shish", sumT: "Summani tanlang", sumB: "Boshqa", sumP: "Summa, so'm", sumMin: "Kamida 5 000 so'm", som: "so'm", nusxa: "Nusxa olish", nusxaOk: "Nusxa olindi", hissaNom: "Telegram ID",
       tileS: function (n) { return n ? n + " g'oya bajarildi" : "G'oya yozish"; }
     },
     ru: {
@@ -49,7 +49,7 @@
       h: { yangi: "Новая", korildi: "На рассмотрении", qabul: "Принята", rad: "Пока не принята", bajarildi: "Реализована" },
       javob: "Ответ Дамблдора", xNom: "Напишите хотя бы 3 буквы", xKop: function (n) { return "Сегодня вы отправили " + n + " идей — напишите завтра"; },
       xato: "Нет связи — попробуйте ещё раз",
-      hissa: "Помочь воплотить идеи", hissaS: "Добровольно. Помогающим — значок «Покровитель Хогвартса» и письмо с благодарностью от Дамблдора.", hissaIz: "В комментарии к платежу укажите свой ник в Telegram — по нему мы выдадим значок.", hissaB: "Поддержать",
+      hissa: "Помочь воплотить идеи", hissaS: "Добровольно. Помогающим — значок «Покровитель Хогвартса» и письмо с благодарностью от Дамблдора.", hissaIz: "На странице оплаты в поле «Сообщение» укажите свой ник в Telegram — по нему мы выдадим значок:", hissaB: "Поддержать", sumT: "Выберите сумму", sumB: "Другая", sumP: "Сумма, сум", sumMin: "Минимум 5 000 сум", som: "сум", nusxa: "Копировать", nusxaOk: "Скопировано", hissaNom: "Telegram ID",
       tileS: function (n) { return n ? "Воплощено: " + n : "Написать идею"; }
     },
     en: {
@@ -67,7 +67,7 @@
       h: { yangi: "New", korildi: "Under review", qabul: "Accepted", rad: "Not accepted for now", bajarildi: "Done" },
       javob: "Dumbledore's reply", xNom: "Please write at least 3 letters", xKop: function (n) { return "You sent " + n + " ideas today — write again tomorrow"; },
       xato: "No connection — please try again",
-      hissa: "Help bring the ideas to life", hissaS: "Optional. Supporters get the «Patron of Hogwarts» badge and a thank-you letter from Dumbledore.", hissaIz: "Put your Telegram username in the payment comment so we can give you the badge.", hissaB: "Support",
+      hissa: "Help bring the ideas to life", hissaS: "Optional. Supporters get the «Patron of Hogwarts» badge and a thank-you letter from Dumbledore.", hissaIz: "On the payment page, put your Telegram username in the «Message» field so we can give you the badge:", hissaB: "Support", sumT: "Choose an amount", sumB: "Other", sumP: "Amount, UZS", sumMin: "At least 5,000 UZS", som: "UZS", nusxa: "Copy", nusxaOk: "Copied", hissaNom: "Telegram ID",
       tileS: function (n) { return n ? n + " ideas done" : "Write an idea"; }
     }
   };
@@ -97,7 +97,7 @@
       if (String(body.yangi.nom || "").trim().length < 3) { return { ok: false, error: "nom" }; }
       goyLocal.list.unshift({ id: goyLocal.list.length + 10, nom: body.yangi.nom, batafsil: body.yangi.batafsil || "", bolim: body.yangi.bolim, holat: "yangi", javob: "", vaqt: new Date().toISOString() });
     }
-    return { ok: true, on: true, preview: true, list: goyLocal.list, stol: goyLocal.stol, devor: goyLocal.devor, kuniga: 5, donat: "https://taps.uz/namuna" };
+    return { ok: true, on: true, preview: true, list: goyLocal.list, stol: goyLocal.stol, devor: goyLocal.devor, kuniga: 5, donat: "https://taps.uz/garripotter_kolleksiya/d" };
   }
   function goyPost(body, cb) {
     if (!window.fetch) { cb(null); return; }
@@ -254,6 +254,11 @@
   // hammasi bir xil ixcham qatorda (oltin ramkalar yo'q), avval GOY_KORSAT tasi, keyin «Yana ko'rsatish».
   var GOY_KORSAT = 5;
   var goyTab = null, goyKop = 0;
+  // Donat (2026-11-08/09): to'lov tashqi sahifada (hozir taps.uz, keyin Rahmat). Summani shu yerda, o'z dizaynimizda
+  // tanlaydi; havolaga ?amount= qo'shiladi (taps formasi summani oldindan qo'yadi). Nishonni egasi paneldan beradi.
+  var GOY_SUMMA = [10000, 20000, 50000], GOY_MIN = 5000, goySum = 20000;
+  function goySon(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+  function goyDonatUrl(url, n) { return url + (url.indexOf("?") < 0 ? "?" : "&") + "amount=" + n; }
   function goyDonat() {
     var dn = $("goy-donat"), t = goyT(), url = goyData && goyData.donat;
     if (!dn) { return; }
@@ -263,13 +268,64 @@
     tx.appendChild(drEl("b", "", t.hissa));
     tx.appendChild(drEl("span", "", t.hissaS));
     dn.appendChild(tx);
-    var b = drEl("button", "goy-donat-b", t.hissaB);
+    var sw = drEl("div", "goy-sum");
+    var inp = document.createElement("input");
+    inp.type = "number"; inp.inputMode = "numeric"; inp.min = String(GOY_MIN); inp.step = "1000";
+    inp.placeholder = t.sumP; inp.className = "goy-sum-in hidden";
+    var ogoh = drEl("small", "goy-sum-x hidden", t.sumMin);
+    var b = drEl("button", "goy-donat-b", "");
     b.type = "button";
+    function yoz() {
+      var n = goySum;
+      b.textContent = n >= GOY_MIN ? t.hissaB + " · " + goySon(n) + " " + t.som : t.hissaB;
+      ogoh.classList.toggle("hidden", !(n && n < GOY_MIN));
+    }
+    function tanla(el, n) {
+      [].forEach.call(sw.children, function (c) { c.classList.remove("on"); });
+      el.classList.add("on");
+      if (n) { goySum = n; inp.classList.add("hidden"); }
+      else { inp.classList.remove("hidden"); goySum = parseInt(inp.value, 10) || 0; setTimeout(function () { try { inp.focus(); } catch (e) {} }, 50); }
+      yoz();
+    }
+    GOY_SUMMA.forEach(function (n) {
+      var c = drEl("button", "goy-sum-c" + (n === goySum ? " on" : ""), goySon(n));
+      c.type = "button";
+      c.onclick = function () { tanla(c, n); };
+      sw.appendChild(c);
+    });
+    var bo = drEl("button", "goy-sum-c" + (GOY_SUMMA.indexOf(goySum) < 0 ? " on" : ""), t.sumB);
+    bo.type = "button";
+    bo.onclick = function () { tanla(bo, 0); };
+    sw.appendChild(bo);
+    inp.oninput = function () { goySum = parseInt(inp.value, 10) || 0; yoz(); };
+    dn.appendChild(drEl("span", "goy-sum-l", t.sumT));
+    dn.appendChild(sw);
+    dn.appendChild(inp);
+    dn.appendChild(ogoh);
     b.onclick = function () {
-      try { tg.openLink ? tg.openLink(url) : window.open(url, "_blank"); } catch (e) { window.open(url, "_blank"); }
+      if (!(goySum >= GOY_MIN)) { ogoh.classList.remove("hidden"); return; }
+      var u = goyDonatUrl(url, goySum);
+      try { tg.openLink ? tg.openLink(u) : window.open(u, "_blank"); } catch (e) { window.open(u, "_blank"); }
     };
     dn.appendChild(b);
+    // Xabar qatoriga nima yozish - o'z Telegram nomi (bo'lmasa ID), nusxa olish tugmasi bilan
+    var tu = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+    var kim = tu.username ? "@" + tu.username : (tu.id ? String(tu.id) : "");
     dn.appendChild(drEl("small", "", t.hissaIz));
+    if (kim) {
+      var kq = drEl("div", "goy-kim");
+      kq.appendChild(drEl("code", "", kim));
+      var nb = drEl("button", "goy-kim-b", t.nusxa);
+      nb.type = "button";
+      nb.onclick = function () {
+        var ok = function () { nb.textContent = t.nusxaOk; setTimeout(function () { nb.textContent = t.nusxa; }, 1600); };
+        try { navigator.clipboard.writeText(kim).then(ok, ok); } catch (e) { ok(); }
+      };
+      kq.appendChild(nb);
+      dn.appendChild(kq);
+    }
+    if (GOY_SUMMA.indexOf(goySum) < 0 && goySum) { inp.classList.remove("hidden"); inp.value = goySum; }
+    yoz();
     dn.classList.remove("hidden");
   }
   function goyBolimlar() {
